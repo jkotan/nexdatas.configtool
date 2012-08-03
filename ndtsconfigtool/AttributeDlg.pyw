@@ -56,20 +56,19 @@ class AttributeDlg(QDialog, ui_attributedlg.Ui_AttributeDlg):
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
     def accept(self):
         class CharacterError(Exception): pass
-        self.name = unicode(self.nameLineEdit.text())
-        self.value = unicode(self.valueLineEdit.text())
+        name = unicode(self.nameLineEdit.text())
         
         try:
-            if 1 in [c in self.name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
+            if 1 in [c in name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
                 raise CharacterError, ("Name contains one of forbidden characters") 
-            if self.name[0] == '-':
+            if name[0] == '-':
                 raise CharacterError, ("The first character of Name is '-'") 
 
         except CharacterError, e:   
             QMessageBox.warning(self, "Character Error", unicode(e))
-            self.name = u''
-            self.value = u''
             return
+        self.name = name
+        value = unicode(self.valueLineEdit.text())
         QDialog.accept(self)
 
 if __name__ == "__main__":

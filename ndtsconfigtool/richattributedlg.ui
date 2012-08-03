@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>407</width>
-    <height>257</height>
+    <width>705</width>
+    <height>548</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -291,6 +291,7 @@
  <tabstops>
   <tabstop>nameLineEdit</tabstop>
   <tabstop>valueLineEdit</tabstop>
+  <tabstop>typeComboBox</tabstop>
   <tabstop>typeLineEdit</tabstop>
   <tabstop>docTextEdit</tabstop>
   <tabstop>buttonBox</tabstop>

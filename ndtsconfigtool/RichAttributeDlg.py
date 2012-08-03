@@ -60,6 +60,7 @@ class RichAttributeDlg(QDialog, ui_richattributedlg.Ui_RichAttributeDlg):
     def on_typeComboBox_currentIndexChanged(self, text):
         if text == 'other ...':
             self.otherFrame.show()            
+            self.typeLineEdit.setFocus()
         else:
             self.otherFrame.hide()
 

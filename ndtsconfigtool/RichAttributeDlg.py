@@ -112,4 +112,4 @@ if __name__ == "__main__":
     if form.nexusType:
         print "Type: %s" % form.nexusType
     if form.doc:
-        print "Doc: \n %s" % form.doc
+        print "Doc: \n%s" % form.doc

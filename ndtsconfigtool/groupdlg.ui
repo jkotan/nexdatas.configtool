@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>GroupDialog</class>
- <widget class="QDialog" name="GroupDialog">
+ <class>GroupDlg</class>
+ <widget class="QDialog" name="GroupDlg">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>389</width>
-    <height>403</height>
+    <width>424</width>
+    <height>562</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Group</string>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -36,30 +36,30 @@
        <item>
         <layout class="QFormLayout" name="formLayout">
          <item row="0" column="0">
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="nameLabel">
            <property name="text">
             <string>&amp;Name:</string>
            </property>
            <property name="buddy">
-            <cstring>lineEdit</cstring>
+            <cstring>nameLineEdit</cstring>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="lineEdit"/>
+          <widget class="QLineEdit" name="nameLineEdit"/>
          </item>
          <item row="1" column="0">
-          <widget class="QLabel" name="label_2">
+          <widget class="QLabel" name="typeLabel">
            <property name="text">
             <string>&amp;Type:</string>
            </property>
            <property name="buddy">
-            <cstring>lineEdit_2</cstring>
+            <cstring>typeLineEdit</cstring>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QLineEdit" name="lineEdit_2"/>
+          <widget class="QLineEdit" name="typeLineEdit"/>
          </item>
         </layout>
        </item>
@@ -67,6 +67,9 @@
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Maximum</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -78,6 +81,12 @@
        </item>
        <item>
         <widget class="QDialogButtonBox" name="buttonBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -89,30 +98,76 @@
       </layout>
      </item>
      <item>
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>&amp;Attributes:</string>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
        </property>
-       <property name="buddy">
-        <cstring>tableView</cstring>
+       <property name="sizeType">
+        <enum>QSizePolicy::Maximum</enum>
        </property>
-      </widget>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>18</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
-      <widget class="QTableView" name="tableView"/>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="attributesLabel">
+         <property name="text">
+          <string>Additional &amp;attributes:</string>
+         </property>
+         <property name="buddy">
+          <cstring>attributeTableWidget</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="addPushButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>A&amp;dd</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="removePushButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>&amp;Remove</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
-      <widget class="QLabel" name="label_4">
+      <widget class="QTableWidget" name="attributeTableWidget"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="docLabel">
        <property name="text">
         <string>&amp;Doc:</string>
        </property>
        <property name="buddy">
-        <cstring>textEdit</cstring>
+        <cstring>docTextEdit</cstring>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QTextEdit" name="textEdit">
+      <widget class="QTextEdit" name="docTextEdit">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -123,10 +178,12 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>lineEdit</tabstop>
-  <tabstop>lineEdit_2</tabstop>
-  <tabstop>tableView</tabstop>
-  <tabstop>textEdit</tabstop>
+  <tabstop>nameLineEdit</tabstop>
+  <tabstop>typeLineEdit</tabstop>
+  <tabstop>addPushButton</tabstop>
+  <tabstop>removePushButton</tabstop>
+  <tabstop>attributeTableWidget</tabstop>
+  <tabstop>docTextEdit</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
@@ -134,12 +191,12 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>GroupDialog</receiver>
+   <receiver>GroupDlg</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>412</x>
+     <y>71</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -150,12 +207,12 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>GroupDialog</receiver>
+   <receiver>GroupDlg</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>412</x>
+     <y>71</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

@@ -24,6 +24,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ui_groupdlg
 
+from AttributeDlg import AttributeDlg
 
 ## dialog defining a tag group
 class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
@@ -46,10 +47,45 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         self.setupUi(self)
         self.updateUi()
 
+        self.connect(self.attributeTableWidget, 
+                     SIGNAL("itemChanged(QTableWidget*)"),
+                     self.tableItemChanged)
+        self.connect(self.addPushButton, SIGNAL("clicked()"), 
+                     self.addAttribute)
+        self.connect(self.removePushButton, SIGNAL("clicked()"), 
+                     self.removeAttribute)
+
         self.populateAttributes()
 
 
+    def addAttribute(self):
+        aform  = AttributeDlg()
+        if aform.exec_():
+            name = aform.name
+            value = aform.value
+            
+            if not aform.name in self.attributes.keys():
+                self.attributes[aform.name] = aform.value
+                self.populateAttributes(aform.name)
+                self.attributeTableWidget.setFocus()
+                self.attributeTableWidget.editItem(self.attributeTableWidget.currentItem())
+                
+    def currentTableAttribute(self):
+        item = self.attributeTableWidget.item(self.attributeTableWidget.currentRow(), 0)
+        if item is None:
+            return None
+        return item.data(Qt.UserRole).toString()
 
+    def removeAttribute(self):
+        attr = self.currentTableAttribute()
+        if attr in self.attributes.keys():
+            del self.attributes[unicode(attr)]
+            self.populateAttributes()
+        pass
+
+    def tableItemChanged(self):
+        print "change Attribute"
+        pass
 
     ## fills in the attribute table      
     # \param selectedAttribute selected attribute    
@@ -61,7 +97,6 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         headers = ["Name", "Value"]
         self.attributeTableWidget.setColumnCount(len(headers))
         self.attributeTableWidget.setHorizontalHeaderLabels(headers)	
-        self.attributeTableWidget.horizontalHeader().setStretchLastSection(True);
         for row, name in enumerate(self.attributes):
             item = QTableWidgetItem(name)
             item.setData(Qt.UserRole, QVariant(name))
@@ -71,6 +106,7 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
             self.attributeTableWidget.setItem(row, 1, QTableWidgetItem(self.attributes[name]))
         self.attributeTableWidget.setSortingEnabled(True)
         self.attributeTableWidget.resizeColumnsToContents()
+        self.attributeTableWidget.horizontalHeader().setStretchLastSection(True);
         if selected is not None:
             selected.setSelected(True)
             self.attributeTableWidget.setCurrentItem(selected)

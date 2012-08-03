@@ -68,7 +68,8 @@ class AttributeDlg(QDialog, ui_attributedlg.Ui_AttributeDlg):
             QMessageBox.warning(self, "Character Error", unicode(e))
             return
         self.name = name
-        value = unicode(self.valueLineEdit.text())
+        self.value = unicode(self.valueLineEdit.text())
+
         QDialog.accept(self)
 
 if __name__ == "__main__":

@@ -39,6 +39,7 @@ class RichAttributeDlg(QDialog, ui_richattributedlg.Ui_RichAttributeDlg):
         self.value = u''
         ## attribute type
         self.nexusType = u''
+        ## attribute doc
         self.doc = u''
         self.setupUi(self)
 
@@ -90,8 +91,8 @@ class RichAttributeDlg(QDialog, ui_richattributedlg.Ui_RichAttributeDlg):
                 raise CharacterError, ("The first character of Name is '-'") 
         except CharacterError, e:   
             QMessageBox.warning(self, "Character Error", unicode(e))
-            self.name=u''
-            self.value=u''
+            self.name = u''
+            self.value = u''
             return
 
         QDialog.accept(self)

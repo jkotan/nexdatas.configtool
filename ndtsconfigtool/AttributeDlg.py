@@ -34,9 +34,9 @@ class AttributeDlg(QDialog, ui_attributedlg.Ui_AttributeDlg):
         super(AttributeDlg, self).__init__(parent)
         
         ## attribute name
-        self.name=u''
+        self.name = u''
         ## attribute value
-        self.value=u''
+        self.value = u''
         self.setupUi(self)
         self.updateUi()
 
@@ -67,8 +67,8 @@ class AttributeDlg(QDialog, ui_attributedlg.Ui_AttributeDlg):
 
         except CharacterError, e:   
             QMessageBox.warning(self, "Character Error", unicode(e))
-            self.name=u''
-            self.value=u''
+            self.name = u''
+            self.value = u''
             return
         QDialog.accept(self)
 

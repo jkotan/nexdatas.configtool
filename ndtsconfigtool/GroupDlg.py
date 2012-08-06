@@ -48,7 +48,7 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         self.updateUi()
 
         self.connect(self.attributeTableWidget, 
-                     SIGNAL("itemChanged(QTableWidget*)"),
+                     SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.tableItemChanged)
         self.connect(self.addPushButton, SIGNAL("clicked()"), 
                      self.addAttribute)
@@ -57,7 +57,8 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
 
         self.populateAttributes()
 
-
+    ## adds an attribute    
+    #  \brief It runs the Attribute Dialog and fetches attribute name and value    
     def addAttribute(self):
         aform  = AttributeDlg()
         if aform.exec_():
@@ -67,25 +68,45 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
             if not aform.name in self.attributes.keys():
                 self.attributes[aform.name] = aform.value
                 self.populateAttributes(aform.name)
-                self.attributeTableWidget.setFocus()
-                self.attributeTableWidget.editItem(self.attributeTableWidget.currentItem())
+            else:
+                QMessageBox.warning(self, "Attribute name exists", "To change the attribute value, please edit the value in the attribute table")
                 
+                
+    ## takes a name of the current attribute
+    # \returns name of the current attribute            
     def currentTableAttribute(self):
         item = self.attributeTableWidget.item(self.attributeTableWidget.currentRow(), 0)
         if item is None:
             return None
         return item.data(Qt.UserRole).toString()
 
+
+    ## removes an attribute    
+    #  \brief It removes the current attribute asking before about it
     def removeAttribute(self):
         attr = self.currentTableAttribute()
-        if attr in self.attributes.keys():
+        if attr is None:
+            return
+        if QMessageBox.question(self, "Attribute - Remove",
+                                "Remove attribute %s = \'%s\'".encode() %  (attr, self.attributes[unicode(attr)]),
+                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+            return
+        if unicode(attr) in self.attributes.keys():
             del self.attributes[unicode(attr)]
             self.populateAttributes()
-        pass
 
-    def tableItemChanged(self):
-        print "change Attribute"
-        pass
+    ## changes the current value of the attribute        
+    # \brief It changes the current value of the attribute and informs the user that attribute names arenot editable
+    def tableItemChanged(self, item):
+        attr = self.currentTableAttribute()
+        if unicode(attr)  not in self.attributes.keys():
+            return
+        column = self.attributeTableWidget.currentColumn()
+        if column == 1:
+            self.attributes[unicode(attr)] = unicode(item.text())
+        if column == 0:
+            QMessageBox.warning(self, "Attribute name is not editable", "To change the attribute name, please remove the attribute and add the new one")
+        self.populateAttributes()
 
     ## fills in the attribute table      
     # \param selectedAttribute selected attribute    
@@ -111,10 +132,6 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
             selected.setSelected(True)
             self.attributeTableWidget.setCurrentItem(selected)
             
-                
-                
-            
-
 
 
     ## calls updateUi when the name text is changing
@@ -150,6 +167,10 @@ if __name__ == "__main__":
     app.exec_()
     if form.nexusType:
         print "Group: name = \'%s\' type = \'%s\'" % ( form.name, form.nexusType )
+    if form.attributes:
+        print "Other attributes:"
+        for k in form.attributes.keys():
+            print  " %s = '%s' " % (k, form.attributes[k])
     if form.doc:
         print "Doc: \n%s" % form.doc
     

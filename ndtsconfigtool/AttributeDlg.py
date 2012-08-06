@@ -25,7 +25,7 @@ from PyQt4.QtGui import *
 import ui_attributedlg
 
 
-## dialog defining a tag attribute
+## dialog defining a tag attribute 
 class AttributeDlg(QDialog, ui_attributedlg.Ui_AttributeDlg):
     
     ## constructor

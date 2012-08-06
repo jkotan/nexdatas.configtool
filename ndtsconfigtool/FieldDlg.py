@@ -16,33 +16,45 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndtsconfigtool nexdatas
-## \file GroupDlg.pyw
-# Group dialog class
+## \file FieldDlg.pyw
+# Field dialog class
 
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_groupdlg
+import ui_fielddlg
 
 from AttributeDlg import AttributeDlg
+from DimensionsDlg import DimensionsDlg
 
-## dialog defining a group tag
-class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
+## dialog defining a field tag
+class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
     
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
-        super(GroupDlg, self).__init__(parent)
+        super(FieldDlg, self).__init__(parent)
         
-        ## group name
+        ## field name
         self.name = u''
-        ## group type
+        ## field type
         self.nexusType = u''
-        ## group doc
+        ## field units
+        self.units = u''
+        ## field value
+        self.value = u''
+        ## field doc
         self.doc = u''
-        ## group attributes
+        ## dimensions doc
+        self.dimDoc = u''
+        ## field attributes
         self.attributes = {}
 #        self.attributes = {"sdfdfsf":"sdffd","sdas":"23423"}
+
+        ## rank
+        self.rank = 0
+        ## dimensions
+        self.dimensions = []
 
         self.setupUi(self)
         self.updateUi()
@@ -54,6 +66,8 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
                      self.addAttribute)
         self.connect(self.removePushButton, SIGNAL("clicked()"), 
                      self.removeAttribute)
+        self.connect(self.dimPushButton, SIGNAL("clicked()"), 
+                     self.changeDimensions)
 
         self.populateAttributes()
 
@@ -71,6 +85,22 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
             else:
                 QMessageBox.warning(self, "Attribute name exists", "To change the attribute value, please edit the value in the attribute table")
                 
+
+
+    ## changing dimensions of the field
+    #  \brief It runs the Dimensions Dialog and fetches rank and dimensions from it
+    def changeDimensions(self):
+        dform  = DimensionsDlg(self.rank, self.dimensions, self)
+        if dform.exec_():
+            self.rank = dform.rank
+            self.dimdoc = dform.doc
+            if self.rank:
+                self.dimensions = dform.lengths
+            else:    
+                self.dimensions = []
+                
+                
+
                 
     ## takes a name of the current attribute
     # \returns name of the current attribute            
@@ -137,20 +167,22 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
     ## calls updateUi when the name text is changing
     # \param text the edited text   
     @pyqtSignature("QString")
-    def on_typeLineEdit_textEdited(self, text):
+    def on_nameLineEdit_textEdited(self, text):
         self.updateUi()
 
-    ## updates group user interface
+    ## updates field user interface
     # \brief It sets enable or disable the OK button
     def updateUi(self):
-        enable = not self.typeLineEdit.text().isEmpty()
+        enable = not self.nameLineEdit.text().isEmpty()
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
 
     ## accepts input text strings
-    # \brief It copies the group name and type from lineEdit widgets and accept the dialog
+    # \brief It copies the field name and type from lineEdit widgets and accept the dialog
     def accept(self):
         self.name = unicode(self.nameLineEdit.text())
         self.nexusType = unicode(self.typeLineEdit.text())
+        self.units = unicode(self.unitsLineEdit.text())
+        self.value = unicode(self.valueLineEdit.text())
 
         self.doc = unicode(self.docTextEdit.toPlainText())
         
@@ -161,16 +193,31 @@ if __name__ == "__main__":
 
     ## Qt application
     app = QApplication(sys.argv)
-    ## group form
-    form = GroupDlg()
+    ## field form
+    form = FieldDlg()
     form.show()
     app.exec_()
+    if form.name:
+        print "Field: name = \'%s\'" % ( form.name )
     if form.nexusType:
-        print "Group: name = \'%s\' type = \'%s\'" % ( form.name, form.nexusType )
+        print "       type = \'%s\'" % ( form.nexusType )
+    if form.units:
+        print "       units = \'%s\'" % ( form.units )
     if form.attributes:
         print "Other attributes:"
         for k in form.attributes.keys():
             print  " %s = '%s' " % (k, form.attributes[k])
+    if form.value:
+        print "       value:\n \'%s\'" % ( form.value )
+    if form.rank:
+        print " rank = %s" % ( form.rank )
+        if form.dimensions:
+            print "Dimensions:"
+            for row, ln in enumerate(form.dimensions):
+                print  " %s: %s " % (row+1, ln)
+    if form.dimDoc:
+        print "Dimensions Doc: \n%s" % form.doc
+
     if form.doc:
         print "Doc: \n%s" % form.doc
     

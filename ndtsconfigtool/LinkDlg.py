@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndtsconfigtool nexdatas
-## \file LinkDlg.pyw
+## \file LinkDlg.py
 # Link dialog class
 
 import re

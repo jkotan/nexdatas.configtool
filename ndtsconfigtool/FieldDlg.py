@@ -98,6 +98,8 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
                 self.dimensions = dform.lengths
             else:    
                 self.dimensions = []
+            label = self.dimensions.__str__()
+            self.dimLabel.setText("Dimensions: %s" % label)
                 
                 
 
@@ -208,7 +210,7 @@ if __name__ == "__main__":
         for k in form.attributes.keys():
             print  " %s = '%s' " % (k, form.attributes[k])
     if form.value:
-        print "       value:\n \'%s\'" % ( form.value )
+        print "Value:\n \'%s\'" % ( form.value )
     if form.rank:
         print " rank = %s" % ( form.rank )
         if form.dimensions:

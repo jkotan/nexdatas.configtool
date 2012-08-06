@@ -238,6 +238,7 @@
   <tabstop>nameLineEdit</tabstop>
   <tabstop>typeLineEdit</tabstop>
   <tabstop>unitsLineEdit</tabstop>
+  <tabstop>dimPushButton</tabstop>
   <tabstop>valueLineEdit</tabstop>
   <tabstop>addPushButton</tabstop>
   <tabstop>removePushButton</tabstop>

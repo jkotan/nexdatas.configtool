@@ -93,7 +93,7 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
         dform  = DimensionsDlg(self.rank, self.dimensions, self)
         if dform.exec_():
             self.rank = dform.rank
-            self.dimdoc = dform.doc
+            self.dimDoc = dform.doc
             if self.rank:
                 self.dimensions = dform.lengths
             else:    
@@ -218,7 +218,7 @@ if __name__ == "__main__":
             for row, ln in enumerate(form.dimensions):
                 print  " %s: %s " % (row+1, ln)
     if form.dimDoc:
-        print "Dimensions Doc: \n%s" % form.doc
+        print "Dimensions Doc: \n%s" % form.dimDoc
 
     if form.doc:
         print "Doc: \n%s" % form.doc

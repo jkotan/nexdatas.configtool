@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>463</width>
+    <width>461</width>
     <height>700</height>
    </rect>
   </property>
@@ -349,6 +349,19 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout">
               <item>
+               <spacer name="verticalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="label">
                 <property name="text">
                  <string>Param&amp;eters:</string>
@@ -442,6 +455,9 @@
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
                 </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Maximum</enum>
+                </property>
                 <property name="sizeHint" stdset="0">
                  <size>
                   <width>20</width>
@@ -453,7 +469,7 @@
              </layout>
             </item>
             <item>
-             <widget class="QTableWidget" name="dAParamTableWidget"/>
+             <widget class="QTableWidget" name="dParameterTableWidget"/>
             </item>
            </layout>
           </item>
@@ -462,7 +478,7 @@
        </layout>
        <zorder>dParamComboBox</zorder>
        <zorder>dRemovePushButton</zorder>
-       <zorder>dAParamTableWidget</zorder>
+       <zorder>dParameterTableWidget</zorder>
        <zorder>dAddPushButton</zorder>
        <zorder>dTypeComboBox</zorder>
        <zorder>dTypeLabel</zorder>
@@ -525,7 +541,7 @@
   <tabstop>dParamComboBox</tabstop>
   <tabstop>dAddPushButton</tabstop>
   <tabstop>dRemovePushButton</tabstop>
-  <tabstop>dAParamTableWidget</tabstop>
+  <tabstop>dParameterTableWidget</tabstop>
   <tabstop>docTextEdit</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>

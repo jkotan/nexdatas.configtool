@@ -81,6 +81,8 @@ if __name__ == "__main__":
     form = LinkDlg()
     form.show()
     app.exec_()
-    if form.name:
-        print "Link: %s = \'%s\'" % ( form.name, form.target )
+
+    if form.result():
+        if form.name:
+            print "Link: %s = \'%s\'" % ( form.name, form.target )
     

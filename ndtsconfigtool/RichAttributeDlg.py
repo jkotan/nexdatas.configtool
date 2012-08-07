@@ -108,9 +108,11 @@ if __name__ == "__main__":
     form = RichAttributeDlg()
     form.show()
     app.exec_()
-    if form.name:
-        print "Attribute: %s = \'%s\'" % ( form.name, form.value )
-    if form.nexusType:
-        print "Type: %s" % form.nexusType
-    if form.doc:
-        print "Doc: \n%s" % form.doc
+
+    if form.result():
+        if form.name:
+            print "Attribute: %s = \'%s\'" % ( form.name, form.value )
+        if form.nexusType:
+            print "Type: %s" % form.nexusType
+        if form.doc:
+            print "Doc: \n%s" % form.doc

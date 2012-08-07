@@ -199,27 +199,28 @@ if __name__ == "__main__":
     form = FieldDlg()
     form.show()
     app.exec_()
-    if form.name:
-        print "Field: name = \'%s\'" % ( form.name )
-    if form.nexusType:
-        print "       type = \'%s\'" % ( form.nexusType )
-    if form.units:
-        print "       units = \'%s\'" % ( form.units )
-    if form.attributes:
-        print "Other attributes:"
-        for k in form.attributes.keys():
-            print  " %s = '%s' " % (k, form.attributes[k])
-    if form.value:
-        print "Value:\n \'%s\'" % ( form.value )
-    if form.rank:
-        print " rank = %s" % ( form.rank )
+    if form.result():
+        if form.name:
+            print "Field: name = \'%s\'" % ( form.name )
+        if form.nexusType:
+            print "       type = \'%s\'" % ( form.nexusType )
+        if form.units:
+            print "       units = \'%s\'" % ( form.units )
+        if form.attributes:
+            print "Other attributes:"
+            for k in form.attributes.keys():
+                print  " %s = '%s' " % (k, form.attributes[k])
+        if form.value:
+            print "Value:\n \'%s\'" % ( form.value )
+        if form.rank:
+            print " rank = %s" % ( form.rank )
         if form.dimensions:
             print "Dimensions:"
             for row, ln in enumerate(form.dimensions):
                 print  " %s: %s " % (row+1, ln)
-    if form.dimDoc:
-        print "Dimensions Doc: \n%s" % form.dimDoc
-
-    if form.doc:
-        print "Doc: \n%s" % form.doc
+        if form.dimDoc:
+            print "Dimensions Doc: \n%s" % form.dimDoc
+            
+        if form.doc:
+            print "Doc: \n%s" % form.doc
     

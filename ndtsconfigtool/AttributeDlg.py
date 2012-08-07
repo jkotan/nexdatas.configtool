@@ -80,7 +80,9 @@ if __name__ == "__main__":
     ## attribute form
     form = AttributeDlg()
     form.show()
-    app.exec_()
-    if form.name:
-        print "Attribute: %s = \'%s\'" % ( form.name, form.value )
+    app.exec_() 
+
+    if form.result():
+        if form.name:
+            print "Attribute: %s = \'%s\'" % ( form.name, form.value )
     

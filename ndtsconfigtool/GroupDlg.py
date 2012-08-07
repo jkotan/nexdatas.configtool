@@ -165,12 +165,15 @@ if __name__ == "__main__":
     form = GroupDlg()
     form.show()
     app.exec_()
-    if form.nexusType:
-        print "Group: name = \'%s\' type = \'%s\'" % ( form.name, form.nexusType )
-    if form.attributes:
-        print "Other attributes:"
-        for k in form.attributes.keys():
-            print  " %s = '%s' " % (k, form.attributes[k])
-    if form.doc:
-        print "Doc: \n%s" % form.doc
+
+
+    if form.result():
+        if form.nexusType:
+            print "Group: name = \'%s\' type = \'%s\'" % ( form.name, form.nexusType )
+        if form.attributes:
+            print "Other attributes:"
+            for k in form.attributes.keys():
+                print  " %s = '%s' " % (k, form.attributes[k])
+        if form.doc:
+            print "Doc: \n%s" % form.doc
     

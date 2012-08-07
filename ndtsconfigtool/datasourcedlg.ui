@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>DataSourceDlg</class>
+ <widget class="QDialog" name="DataSourceDlg">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>523</width>
-    <height>753</height>
+    <width>463</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>DataSource</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_6">
    <item row="0" column="0">
@@ -124,7 +124,7 @@
          <number>6</number>
         </property>
         <property name="leftMargin">
-         <number>0</number>
+         <number>9</number>
         </property>
         <item row="0" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -147,7 +147,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="deviceFrame">
+      <widget class="QFrame" name="tangoFrame">
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
@@ -156,7 +156,7 @@
        </property>
        <layout class="QFormLayout" name="formLayout_2">
         <property name="leftMargin">
-         <number>0</number>
+         <number>9</number>
         </property>
         <property name="topMargin">
          <number>9</number>
@@ -251,6 +251,9 @@
      </item>
      <item>
       <widget class="QFrame" name="dbFrame">
+       <property name="toolTip">
+        <string/>
+       </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
@@ -259,10 +262,10 @@
        </property>
        <layout class="QGridLayout" name="gridLayout_4">
         <property name="leftMargin">
-         <number>0</number>
+         <number>9</number>
         </property>
         <property name="rightMargin">
-         <number>0</number>
+         <number>9</number>
         </property>
         <item row="0" column="0">
          <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -470,9 +473,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="docframe">
+      <widget class="QFrame" name="docFrame">
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::NoFrame</enum>
        </property>
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
@@ -531,7 +534,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>DataSourceDlg</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -547,7 +550,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>DataSourceDlg</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

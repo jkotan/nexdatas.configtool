@@ -143,12 +143,14 @@ if __name__ == "__main__":
     form = DimensionsDlg()
     form.show()
     app.exec_()
-    if form.rank:
-        print "Dimensions: rank = %s" % ( form.rank )
-    if form.lengths:
-        print "Lengths:"
-        for row, ln in enumerate(form.lengths):
-            print  " %s: %s " % (row+1, ln)
-    if form.doc:
-        print "Doc: \n%s" % form.doc
+
+    if form.result():
+        if form.rank:
+            print "Dimensions: rank = %s" % ( form.rank )
+        if form.lengths:
+            print "Lengths:"
+            for row, ln in enumerate(form.lengths):
+                print  " %s: %s " % (row+1, ln)
+        if form.doc:
+            print "Doc: \n%s" % form.doc
     

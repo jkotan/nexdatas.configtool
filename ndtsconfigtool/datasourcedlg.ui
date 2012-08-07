@@ -6,546 +6,526 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>982</height>
+    <width>523</width>
+    <height>753</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>20</y>
-     <width>81</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Vertical</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="strategyLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>50</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>&amp;Strategy:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="typeLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>66</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>&amp;Type:</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="typeComboBox">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>10</y>
-     <width>85</width>
-     <height>27</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>CLIENT</string>
-    </property>
+  <layout class="QGridLayout" name="gridLayout_6">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="typeLabel">
+           <property name="text">
+            <string>&amp;Type:</string>
+           </property>
+           <property name="buddy">
+            <cstring>typeComboBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="typeComboBox">
+           <item>
+            <property name="text">
+             <string>CLIENT</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>TANGO</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>DB</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="strategyLabel">
+           <property name="text">
+            <string>&amp;Strategy:</string>
+           </property>
+           <property name="buddy">
+            <cstring>strategyComboBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="strategyComboBox">
+           <item>
+            <property name="text">
+             <string>INIT</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>STEP</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>FINAL</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QDialogButtonBox" name="buttonBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="standardButtons">
+          <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QFrame" name="clientFrame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QFormLayout" name="formLayout">
+        <property name="horizontalSpacing">
+         <number>6</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="cRecNameLabel">
+            <property name="text">
+             <string>&amp;Record name:</string>
+            </property>
+            <property name="buddy">
+             <cstring>cRecNameLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="cRecNameLineEdit"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="deviceFrame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QFormLayout" name="formLayout_2">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>9</number>
+        </property>
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="tDevNameLabel">
+            <property name="text">
+             <string>Dev&amp;ice name:</string>
+            </property>
+            <property name="buddy">
+             <cstring>tDevNameLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="tDevNameLineEdit"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="tMemberLabel">
+            <property name="text">
+             <string>&amp;Member type:</string>
+            </property>
+            <property name="buddy">
+             <cstring>tMemberComboBox</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="tMemberComboBox">
+            <item>
+             <property name="text">
+              <string>attribute</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>command</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>property</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="tMemberNameLabel">
+            <property name="text">
+             <string>Member &amp;name:</string>
+            </property>
+            <property name="buddy">
+             <cstring>tMemberNameLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="tMemberNameLineEdit"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="tHostLabel">
+            <property name="text">
+             <string>Device &amp;host:</string>
+            </property>
+            <property name="buddy">
+             <cstring>tHostLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="tHostLineEdit"/>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="tPortLabel">
+            <property name="text">
+             <string>Device &amp;port:</string>
+            </property>
+            <property name="buddy">
+             <cstring>tPortLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="tPortLineEdit"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="dbFrame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QLabel" name="dTypeLabel">
+              <property name="text">
+               <string>D&amp;B type:</string>
+              </property>
+              <property name="buddy">
+               <cstring>dTypeComboBox</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="dTypeComboBox">
+              <item>
+               <property name="text">
+                <string>MYSQL</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>PGSQL</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>ORACLE</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <spacer name="dHorizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="dFormatLabel">
+              <property name="text">
+               <string>Data &amp;format:</string>
+              </property>
+              <property name="buddy">
+               <cstring>dFormatComboBox</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="dFormatComboBox">
+              <item>
+               <property name="text">
+                <string>SCALAR</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>SPECTRUM</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>IMAGE</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="text">
+                 <string>Param&amp;eters:</string>
+                </property>
+                <property name="buddy">
+                 <cstring>dParamComboBox</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="dParamComboBox">
+                <item>
+                 <property name="text">
+                  <string>DB name</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>DB host</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>DB port</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>DB user</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>DB password</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Mysql cnf</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Oracle node</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Oracle DSN</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Query</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Minimum</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="dAddPushButton">
+                <property name="text">
+                 <string>&amp;Add</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="dRemovePushButton">
+                <property name="text">
+                 <string>Remo&amp;ve</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="dAParamTableWidget"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+       <zorder>dParamComboBox</zorder>
+       <zorder>dRemovePushButton</zorder>
+       <zorder>dAParamTableWidget</zorder>
+       <zorder>dAddPushButton</zorder>
+       <zorder>dTypeComboBox</zorder>
+       <zorder>dTypeLabel</zorder>
+       <zorder>dFormatLabel</zorder>
+       <zorder>dFormatComboBox</zorder>
+       <zorder>dHorizontalSpacer</zorder>
+       <zorder></zorder>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="docframe">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QLabel" name="docLabel">
+            <property name="text">
+             <string>&amp;Doc:</string>
+            </property>
+            <property name="buddy">
+             <cstring>docTextEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTextEdit" name="docTextEdit"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item>
-    <property name="text">
-     <string>TANGO</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>DB</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>SARDANA</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QComboBox" name="strategyComboBox">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>50</y>
-     <width>85</width>
-     <height>27</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>INIT</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>STEP</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>FINAL</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QFrame" name="clientFrame">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>110</y>
-     <width>441</width>
-     <height>141</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-   <widget class="QLabel" name="cRecNameLabel">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&amp;Record name:</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="cRecNameLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>20</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QFrame" name="deviceFrame">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>270</y>
-     <width>541</width>
-     <height>201</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-   <widget class="QLabel" name="tDevNameLabel">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>111</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&amp;Device name:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="tMemberLabel">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>50</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&amp;Member type:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="tHostLabel">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>80</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Device &amp;host:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="tPortLabel">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>110</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Device &amp;port:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="tRecNameLabel">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>160</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&amp;Record name:</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="tMemberComboBox">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>40</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>attribute</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>command</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>property</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QLineEdit" name="tDevNameLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>10</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="tHostLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>80</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="tPortLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>120</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="tRecNameLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>160</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QFrame" name="dbFrame">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>490</y>
-     <width>531</width>
-     <height>241</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-   <widget class="QLabel" name="dbTypeLabel">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>66</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&amp;DB Type:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="dbNameLabel">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>81</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>D&amp;B name:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="dbHostLabel">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>80</y>
-      <width>81</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>DB &amp;host:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="dbPortLabel">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>66</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>DB &amp;port:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="dbUserLabel">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>140</y>
-      <width>81</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>DB &amp;user:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="dbPasswdLabel">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>170</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>DB &amp;passwd:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_7">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>10</y>
-      <width>66</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_8">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>60</y>
-      <width>66</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_9">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>100</y>
-      <width>66</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_10">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>130</y>
-      <width>66</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_11">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>170</y>
-      <width>66</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="dbTypeComboBox">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>10</y>
-      <width>85</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>MYSQL</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>PGSQL</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>ORACLE</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QLineEdit" name="dbNameLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>40</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="dbHostLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>70</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="dbPortLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>100</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="dbUserLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>130</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="dbPasswdLineEdit">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>160</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QFrame" name="sardanaFrame">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>740</y>
-     <width>431</width>
-     <height>221</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-  </widget>
+  </layout>
  </widget>
+ <tabstops>
+  <tabstop>typeComboBox</tabstop>
+  <tabstop>strategyComboBox</tabstop>
+  <tabstop>cRecNameLineEdit</tabstop>
+  <tabstop>tDevNameLineEdit</tabstop>
+  <tabstop>tMemberComboBox</tabstop>
+  <tabstop>tMemberNameLineEdit</tabstop>
+  <tabstop>tHostLineEdit</tabstop>
+  <tabstop>tPortLineEdit</tabstop>
+  <tabstop>dTypeComboBox</tabstop>
+  <tabstop>dFormatComboBox</tabstop>
+  <tabstop>dParamComboBox</tabstop>
+  <tabstop>dAddPushButton</tabstop>
+  <tabstop>dRemovePushButton</tabstop>
+  <tabstop>dAParamTableWidget</tabstop>
+  <tabstop>docTextEdit</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -555,8 +535,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>515</x>
+     <y>197</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -571,8 +551,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>515</x>
+     <y>197</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

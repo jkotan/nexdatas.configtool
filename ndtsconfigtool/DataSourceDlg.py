@@ -112,7 +112,8 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
     #  \brief It runs the Parameter Dialog and fetches parameter name and value    
     def addParameter(self):
         name =  unicode(self.dParamComboBox.currentText())
-        self.dbParameters[name] = ""
+        if name not in self.dbParameters.keys():
+            self.dbParameters[name] = ""
         self.populateParameters(name)
     
 
@@ -178,6 +179,7 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
         if selected is not None:
             selected.setSelected(True)
             self.dParameterTableWidget.setCurrentItem(selected)
+            self.dParameterTableWidget.editItem(selected)
             
 
 

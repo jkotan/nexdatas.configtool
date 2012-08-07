@@ -106,6 +106,10 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
     # \param text the edited text   
     @pyqtSignature("QString")
     def on_dParamComboBox_currentIndexChanged(self, text):
+        param = unicode(text)
+        if param == 'DB password':
+            QMessageBox.warning(self, "Unprotected password", "Please note that there is no support for any password protection")
+            
         self.populateParameters(unicode(text))
 
     ## adds an parameter    
@@ -132,7 +136,7 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
         if param is None:
             return
         if QMessageBox.question(self, "Parameter - Remove",
-                                "Remove parameter %s = \'%s\'".encode() 
+                                "Remove parameter: %s = \'%s\'".encode() 
                                 %  (param, self.dbParameters[unicode(param)]),
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
@@ -264,3 +268,5 @@ if __name__ == "__main__":
                 print "%s = '%s'" % (par, form.dbParameters[par])
         if form.doc:
             print "Doc: \n%s" % form.doc
+
+#  LocalWords:  decryption

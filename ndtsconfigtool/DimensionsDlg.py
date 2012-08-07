@@ -123,6 +123,7 @@ class DimensionsDlg(QDialog, ui_dimensionsdlg.Ui_DimensionsDlg):
         if selected is not None:
             selected.setSelected(True)
             self.dimTableWidget.setCurrentItem(selected)
+            self.dimTableWidget.editItem(selected)
             
 
 

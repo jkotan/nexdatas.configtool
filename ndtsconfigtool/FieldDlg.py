@@ -120,7 +120,7 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
         if attr is None:
             return
         if QMessageBox.question(self, "Attribute - Remove",
-                                "Remove attribute %s = \'%s\'".encode() %  (attr, self.attributes[unicode(attr)]),
+                                "Remove attribute: %s = \'%s\'".encode() %  (attr, self.attributes[unicode(attr)]),
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
         if unicode(attr) in self.attributes.keys():
@@ -153,10 +153,11 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
         for row, name in enumerate(self.attributes):
             item = QTableWidgetItem(name)
             item.setData(Qt.UserRole, QVariant(name))
-            if selectedAttribute is not None and selectedAttribute == name:
-                selected = item
             self.attributeTableWidget.setItem(row, 0, item)
-            self.attributeTableWidget.setItem(row, 1, QTableWidgetItem(self.attributes[name]))
+            item2 = QTableWidgetItem(self.attributes[name])
+            self.attributeTableWidget.setItem(row, 1, item2)
+            if selectedAttribute is not None and selectedAttribute == name:
+                selected = item2
         self.attributeTableWidget.setSortingEnabled(True)
         self.attributeTableWidget.resizeColumnsToContents()
         self.attributeTableWidget.horizontalHeader().setStretchLastSection(True);

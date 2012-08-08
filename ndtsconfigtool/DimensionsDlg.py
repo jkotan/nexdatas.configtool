@@ -49,15 +49,18 @@ class DimensionsDlg(QDialog, ui_dimensionsdlg.Ui_DimensionsDlg):
             if self.rank is not None and int(self.rank) >= 0 :
                 self.rank = int(self.rank)
                 for i, ln in enumerate(self.lengths):    
-                    self.lengths[i]=int(ln)
-                    if self.lengths[i] < 1:
-                        self.lengths[i] = 1
+                    if ln:
+                        self.lengths[i]=int(ln)
+                        if self.lengths[i] < 1:
+                            self.lengths[i] = None
+                    else:        
+                        self.lengths[i] = None
         except:
             self.rank = 1
-            self.lengths = [1]
+            self.lengths = []
             
         if not self.lengths:
-            self.lengths = [1]
+            self.lengths = []
             
         self.setupUi(self)
 
@@ -91,10 +94,13 @@ class DimensionsDlg(QDialog, ui_dimensionsdlg.Ui_DimensionsDlg):
         column = self.dimTableWidget.currentColumn()
         if column == 0:
             try:
-                ln = int(item.text())
-                if ln < 1:
-                    raise ValueError("Negative length value")
-                self.lengths[row] = ln
+                if item.text():
+                    ln = int(item.text())
+                    if ln < 1:
+                        raise ValueError("Non-positive length value")
+                    self.lengths[row] = ln
+                else:
+                    self.lengths[row] = None
             except:
                 QMessageBox.warning(self, "Value Error", "Wrong value of the edited length")
                 
@@ -116,14 +122,17 @@ class DimensionsDlg(QDialog, ui_dimensionsdlg.Ui_DimensionsDlg):
         self.dimTableWidget.setRowCount(self.rank)
         
         while self.rank > len(self.lengths):
-            self.lengths.append(1)
+            self.lengths.append(None)
         
         headers = ["Length"]
         self.dimTableWidget.setColumnCount(len(headers))
         self.dimTableWidget.setHorizontalHeaderLabels(headers)	
         self.dimTableWidget.setVerticalHeaderLabels( [str(l+1) for l in range(self.rank)] )	
         for row, ln in enumerate(self.lengths):
-            item = QTableWidgetItem(str(ln))
+            if ln:
+                item = QTableWidgetItem(str(ln))
+            else:
+                item = QTableWidgetItem("")
             item.setData(Qt.UserRole, QVariant(long(row)))
             if selectedDim is not None and selectedDim == row:
                 selected = item
@@ -153,7 +162,8 @@ if __name__ == "__main__":
     ## dimensions form
     form = DimensionsDlg()
     form.rank = 2
-    form.lengths = [13,14]
+    form.lengths = [25,27]
+#    form.lengths = [None,3]
     form.doc = "Two dimentional array"
     form.createGUI()
     form.show()

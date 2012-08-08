@@ -72,7 +72,9 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
         if self.value:    
             self.valueLineEdit.setText(self.value)
 
-        self.rank = len(self.dimensions)    
+        if self.rank < len(self.dimensions) :
+            self.rank = len(self.dimensions)
+        
         if self.dimensions:
             label = self.dimensions.__str__()
             self.dimLabel.setText("Dimensions: %s" % label)

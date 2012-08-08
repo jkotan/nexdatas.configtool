@@ -55,19 +55,15 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
         ## tango host name
         self.tangoPort = u''
 
+        ## database type
         self.dbType = 'MYSQL'
+        ## database format
         self.dbDataFormat = 'SCALAR'
+        ## database parameters
         self.dbParameters = {}
 
-
-
-
         self.setupUi(self)
-
-
         self.resize(460, 440)
-
-        
 
         self.clientFrame.show()
         self.dbFrame.hide()

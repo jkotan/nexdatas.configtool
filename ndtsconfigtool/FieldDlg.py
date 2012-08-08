@@ -49,14 +49,36 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
         self.dimDoc = u''
         ## field attributes
         self.attributes = {}
-#        self.attributes = {"sdfdfsf":"sdffd","sdas":"23423"}
 
         ## rank
         self.rank = 0
         ## dimensions
         self.dimensions = []
 
+
+    ##  creates GUI
+    # \brief It calls setupUi and  connects signals and slots    
+    def createGUI(self):
         self.setupUi(self)
+
+        if self.name :
+            self.nameLineEdit.setText(self.name) 
+        if self.nexusType :
+            self.typeLineEdit.setText(self.nexusType) 
+        if self.doc :
+            self.docTextEdit.setText(self.doc)
+        if self.units:    
+            self.unitsLineEdit.setText(self.units)
+        if self.value:    
+            self.valueLineEdit.setText(self.value)
+
+        self.rank = len(self.dimensions)    
+        if self.dimensions:
+            label = self.dimensions.__str__()
+            self.dimLabel.setText("Dimensions: %s" % label)
+
+
+
         self.updateUi()
 
         self.connect(self.attributeTableWidget, 
@@ -70,6 +92,8 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
                      self.changeDimensions)
 
         self.populateAttributes()
+        
+        
 
     ## adds an attribute    
     #  \brief It runs the Attribute Dialog and fetches attribute name and value    
@@ -90,7 +114,11 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
     ## changing dimensions of the field
     #  \brief It runs the Dimensions Dialog and fetches rank and dimensions from it
     def changeDimensions(self):
-        dform  = DimensionsDlg(self.rank, self.dimensions, self)
+        dform  = DimensionsDlg( self)
+        dform.rank = self.rank
+        dform.lengths = self.dimensions
+        dform.doc = self.dimDoc
+        dform.createGUI()
         if dform.exec_():
             self.rank = dform.rank
             self.dimDoc = dform.doc
@@ -198,6 +226,16 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     ## field form
     form = FieldDlg()
+    form.name = 'distance'
+    form.nexusType = 'NX_FLOAT'
+    form.units = 'cm'
+    form.attributes = {"signal":"1","long_name":"source detector distance", "interpretation":"spectrum"}
+    form.doc = """Distance between the source and the mca detector.
+It should be defined by client."""
+    form.dimensions = [3]
+    form.dimDoc = "(x,y,z) coordinates"
+    form.value ="1.23,3.43,4.23"
+    form.createGUI()
     form.show()
     app.exec_()
     if form.result():

@@ -30,7 +30,7 @@ class DimensionsDlg(QDialog, ui_dimensionsdlg.Ui_DimensionsDlg):
     
     ## constructor
     # \param parent patent instance
-    def __init__(self, rank = None, lengths = None, parent=None):
+    def __init__(self, parent=None):
         super(DimensionsDlg, self).__init__(parent)
 
         ## dimensions rank
@@ -40,20 +40,30 @@ class DimensionsDlg(QDialog, ui_dimensionsdlg.Ui_DimensionsDlg):
         ## dimensions lengths
         self.lengths = []
 
-        try:
-            if rank is not None and int(rank) >= 0 :
-                self.rank = int(rank)
-                for ln in lengths:    
-                    self.lengths.append(int(ln))
-                    if self.lengths[-1] < 1:
-                        self.lengths[-1] = 1
-        except:
-            pass
 
+    ##  creates GUI
+    # \brief It calls setupUi and  connects signals and slots    
+    def createGUI(self):
+
+        try:
+            if self.rank is not None and int(self.rank) >= 0 :
+                self.rank = int(self.rank)
+                for i, ln in enumerate(self.lengths):    
+                    self.lengths[i]=int(ln)
+                    if self.lengths[i] < 1:
+                        self.lengths[i] = 1
+        except:
+            self.rank = 1
+            self.lengths = [1]
+            
         if not self.lengths:
             self.lengths = [1]
             
         self.setupUi(self)
+
+        if self.doc :
+            self.docTextEdit.setText(self.doc)
+        
         self.rankSpinBox.setValue(self.rank)    
 
         self.connect(self.dimTableWidget, 
@@ -62,7 +72,7 @@ class DimensionsDlg(QDialog, ui_dimensionsdlg.Ui_DimensionsDlg):
 
         self.dimTableWidget.setSortingEnabled(False)
         self.populateLengths()
-
+        self.rankSpinBox.setFocus()
                 
     ## takes a name of the current dim
     # \returns name of the current dim            
@@ -142,6 +152,10 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     ## dimensions form
     form = DimensionsDlg()
+    form.rank = 2
+    form.lengths = [13,14]
+    form.doc = "Two dimentional array"
+    form.createGUI()
     form.show()
     app.exec_()
 

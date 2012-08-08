@@ -62,12 +62,87 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
         ## database parameters
         self.dbParameters = {}
 
+    ##  creates GUI
+    # \brief It calls setupUi and  connects signals and slots    
+    def createGUI(self):
+
+
         self.setupUi(self)
+
+        if self.doc :
+            self.docTextEdit.setText(self.doc)
+
+        if self.dataSourceType :
+            index = self.typeComboBox.findText(unicode(self.dataSourceType))
+            if  index > -1 :
+                self.typeComboBox.setCurrentIndex(index)
+            else:
+                self.dataSourceType = 'CLIENT'    
+
+
+        if self.strategy:
+            index = self.strategyComboBox.findText(unicode(self.strategy))
+            if  index > -1 :
+                self.strategyComboBox.setCurrentIndex(index)
+            else:
+                self.strategy = 'INIT'    
+
+            
+    
+        if self.clientRecordName:
+            self.cRecNameLineEdit.setText(self.clientRecordName)
+            
+
+
+        if self.tangoDeviceName:
+            self.tDevNameLineEdit.setText(self.tangoDeviceName)
+
+        if self.tangoMemberName:
+            self.tMemberNameLineEdit.setText(self.tangoMemberName)
+            
+        if self.tangoMemberType:
+            index = self.tMemberComboBox.findText(unicode(self.tangoMemberType))
+            if  index > -1 :
+                self.tMemberComboBox.setCurrentIndex(index)
+            else:
+                self.tangoMemberType = 'attribute'    
+            
+        if self.tangoHost:
+            self.tHostLineEdit.setText(self.tangoHost)
+        if self.tangoPort:
+            self.tPortLineEdit.setText(self.tangoPort)
+
+
+
+        if self.dbType :
+            index = self.dTypeComboBox.findText(unicode(self.dbType))
+            if  index > -1 :
+                self.dTypeComboBox.setCurrentIndex(index)
+            else:
+                self.dbType = 'MYSQL'    
+
+
+        if self.dbDataFormat:
+            index = self.dFormatComboBox.findText(unicode(self.dbDataFormat))
+            if  index > -1 :
+                self.dFormatComboBox.setCurrentIndex(index)
+            else:
+                self.dbDataFormat = 'INIT'    
+
+        for par in self.dbParameters.keys():
+            index = self.dParamComboBox.findText(unicode(par))
+            if  index < 0 :
+                QMessageBox.warning(self, "Unregistered parameter", 
+                                    "Unknown parameter %s = '%s' will be removed." 
+                                    % (par, self.dbParameters[unicode(par)]) )
+                del self.dbParameters[unicode(par)]
+            
+            
+
+
+
         self.resize(460, 440)
 
-        self.clientFrame.show()
-        self.dbFrame.hide()
-        self.tangoFrame.hide()
 
         self.connect(self.dAddPushButton, SIGNAL("clicked()"), 
                      self.addParameter)
@@ -76,6 +151,8 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
         self.connect(self.dParameterTableWidget, 
                      SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.tableItemChanged)
+        
+        self.setFrames(self.dataSourceType)
 
 
 
@@ -84,6 +161,12 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
     # \param text the edited text   
     @pyqtSignature("QString")
     def on_typeComboBox_currentIndexChanged(self, text):
+        self.setFrames(text)
+
+
+    ## shows and hides frames according to typeComboBox
+    # \param text the edited text   
+    def setFrames(self,text):
         if text == 'CLIENT':
             self.clientFrame.show()
             self.dbFrame.hide()
@@ -97,6 +180,8 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
             self.dbFrame.show()
             self.tangoFrame.hide()
             self.populateParameters()
+
+        
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
@@ -239,6 +324,27 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     ## data source form
     form = DataSourceDlg()
+
+    form.dataSourceType = 'CLIENT'
+    form.strategy = 'STEP'
+    form.clientRecordName = 'counter1'
+    form.doc = 'The first client counter  '
+
+    form.dataSourceType = 'TANGO'
+    form.tangoDeviceName = 'p09/motor/exp.01'
+    form.tangoMemberName = 'Position'
+    form.tangoMemberType = 'attribute'
+    form.tangoHost = 'hasso.desy.de'
+    form.tangoPort = '10000'
+
+    form.dataSourceType = 'DB'
+    form.dbType = 'PGSQL'
+    form.dbDataFormat = 'SPECTRUM'
+    form.dbParameters = {'DB name':'tango', 'DB user':'tangouser'}
+
+
+
+    form.createGUI()
     form.show()
     app.exec_()
     

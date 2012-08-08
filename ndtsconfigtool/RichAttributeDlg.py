@@ -41,9 +41,31 @@ class RichAttributeDlg(QDialog, ui_richattributedlg.Ui_RichAttributeDlg):
         self.nexusType = u''
         ## attribute doc
         self.doc = u''
+
+    ##  creates GUI
+    # \brief It calls setupUi and  connects signals and slots    
+    def createGUI(self):
         self.setupUi(self)
 
-        self.otherFrame.hide()
+        if self.name :
+            self.nameLineEdit.setText(self.name) 
+        if self.nexusType :
+            index = self.typeComboBox.findText(unicode(self.nexusType))
+            if  index > -1 :
+                self.typeComboBox.setCurrentIndex(index)
+                self.otherFrame.hide()
+            else:
+                index2 = self.typeComboBox.findText('other ...')
+                self.typeComboBox.setCurrentIndex(index2)
+                self.typeLineEdit.setText(self.nexusType) 
+                self.otherFrame.show()
+        
+        if self.doc :
+            self.docTextEdit.setText(self.doc)
+        if self.value:    
+            self.valueLineEdit.setText(self.value)
+
+
 
         self.updateUi()
 
@@ -106,6 +128,11 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     ## attribute form
     form = RichAttributeDlg()
+    form.name = "pre_sample_flightpath"
+    form.nexusType = 'NX_FLOAT'
+    form.doc = "This is the flightpath before the sample position."
+    form.value = "1.2"
+    form.createGUI()
     form.show()
     app.exec_()
 

@@ -37,7 +37,20 @@ class LinkDlg(QDialog, ui_linkdlg.Ui_LinkDlg):
         self.name = u''
         ## link target
         self.target = u''
+
+    ##  creates GUI
+    # \brief It calls setupUi and  connects signals and slots    
+    def createGUI(self):
+
         self.setupUi(self)
+
+        if self.name :
+            self.nameLineEdit.setText(self.name) 
+
+        if self.target:    
+            self.targetLineEdit.setText(self.target)
+
+
         self.updateUi()
 
     ## calls updateUi when the name text is changing
@@ -79,6 +92,9 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     ## link form
     form = LinkDlg()
+    form.name = 'data'
+    form.target = '/NXentry/NXinstrument/NXdetector/data'
+    form.createGUI()
     form.show()
     app.exec_()
 

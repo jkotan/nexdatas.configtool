@@ -42,9 +42,21 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         self.doc = u''
         ## group attributes
         self.attributes = {}
-#        self.attributes = {"sdfdfsf":"sdffd","sdas":"23423"}
+
+    ##  creates GUI
+    # \brief It calls setupUi and  connects signals and slots    
+    def createGUI(self):
 
         self.setupUi(self)
+
+        if self.name :
+            self.nameLineEdit.setText(self.name) 
+        if self.nexusType :
+            self.typeLineEdit.setText(self.nexusType) 
+        if self.doc :
+            self.docTextEdit.setText(self.doc)
+
+
         self.updateUi()
 
         self.connect(self.attributeTableWidget, 
@@ -164,6 +176,11 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     ## group form
     form = GroupDlg()
+    form.name = 'entry'
+    form.nexusType = 'NXentry'
+    form.doc = 'The main entry'
+    form.attributes={"title":"Test run 1", "run_cycle":"2012-1"}
+    form.createGUI()
     form.show()
     app.exec_()
 

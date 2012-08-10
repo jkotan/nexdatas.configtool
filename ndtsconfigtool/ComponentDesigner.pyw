@@ -60,10 +60,9 @@ class MainWindow(QMainWindow):
         self.dockSplitter.setStretchFactor(1,1)
         compDockWidget.setWidget(self.dockSplitter)
         self.addDockWidget(Qt.LeftDockWidgetArea, compDockWidget)
-        
-
 
         self.mdi = QWorkspace()
+        self.mdi.setScrollBarsEnabled(True)        
         self.setCentralWidget(self.mdi)
 
         fileNewAction = self.createAction("&New", self.fileNew,

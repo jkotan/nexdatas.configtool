@@ -227,6 +227,8 @@ class MDialog(QDialog):
         super(MDialog, self).__init__(parent)
         
         self.form = FieldWg(self)
+        self.gridLayout = QGridLayout(self)
+        self.gridLayout.addWidget(self.form)
         
         self.form.name = 'distance'
         self.form.nexusType = 'NX_FLOAT'
@@ -249,11 +251,10 @@ if __name__ == "__main__":
 
     ## Qt application
     app = QApplication(sys.argv)
-    
+
     dl = MDialog()
 
     form = dl.form
-
     dl.show()
     app.exec_()
 

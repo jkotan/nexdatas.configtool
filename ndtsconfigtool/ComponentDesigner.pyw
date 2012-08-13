@@ -120,21 +120,6 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("NDTS Component Designer")
 
-    def createAction(self, text, name, slot=None, shortcut=None, icon=None,
-                     tip=None, checkable=False, signal="triggered()"):
-        action = QAction(text, self)
-        if icon is not None:
-            action.setIcon(QIcon(":/{0}.png".format(icon)))
-        if shortcut is not None:
-            action.setShortcut(shortcut)
-        if tip is not None:
-            action.setToolTip(tip)
-            action.setStatusTip(tip)
-        if slot is not None:
-            self.connect(action, SIGNAL(signal), slot)
-        if checkable:
-            action.setCheckable(True)
-        return action
 
     def addActions(self, target, actions):
         for action in actions:
@@ -144,16 +129,21 @@ class MainWindow(QMainWindow):
                 target.addAction(action)
 
 
+
     def dsourceNew(self):
         cmd = self.pool.getCommand('dsourceNew').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
 
 
     def fileNew(self):
         cmd = self.pool.getCommand('fileNew').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
 
 
     def undo(self):
@@ -164,7 +154,13 @@ class MainWindow(QMainWindow):
         if hasattr(ucmd,'unexecute'):
             ucmd.unexecute()
         else:
+            
             print "Undo not possible"
+
+        if self.cmdStack.isEmpty():
+            self.pool.setDisabled("undo",True)
+        self.pool.setDisabled("reundo",False)   
+
 
     def reundo(self):
         cmd = self.pool.getCommand('reundo').clone()
@@ -176,10 +172,18 @@ class MainWindow(QMainWindow):
         else:
             print "Re-undo not possible"
 
+
+        if self.cmdStack.isFinal():
+            self.pool.setDisabled("reundo",True)
+        self.pool.setDisabled("undo",False)   
+
+
     def closeApp(self):
         cmd = self.pool.getCommand('closeApp').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
 
 
 

@@ -35,6 +35,7 @@ class CommandStack(object):
             self._stack.pop()
         self._stack.append(command)    
         self._current += 1
+
     
     def undo(self):
         if self._stack and self._current > 0 :
@@ -45,7 +46,13 @@ class CommandStack(object):
         if self._stack and self._current < len(self._stack) :
             self._current += 1
             return self._stack[ self._current - 1 ]
-        
+
+    def isEmpty(self):
+        return self._current == 0
+       
+    def isFinal(self):
+        return self._current == len(self._stack)
+
     def clean(self):
         self._stack = []
         self._current = 0
@@ -85,6 +92,9 @@ class CommandPool(object):
            
         return action
 
+    def setDisabled(self, name, flag):
+        if name in self._actions.keys():
+            self._actions[name].setDisabled(flag)
 
 
     def getCommand(self, name):

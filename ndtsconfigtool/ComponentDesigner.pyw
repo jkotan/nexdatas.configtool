@@ -26,7 +26,7 @@ from PyQt4.QtGui import *
 
 import qrc_resources
 
-    
+from CommandPool import *
 
 __version__ = "1.0.0"
 
@@ -35,7 +35,6 @@ class MainWindow(QMainWindow):
 
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
-
 
         compDockWidget = QDockWidget("&Components:",self)
         compDockWidget.setObjectName("CompDockWidget")
@@ -65,22 +64,47 @@ class MainWindow(QMainWindow):
         self.mdi.setScrollBarsEnabled(True)        
         self.setCentralWidget(self.mdi)
 
-        fileNewAction = self.createAction("&New", self.fileNew,
-                                          QKeySequence.New, "filenew", "Create a text file")
-        fileQuitAction = self.createAction("&Quit", self.close,
-                                           "Ctrl+Q", "filequit", "Close the application")
+
+        self.pool = CommandPool(self)
+        self.cmdStack = CommandStack()
+
+
+        commandArgs = {'receiver':self}
+
+        dsourceNewAction = self.pool.createAction("New Data&Source", "dsourceNew",  commandArgs, DataSourceNew,
+                               "Ctrl+D", "filenew", "Create a data source")
+        
+        fileNewAction = self.pool.createAction("&New", "fileNew",  commandArgs, FileNewCommand,
+                               QKeySequence.New, "filenew", "Create a text file")
+
+        fileQuitAction = self.pool.createAction("&Quit", "closeApp", commandArgs, CloseApplication,
+                               "Ctrl+Q", "filequit", "Close the application")
+
+        undoAction = self.pool.createAction("&Undo", "undo",  commandArgs, UndoCommand,
+                               "Ctrl+Z", "icon", "Undo the loast command")
+        reundoAction = self.pool.createAction("&Re-undo", "reundo",  commandArgs, ReundoCommand,
+                               "Ctrl+Y", "icon", "Re-undo the loast command")
+
+
+
+
+#        fileNewAction = self.createAction("&New", "fileNew", self.fileNew,
+#                                          QKeySequence.New, "filenew", "Create a text file")
+#        fileQuitAction = self.createAction("&Quit", "close", self.close,
+#                                           "Ctrl+Q", "filequit", "Close the application")
 
 
         fileMenu = self.menuBar().addMenu("&File")    
-        self.addActions(fileMenu, (fileNewAction,None,fileQuitAction))
+        self.addActions(fileMenu, (dsourceNewAction, fileNewAction,None,fileQuitAction))
         editMenu = self.menuBar().addMenu("&Edit")
-
+        self.addActions(editMenu, (undoAction,reundoAction))
+ 
         self.windowMenu = self.menuBar().addMenu("&Window")
 
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolbar")
 
-        self.addActions(fileToolbar, (fileNewAction, None))
+        self.addActions(fileToolbar, (dsourceNewAction, fileNewAction, None, undoAction, reundoAction))
 
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolbar")
@@ -96,7 +120,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("NDTS Component Designer")
 
-    def createAction(self, text, slot=None, shortcut=None, icon=None,
+    def createAction(self, text, name, slot=None, shortcut=None, icon=None,
                      tip=None, checkable=False, signal="triggered()"):
         action = QAction(text, self)
         if icon is not None:
@@ -120,10 +144,43 @@ class MainWindow(QMainWindow):
                 target.addAction(action)
 
 
+    def dsourceNew(self):
+        cmd = self.pool.getCommand('dsourceNew').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+
+
     def fileNew(self):
-        textEdit = QTextEdit()
-        self.mdi.addWindow(textEdit)
-        textEdit.show()
+        cmd = self.pool.getCommand('fileNew').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+
+
+    def undo(self):
+        cmd = self.pool.getCommand('undo').clone()
+        cmd.execute()
+
+        ucmd = self.cmdStack.undo()
+        if hasattr(ucmd,'unexecute'):
+            ucmd.unexecute()
+        else:
+            print "Undo not possible"
+
+    def reundo(self):
+        cmd = self.pool.getCommand('reundo').clone()
+        cmd.execute()
+
+        rucmd = self.cmdStack.reundo()
+        if hasattr(rucmd,'execute'):
+            rucmd.execute()
+        else:
+            print "Re-undo not possible"
+
+    def closeApp(self):
+        cmd = self.pool.getCommand('closeApp').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+
 
 
 

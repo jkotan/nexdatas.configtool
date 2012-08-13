@@ -229,7 +229,8 @@ class MDialog(QDialog):
         self.form = FieldWg(self)
         self.gridLayout = QGridLayout(self)
         self.gridLayout.addWidget(self.form)
-        
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+
         self.form.name = 'distance'
         self.form.nexusType = 'NX_FLOAT'
         self.form.units = 'cm'

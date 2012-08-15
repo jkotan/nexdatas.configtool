@@ -81,7 +81,10 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
         if obj is not None:
             oid = obj.id
         else:    
-            oid = self.currentListDataSource().id
+            cds = self.currentListDataSource()
+            if cds is None:
+                return
+            oid = cds.id
         if oid is None:
             return
         if oid in self.datasources.keys():

@@ -107,9 +107,9 @@ class MainWindow(QMainWindow):
                                "Ctrl+Q", "filequit", "Close the application")
 
         undoAction = self.pool.createAction("&Undo", "undo",  commandArgs, UndoCommand,
-                               "Ctrl+Z", "icon", "Undo the loast command")
+                               "Ctrl+Z", "icon", "Undo the last command")
         reundoAction = self.pool.createAction("&Re-undo", "reundo",  commandArgs, ReundoCommand,
-                               "Ctrl+Y", "icon", "Re-undo the loast command")
+                               "Ctrl+Y", "icon", "Re-undo the last command")
 
         undoAction.setDisabled(True)
         reundoAction.setDisabled(True)

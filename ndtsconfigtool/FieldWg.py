@@ -219,7 +219,7 @@ class FieldWg(QWidget, ui_fieldwg.Ui_FieldWg):
 
         self.doc = unicode(self.docTextEdit.toPlainText())
         
-        QDialog.accept(self)
+        QWidget.accept(self)
 
 ## test dialog class
 class MDialog(QDialog):

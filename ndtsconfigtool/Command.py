@@ -22,6 +22,8 @@
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
+from DataSourceList import LabeledObject
+
 ## abstract command
 class Command(object):
     
@@ -76,7 +78,7 @@ class DataSourceNew(Command):
     def __init__(self, receiver):
         self.receiver = receiver
         self._slot = 'dsourceNew'
-        self._textEdit = None
+        self._ds = None
         
     def slot(self):
         if hasattr(self.receiver, self._slot):
@@ -84,9 +86,15 @@ class DataSourceNew(Command):
     
 
     def execute(self):
+        
+        if self._ds is None:
+            self._ds = LabeledObject("", None)
+        self.receiver.sourceList.addDataSource(self._ds)
         print "EXEC dsourceNew"
 
     def unexecute(self):
+        if self._ds is not None:
+            self.receiver.sourceList.removeDataSource(self._ds, False)
         print "UNDO dsourceNew"
 
     def clone(self):

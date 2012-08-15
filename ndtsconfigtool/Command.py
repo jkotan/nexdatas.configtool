@@ -23,6 +23,8 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 from DataSourceList import LabeledObject
+from DataSourceDlg import DataSourceDlg
+from FieldWg import FieldWg
 
 ## abstract command
 class Command(object):
@@ -79,6 +81,51 @@ class FileNewCommand(Command):
 
 
 
+class DataSourceEdit(Command):
+    def __init__(self, receiver):
+        self.receiver = receiver
+        self._slot = 'dsourceEdit'
+        self._ds = None
+        self._dsEdit = None
+        
+        
+    def slot(self):
+        if hasattr(self.receiver, self._slot):
+            return  getattr(self.receiver, self._slot)
+    
+
+    def execute(self):
+        if self._ds is None:
+            self._ds = self.receiver.sourceList.currentListDataSource()
+            if self._ds is not None:
+                if self._ds.instance is None:
+                    #                self._dsEdit = FieldWg()  
+                    self._dsEdit = DataSourceDlg() 
+                    self._dsEdit.createGUI()
+                    self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
+                else:
+                    self._dsEdit = self._ds.instance 
+                if self._ds.instance in self.receiver.mdi.windowList():
+                    self.receiver.mdi.setActiveWindow(self._ds.instance) 
+                else:    
+                    self.receiver.mdi.addWindow(self._dsEdit)
+                    self._dsEdit.show()
+                    #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
+                    self._ds.instance = self._dsEdit 
+            print "EXEC dsourceCurrentItemChanged"
+
+
+
+            
+        print "EXEC dsourceEdit"
+
+    def unexecute(self):
+        print "UNDO dsourceEdit"
+
+    def clone(self):
+        return DataSourceEdit(self.receiver) 
+
+
 
 class DataSourceNew(Command):
     def __init__(self, receiver):
@@ -106,6 +153,7 @@ class DataSourceNew(Command):
 
     def clone(self):
         return DataSourceNew(self.receiver) 
+
 
 
 
@@ -176,6 +224,52 @@ class DataSourceListChanged(Command):
 
     def clone(self):
         return DataSourceListChanged(self.receiver) 
+    
+
+
+
+
+
+
+class DataSourceCurrentItemChanged(Command):
+    def __init__(self, receiver):
+        self.receiver = receiver
+        self._slot = 'dsourceCurrentItemChanged'
+        self._ds = None
+        self._dsEdit = None
+        self.item = None
+        self.previousItem = None
+        
+    def slot(self):
+        if hasattr(self.receiver, self._slot):
+            return  getattr(self.receiver, self._slot)
+    
+
+    def execute(self):
+        if self._ds is None:
+            self._ds = self.receiver.sourceList.currentListDataSource()
+            if self._ds is not None:
+                if self._ds.instance is None:
+                    #                self._dsEdit = FieldWg()  
+                    self._dsEdit = DataSourceDlg() 
+                    self._dsEdit.createGUI()
+                    self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
+                else:
+                    self._dsEdit = self._ds.instance 
+                if self._ds.instance in self.receiver.mdi.windowList():
+                    self.receiver.mdi.setActiveWindow(self._ds.instance) 
+                else:    
+                    self.receiver.mdi.addWindow(self._dsEdit)
+                    self._dsEdit.show()
+                    #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
+                    self._ds.instance = self._dsEdit 
+        print "EXEC dsourceCurrentItemChanged"
+
+    def unexecute(self):
+        print "UNDO dsourceCurrentItemChanged"
+
+    def clone(self):
+        return DataSourceCurrentItemChanged(self.receiver) 
     
 
 

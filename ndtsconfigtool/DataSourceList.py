@@ -54,6 +54,11 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
 #                     SIGNAL("itemChanged(QListWidgetItem*)"),
 #                     self.listItemChanged)
 
+#        self.connect(self.sourceListWidget, 
+#                     SIGNAL("currentItemChanged(QListWidgetItem*,QListWidgetItem*)"),
+#                     self.dsourceEdit)
+
+
         self.populateDataSources()
 
     ## adds an datasource    
@@ -70,8 +75,6 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
         if item is None:
             return None
         return self.datasources[item.data(Qt.UserRole).toLongLong()[0]] 
-#        return item.data(Qt.UserRole).toString()
-#        return unicode(item.text())
 
 
     ## removes an datasource    
@@ -122,6 +125,9 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
             self.sourceListWidget.addItem(item)
             if selectedDataSource is not None and selectedDataSource == self.datasources[ds].id:
                 selected = item
+            if self.datasources[ds].instance is not None:
+                self.datasources[ds].instance.setWindowTitle("DataSource: %s" %name)
+
         if selected is not None:
             selected.setSelected(True)
             self.sourceListWidget.setCurrentItem(selected)

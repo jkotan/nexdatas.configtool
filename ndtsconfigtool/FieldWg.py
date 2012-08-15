@@ -83,6 +83,14 @@ class FieldWg(QWidget, ui_fieldwg.Ui_FieldWg):
 
         self.updateUi()
 
+
+
+
+        self.connect(self.nameLineEdit, 
+                     SIGNAL("textEdited(QString)"),
+                     self.textEdit)
+
+
         self.connect(self.attributeTableWidget, 
                      SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.tableItemChanged)
@@ -199,8 +207,7 @@ class FieldWg(QWidget, ui_fieldwg.Ui_FieldWg):
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_nameLineEdit_textEdited(self, text):
+    def textEdit(self, text):
         self.updateUi()
 
     ## updates field user interface

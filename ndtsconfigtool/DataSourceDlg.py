@@ -135,7 +135,7 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
                 QMessageBox.warning(self, "Unregistered parameter", 
                                     "Unknown parameter %s = '%s' will be removed." 
                                     % (par, self.dbParameters[unicode(par)]) )
-                del self.dbParameters[unicode(par)]
+                self.dbParameters.pop(unicode(par))
             
             
 
@@ -222,7 +222,7 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
         if unicode(param) in self.dbParameters.keys():
-            del self.dbParameters[unicode(param)]
+            self.dbParameters.pop(unicode(param))
             self.populateParameters()
 
 

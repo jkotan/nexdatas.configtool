@@ -88,8 +88,17 @@ class MainWindow(QMainWindow):
 
         commandArgs = {'receiver':self}
 
-        dsourceNewAction = self.pool.createAction("New Data&Source", "dsourceNew",  commandArgs, DataSourceNew,
-                               "Ctrl+D", "filenew", "Create a data source")
+        dsourceNewAction = self.pool.createAction("&New DataSource", "dsourceNew",  commandArgs, 
+                                                  DataSourceNew,"Ctrl+D", "filenew", 
+                                                  "Create a data source") 
+
+        dsourceRemoveAction = self.pool.createAction("&Remove DataSource", "dsourceRemove",  commandArgs, 
+                                                  DataSourceRemove,"Ctrl+R", "filequit", 
+                                                  "Remove the data source")
+       
+        self.pool.createTask("dsourceChanged",commandArgs, DataSourceListChanged,
+                             self.sourceList.sourceListWidget, "itemChanged(QListWidgetItem*)")
+
 
         fileNewAction = self.pool.createAction("&New", "fileNew",  commandArgs, FileNewCommand,
                                QKeySequence.New, "filenew", "Create a text file")
@@ -102,6 +111,8 @@ class MainWindow(QMainWindow):
         reundoAction = self.pool.createAction("&Re-undo", "reundo",  commandArgs, ReundoCommand,
                                "Ctrl+Y", "icon", "Re-undo the loast command")
 
+        undoAction.setDisabled(True)
+        reundoAction.setDisabled(True)
 
 
 
@@ -112,16 +123,18 @@ class MainWindow(QMainWindow):
 
 
         fileMenu = self.menuBar().addMenu("&File")    
-        self.addActions(fileMenu, (dsourceNewAction, fileNewAction,None,fileQuitAction))
+        self.addActions(fileMenu, ( fileNewAction,None,fileQuitAction))
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (undoAction,reundoAction))
+        fileMenu = self.menuBar().addMenu("Data&Sources")    
+        self.addActions(fileMenu, (dsourceNewAction,dsourceRemoveAction))
  
         self.windowMenu = self.menuBar().addMenu("&Window")
 
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolbar")
 
-        self.addActions(fileToolbar, (dsourceNewAction, fileNewAction, None, undoAction, reundoAction))
+        self.addActions(fileToolbar, (fileNewAction, None,dsourceNewAction,dsourceRemoveAction, None, undoAction, reundoAction))
 
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolbar")
@@ -149,6 +162,24 @@ class MainWindow(QMainWindow):
 
     def dsourceNew(self):
         cmd = self.pool.getCommand('dsourceNew').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+
+
+    def dsourceRemove(self):
+        cmd = self.pool.getCommand('dsourceRemove').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+
+    def dsourceChanged(self, item):
+        cmd = self.pool.getCommand('dsourceChanged').clone()
+        cmd.item = item
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)
@@ -216,8 +247,6 @@ if __name__ == "__main__":
     form.show()
     app.exec_()
     
-
-
 
 
 

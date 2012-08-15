@@ -92,6 +92,19 @@ class CommandPool(object):
            
         return action
 
+
+
+    def createTask(self, name, args, command,  instance, signal):
+        if name not in  self._pool.keys():
+            self._pool[name] = command(**args)        
+            slot = self._pool[name].slot()
+        if slot is not None:
+            self.origin.connect(instance, SIGNAL(signal), slot)
+        self._actions[name] = None
+
+
+
+
     def setDisabled(self, name, flag):
         if name in self._actions.keys():
             self._actions[name].setDisabled(flag)
@@ -104,9 +117,9 @@ class CommandPool(object):
         
     def removeCommand(self, name):
         if name in self._pool.keys():
-            del self._pool[name]
+            self._pool.pop(name)
         if name in self._actions.keys():
-            del self._actions[name]
+            self._actions.pop(name)
         
 class TestMainWindow(QMainWindow):
     pass

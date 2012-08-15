@@ -77,7 +77,7 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
         if unicode(attr) in self.components.keys():
-            del self.components[unicode(attr)]
+            self.components.pop(unicode(attr))
             self.populateComponents()
 
     ## changes the current value of the component        
@@ -87,7 +87,7 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
 
         if unicode(cp) in self.components.keys():
             data = self.components[unicode(cp)] 
-            del self.components[unicode(cp)]
+            self.components.pop(unicode(cp))
         self.components[unicode(item.text())] =  data
         self.populateComponents()
 

@@ -29,7 +29,7 @@ class LabeledObject(object):
     def __init__(self, name , instance):
         self.name = name
         self.instance = instance
-        
+        self.id = id(self)
 
 
 ## dialog defining a group tag
@@ -50,17 +50,17 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
         self.setupUi(self)
 
 
-        self.connect(self.sourceListWidget, 
-                     SIGNAL("itemChanged(QListWidgetItem*)"),
-                     self.listItemChanged)
+#        self.connect(self.sourceListWidget, 
+#                     SIGNAL("itemChanged(QListWidgetItem*)"),
+#                     self.listItemChanged)
 
         self.populateDataSources()
 
     ## adds an datasource    
     #  \brief It runs the DataSource Dialog and fetches datasource name and value    
-    def addDataSource(self, obj):
-        self.datasources[id(obj)] = obj
-        self.populateDataSources(id(obj), True)
+    def addDataSource(self, obj, flag = True):
+        self.datasources[obj.id] = obj
+        self.populateDataSources(obj.id, flag)
                 
                 
     ## takes a name of the current datasource
@@ -79,29 +79,32 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
     def removeDataSource(self, obj = None, question = True):
         
         if obj is not None:
-            oid = id(obj)
+            oid = obj.id
         else:    
-            oid = self.currentListDataSource()
+            oid = self.currentListDataSource().id
         if oid is None:
             return
-        if question :
-            if QMessageBox.question(self, "DataSource - Remove",
-                                    "Remove datasource: %s = \'%s\'".encode() %  (attr, self.datasources[unicode(attr)]),
-                                    QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
-                return
         if oid in self.datasources.keys():
-            del self.datasources[oid]
+            if question :
+                if QMessageBox.question(self, "DataSource - Remove",
+                                        "Remove datasource: %s ".encode() %  (self.datasources[oid].name),
+                                        QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                    return
+
+            self.datasources.pop(oid)
             self.populateDataSources()
+            
 
     ## changes the current value of the datasource        
     # \brief It changes the current value of the datasource and informs the user that datasource names arenot editable
     def listItemChanged(self, item):
-        ds = id(self.currentListDataSource())
-#        if unicode(ds) not in self.datasources.keys():
-#            return
-        if ds in self.datasources.keys():
-            self.datasources[ds].name = unicode(item.text())
+        ids =  self.currentListDataSource().id 
+        if ids in self.datasources.keys():
+            old = self.datasources[ids]
+            oname = self.datasources[ids].name
+            self.datasources[ids].name = unicode(item.text())
             self.populateDataSources()
+            return old, oname
 
     ## fills in the datasource list      
     # \param selectedDataSource selected datasource    
@@ -111,10 +114,10 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
         for ds in self.datasources.keys():
             name = self.datasources[ds].name
             item = QListWidgetItem(QString("%s" % name))
-            item.setData(Qt.UserRole, QVariant(id(self.datasources[ds])))
+            item.setData(Qt.UserRole, QVariant(self.datasources[ds].id))
             item.setFlags(item.flags() | Qt.ItemIsEditable)
             self.sourceListWidget.addItem(item)
-            if selectedDataSource is not None and selectedDataSource == id(self.datasources[ds]):
+            if selectedDataSource is not None and selectedDataSource == self.datasources[ds].id:
                 selected = item
         if selected is not None:
             selected.setSelected(True)

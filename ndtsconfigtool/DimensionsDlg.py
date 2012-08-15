@@ -151,7 +151,8 @@ class DimensionsDlg(QDialog, ui_dimensionsdlg.Ui_DimensionsDlg):
     # \brief It copies the dimensions name and type from lineEdit widgets and accept the dialog
     def accept(self):
         self.doc = unicode(self.docTextEdit.toPlainText())
-        del self.lengths[self.rank:]
+        while len(self.lengths) > self.rank:
+            self.lengths.pop()
         QDialog.accept(self)
 
 if __name__ == "__main__":

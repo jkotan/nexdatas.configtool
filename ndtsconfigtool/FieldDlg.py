@@ -154,7 +154,7 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
         if unicode(attr) in self.attributes.keys():
-            del self.attributes[unicode(attr)]
+            self.attributes.pop(unicode(attr))
             self.populateAttributes()
 
     ## changes the current value of the attribute        

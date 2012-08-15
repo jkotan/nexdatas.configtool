@@ -104,7 +104,7 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
         if unicode(attr) in self.attributes.keys():
-            del self.attributes[unicode(attr)]
+            self.attributes.pop(unicode(attr))
             self.populateAttributes()
 
     ## changes the current value of the attribute        

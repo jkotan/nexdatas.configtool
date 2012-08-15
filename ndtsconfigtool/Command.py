@@ -63,8 +63,14 @@ class FileNewCommand(Command):
             print "EXEC fileNew"
 
     def unexecute(self):
-        self.receiver.mdi.setActiveWindow(self._textEdit)
-        self.receiver.mdi.closeActiveWindow()
+
+        try:
+            self.receiver.mdi.setActiveWindow(self._textEdit)
+            self.receiver.mdi.closeActiveWindow()
+        except:
+            # TODO undo support for DeleteOnClose  
+            pass
+
         print "UNDO fileNew"
 
     def clone(self):
@@ -89,6 +95,7 @@ class DataSourceNew(Command):
         
         if self._ds is None:
             self._ds = LabeledObject("", None)
+            
         self.receiver.sourceList.addDataSource(self._ds)
         print "EXEC dsourceNew"
 
@@ -100,6 +107,76 @@ class DataSourceNew(Command):
     def clone(self):
         return DataSourceNew(self.receiver) 
 
+
+
+
+
+class DataSourceRemove(Command):
+    def __init__(self, receiver):
+        self.receiver = receiver
+        self._slot = 'dsourceRemove'
+        self._ds = None
+        
+    def slot(self):
+        if hasattr(self.receiver, self._slot):
+            return  getattr(self.receiver, self._slot)
+    
+
+    def execute(self):
+        
+        if self._ds is not None:
+            self.receiver.sourceList.removeDataSource(self._ds, False)
+        else:
+            self._ds = self.receiver.sourceList.currentListDataSource()
+            self.receiver.sourceList.removeDataSource(self._ds, True)
+
+        print "EXEC dsourceRemove"
+
+    def unexecute(self):
+        if self._ds is not None:
+
+            self.receiver.sourceList.addDataSource(self._ds, False)
+        print "UNDO dsourceRemove"
+
+    def clone(self):
+        return DataSourceRemove(self.receiver) 
+
+
+
+class DataSourceListChanged(Command):
+    def __init__(self, receiver):
+        self.receiver = receiver
+        self._slot = 'dsourceChanged'
+        self._ds = None
+        self.item = None
+        self.name = None
+        self.newName = None
+        
+    def slot(self):
+        if hasattr(self.receiver, self._slot):
+            return  getattr(self.receiver, self._slot)
+    
+
+    def execute(self):
+        if self.item is not None:
+            if self.newName is None:
+                self.newName = unicode(self.item.text())
+            if self._ds is None:    
+                self._ds, self.name = self.receiver.sourceList.listItemChanged(self.item)
+            else:
+                self._ds.name = self.newName
+                self.receiver.sourceList.populateDataSources()
+        print "EXEC dsourceChanged"
+
+    def unexecute(self):
+        if self._ds is not None:
+            self._ds.name = self.name 
+            self.receiver.sourceList.addDataSource(self._ds, False)
+        print "UNDO dsourceChanged"
+
+    def clone(self):
+        return DataSourceListChanged(self.receiver) 
+    
 
 
 

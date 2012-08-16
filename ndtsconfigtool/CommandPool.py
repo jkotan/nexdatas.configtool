@@ -35,16 +35,20 @@ class CommandStack(object):
             self._stack.pop()
         self._stack.append(command)    
         self._current += 1
+        print "append",  self._current , len(self._stack) 
 
     
     def undo(self):
         if self._stack and self._current > 0 :
             self._current -= 1
+            print "undo",  self._current , len(self._stack) 
             return self._stack[self._current]
 
     def reundo(self):
+#        print  "st", self._current - 1, self._current , len(self._stack) 
         if self._stack and self._current < len(self._stack) :
             self._current += 1
+            print "reundo",  self._current , len(self._stack) 
             return self._stack[ self._current - 1 ]
 
     def isEmpty(self):

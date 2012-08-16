@@ -112,8 +112,7 @@ class DataSourceEdit(Command):
                     self._dsEdit.show()
                     #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
                     self._ds.instance = self._dsEdit 
-            print "EXEC dsourceCurrentItemChanged"
-
+                    
 
 
             
@@ -164,6 +163,7 @@ class DataSourceRemove(Command):
         self.receiver = receiver
         self._slot = 'dsourceRemove'
         self._ds = None
+        self._wList = False
         
     def slot(self):
         if hasattr(self.receiver, self._slot):
@@ -176,7 +176,16 @@ class DataSourceRemove(Command):
             self.receiver.sourceList.removeDataSource(self._ds, False)
         else:
             self._ds = self.receiver.sourceList.currentListDataSource()
-            self.receiver.sourceList.removeDataSource(self._ds, True)
+            if self._ds is not None:
+                self.receiver.sourceList.removeDataSource(self._ds, True)
+            
+        ## TODO check     
+        if hasattr(self._ds,"instance") and self._ds.instance in self.receiver.mdi.windowList():
+            self._wList = True
+            self.receiver.mdi.setActiveWindow(self._ds.instance)
+            self.receiver.mdi.closeActiveWindow()
+            
+            
 
         print "EXEC dsourceRemove"
 
@@ -239,6 +248,9 @@ class DataSourceCurrentItemChanged(Command):
         self._dsEdit = None
         self.item = None
         self.previousItem = None
+        self._wasInWS = None
+        self._wasCreated = None
+        self._prevActive = None
         
     def slot(self):
         if hasattr(self.receiver, self._slot):
@@ -248,26 +260,53 @@ class DataSourceCurrentItemChanged(Command):
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
-            if self._ds is not None:
-                if self._ds.instance is None:
-                    #                self._dsEdit = FieldWg()  
-                    self._dsEdit = DataSourceDlg() 
-                    self._dsEdit.createGUI()
-                    self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
-                else:
-                    self._dsEdit = self._ds.instance 
-                if self._ds.instance in self.receiver.mdi.windowList():
-                    self.receiver.mdi.setActiveWindow(self._ds.instance) 
-                else:    
-                    self.receiver.mdi.addWindow(self._dsEdit)
-                    self._dsEdit.show()
-                    #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
-                    self._ds.instance = self._dsEdit 
+        if self._ds is not None:
+            self._prevActive = self.receiver.mdi.activeWindow()
+            if self._ds.instance is None or self._wasCreated:
+                #                self._dsEdit = FieldWg()  
+                if self._wasCreated is None:
+                    self._wasCreated  = True
+                self._dsEdit = DataSourceDlg() 
+                self._dsEdit.createGUI()
+                self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
+            else:
+                self._dsEdit = self._ds.instance 
+            if self._ds.instance in self.receiver.mdi.windowList() or self._wasInWS:
+                print "show"
+                if self._wasInWS is None : 
+                    self._wasInWS = True
+                self.receiver.mdi.setActiveWindow(self._ds.instance) 
+            else:    
+                print "create"
+                self.receiver.mdi.addWindow(self._dsEdit)
+                self._dsEdit.show()
+                #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
+                self._ds.instance = self._dsEdit 
+        if self._wasInWS is None : 
+            self._wasInWS = False
+        if self._wasCreated is None:
+            self._wasCreated  = False
+
         print "EXEC dsourceCurrentItemChanged"
 
     def unexecute(self):
-        print "UNDO dsourceCurrentItemChanged"
+        if hasattr(self._ds, "instance"):
+            if self._wasCreated:
+                self._ds.instance.setAttribute(Qt.WA_DeleteOnClose)
+            if not self._wasInWS: 
+                print "close"
+                self.receiver.mdi.setActiveWindow(self._ds.instance) 
+                self.receiver.mdi.closeActiveWindow() 
 
+            if self._wasCreated:
+                self._ds.instance = None
+
+            if self._prevActive:
+                print "prev"
+                self.receiver.mdi.setActiveWindow(self._prevActive) 
+                
+                print "UNDO dsourceCurrentItemChanged"
+        
     def clone(self):
         return DataSourceCurrentItemChanged(self.receiver) 
     

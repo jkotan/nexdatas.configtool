@@ -77,6 +77,7 @@ class MainWindow(QMainWindow):
         compDockWidget.setWidget(self.dockSplitter)
         self.addDockWidget(Qt.LeftDockWidgetArea, compDockWidget)
 
+
         self.mdi = QWorkspace()
         self.mdi.setScrollBarsEnabled(True)        
         self.setCentralWidget(self.mdi)
@@ -84,6 +85,7 @@ class MainWindow(QMainWindow):
 
         self.pool = CommandPool(self)
         self.cmdStack = CommandStack()
+        self.pooling = True
 
 
         commandArgs = {'receiver':self}
@@ -155,13 +157,14 @@ class MainWindow(QMainWindow):
 
         settings = QSettings()
 
-
-
         status = self.statusBar()
         status.setSizeGripEnabled(False)
         status.showMessage("Ready", 5000)
 
         self.setWindowTitle("NDTS Component Designer")
+
+
+        
 
 
     def addActions(self, target, actions):
@@ -183,11 +186,13 @@ class MainWindow(QMainWindow):
 
 
     def dsourceRemove(self):
+        self.pooling = False
         cmd = self.pool.getCommand('dsourceRemove').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)
         self.pool.setDisabled("reundo",True)   
+        self.pooling = True
 
 
     def dsourceEdit(self):
@@ -209,13 +214,18 @@ class MainWindow(QMainWindow):
 
 
     def dsourceCurrentItemChanged(self, item ,previousItem):
-        cmd = self.pool.getCommand('dsourceCurrentItemChanged').clone()
-        cmd.item = item
-        cmd.previousItem = previousItem
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo",False)
-        self.pool.setDisabled("reundo",True)   
+        print "curr: " , item.text() if hasattr(item, "text") else item
+        print "prev: " , previousItem.text() if hasattr(previousItem, "text") else previousItem
+        if self.pooling:
+            if item == previousItem:
+                return
+            cmd = self.pool.getCommand('dsourceCurrentItemChanged').clone()
+            cmd.item = item
+            cmd.previousItem = previousItem
+            cmd.execute()
+            self.cmdStack.append(cmd)
+            self.pool.setDisabled("undo",False)
+            self.pool.setDisabled("reundo",True)   
 
 
     def fileNew(self):
@@ -227,6 +237,7 @@ class MainWindow(QMainWindow):
 
 
     def undo(self):
+        self.pooling = False
         cmd = self.pool.getCommand('undo').clone()
         cmd.execute()
 
@@ -234,15 +245,16 @@ class MainWindow(QMainWindow):
         if hasattr(ucmd,'unexecute'):
             ucmd.unexecute()
         else:
-            
             print "Undo not possible"
 
         if self.cmdStack.isEmpty():
             self.pool.setDisabled("undo",True)
         self.pool.setDisabled("reundo",False)   
 
+        self.pooling = True
 
     def reundo(self):
+        self.pooling = False
         cmd = self.pool.getCommand('reundo').clone()
         cmd.execute()
 
@@ -256,7 +268,7 @@ class MainWindow(QMainWindow):
         if self.cmdStack.isFinal():
             self.pool.setDisabled("reundo",True)
         self.pool.setDisabled("undo",False)   
-
+        self.pooling = True
 
     def closeApp(self):
         cmd = self.pool.getCommand('closeApp').clone()

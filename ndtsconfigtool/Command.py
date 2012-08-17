@@ -268,7 +268,7 @@ class DataSourceCurrentItemChanged(Command):
                     self._wasCreated  = True
                 self._dsEdit = DataSourceDlg() 
                 self._dsEdit.createGUI()
-                self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
+                self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)  
             else:
                 self._dsEdit = self._ds.instance 
             if self._ds.instance in self.receiver.mdi.windowList() or self._wasInWS:

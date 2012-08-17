@@ -36,8 +36,6 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
 
         ## data source type
         self.dataSourceType = 'CLIENT'
-        ## strategy
-        self.strategy = 'INIT'
         ## attribute doc
         self.doc = u''
 
@@ -79,13 +77,6 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
             else:
                 self.dataSourceType = 'CLIENT'    
 
-
-        if self.strategy:
-            index = self.strategyComboBox.findText(unicode(self.strategy))
-            if  index > -1 :
-                self.strategyComboBox.setCurrentIndex(index)
-            else:
-                self.strategy = 'INIT'    
 
             
     
@@ -142,6 +133,13 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
 
 
         self.resize(460, 440)
+
+        self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+                     self.apply)
+        self.connect(self.savePushButton, SIGNAL("clicked()"), 
+                     self.save)
+        self.connect(self.closePushButton, SIGNAL("clicked()"), 
+                     self, SLOT("reject()"))
 
 
         self.connect(self.dAddPushButton, SIGNAL("clicked()"), 
@@ -265,15 +263,20 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
             selected.setSelected(True)
             self.dParameterTableWidget.setCurrentItem(selected)
             self.dParameterTableWidget.editItem(selected)
-            
 
 
+
+   ## accepts and save input text strings
+    # \brief It copies the parameters and saves the dialog
+    def save(self):
+        self.apply()
+        print "SAVING"
 
 
 
    ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
-    def accept(self):
+    def apply(self):
         class CharacterError(Exception): pass
         
         sourceType = unicode(self.typeComboBox.currentText())
@@ -309,47 +312,19 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
             self.dbDataFormat =  unicode(self.dFormatComboBox.currentText())
 
         self.dataSourceType = sourceType
-        self.strategy = unicode(self.strategyComboBox.currentText())
 
         self.doc = unicode(self.docTextEdit.toPlainText())
 
-        QDialog.accept(self)
+#        QDialog.accept(self)
+
+        self.emit(SIGNAL("changed"))    
 
 
-
-if __name__ == "__main__":
-    import sys
-
-    ## Qt application
-    app = QApplication(sys.argv)
-    ## data source form
-    form = DataSourceDlg()
-
-    form.dataSourceType = 'CLIENT'
-    form.strategy = 'STEP'
-    form.clientRecordName = 'counter1'
-    form.doc = 'The first client counter  '
-
-    form.dataSourceType = 'TANGO'
-    form.tangoDeviceName = 'p09/motor/exp.01'
-    form.tangoMemberName = 'Position'
-    form.tangoMemberType = 'attribute'
-    form.tangoHost = 'hasso.desy.de'
-    form.tangoPort = '10000'
-
-    form.dataSourceType = 'DB'
-    form.dbType = 'PGSQL'
-    form.dbDataFormat = 'SPECTRUM'
-    form.dbParameters = {'DB name':'tango', 'DB user':'tangouser'}
+    def  showParameters(self):
 
 
-
-    form.createGUI()
-    form.show()
-    app.exec_()
     
-    if form.result():
-        print "DataSource: %s in the %s mode" % (form.dataSourceType, form.strategy )
+        print "DataSource: %s " % (form.dataSourceType)
         
         if form.dataSourceType == 'CLIENT' :
             print "record name: %s " % (form.clientRecordName)
@@ -370,5 +345,37 @@ if __name__ == "__main__":
                 print "%s = '%s'" % (par, form.dbParameters[par])
         if form.doc:
             print "Doc: \n%s" % form.doc
+
+
+if __name__ == "__main__":
+    import sys
+
+    ## Qt application
+    app = QApplication(sys.argv)
+    ## data source form
+    form = DataSourceDlg()
+
+    form.dataSourceType = 'CLIENT'
+    form.clientRecordName = 'counter1'
+    form.doc = 'The first client counter  '
+
+    form.dataSourceType = 'TANGO'
+    form.tangoDeviceName = 'p09/motor/exp.01'
+    form.tangoMemberName = 'Position'
+    form.tangoMemberType = 'attribute'
+    form.tangoHost = 'hasso.desy.de'
+    form.tangoPort = '10000'
+
+    form.dataSourceType = 'DB'
+    form.dbType = 'PGSQL'
+    form.dbDataFormat = 'SPECTRUM'
+    form.dbParameters = {'DB name':'tango', 'DB user':'tangouser'}
+
+    form.createGUI()
+
+    app.connect(form, SIGNAL("changed"), form.showParameters)
+    form.show()
+    app.exec_()
+
 
 #  LocalWords:  decryption

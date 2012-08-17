@@ -113,6 +113,10 @@ class MainWindow(QMainWindow):
                              "currentItemChanged(QListWidgetItem*,QListWidgetItem*)")
 
 
+        self.connect(self.mdi, SIGNAL("windowActivated(QWidget*)"), self.mdiWindowActivated)
+
+        
+
         fileNewAction = self.pool.createAction("&New", "fileNew",  commandArgs, FileNewCommand,
                                QKeySequence.New, "filenew", "Create a text file")
 
@@ -212,10 +216,21 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("reundo",True)   
 
 
+    def mdiWindowActivated(self, widget):
+        self.pooling = False
+        if isinstance(widget, DataSourceDlg):
+            if widget.ids is not None:
+                if hasattr(self.sourceList.currentListDataSource(),"id"):
+                    if self.sourceList.currentListDataSource().id != widget.ids: 
+                        self.sourceList.populateDataSources(widget.ids)
+        self.pooling = True
+
+
+
 
     def dsourceCurrentItemChanged(self, item ,previousItem):
-        print "curr: " , item.text() if hasattr(item, "text") else item
-        print "prev: " , previousItem.text() if hasattr(previousItem, "text") else previousItem
+#        print "curr: " , item.text() if hasattr(item, "text") else item
+#        print "prev: " , previousItem.text() if hasattr(previousItem, "text") else previousItem
         if self.pooling:
             if item == previousItem:
                 return
@@ -291,7 +306,5 @@ if __name__ == "__main__":
     form.show()
     app.exec_()
     
-
-
 
 

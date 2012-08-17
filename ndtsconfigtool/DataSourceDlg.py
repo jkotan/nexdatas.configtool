@@ -60,66 +60,53 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
         ## database parameters
         self.dbParameters = {}
 
-    ##  creates GUI
-    # \brief It calls setupUi and  connects signals and slots    
-    def createGUI(self):
+        ## datasource id
+        self.ids = None
 
-
-        self.setupUi(self)
-
-        if self.doc :
+    def setupForm(self):    
+        print "SETUP"
+        if self.doc is not None:
             self.docTextEdit.setText(self.doc)
 
-        if self.dataSourceType :
+        if self.dataSourceType is not None:
             index = self.typeComboBox.findText(unicode(self.dataSourceType))
             if  index > -1 :
                 self.typeComboBox.setCurrentIndex(index)
             else:
                 self.dataSourceType = 'CLIENT'    
-
-
-            
     
-        if self.clientRecordName:
+        if self.clientRecordName is not None:
             self.cRecNameLineEdit.setText(self.clientRecordName)
-            
 
-
-        if self.tangoDeviceName:
+        if self.tangoDeviceName is not None:
             self.tDevNameLineEdit.setText(self.tangoDeviceName)
-
-        if self.tangoMemberName:
+        if self.tangoMemberName is not None:
             self.tMemberNameLineEdit.setText(self.tangoMemberName)
-            
-        if self.tangoMemberType:
+        if self.tangoMemberType is not None:
             index = self.tMemberComboBox.findText(unicode(self.tangoMemberType))
             if  index > -1 :
                 self.tMemberComboBox.setCurrentIndex(index)
             else:
                 self.tangoMemberType = 'attribute'    
-            
-        if self.tangoHost:
+        if self.tangoHost is not None:
             self.tHostLineEdit.setText(self.tangoHost)
-        if self.tangoPort:
+        if self.tangoPort is not None:
             self.tPortLineEdit.setText(self.tangoPort)
 
 
 
-        if self.dbType :
+        if self.dbType  is not None:
             index = self.dTypeComboBox.findText(unicode(self.dbType))
             if  index > -1 :
                 self.dTypeComboBox.setCurrentIndex(index)
             else:
                 self.dbType = 'MYSQL'    
-
-
-        if self.dbDataFormat:
+        if self.dbDataFormat is not None:
             index = self.dFormatComboBox.findText(unicode(self.dbDataFormat))
             if  index > -1 :
                 self.dFormatComboBox.setCurrentIndex(index)
             else:
                 self.dbDataFormat = 'INIT'    
-
         for par in self.dbParameters.keys():
             index = self.dParamComboBox.findText(unicode(par))
             if  index < 0 :
@@ -132,6 +119,14 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
 
 
 
+    ##  creates GUI
+    # \brief It calls setupUi and  connects signals and slots    
+    def createGUI(self):
+
+
+        self.setupUi(self)
+        self.setupForm()
+
         self.resize(460, 440)
 
         self.connect(self.applyPushButton, SIGNAL("clicked()"), 
@@ -139,7 +134,7 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
         self.connect(self.savePushButton, SIGNAL("clicked()"), 
                      self.save)
         self.connect(self.closePushButton, SIGNAL("clicked()"), 
-                     self, SLOT("reject()"))
+                     self.revert)
 
 
         self.connect(self.dAddPushButton, SIGNAL("clicked()"), 
@@ -277,11 +272,13 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
    ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
+        change  = False
         class CharacterError(Exception): pass
-        
         sourceType = unicode(self.typeComboBox.currentText())
+
         if sourceType == 'CLIENT':
             recName = unicode(self.cRecNameLineEdit.text())
+
             if not recName:
                 QMessageBox.warning(self, "Empty record name", 
                                     "Please define the record name")
@@ -289,7 +286,8 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
                 return
             self.clientRecordName = recName
         elif sourceType == 'TANGO':
-            devName = unicode(self.tDevNameLineEdit.text())
+            if devName != unicode(self.tDevNameLineEdit.text()):
+                devName = unicode(self.tDevNameLineEdit.text())
             memName = unicode(self.tMemberNameLineEdit.text())
             if not devName: 
                 QMessageBox.warning(self, "Empty device name", 
@@ -318,6 +316,10 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
 #        QDialog.accept(self)
 
         self.emit(SIGNAL("changed"))    
+
+    def revert(self):
+        self.setupForm()
+        self.reject()
 
 
     def  showParameters(self):

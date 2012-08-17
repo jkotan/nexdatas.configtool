@@ -97,21 +97,23 @@ class DataSourceEdit(Command):
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
-            if self._ds is not None:
-                if self._ds.instance is None:
-                    #                self._dsEdit = FieldWg()  
-                    self._dsEdit = DataSourceDlg() 
-                    self._dsEdit.createGUI()
-                    self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
-                else:
-                    self._dsEdit = self._ds.instance 
-                if self._ds.instance in self.receiver.mdi.windowList():
-                    self.receiver.mdi.setActiveWindow(self._ds.instance) 
-                else:    
-                    self.receiver.mdi.addWindow(self._dsEdit)
-                    self._dsEdit.show()
-                    #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
-                    self._ds.instance = self._dsEdit 
+        if self._ds is not None:
+            if self._ds.instance is None:
+                #                self._dsEdit = FieldWg()  
+                self._dsEdit = DataSourceDlg()
+                self._dsEdit.ids = self._ds.id
+                self._dsEdit.createGUI()
+                self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
+            else:
+                self._dsEdit = self._ds.instance 
+                
+            if self._ds.instance in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._ds.instance) 
+            else:    
+                self.receiver.mdi.addWindow(self._dsEdit)
+                self._dsEdit.show()
+                #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
+                self._ds.instance = self._dsEdit 
                     
 
 
@@ -168,7 +170,6 @@ class DataSourceRemove(Command):
     def slot(self):
         if hasattr(self.receiver, self._slot):
             return  getattr(self.receiver, self._slot)
-    
 
     def execute(self):
         
@@ -267,6 +268,7 @@ class DataSourceCurrentItemChanged(Command):
                 if self._wasCreated is None:
                     self._wasCreated  = True
                 self._dsEdit = DataSourceDlg() 
+                self._dsEdit.ids = self._ds.id
                 self._dsEdit.createGUI()
                 self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)  
             else:

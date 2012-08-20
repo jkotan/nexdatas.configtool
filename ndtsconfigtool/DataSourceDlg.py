@@ -24,6 +24,11 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ui_datasourcedlg
 
+import XMLDumper
+from xml.dom.minidom import parse
+
+
+
 
 ## dialog defining datasources
 class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
@@ -57,11 +62,19 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
         self.dbType = 'MYSQL'
         ## database format
         self.dbDataFormat = 'SCALAR'
+        ## database query
+        self.dbQuery = ""
         ## database parameters
         self.dbParameters = {}
 
         ## datasource id
         self.ids = None
+
+        ## datasource id
+        self.directory = None
+        ## datasource name
+        self.name = None
+
 
     def setupForm(self):    
         print "SETUP"
@@ -259,13 +272,46 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
             self.dParameterTableWidget.setCurrentItem(selected)
             self.dParameterTableWidget.editItem(selected)
 
-
+    def load(self):
+        filename = self.directory + "/" + self.name + ".ds.xml"
+        try:
+            ds = parse(filename)
+            if ds.documentElement.tagName == "definition":
+                print "OK"
+        except:
+            QMessageBox.warning(self, "XML not loaded", 
+                                "Problems in loading the XML file:%s" %(filename))
 
     ## accepts and save input text strings
     # \brief It copies the parameters and saves the dialog
     def save(self):
-        self.apply()
-        print "SAVING"
+        if self.apply():
+            filename = self.directory + "/" + self.name + ".ds.xml"
+            print "saving in %s"% (filename)
+            if filename:
+                df = XMLDumper.XMLFile(filename)
+                sr = XMLDumper.NDSource(df)
+                if self.dataSourceType == 'CLIENT':
+                    sr.initClient(self.clientRecordName);
+                elif self.dataSourceType == 'TANGO':
+                    args = {"device":self.tangoDeviceName, 
+                            "memberType":self.tangoMemberType,
+                            "recordName":self.tangoMemberName,
+                            }
+                    if self.tangoHost:
+                        args["host"] = self.tangoHost
+                    if self.tangoPort:
+                        args["port"] = self.tangoPort 
+                    sr.initTango(**args)
+                elif self.dataSourceType == 'DB':
+                    args = {"dbtype":self.dbType,
+                            "format":self.dbDataFormat,
+                            "query":self.dbQuery
+                            }
+                    sr.initDBase(**args)
+
+                df.dump()    
+
 
     ## rejects the changes
     # \brief It asks for the cancellation  and reject the changes
@@ -314,6 +360,14 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
             self.tangoPort = unicode(self.tPortLineEdit.text())
                 
         elif sourceType == 'DB':
+            query = unicode(self.dQueryLineEdit.text())
+
+            if not query:
+                QMessageBox.warning(self, "Empty query", 
+                                    "Please define the DB query")
+                self.dQueryLineEdit.setFocus()
+                return
+            self.dbQuery = query
             self.dbType =  unicode(self.dTypeComboBox.currentText())
             self.dbDataFormat =  unicode(self.dFormatComboBox.currentText())
 
@@ -324,6 +378,7 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
 #        QDialog.accept(self)
 
         self.emit(SIGNAL("changed"))    
+        return True    
 
     def revert(self):
         self.setupForm()
@@ -331,8 +386,6 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
 
 
     def  showParameters(self):
-
-
     
         print "DataSource: %s " % (form.dataSourceType)
         

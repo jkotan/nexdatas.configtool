@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>485</width>
-    <height>794</height>
+    <width>429</width>
+    <height>741</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -265,13 +265,7 @@
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
-       <layout class="QGridLayout" name="gridLayout_4">
-        <property name="leftMargin">
-         <number>9</number>
-        </property>
-        <property name="rightMargin">
-         <number>9</number>
-        </property>
+       <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
@@ -346,6 +340,23 @@
                </property>
               </item>
              </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <widget class="QLabel" name="dQueryLabel">
+              <property name="text">
+               <string>&amp;Query:</string>
+              </property>
+              <property name="buddy">
+               <cstring>dQueryLineEdit</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="dQueryLineEdit"/>
             </item>
            </layout>
           </item>
@@ -481,7 +492,6 @@
          </layout>
         </item>
        </layout>
-       <zorder></zorder>
       </widget>
      </item>
      <item>
@@ -533,11 +543,15 @@
   <tabstop>tPortLineEdit</tabstop>
   <tabstop>dTypeComboBox</tabstop>
   <tabstop>dFormatComboBox</tabstop>
+  <tabstop>dQueryLineEdit</tabstop>
   <tabstop>dParamComboBox</tabstop>
   <tabstop>dAddPushButton</tabstop>
   <tabstop>dRemovePushButton</tabstop>
   <tabstop>dParameterTableWidget</tabstop>
   <tabstop>docTextEdit</tabstop>
+  <tabstop>applyPushButton</tabstop>
+  <tabstop>cancelPushButton</tabstop>
+  <tabstop>savePushButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

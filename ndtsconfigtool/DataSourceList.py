@@ -24,7 +24,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ui_datasourcelist
 
-
 class LabeledObject(object):
     def __init__(self, name , instance):
         self.name = name
@@ -37,8 +36,9 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
     
     ## constructor
     # \param parent patent instance
-    def __init__(self, parent=None):
+    def __init__(self, directory, parent=None):
         super(DataSourceList, self).__init__(parent)
+        self.directory = directory
         
         ## group datasources
         self.datasources = {}
@@ -50,9 +50,6 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
         self.setupUi(self)
 
 
-#        self.connect(self.sourceListWidget, 
-#                     SIGNAL("itemChanged(QListWidgetItem*)"),
-#                     self.listItemChanged)
 
 #        self.connect(self.sourceListWidget, 
 #                     SIGNAL("currentItemChanged(QListWidgetItem*,QListWidgetItem*)"),
@@ -61,10 +58,14 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
 
         self.populateDataSources()
 
+            
+
+
     ## adds an datasource    
     #  \brief It runs the DataSource Dialog and fetches datasource name and value    
     def addDataSource(self, obj, flag = True):
         self.datasources[obj.id] = obj
+
         self.populateDataSources(obj.id, flag)
                 
                 

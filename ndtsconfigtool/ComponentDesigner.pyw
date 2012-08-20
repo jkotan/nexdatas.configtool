@@ -42,41 +42,28 @@ class MainWindow(QMainWindow):
         compDockWidget.setObjectName("CompDockWidget")
         compDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea |  Qt.RightDockWidgetArea)
 
-#        self.sourceFrame = QFrame(self)   
-#        self.sourceFrame.setFrameShape(QFrame.NoFrame)
-#        self.sourceLabel = QLabel("&DataSources:")
-#        self.sourceListWidget = QListWidget()
+        self.dsDirectory = "./datasources"
 
-        self.sourceList = DataSourceList(self)
+        self.sourceList = DataSourceList(self.dsDirectory)
         ds1 = LabeledObject("dataSource1", None)
         self.sourceList.datasources[id(ds1)] =  ds1
         ds2 = LabeledObject("dataSource2", None)
         self.sourceList.datasources[id(ds2)] =  ds2
         self.sourceList.createGUI()
 
-#        self.sourceLayout = QVBoxLayout(self.sourceFrame)
-#        self.sourceLayout.addWidget(self.sourceLabel)
-#        self.sourceLayout.addWidget(self.sourceListWidget)
-#        self.sourceLabel.setBuddy(self.sourceListWidget)
-
-#        self.sourceLayout.setContentsMargins(0, 0, 0, 6)
-
-
         self.componentList = ComponentList(self)
         self.componentList.components={"component1":"Test run 1", "component2":"2012-1"}
         self.componentList.createGUI()
 
-#        self.compListWidget = QListWidget()
         self.dockSplitter = QSplitter(Qt.Vertical)
         self.dockSplitter.addWidget(self.componentList)
-#        self.dockSplitter.addWidget(self.compListWidget)
- #       self.dockSplitter.addWidget(self.sourceFrame)
         self.dockSplitter.addWidget(self.sourceList)
         self.dockSplitter.setStretchFactor(0,3)
         self.dockSplitter.setStretchFactor(1,1)
         compDockWidget.setWidget(self.dockSplitter)
         self.addDockWidget(Qt.LeftDockWidgetArea, compDockWidget)
 
+        
 
         self.mdi = QWorkspace()
         self.mdi.setScrollBarsEnabled(True)        
@@ -132,11 +119,6 @@ class MainWindow(QMainWindow):
         reundoAction.setDisabled(True)
 
 
-
-#        fileNewAction = self.createAction("&New", "fileNew", self.fileNew,
-#                                          QKeySequence.New, "filenew", "Create a text file")
-#        fileQuitAction = self.createAction("&Quit", "close", self.close,
-#                                           "Ctrl+Q", "filequit", "Close the application")
 
 
         fileMenu = self.menuBar().addMenu("&File")    

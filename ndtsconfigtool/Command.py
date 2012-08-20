@@ -102,6 +102,8 @@ class DataSourceEdit(Command):
                 #                self._dsEdit = FieldWg()  
                 self._dsEdit = DataSourceDlg()
                 self._dsEdit.ids = self._ds.id
+                self._dsEdit.directory = self.receiver.sourceList.directory
+                self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
                 self._dsEdit.createGUI()
                 self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
             else:
@@ -216,14 +218,22 @@ class DataSourceListChanged(Command):
     
 
     def execute(self):
+        print "dsourceChange"
         if self.item is not None:
+            print "self.item is not None:"
             if self.newName is None:
+                print "self.newName is None:"
                 self.newName = unicode(self.item.text())
-            if self._ds is None:    
+            if self._ds is None:
+                print "self._ds is None:    "
                 self._ds, self.name = self.receiver.sourceList.listItemChanged(self.item)
             else:
+                print "not self._ds is None:    "
+                print "Name:", self.newName
                 self._ds.name = self.newName
                 self.receiver.sourceList.populateDataSources()
+            if self._ds.instance is not None:
+                self._ds.instance.name = self.newName
         print "EXEC dsourceChanged"
 
     def unexecute(self):
@@ -269,6 +279,8 @@ class DataSourceCurrentItemChanged(Command):
                     self._wasCreated  = True
                 self._dsEdit = DataSourceDlg() 
                 self._dsEdit.ids = self._ds.id
+                self._dsEdit.directory = self.receiver.sourceList.directory
+                self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
                 self._dsEdit.createGUI()
                 self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)  
             else:

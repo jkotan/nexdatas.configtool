@@ -269,7 +269,7 @@ class DataSourceCurrentItemChanged(Command):
     
 
     def execute(self):
-        print "IC: ", (self.item.text() if self.item else None),  (self.previousItem.text() if self.previousItem else None)
+#        print "IC: ", (self.item.text() if self.item else None),  (self.previousItem.text() if self.previousItem else None)
 
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()

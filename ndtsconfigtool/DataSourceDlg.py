@@ -133,8 +133,8 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
                      self.apply)
         self.connect(self.savePushButton, SIGNAL("clicked()"), 
                      self.save)
-        self.connect(self.closePushButton, SIGNAL("clicked()"), 
-                     self.revert)
+        self.connect(self.cancelPushButton, SIGNAL("clicked()"), 
+                     self.cancel)
 
 
         self.connect(self.dAddPushButton, SIGNAL("clicked()"), 
@@ -261,11 +261,20 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
 
 
 
-   ## accepts and save input text strings
+    ## accepts and save input text strings
     # \brief It copies the parameters and saves the dialog
     def save(self):
         self.apply()
         print "SAVING"
+
+    ## rejects the changes
+    # \brief It asks for the cancellation  and reject the changes
+    def cancel(self):
+        if QMessageBox.question(self, "Cancel changes",
+                                "Would you like to cancel?", 
+                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+            return
+        self.revert()
 
 
 
@@ -286,8 +295,7 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
                 return
             self.clientRecordName = recName
         elif sourceType == 'TANGO':
-            if devName != unicode(self.tDevNameLineEdit.text()):
-                devName = unicode(self.tDevNameLineEdit.text())
+            devName = unicode(self.tDevNameLineEdit.text())
             memName = unicode(self.tMemberNameLineEdit.text())
             if not devName: 
                 QMessageBox.warning(self, "Empty device name", 

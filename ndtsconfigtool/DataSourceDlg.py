@@ -67,6 +67,27 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
         ## database parameters
         self.dbParameters = {}
 
+        ## parameter map for XMLdumper
+        self.dbxml = {"DB name":"dbname",
+                      "DB host":"host",
+                      "DB port":"port",
+                      "DB user":"user",
+                      "DB password":"passwd",
+                      "Mysql cnf":"mycnf",
+                      "Oracle mode":"mode",
+                      "Oracle DSN":"dsn"
+                     } 
+
+        ## parameter map for xml tags
+        self.dbmap = {"dbname":"DB name",
+                      "hostname":"DB host",
+                      "port":"DB port",
+                      "user":"DB user",
+                      "passwd":"DB password",
+                      "mycnf":"Mysql cnf",
+                      "mode":"Oracle mode"
+                     } 
+
         ## datasource id
         self.ids = None
 
@@ -76,8 +97,8 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
         self.name = None
 
 
+
     def setupForm(self):    
-        print "SETUP"
         if self.doc is not None:
             self.docTextEdit.setText(self.doc)
 
@@ -120,6 +141,11 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
                 self.dFormatComboBox.setCurrentIndex(index)
             else:
                 self.dbDataFormat = 'INIT'    
+        
+        if self.dbQuery is not None:        
+            self.dQueryLineEdit.setText(self.dbQuery)
+                
+        
         for par in self.dbParameters.keys():
             index = self.dParamComboBox.findText(unicode(par))
             if  index < 0 :
@@ -272,12 +298,80 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
             self.dParameterTableWidget.setCurrentItem(selected)
             self.dParameterTableWidget.editItem(selected)
 
-    def load(self):
-        filename = self.directory + "/" + self.name + ".ds.xml"
+
+    ## loads datasources from default directory
+    # \param fname optional file name
+    def load(self, fname = None):
+        if fname is None:
+            filename = self.directory + "/" + self.name + ".ds.xml"
+        else:
+            filename = fname
         try:
-            ds = parse(filename)
-            if ds.documentElement.tagName == "definition":
-                print "OK"
+            doc = parse(filename)
+            ds = doc.getElementsByTagName("datasource")[0]
+            #            node = ds.documentElement        
+            for (name, value) in ds.attributes.items():
+                if name == 'type':  
+                    if value == 'CLIENT':
+                        self.dataSourceType = value
+                        record = ds.getElementsByTagName("record")[0]
+                        for (name, value) in record.attributes.items():
+                            if name == 'name':
+                                self.clientRecordName = value
+                    if value == 'TANGO':
+                        self.dataSourceType = value
+
+                        record = ds.getElementsByTagName("record")[0]
+                        for (name, value) in record.attributes.items():
+                            if name == 'name':
+                                self.tangoMemberName = value
+
+                        device = ds.getElementsByTagName("device")[0]
+                        for (name, value) in device.attributes.items():
+                            if name == 'name':
+                                self.tangoDeviceName = value
+                            elif name == 'member':    
+                                self.tangoMemberType = value
+                            elif name == 'hostname':    
+                                self.tangoHost = value
+                            elif name == 'port':    
+                                self.tangoPort = value
+                    if value == 'DB':
+                        self.dataSourceType = value
+
+                        database = ds.getElementsByTagName("database")[0]
+                        for (name, value) in database.attributes.items():
+                            if name == 'dbtype':
+                                self.dbType = value         
+                            elif name in self.dbmap:
+                                self.dbParameters[self.dbmap[name]] = value
+
+                        dtxt = ""
+                        for txt in database.childNodes:
+                            if txt.nodeType == txt.TEXT_NODE:
+                                dtxt = dtxt + txt.data
+                        self.dbParameters['Oracle DSN'] = dtxt.strip()
+
+
+                        query = ds.getElementsByTagName("query")[0]
+                        for (name, value) in query.attributes.items():
+                            if name == 'format':
+                                self.dbDataFormat = value         
+
+                        qtxt = ""
+                        for txt in query.childNodes:
+                            if txt.nodeType == txt.TEXT_NODE:
+                                qtxt = qtxt + txt.data
+                        self.dbQuery = qtxt.strip()
+            tdoc = doc.getElementsByTagName("doc")[0]
+            qtxt = ""
+            for txt in tdoc.childNodes:
+                if txt.nodeType == txt.TEXT_NODE:
+                    qtxt = qtxt + txt.data
+            self.doc = qtxt.strip()
+                    
+            self.createGUI()
+                
         except:
             QMessageBox.warning(self, "XML not loaded", 
                                 "Problems in loading the XML file:%s" %(filename))
@@ -308,7 +402,14 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
                             "format":self.dbDataFormat,
                             "query":self.dbQuery
                             }
+                    
+                    for name in self.dbParameters.keys():
+                        if name in self.dbxml.keys():
+                            args[self.dbxml[name]] =  self.dbParameters[name]
+
                     sr.initDBase(**args)
+                if self.doc: 
+                    sr.addDoc(self.doc)
 
                 df.dump()    
 

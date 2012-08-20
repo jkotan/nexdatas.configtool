@@ -421,17 +421,12 @@
                 </item>
                 <item>
                  <property name="text">
-                  <string>Oracle node</string>
+                  <string>Oracle mode</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
                   <string>Oracle DSN</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Query</string>
                  </property>
                 </item>
                </widget>

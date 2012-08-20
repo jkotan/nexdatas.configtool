@@ -212,6 +212,8 @@ class NDSource(NTag):
 	def __init__(self, parent):
 		NTag.__init__(self, parent, "datasource")
 			
+		## list of doc tag contents
+		self._doc = []
 
 	## sets parameters of DataBase		
 	# \param dbname name of used DataBase
@@ -301,6 +303,11 @@ class NDSource(NTag):
 		da.addTagAttr("name", recordName)
 
 
+        ## adds doc tag content
+	# \param doc doc tag content	
+	def addDoc(self, doc):
+		self._doc.append(NTag(self, "doc"))
+		self._doc[-1].addText(doc)
 
 
 ## Tango device tag creator

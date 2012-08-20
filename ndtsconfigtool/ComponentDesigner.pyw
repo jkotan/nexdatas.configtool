@@ -45,10 +45,10 @@ class MainWindow(QMainWindow):
         self.dsDirectory = "./datasources"
 
         self.sourceList = DataSourceList(self.dsDirectory)
-        ds1 = LabeledObject("dataSource1", None)
-        self.sourceList.datasources[id(ds1)] =  ds1
-        ds2 = LabeledObject("dataSource2", None)
-        self.sourceList.datasources[id(ds2)] =  ds2
+#        ds1 = LabeledObject("dataSource1", None)
+#        self.sourceList.datasources[id(ds1)] =  ds1
+#        ds2 = LabeledObject("dataSource2", None)
+#        self.sourceList.datasources[id(ds2)] =  ds2
         self.sourceList.createGUI()
 
         self.componentList = ComponentList(self)
@@ -143,6 +143,8 @@ class MainWindow(QMainWindow):
 
         settings = QSettings()
 
+        self.loadDataSources()
+
         status = self.statusBar()
         status.setSizeGripEnabled(False)
         status.showMessage("Ready", 5000)
@@ -150,6 +152,9 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("NDTS Component Designer")
 
 
+    def loadDataSources(self):
+        self.sourceList.loadList()
+        self.sourceList.populateDataSources()
         
 
 
@@ -214,8 +219,10 @@ class MainWindow(QMainWindow):
 #        print "curr: " , item.text() if hasattr(item, "text") else item
 #        print "prev: " , previousItem.text() if hasattr(previousItem, "text") else previousItem
         if self.pooling:
-            if item == previousItem:
-                return
+#            if item == previousItem  :
+#                return
+#            if previousItem is None:
+#                return
             cmd = self.pool.getCommand('dsourceCurrentItemChanged').clone()
             cmd.item = item
             cmd.previousItem = previousItem

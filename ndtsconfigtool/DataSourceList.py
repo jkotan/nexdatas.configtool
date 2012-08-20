@@ -23,6 +23,8 @@ import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ui_datasourcelist
+from DataSourceDlg import DataSourceDlg
+import os 
 
 class LabeledObject(object):
     def __init__(self, name , instance):
@@ -60,6 +62,25 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
 
             
 
+    def loadList(self):
+        dirList=os.listdir(self.directory)
+        for fname in dirList:
+            if fname[-4:] == '.xml':
+                name = fname[:-4]
+                if name[-3:] == '.ds':
+                    name = name[:-3]
+            else:
+                name = fname
+                
+            dlg = DataSourceDlg()
+            dlg.directory = self.directory
+            dlg.name = name
+            dlg.load()    
+            ds = LabeledObject(name, dlg)
+            self.datasources[id(ds)] =  ds
+            if ds.instance is not None:
+                ds.instance.ids = ds.id
+            print name
 
     ## adds an datasource    
     #  \brief It runs the DataSource Dialog and fetches datasource name and value    
@@ -101,6 +122,8 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
             self.datasources.pop(oid)
             self.populateDataSources()
             
+
+
 
     ## changes the current value of the datasource        
     # \brief It changes the current value of the datasource and informs the user that datasource names arenot editable
@@ -152,7 +175,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     ## group form
     form = DataSourceList()
-    form.datasources={"title":"Test run 1", "run_cycle":"2012-1"}
+#    form.datasources={"title":"Test run 1", "run_cycle":"2012-1"}
     form.createGUI()
     form.show()
     app.exec_()

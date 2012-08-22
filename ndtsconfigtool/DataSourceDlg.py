@@ -321,60 +321,84 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
                     if value == 'TANGO':
                         self.dataSourceType = value
 
-                        record = ds.getElementsByTagName("record")[0]
-                        for (name, value) in record.attributes.items():
-                            if name == 'name':
-                                self.tangoMemberName = value
+                        try:
+                            record = ds.getElementsByTagName("record")[0]
+                            for (name, value) in record.attributes.items():
+                                if name == 'name':
+                                    self.tangoMemberName = value
+                        except:
+                            self.tangoMemberName = ""
 
-                        device = ds.getElementsByTagName("device")[0]
-                        for (name, value) in device.attributes.items():
-                            if name == 'name':
-                                self.tangoDeviceName = value
-                            elif name == 'member':    
-                                self.tangoMemberType = value
-                            elif name == 'hostname':    
-                                self.tangoHost = value
-                            elif name == 'port':    
-                                self.tangoPort = value
+                        try:
+                            device = ds.getElementsByTagName("device")[0]
+                            for (name, value) in device.attributes.items():
+                                if name == 'name':
+                                    self.tangoDeviceName = value
+                                elif name == 'member':    
+                                    self.tangoMemberType = value
+                                elif name == 'hostname':    
+                                    self.tangoHost = value
+                                elif name == 'port':    
+                                    self.tangoPort = value
+                        except:
+                            self.tangoDeviceName = ""
+                            self.tangoMemberType = "attribute"
+                            self.tangoHost = ""
+                            self.tangoPort = ""
+                                    
                     if value == 'DB':
                         self.dataSourceType = value
 
-                        database = ds.getElementsByTagName("database")[0]
-                        for (name, value) in database.attributes.items():
-                            if name == 'dbtype':
-                                self.dbType = value         
-                            elif name in self.dbmap:
-                                self.dbParameters[self.dbmap[name]] = value
+                        try:
+                            database = ds.getElementsByTagName("database")[0]
+                            for (name, value) in database.attributes.items():
+                                if name == 'dbtype':
+                                    self.dbType = value         
+                                elif name in self.dbmap:
+                                    self.dbParameters[self.dbmap[name]] = value
 
-                        dtxt = ""
-                        for txt in database.childNodes:
-                            if txt.nodeType == txt.TEXT_NODE:
-                                dtxt = dtxt + txt.data
-                        self.dbParameters['Oracle DSN'] = dtxt.strip()
+                            dtxt = ""
+                            for txt in database.childNodes:
+                                if txt.nodeType == txt.TEXT_NODE:
+                                    dtxt = dtxt + txt.data
+                            self.dbParameters['Oracle DSN'] = dtxt.strip()
+                        except:
+                            self.dbType = 'MYSQL'
+                                    
 
+                        try:                                
+                            query = ds.getElementsByTagName("query")[0]
+                            for (name, value) in query.attributes.items():
+                                if name == 'format':
+                                    self.dbDataFormat = value         
 
-                        query = ds.getElementsByTagName("query")[0]
-                        for (name, value) in query.attributes.items():
-                            if name == 'format':
-                                self.dbDataFormat = value         
-
-                        qtxt = ""
-                        for txt in query.childNodes:
-                            if txt.nodeType == txt.TEXT_NODE:
-                                qtxt = qtxt + txt.data
-                        self.dbQuery = qtxt.strip()
-            tdoc = doc.getElementsByTagName("doc")[0]
+                            qtxt = ""
+                            for txt in query.childNodes:
+                                if txt.nodeType == txt.TEXT_NODE:
+                                    qtxt = qtxt + txt.data
+                            self.dbQuery = qtxt.strip()
+                        except:
+                            self.dbDataFormat = 'SCALAR'
+                            
             qtxt = ""
-            for txt in tdoc.childNodes:
-                if txt.nodeType == txt.TEXT_NODE:
-                    qtxt = qtxt + txt.data
-            self.doc = qtxt.strip()
+            try:  
+                tdoc = doc.getElementsByTagName("doc")[0]
+                for txt in tdoc.childNodes:
+                    if txt.nodeType == txt.TEXT_NODE:
+                        qtxt = qtxt + txt.data
+            except:
+                pass
+            self
+        except Exception as e:
+            QMessageBox.warning(self, "XML not loaded", 
+                                "Problems in loading the %s:\n\n%s" %(filename,str(e)))
+        try:    
                     
             self.createGUI()
                 
-        except:
-            QMessageBox.warning(self, "XML not loaded", 
-                                "Problems in loading the XML file:%s" %(filename))
+        except Exception as e:
+            QMessageBox.warning(self, "dialog not created", 
+                                "Problems in creating a dialog for %s:\n\n%s" %(filename,str(e)))
 
     ## accepts and save input text strings
     # \brief It copies the parameters and saves the dialog

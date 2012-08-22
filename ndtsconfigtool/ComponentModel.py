@@ -43,10 +43,17 @@ class ComponentModel(QAbstractItemModel):
         item  = index.internalPointer()
         node = item.node
 
-        if index.column() == 0:
-            return node.nodeName()
+        attributeMap = node.attributes()
+
+        if index.column() == 0:      
+            name = None
+            if attributeMap.contains("name"):
+                name = attributeMap.namedItem("name").nodeValue()
+            if name is not None:    
+                return node.nodeName() +": "+ name
+            else:
+                return node.nodeName() 
         elif index.column() == 1:
-            attributeMap = node.attributes()
             attributes = QStringList()
             for i in range(attributeMap.count()):
                 attribute = attributeMap.item(i)

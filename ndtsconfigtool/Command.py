@@ -26,6 +26,8 @@ from DataSourceList import LabeledObject
 from DataSourceDlg import DataSourceDlg
 from FieldWg import FieldWg
 
+from ComponentDlg import ComponentDlg
+
 ## abstract command
 class Command(object):
     
@@ -48,7 +50,7 @@ class FileNewCommand(Command):
     def __init__(self, receiver):
         self.receiver = receiver
         self._slot = 'fileNew'
-        self._textEdit = None
+        self._component = None
         
     def slot(self):
         if hasattr(self.receiver, self._slot):
@@ -58,16 +60,18 @@ class FileNewCommand(Command):
     def execute(self):
         self._textEdit = QTextEdit()
         if hasattr(self.receiver,'mdi'):
-            self._textEdit = QTextEdit()
-            self.receiver.mdi.addWindow(self._textEdit)
-            self._textEdit.setAttribute(Qt.WA_DeleteOnClose)
-            self._textEdit.show()
+            self._component = ComponentDlg()
+            self._component.openFile()
+                
+            self.receiver.mdi.addWindow(self._component)
+            self._component.setAttribute(Qt.WA_DeleteOnClose)
+            self._component.show()
             print "EXEC fileNew"
 
     def unexecute(self):
 
         try:
-            self.receiver.mdi.setActiveWindow(self._textEdit)
+            self.receiver.mdi.setActiveWindow(self._component)
             self.receiver.mdi.closeActiveWindow()
         except:
             # TODO undo support for DeleteOnClose  

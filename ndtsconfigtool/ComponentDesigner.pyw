@@ -78,16 +78,16 @@ class MainWindow(QMainWindow):
         commandArgs = {'receiver':self}
 
         dsourceNewAction = self.pool.createAction("&New DataSource", "dsourceNew",  commandArgs, 
-                                                  DataSourceNew,"Ctrl+D", "editadd", 
+                                                  DataSourceNew,"Ctrl+D", "dsourceadd", 
                                                   "Create a data source") 
 
         dsourceRemoveAction = self.pool.createAction("&Remove DataSource", "dsourceRemove",  commandArgs, 
-                                                  DataSourceRemove,"Ctrl+R", "editdelete", 
+                                                  DataSourceRemove,"Ctrl+R", "dsourceremove", 
                                                   "Remove the data source")
 
 
         dsourceEditAction = self.pool.createAction("&Edit DataSource", "dsourceEdit",  commandArgs, 
-                                                  DataSourceEdit,"Ctrl+E", "editedit", 
+                                                  DataSourceEdit,"Ctrl+E", "dsourceedit", 
                                                   "Edit the data source")
 
        
@@ -105,15 +105,15 @@ class MainWindow(QMainWindow):
         
 
         fileNewAction = self.pool.createAction("&New", "fileNew",  commandArgs, FileNewCommand,
-                               QKeySequence.New, "filenew", "Create a text file")
+                               QKeySequence.New, "componentnew", "Create a text file")
 
         fileQuitAction = self.pool.createAction("&Quit", "closeApp", commandArgs, CloseApplication,
                                "Ctrl+Q", "filequit", "Close the application")
 
         undoAction = self.pool.createAction("&Undo", "undo",  commandArgs, UndoCommand,
-                               "Ctrl+Z", "icon", "Undo the last command")
+                               "Ctrl+Z", "undo", "Undo the last command")
         reundoAction = self.pool.createAction("&Re-undo", "reundo",  commandArgs, ReundoCommand,
-                               "Ctrl+Y", "icon", "Re-undo the last command")
+                               "Ctrl+Y", "redo", "Re-undo the last command")
 
         undoAction.setDisabled(True)
         reundoAction.setDisabled(True)
@@ -129,6 +129,7 @@ class MainWindow(QMainWindow):
         self.addActions(fileMenu, (dsourceNewAction,dsourceEditAction,dsourceRemoveAction))
  
         self.windowMenu = self.menuBar().addMenu("&Window")
+        self.windowMenu = self.menuBar().addMenu("&Help")
 
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolbar")

@@ -39,22 +39,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     def __init__(self, parent=None):
         super(ComponentDlg, self).__init__(parent)
         
-#        self.fileMenu = self.menuBar().addMenu("&File")
-
-#        newFileAction = QAction("&Open",self)
-#        newFileAction.setShortcut(QKeySequence.Open)
-#        self.connect(newFileAction,SIGNAL("triggered()"),self.openFile)
-#        self.fileMenu.addAction(newFileAction)
-
-
-#        exitAction = QAction("E&xit",self)
-#        exitAction.setShortcut(QKeySequence.Quit)
-#        self.connect(exitAction,SIGNAL("triggered()"),self.close)
-#        self.fileMenu.addAction(exitAction)
-        
         self.setupUi(self)
-#        self.view = QTreeView(self)
-
 
 
         self.model = ComponentModel(QDomDocument(),self)
@@ -62,31 +47,10 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         
         field = FieldDlg()
         field.createGUI()
- #       self.frame = QFrame()
 
         grid = QGridLayout()
         grid.addWidget(field)
         self.frame.setLayout(grid)
-
-#        self.savePushButton = QPushButton("&Save")
-#        self.closePushButton = QPushButton("&Close")
-#        buttonLayout = QHBoxLayout()
-#        buttonLayout.addStretch()
-#        buttonLayout.addWidget(self.savePushButton)
-#        buttonLayout.addWidget(self.closePushButton)
-#        
-#        viewLayout = QVBoxLayout()
-#        viewLayout.addWidget(self.view)        
-#        viewLayout.addLayout(buttonLayout)        
-        
- #       self.componentSplitter = QSplitter(Qt.Horizontal)
- #       self.componentSplitter.addLayout(viewLayout)
- #       self.componentSplitter.addWidget(self.frame)
- #       self.componentSplitter.setStretchFactor(0,1)
- #       self.componentSplitter.setStretchFactor(1,1)
- #       grid = QGridLayout()
- #       grid.addWidget(self.componentSplitter)
- #       self.setLayout(grid)
 
         self.xmlPath = os.path.dirname(".")
         self.setupForm()
@@ -95,11 +59,6 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         pass
         
 
-
-
-#        self.setCentralWidget(self.view)
-#       self.setWindowTitle("Dom Model")
-        
 
     def openFile(self):
         

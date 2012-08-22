@@ -1,17 +1,13 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-<file alias="icon.png">images/icon.png</file>
-<file alias="filenew.png">images/filenew.png</file>
-<file alias="fileopen.png">images/fileopen.png</file>
-<file alias="filesave.png">images/filesave.png</file>
-<file alias="filesaveas.png">images/filesaveas.png</file>
-<file alias="fileclose.png">images/filequit.png</file>
-<file alias="filequit.png">images/filequit.png</file>
-<file alias="editcut.png">images/editcut.png</file>
-<file alias="editcopy.png">images/editcopy.png</file>
-<file alias="editpaste.png">images/editpaste.png</file>
-<file alias="editadd.png">images/editadd.png</file>
-<file alias="editedit.png">images/editedit.png</file>
-<file alias="editdelete.png">images/editdelete.png</file>
+<file alias="icon.png">images/defragmentation.png</file>
+<file alias="componentnew.png">images/document.png</file>
+<file alias="dsourceadd.png">images/symbol_add.png</file>
+<file alias="dsourceremove.png">images/symbol_restricted.png</file>
+<file alias="dsourceedit.png">images/symbol_check.png</file>
+
+<file alias="undo.png">images/undo.png</file>
+<file alias="redo.png">images/redo.png</file>
+
 </qresource>
 </RCC>

@@ -388,7 +388,7 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
                         qtxt = qtxt + txt.data
             except:
                 pass
-            self
+            self.doc = qtxt.strip()
         except Exception as e:
             QMessageBox.warning(self, "XML not loaded", 
                                 "Problems in loading the %s:\n\n%s" %(filename,str(e)))

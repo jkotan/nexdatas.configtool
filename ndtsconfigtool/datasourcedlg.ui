@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>429</width>
+    <width>430</width>
     <height>741</height>
    </rect>
   </property>
@@ -529,6 +529,7 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>savePushButton</tabstop>
   <tabstop>typeComboBox</tabstop>
   <tabstop>cRecNameLineEdit</tabstop>
   <tabstop>tDevNameLineEdit</tabstop>
@@ -539,14 +540,13 @@
   <tabstop>dTypeComboBox</tabstop>
   <tabstop>dFormatComboBox</tabstop>
   <tabstop>dQueryLineEdit</tabstop>
+  <tabstop>dParameterTableWidget</tabstop>
   <tabstop>dParamComboBox</tabstop>
   <tabstop>dAddPushButton</tabstop>
   <tabstop>dRemovePushButton</tabstop>
-  <tabstop>dParameterTableWidget</tabstop>
   <tabstop>docTextEdit</tabstop>
   <tabstop>applyPushButton</tabstop>
   <tabstop>cancelPushButton</tabstop>
-  <tabstop>savePushButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

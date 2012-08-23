@@ -156,7 +156,6 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
                                     % (par, self.dbParameters[unicode(par)]) )
                 self.dbParameters.pop(unicode(par))
             else:
-                print "REVERT: %s %s" % (unicode(par), self.dbParameters[(unicode(par))])
                 self._dbParam[unicode(par)]=self.dbParameters[(unicode(par))]
         self.populateParameters()
     

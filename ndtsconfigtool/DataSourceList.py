@@ -57,7 +57,7 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
 #                     SIGNAL("currentItemChanged(QListWidgetItem*,QListWidgetItem*)"),
 #                     self.dsourceEdit)
 
-
+        
         self.populateDataSources()
 
             

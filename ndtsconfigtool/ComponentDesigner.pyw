@@ -155,7 +155,10 @@ class MainWindow(QMainWindow):
 
     def loadDataSources(self):
         self.sourceList.loadList()
-        self.sourceList.populateDataSources()
+        ids =  self.sourceList.datasources.itervalues().next().id \
+            if len(self.sourceList.datasources) else None
+
+        self.sourceList.populateDataSources(ids)
         
 
 
@@ -222,8 +225,8 @@ class MainWindow(QMainWindow):
         if self.pooling:
 #            if item == previousItem  :
 #                return
-#            if previousItem is None:
-#                return
+            if previousItem is None:
+                return
             cmd = self.pool.getCommand('dsourceCurrentItemChanged').clone()
             cmd.item = item
             cmd.previousItem = previousItem

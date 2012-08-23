@@ -175,6 +175,8 @@ class MainWindow(QMainWindow):
 
         self.loadDataSources()
 
+        self.loadComponents()
+
         status = self.statusBar()
         status.setSizeGripEnabled(False)
         status.showMessage("Ready", 5000)
@@ -188,6 +190,16 @@ class MainWindow(QMainWindow):
             if len(self.sourceList.datasources) else None
 
         self.sourceList.populateDataSources(ids)
+        
+
+
+
+    def loadComponents(self):
+        self.componentList.loadList()
+        idc =  self.componentList.components.itervalues().next().id \
+            if len(self.componentList.components) else None
+
+        self.componentList.populateComponents(idc)
         
 
 

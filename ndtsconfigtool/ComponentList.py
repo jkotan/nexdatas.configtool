@@ -23,6 +23,9 @@ import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ui_componentlist
+import os
+
+from ComponentDlg import *
 
 
 ## dialog defining a group tag
@@ -139,6 +142,24 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
 
             
 
+    def loadList(self):
+        dirList=os.listdir(self.directory)
+        for fname in dirList:
+            if fname[-4:] == '.xml':
+                name = fname[:-4]
+            else:
+                name = fname
+                
+            dlg = ComponentDlg()
+            dlg.directory = self.directory
+            dlg.name = name
+            dlg.createGUI()
+            dlg.load()    
+            cp = LabeledObject(name, dlg)
+            self.components[id(cp)] =  cp
+            if cp.widget is not None:
+                cp.widget.idc = cp.id
+            print name
             
 
 

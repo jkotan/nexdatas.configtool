@@ -97,9 +97,9 @@ class ComponentOpen(Command):
             self._cpEdit.directory = self.receiver.componentList.directory
             self._cpEdit.createGUI()
             if self._fpath:
-                self._cpEdit.openFile(self._fpath)
+                self._cpEdit.load(self._fpath)
             else:
-                self._fpath = self._cpEdit.openFile()
+                self._fpath = self._cpEdit.load()
             self._cp.name = self._cpEdit.name  
             self._cp.widget = self._cpEdit
             

@@ -29,7 +29,7 @@ from FieldDlg import FieldDlg
 import os
 
 from ComponentModel import *    
-
+from LabeledObject import LabeledObject
 
 ## dialog defining a tag link 
 class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
@@ -70,12 +70,15 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
 
-    def openFile(self,filePath = None):
+    def load(self,filePath = None):
         
         if not filePath:
-            fPath = unicode(QFileDialog.getOpenFileName(self,"Open File",self.xmlPath,
-                                                        "XML files (*.xml);;HTML files (*.html);;"
-                                                        "SVG files (*.svg);;User Interface files (*.ui)"))
+            if not self.name:
+                fPath = unicode(QFileDialog.getOpenFileName(self,"Open File",self.xmlPath,
+                                                            "XML files (*.xml);;HTML files (*.html);;"
+                                                            "SVG files (*.svg);;User Interface files (*.ui)"))
+            else:
+                fPath = self.directory + "/" + self.name + ".xml"
         else:
             fPath = filePath
         if fPath:
@@ -113,7 +116,7 @@ if __name__ == "__main__":
     component = ComponentDlg()
     component.resize(640,480)
     component.show()
-    component.openFile()
+    component.load()
     app.exec_()
 
     

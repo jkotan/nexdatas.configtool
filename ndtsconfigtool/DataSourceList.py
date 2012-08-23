@@ -26,11 +26,8 @@ import ui_datasourcelist
 from DataSourceDlg import DataSourceDlg
 import os 
 
-class LabeledObject(object):
-    def __init__(self, name , instance):
-        self.name = name
-        self.instance = instance
-        self.id = id(self)
+
+from LabeledObject import LabeledObject
 
 
 ## dialog defining a group tag
@@ -78,8 +75,8 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
             dlg.load()    
             ds = LabeledObject(name, dlg)
             self.datasources[id(ds)] =  ds
-            if ds.instance is not None:
-                ds.instance.ids = ds.id
+            if ds.widget is not None:
+                ds.widget.ids = ds.id
             print name
 
     ## adds an datasource    
@@ -114,8 +111,8 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
             return
         if oid in self.datasources.keys():
             if question :
-                if QMessageBox.question(self, "DataSource - Remove",
-                                        "Remove datasource: %s ".encode() %  (self.datasources[oid].name),
+                if QMessageBox.question(self, "DataSource - Close",
+                                        "Close datasource: %s ".encode() %  (self.datasources[oid].name),
                                         QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
                     return
 
@@ -149,8 +146,8 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
             self.sourceListWidget.addItem(item)
             if selectedDataSource is not None and selectedDataSource == self.datasources[ds].id:
                 selected = item
-            if self.datasources[ds].instance is not None:
-                self.datasources[ds].instance.setWindowTitle("DataSource: %s" %name)
+            if self.datasources[ds].widget is not None:
+                self.datasources[ds].widget.setWindowTitle("DataSource: %s" %name)
 
         if selected is not None:
             selected.setSelected(True)

@@ -30,8 +30,9 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
     
     ## constructor
     # \param parent patent instance
-    def __init__(self, parent=None):
+    def __init__(self, directory, parent=None):
         super(ComponentList, self).__init__(parent)
+        self.directory = directory
         
         ## group components
         self.components = {}
@@ -43,18 +44,18 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
         self.setupUi(self)
 
 
-        self.connect(self.componentListWidget, 
-                     SIGNAL("itemChanged(QListWidgetItem*)"),
-                     self.tableItemChanged)
+#        self.connect(self.componentListWidget, 
+#                     SIGNAL("itemChanged(QListWidgetItem*)"),
+#                     self.listItemChanged)
 
         self.populateComponents()
 
     ## adds an component    
     #  \brief It runs the Component Dialog and fetches component name and value    
-    def addComponent(self,name):
+    def addComponent(self,obj, flag = True):
 
-        self.components[name] = None
-        self.populateComponents(name,True)
+        self.components[obj.id] = obj
+        self.populateComponents(obj.id,flag)
                 
                 
     ## takes a name of the current component
@@ -62,13 +63,32 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
     def currentListComponent(self):
         item = self.componentListWidget.currentItem()
         if item is None:
-            return None
-        return item.data(Qt.UserRole).toString()
+            return None    
+        return self.components[item.data(Qt.UserRole).toLongLong()[0]] 
 
 
     ## removes an component    
     #  \brief It removes the current component asking before about it
-    def removeComponent(self):
+    def removeComponent(self,obj = None, question = True):
+        if obj is not None:
+            oid = obj.id
+        else:
+            comp = self.currentListComponent()
+            if comp is None:
+                return
+            oid = comp.id
+        if oid is None:
+            return
+        if oid in self.components.keys():
+            if question :
+                if QMessageBox.question(self, "Component - Close",
+                                        "Close the component: %s ".encode() %  (self.components[oid].name),
+                                        QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                    return
+
+            self.components.pop(oid)
+            self.populateComponents()
+
         attr = self.currentListComponent()
         if attr is None:
             return
@@ -82,35 +102,43 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
 
     ## changes the current value of the component        
     # \brief It changes the current value of the component and informs the user that component names arenot editable
-    def tableItemChanged(self, item):
-        cp = self.currentListComponent()
+    def listItemChanged(self, item):
+        icp = self.currentListComponent().id
 
-        if unicode(cp) in self.components.keys():
-            data = self.components[unicode(cp)] 
-            self.components.pop(unicode(cp))
-        self.components[unicode(item.text())] =  data
-        self.populateComponents()
+        if icp in self.components.keys():
+            old = self.components[icp] 
+            oname = self.components[icp].name
+            self.components[icp].name = unicode(item.text())
+            self.populateComponents()
+            return old, oname
+
 
     ## fills in the component table      
     # \param selectedComponent selected component    
     def populateComponents(self, selectedComponent = None, edit = False):
-
-            
-
         selected = None
         self.componentListWidget.clear()
         for cp in self.components.keys():
-            item  = QListWidgetItem(QString("%s" % cp))
-            item.setData(Qt.UserRole, QVariant(cp))
+            name = self.components[cp].name
+            item  = QListWidgetItem(QString("%s" % name))
+            item.setData(Qt.UserRole, QVariant(self.components[cp].id))
             item.setFlags(item.flags() | Qt.ItemIsEditable)
             self.componentListWidget.addItem(item)
-            if selectedComponent is not None and selectedComponent == cp:
+            if selectedComponent is not None and selectedComponent == self.components[cp].id:
                 selected = item
+            if self.components[cp].widget is not None:
+                self.components[cp].widget.setWindowTitle("Components: %s" %name)
+
+
         if selected is not None:
             selected.setSelected(True)
             self.componentListWidget.setCurrentItem(selected)
             if edit:
                 self.componentListWidget.editItem(selected)
+
+
+            
+
             
 
 

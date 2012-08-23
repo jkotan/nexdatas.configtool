@@ -23,6 +23,9 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtXml import *
 
+from FieldDlg import FieldDlg
+from GroupDlg import GroupDlg
+from RichAttributeDlg import RichAttributeDlg
 
 ## dialog defining a tag link 
 class ComponentItem(object):
@@ -36,6 +39,16 @@ class ComponentItem(object):
         self.childItems = {}
         self.parent = parent
         self.row = row
+        self.widget = None
+        
+        self.tagClasses = {"field":FieldDlg, "group":GroupDlg}
+
+
+    def createWidget(self):
+        nNode = node.nodeName()
+        if unicode(nNode) in tagClasses.keys():
+            self.widget = tagClasses[unicode(nNode)]()
+        return self.widget    
         
     def child(self, i):
         if i in self.childItems.keys():

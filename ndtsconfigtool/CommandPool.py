@@ -142,7 +142,7 @@ if __name__ == "__main__":
 
 #    args = { 'receiver':actionObj, 'action':'myAction',  } 
     pool = CommandPool(app)
-    pool.createAction("&New", "fileNew",  app, FileNewCommand,
+    pool.createAction("&New", "fileNew",  app, ComponentNew,
                       QKeySequence.New, "filenew", "Create a text file")
                        
 #    pool.getCommand("com1",args)

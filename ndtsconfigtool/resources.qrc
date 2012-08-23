@@ -1,7 +1,9 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
 <file alias="icon.png">images/defragmentation.png</file>
-<file alias="componentnew.png">images/document.png</file>
+<file alias="componentnew.png">images/login.png</file>
+<file alias="componentopen.png">images/document.png</file>
+<file alias="componentremove.png">images/logout.png</file>
 <file alias="dsourceadd.png">images/symbol_add.png</file>
 <file alias="dsourceremove.png">images/symbol_restricted.png</file>
 <file alias="dsourceedit.png">images/symbol_check.png</file>

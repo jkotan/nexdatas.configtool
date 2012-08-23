@@ -43,6 +43,7 @@ class MainWindow(QMainWindow):
         compDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea |  Qt.RightDockWidgetArea)
 
         self.dsDirectory = "./datasources"
+        self.cpDirectory = "./components"
 
         self.sourceList = DataSourceList(self.dsDirectory)
 #        ds1 = LabeledObject("dataSource1", None)
@@ -51,8 +52,11 @@ class MainWindow(QMainWindow):
 #        self.sourceList.datasources[id(ds2)] =  ds2
         self.sourceList.createGUI()
 
-        self.componentList = ComponentList(self)
-        self.componentList.components={"component1":"Test run 1", "component2":"2012-1"}
+        self.componentList = ComponentList(self.cpDirectory)
+        cp1 = LabeledObject("component1", None)
+        self.componentList.components[id(cp1)] =  cp1
+        cp2 = LabeledObject("component2", None)
+        self.componentList.components[id(cp2)] =  cp2
         self.componentList.createGUI()
 
         self.dockSplitter = QSplitter(Qt.Vertical)
@@ -81,9 +85,9 @@ class MainWindow(QMainWindow):
                                                   DataSourceNew,"Ctrl+D", "dsourceadd", 
                                                   "Create the new data source") 
 
-        dsourceRemoveAction = self.pool.createAction("&Remove DataSource", "dsourceRemove",  commandArgs, 
+        dsourceRemoveAction = self.pool.createAction("&Close DataSource", "dsourceRemove",  commandArgs, 
                                                   DataSourceRemove,"Ctrl+R", "dsourceremove", 
-                                                  "Remove the data source")
+                                                  "Close the data source")
 
 
         dsourceEditAction = self.pool.createAction("&Edit DataSource", "dsourceEdit",  commandArgs, 
@@ -92,20 +96,42 @@ class MainWindow(QMainWindow):
 
        
         self.pool.createTask("dsourceChanged",commandArgs, DataSourceListChanged,
-                             self.sourceList.sourceListWidget, "itemChanged(QListWidgetItem*)")
+                             self.sourceList.sourceListWidget, 
+                             "itemChanged(QListWidgetItem*)")
+
+        self.pool.createTask("componentChanged",commandArgs, ComponentListChanged,
+                             self.componentList.componentListWidget, 
+                             "itemChanged(QListWidgetItem*)")
 
 
         self.pool.createTask("dsourceCurrentItemChanged",commandArgs, DataSourceCurrentItemChanged,
                              self.sourceList.sourceListWidget, 
                              "currentItemChanged(QListWidgetItem*,QListWidgetItem*)")
 
+        self.pool.createTask("componentCurrentItemChanged",commandArgs, ComponentCurrentItemChanged,
+                             self.componentList.componentListWidget, 
+                             "currentItemChanged(QListWidgetItem*,QListWidgetItem*)")
+
+
+#        self.pool.createTask("componentClicked",commandArgs, ComponentClicked,
+#                             self.componentList.componentListWidget, 
+#                             "clicked(QModelIndex)")
+
 
         self.connect(self.mdi, SIGNAL("windowActivated(QWidget*)"), self.mdiWindowActivated)
 
         
 
-        fileNewAction = self.pool.createAction("&New", "fileNew",  commandArgs, FileNewCommand,
-                               QKeySequence.New, "componentnew", "Create a text file")
+        componentNewAction = self.pool.createAction("&New", "componentNew",  commandArgs, ComponentNew,
+                               QKeySequence.New, "componentnew", "Create the new component")
+
+
+        componentOpenAction = self.pool.createAction("&Open", "componentOpen",  commandArgs, ComponentOpen,
+                               QKeySequence.Open, "componentopen", "Open the component")
+
+        componentRemoveAction = self.pool.createAction("&Close", "componentRemove",  commandArgs, 
+                                                  ComponentRemove,"Ctrl+R", "componentremove", 
+                                                  "Close the component")
 
         fileQuitAction = self.pool.createAction("&Quit", "closeApp", commandArgs, CloseApplication,
                                "Ctrl+Q", "filequit", "Close the application")
@@ -122,19 +148,22 @@ class MainWindow(QMainWindow):
 
 
         fileMenu = self.menuBar().addMenu("&File")    
-        self.addActions(fileMenu, ( fileNewAction,None,fileQuitAction))
+        self.addActions(fileMenu, ( componentNewAction, componentOpenAction,
+                                    componentRemoveAction, None, fileQuitAction))
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (undoAction,reundoAction))
         fileMenu = self.menuBar().addMenu("Data&Sources")    
         self.addActions(fileMenu, (dsourceNewAction,dsourceEditAction,dsourceRemoveAction))
  
+        self.windowMenu = self.menuBar().addMenu("&View")
         self.windowMenu = self.menuBar().addMenu("&Window")
         self.windowMenu = self.menuBar().addMenu("&Help")
 
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolbar")
 
-        self.addActions(fileToolbar, (fileNewAction, None,
+        self.addActions(fileToolbar, (componentNewAction,componentOpenAction, 
+                                      componentRemoveAction, None,
                                       dsourceNewAction,dsourceEditAction,dsourceRemoveAction, None, 
                                       undoAction, reundoAction))
 
@@ -190,6 +219,16 @@ class MainWindow(QMainWindow):
         self.pooling = True
 
 
+    def componentRemove(self):
+        self.pooling = False
+        cmd = self.pool.getCommand('componentRemove').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+        self.pooling = True
+
+
     def dsourceEdit(self):
         cmd = self.pool.getCommand('dsourceEdit').clone()
         cmd.execute()
@@ -217,6 +256,17 @@ class MainWindow(QMainWindow):
         self.pooling = True
 
 
+    def componentClicked(self, index):
+        if self.pooling:
+            cmd = self.pool.getCommand('componentClicked').clone()
+            cmd.index = index
+            cmd.execute()
+            self.cmdStack.append(cmd)
+            self.pool.setDisabled("undo",False)
+            self.pool.setDisabled("reundo",True)   
+
+
+
 
 
     def dsourceCurrentItemChanged(self, item ,previousItem):
@@ -236,12 +286,48 @@ class MainWindow(QMainWindow):
             self.pool.setDisabled("reundo",True)   
 
 
-    def fileNew(self):
-        cmd = self.pool.getCommand('fileNew').clone()
+    def componentChanged(self, item):
+        cmd = self.pool.getCommand('componentChanged').clone()
+        cmd.item = item
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)
         self.pool.setDisabled("reundo",True)   
+
+
+
+    def componentCurrentItemChanged(self, item ,previousItem):
+        print "curr: " , item.text() if hasattr(item, "text") else item
+        print "prev: " , previousItem.text() if hasattr(previousItem, "text") else previousItem
+        if self.pooling:
+#            if item == previousItem  :
+#                return
+            if previousItem is None or item is None :
+                return
+            cmd = self.pool.getCommand('componentCurrentItemChanged').clone()
+            cmd.item = item
+            cmd.previousItem = previousItem
+            cmd.execute()
+            self.cmdStack.append(cmd)
+            self.pool.setDisabled("undo",False)
+            self.pool.setDisabled("reundo",True)   
+
+
+    def componentNew(self):
+        cmd = self.pool.getCommand('componentNew').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+    def componentOpen(self):
+        self.pooling = False
+        cmd = self.pool.getCommand('componentOpen').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+        self.pooling = True
 
 
     def undo(self):

@@ -38,7 +38,21 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     # \param parent patent instance
     def __init__(self, parent=None):
         super(ComponentDlg, self).__init__(parent)
+
+        self.xmlPath = os.path.dirname(".")
+        self.view = None
+        self.frame = None
+        self.model = None
         
+        ## component id
+        self.idc = None
+        self.name = ""
+
+    def setupForm(self):
+        pass
+        
+
+    def createGUI(self):
         self.setupUi(self)
 
 
@@ -52,22 +66,21 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         grid.addWidget(field)
         self.frame.setLayout(grid)
 
-        self.xmlPath = os.path.dirname(".")
         self.setupForm()
 
-    def setupForm(self):
-        pass
-        
 
 
-    def openFile(self):
+    def openFile(self,filePath = None):
         
-        filePath = unicode(QFileDialog.getOpenFileName(self,"Open File",self.xmlPath,
-                                                    "XML files (*.xml);;HTML files (*.html);;"
-                                                    "SVG files (*.svg);;User Interface files (*.ui)"))
-        if filePath:
+        if not filePath:
+            fPath = unicode(QFileDialog.getOpenFileName(self,"Open File",self.xmlPath,
+                                                        "XML files (*.xml);;HTML files (*.html);;"
+                                                        "SVG files (*.svg);;User Interface files (*.ui)"))
+        else:
+            fPath = filePath
+        if fPath:
             try:
-                fh = QFile(filePath)
+                fh = QFile(fPath)
                 if  fh.open(QIODevice.ReadOnly):
                     document = QDomDocument()
                 
@@ -77,13 +90,20 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                     newModel = ComponentModel(document, self)
                     self.view.setModel(newModel)
                     self.model = newModel
-                    self.xmlPath = filePath
+                    self.xmlPath = fPath
+                    fi = QFileInfo(fPath);
+                    self.name = fi.fileName(); 
+
+                    if self.name[-4:] == '.xml':
+                        self.name = self.name[:-4]
             except (IOError, OSError, ValueError), e:
                 error = "Failed to import: %s" % e
                 print error
             finally:                 
                 if fh is not None:
                     fh.close()
+                    return fPath
+            
 
 if __name__ == "__main__":
     import sys

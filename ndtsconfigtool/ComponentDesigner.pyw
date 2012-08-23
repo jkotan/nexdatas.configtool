@@ -53,10 +53,10 @@ class MainWindow(QMainWindow):
         self.sourceList.createGUI()
 
         self.componentList = ComponentList(self.cpDirectory)
-        cp1 = LabeledObject("component1", None)
-        self.componentList.components[id(cp1)] =  cp1
-        cp2 = LabeledObject("component2", None)
-        self.componentList.components[id(cp2)] =  cp2
+#        cp1 = LabeledObject("component1", None)
+#        self.componentList.components[id(cp1)] =  cp1
+#        cp2 = LabeledObject("component2", None)
+#        self.componentList.components[id(cp2)] =  cp2
         self.componentList.createGUI()
 
         self.dockSplitter = QSplitter(Qt.Vertical)

@@ -79,7 +79,7 @@ class MainWindow(QMainWindow):
 
         dsourceNewAction = self.pool.createAction("&New DataSource", "dsourceNew",  commandArgs, 
                                                   DataSourceNew,"Ctrl+D", "dsourceadd", 
-                                                  "Create a data source") 
+                                                  "Create the new data source") 
 
         dsourceRemoveAction = self.pool.createAction("&Remove DataSource", "dsourceRemove",  commandArgs, 
                                                   DataSourceRemove,"Ctrl+R", "dsourceremove", 

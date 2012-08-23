@@ -66,6 +66,8 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
         self.dbQuery = ""
         ## database parameters
         self.dbParameters = {}
+        ## database parameters
+        self._dbParam = {}
 
         ## parameter map for XMLdumper
         self.dbxml = {"DB name":"dbname",
@@ -153,8 +155,11 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
                                     "Unknown parameter %s = '%s' will be removed." 
                                     % (par, self.dbParameters[unicode(par)]) )
                 self.dbParameters.pop(unicode(par))
-            
-            
+            else:
+                print "REVERT: %s %s" % (unicode(par), self.dbParameters[(unicode(par))])
+                self._dbParam[unicode(par)]=self.dbParameters[(unicode(par))]
+        self.populateParameters()
+    
 
 
 
@@ -229,8 +234,8 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
     #  \brief It runs the Parameter Dialog and fetches parameter name and value    
     def addParameter(self):
         name =  unicode(self.dParamComboBox.currentText())
-        if name not in self.dbParameters.keys():
-            self.dbParameters[name] = ""
+        if name not in self._dbParam.keys():
+            self._dbParam[name] = ""
         self.populateParameters(name)
     
 
@@ -250,11 +255,11 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
             return
         if QMessageBox.question(self, "Parameter - Remove",
                                 "Remove parameter: %s = \'%s\'".encode() 
-                                %  (param, self.dbParameters[unicode(param)]),
+                                %  (param, self._dbParam[unicode(param)]),
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
-        if unicode(param) in self.dbParameters.keys():
-            self.dbParameters.pop(unicode(param))
+        if unicode(param) in self._dbParam.keys():
+            self._dbParam.pop(unicode(param))
             self.populateParameters()
 
 
@@ -262,11 +267,11 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
     # \brief It changes the current value of the parameter and informs the user that parameter names arenot editable
     def tableItemChanged(self, item):
         param = self.currentTableParameter()
-        if unicode(param)  not in self.dbParameters.keys():
+        if unicode(param)  not in self._dbParam.keys():
             return
         column = self.dParameterTableWidget.currentColumn()
         if column == 1:
-            self.dbParameters[unicode(param)] = unicode(item.text())
+            self._dbParam[unicode(param)] = unicode(item.text())
         if column == 0:
             QMessageBox.warning(self, "Parameter name is not editable", "To change the parameter name, please remove the parameter and add the new one")
         self.populateParameters()
@@ -278,15 +283,15 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
         selected = None
         self.dParameterTableWidget.clear()
         self.dParameterTableWidget.setSortingEnabled(False)
-        self.dParameterTableWidget.setRowCount(len(self.dbParameters))
+        self.dParameterTableWidget.setRowCount(len(self._dbParam))
         headers = ["Name", "Value"]
         self.dParameterTableWidget.setColumnCount(len(headers))
         self.dParameterTableWidget.setHorizontalHeaderLabels(headers)	
-        for row, name in enumerate(self.dbParameters):
+        for row, name in enumerate(self._dbParam):
             item = QTableWidgetItem(name)
             item.setData(Qt.UserRole, QVariant(name))
             self.dParameterTableWidget.setItem(row, 0, item)
-            item2 = QTableWidgetItem(self.dbParameters[name])
+            item2 = QTableWidgetItem(self._dbParam[name])
             if selectedParameter is not None and selectedParameter == name:
                 selected = item2
             self.dParameterTableWidget.setItem(row, 1, item2)
@@ -356,12 +361,14 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
                                     self.dbType = value         
                                 elif name in self.dbmap:
                                     self.dbParameters[self.dbmap[name]] = value
+                                    self._dbParam[self.dbmap[name]] = value
 
                             dtxt = ""
                             for txt in database.childNodes:
                                 if txt.nodeType == txt.TEXT_NODE:
                                     dtxt = dtxt + txt.data
                             self.dbParameters['Oracle DSN'] = dtxt.strip()
+                            self._dbParam['Oracle DSN'] = dtxt.strip()
                         except:
                             self.dbType = 'MYSQL'
                                     
@@ -496,6 +503,11 @@ class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
             self.dbType =  unicode(self.dTypeComboBox.currentText())
             self.dbDataFormat =  unicode(self.dFormatComboBox.currentText())
 
+            self.dbParameters.clear()
+            for par in self._dbParam.keys():
+                self.dbParameters[par] = self._dbParam[par]
+
+
         self.dataSourceType = sourceType
 
         self.doc = unicode(self.docTextEdit.toPlainText())
@@ -557,7 +569,7 @@ if __name__ == "__main__":
     form.dataSourceType = 'DB'
     form.dbType = 'PGSQL'
     form.dbDataFormat = 'SPECTRUM'
-    form.dbParameters = {'DB name':'tango', 'DB user':'tangouser'}
+#    form.dbParameters = {'DB name':'tango', 'DB user':'tangouser'}
 
     form.createGUI()
 

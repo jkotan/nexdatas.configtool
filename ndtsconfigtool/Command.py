@@ -285,12 +285,14 @@ class DataSourceCurrentItemChanged(Command):
                     self._wasCreated  = True
                 self._dsEdit = DataSourceDlg() 
                 self._dsEdit.ids = self._ds.id
+                print  "ID", self._ds.id
                 self._dsEdit.directory = self.receiver.sourceList.directory
                 self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
                 self._dsEdit.createGUI()
                 self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)  
             else:
                 self._dsEdit = self._ds.instance 
+                print  "ID-e", self._ds.id
             if self._ds.instance in self.receiver.mdi.windowList() or self._wasInWS:
                 print "show"
                 if self._wasInWS is None : 
@@ -311,6 +313,7 @@ class DataSourceCurrentItemChanged(Command):
 
     def unexecute(self):
         if hasattr(self._ds, "instance"):
+            print  "ID-u", self._ds.id
             if self._wasCreated:
                 self._ds.instance.setAttribute(Qt.WA_DeleteOnClose)
             if not self._wasInWS: 

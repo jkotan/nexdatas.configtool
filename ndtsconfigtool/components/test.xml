@@ -1,0 +1,201 @@
+<?xml version="1.0" ?>
+<definition>
+  <group name="entry1" type="NXentry">
+    <group name="instrument" type="NXinstrument">
+      <group name="source" type="NXsource">
+        <field name="distance" type="NX_FLOAT" units="m">
+          100.
+        </field>
+        <field name="single_mysql_record_string" type="NX_CHAR">
+          <dimensions rank="1">
+            <dim index="1" value="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+        <field name="single_mysql_record_int" type="NX_INT">
+          <dimensions rank="1">
+            <dim index="1" value="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+        <field name="mysql_record" type="NX_CHAR">
+          <dimensions rank="2">
+            <dim index="1" value="151"/>
+            <dim index="2" value="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <query format="IMAGE">
+              SELECT name, pid FROM device limit 151
+            </query>
+          </datasource>
+        </field>
+        <field name="pgsql_record" type="NX_CHAR">
+          <dimensions rank="2">
+            <dim index="1" value="3"/>
+            <dim index="2" value="5"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="DB">
+            <database dbname="mydb" dbtype="PGSQL"/>
+            <query format="IMAGE">
+              SELECT * FROM weather limit 3
+            </query>
+          </datasource>
+        </field>
+        <field name="oracle_record" type="NX_CHAR">
+          <dimensions rank="1">
+            <dim index="1" value="19"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="DB">
+            <database dbtype="ORACLE" hostname="haso228k.desy.de" passwd="****" user="read">
+              (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))
+            </database>
+            <query format="SPECTRUM">
+              select * from (select * from telefonbuch) where ROWNUM &lt;= 19
+            </query>
+          </datasource>
+        </field>
+        <field name="type" type="NX_CHAR">
+          Synchrotron X-ray Source
+        </field>
+        <field name="name" type="NX_CHAR">
+          PETRA-III
+          <attribute name="short_name" type="NX_CHAR">
+            P3
+          </attribute>
+        </field>
+        <field name="probe" type="NX_CHAR">
+          x-ray
+        </field>
+        <field name="power" type="NX_FLOAT" units="W">
+          1
+          <strategy mode="INIT"/>
+          <datasource type="TANGO">
+            <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
+            <record name="Position"/>
+          </datasource>
+        </field>
+        <field name="emittance_x" type="NX_FLOAT" units="nm rad">
+          0.2
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="emitannce_x"/>
+          </datasource>
+        </field>
+        <field name="emittance_y" type="NX_FLOAT" units="nm rad">
+          0.2
+        </field>
+        <field name="sigma_x" type="NX_FLOAT" units="nm">
+          0.1
+        </field>
+        <field name="sigma_y" type="NX_FLOAT" units="nm">
+          0.1
+        </field>
+        <field name="flux" type="NX_FLOAT" units="s-1 cm-2">
+          0.1
+        </field>
+        <field name="energy" type="NX_FLOAT" units="GeV">
+          0.1
+        </field>
+        <field name="current" type="NX_FLOAT" units="A">
+          10
+        </field>
+        <field name="voltage" type="NX_FLOAT" units="V">
+          10
+        </field>
+        <field name="period" type="NX_FLOAT" units="microseconds">
+          1
+        </field>
+        <field name="target_material" type="NX_CHAR">
+          C
+        </field>
+      </group>
+      <group name="crystal" type="NXcrystal">
+        <field name="distance" type="NX_FLOAT" units="A">
+          <doc>
+            Optimum diffracted wavelength
+          </doc>
+          <dimensions rank="1">
+            <dim index="1" value="10"/>
+          </dimensions>
+        </field>
+      </group>
+      <group name="detector" type="NXdetector">
+        <field name="azimuthal_angle" type="NX_FLOAT">
+          0.1
+        </field>
+        <field name="beam_center_x" type="NX_FLOAT">
+          0.0001
+        </field>
+        <field name="beam_center_y" type="NX_FLOAT">
+          -0.00012
+        </field>
+        <field name="data" type="NX_UINT32">
+          <dimensions rank="2">
+            <dim index="1" value="2"/>
+            <dim index="2" value="2"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource type="TANGO">
+            <device hostname="haso228k.desy.de" member="attribute" name="p09/tst/exp.01" port="10000"/>
+            <record name="MyImageAttribute"/>
+          </datasource>
+        </field>
+        <field name="distance" type="NX_FLOAT">
+          10.00012
+        </field>
+        <field name="polar_angle" type="NX_FLOAT">
+          <doc>
+             Optional rotation angle for the case when the powder diagram has been obtained
+	  through an omega-2theta scan like from a traditional single detector powder
+	  diffractometer
+          </doc>
+          <dimensions rank="1">
+            <dim index="1" value="100"/>
+          </dimensions>
+        </field>
+        <field name="rotation_angle" type="NX_FLOAT">
+          0.0
+        </field>
+        <field name="x_pixel_size" type="NX_FLOAT">
+          0.01
+        </field>
+        <field name="y_pixel_size" type="NX_FLOAT">
+          0.01
+          <strategy mode="FINAL"/>
+          <datasource type="TANGO">
+            <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
+            <record name="Position"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+    <group name="data" type="NXdata">
+      <link name="polar_angle" target="/NXentry/NXinstrument/NXdetector/polar_angle">
+        <doc>
+          Link to polar angle in /NXentry/NXinstrument/NXdetector
+        </doc>
+      </link>
+      <link name="data" target="/NXentry/NXinstrument/NXdetector/data">
+        <doc>
+          Link to data in /NXentry/NXinstrument/NXdetector
+        </doc>
+      </link>
+    </group>
+  </group>
+</definition>

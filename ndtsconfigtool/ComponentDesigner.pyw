@@ -81,18 +81,19 @@ class MainWindow(QMainWindow):
 
         commandArgs = {'receiver':self}
 
-        dsourceNewAction = self.pool.createAction("&New DataSource", "dsourceNew",  commandArgs, 
+        dsourceNewAction = self.pool.createCommand("&New DataSource", "dsourceNew",  commandArgs, 
                                                   DataSourceNew,"Ctrl+D", "dsourceadd", 
                                                   "Create the new data source") 
 
-        dsourceRemoveAction = self.pool.createAction("&Close DataSource", "dsourceRemove",  commandArgs, 
+        dsourceRemoveAction = self.pool.createCommand("&Close DataSource", "dsourceRemove",  commandArgs, 
                                                   DataSourceRemove,"Ctrl+R", "dsourceremove", 
                                                   "Close the data source")
 
 
-        dsourceEditAction = self.pool.createAction("&Edit DataSource", "dsourceEdit",  commandArgs, 
+        dsourceEditAction = self.pool.createCommand("&Edit DataSource", "dsourceEdit",  commandArgs, 
                                                   DataSourceEdit,"Ctrl+E", "dsourceedit", 
                                                   "Edit the data source")
+
 
        
         self.pool.createTask("dsourceChanged",commandArgs, DataSourceListChanged,
@@ -122,28 +123,55 @@ class MainWindow(QMainWindow):
 
         
 
-        componentNewAction = self.pool.createAction("&New", "componentNew",  commandArgs, ComponentNew,
-                               QKeySequence.New, "componentnew", "Create the new component")
+        componentNewAction = self.pool.createCommand("&New", "componentNew",  
+                                                     commandArgs, ComponentNew,
+                                                     QKeySequence.New, "componentnew", 
+                                                     "Create the new component")
 
 
-        componentOpenAction = self.pool.createAction("&Open", "componentOpen",  commandArgs, ComponentOpen,
-                               QKeySequence.Open, "componentopen", "Open the component")
+        componentOpenAction = self.pool.createCommand("&Open", "componentOpen",  
+                                                      commandArgs, ComponentOpen,
+                                                      QKeySequence.Open, "componentopen", 
+                                                      "Open the component")
 
-        componentRemoveAction = self.pool.createAction("&Close", "componentRemove",  commandArgs, 
-                                                  ComponentRemove,"Ctrl+R", "componentremove", 
-                                                  "Close the component")
+        componentRemoveAction = self.pool.createCommand("&Close", "componentRemove",  
+                                                        commandArgs, ComponentRemove,
+                                                        "Ctrl+R", "componentremove", 
+                                                        "Close the component")
 
-        fileQuitAction = self.pool.createAction("&Quit", "closeApp", commandArgs, CloseApplication,
-                               "Ctrl+Q", "filequit", "Close the application")
+        fileQuitAction = self.pool.createCommand("&Quit", "closeApp", commandArgs, 
+                                                 CloseApplication, "Ctrl+Q", "filequit", 
+                                                 "Close the application")
 
-        undoAction = self.pool.createAction("&Undo", "undo",  commandArgs, UndoCommand,
-                               "Ctrl+Z", "undo", "Undo the last command")
-        reundoAction = self.pool.createAction("&Re-undo", "reundo",  commandArgs, ReundoCommand,
-                               "Ctrl+Y", "redo", "Re-undo the last command")
+        undoAction = self.pool.createCommand("&Undo", "undo",  commandArgs, UndoCommand,
+                                             "Ctrl+Z", "undo", "Undo the last command")
+        reundoAction = self.pool.createCommand("&Re-undo", "reundo",  commandArgs, ReundoCommand,
+                                               "Ctrl+Y", "redo", "Re-undo the last command")
 
         undoAction.setDisabled(True)
         reundoAction.setDisabled(True)
 
+        self.windowNextAction = self.createAction("&Next",
+                self.mdi.activateNextWindow, QKeySequence.NextChild)
+        self.windowPrevAction = self.createAction("&Previous",
+                self.mdi.activatePreviousWindow,
+                QKeySequence.PreviousChild)
+        self.windowCascadeAction = self.createAction("Casca&de",
+                self.mdi.cascade)
+        self.windowTileAction = self.createAction("&Tile",
+                self.mdi.tile)
+        self.windowRestoreAction = self.createAction("&Restore All",
+                self.windowRestoreAll)
+        self.windowMinimizeAction = self.createAction("&Iconize All",
+                self.windowMinimizeAll)
+        self.windowArrangeIconsAction = self.createAction(
+                "&Arrange Icons", self.mdi.arrangeIcons)
+        self.windowCloseAction = self.createAction("&Close",
+                self.mdi.closeActiveWindow, QKeySequence.Close)
+
+        self.windowMapper = QSignalMapper(self)
+        self.connect(self.windowMapper, SIGNAL("mapped(QWidget*)"),
+                     self.mdi, SLOT("setActiveWindow(QWidget*)"))
 
 
 
@@ -155,9 +183,11 @@ class MainWindow(QMainWindow):
         fileMenu = self.menuBar().addMenu("Data&Sources")    
         self.addActions(fileMenu, (dsourceNewAction,dsourceEditAction,dsourceRemoveAction))
  
-        self.windowMenu = self.menuBar().addMenu("&View")
+        self.viewMenu = self.menuBar().addMenu("&View")
         self.windowMenu = self.menuBar().addMenu("&Window")
-        self.windowMenu = self.menuBar().addMenu("&Help")
+        self.connect(self.windowMenu, SIGNAL("aboutToShow()"),
+                     self.updateWindowMenu)
+        self.helpMenu = self.menuBar().addMenu("&Help")
 
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolbar")
@@ -265,6 +295,11 @@ class MainWindow(QMainWindow):
                 if hasattr(self.sourceList.currentListDataSource(),"id"):
                     if self.sourceList.currentListDataSource().id != widget.ids: 
                         self.sourceList.populateDataSources(widget.ids)
+        elif isinstance(widget, ComponentDlg):
+            if widget.idc is not None:
+                if hasattr(self.componentList.currentListComponent(),"id"):
+                    if self.componentList.currentListComponent().id != widget.idc:
+                        self.componentList.populateComponents(widget.idc)
         self.pooling = True
 
 
@@ -383,6 +418,67 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo",False)
         self.pool.setDisabled("reundo",True)   
 
+
+
+    def createAction(self, text, slot=None, shortcut=None, icon=None,
+                     tip=None, checkable=False, signal="triggered()"):
+        action = QAction(text, self)
+        if icon is not None:
+            action.setIcon(QIcon(":/{0}.png".format(icon)))
+        if shortcut is not None:
+            action.setShortcut(shortcut)
+        if tip is not None:
+            action.setToolTip(tip)
+            action.setStatusTip(tip)
+        if slot is not None:
+            self.connect(action, SIGNAL(signal), slot)
+        if checkable:
+            action.setCheckable(True)
+        return action
+
+
+
+
+    def windowRestoreAll(self):
+        for dialog in self.mdi.windowList():
+            dialog.showNormal()
+
+
+    def windowMinimizeAll(self):
+        for dialog in self.mdi.windowList():
+            dialog.showMinimized()
+
+
+    def updateWindowMenu(self):
+        print "update"
+        self.windowMenu.clear()
+        self.addActions(self.windowMenu, (self.windowNextAction,
+                self.windowPrevAction, self.windowCascadeAction,
+                self.windowTileAction, self.windowRestoreAction,
+                self.windowMinimizeAction,
+                self.windowArrangeIconsAction, None,
+                self.windowCloseAction))
+        dialogs = self.mdi.windowList()
+        if not dialogs:
+            return
+        self.windowMenu.addSeparator()
+        i = 1
+        menu = self.windowMenu
+        for dialog in dialogs:
+            title = dialog.windowTitle()
+            if i == 10:
+                self.windowMenu.addSeparator()
+                menu = menu.addMenu("&More")
+            accel = ""
+            if i < 10:
+                accel = "&{0} ".format(i)
+            elif i < 36:
+                accel = "&{0} ".format(chr(i + ord("@") - 9))
+            action = menu.addAction("{0}{1}".format(accel, title))
+            self.connect(action, SIGNAL("triggered()"),
+                         self.windowMapper, SLOT("map()"))
+            self.windowMapper.setMapping(action, dialog)
+            i += 1
 
 
 

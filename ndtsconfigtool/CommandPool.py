@@ -73,7 +73,7 @@ class CommandPool(object):
         else:
             raise ValueError, "Origin without 'connect' attribute"
 
-    def createAction(self, text, name, args, command=None,  shortcut=None, icon=None,
+    def createCommand(self, text, name, args, command=None,  shortcut=None, icon=None,
                      tip=None, checkable=False, signal="triggered()"):
         action = QAction(text, self.origin)
         if icon is not None:

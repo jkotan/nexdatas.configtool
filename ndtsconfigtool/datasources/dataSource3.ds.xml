@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<definition>
+  <datasource type="DB">
+    <database dbname="tango" dbtype="MYSQL" hostname="hasso.desy.de" mode="my oracle mode" mycnf="file.name" passwd="public" port="10000" user="me">
+      complicated DSN string
+    </database>
+    <query format="IMAGE">
+      select * from device
+    </query>
+    <doc>
+      test database datasource
+    </doc>
+  </datasource>
+</definition>

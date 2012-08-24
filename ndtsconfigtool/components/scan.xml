@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<definition>
+  <group name="entry1" type="NXentry">
+    <group name="instrument" type="NXinstrument">
+      <group name="detector" type="NXdetector">
+        <field name="counter1" type="NX_FLOAT" units="m">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="exp_c01"/>
+          </datasource>
+        </field>
+        <field name="counter2" type="NX_FLOAT" units="s">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="exp_c02"/>
+          </datasource>
+        </field>
+        <field name="mca" type="NX_FLOAT" units="">
+          <dimensions rank="1">
+            <dim index="1" value="2048"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="p09/mca/exp.02"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+    <group name="data" type="NXdata">
+      <link name="data" target="/NXentry/NXinstrument/NXdetector/mca">
+        <doc>
+          Link to mca in /NXentry/NXinstrument/NXdetector
+        </doc>
+      </link>
+      <link name="counter1" target="/NXentry/NXinstrument/NXdetector/counter1">
+        <doc>
+          Link to counter1 in /NXentry/NXinstrument/NXdetector
+        </doc>
+      </link>
+      <link name="counter2" target="/NXentry/NXinstrument/NXdetector/counter2">
+        <doc>
+          Link to counter2 in /NXentry/NXinstrument/NXdetector
+        </doc>
+      </link>
+    </group>
+  </group>
+</definition>

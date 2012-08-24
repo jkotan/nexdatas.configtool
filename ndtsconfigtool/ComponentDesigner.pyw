@@ -24,13 +24,15 @@ import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
+import platform
 import qrc_resources
 
 from CommandPool import *
 from DataSourceList import *
 from ComponentList import *
 
-__version__ = "1.0.0"
+#__version__ = "1.0.0"
+__version__ = "0.0.1"
 
 
 class MainWindow(QMainWindow):
@@ -151,27 +153,32 @@ class MainWindow(QMainWindow):
         undoAction.setDisabled(True)
         reundoAction.setDisabled(True)
 
-        self.windowNextAction = self.createAction("&Next",
-                self.mdi.activateNextWindow, QKeySequence.NextChild)
-        self.windowPrevAction = self.createAction("&Previous",
-                self.mdi.activatePreviousWindow,
-                QKeySequence.PreviousChild)
-        self.windowCascadeAction = self.createAction("Casca&de",
-                self.mdi.cascade)
-        self.windowTileAction = self.createAction("&Tile",
-                self.mdi.tile)
-        self.windowRestoreAction = self.createAction("&Restore All",
-                self.windowRestoreAll)
-        self.windowMinimizeAction = self.createAction("&Iconize All",
-                self.windowMinimizeAll)
+        self.windowNextAction = self.createAction(
+            "&Next", self.mdi.activateNextWindow, 
+            QKeySequence.NextChild, tip = "Go to the next window")
+        self.windowPrevAction = self.createAction(
+            "&Previous", self.mdi.activatePreviousWindow,
+            QKeySequence.PreviousChild, tip = "Go to the previous window")
+        self.windowCascadeAction = self.createAction(
+            "Casca&de", self.mdi.cascade, tip = "Cascade the windows")
+        self.windowTileAction = self.createAction(
+            "&Tile", self.mdi.tile, tip = "Tile the windows")
+        self.windowRestoreAction = self.createAction(
+            "&Restore All", self.windowRestoreAll, tip = "Restore the windows")
+        self.windowMinimizeAction = self.createAction(
+            "&Iconize All", self.windowMinimizeAll, tip = "Minimize the windows")
         self.windowArrangeIconsAction = self.createAction(
-                "&Arrange Icons", self.mdi.arrangeIcons)
-        self.windowCloseAction = self.createAction("&Close",
-                self.mdi.closeActiveWindow, QKeySequence.Close)
+            "&Arrange Icons", self.mdi.arrangeIcons, tip = "Arrange the icons")
+        self.windowCloseAction = self.createAction(
+            "&Close", self.mdi.closeActiveWindow, QKeySequence.Close,
+            tip = "Close the window" )
 
         self.windowMapper = QSignalMapper(self)
         self.connect(self.windowMapper, SIGNAL("mapped(QWidget*)"),
                      self.mdi, SLOT("setActiveWindow(QWidget*)"))
+
+        helpAboutAction = self.createAction("&About Component Designer",
+                self.helpAbout, tip = "About Component Designer")
 
 
 
@@ -183,11 +190,16 @@ class MainWindow(QMainWindow):
         fileMenu = self.menuBar().addMenu("Data&Sources")    
         self.addActions(fileMenu, (dsourceNewAction,dsourceEditAction,dsourceRemoveAction))
  
-        self.viewMenu = self.menuBar().addMenu("&View")
+        viewMenu = self.menuBar().addMenu("&View")
         self.windowMenu = self.menuBar().addMenu("&Window")
         self.connect(self.windowMenu, SIGNAL("aboutToShow()"),
                      self.updateWindowMenu)
-        self.helpMenu = self.menuBar().addMenu("&Help")
+
+        self.menuBar().addSeparator()
+
+        helpMenu = self.menuBar().addMenu("&Help") 
+        self.addActions(helpMenu, (helpAboutAction, ))
+        
 
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolbar")
@@ -448,9 +460,19 @@ class MainWindow(QMainWindow):
         for dialog in self.mdi.windowList():
             dialog.showMinimized()
 
+    def helpAbout(self):
+        QMessageBox.about(self, "About Component Designer",
+                """<b>Component Designer</b> v {0}
+                <p>Copyright &copy; 2012 GNU GENERAL PUBLIC LICENSE
+                <p>This application can be used to create
+                XML configuration file for the Nexus Data Writer.
+                <p>Python {1} - Qt {2} - PyQt {3} on {4}""".format(
+                __version__, platform.python_version(),
+                QT_VERSION_STR, PYQT_VERSION_STR,
+                platform.system()))
+
 
     def updateWindowMenu(self):
-        print "update"
         self.windowMenu.clear()
         self.addActions(self.windowMenu, (self.windowNextAction,
                 self.windowPrevAction, self.windowCascadeAction,

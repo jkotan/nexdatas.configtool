@@ -42,6 +42,8 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         self.doc = u''
         ## group attributes
         self.attributes = {}
+        ## DOM node    
+        self.node = None
 
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
@@ -59,6 +61,8 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
 
         self.updateUi()
 
+        self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+                     self.accept)
         self.connect(self.attributeTableWidget, 
                      SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.tableItemChanged)
@@ -68,6 +72,43 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
                      self.removeAttribute)
 
         self.populateAttributes()
+
+    def setFromNode(self, node):
+        self.node = node
+        attributeMap = node.attributes()
+        nNode = node.nodeName()
+
+        if attributeMap.contains("name"):
+            self.name = attributeMap.namedItem("name").nodeValue()
+        else:
+            self.name = ""
+        if attributeMap.contains("type"):
+            self.nexusType = attributeMap.namedItem("type").nodeValue() 
+        else:
+            self.nexusType = ""
+
+        self.attributes.clear()    
+        for i in range(attributeMap.count()):
+            attribute = attributeMap.item(i)
+            attrName = attribute.nodeName()
+            if attrName != "name" and attrName != "type":
+                self.attributes[unicode(attribute.nodeName())] = unicode(attribute.nodeValue())
+
+        doc = node.firstChildElement(QString("doc"))           
+        if doc:
+            self.doc =unicode(doc.text()).strip()
+
+        else:
+            self.doc = ""
+             
+
+
+#    form.name = 'entry'
+#    form.nexusType = 'NXentry'
+#    form.doc = 'The main entry'
+#    form.attributes={"title":"Test run 1", "run_cycle":"2012-1"}
+            
+
 
     ## adds an attribute    
     #  \brief It runs the Attribute Dialog and fetches attribute name and value    
@@ -157,17 +198,34 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
     # \brief It sets enable or disable the OK button
     def updateUi(self):
         enable = not self.typeLineEdit.text().isEmpty()
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
+        self.applyPushButton.setEnabled(enable)
 
     ## accepts input text strings
     # \brief It copies the group name and type from lineEdit widgets and accept the dialog
     def accept(self):
+        print "ACCEPT"
         self.name = unicode(self.nameLineEdit.text())
         self.nexusType = unicode(self.typeLineEdit.text())
 
         self.doc = unicode(self.docTextEdit.toPlainText())
-        
-        QDialog.accept(self)
+
+        if self.node and self.node.isElement():
+            elem=self.node.toElement()
+            
+            attributeMap = self.node.attributes()
+            for i in range(attributeMap.count()):
+                attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
+            elem.setAttribute(QString("name"), QString(self.name))
+            elem.setAttribute(QString("type"), QString(self.nexusType))
+        for attr in self.attributes.keys():
+            elem.setAttribute(QString(attr), QString(self.attributes[attr]))
+#        QDialog.accept(self)
+
+        doc = self.node.firstChildElement(QString("doc"))           
+#        if doc:
+#            doc = QString(self.doc)
+
+
 
 if __name__ == "__main__":
     import sys

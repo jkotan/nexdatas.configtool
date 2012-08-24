@@ -83,21 +83,6 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.setupForm()
 
         
-#       self.connect(self.applyPushButton, SIGNAL("clicked()"), 
-#                     self.apply)
-#        self.connect(self.savePushButton, SIGNAL("clicked()"), 
-#                     self.save)
-#        self.connect(self.cancelPushButton, SIGNAL("clicked()"), 
-#                     self.cancel)
-
-
-#        self.connect(self.dAddPushButton, SIGNAL("clicked()"), 
-#                     self.addParameter)
-#        self.connect(self.dRemovePushButton, SIGNAL("clicked()"), 
-#                     self.removeParameter)
-#        self.connect(self.dParameterTableWidget, 
-#                     SIGNAL("itemChanged(QTableWidgetItem*)"),
-#                     self.tableItemChanged)
 
         self.connect(self.view, 
                      SIGNAL("clicked(QModelIndex)"),
@@ -133,6 +118,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             self.frame.hide()
             self.frameLayout.removeWidget(self.widget)
             self.widget = self.tagClasses[unicode(nNode)]()
+            self.widget.setFromNode(node)
             self.widget.createGUI()
             self.frameLayout.addWidget(self.widget)
             self.widget.show()

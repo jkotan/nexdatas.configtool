@@ -223,16 +223,20 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
                 elem.setAttribute(QString(attr), QString(self.attributes[attr]))
 #        QDialog.accept(self)
 
+            
                 
             doc = self.node.firstChildElement(QString("doc"))           
-            
-            if doc is not None:
+            if doc and doc.nodeName() == "doc" :
                 print "REPLACE??"
                 newTag = self.root.createElement(QString("doc"))
                 newText = self.root.createTextNode(QString(self.doc))
                 newTag.appendChild(newText);
-
-                self.root.replaceChild(newTag, doc)
+                self.node.replaceChild(newTag, doc)
+            elif self.doc:
+                newTag = self.root.createElement(QString("doc"))
+                newText = self.root.createTextNode(QString(self.doc))
+                newTag.appendChild(newText);
+                self.node.appendChild(newTag)
 
 if __name__ == "__main__":
     import sys

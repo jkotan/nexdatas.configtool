@@ -204,7 +204,6 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
     ## accepts input text strings
     # \brief It copies the group name and type from lineEdit widgets and accept the dialog
     def accept(self):
-        print "ACCEPT"
         self.name = unicode(self.nameLineEdit.text())
         self.nexusType = unicode(self.typeLineEdit.text())
 
@@ -227,7 +226,6 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
                 
             doc = self.node.firstChildElement(QString("doc"))           
             if doc and doc.nodeName() == "doc" :
-                print "REPLACE??"
                 newTag = self.root.createElement(QString("doc"))
                 newText = self.root.createTextNode(QString(self.doc))
                 newTag.appendChild(newText);

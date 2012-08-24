@@ -44,7 +44,8 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         self.attributes = {}
         ## DOM node    
         self.node = None
-
+        ## DOM root
+        self.root = None
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
@@ -209,7 +210,7 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
 
         self.doc = unicode(self.docTextEdit.toPlainText())
 
-        if self.node and self.node.isElement():
+        if self.node  and self.root and self.node.isElement():
             elem=self.node.toElement()
             
             attributeMap = self.node.attributes()
@@ -217,15 +218,21 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
                 attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
             elem.setAttribute(QString("name"), QString(self.name))
             elem.setAttribute(QString("type"), QString(self.nexusType))
-        for attr in self.attributes.keys():
-            elem.setAttribute(QString(attr), QString(self.attributes[attr]))
+
+            for attr in self.attributes.keys():
+                elem.setAttribute(QString(attr), QString(self.attributes[attr]))
 #        QDialog.accept(self)
 
-        doc = self.node.firstChildElement(QString("doc"))           
-#        if doc:
-#            doc = QString(self.doc)
+                
+            doc = self.node.firstChildElement(QString("doc"))           
+            
+            if doc is not None:
+                print "REPLACE??"
+                newTag = self.root.createElement(QString("doc"))
+                newText = self.root.createTextNode(QString(self.doc))
+                newTag.appendChild(newText);
 
-
+                self.root.replaceChild(newTag, doc)
 
 if __name__ == "__main__":
     import sys

@@ -24,7 +24,7 @@ from PyQt4.QtCore import *
 
 from DataSourceList import DataSourceList
 from DataSourceDlg import DataSourceDlg
-from FieldWg import FieldWg
+#from FieldWg import FieldWg
 
 from ComponentList import ComponentList
 from ComponentDlg import ComponentDlg

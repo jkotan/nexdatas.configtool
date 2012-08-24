@@ -62,6 +62,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.currentTag = None
         self.frameLayout = None
 
+        self.document = None
+
     def setupForm(self):
         pass
         
@@ -118,6 +120,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             self.frame.hide()
             self.frameLayout.removeWidget(self.widget)
             self.widget = self.tagClasses[unicode(nNode)]()
+            self.widget.root = self.document
             self.widget.setFromNode(node)
             self.widget.createGUI()
             self.frameLayout.addWidget(self.widget)
@@ -150,12 +153,12 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             try:
                 fh = QFile(fPath)
                 if  fh.open(QIODevice.ReadOnly):
-                    document = QDomDocument()
+                    self.document = QDomDocument()
                 
-                    if not document.setContent(fh):
+                    if not self.document.setContent(fh):
                         raise ValueError, "could not parse XML"
 
-                    newModel = ComponentModel(document, self)
+                    newModel = ComponentModel(self.document, self)
                     self.view.setModel(newModel)
                     self.model = newModel
                     self.xmlPath = fPath

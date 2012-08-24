@@ -25,6 +25,11 @@ from PyQt4.QtXml import (QDomDocument, QDomNode, QXmlDefaultHandler,
                          QXmlInputSource, QXmlSimpleReader)
 import ui_componentdlg
 from FieldDlg import FieldDlg 
+from GroupDlg import GroupDlg 
+from LinkDlg import LinkDlg 
+from RichAttributeDlg import RichAttributeDlg 
+from DataSourceDlg import DataSourceDlg 
+from DimensionsDlg import DimensionsDlg
 
 import os
 
@@ -48,6 +53,15 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.idc = None
         self.name = ""
 
+
+        self.tagClasses = {"field":FieldDlg, "group":GroupDlg, 
+                           "attribute":RichAttributeDlg,"link":LinkDlg,
+                           "datasource":DataSourceDlg,"dimensions":DimensionsDlg}
+        self.widget = None
+
+        self.currentTag = None
+        self.frameLayout = None
+
     def setupForm(self):
         pass
         
@@ -59,14 +73,79 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.model = ComponentModel(QDomDocument(),self)
         self.view.setModel(self.model)
         
-        field = FieldDlg()
-        field.createGUI()
+        self.widget = QWidget()
+#        self.widget.createGUI()
 
-        grid = QGridLayout()
-        grid.addWidget(field)
-        self.frame.setLayout(grid)
+        self.frameLayout = QGridLayout()
+        self.frameLayout.addWidget(self.widget)
+        self.frame.setLayout(self.frameLayout)
 
         self.setupForm()
+
+        
+#       self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+#                     self.apply)
+#        self.connect(self.savePushButton, SIGNAL("clicked()"), 
+#                     self.save)
+#        self.connect(self.cancelPushButton, SIGNAL("clicked()"), 
+#                     self.cancel)
+
+
+#        self.connect(self.dAddPushButton, SIGNAL("clicked()"), 
+#                     self.addParameter)
+#        self.connect(self.dRemovePushButton, SIGNAL("clicked()"), 
+#                     self.removeParameter)
+#        self.connect(self.dParameterTableWidget, 
+#                     SIGNAL("itemChanged(QTableWidgetItem*)"),
+#                     self.tableItemChanged)
+
+        self.connect(self.view, 
+                     SIGNAL("clicked(QModelIndex)"),
+                     self.tagClicked)
+        self.connect(self.view, 
+                     SIGNAL("expanded(QModelIndex)"),
+                     self.expanded)
+
+        self.connect(self.view, 
+                     SIGNAL("collapsed(QModelIndex)"),
+                     self.collapsed)
+
+#        self.pool.createTask("componentClicked",commandArgs, ComponentClicked,
+#                             self.componentList.componentListWidget, 
+#                             "clicked(QModelIndex)")
+
+
+    def tagClicked(self, index):
+        self.currentTag = index
+        item  = self.currentTag.internalPointer()
+        node = item.node
+        attributeMap = node.attributes()
+        nNode = node.nodeName()
+        name = None
+        if attributeMap.contains("name"):
+            name = attributeMap.namedItem("name").nodeValue()
+
+        print "Clicked:", nNode, ": "+ name if name else "" 
+
+
+        self.widget.setVisible(False)
+        if unicode(nNode) in self.tagClasses.keys():
+            self.frame.hide()
+            self.frameLayout.removeWidget(self.widget)
+            self.widget = self.tagClasses[unicode(nNode)]()
+            self.widget.createGUI()
+            self.frameLayout.addWidget(self.widget)
+            self.widget.show()
+#            self.frameLayout.update()
+            self.frame.show()
+    
+    def expanded(self,index):
+        for column in range(self.model.columnCount(index)):
+            self.view.resizeColumnToContents(column)
+
+    def collapsed(self,index):
+        for column in range(self.model.columnCount(index)):
+            self.view.resizeColumnToContents(column)
 
 
 

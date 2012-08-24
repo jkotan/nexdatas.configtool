@@ -22,7 +22,7 @@
      <item>
       <widget class="QLabel" name="sourceLabel">
        <property name="text">
-        <string>&amp;DataSource:</string>
+        <string>&amp;DataSources</string>
        </property>
        <property name="buddy">
         <cstring>sourceListWidget</cstring>

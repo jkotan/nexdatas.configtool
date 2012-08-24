@@ -40,9 +40,9 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-        compDockWidget = QDockWidget("&Components:",self)
-        compDockWidget.setObjectName("CompDockWidget")
-        compDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea |  Qt.RightDockWidgetArea)
+        self.compDockWidget = QDockWidget("&Components",self)
+        self.compDockWidget.setObjectName("CompDockWidget")
+        self.compDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea |  Qt.RightDockWidgetArea)
 
         self.dsDirectory = "./datasources"
         self.cpDirectory = "./components"
@@ -66,8 +66,8 @@ class MainWindow(QMainWindow):
         self.dockSplitter.addWidget(self.sourceList)
         self.dockSplitter.setStretchFactor(0,3)
         self.dockSplitter.setStretchFactor(1,1)
-        compDockWidget.setWidget(self.dockSplitter)
-        self.addDockWidget(Qt.LeftDockWidgetArea, compDockWidget)
+        self.compDockWidget.setWidget(self.dockSplitter)
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.compDockWidget)
 
         
 
@@ -138,7 +138,7 @@ class MainWindow(QMainWindow):
 
         componentRemoveAction = self.pool.createCommand("&Close", "componentRemove",  
                                                         commandArgs, ComponentRemove,
-                                                        "Ctrl+R", "componentremove", 
+                                                        QKeySequence.Close, "componentremove", 
                                                         "Close the component")
 
         fileQuitAction = self.pool.createCommand("&Quit", "closeApp", commandArgs, 
@@ -173,6 +173,10 @@ class MainWindow(QMainWindow):
             "&Close", self.mdi.closeActiveWindow, QKeySequence.Close,
             tip = "Close the window" )
 
+        viewDockAction = self.compDockWidget.toggleViewAction()
+        viewDockAction.setToolTip("Show/Hide the dock lists")
+        viewDockAction.setStatusTip("Show/Hide the dock lists")
+
         self.windowMapper = QSignalMapper(self)
         self.connect(self.windowMapper, SIGNAL("mapped(QWidget*)"),
                      self.mdi, SLOT("setActiveWindow(QWidget*)"))
@@ -191,6 +195,10 @@ class MainWindow(QMainWindow):
         self.addActions(fileMenu, (dsourceNewAction,dsourceEditAction,dsourceRemoveAction))
  
         viewMenu = self.menuBar().addMenu("&View")
+        self.addActions(viewMenu, (viewDockAction,))
+
+        
+
         self.windowMenu = self.menuBar().addMenu("&Window")
         self.connect(self.windowMenu, SIGNAL("aboutToShow()"),
                      self.updateWindowMenu)

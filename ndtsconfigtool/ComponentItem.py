@@ -39,16 +39,9 @@ class ComponentItem(object):
         self.childItems = {}
         self.parent = parent
         self.row = row
-        self.widget = None
         
-        self.tagClasses = {"field":FieldDlg, "group":GroupDlg}
 
 
-    def createWidget(self):
-        nNode = node.nodeName()
-        if unicode(nNode) in tagClasses.keys():
-            self.widget = tagClasses[unicode(nNode)]()
-        return self.widget    
         
     def child(self, i):
         if i in self.childItems.keys():

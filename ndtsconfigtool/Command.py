@@ -34,9 +34,15 @@ from LabeledObject import LabeledObject
 class Command(object):
     
     ## constructor
-    def __init__(self):
-        pass
+    def __init__(self,receiver):
+        self.receiver = receiver
+        self._slot = ''
 
+
+    def slot(self):
+        if hasattr(self.receiver, self._slot):
+            return  getattr(self.receiver, self._slot)
+        
     ## 
     def execute(self):
         pass
@@ -49,14 +55,10 @@ class Command(object):
 
 class ComponentNew(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self,receiver)
         self._slot = 'componentNew'
         self._comp = None
         
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
 
     def execute(self):       
         if self._comp is None:
@@ -78,17 +80,12 @@ class ComponentNew(Command):
 
 class ComponentOpen(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self,receiver)
         self._slot = 'componentOpen'
         self._cpEdit = None
         self._cp = None
         self._fpath = None
         
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
-
     def execute(self):
         if hasattr(self.receiver,'mdi'):
             self._cp = LabeledObject("", None)
@@ -149,15 +146,10 @@ class ComponentOpen(Command):
 
 class ComponentClicked(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self,receiver)
         self._slot = 'componentClicked'
         self._component = None
         
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
-
     def execute(self):
         print "EXEC componentClicked"
 
@@ -170,7 +162,7 @@ class ComponentClicked(Command):
 
 class ComponentCurrentItemChanged(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self, receiver)
         self._slot = 'componentCurrentItemChanged'
         self._cp = None
         self._cpEdit = None
@@ -180,11 +172,6 @@ class ComponentCurrentItemChanged(Command):
         self._wasCreated = None
         self._prevActive = None
         
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
-
     def execute(self):
 #        print "IC: ", (self.item.text() if self.item else None),  (self.previousItem.text() if self.previousItem else None)
 
@@ -255,15 +242,11 @@ class ComponentCurrentItemChanged(Command):
 
 class ComponentRemove(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self, receiver)
         self._slot = 'componentRemove'
         self._cp = None
         self._wList = False
         
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-
     def execute(self):
         
         if self._cp is not None:
@@ -299,18 +282,13 @@ class ComponentRemove(Command):
 
 class ComponentListChanged(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self, receiver)
         self._slot = 'componentChanged'
         self._ds = None
         self.item = None
         self.name = None
         self.newName = None
         
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
-
     def execute(self):
 #        print "componentChange"
         if self.item is not None:
@@ -343,15 +321,10 @@ class ComponentListChanged(Command):
 
 class DataSourceNew(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self, receiver)
         self._slot = 'dsourceNew'
         self._ds = None
         
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
-
     def execute(self):
         
         if self._ds is None:
@@ -375,17 +348,12 @@ class DataSourceNew(Command):
 
 class DataSourceEdit(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self, receiver)
         self._slot = 'dsourceEdit'
         self._ds = None
         self._dsEdit = None
         
         
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
-
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
@@ -424,15 +392,10 @@ class DataSourceEdit(Command):
 
 class DataSourceNew(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self, receiver)
         self._slot = 'dsourceNew'
         self._ds = None
         
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
-
     def execute(self):
         
         if self._ds is None:
@@ -458,15 +421,11 @@ class DataSourceNew(Command):
 
 class DataSourceRemove(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self, receiver)
         self._slot = 'dsourceRemove'
         self._ds = None
         self._wList = False
         
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-
     def execute(self):
         
         if self._ds is not None:
@@ -499,18 +458,13 @@ class DataSourceRemove(Command):
 
 class DataSourceListChanged(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self, receiver)
         self._slot = 'dsourceChanged'
         self._ds = None
         self.item = None
         self.name = None
         self.newName = None
         
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
-
     def execute(self):
 #        print "dsourceChange"
         if self.item is not None:
@@ -547,7 +501,7 @@ class DataSourceListChanged(Command):
 
 class DataSourceCurrentItemChanged(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self, receiver)
         self._slot = 'dsourceCurrentItemChanged'
         self._ds = None
         self._dsEdit = None
@@ -557,11 +511,6 @@ class DataSourceCurrentItemChanged(Command):
         self._wasCreated = None
         self._prevActive = None
         
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
-
     def execute(self):
 #        print "IC: ", (self.item.text() if self.item else None),  (self.previousItem.text() if self.previousItem else None)
 
@@ -632,13 +581,8 @@ class DataSourceCurrentItemChanged(Command):
 
 class CloseApplication(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self, receiver)
         self._slot = 'closeApp'
-
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
 
     def execute(self):
         if hasattr(self.receiver,'mdi'):
@@ -655,13 +599,8 @@ class CloseApplication(Command):
 
 class UndoCommand(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self, receiver)
         self._slot = 'undo'
-
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
 
     def execute(self):
         print "EXEC undo"
@@ -674,13 +613,8 @@ class UndoCommand(Command):
 
 class ReundoCommand(Command):
     def __init__(self, receiver):
-        self.receiver = receiver
+        Command.__init__(self, receiver)
         self._slot = 'reundo'
-
-    def slot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
-    
 
     def execute(self):
         print "EXEC reundo"

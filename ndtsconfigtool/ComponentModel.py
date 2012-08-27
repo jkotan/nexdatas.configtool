@@ -34,6 +34,8 @@ class ComponentModel(QAbstractItemModel):
         self.domDocument = document
         self.rootItem = ComponentItem(self.domDocument, 0)
 
+
+
     def data(self, index, role = Qt.DisplayRole):
         if not index.isValid() :
             return QVariant()
@@ -46,12 +48,16 @@ class ComponentModel(QAbstractItemModel):
         attributeMap = node.attributes()
 
         if index.column() == 0:      
+#            print ":DA:, "
             name = None
             if attributeMap.contains("name"):
                 name = attributeMap.namedItem("name").nodeValue()
+
             if name is not None:    
+#                print ":DA:, ", node.nodeName() +": "+ name
                 return node.nodeName() +": "+ name
             else:
+#                print ":DA:, ", node.nodeName()
                 return node.nodeName() 
         elif index.column() == 1:
             attributes = QStringList()
@@ -87,7 +93,7 @@ class ComponentModel(QAbstractItemModel):
     def index(self, row, column, parent = QModelIndex()):
         if not self.hasIndex(row, column, parent):
             return QModelIndex()
-        
+
         if not parent.isValid():
             parentItem = self.rootItem
         else:
@@ -131,7 +137,26 @@ class ComponentModel(QAbstractItemModel):
     def columnCount(self, parent = QModelIndex()):
         return 3
     
+    def insertRows(self, position, rows = 1, parent = QModelIndex()):
+        item = parent.internalPointer()
+        if not item:
+            return False
+        self.beginInsertRows(parent, position, position+rows-1)
+        status = item.insertChildren(position, rows)
+        self.endInsertRows()
+        return status
 
+
+    def removeRows(self, position, rows = 1, parent = QModelIndex()):
+        print "remove Rows"
+        item = parent.internalPointer()
+        if not item:
+            return False
+        self.beginRemoveRows(parent, position, position+rows-1)
+        status = item.removeChildren(position, rows)
+        self.endRemoveRows()
+        return status
+    
 
 if __name__ == "__main__":
     import sys

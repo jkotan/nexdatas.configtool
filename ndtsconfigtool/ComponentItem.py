@@ -36,7 +36,7 @@ class ComponentItem(object):
         
         
         self.node = node
-        self.childItems = {}
+        self.childItems = []
         self.parent = parent
         self.row = row
         
@@ -44,13 +44,45 @@ class ComponentItem(object):
 
         
     def child(self, i):
-        if i in self.childItems.keys():
+        size = len(self.childItems)
+        if i in range(size):
             return self.childItems[i]
         if i >=0 and i < self.node.childNodes().count():
             childNode = self.node.childNodes().item(i)
-            childItem = ComponentItem(childNode, i, self)
-            self.childItems[i] = childItem
+            for j in range(size,i+1):                
+                childItem = ComponentItem(childNode, j, self)
+                self.childItems.append(childItem)
+            print ":CH: ",childItem.node.nodeName()
             return childItem
+
+
+    def removeChildren(self,position, count):
+        
+        if position < 0 or position + count  >   self.node.childNodes().count():
+            return False
+        
+        for i in range(count):
+            if position < len(self.childItems):
+                self.childItems.pop(position)
+
+        return True
+            
+
+    def insertChildren(self, position, count):
+        
+        
+        if position < 0 or position  >   self.node.childNodes().count():
+            return False
+
+        for i in range(position,position+count):
+            if position <= len(self.childItems):
+                childNode = self.node.childNodes().item(i)
+                childItem = ComponentItem(childNode, i, self)
+                self.childItems.insert(i, childItem)
+                
+        return True
+
+
 
 if __name__ == "__main__":
     import sys

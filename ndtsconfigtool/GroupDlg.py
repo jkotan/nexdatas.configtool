@@ -46,6 +46,10 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         self.node = None
         ## DOM root
         self.root = None
+        ## component tree view
+        self.view = None 
+        ## component tree model
+        self.model = None 
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
@@ -201,6 +205,19 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         enable = not self.typeLineEdit.text().isEmpty()
         self.applyPushButton.setEnabled(enable)
 
+    def getRow(self, element):
+        row = 0
+        children = self.node.childNodes()
+        for i in range(children.count()):
+            print "ROW", row
+            ch = children.item(i)
+            if ch.isElement() and  element == ch.toElement():
+                break
+            row += 1
+        if row < children.count():
+            return row
+        
+
     ## accepts input text strings
     # \brief It copies the group name and type from lineEdit widgets and accept the dialog
     def accept(self):
@@ -208,6 +225,8 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         self.nexusType = unicode(self.typeLineEdit.text())
 
         self.doc = unicode(self.docTextEdit.toPlainText())
+        
+        index = self.view.currentIndex()
 
         if self.node  and self.root and self.node.isElement():
             elem=self.node.toElement()
@@ -226,15 +245,29 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
                 
             doc = self.node.firstChildElement(QString("doc"))           
             if not self.doc and doc and doc.nodeName() == "doc" :
+
+                row = self.getRow(doc)
+                if row is not None:
+                    self.model.removeRows(row, 1, index)
                 self.node.removeChild(doc)
+
             elif self.doc:
-                newTag = self.root.createElement(QString("doc"))
+                newDoc = self.root.createElement(QString("doc"))
                 newText = self.root.createTextNode(QString(self.doc))
-                newTag.appendChild(newText);
+                newDoc.appendChild(newText);
                 if doc and doc.nodeName() == "doc" :
-                    self.node.replaceChild(newTag, doc)
+                    row = self.getRow(doc)
+                    self.node.replaceChild(newDoc, doc)
+                    if row is not None:
+                        self.model.removeRows(row, 1, index)
+                        self.model.insertRows(row, 1, index)
                 else:
-                    self.node.appendChild(newTag)
+                    self.node.appendChild(newDoc)
+                    row = self.node.childNodes().count()-1
+                    if row is not None:
+                        self.model.insertRows(row, 1, index)
+
+            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
 if __name__ == "__main__":
     import sys

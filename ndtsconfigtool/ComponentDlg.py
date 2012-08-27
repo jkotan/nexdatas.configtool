@@ -43,7 +43,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     # \param parent patent instance
     def __init__(self, parent=None):
         super(ComponentDlg, self).__init__(parent)
-
+        
         self.xmlPath = os.path.dirname(".")
         self.view = None
         self.frame = None
@@ -71,7 +71,9 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     def createGUI(self):
         self.setupUi(self)
 
-
+        self.splitter.setStretchFactor(0,1)
+        self.splitter.setStretchFactor(1,2)
+        
         self.model = ComponentModel(QDomDocument(),self)
         self.view.setModel(self.model)
         

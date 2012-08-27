@@ -50,11 +50,22 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         self.view = None 
         ## component tree model
         self.model = None 
+
+
+    def updateForm(self):
+        self.nameLineEdit.setText(self.name) 
+        self.typeLineEdit.setText(self.nexusType) 
+        self.docTextEdit.setText(self.doc)
+
+        self.populateAttributes()
+        
+
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
-
         self.setupUi(self)
+        
+        self.updateForm()
 
         if self.name :
             self.nameLineEdit.setText(self.name) 
@@ -63,11 +74,14 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         if self.doc :
             self.docTextEdit.setText(self.doc)
 
+        self.populateAttributes()
 
         self.updateUi()
 
         self.connect(self.applyPushButton, SIGNAL("clicked()"), 
                      self.accept)
+        self.connect(self.resetPushButton, SIGNAL("clicked()"), 
+                     self.reset)
         self.connect(self.attributeTableWidget, 
                      SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.tableItemChanged)
@@ -76,12 +90,12 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         self.connect(self.removePushButton, SIGNAL("clicked()"), 
                      self.removeAttribute)
 
-        self.populateAttributes()
 
-    def setFromNode(self, node):
-        self.node = node
-        attributeMap = node.attributes()
-        nNode = node.nodeName()
+    def setFromNode(self, node=None):
+        if node:
+            self.node = node
+        attributeMap = self.node.attributes()
+        nNode = self.node.nodeName()
 
         if attributeMap.contains("name"):
             self.name = attributeMap.namedItem("name").nodeValue()
@@ -99,7 +113,7 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
             if attrName != "name" and attrName != "type":
                 self.attributes[unicode(attribute.nodeName())] = unicode(attribute.nodeValue())
 
-        doc = node.firstChildElement(QString("doc"))           
+        doc = self.node.firstChildElement(QString("doc"))           
         if doc:
             self.doc =unicode(doc.text()).strip()
 
@@ -209,13 +223,18 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         row = 0
         children = self.node.childNodes()
         for i in range(children.count()):
-            print "ROW", row
             ch = children.item(i)
             if ch.isElement() and  element == ch.toElement():
                 break
             row += 1
         if row < children.count():
             return row
+
+    def reset(self):
+        index = self.view.currentIndex()
+        self.setFromNode()
+        self.updateForm()
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         
 
     ## accepts input text strings
@@ -267,7 +286,7 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
                     if row is not None:
                         self.model.insertRows(row, 1, index)
 
-            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
 if __name__ == "__main__":
     import sys

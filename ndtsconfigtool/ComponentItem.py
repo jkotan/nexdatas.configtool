@@ -52,7 +52,6 @@ class ComponentItem(object):
             for j in range(size,i+1):                
                 childItem = ComponentItem(childNode, j, self)
                 self.childItems.append(childItem)
-            print ":CH: ",childItem.node.nodeName()
             return childItem
 
 

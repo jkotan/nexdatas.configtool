@@ -148,7 +148,6 @@ class ComponentModel(QAbstractItemModel):
 
 
     def removeRows(self, position, rows = 1, parent = QModelIndex()):
-        print "remove Rows"
         item = parent.internalPointer()
         if not item:
             return False

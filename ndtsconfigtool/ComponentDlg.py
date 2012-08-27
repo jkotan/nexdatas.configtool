@@ -52,7 +52,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         ## component id
         self.idc = None
         self.name = ""
-
+        self.fpath = ""
 
         self.tagClasses = {"field":FieldDlg, "group":GroupDlg, 
                            "attribute":RichAttributeDlg,"link":LinkDlg,
@@ -72,7 +72,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.setupUi(self)
 
         self.splitter.setStretchFactor(0,1)
-        self.splitter.setStretchFactor(1,2)
+        self.splitter.setStretchFactor(1,1)
         
         self.model = ComponentModel(QDomDocument(),self)
         self.view.setModel(self.model)
@@ -87,6 +87,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.setupForm()
 
         
+        self.connect(self.savePushButton, SIGNAL("clicked()"), 
+                     self.save)
 
         self.connect(self.view, 
                      SIGNAL("clicked(QModelIndex)"),
@@ -146,16 +148,16 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         
         if not filePath:
             if not self.name:
-                fPath = unicode(QFileDialog.getOpenFileName(self,"Open File",self.xmlPath,
-                                                            "XML files (*.xml);;HTML files (*.html);;"
-                                                            "SVG files (*.svg);;User Interface files (*.ui)"))
+                self.fPath = unicode(QFileDialog.getOpenFileName(self,"Open File",self.xmlPath,
+                                                                 "XML files (*.xml);;HTML files (*.html);;"
+                                                                 "SVG files (*.svg);;User Interface files (*.ui)"))
             else:
-                fPath = self.directory + "/" + self.name + ".xml"
+                self.fPath = self.directory + "/" + self.name + ".xml"
         else:
-            fPath = filePath
-        if fPath:
+            self.fPath = filePath
+        if self.fPath:
             try:
-                fh = QFile(fPath)
+                fh = QFile(self.fPath)
                 if  fh.open(QIODevice.ReadOnly):
                     self.document = QDomDocument()
                 
@@ -165,20 +167,39 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                     newModel = ComponentModel(self.document, self)
                     self.view.setModel(newModel)
                     self.model = newModel
-                    self.xmlPath = fPath
-                    fi = QFileInfo(fPath);
+                    self.xmlPath = self.fPath
+                    fi = QFileInfo(self.fPath);
                     self.name = fi.fileName(); 
 
                     if self.name[-4:] == '.xml':
                         self.name = self.name[:-4]
             except (IOError, OSError, ValueError), e:
-                error = "Failed to import: %s" % e
+                error = "Failed to load: %s" % e
                 print error
             finally:                 
                 if fh is not None:
                     fh.close()
-                    return fPath
+                    return self.fPath
             
+    def save(self):
+        error = None
+        if self.fPath:
+            try:
+                fh = QFile(self.fPath)
+                if not fh.open(QIODevice.WriteOnly):
+                    raise IOError, unicode(fh.errorString())
+                stream = QTextStream(fh)
+                stream <<self.document.toString(2)
+#                print self.document.toString(2)
+            except (IOError, OSError, ValueError), e:
+                error = "Failed to save: %s" % e
+                print error
+                
+            finally:
+                if fh is not None:
+                    fh.close()
+
+    
 
 if __name__ == "__main__":
     import sys

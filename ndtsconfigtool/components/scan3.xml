@@ -1,0 +1,49 @@
+<?xml version='1.0'?>
+<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group minOccurs="3" type="NXdetector" name="detector">
+        <doc>Our super detector</doc>
+        <field units="m" type="NX_FLOAT" name="counter1">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="exp_c01"/>
+          </datasource>
+        </field>
+        <field units="s" type="NX_FLOAT" name="counter2">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="exp_c02"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT" name="mca">
+          <dimensions rank="1">
+            <dim value="2048" index="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="TANGO">
+            <device member="attribute" name="p09/mca/exp.02"/>
+            <record name="Data"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+    <group type="NXdata" name="data">
+      <link target="/NXentry/NXinstrument/NXdetector/mca" name="data">
+        <doc>
+          Link to mca in /NXentry/NXinstrument/NXdetector
+        </doc>
+      </link>
+      <link target="/NXentry/NXinstrument/NXdetector/counter1" name="counter1">
+        <doc>
+          Link to counter1 in /NXentry/NXinstrument/NXdetector
+        </doc>
+      </link>
+      <link target="/NXentry/NXinstrument/NXdetector/counter2" name="counter2">
+        <doc>
+          Link to counter2 in /NXentry/NXinstrument/NXdetector
+        </doc>
+      </link>
+    </group>
+  </group>
+</definition>

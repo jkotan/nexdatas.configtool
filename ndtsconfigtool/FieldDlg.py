@@ -324,7 +324,7 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         self.doc = unicode(self.docTextEdit.toPlainText())
 
         index = self.view.currentIndex()
-        
+
         if self.node  and self.root and self.node.isElement():
             elem=self.node.toElement()
 
@@ -335,6 +335,8 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
             elem.setAttribute(QString("name"), QString(self.name))
             elem.setAttribute(QString("type"), QString(self.nexusType))
             elem.setAttribute(QString("units"), QString(self.units))
+
+            self.replaceText(self.node, index ,unicode(self.value))
 
             for attr in self.attributes.keys():
                 elem.setAttribute(QString(attr), QString(self.attributes[attr]))
@@ -367,7 +369,7 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
                 else:
                     self.appendElement(newDimens, index)
 
-
+                    
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
 

@@ -47,13 +47,25 @@ class NodeDlg(QDialog):
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
 
-    def getRow(self, element):
+    def getElementRow(self, element):
         row = 0
         if self.node:
             children = self.node.childNodes()
             for i in range(children.count()):
                 ch = children.item(i)
                 if ch.isElement() and  element == ch.toElement():
+                    break
+                row += 1
+            if row < children.count():
+                return row
+
+    def getNodeRow(self, child):
+        row = 0
+        if self.node:
+            children = self.node.childNodes()
+            for i in range(children.count()):
+                ch = children.item(i)
+                if child == ch:
                     break
                 row += 1
             if row < children.count():
@@ -69,16 +81,49 @@ class NodeDlg(QDialog):
                     text += child.toText().data()
                 child = child.nextSibling()
         return text    
-        
+
+    def replaceText(self, node, index, text = None):
+        if node:
+            child = node.firstChild()
+            while not child.isNull():
+                if child.nodeType() == QDomNode.TextNode:
+                    self.removeNode(child, index)
+                child = child.nextSibling()
+            if text:
+                textNode = self.root.createTextNode(QString(text))
+                self.appendNode(textNode,index)
+    
+
+    def removeNode(self, node, parent):
+        row = self.getNodeRow(node)
+        if row is not None:
+            self.model.removeRows(row, 1, parent)
+        self.node.removeChild(node)
+
+
+    def replaceNode(self, oldNode, newNode, parent):
+        row = self.getNodeRow(oldNode)
+        self.node.replaceChild(newNode, oldNode)
+        if row is not None:
+            self.model.removeRows(row, 1, parent)
+            self.model.insertRows(row, 1, parent)
+
+
+    def appendNode(self, node, parent):
+        self.node.appendChild(node)
+        row = self.node.childNodes().count()-1
+        if row is not None:
+            self.model.insertRows(row, 1, parent)
+
 
     def removeElement(self, element, parent):
-        row = self.getRow(element)
+        row = self.getElementRow(element)
         if row is not None:
             self.model.removeRows(row, 1, parent)
         self.node.removeChild(element)
 
     def replaceElement(self, oldElement, newElement, parent):
-        row = self.getRow(oldElement)
+        row = self.getElementRow(oldElement)
         self.node.replaceChild(newElement, oldElement)
         if row is not None:
             self.model.removeRows(row, 1, parent)

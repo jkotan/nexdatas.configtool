@@ -118,31 +118,12 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         attributeMap = self.node.attributes()
         nNode = self.node.nodeName()
 
-        if attributeMap.contains("name"):
-            self.name = attributeMap.namedItem("name").nodeValue()
-        else:
-            self.name = ""
-
-        if attributeMap.contains("type"):
-            self.nexusType = attributeMap.namedItem("type").nodeValue() 
-        else:
-            self.nexusType = ""
-
-
-        if attributeMap.contains("units"):
-            self.units = attributeMap.namedItem("units").nodeValue() 
-        else:
-            self.units = ""
-
-
+        self.name = attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else ""
+        self.nexusType = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
+        self.units = attributeMap.namedItem("units").nodeValue() if attributeMap.contains("units") else ""
 
         text = self.getText(node)    
-        if text:
-            self.value = unicode(text).strip()
-        else:
-            self.value = ""
-
-
+        self.value = unicode(text).strip() if text else ""
 
         self.attributes.clear()    
         for i in range(attributeMap.count()):
@@ -194,11 +175,10 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
             self.rank = len(self.dimensions)
 
         doc = self.node.firstChildElement(QString("doc"))           
-        if doc:
-            self.doc =unicode(doc.text()).strip()
+        text = self.getText(doc)    
+        self.doc = unicode(text).strip() if text else ""
 
-        else:
-            self.doc = ""
+
 
 
     ## adds an attribute    
@@ -336,7 +316,7 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
             elem.setAttribute(QString("type"), QString(self.nexusType))
             elem.setAttribute(QString("units"), QString(self.units))
 
-            self.replaceText(self.node, index ,unicode(self.value))
+            self.replaceText(self.node, index, unicode(self.value))
 
             for attr in self.attributes.keys():
                 elem.setAttribute(QString(attr), QString(self.attributes[attr]))

@@ -85,14 +85,8 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
         attributeMap = self.node.attributes()
         nNode = self.node.nodeName()
 
-        if attributeMap.contains("name"):
-            self.name = attributeMap.namedItem("name").nodeValue()
-        else:
-            self.name = ""
-        if attributeMap.contains("type"):
-            self.nexusType = attributeMap.namedItem("type").nodeValue() 
-        else:
-            self.nexusType = ""
+        self.name = attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else ""
+        self.nexusType = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
 
         self.attributes.clear()    
         for i in range(attributeMap.count()):
@@ -102,11 +96,8 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
                 self.attributes[unicode(attribute.nodeName())] = unicode(attribute.nodeValue())
 
         doc = self.node.firstChildElement(QString("doc"))           
-        if doc:
-            self.doc =unicode(doc.text()).strip()
-
-        else:
-            self.doc = ""
+        text = self.getText(doc)    
+        self.doc = unicode(text).strip() if text else ""
              
     ## adds an attribute    
     #  \brief It runs the Attribute Dialog and fetches attribute name and value    

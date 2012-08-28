@@ -43,15 +43,12 @@ class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
         ## attribute doc
         self.doc = u''
 
-    ##  creates GUI
-    # \brief It calls setupUi and  connects signals and slots    
-    def createGUI(self):
-        self.setupUi(self)
-
+    def updateForm(self):
         if self.name :
             self.nameLineEdit.setText(self.name) 
         if self.nexusType :
             index = self.typeComboBox.findText(unicode(self.nexusType))
+            print "Index:" , index
             if  index > -1 :
                 self.typeComboBox.setCurrentIndex(index)
                 self.otherFrame.hide()
@@ -60,6 +57,10 @@ class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
                 self.typeComboBox.setCurrentIndex(index2)
                 self.typeLineEdit.setText(self.nexusType) 
                 self.otherFrame.show()
+        else:
+            index = self.typeComboBox.findText(unicode("None"))
+            self.typeComboBox.setCurrentIndex(index)
+            self.otherFrame.hide()
         
         if self.doc :
             self.docTextEdit.setText(self.doc)
@@ -67,8 +68,42 @@ class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
             self.valueLineEdit.setText(self.value)
 
 
+    ##  creates GUI
+    # \brief It calls setupUi and  connects signals and slots    
+    def createGUI(self):
+        self.setupUi(self)
+
+        self.updateForm()
 
         self.updateUi()
+
+        self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+                     self.apply)
+        self.connect(self.resetPushButton, SIGNAL("clicked()"), 
+                     self.reset)
+
+    def setFromNode(self, node=None):
+        if node:
+            self.node = node
+        attributeMap = self.node.attributes()
+        nNode = self.node.nodeName()
+
+        self.name = attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else ""
+        self.nexusType = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
+
+
+        text = self.getText(node)    
+        self.value = unicode(text).strip() if text else ""
+
+
+
+        doc = self.node.firstChildElement(QString("doc"))           
+        text = self.getText(doc)    
+        self.doc = unicode(text).strip() if text else ""
+
+
+
+
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
@@ -91,11 +126,11 @@ class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
     # \brief It sets enable or disable the OK button
     def updateUi(self):
         enable = not self.nameLineEdit.text().isEmpty()
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
+        self.applyPushButton.setEnabled(enable)
 
     ## accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
-    def accept(self):
+    def apply(self):
         class CharacterError(Exception): pass
         name = unicode(self.nameLineEdit.text())
 
@@ -119,8 +154,35 @@ class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
 
         self.doc = unicode(self.docTextEdit.toPlainText())
 
+        index = self.view.currentIndex()
 
-        QDialog.accept(self)
+        if self.node  and self.root and self.node.isElement():
+            elem=self.node.toElement()
+
+
+            attributeMap = self.node.attributes()
+            for i in range(attributeMap.count()):
+                attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
+            elem.setAttribute(QString("name"), QString(self.name))
+            elem.setAttribute(QString("type"), QString(self.nexusType))
+
+            self.replaceText(self.node, index, unicode(self.value))
+
+            doc = self.node.firstChildElement(QString("doc"))           
+            if not self.doc and doc and doc.nodeName() == "doc" :
+                self.removeElement(doc, index)
+            elif self.doc:
+                newDoc = self.root.createElement(QString("doc"))
+                newText = self.root.createTextNode(QString(self.doc))
+                newDoc.appendChild(newText)
+                if doc and doc.nodeName() == "doc" :
+                    self.replaceElement(doc, newDoc, index)
+                else:
+                    self.appendElement(newDoc, index)
+
+                    
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+
 
 if __name__ == "__main__":
     import sys
@@ -137,10 +199,9 @@ if __name__ == "__main__":
     form.show()
     app.exec_()
 
-    if form.result():
-        if form.name:
-            print "Attribute: %s = \'%s\'" % ( form.name, form.value )
-        if form.nexusType:
-            print "Type: %s" % form.nexusType
-        if form.doc:
-            print "Doc: \n%s" % form.doc
+    if form.name:
+        print "Attribute: %s = \'%s\'" % ( form.name, form.value )
+    if form.nexusType:
+        print "Type: %s" % form.nexusType
+    if form.doc:
+        print "Doc: \n%s" % form.doc

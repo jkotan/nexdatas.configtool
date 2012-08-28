@@ -44,9 +44,9 @@ class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
         self.doc = u''
 
     def updateForm(self):
-        if self.name :
+        if self.name is not None :
             self.nameLineEdit.setText(self.name) 
-        if self.nexusType :
+        if self.nexusType is not None:
             index = self.typeComboBox.findText(unicode(self.nexusType))
             print "Index:" , index
             if  index > -1 :
@@ -62,9 +62,9 @@ class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
             self.typeComboBox.setCurrentIndex(index)
             self.otherFrame.hide()
         
-        if self.doc :
+        if self.doc is not None:
             self.docTextEdit.setText(self.doc)
-        if self.value:    
+        if self.value is not None:    
             self.valueLineEdit.setText(self.value)
 
 

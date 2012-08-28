@@ -38,6 +38,22 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
         self.name = u''
         ## link target
         self.target = u''
+        ## field doc
+        self.doc = u''
+
+    def updateForm(self):
+        if self.name is not None:
+            self.nameLineEdit.setText(self.name) 
+        if self.doc is not None:
+            self.docTextEdit.setText(self.doc)
+
+        if self.target is not None:    
+            self.targetLineEdit.setText(self.target)
+
+        doc = self.node.firstChildElement(QString("doc"))           
+        text = self.getText(doc)    
+        self.doc = unicode(text).strip() if text else ""
+
 
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
@@ -45,14 +61,28 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
 
         self.setupUi(self)
 
-        if self.name :
-            self.nameLineEdit.setText(self.name) 
-
-        if self.target:    
-            self.targetLineEdit.setText(self.target)
-
+        self.updateForm()
 
         self.updateUi()
+
+
+        self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+                     self.apply)
+        self.connect(self.resetPushButton, SIGNAL("clicked()"), 
+                     self.reset)
+
+    def setFromNode(self, node=None):
+        if node:
+            self.node = node
+        attributeMap = self.node.attributes()
+        nNode = self.node.nodeName()
+
+        self.name = attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else ""
+        self.target = attributeMap.namedItem("target").nodeValue() if attributeMap.contains("target") else ""
+ 
+        doc = self.node.firstChildElement(QString("doc"))           
+        text = self.getText(doc)    
+        self.doc = unicode(text).strip() if text else ""
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
@@ -64,11 +94,13 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
     # \brief It sets enable or disable the OK button
     def updateUi(self):
         enable = not self.nameLineEdit.text().isEmpty()
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
+        self.applyPushButton.setEnabled(enable)
+
+
 
     ## accepts input text strings
     # \brief It copies the link name and target from lineEdit widgets and accept the dialog
-    def accept(self):
+    def apply(self):
         class CharacterError(Exception): pass
         name = unicode(self.nameLineEdit.text())
         
@@ -84,7 +116,37 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
         self.name = name
         self.target = unicode(self.targetLineEdit.text())
 
-        QDialog.accept(self)
+        self.doc = unicode(self.docTextEdit.toPlainText())
+
+        index = self.view.currentIndex()
+
+        if self.node  and self.root and self.node.isElement():
+            elem=self.node.toElement()
+
+
+            attributeMap = self.node.attributes()
+            for i in range(attributeMap.count()):
+                attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
+            elem.setAttribute(QString("name"), QString(self.name))
+            elem.setAttribute(QString("target"), QString(self.target))
+
+
+            doc = self.node.firstChildElement(QString("doc"))           
+            if not self.doc and doc and doc.nodeName() == "doc" :
+                self.removeElement(doc, index)
+            elif self.doc:
+                newDoc = self.root.createElement(QString("doc"))
+                newText = self.root.createTextNode(QString(self.doc))
+                newDoc.appendChild(newText)
+                if doc and doc.nodeName() == "doc" :
+                    self.replaceElement(doc, newDoc, index)
+                else:
+                    self.appendElement(newDoc, index)
+
+                    
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+
+
 
 if __name__ == "__main__":
     import sys
@@ -99,7 +161,6 @@ if __name__ == "__main__":
     form.show()
     app.exec_()
 
-    if form.result():
-        if form.name:
-            print "Link: %s = \'%s\'" % ( form.name, form.target )
+    if form.name:
+        print "Link: %s = \'%s\'" % ( form.name, form.target )
     

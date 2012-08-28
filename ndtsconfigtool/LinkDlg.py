@@ -24,9 +24,10 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ui_linkdlg
 
+from NodeDlg import NodeDlg 
 
 ## dialog defining a tag link 
-class LinkDlg(QDialog, ui_linkdlg.Ui_LinkDlg):
+class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
     
     ## constructor
     # \param parent patent instance

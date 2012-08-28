@@ -28,10 +28,11 @@ import XMLDumper
 from xml.dom.minidom import parse
 
 
+from NodeDlg import NodeDlg 
 
 
 ## dialog defining datasources
-class DataSourceDlg(QDialog, ui_datasourcedlg.Ui_DataSourceDlg):
+class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
     
     ## constructor
     # \param parent patent instance

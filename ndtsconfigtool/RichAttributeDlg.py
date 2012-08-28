@@ -24,9 +24,10 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ui_richattributedlg
 
+from NodeDlg import NodeDlg 
 
 ## dialog defining an attribute
-class RichAttributeDlg(QDialog, ui_richattributedlg.Ui_RichAttributeDlg):
+class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
     
     ## constructor
     # \param parent patent instance

@@ -2,7 +2,7 @@
 <definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
-      <group minOccurs="3" type="NXdetector" name="detector">
+      <group minOccurs="2" type="NXdetector" name="detector">
         <doc>Our super detector</doc>
         <field units="m" type="NX_FLOAT" name="counter1">
           <strategy mode="STEP"/>

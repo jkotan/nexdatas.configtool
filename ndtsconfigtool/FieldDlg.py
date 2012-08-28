@@ -23,12 +23,17 @@ import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ui_fielddlg
+from PyQt4.QtXml import (QDomDocument, QDomNode)
+
 
 from AttributeDlg import AttributeDlg
 from DimensionsDlg import DimensionsDlg
 
+
+from NodeDlg import NodeDlg 
+
 ## dialog defining a field tag
-class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
+class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
     
     ## constructor
     # \param parent patent instance
@@ -56,20 +61,27 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
         self.dimensions = []
 
 
-    ##  creates GUI
-    # \brief It calls setupUi and  connects signals and slots    
-    def createGUI(self):
-        self.setupUi(self)
+        ## DOM node    
+        self.node = None
+        ## DOM root
+        self.root = None
+        ## component tree view
+        self.view = None 
+        ## component tree model
+        self.model = None 
 
-        if self.name :
+
+
+    def updateForm(self):
+        if self.name is not None:
             self.nameLineEdit.setText(self.name) 
-        if self.nexusType :
+        if self.nexusType is not None:
             self.typeLineEdit.setText(self.nexusType) 
-        if self.doc :
+        if self.doc is not None:
             self.docTextEdit.setText(self.doc)
-        if self.units:    
+        if self.units is not None:    
             self.unitsLineEdit.setText(self.units)
-        if self.value:    
+        if self.value is not None:    
             self.valueLineEdit.setText(self.value)
 
         if self.rank < len(self.dimensions) :
@@ -77,9 +89,17 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
         
         if self.dimensions:
             label = self.dimensions.__str__()
-            self.dimLabel.setText("Dimensions: %s" % label)
+            self.dimLabel.setText("%s" % label)
+
+        
 
 
+    ##  creates GUI
+    # \brief It calls setupUi and  connects signals and slots    
+    def createGUI(self):
+        self.setupUi(self)
+
+        self.updateForm()
 
         self.updateUi()
 
@@ -94,8 +114,100 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
                      self.changeDimensions)
 
         self.populateAttributes()
+
+    def getText(self, node):
+        child = node.firstChild()
+        text = QString()
+        while not child.isNull():
+            if child.nodeType() == QDomNode.TextNode:
+                text += child.toText().data()
+            child = child.nextSibling()
+        return text    
         
-        
+    def setFromNode(self, node=None):
+        if node:
+            self.node = node
+        attributeMap = self.node.attributes()
+        nNode = self.node.nodeName()
+
+        if attributeMap.contains("name"):
+            self.name = attributeMap.namedItem("name").nodeValue()
+        else:
+            self.name = ""
+
+        if attributeMap.contains("type"):
+            self.nexusType = attributeMap.namedItem("type").nodeValue() 
+        else:
+            self.nexusType = ""
+
+
+        if attributeMap.contains("units"):
+            self.units = attributeMap.namedItem("units").nodeValue() 
+        else:
+            self.units = ""
+
+
+        text = self.getText(node)    
+        if text:
+            self.value = unicode(text).strip()
+        else:
+            self.value = ""
+
+        self.attributes.clear()    
+        for i in range(attributeMap.count()):
+            attribute = attributeMap.item(i)
+            attrName = attribute.nodeName()
+            if attrName != "name" and attrName != "type" and attrName != "units":
+                self.attributes[unicode(attribute.nodeName())] = unicode(attribute.nodeValue())
+
+
+        dimens = self.node.firstChildElement(QString("dimensions"))           
+        attributeMap = dimens.attributes()
+
+        self.dimensions = []
+        if attributeMap.contains("rank"):
+            try:
+                self.rank = int(attributeMap.namedItem("rank").nodeValue())
+                if self.rank < 0: 
+                    self.rank = 0
+            except:
+                self.rank = 0
+        else:
+            self.rank = 0
+        if self.rank > 0:
+            child = dimens.firstChild()
+            maxIndex = 0
+            lengths = {}
+            while not child.isNull():
+                if child.isElement() and child.nodeName() == "dim":
+                    attributeMap = child.attributes()
+                    index = None
+                    value = None
+                    try:                        
+                        if attributeMap.contains("index"):
+                            index = int(attributeMap.namedItem("index").nodeValue())
+                        if attributeMap.contains("value"):
+                            value = int(attributeMap.namedItem("value").nodeValue())
+                    except:
+                        pass
+                    if index < 1: index = None
+                    if value < 1: value = None
+                    print "index: ", index, " = " , value
+                    if index is not None:
+                        while len(self.dimensions)< index:
+                            self.dimensions.append(None)
+                        self.dimensions[index-1] = value     
+
+                child = child.nextSibling()
+                
+
+        doc = self.node.firstChildElement(QString("doc"))           
+        if doc:
+            self.doc =unicode(doc.text()).strip()
+
+        else:
+            self.doc = ""
+
 
     ## adds an attribute    
     #  \brief It runs the Attribute Dialog and fetches attribute name and value    
@@ -129,7 +241,7 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
             else:    
                 self.dimensions = []
             label = self.dimensions.__str__()
-            self.dimLabel.setText("Dimensions: %s" % label)
+            self.dimLabel.setText("%s" % label)
                 
                 
 
@@ -207,11 +319,11 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
     # \brief It sets enable or disable the OK button
     def updateUi(self):
         enable = not self.nameLineEdit.text().isEmpty()
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
+        self.applyPushButton.setEnabled(enable)
 
-    ## accepts input text strings
-    # \brief It copies the field name and type from lineEdit widgets and accept the dialog
-    def accept(self):
+    ## applys input text strings
+    # \brief It copies the field name and type from lineEdit widgets and apply the dialog
+    def apply(self):
         self.name = unicode(self.nameLineEdit.text())
         self.nexusType = unicode(self.typeLineEdit.text())
         self.units = unicode(self.unitsLineEdit.text())
@@ -219,7 +331,7 @@ class FieldDlg(QDialog, ui_fielddlg.Ui_FieldDlg):
 
         self.doc = unicode(self.docTextEdit.toPlainText())
         
-        QDialog.accept(self)
+#        QDialog.apply(self)
 
 if __name__ == "__main__":
     import sys

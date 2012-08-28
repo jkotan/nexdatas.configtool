@@ -120,7 +120,7 @@
        <item>
         <widget class="QLabel" name="attributesLabel">
          <property name="text">
-          <string>Additional &amp;attributes:</string>
+          <string>&amp;Attributes:</string>
          </property>
          <property name="buddy">
           <cstring>attributeTableWidget</cstring>

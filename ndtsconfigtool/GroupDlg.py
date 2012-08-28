@@ -25,9 +25,10 @@ from PyQt4.QtGui import *
 import ui_groupdlg
 
 from AttributeDlg import AttributeDlg
+from NodeDlg import NodeDlg 
 
 ## dialog defining a group tag
-class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
+class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
     
     ## constructor
     # \param parent patent instance
@@ -42,6 +43,7 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         self.doc = u''
         ## group attributes
         self.attributes = {}
+
         ## DOM node    
         self.node = None
         ## DOM root
@@ -53,9 +55,13 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
 
 
     def updateForm(self):
-        self.nameLineEdit.setText(self.name) 
-        self.typeLineEdit.setText(self.nexusType) 
-        self.docTextEdit.setText(self.doc)
+
+        if self.name is not None:
+            self.nameLineEdit.setText(self.name) 
+        if self.nexusType is not None:
+            self.typeLineEdit.setText(self.nexusType) 
+        if self.doc is not None:
+            self.docTextEdit.setText(self.doc)
 
         self.populateAttributes()
         
@@ -67,19 +73,10 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         
         self.updateForm()
 
-        if self.name :
-            self.nameLineEdit.setText(self.name) 
-        if self.nexusType :
-            self.typeLineEdit.setText(self.nexusType) 
-        if self.doc :
-            self.docTextEdit.setText(self.doc)
-
-        self.populateAttributes()
-
         self.updateUi()
 
         self.connect(self.applyPushButton, SIGNAL("clicked()"), 
-                     self.accept)
+                     self.apply)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), 
                      self.reset)
         self.connect(self.attributeTableWidget, 
@@ -237,9 +234,9 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         
 
-    ## accepts input text strings
-    # \brief It copies the group name and type from lineEdit widgets and accept the dialog
-    def accept(self):
+    ## applys input text strings
+    # \brief It copies the group name and type from lineEdit widgets and apply the dialog
+    def apply(self):
         self.name = unicode(self.nameLineEdit.text())
         self.nexusType = unicode(self.typeLineEdit.text())
 
@@ -287,7 +284,7 @@ class GroupDlg(QDialog, ui_groupdlg.Ui_GroupDlg):
                         self.model.insertRows(row, 1, index)
 
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
-
+        
 if __name__ == "__main__":
     import sys
 

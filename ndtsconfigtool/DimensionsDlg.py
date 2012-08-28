@@ -24,9 +24,10 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ui_dimensionsdlg
 
+from NodeDlg import NodeDlg 
 
 ## dialog defining a dimensions tag
-class DimensionsDlg(QDialog, ui_dimensionsdlg.Ui_DimensionsDlg):
+class DimensionsDlg(NodeDlg, ui_dimensionsdlg.Ui_DimensionsDlg):
     
     ## constructor
     # \param parent patent instance

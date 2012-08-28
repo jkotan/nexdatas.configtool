@@ -44,15 +44,6 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
         ## group attributes
         self.attributes = {}
 
-        ## DOM node    
-        self.node = None
-        ## DOM root
-        self.root = None
-        ## component tree view
-        self.view = None 
-        ## component tree model
-        self.model = None 
-
 
     def updateForm(self):
 
@@ -117,15 +108,6 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
         else:
             self.doc = ""
              
-
-
-#    form.name = 'entry'
-#    form.nexusType = 'NXentry'
-#    form.doc = 'The main entry'
-#    form.attributes={"title":"Test run 1", "run_cycle":"2012-1"}
-            
-
-
     ## adds an attribute    
     #  \brief It runs the Attribute Dialog and fetches attribute name and value    
     def addAttribute(self):
@@ -197,7 +179,7 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
                 selected = item2
         self.attributeTableWidget.setSortingEnabled(True)
         self.attributeTableWidget.resizeColumnsToContents()
-        self.attributeTableWidget.horizontalHeader().setStretchLastSection(True);
+        self.attributeTableWidget.horizontalHeader().setStretchLastSection(True)
         if selected is not None:
             selected.setSelected(True)
             self.attributeTableWidget.setCurrentItem(selected)
@@ -216,23 +198,7 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
         enable = not self.typeLineEdit.text().isEmpty()
         self.applyPushButton.setEnabled(enable)
 
-    def getRow(self, element):
-        row = 0
-        children = self.node.childNodes()
-        for i in range(children.count()):
-            ch = children.item(i)
-            if ch.isElement() and  element == ch.toElement():
-                break
-            row += 1
-        if row < children.count():
-            return row
 
-    def reset(self):
-        index = self.view.currentIndex()
-        self.setFromNode()
-        self.updateForm()
-        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
-        
 
     ## applys input text strings
     # \brief It copies the group name and type from lineEdit widgets and apply the dialog
@@ -255,33 +221,19 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
 
             for attr in self.attributes.keys():
                 elem.setAttribute(QString(attr), QString(self.attributes[attr]))
-#        QDialog.accept(self)
 
-            
                 
             doc = self.node.firstChildElement(QString("doc"))           
             if not self.doc and doc and doc.nodeName() == "doc" :
-
-                row = self.getRow(doc)
-                if row is not None:
-                    self.model.removeRows(row, 1, index)
-                self.node.removeChild(doc)
-
+                self.removeElement(doc, index)
             elif self.doc:
                 newDoc = self.root.createElement(QString("doc"))
                 newText = self.root.createTextNode(QString(self.doc))
-                newDoc.appendChild(newText);
+                newDoc.appendChild(newText)
                 if doc and doc.nodeName() == "doc" :
-                    row = self.getRow(doc)
-                    self.node.replaceChild(newDoc, doc)
-                    if row is not None:
-                        self.model.removeRows(row, 1, index)
-                        self.model.insertRows(row, 1, index)
+                    self.replaceElement(doc, newDoc, index)
                 else:
-                    self.node.appendChild(newDoc)
-                    row = self.node.childNodes().count()-1
-                    if row is not None:
-                        self.model.insertRows(row, 1, index)
+                    self.appendElement(newDoc, index)
 
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         
@@ -301,13 +253,12 @@ if __name__ == "__main__":
     app.exec_()
 
 
-    if form.result():
-        if form.nexusType:
-            print "Group: name = \'%s\' type = \'%s\'" % ( form.name, form.nexusType )
-        if form.attributes:
-            print "Other attributes:"
-            for k in form.attributes.keys():
-                print  " %s = '%s' " % (k, form.attributes[k])
-        if form.doc:
-            print "Doc: \n%s" % form.doc
+    if form.nexusType:
+        print "Group: name = \'%s\' type = \'%s\'" % ( form.name, form.nexusType )
+    if form.attributes:
+        print "Other attributes:"
+        for k in form.attributes.keys():
+            print  " %s = '%s' " % (k, form.attributes[k])
+    if form.doc:
+        print "Doc: \n%s" % form.doc
     

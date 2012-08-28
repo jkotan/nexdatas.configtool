@@ -61,14 +61,6 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         self.dimensions = []
 
 
-        ## DOM node    
-        self.node = None
-        ## DOM root
-        self.root = None
-        ## component tree view
-        self.view = None 
-        ## component tree model
-        self.model = None 
 
 
 
@@ -91,7 +83,7 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
             label = self.dimensions.__str__()
             self.dimLabel.setText("%s" % label)
 
-        
+        self.populateAttributes()
 
 
     ##  creates GUI
@@ -103,6 +95,10 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
 
         self.updateUi()
 
+        self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+                     self.apply)
+        self.connect(self.resetPushButton, SIGNAL("clicked()"), 
+                     self.reset)
         self.connect(self.attributeTableWidget, 
                      SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.tableItemChanged)
@@ -115,14 +111,6 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
 
         self.populateAttributes()
 
-    def getText(self, node):
-        child = node.firstChild()
-        text = QString()
-        while not child.isNull():
-            if child.nodeType() == QDomNode.TextNode:
-                text += child.toText().data()
-            child = child.nextSibling()
-        return text    
         
     def setFromNode(self, node=None):
         if node:
@@ -147,11 +135,14 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
             self.units = ""
 
 
+
         text = self.getText(node)    
         if text:
             self.value = unicode(text).strip()
         else:
             self.value = ""
+
+
 
         self.attributes.clear()    
         for i in range(attributeMap.count()):
@@ -192,14 +183,15 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
                         pass
                     if index < 1: index = None
                     if value < 1: value = None
-                    print "index: ", index, " = " , value
                     if index is not None:
                         while len(self.dimensions)< index:
                             self.dimensions.append(None)
                         self.dimensions[index-1] = value     
 
                 child = child.nextSibling()
-                
+
+        if self.rank < len(self.dimensions) :
+            self.rank = len(self.dimensions)
 
         doc = self.node.firstChildElement(QString("doc"))           
         if doc:
@@ -302,7 +294,7 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
                 selected = item2
         self.attributeTableWidget.setSortingEnabled(True)
         self.attributeTableWidget.resizeColumnsToContents()
-        self.attributeTableWidget.horizontalHeader().setStretchLastSection(True);
+        self.attributeTableWidget.horizontalHeader().setStretchLastSection(True)
         if selected is not None:
             selected.setSelected(True)
             self.attributeTableWidget.setCurrentItem(selected)
@@ -330,8 +322,55 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         self.value = unicode(self.valueLineEdit.text())
 
         self.doc = unicode(self.docTextEdit.toPlainText())
+
+        index = self.view.currentIndex()
         
-#        QDialog.apply(self)
+        if self.node  and self.root and self.node.isElement():
+            elem=self.node.toElement()
+
+
+            attributeMap = self.node.attributes()
+            for i in range(attributeMap.count()):
+                attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
+            elem.setAttribute(QString("name"), QString(self.name))
+            elem.setAttribute(QString("type"), QString(self.nexusType))
+            elem.setAttribute(QString("units"), QString(self.units))
+
+            for attr in self.attributes.keys():
+                elem.setAttribute(QString(attr), QString(self.attributes[attr]))
+
+            doc = self.node.firstChildElement(QString("doc"))           
+            if not self.doc and doc and doc.nodeName() == "doc" :
+                self.removeElement(doc, index)
+            elif self.doc:
+                newDoc = self.root.createElement(QString("doc"))
+                newText = self.root.createTextNode(QString(self.doc))
+                newDoc.appendChild(newText)
+                if doc and doc.nodeName() == "doc" :
+                    self.replaceElement(doc, newDoc, index)
+                else:
+                    self.appendElement(newDoc, index)
+
+            dimens = self.node.firstChildElement(QString("dimensions"))           
+            if not self.dimensions and dimens and dimens.nodeName() == "dimensions":
+                self.removeElement(dimens,index)
+            elif self.dimensions:
+                newDimens = self.root.createElement(QString("dimensions"))
+                newDimens.setAttribute(QString("rank"), QString(unicode(self.rank)))
+                for i in range(min(self.rank,len(self.dimensions))):
+                    dim = self.root.createElement(QString("dim"))
+                    dim.setAttribute(QString("index"), QString(unicode(i+1)))
+                    dim.setAttribute(QString("value"), QString(unicode(self.dimensions[i])))
+                    newDimens.appendChild(dim)
+                if dimens and dimens.nodeName() == "doc" :
+                    self.replaceElement(dimens, newDimens, index)
+                else:
+                    self.appendElement(newDimens, index)
+
+
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+
+
 
 if __name__ == "__main__":
     import sys
@@ -352,28 +391,27 @@ It should be defined by client."""
     form.createGUI()
     form.show()
     app.exec_()
-    if form.result():
-        if form.name:
-            print "Field: name = \'%s\'" % ( form.name )
-        if form.nexusType:
-            print "       type = \'%s\'" % ( form.nexusType )
-        if form.units:
-            print "       units = \'%s\'" % ( form.units )
-        if form.attributes:
-            print "Other attributes:"
-            for k in form.attributes.keys():
-                print  " %s = '%s' " % (k, form.attributes[k])
-        if form.value:
-            print "Value:\n \'%s\'" % ( form.value )
-        if form.rank:
-            print " rank = %s" % ( form.rank )
-        if form.dimensions:
-            print "Dimensions:"
-            for row, ln in enumerate(form.dimensions):
-                print  " %s: %s " % (row+1, ln)
-        if form.dimDoc:
-            print "Dimensions Doc: \n%s" % form.dimDoc
+    if form.name:
+        print "Field: name = \'%s\'" % ( form.name )
+    if form.nexusType:
+        print "       type = \'%s\'" % ( form.nexusType )
+    if form.units:
+        print "       units = \'%s\'" % ( form.units )
+    if form.attributes:
+        print "Other attributes:"
+        for k in form.attributes.keys():
+            print  " %s = '%s' " % (k, form.attributes[k])
+    if form.value:
+        print "Value:\n \'%s\'" % ( form.value )
+    if form.rank:
+        print " rank = %s" % ( form.rank )
+    if form.dimensions:
+        print "Dimensions:"
+        for row, ln in enumerate(form.dimensions):
+            print  " %s: %s " % (row+1, ln)
+    if form.dimDoc:
+        print "Dimensions Doc: \n%s" % form.dimDoc
             
-        if form.doc:
-            print "Doc: \n%s" % form.doc
+    if form.doc:
+        print "Doc: \n%s" % form.doc
     

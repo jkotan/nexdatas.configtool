@@ -20,6 +20,8 @@
 # Abstract Node dialog class
 
 from PyQt4.QtGui import QDialog
+from PyQt4.QtXml import QDomNode
+from PyQt4.QtCore import (QString,SIGNAL)
 
 ## dialog defining a field tag
 class NodeDlg(QDialog):
@@ -28,6 +30,68 @@ class NodeDlg(QDialog):
     # \param parent patent instance
     def __init__(self, parent=None):
         super(NodeDlg, self).__init__(parent)
+
+        ## DOM node    
+        self.node = None
+        ## DOM root
+        self.root = None
+        ## component tree view
+        self.view = None 
+        ## component tree model
+        self.model = None 
+
+    def reset(self):
+        index = self.view.currentIndex()
+        self.setFromNode()
+        self.updateForm()
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+
+
+    def getRow(self, element):
+        row = 0
+        if self.node:
+            children = self.node.childNodes()
+            for i in range(children.count()):
+                ch = children.item(i)
+                if ch.isElement() and  element == ch.toElement():
+                    break
+                row += 1
+            if row < children.count():
+                return row
+
+
+    def getText(self, node):
+        text = QString()
+        if node:
+            child = node.firstChild()
+            while not child.isNull():
+                if child.nodeType() == QDomNode.TextNode:
+                    text += child.toText().data()
+                child = child.nextSibling()
+        return text    
+        
+
+    def removeElement(self, element, parent):
+        row = self.getRow(element)
+        if row is not None:
+            self.model.removeRows(row, 1, parent)
+        self.node.removeChild(element)
+
+    def replaceElement(self, oldElement, newElement, parent):
+        row = self.getRow(oldElement)
+        self.node.replaceChild(newElement, oldElement)
+        if row is not None:
+            self.model.removeRows(row, 1, parent)
+            self.model.insertRows(row, 1, parent)
+
+    def appendElement(self, newElement, parent):
+        self.node.appendChild(newElement)
+        row = self.node.childNodes().count()-1
+        if row is not None:
+            self.model.insertRows(row, 1, parent)
+
+            
+
 
 
     ## updates the form

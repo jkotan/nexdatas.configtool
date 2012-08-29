@@ -30,6 +30,7 @@ from LinkDlg import LinkDlg
 from RichAttributeDlg import RichAttributeDlg 
 from DataSourceDlg import DataSourceDlg 
 from DimensionsDlg import DimensionsDlg
+from StrategyDlg import StrategyDlg
 
 import os
 
@@ -56,7 +57,10 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
         self.tagClasses = {"field":FieldDlg, "group":GroupDlg, 
                            "attribute":RichAttributeDlg,"link":LinkDlg,
-                           "datasource":DataSourceDlg,"dimensions":DimensionsDlg}
+                           "datasource":DataSourceDlg,
+                           "strategy":StrategyDlg
+#                           ,"dimensions":DimensionsDlg
+                           }
         self.widget = None
 
         self.currentTag = None

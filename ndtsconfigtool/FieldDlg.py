@@ -304,6 +304,7 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         self.doc = unicode(self.docTextEdit.toPlainText())
 
         index = self.view.currentIndex()
+        finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
 
         if self.node  and self.root and self.node.isElement():
             elem=self.node.toElement()
@@ -350,7 +351,7 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
                     self.appendElement(newDimens, index)
 
                     
-        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
 
 

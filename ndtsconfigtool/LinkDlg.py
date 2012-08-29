@@ -119,6 +119,7 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
         self.doc = unicode(self.docTextEdit.toPlainText())
 
         index = self.view.currentIndex()
+        finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
 
         if self.node  and self.root and self.node.isElement():
             elem=self.node.toElement()
@@ -144,7 +145,7 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
                     self.appendElement(newDoc, index)
 
                     
-        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
 
 

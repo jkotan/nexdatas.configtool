@@ -524,23 +524,18 @@ class DataSourceCurrentItemChanged(Command):
                     self._wasCreated  = True
                 self._dsEdit = DataSourceDlg() 
                 self._dsEdit.ids = self._ds.id
- #               print  "ID", self._ds.id
                 self._dsEdit.directory = self.receiver.sourceList.directory
- #               print "STAT", self._ds.id in self.receiver.sourceList.datasources
                 self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
                 self._dsEdit.createGUI()
                 self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)  
             else:
                 self._dsEdit = self._ds.widget 
-#                print  "ID-e", self._ds.id
             if self._ds.widget in self.receiver.mdi.windowList() or self._wasInWS:
- #               print "show"
                 if self._wasInWS is None : 
                     self._wasInWS = True
                 self.receiver.mdi.setActiveWindow(self._ds.widget) 
                 self._ds.widget.savePushButton.setFocus()
             else:    
- #               print "create"
                 self.receiver.mdi.addWindow(self._dsEdit)
                 self._dsEdit.savePushButton.setFocus()
                 self._dsEdit.show()

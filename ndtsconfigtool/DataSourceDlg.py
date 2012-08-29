@@ -23,11 +23,7 @@ import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ui_datasourcedlg
-
-import XMLDumper
-from xml.dom.minidom import parse
-
-
+from PyQt4.QtXml import (QDomDocument, QDomNode)
 from NodeDlg import NodeDlg 
 
 
@@ -70,6 +66,9 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         ## database parameters
         self._dbParam = {}
 
+
+
+
         ## parameter map for XMLdumper
         self.dbxml = {"DB name":"dbname",
                       "DB host":"host",
@@ -99,9 +98,11 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         ## datasource name
         self.name = None
 
+        ## DOM document
+        self.document = None
+        
 
-
-    def setupForm(self):    
+    def updateForm(self):    
         if self.doc is not None:
             self.docTextEdit.setText(self.doc)
 
@@ -169,7 +170,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
 
         self.setupUi(self)
-        self.setupForm()
+        self.updateForm()
 
         self.resize(460, 440)
 
@@ -177,8 +178,10 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                      self.apply)
         self.connect(self.savePushButton, SIGNAL("clicked()"), 
                      self.save)
-        self.connect(self.cancelPushButton, SIGNAL("clicked()"), 
-                     self.cancel)
+        self.connect(self.resetPushButton, SIGNAL("clicked()"), 
+                     self.reset)
+        self.connect(self.closePushButton, SIGNAL("clicked()"), 
+                     self.close)
 
 
         self.connect(self.dAddPushButton, SIGNAL("clicked()"), 
@@ -190,7 +193,6 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                      self.tableItemChanged)
         
         self.setFrames(self.dataSourceType)
-
 
 
 
@@ -311,148 +313,159 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             filename = self.directory + "/" + self.name + ".ds.xml"
         else:
             filename = fname
+
         try:
-            doc = parse(filename)
-            ds = doc.getElementsByTagName("datasource")[0]
-            #            node = ds.documentElement        
-            for (name, value) in ds.attributes.items():
-                if name == 'type':  
-                    if value == 'CLIENT':
-                        self.dataSourceType = value
-                        record = ds.getElementsByTagName("record")[0]
-                        for (name, value) in record.attributes.items():
-                            if name == 'name':
-                                self.clientRecordName = value
-                    if value == 'TANGO':
-                        self.dataSourceType = value
 
-                        try:
-                            record = ds.getElementsByTagName("record")[0]
-                            for (name, value) in record.attributes.items():
-                                if name == 'name':
-                                    self.tangoMemberName = value
-                        except:
-                            self.tangoMemberName = ""
+            fh = QFile(filename)
+            if  fh.open(QIODevice.ReadOnly):
+                self.document = QDomDocument()
+                self.root = self.document
+                if not self.document.setContent(fh):
+                    raise ValueError, "could not parse XML"
 
-                        try:
-                            device = ds.getElementsByTagName("device")[0]
-                            for (name, value) in device.attributes.items():
-                                if name == 'name':
-                                    self.tangoDeviceName = value
-                                elif name == 'member':    
-                                    self.tangoMemberType = value
-                                elif name == 'hostname':    
-                                    self.tangoHost = value
-                                elif name == 'port':    
-                                    self.tangoPort = value
-                        except:
-                            self.tangoDeviceName = ""
-                            self.tangoMemberType = "attribute"
-                            self.tangoHost = ""
-                            self.tangoPort = ""
-                                    
-                    if value == 'DB':
-                        self.dataSourceType = value
-
-                        try:
-                            database = ds.getElementsByTagName("database")[0]
-                            for (name, value) in database.attributes.items():
-                                if name == 'dbtype':
-                                    self.dbType = value         
-                                elif name in self.dbmap:
-                                    self.dbParameters[self.dbmap[name]] = value
-                                    self._dbParam[self.dbmap[name]] = value
-
-                            dtxt = ""
-                            for txt in database.childNodes:
-                                if txt.nodeType == txt.TEXT_NODE:
-                                    dtxt = dtxt + txt.data
-                            self.dbParameters['Oracle DSN'] = dtxt.strip()
-                            self._dbParam['Oracle DSN'] = dtxt.strip()
-                        except:
-                            self.dbType = 'MYSQL'
-                                    
-
-                        try:                                
-                            query = ds.getElementsByTagName("query")[0]
-                            for (name, value) in query.attributes.items():
-                                if name == 'format':
-                                    self.dbDataFormat = value         
-
-                            qtxt = ""
-                            for txt in query.childNodes:
-                                if txt.nodeType == txt.TEXT_NODE:
-                                    qtxt = qtxt + txt.data
-                            self.dbQuery = qtxt.strip()
-                        except:
-                            self.dbDataFormat = 'SCALAR'
-                            
-            qtxt = ""
-            try:  
-                tdoc = doc.getElementsByTagName("doc")[0]
-                for txt in tdoc.childNodes:
-                    if txt.nodeType == txt.TEXT_NODE:
-                        qtxt = qtxt + txt.data
-            except:
-                pass
-            self.doc = qtxt.strip()
-        except Exception as e:
-            QMessageBox.warning(self, "XML not loaded", 
-                                "Problems in loading the %s:\n\n%s" %(filename,str(e)))
-        try:    
-                    
-            self.createGUI()
+                ds = self.getFirstElement(self.document, "datasource")           
+                self.setFromNode(ds)
+            try:    
+                self.createGUI()
+            except Exception as e:
+                QMessageBox.warning(self, "dialog not created", 
+                                    "Problems in creating a dialog %s :\n\n%s" %(self.name,str(e)))
                 
-        except Exception as e:
-            QMessageBox.warning(self, "dialog not created", 
-                                "Problems in creating a dialog for %s:\n\n%s" %(filename,str(e)))
+        except (IOError, OSError, ValueError), e:
+            error = "Failed to load: %s" % e
+            print error
+            
+        except Exception, e:
+            print e
+        finally:                 
+            if fh is not None:
+                fh.close()
+                return filename
+
+
+            
+
+    def setFromNode(self, node=None):
+        if node:
+            self.node = node
+        attributeMap = self.node.attributes()
+        
+        value = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
+        
+        if value == 'CLIENT':
+            self.dataSourceType = value
+
+            record = self.node.firstChildElement(QString("record"))           
+            attributeMap = record.attributes()
+            self.clientRecordName = attributeMap.namedItem("name").nodeValue() \
+                if attributeMap.contains("name") else ""
+
+
+        elif value == 'TANGO':
+            self.dataSourceType = value
+
+            record = self.node.firstChildElement(QString("record"))           
+            attributeMap = record.attributes()
+            self.tangoMemberName = attributeMap.namedItem("name").nodeValue() \
+                if attributeMap.contains("name") else ""
+
+            device = self.node.firstChildElement(QString("device"))           
+            attributeMap = device.attributes()
+            self.tangoDeviceName = attributeMap.namedItem("name").nodeValue() \
+                if attributeMap.contains("name") else ""
+            self.tangoMemberType = attributeMap.namedItem("member").nodeValue() \
+                if attributeMap.contains("member") else "attribute"
+            self.tangoHost = attributeMap.namedItem("hostname").nodeValue() \
+                if attributeMap.contains("hostname") else ""
+            self.tangoPort = attributeMap.namedItem("port").nodeValue() \
+                if attributeMap.contains("port") else ""
+
+                                    
+        elif value == 'DB':
+            self.dataSourceType = value
+            
+            database = self.node.firstChildElement(QString("database"))           
+            attributeMap = database.attributes()
+
+            for i in range(attributeMap.count()):
+                name = attributeMap.item(i).nodeName()
+                if name == 'dbtype':
+                    self.dbType = attributeMap.item(i).nodeValue()
+                elif name in self.dbmap:
+                    self.dbParameters[self.dbmap[name]] = attributeMap.item(i).nodeValue()
+                    self._dbParam[self.dbmap[name]] = attributeMap.item(i).nodeValue()
+
+                    
+            if not self.dbType:
+                self.dbType = 'MYSQL'
+                    
+            text = self.getText(database)    
+            self.dbParameters['Oracle DSN'] = unicode(text).strip() if text else ""
+            self._dbParam['Oracle DSN'] = unicode(text).strip() if text else ""
+
+
+            query = self.node.firstChildElement(QString("query"))           
+            attributeMap = query.attributes()
+
+            self.dbDataFormat = attributeMap.namedItem("format").nodeValue() \
+                if attributeMap.contains("format") else "SCALAR"
+
+
+            text = self.getText(query)    
+            self.dbQuery = unicode(text).strip() if text else ""
+
+        doc = self.node.firstChildElement(QString("doc"))           
+        text = self.getText(doc)    
+        self.doc = unicode(text).strip() if text else ""
+
 
     ## accepts and save input text strings
     # \brief It copies the parameters and saves the dialog
     def save(self):
+        if not self.document or not self.node:
+            self.model = None
+            self.document = QDomDocument()
+            self.root = self.document
+            definition = self.root.createElement(QString("definition"))
+            self.root.appendChild(definition)
+            self.node = self.root.createElement(QString("datasource"))
+            definition.appendChild(self.node)            
+
         if self.apply():
             filename = self.directory + "/" + self.name + ".ds.xml"
             print "saving in %s"% (filename)
+            error = None
             if filename:
-                df = XMLDumper.XMLFile(filename)
-                sr = XMLDumper.NDSource(df)
-                if self.dataSourceType == 'CLIENT':
-                    sr.initClient(self.clientRecordName);
-                elif self.dataSourceType == 'TANGO':
-                    args = {"device":self.tangoDeviceName, 
-                            "memberType":self.tangoMemberType,
-                            "recordName":self.tangoMemberName,
-                            }
-                    if self.tangoHost:
-                        args["host"] = self.tangoHost
-                    if self.tangoPort:
-                        args["port"] = self.tangoPort 
-                    sr.initTango(**args)
-                elif self.dataSourceType == 'DB':
-                    args = {"dbtype":self.dbType,
-                            "format":self.dbDataFormat,
-                            "query":self.dbQuery
-                            }
+                try:
+                    fh = QFile(filename)
+                    if not fh.open(QIODevice.WriteOnly):
+                        raise IOError, unicode(fh.errorString())
+                    stream = QTextStream(fh)
+                    stream <<self.document.toString(2)
+            #                print self.document.toString(2)
+                except (IOError, OSError, ValueError), e:
+                    error = "Failed to save: %s" % e
+                    print error
                     
-                    for name in self.dbParameters.keys():
-                        if name in self.dbxml.keys():
-                            args[self.dbxml[name]] =  self.dbParameters[name]
-
-                    sr.initDBase(**args)
-                if self.doc: 
-                    sr.addDoc(self.doc)
-
-                df.dump()    
+                finally:
+                    if fh is not None:
+                        fh.close()
 
 
     ## rejects the changes
     # \brief It asks for the cancellation  and reject the changes
-    def cancel(self):
-        if QMessageBox.question(self, "Cancel changes",
-                                "Would you like to cancel?", 
+    def close(self):
+        if QMessageBox.question(self, "Close datasource",
+                                "Would you like to close the datasource?", 
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
         self.revert()
+        self.reject()
+
+
+    def reset(self):
+        self.revert()
+
 
 
 
@@ -512,14 +525,100 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
         self.doc = unicode(self.docTextEdit.toPlainText())
 
+        index = None
+        if self.model:
+            index = self.view.currentIndex()
+            finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
+
+        if self.node  and self.root and self.node.isElement():
+            self.updateNode(index)
+
+
+            if self.model:
+                self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
+                self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+
+        
+
 #        QDialog.accept(self)
 
         self.emit(SIGNAL("changed"))    
         return True    
 
+    def updateNode(self,index=QModelIndex()):
+        if not self.root or not self.node:
+            self.model = None
+            self.document = QDomDocument()
+            self.root = self.document
+            definition = self.root.createElement(QString("definition"))
+            self.root.appendChild(definition)
+            self.node = self.root.createElement(QString("datasource"))
+            definition.appendChild(self.node)            
+            
+
+        newDs = self.root.createElement(QString("datasource"))
+        elem=newDs.toElement()
+#        attributeMap = self.newDs.attributes()
+        elem.setAttribute(QString("type"), QString(self.dataSourceType))
+        if self.dataSourceType == 'CLIENT':
+            record = self.root.createElement(QString("record"))
+            record.setAttribute(QString("name"), QString(self.clientRecordName))
+            newDs.appendChild(record)            
+
+        elif self.dataSourceType == 'TANGO':
+            record = self.root.createElement(QString("record"))
+            record.setAttribute(QString("name"), QString(self.tangoMemberName))
+            newDs.appendChild(record)            
+
+            device = self.root.createElement(QString("device"))
+            device.setAttribute(QString("name"), QString(self.tangoDeviceName))
+            device.setAttribute(QString("member"), QString(self.tangoMemberType))
+            if self.tangoHost:
+                device.setAttribute(QString("hostname"), QString(self.tangoHost))
+            if self.tangoPort:
+                device.setAttribute(QString("port"), QString(self.tangoPort))
+            newDs.appendChild(device)            
+            
+        elif self.dataSourceType == 'DB':
+            db = self.root.createElement(QString("database"))
+            db.setAttribute(QString("dbtype"), QString(self.dbType))
+            for par in self.dbParameters.keys():
+                if par == 'Oracle DSN':
+                    newText = self.root.createTextNode(QString(self.dbParameters[par]))
+                    db.appendChild(newText)
+                else:
+                    db.setAttribute(QString(par), QString(self.dbParameters[par]))
+            newDs.appendChild(db)            
+
+            query = self.root.createElement(QString("query"))
+            query.setAttribute(QString("format"), QString(self.dbDataFormat))
+            if self.dbQuery:
+                newText = self.root.createTextNode(QString(self.dbQuery))
+                query.appendChild(newText)
+
+            newDs.appendChild(query)            
+
+
+        newDoc = self.root.createElement(QString("doc"))
+        newText = self.root.createTextNode(QString(self.doc))
+        newDoc.appendChild(newText)
+        newDs.appendChild(newDoc)
+        
+        oldDs = self.node
+        self.node = self.node.parentNode()
+        
+        if hasattr(index,"parent"):
+            parent = index.parent()
+        else:
+            parent = QModelIndex()
+        self.replaceNode(oldDs, newDs, parent)
+        self.node = newDs
+
+
+                    
+
     def revert(self):
-        self.setupForm()
-        self.reject()
+        self.updateForm()
 
 
     def  showParameters(self):

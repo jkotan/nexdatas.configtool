@@ -118,11 +118,14 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         attributeMap = self.node.attributes()
         nNode = self.node.nodeName()
 
-        self.name = attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else ""
-        self.nexusType = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
-        self.units = attributeMap.namedItem("units").nodeValue() if attributeMap.contains("units") else ""
+        self.name = attributeMap.namedItem("name").nodeValue() \
+            if attributeMap.contains("name") else ""
+        self.nexusType = attributeMap.namedItem("type").nodeValue() \
+            if attributeMap.contains("type") else ""
+        self.units = attributeMap.namedItem("units").nodeValue() \
+            if attributeMap.contains("units") else ""
 
-        text = self.getText(node)    
+        text = self.getText(self.node)    
         self.value = unicode(text).strip() if text else ""
 
         self.attributes.clear()    

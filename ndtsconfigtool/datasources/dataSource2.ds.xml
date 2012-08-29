@@ -1,10 +1,8 @@
-<?xml version="1.0" ?>
+<?xml version='1.0'?>
 <definition>
   <datasource type="TANGO">
-    <device hostname="hasso.desy.de" member="attribute" name="dev/motor1/p09" port="10000"/>
     <record name="position"/>
-    <doc>
-      test tango datasource
-    </doc>
+    <device port="10000" hostname="hasso.desy.de" member="attribute" name="dev/motor1/p09"/>
+    <doc>test tango datasourcesss</doc>
   </datasource>
 </definition>

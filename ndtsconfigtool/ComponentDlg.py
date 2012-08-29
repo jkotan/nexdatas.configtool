@@ -68,7 +68,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
         self.document = None
 
-    def setupForm(self):
+    def updateForm(self):
         pass
         
 
@@ -88,7 +88,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.frameLayout.addWidget(self.widget)
         self.frame.setLayout(self.frameLayout)
 
-        self.setupForm()
+        self.updateForm()
 
         
         self.connect(self.savePushButton, SIGNAL("clicked()"), 

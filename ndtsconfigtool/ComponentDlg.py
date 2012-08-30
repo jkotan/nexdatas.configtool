@@ -131,6 +131,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             self.widget.root = self.document
             self.widget.setFromNode(node)
             self.widget.createGUI()
+            if hasattr(self.widget,"treeMode"):
+                self.widget.treeMode()
             self.widget.model = self.model
             self.widget.view = self.view
             self.frameLayout.addWidget(self.widget)

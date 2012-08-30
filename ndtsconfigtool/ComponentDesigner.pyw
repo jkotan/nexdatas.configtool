@@ -123,6 +123,8 @@ class MainWindow(QMainWindow):
 
         self.connect(self.mdi, SIGNAL("windowActivated(QWidget*)"), self.mdiWindowActivated)
 
+        self.connect(self.sourceList.sourceListWidget, SIGNAL("itemClicked(QListWidgetItem*)"), self.dsourceEdit)
+
         
 
         componentNewAction = self.pool.createCommand("&New", "componentNew",  
@@ -339,6 +341,7 @@ class MainWindow(QMainWindow):
     def dsourceCurrentItemChanged(self, item ,previousItem):
 #        print "curr: " , item.text() if hasattr(item, "text") else item
 #        print "prev: " , previousItem.text() if hasattr(previousItem, "text") else previousItem
+        return
         if self.pooling:
 #            if item == previousItem  :
 #                return

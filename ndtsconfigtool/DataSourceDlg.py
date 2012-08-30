@@ -162,8 +162,13 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         self.populateParameters()
     
 
-
-
+    def treeMode(self, enable = True):
+        if enable:
+            self.frame.hide()
+        else:
+            self.frame.show()
+            
+        
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):

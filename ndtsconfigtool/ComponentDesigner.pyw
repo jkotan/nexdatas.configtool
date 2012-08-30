@@ -102,7 +102,7 @@ class MainWindow(QMainWindow):
         commandArgs = {'receiver':self}
 
         dsourceNewAction = self.pool.createCommand("&New DataSource", "dsourceNew",  commandArgs, 
-                                                  DataSourceNew,"Ctrl+D", "dsourceadd", 
+                                                  DataSourceNew,"Ctrl+S", "dsourceadd", 
                                                   "Create the new data source") 
 
         dsourceRemoveAction = self.pool.createCommand("&Close DataSource", "dsourceRemove",  commandArgs, 
@@ -161,7 +161,7 @@ class MainWindow(QMainWindow):
 
         componentRemoveItemAction = self.pool.createCommand("&Remove Item", "componentRemoveItem",  
                                                      commandArgs, ComponentRemoveItem,
-                                                     "Ctrl+R", "componentremoveItem", 
+                                                     "Ctrl+D", "componentremoveItem", 
                                                      "Remove the component item")
 
 

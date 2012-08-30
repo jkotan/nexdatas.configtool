@@ -74,7 +74,29 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
     def updateForm(self):
         pass
-        
+
+    def removeSelectedItem(self):
+        if self.model and self.view:
+            index = self.view.currentIndex()
+            sel = index.internalPointer()
+            if sel:
+                node = sel.node
+                attributeMap = node.attributes()
+                name = ""
+                if attributeMap.contains("name"):
+                    name = attributeMap.namedItem("name").nodeValue()
+
+                print "Removing" , node.nodeName(), name
+#                node = self.widget.node
+
+                self.widget.node = node.parentNode()
+            
+                self.widget.removeNode(node, index.parent())
+                
+                self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+                if index.parent().isValid():
+                    self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
+
 
     def createGUI(self):
         self.setupUi(self)
@@ -183,14 +205,28 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
                     if self.name[-4:] == '.xml':
                         self.name = self.name[:-4]
+                    return self.fPath
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
                 print error
             finally:                 
                 if fh is not None:
                     fh.close()
-                    return self.fPath
             
+
+    def createHeader(self):
+            self.document = QDomDocument()
+            self.root = self.document
+            processing = self.root.createProcessingInstruction("xml", 'version="1.0"') 
+            self.root.appendChild(processing)
+            
+            definition = self.root.createElement(QString("definition"))
+            self.root.appendChild(definition)
+            newModel = ComponentModel(self.document, self)
+            self.view.setModel(newModel)
+            self.model = newModel
+
+
     def save(self):
         error = None
         if self.fPath:

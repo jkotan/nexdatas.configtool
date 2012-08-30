@@ -40,12 +40,31 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
+        self.dsDirectory = "./datasources"
+        self.cpDirectory = "./components"
+
+        self.createGUI()
+
+        self.createActions()
+
+        settings = QSettings()
+
+        self.loadDataSources()
+
+        self.loadComponents()
+
+        status = self.statusBar()
+        status.setSizeGripEnabled(False)
+        status.showMessage("Ready", 5000)
+
+        self.setWindowTitle("NDTS Component Designer")
+
+
+
+    def createGUI(self):
         self.compDockWidget = QDockWidget("&Components",self)
         self.compDockWidget.setObjectName("CompDockWidget")
         self.compDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea |  Qt.RightDockWidgetArea)
-
-        self.dsDirectory = "./datasources"
-        self.cpDirectory = "./components"
 
         self.sourceList = DataSourceList(self.dsDirectory)
 #        ds1 = LabeledObject("dataSource1", None)
@@ -69,13 +88,12 @@ class MainWindow(QMainWindow):
         self.compDockWidget.setWidget(self.dockSplitter)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.compDockWidget)
 
-        
-
         self.mdi = QWorkspace()
         self.mdi.setScrollBarsEnabled(True)        
         self.setCentralWidget(self.mdi)
 
-
+        
+    def createActions(self):
         self.pool = CommandPool(self)
         self.cmdStack = CommandStack()
         self.pooling = True
@@ -90,7 +108,6 @@ class MainWindow(QMainWindow):
         dsourceRemoveAction = self.pool.createCommand("&Close DataSource", "dsourceRemove",  commandArgs, 
                                                   DataSourceRemove,"Ctrl+R", "dsourceremove", 
                                                   "Close the data source")
-
 
         dsourceEditAction = self.pool.createCommand("&Edit DataSource", "dsourceEdit",  commandArgs, 
                                                   DataSourceEdit,"Ctrl+E", "dsourceedit", 
@@ -123,7 +140,11 @@ class MainWindow(QMainWindow):
 
         self.connect(self.mdi, SIGNAL("windowActivated(QWidget*)"), self.mdiWindowActivated)
 
-        self.connect(self.sourceList.sourceListWidget, SIGNAL("itemClicked(QListWidgetItem*)"), self.dsourceEdit)
+        self.connect(self.sourceList.sourceListWidget, SIGNAL("itemClicked(QListWidgetItem*)"), 
+                     self.dsourceEdit)
+
+        self.connect(self.componentList.componentListWidget, SIGNAL("itemClicked(QListWidgetItem*)"), 
+                     self.componentEdit)
 
         
 
@@ -131,6 +152,18 @@ class MainWindow(QMainWindow):
                                                      commandArgs, ComponentNew,
                                                      QKeySequence.New, "componentnew", 
                                                      "Create the new component")
+
+        componentEditAction = self.pool.createCommand("&Edit", "componentEdit",  
+                                                     commandArgs, ComponentEdit,
+                                                     "Ctrl+E", "componentedit", 
+                                                     "Edit the component")
+
+
+        componentRemoveItemAction = self.pool.createCommand("&Remove Item", "componentRemoveItem",  
+                                                     commandArgs, ComponentRemoveItem,
+                                                     "Ctrl+R", "componentremoveItem", 
+                                                     "Remove the component item")
+
 
 
         componentOpenAction = self.pool.createCommand("&Open", "componentOpen",  
@@ -189,17 +222,21 @@ class MainWindow(QMainWindow):
 
 
         fileMenu = self.menuBar().addMenu("&File")    
-        self.addActions(fileMenu, ( componentNewAction, componentOpenAction,
-                                    componentRemoveAction, None, fileQuitAction))
+        self.addActions(fileMenu, ( componentOpenAction, None, fileQuitAction))
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (undoAction,reundoAction))
-        fileMenu = self.menuBar().addMenu("Data&Sources")    
-        self.addActions(fileMenu, (dsourceNewAction,dsourceEditAction,dsourceRemoveAction))
+        componentsMenu = self.menuBar().addMenu("&Components")    
+        self.addActions(componentsMenu, ( componentNewAction, componentEditAction,componentRemoveAction, 
+                                          componentRemoveItemAction))
+        
+        componentsAddMenu = componentsMenu.addMenu("&Add ...")
+        
+        datasourcesMenu = self.menuBar().addMenu("Data&Sources")    
+        self.addActions(datasourcesMenu, (dsourceNewAction,dsourceEditAction,dsourceRemoveAction))
  
         viewMenu = self.menuBar().addMenu("&View")
         self.addActions(viewMenu, (viewDockAction,))
 
-        
 
         self.windowMenu = self.menuBar().addMenu("&Window")
         self.connect(self.windowMenu, SIGNAL("aboutToShow()"),
@@ -214,26 +251,14 @@ class MainWindow(QMainWindow):
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolbar")
 
-        self.addActions(fileToolbar, (componentNewAction,componentOpenAction, 
+        self.addActions(fileToolbar, (componentOpenAction, componentNewAction,componentEditAction, 
                                       componentRemoveAction, None,
                                       dsourceNewAction,dsourceEditAction,dsourceRemoveAction, None, 
                                       undoAction, reundoAction))
 
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolbar")
-
-
-        settings = QSettings()
-
-        self.loadDataSources()
-
-        self.loadComponents()
-
-        status = self.statusBar()
-        status.setSizeGripEnabled(False)
-        status.showMessage("Ready", 5000)
-
-        self.setWindowTitle("NDTS Component Designer")
+        
 
 
     def loadDataSources(self):
@@ -281,6 +306,21 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo",False)
         self.pool.setDisabled("reundo",True)   
         self.pooling = True
+
+    def componentEdit(self):
+        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+    def componentRemoveItem(self):
+        cmd = self.pool.getCommand('componentRemoveItem').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
 
 
     def componentRemove(self):
@@ -367,6 +407,7 @@ class MainWindow(QMainWindow):
 
 
     def componentCurrentItemChanged(self, item ,previousItem):
+        return
         print "curr: " , item.text() if hasattr(item, "text") else item
         print "prev: " , previousItem.text() if hasattr(previousItem, "text") else previousItem
         if self.pooling:

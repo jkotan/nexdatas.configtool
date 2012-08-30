@@ -112,6 +112,11 @@ class ComponentModel(QAbstractItemModel):
             return QModelIndex()
 
         childItem = child.internalPointer()
+
+        ## TODO when it is performed
+        if not hasattr(childItem,"parent"):
+            return QModelIndex()            
+        
         parentItem = childItem.parent
 
         if parentItem is None or parentItem == self.rootItem:

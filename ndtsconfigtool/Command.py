@@ -94,45 +94,48 @@ class ComponentOpen(Command):
             self._cpEdit.directory = self.receiver.componentList.directory
             self._cpEdit.createGUI()
             if self._fpath:
-                self._cpEdit.load(self._fpath)
+                path = self._cpEdit.load(self._fpath)
             else:
-                self._fpath = self._cpEdit.load()
-            self._cp.name = self._cpEdit.name  
-            self._cp.widget = self._cpEdit
+                path = self._cpEdit.load()
+                self._fpath = path
+            if path:   
+                self._cp.name = self._cpEdit.name  
+                self._cp.widget = self._cpEdit
             
-            self.receiver.componentList.addComponent(self._cp,False)
+                self.receiver.componentList.addComponent(self._cp,False)
             #               print  "ID", self._cp.id
  #               print "STAT", self._cp.id in self.receiver.componentList.components
-            self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)                  
+                self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)                  
 
-            if self._cp.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._cp.widget) 
-                self._cp.widget.savePushButton.setFocus()
-            else:    
+                if self._cp.widget in self.receiver.mdi.windowList():
+                    self.receiver.mdi.setActiveWindow(self._cp.widget) 
+                    self._cp.widget.savePushButton.setFocus()
+                else:    
  #               print "create"
-                self.receiver.mdi.addWindow(self._cpEdit)
-                self._cpEdit.savePushButton.setFocus()
-                self._cpEdit.show()
+                    self.receiver.mdi.addWindow(self._cpEdit)
+                    self._cpEdit.savePushButton.setFocus()
+                    self._cpEdit.show()
                 #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
-                self._cp.widget = self._cpEdit 
+                    self._cp.widget = self._cpEdit 
 
 
 
-            self.receiver.mdi.addWindow(self._cpEdit)
+                self.receiver.mdi.addWindow(self._cpEdit)
 #            self._component.setAttribute(Qt.WA_DeleteOnClose)
-            self._cpEdit.show()
-            print "EXEC componentOpen"
+                self._cpEdit.show()
+                print "EXEC componentOpen"
 
     def unexecute(self):
         if hasattr(self._cp, "widget"):
-            self._cp.widget.setAttribute(Qt.WA_DeleteOnClose)
+            if self._fpath:
+                self._cp.widget.setAttribute(Qt.WA_DeleteOnClose)
 
-            self.receiver.mdi.setActiveWindow(self._cp.widget) 
-            self.receiver.mdi.closeActiveWindow() 
+                self.receiver.mdi.setActiveWindow(self._cp.widget) 
+                self.receiver.mdi.closeActiveWindow() 
 
-            self.receiver.componentList.removeComponent(self._cp, False)
-            self._cp.widget = None
-            self._cp = None
+                self.receiver.componentList.removeComponent(self._cp, False)
+                self._cp.widget = None
+                self._cp = None
 
 
             
@@ -275,6 +278,76 @@ class ComponentRemove(Command):
     def clone(self):
         return ComponentRemove(self.receiver) 
 
+
+class ComponentEdit(Command):
+    def __init__(self, receiver):
+        Command.__init__(self, receiver)
+        self._slot = 'componentEdit'
+        self._cp = None
+        self._cpEdit = None
+        
+        
+    def execute(self):
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is not None:
+            if self._cp.widget is None:
+                #                self._cpEdit = FieldWg()  
+                self._cpEdit = ComponentDlg()
+                self._cpEdit.idc = self._cp.id
+                self._cpEdit.directory = self.receiver.componentList.directory
+                self._cpEdit.name = self.receiver.componentList.components[self._cp.id].name
+                self._cpEdit.createGUI()
+                self._cpEdit.createHeader()
+                self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
+            else:
+                self._cpEdit = self._cp.widget 
+                
+            if self._cp.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._cp.widget) 
+            else:    
+                self.receiver.mdi.addWindow(self._cpEdit)
+                self._cpEdit.show()
+                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
+                self._cp.widget = self._cpEdit 
+                    
+
+
+            
+        print "EXEC componentEdit"
+
+    def unexecute(self):
+        print "UNDO componentEdit"
+
+    def clone(self):
+        return ComponentEdit(self.receiver) 
+
+
+
+class ComponentRemoveItem(Command):
+    def __init__(self, receiver):
+        Command.__init__(self, receiver)
+        self._slot = 'componentRemoveItem'
+        self._cp = None
+        self._cpEdit = None
+        
+        
+    def execute(self):
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is not None:
+            if self._cp.widget is not None:
+                if hasattr(self._cp.widget,"removeSelectedItem"):
+                    self._cp.widget.removeSelectedItem()
+
+            
+        print "EXEC componentRemoveItem"
+
+    def unexecute(self):
+        print "UNDO componentRemoveItem"
+
+    def clone(self):
+        return ComponentRemoveItem(self.receiver) 
 
 
 

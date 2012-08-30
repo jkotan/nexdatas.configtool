@@ -351,49 +351,54 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("reundo",True)   
 
     def componentAddGroupItem(self):
-        cmd = self.pool.getCommand('componentAddGroupItem').clone()
-        cmd.itemName = 'group' 
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo",False)
-        self.pool.setDisabled("reundo",True)   
+        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+            cmd = self.pool.getCommand('componentAddGroupItem').clone()
+            cmd.itemName = 'group' 
+            cmd.execute()
+            self.cmdStack.append(cmd)
+            self.pool.setDisabled("undo",False)
+            self.pool.setDisabled("reundo",True)   
 
 
     def componentAddFieldItem(self):
-        cmd = self.pool.getCommand('componentAddFieldItem').clone()
-        cmd.itemName = 'field' 
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo",False)
-        self.pool.setDisabled("reundo",True)   
+        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+            cmd = self.pool.getCommand('componentAddFieldItem').clone()
+            cmd.itemName = 'field' 
+            cmd.execute()
+            self.cmdStack.append(cmd)
+            self.pool.setDisabled("undo",False)
+            self.pool.setDisabled("reundo",True)   
 
 
     def componentAddAttributeItem(self):
-        cmd = self.pool.getCommand('componentAddAttributeItem').clone()
-        cmd.itemName = 'attribute' 
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo",False)
-        self.pool.setDisabled("reundo",True)   
-
+        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+            cmd = self.pool.getCommand('componentAddAttributeItem').clone()
+            cmd.itemName = 'attribute' 
+            cmd.execute()
+            self.cmdStack.append(cmd)
+            self.pool.setDisabled("undo",False)
+            self.pool.setDisabled("reundo",True)   
+            
 
     def componentAddLinkItem(self):
-        cmd = self.pool.getCommand('componentAddLinkItem').clone()
-        cmd.itemName = 'link' 
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo",False)
-        self.pool.setDisabled("reundo",True)   
+        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+            cmd = self.pool.getCommand('componentAddLinkItem').clone()
+            cmd.itemName = 'link' 
+            cmd.execute()
+            self.cmdStack.append(cmd)
+            self.pool.setDisabled("undo",False)
+            self.pool.setDisabled("reundo",True)   
 
 
 
     def componentAddDataSourceItem(self):
-        cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
-        cmd.itemName = 'datasource' 
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo",False)
-        self.pool.setDisabled("reundo",True)   
+        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+            cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
+            cmd.itemName = 'datasource' 
+            cmd.execute()
+            self.cmdStack.append(cmd)
+            self.pool.setDisabled("undo",False)
+            self.pool.setDisabled("reundo",True)   
 
 
 

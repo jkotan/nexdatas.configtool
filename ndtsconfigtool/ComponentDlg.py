@@ -97,7 +97,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                         self.widget.node = node
                         child = self.widget.root.createElement(QString(name))
                         self.widget.appendNode(child, index)
-                        print name, " at ", node.nodeName()
+#                        print name, " at ", node.nodeName()
 #                        row=self.widget.getNodeRow(child)
 #                        childIndex=self.model.index(row,0,index)
 #                        self.view.setCurrentIndex(childIndex)

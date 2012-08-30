@@ -162,27 +162,33 @@ class MainWindow(QMainWindow):
             "Ctrl+D", "componentremoveitem", "Remove the component item")
         
 
-        componentAddGroupAction = self.pool.createCommand(
-            "Add Group", "componentAddGroupItem", commandArgs, ComponentAddItem,
-            "", "componentadditem", "Add the component group")
+        componentNewGroupAction = self.pool.createCommand(
+            "New Group", "componentNewGroupItem", commandArgs, ComponentNewItem,
+            "", "componentnewitem", "Add the component group")
 
 
-        componentAddFieldAction = self.pool.createCommand(
-            "Add Field", "componentAddFieldItem", commandArgs, ComponentAddItem,
-            "", "componentadditem", "Add the component field")
+        componentNewFieldAction = self.pool.createCommand(
+            "New Field", "componentNewFieldItem", commandArgs, ComponentNewItem,
+            "", "componentnewitem", "Add the component field")
 
-        componentAddAttributeAction = self.pool.createCommand(
-            "Add Attribute", "componentAddAttributeItem", commandArgs, ComponentAddItem,
-            "", "componentadditem", "Add the component attribute")
+        componentNewAttributeAction = self.pool.createCommand(
+            "New Attribute", "componentNewAttributeItem", commandArgs, ComponentNewItem,
+            "", "componentnewitem", "Add the component attribute")
 
-        componentAddLinkAction = self.pool.createCommand(
-            "Add Link", "componentAddLinkItem", commandArgs, ComponentAddItem,
-            "", "componentadditem", "Add the component link")
+        componentNewLinkAction = self.pool.createCommand(
+            "New Link", "componentNewLinkItem", commandArgs, ComponentNewItem,
+            "", "componentnewitem", "Add the component link")
         
 
-        componentAddDataSourceAction = self.pool.createCommand(
-            "Add DataSource", "componentAddDataSourceItem", commandArgs, ComponentAddItem,
-            "", "componentadditem", "Add the component datasource")
+        componentNewDataSourceAction = self.pool.createCommand(
+            "New DataSource", "componentNewDataSourceItem", commandArgs, ComponentNewItem,
+            "", "componentnewitem", "Add the component datasource")
+
+
+        componentAddComponentAction = self.pool.createCommand(
+            "Add Component", "componentAddComponentItem", commandArgs, ComponentAddComponentItem,
+            "", "componentadditem", "Add the other component")
+
 
 
         componentOpenAction = self.pool.createCommand(
@@ -245,16 +251,16 @@ class MainWindow(QMainWindow):
         componentsMenu = self.menuBar().addMenu("&Components")    
         self.addActions(componentsMenu, ( componentNewAction, componentEditAction,componentRemoveAction, 
                                           componentRemoveItemAction, None,
-                                          componentAddGroupAction, componentAddFieldAction, 
-                                          componentAddAttributeAction, componentAddLinkAction,
-                                          componentAddDataSourceAction))
+                                          componentNewGroupAction, componentNewFieldAction, 
+                                          componentNewAttributeAction, componentNewLinkAction,
+                                          componentNewDataSourceAction,None, componentAddComponentAction))
 
         self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
         
 #        componentsAddMenu = componentsMenu.addMenu("&Add ...")
-        self.addActions(self.mdi, ( componentAddGroupAction, componentAddFieldAction,
-                                    componentAddAttributeAction, componentAddLinkAction,
-                                    componentAddDataSourceAction,
+        self.addActions(self.mdi, ( componentNewGroupAction, componentNewFieldAction,
+                                    componentNewAttributeAction, componentNewLinkAction,
+                                    componentNewDataSourceAction,
                                     ))
         
 
@@ -350,9 +356,9 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo",False)
         self.pool.setDisabled("reundo",True)   
 
-    def componentAddGroupItem(self):
+    def componentNewGroupItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
-            cmd = self.pool.getCommand('componentAddGroupItem').clone()
+            cmd = self.pool.getCommand('componentNewGroupItem').clone()
             cmd.itemName = 'group' 
             cmd.execute()
             self.cmdStack.append(cmd)
@@ -360,9 +366,9 @@ class MainWindow(QMainWindow):
             self.pool.setDisabled("reundo",True)   
 
 
-    def componentAddFieldItem(self):
+    def componentNewFieldItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
-            cmd = self.pool.getCommand('componentAddFieldItem').clone()
+            cmd = self.pool.getCommand('componentNewFieldItem').clone()
             cmd.itemName = 'field' 
             cmd.execute()
             self.cmdStack.append(cmd)
@@ -370,9 +376,9 @@ class MainWindow(QMainWindow):
             self.pool.setDisabled("reundo",True)   
 
 
-    def componentAddAttributeItem(self):
+    def componentNewAttributeItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
-            cmd = self.pool.getCommand('componentAddAttributeItem').clone()
+            cmd = self.pool.getCommand('componentNewAttributeItem').clone()
             cmd.itemName = 'attribute' 
             cmd.execute()
             self.cmdStack.append(cmd)
@@ -380,9 +386,9 @@ class MainWindow(QMainWindow):
             self.pool.setDisabled("reundo",True)   
             
 
-    def componentAddLinkItem(self):
+    def componentNewLinkItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
-            cmd = self.pool.getCommand('componentAddLinkItem').clone()
+            cmd = self.pool.getCommand('componentNewLinkItem').clone()
             cmd.itemName = 'link' 
             cmd.execute()
             self.cmdStack.append(cmd)
@@ -391,10 +397,20 @@ class MainWindow(QMainWindow):
 
 
 
-    def componentAddDataSourceItem(self):
+    def componentNewDataSourceItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
-            cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
+            cmd = self.pool.getCommand('componentNewDataSourceItem').clone()
             cmd.itemName = 'datasource' 
+            cmd.execute()
+            self.cmdStack.append(cmd)
+            self.pool.setDisabled("undo",False)
+            self.pool.setDisabled("reundo",True)   
+
+
+
+    def componentAddComponentItem(self):
+        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+            cmd = self.pool.getCommand('componentAddComponentItem').clone()
             cmd.execute()
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo",False)

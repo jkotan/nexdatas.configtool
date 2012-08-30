@@ -194,9 +194,10 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         
         if not filePath:
             if not self.name:
-                self.fPath = unicode(QFileDialog.getOpenFileName(self,"Open File",self.xmlPath,
-                                                                 "XML files (*.xml);;HTML files (*.html);;"
-                                                                 "SVG files (*.svg);;User Interface files (*.ui)"))
+                self.fPath = unicode(QFileDialog.getOpenFileName(
+                        self,"Open File",self.xmlPath,
+                        "XML files (*.xml);;HTML files (*.html);;"
+                        "SVG files (*.svg);;User Interface files (*.ui)"))
             else:
                 self.fPath = self.directory + "/" + self.name + ".xml"
         else:
@@ -226,7 +227,52 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             finally:                 
                 if fh is not None:
                     fh.close()
+
+
+    def addComponentItem(self,filePath = None):
+        print "Adding Component 2"
+        
+        if not self.model or not self.view or not self.widget or "component" not in  self.widget.subItems:
+            return
+        index = self.view.currentIndex()
+        sel = index.internalPointer()
+        if not sel:
+            return
+        node = sel.node
+
+        if not filePath:
+                self.fPath = unicode(QFileDialog.getOpenFileName(self,"Open File",self.xmlPath,
+                                                                 "XML files (*.xml);;HTML files (*.html);;"
+                                                                 "SVG files (*.svg);;User Interface files (*.ui)"))
+        else:
+            self.fPath = filePath
+        if self.fPath:
+            try:
+                fh = QFile(self.fPath)
+                if  fh.open(QIODevice.ReadOnly):
+                    root = QDomDocument()
+                    if not root.setContent(fh):
+                        raise ValueError, "could not parse XML"
+                    definition = root.firstChildElement(QString("definition"))           
+                    child = definition.firstChild()
+                    while not child.isNull():
+                        node.appendChild(child)
+                        child = child.nextSibling()
+
+
+                    
+                    
+
+
+            except (IOError, OSError, ValueError), e:
+                error = "Failed to load: %s" % e
+                print error
+            finally:                 
+                if fh is not None:
+                    fh.close()
+
             
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
     def createHeader(self):
             self.document = QDomDocument()

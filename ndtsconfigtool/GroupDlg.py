@@ -45,7 +45,7 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
         self.attributes = {}
         
         ## allowed subitems
-        self.subItems = ["group", "field", "attribute", "link"]
+        self.subItems = ["group", "field", "attribute", "link", "component"]
 
 
     def updateForm(self):

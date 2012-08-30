@@ -161,7 +161,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                 self._dbParam[unicode(par)]=self.dbParameters[(unicode(par))]
         self.populateParameters()
     
-
+    ## sets the tree mode used in ComponentDlg without save/close buttons
+    # \param enable logical variable which dis-/enables mode 
     def treeMode(self, enable = True):
         if enable:
             self.frame.hide()
@@ -428,13 +429,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
     # \brief It copies the parameters and saves the dialog
     def save(self):
         if not self.document or not self.node:
-            self.model = None
-            self.document = QDomDocument()
-            self.root = self.document
-            definition = self.root.createElement(QString("definition"))
-            self.root.appendChild(definition)
-            self.node = self.root.createElement(QString("datasource"))
-            definition.appendChild(self.node)            
+            self.createHeader()
 
         if self.apply():
             filename = self.directory + "/" + self.name + ".ds.xml"
@@ -550,16 +545,24 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         self.emit(SIGNAL("changed"))    
         return True    
 
-    def updateNode(self,index=QModelIndex()):
-        if not self.root or not self.node:
+    def createHeader(self):
             self.model = None
             self.document = QDomDocument()
             self.root = self.document
+            processing = self.root.createProcessingInstruction("xml", 'version="1.0"') 
+            self.root.appendChild(processing)
+            
             definition = self.root.createElement(QString("definition"))
             self.root.appendChild(definition)
             self.node = self.root.createElement(QString("datasource"))
             definition.appendChild(self.node)            
-            
+
+
+
+
+    def updateNode(self,index=QModelIndex()):
+        if not self.root or not self.node:
+            self.createHeader()
 
         newDs = self.root.createElement(QString("datasource"))
         elem=newDs.toElement()

@@ -31,6 +31,7 @@ from RichAttributeDlg import RichAttributeDlg
 from DataSourceDlg import DataSourceDlg 
 from DimensionsDlg import DimensionsDlg
 from StrategyDlg import StrategyDlg
+from DefinitionDlg import DefinitionDlg
 
 import os
 
@@ -55,8 +56,11 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.name = ""
         self.fpath = ""
 
-        self.tagClasses = {"field":FieldDlg, "group":GroupDlg, 
-                           "attribute":RichAttributeDlg,"link":LinkDlg,
+        self.tagClasses = {"field":FieldDlg, 
+                           "group":GroupDlg, 
+                           "definition":DefinitionDlg, 
+                           "attribute":RichAttributeDlg,
+                           "link":LinkDlg,
                            "datasource":DataSourceDlg,
                            "strategy":StrategyDlg
 #                           ,"dimensions":DimensionsDlg

@@ -101,24 +101,24 @@ class MainWindow(QMainWindow):
 
         commandArgs = {'receiver':self}
 
-        dsourceNewAction = self.pool.createCommand("&New DataSource", "dsourceNew",  commandArgs, 
-                                                  DataSourceNew,"Ctrl+S", "dsourceadd", 
-                                                  "Create the new data source") 
+        dsourceNewAction = self.pool.createCommand(
+            "&New DataSource", "dsourceNew",  commandArgs, 
+            DataSourceNew,"Ctrl+S", "dsourceadd", "Create the new data source") 
 
-        dsourceRemoveAction = self.pool.createCommand("&Close DataSource", "dsourceRemove",  commandArgs, 
-                                                  DataSourceRemove,"Ctrl+R", "dsourceremove", 
-                                                  "Close the data source")
+        dsourceRemoveAction = self.pool.createCommand(
+            "&Close DataSource", "dsourceRemove",  commandArgs, 
+            DataSourceRemove,"Ctrl+R", "dsourceremove", "Close the data source")
 
-        dsourceEditAction = self.pool.createCommand("&Edit DataSource", "dsourceEdit",  commandArgs, 
-                                                  DataSourceEdit,"Ctrl+E", "dsourceedit", 
-                                                  "Edit the data source")
+        dsourceEditAction =  self.pool.createCommand(
+            "&Edit DataSource", "dsourceEdit",  commandArgs, 
+            DataSourceEdit,"Ctrl+E", "dsourceedit", "Edit the data source")
 
 
        
         self.pool.createTask("dsourceChanged",commandArgs, DataSourceListChanged,
                              self.sourceList.sourceListWidget, 
                              "itemChanged(QListWidgetItem*)")
-
+        
         self.pool.createTask("componentChanged",commandArgs, ComponentListChanged,
                              self.componentList.componentListWidget, 
                              "itemChanged(QListWidgetItem*)")
@@ -131,7 +131,7 @@ class MainWindow(QMainWindow):
         self.pool.createTask("componentCurrentItemChanged",commandArgs, ComponentCurrentItemChanged,
                              self.componentList.componentListWidget, 
                              "currentItemChanged(QListWidgetItem*,QListWidgetItem*)")
-
+        
 
 #        self.pool.createTask("componentClicked",commandArgs, ComponentClicked,
 #                             self.componentList.componentListWidget, 
@@ -148,39 +148,56 @@ class MainWindow(QMainWindow):
 
         
 
-        componentNewAction = self.pool.createCommand("&New", "componentNew",  
-                                                     commandArgs, ComponentNew,
-                                                     QKeySequence.New, "componentnew", 
-                                                     "Create the new component")
+        componentNewAction = self.pool.createCommand(
+            "&New", "componentNew", commandArgs, ComponentNew,
+            QKeySequence.New, "componentnew", "Create the new component")
 
-        componentEditAction = self.pool.createCommand("&Edit", "componentEdit",  
-                                                     commandArgs, ComponentEdit,
-                                                     "Ctrl+E", "componentedit", 
-                                                     "Edit the component")
+        componentEditAction = self.pool.createCommand(
+            "&Edit", "componentEdit", commandArgs, ComponentEdit,
+            "Ctrl+E", "componentedit", "Edit the component")
+        
+
+        componentRemoveItemAction = self.pool.createCommand(
+            "&Remove Item", "componentRemoveItem", commandArgs, ComponentRemoveItem,
+            "Ctrl+D", "componentremoveitem", "Remove the component item")
+        
+
+        componentAddGroupAction = self.pool.createCommand(
+            "Add Group", "componentAddGroupItem", commandArgs, ComponentAddItem,
+            "", "componentadditem", "Add the component group")
 
 
-        componentRemoveItemAction = self.pool.createCommand("&Remove Item", "componentRemoveItem",  
-                                                     commandArgs, ComponentRemoveItem,
-                                                     "Ctrl+D", "componentremoveItem", 
-                                                     "Remove the component item")
+        componentAddFieldAction = self.pool.createCommand(
+            "Add Field", "componentAddFieldItem", commandArgs, ComponentAddItem,
+            "", "componentadditem", "Add the component field")
+
+        componentAddAttributeAction = self.pool.createCommand(
+            "Add Attribute", "componentAddAttributeItem", commandArgs, ComponentAddItem,
+            "", "componentadditem", "Add the component attribute")
+
+        componentAddLinkAction = self.pool.createCommand(
+            "Add Link", "componentAddLinkItem", commandArgs, ComponentAddItem,
+            "", "componentadditem", "Add the component link")
+        
+
+        componentAddDataSourceAction = self.pool.createCommand(
+            "Add DataSource", "componentAddDataSourceItem", commandArgs, ComponentAddItem,
+            "", "componentadditem", "Add the component datasource")
 
 
+        componentOpenAction = self.pool.createCommand(
+            "&Open", "componentOpen", commandArgs, ComponentOpen,
+            QKeySequence.Open, "componentopen", "Open the component")
+        
+        componentRemoveAction = self.pool.createCommand(
+            "&Close", "componentRemove", commandArgs, ComponentRemove,
+            QKeySequence.Close, "componentremove", "Close the component")
 
-        componentOpenAction = self.pool.createCommand("&Open", "componentOpen",  
-                                                      commandArgs, ComponentOpen,
-                                                      QKeySequence.Open, "componentopen", 
-                                                      "Open the component")
+        fileQuitAction = self.pool.createCommand(
+            "&Quit", "closeApp", commandArgs, CloseApplication, "Ctrl+Q", "filequit", 
+            "Close the application")
 
-        componentRemoveAction = self.pool.createCommand("&Close", "componentRemove",  
-                                                        commandArgs, ComponentRemove,
-                                                        QKeySequence.Close, "componentremove", 
-                                                        "Close the component")
-
-        fileQuitAction = self.pool.createCommand("&Quit", "closeApp", commandArgs, 
-                                                 CloseApplication, "Ctrl+Q", "filequit", 
-                                                 "Close the application")
-
-        undoAction = self.pool.createCommand("&Undo", "undo",  commandArgs, UndoCommand,
+        undoAction = self.pool.createCommand("&Undo", "undo",  commandArgs, UndoCommand, 
                                              "Ctrl+Z", "undo", "Undo the last command")
         reundoAction = self.pool.createCommand("&Re-undo", "reundo",  commandArgs, ReundoCommand,
                                                "Ctrl+Y", "redo", "Re-undo the last command")
@@ -227,12 +244,23 @@ class MainWindow(QMainWindow):
         self.addActions(editMenu, (undoAction,reundoAction))
         componentsMenu = self.menuBar().addMenu("&Components")    
         self.addActions(componentsMenu, ( componentNewAction, componentEditAction,componentRemoveAction, 
-                                          componentRemoveItemAction))
+                                          componentRemoveItemAction, None,
+                                          componentAddGroupAction, componentAddFieldAction, 
+                                          componentAddAttributeAction, componentAddLinkAction,
+                                          componentAddDataSourceAction))
+
+        self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
         
-        componentsAddMenu = componentsMenu.addMenu("&Add ...")
+#        componentsAddMenu = componentsMenu.addMenu("&Add ...")
+        self.addActions(self.mdi, ( componentAddGroupAction, componentAddFieldAction,
+                                    componentAddAttributeAction, componentAddLinkAction,
+                                    componentAddDataSourceAction,
+                                    ))
         
+
+
         datasourcesMenu = self.menuBar().addMenu("Data&Sources")    
-        self.addActions(datasourcesMenu, (dsourceNewAction,dsourceEditAction,dsourceRemoveAction))
+        self.addActions(datasourcesMenu, (dsourceNewAction, dsourceEditAction, dsourceRemoveAction))
  
         viewMenu = self.menuBar().addMenu("&View")
         self.addActions(viewMenu, (viewDockAction,))
@@ -314,8 +342,54 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo",False)
         self.pool.setDisabled("reundo",True)   
 
+
     def componentRemoveItem(self):
         cmd = self.pool.getCommand('componentRemoveItem').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+    def componentAddGroupItem(self):
+        cmd = self.pool.getCommand('componentAddGroupItem').clone()
+        cmd.itemName = 'group' 
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+
+    def componentAddFieldItem(self):
+        cmd = self.pool.getCommand('componentAddFieldItem').clone()
+        cmd.itemName = 'field' 
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+
+    def componentAddAttributeItem(self):
+        cmd = self.pool.getCommand('componentAddAttributeItem').clone()
+        cmd.itemName = 'attribute' 
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+
+    def componentAddLinkItem(self):
+        cmd = self.pool.getCommand('componentAddLinkItem').clone()
+        cmd.itemName = 'link' 
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+
+
+    def componentAddDataSourceItem(self):
+        cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
+        cmd.itemName = 'datasource' 
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)
@@ -408,8 +482,8 @@ class MainWindow(QMainWindow):
 
     def componentCurrentItemChanged(self, item ,previousItem):
         return
-        print "curr: " , item.text() if hasattr(item, "text") else item
-        print "prev: " , previousItem.text() if hasattr(previousItem, "text") else previousItem
+#        print "curr: " , item.text() if hasattr(item, "text") else item
+#        print "prev: " , previousItem.text() if hasattr(previousItem, "text") else previousItem
         if self.pooling:
 #            if item == previousItem  :
 #                return
@@ -468,7 +542,6 @@ class MainWindow(QMainWindow):
             rucmd.execute()
         else:
             print "Re-undo not possible"
-
 
         if self.cmdStack.isFinal():
             self.pool.setDisabled("reundo",True)

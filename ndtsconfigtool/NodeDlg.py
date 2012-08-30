@@ -40,6 +40,8 @@ class NodeDlg(QDialog):
         ## component tree model
         self.model = None 
 
+        self.subItems = []
+
     def reset(self):
         index = self.view.currentIndex()
         self.setFromNode()

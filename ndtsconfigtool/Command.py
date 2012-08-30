@@ -34,12 +34,12 @@ from LabeledObject import LabeledObject
 class Command(object):
     
     ## constructor
-    def __init__(self,receiver):
+    def __init__(self,receiver, slot):
         self.receiver = receiver
-        self._slot = ''
+        self._slot = slot
 
 
-    def slot(self):
+    def connectSlot(self):
         if hasattr(self.receiver, self._slot):
             return  getattr(self.receiver, self._slot)
         
@@ -54,9 +54,8 @@ class Command(object):
         pass
 
 class ComponentNew(Command):
-    def __init__(self, receiver):
-        Command.__init__(self,receiver)
-        self._slot = 'componentNew'
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
         self._comp = None
         
 
@@ -72,16 +71,15 @@ class ComponentNew(Command):
         print "UNDO componentNew"
 
     def clone(self):
-        return ComponentNew(self.receiver) 
+        return ComponentNew(self.receiver, self._slot) 
 
 
 
 
 
 class ComponentOpen(Command):
-    def __init__(self, receiver):
-        Command.__init__(self,receiver)
-        self._slot = 'componentOpen'
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
         self._cpEdit = None
         self._cp = None
         self._fpath = None
@@ -142,15 +140,14 @@ class ComponentOpen(Command):
         print "UNDO componentOpen"
 
     def clone(self):
-        return ComponentOpen(self.receiver) 
+        return ComponentOpen(self.receiver, self._slot) 
 
 
 
 
 class ComponentClicked(Command):
-    def __init__(self, receiver):
-        Command.__init__(self,receiver)
-        self._slot = 'componentClicked'
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
         self._component = None
         
     def execute(self):
@@ -160,13 +157,12 @@ class ComponentClicked(Command):
         print "UNDO componentClicked"
 
     def clone(self):
-        return ComponentClicked(self.receiver) 
+        return ComponentClicked(self.receiver, self._slot) 
 
 
 class ComponentCurrentItemChanged(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'componentCurrentItemChanged'
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
         self._cp = None
         self._cpEdit = None
         self.item = None
@@ -237,16 +233,15 @@ class ComponentCurrentItemChanged(Command):
                 print "UNDO componentCurrentItemChanged"
         
     def clone(self):
-        return ComponentCurrentItemChanged(self.receiver) 
+        return ComponentCurrentItemChanged(self.receiver, self._slot) 
     
 
 
 
 
 class ComponentRemove(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'componentRemove'
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
         self._cp = None
         self._wList = False
         
@@ -276,13 +271,12 @@ class ComponentRemove(Command):
         print "UNDO componentRemove"
 
     def clone(self):
-        return ComponentRemove(self.receiver) 
+        return ComponentRemove(self.receiver, self._slot) 
 
 
 class ComponentEdit(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'componentEdit'
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
         self._cp = None
         self._cpEdit = None
         
@@ -320,14 +314,13 @@ class ComponentEdit(Command):
         print "UNDO componentEdit"
 
     def clone(self):
-        return ComponentEdit(self.receiver) 
+        return ComponentEdit(self.receiver, self._slot) 
 
 
 
 class ComponentRemoveItem(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'componentRemoveItem'
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver,slot)
         self._cp = None
         self._cpEdit = None
         
@@ -347,16 +340,43 @@ class ComponentRemoveItem(Command):
         print "UNDO componentRemoveItem"
 
     def clone(self):
-        return ComponentRemoveItem(self.receiver) 
+        return ComponentRemoveItem(self.receiver, self._slot) 
+
+
+
+
+class ComponentAddItem(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._cp = None
+        self._cpEdit = None
+        self.itemName = ""
+        
+        
+    def execute(self):
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is not None:
+            if self._cp.widget is not None:
+                if hasattr(self._cp.widget,"addItem"):
+                    self._cp.widget.addItem(self.itemName)
+
+            
+        print "EXEC componentAddItem"
+
+    def unexecute(self):
+        print "UNDO componentAddItem"
+
+    def clone(self):
+        return ComponentAddItem(self.receiver, self._slot) 
 
 
 
 
 
 class ComponentListChanged(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'componentChanged'
+    def __init__(self, receiver,slot):
+        Command.__init__(self, receiver, slot)
         self._ds = None
         self.item = None
         self.name = None
@@ -388,14 +408,13 @@ class ComponentListChanged(Command):
         print "UNDO componentChanged"
 
     def clone(self):
-        return ComponentListChanged(self.receiver) 
+        return ComponentListChanged(self.receiver, self._slot) 
     
 
 
 class DataSourceNew(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'dsourceNew'
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
         self._ds = None
         
     def execute(self):
@@ -412,7 +431,7 @@ class DataSourceNew(Command):
         print "UNDO dsourceNew"
 
     def clone(self):
-        return DataSourceNew(self.receiver) 
+        return DataSourceNew(self.receiver, self._slot) 
 
 
 
@@ -420,9 +439,8 @@ class DataSourceNew(Command):
 
 
 class DataSourceEdit(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'dsourceEdit'
+    def __init__(self, receiver,slot):
+        Command.__init__(self, receiver,slot)
         self._ds = None
         self._dsEdit = None
         
@@ -459,14 +477,13 @@ class DataSourceEdit(Command):
         print "UNDO dsourceEdit"
 
     def clone(self):
-        return DataSourceEdit(self.receiver) 
+        return DataSourceEdit(self.receiver, self._slot) 
 
 
 
 class DataSourceNew(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'dsourceNew'
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
         self._ds = None
         
     def execute(self):
@@ -483,7 +500,7 @@ class DataSourceNew(Command):
         print "UNDO dsourceNew"
 
     def clone(self):
-        return DataSourceNew(self.receiver) 
+        return DataSourceNew(self.receiver, self._slot) 
 
 
 
@@ -493,9 +510,8 @@ class DataSourceNew(Command):
 
 
 class DataSourceRemove(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'dsourceRemove'
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
         self._ds = None
         self._wList = False
         
@@ -525,14 +541,13 @@ class DataSourceRemove(Command):
         print "UNDO dsourceRemove"
 
     def clone(self):
-        return DataSourceRemove(self.receiver) 
+        return DataSourceRemove(self.receiver, self._slot) 
 
 
 
 class DataSourceListChanged(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'dsourceChanged'
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
         self._ds = None
         self.item = None
         self.name = None
@@ -564,7 +579,7 @@ class DataSourceListChanged(Command):
         print "UNDO dsourceChanged"
 
     def clone(self):
-        return DataSourceListChanged(self.receiver) 
+        return DataSourceListChanged(self.receiver, self._slot) 
     
 
 
@@ -573,9 +588,8 @@ class DataSourceListChanged(Command):
 
 
 class DataSourceCurrentItemChanged(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'dsourceCurrentItemChanged'
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
         self._ds = None
         self._dsEdit = None
         self.item = None
@@ -641,16 +655,15 @@ class DataSourceCurrentItemChanged(Command):
                 print "UNDO dsourceCurrentItemChanged"
         
     def clone(self):
-        return DataSourceCurrentItemChanged(self.receiver) 
+        return DataSourceCurrentItemChanged(self.receiver, self._slot) 
     
 
 
 
 
 class CloseApplication(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'closeApp'
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
 
     def execute(self):
         if hasattr(self.receiver,'mdi'):
@@ -661,14 +674,13 @@ class CloseApplication(Command):
         print "UNDO closeApp"
 
     def clone(self):
-        return CloseApplication(self.receiver) 
+        return CloseApplication(self.receiver, self._slot) 
 
 
 
 class UndoCommand(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'undo'
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
 
     def execute(self):
         print "EXEC undo"
@@ -677,12 +689,11 @@ class UndoCommand(Command):
         pass
 
     def clone(self):
-        return UndoCommand(self.receiver) 
+        return UndoCommand(self.receiver, self._slot) 
 
 class ReundoCommand(Command):
-    def __init__(self, receiver):
-        Command.__init__(self, receiver)
-        self._slot = 'reundo'
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
 
     def execute(self):
         print "EXEC reundo"
@@ -691,7 +702,7 @@ class ReundoCommand(Command):
         pass
 
     def clone(self):
-        return ReundoCommand(self.receiver) 
+        return ReundoCommand(self.receiver, self._slot) 
 
 
         

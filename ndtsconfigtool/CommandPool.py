@@ -83,11 +83,11 @@ class CommandPool(object):
         if tip is not None:
             action.setToolTip(tip)
             action.setStatusTip(tip)
-
-            
         if name not in  self._pool.keys():
-            self._pool[name] = command(**args)        
-            slot = self._pool[name].slot()
+            largs = args
+            largs["slot"] = name 
+            self._pool[name] = command(**largs)        
+            slot = self._pool[name].connectSlot()
         if slot is not None:
             self.origin.connect(action, SIGNAL(signal), slot)
         if checkable:
@@ -100,8 +100,10 @@ class CommandPool(object):
 
     def createTask(self, name, args, command,  instance, signal):
         if name not in  self._pool.keys():
-            self._pool[name] = command(**args)        
-            slot = self._pool[name].slot()
+            largs = args
+            largs["slot"] = name 
+            self._pool[name] = command(**largs)        
+            slot = self._pool[name].connectSlot()
         if slot is not None:
             self.origin.connect(instance, SIGNAL(signal), slot)
         self._actions[name] = None

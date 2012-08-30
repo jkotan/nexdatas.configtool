@@ -73,7 +73,39 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.document = None
 
     def updateForm(self):
-        pass
+        self.splitter.setStretchFactor(0,1)
+        self.splitter.setStretchFactor(1,1)
+        
+        self.model = ComponentModel(QDomDocument(),self)
+        self.view.setModel(self.model)
+        
+        self.widget = QWidget()
+#        self.widget.createGUI()
+
+        self.frameLayout = QGridLayout()
+        self.frameLayout.addWidget(self.widget)
+        self.frame.setLayout(self.frameLayout)
+
+    def addItem(self,name):
+        if name in self.tagClasses.keys():
+            if self.model and self.view and self.widget:
+                if name in self.widget.subItems:
+                    index = self.view.currentIndex()
+                    sel = index.internalPointer()
+                    if sel:
+                        node = sel.node
+                        self.widget.node = node
+                        child = self.widget.root.createElement(QString(name))
+                        self.widget.appendNode(child, index)
+                        print name, " at ", node.nodeName()
+#                        row=self.widget.getNodeRow(child)
+#                        childIndex=self.model.index(row,0,index)
+#                        self.view.setCurrentIndex(childIndex)
+#                        self.widget = None
+#                        self.tagClicked(childIndex)
+                        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+
+
 
     def removeSelectedItem(self):
         if self.model and self.view:
@@ -95,41 +127,20 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                 
                 self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
                 if index.parent().isValid():
-                    self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
+                    self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                                    index.parent(),index.parent())
 
 
     def createGUI(self):
+
         self.setupUi(self)
-
-        self.splitter.setStretchFactor(0,1)
-        self.splitter.setStretchFactor(1,1)
-        
-        self.model = ComponentModel(QDomDocument(),self)
-        self.view.setModel(self.model)
-        
-        self.widget = QWidget()
-#        self.widget.createGUI()
-
-        self.frameLayout = QGridLayout()
-        self.frameLayout.addWidget(self.widget)
-        self.frame.setLayout(self.frameLayout)
-
         self.updateForm()
 
         
-        self.connect(self.savePushButton, SIGNAL("clicked()"), 
-                     self.save)
-
-        self.connect(self.view, 
-                     SIGNAL("clicked(QModelIndex)"),
-                     self.tagClicked)
-        self.connect(self.view, 
-                     SIGNAL("expanded(QModelIndex)"),
-                     self.expanded)
-
-        self.connect(self.view, 
-                     SIGNAL("collapsed(QModelIndex)"),
-                     self.collapsed)
+        self.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
+        self.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)
+        self.connect(self.view, SIGNAL("expanded(QModelIndex)"), self.expanded)
+        self.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self.collapsed)
 
 #        self.pool.createTask("componentClicked",commandArgs, ComponentClicked,
 #                             self.componentList.componentListWidget, 
@@ -148,8 +159,9 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
         print "Clicked:", nNode, ": "+ name if name else "" 
 
-
-        self.widget.setVisible(False)
+        
+        if self.widget:
+            self.widget.setVisible(False)
         if unicode(nNode) in self.tagClasses.keys():
             self.frame.hide()
             self.frameLayout.removeWidget(self.widget)
@@ -165,6 +177,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             self.widget.show()
 #            self.frameLayout.update()
             self.frame.show()
+        else:
+            self.widget = None
     
     def expanded(self,index):
         for column in range(self.model.columnCount(index)):

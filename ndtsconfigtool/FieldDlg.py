@@ -61,6 +61,8 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         self.dimensions = []
 
 
+        ## allowed subitems
+        self.subItems = ["attribute", "datasource"]
 
 
 

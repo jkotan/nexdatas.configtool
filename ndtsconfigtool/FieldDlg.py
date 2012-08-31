@@ -298,6 +298,19 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         enable = not self.nameLineEdit.text().isEmpty()
         self.applyPushButton.setEnabled(enable)
 
+
+    def appendNode(self, node, parent):
+        if node.nodeName() == 'datasource' :
+            if not self.node:
+                return
+            child = self.node.firstChild()
+            while not child.isNull():
+                if child.nodeName() == 'datasource':
+                    return
+                child = child.nextSibling()    
+        NodeDlg.appendNode(self,node,parent)       
+
+
     ## applys input text strings
     # \brief It copies the field name and type from lineEdit widgets and apply the dialog
     def apply(self):

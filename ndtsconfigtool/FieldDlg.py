@@ -308,7 +308,7 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
                 if child.nodeName() == 'datasource':
                     return
                 child = child.nextSibling()    
-        NodeDlg.appendNode(self,node,parent)       
+        NodeDlg.appendNode(self, node, parent)       
 
 
     ## applys input text strings

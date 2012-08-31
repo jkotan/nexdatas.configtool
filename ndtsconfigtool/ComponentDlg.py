@@ -47,6 +47,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         super(ComponentDlg, self).__init__(parent)
         
         self.xmlPath = os.path.dirname(".")
+        self.dsPath = os.path.dirname("./datasources/")
         self.view = None
         self.frame = None
         self.model = None
@@ -230,7 +231,6 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
     def addComponentItem(self,filePath = None):
-        print "Adding Component 2"
         
         if not self.model or not self.view or not self.widget or "component" not in  self.widget.subItems:
             return
@@ -241,9 +241,10 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         node = sel.node
 
         if not filePath:
-                self.fPath = unicode(QFileDialog.getOpenFileName(self,"Open File",self.xmlPath,
-                                                                 "XML files (*.xml);;HTML files (*.html);;"
-                                                                 "SVG files (*.svg);;User Interface files (*.ui)"))
+                self.fPath = unicode(
+                    QFileDialog.getOpenFileName(self,"Open File",self.xmlPath,
+                                                "XML files (*.xml);;HTML files (*.html);;"
+                                                "SVG files (*.svg);;User Interface files (*.ui)"))
         else:
             self.fPath = filePath
         if self.fPath:
@@ -255,13 +256,75 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                         raise ValueError, "could not parse XML"
                     definition = root.firstChildElement(QString("definition"))           
                     child = definition.firstChild()
+
+                    self.widget.node = node
+
                     while not child.isNull():
-                        node.appendChild(child)
+                        self.widget.appendNode(child, index)
+#                        node.appendChild(child)
                         child = child.nextSibling()
 
+                        
+                self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+                    
 
-                    
-                    
+            except (IOError, OSError, ValueError), e:
+                error = "Failed to load: %s" % e
+                print error
+            finally:                 
+                if fh is not None:
+                    fh.close()
+
+            
+
+
+
+    def addDataSourceItem(self,filePath = None):
+        print "Adding DataSource"
+        
+        if not self.model or not self.view or not self.widget or "datasource" not in  self.widget.subItems:
+            return
+
+        child = self.widget.node.firstChild()
+        while not child.isNull():
+            if child.nodeName() == 'datasource':
+                QMessageBox.warning(self, "DataSource exists", 
+                                    "To add a new datasource please remove the old one")
+                return
+            child = child.nextSibling()    
+                
+
+        index = self.view.currentIndex()
+        sel = index.internalPointer()
+        if not sel:
+            return
+        node = sel.node
+
+        if not filePath:
+                self.fPath = unicode(
+                    QFileDialog.getOpenFileName(self,"Open File",self.dsPath,
+                                                "XML files (*.xml);;HTML files (*.html);;"
+                                                "SVG files (*.svg);;User Interface files (*.ui)"))
+        else:
+            self.fPath = filePath
+        if self.fPath:
+            try:
+                fh = QFile(self.fPath)
+                if  fh.open(QIODevice.ReadOnly):
+                    root = QDomDocument()
+                    if not root.setContent(fh):
+                        raise ValueError, "could not parse XML"
+                    definition = root.firstChildElement(QString("definition"))           
+                    if definition:
+                        ds  = definition.firstChildElement(QString("datasource"))
+                        if ds:
+
+
+                            self.widget.node = node
+                            self.widget.appendNode(ds, index)
+#                            node.appendChild(ds)
+
+                self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
 
             except (IOError, OSError, ValueError), e:
@@ -272,7 +335,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                     fh.close()
 
             
-        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+
 
     def createHeader(self):
             self.document = QDomDocument()

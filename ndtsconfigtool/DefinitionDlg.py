@@ -16,83 +16,54 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndtsconfigtool nexdatas
-## \file FieldDlg.py
-# Field dialog class
+## \file DefinitionDlg.py
+# Definition dialog class
 
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_fielddlg
-from PyQt4.QtXml import (QDomDocument, QDomNode)
-
+import ui_definitiondlg
 
 from AttributeDlg import AttributeDlg
-from DimensionsDlg import DimensionsDlg
-
-
 from NodeDlg import NodeDlg 
 
-## dialog defining a field tag
-class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
+## dialog defining a definition tag
+class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
     
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
-        super(FieldDlg, self).__init__(parent)
+        super(DefinitionDlg, self).__init__(parent)
         
-        ## field name
+        ## definition name
         self.name = u''
-        ## field type
+        ## definition type
         self.nexusType = u''
-        ## field units
-        self.units = u''
-        ## field value
-        self.value = u''
-        ## field doc
+        ## definition doc
         self.doc = u''
-        ## dimensions doc
-        self.dimDoc = u''
-        ## field attributes
+        ## definition attributes
         self.attributes = {}
 
-        ## rank
-        self.rank = 0
-        ## dimensions
-        self.dimensions = []
-
-
         ## allowed subitems
-        self.subItems = ["attribute", "datasource"]
-
-
+        self.subItems = ["group", "field", "attribute", "link", "component"]
 
     def updateForm(self):
+
         if self.name is not None:
             self.nameLineEdit.setText(self.name) 
         if self.nexusType is not None:
             self.typeLineEdit.setText(self.nexusType) 
         if self.doc is not None:
             self.docTextEdit.setText(self.doc)
-        if self.units is not None:    
-            self.unitsLineEdit.setText(self.units)
-        if self.value is not None:    
-            self.valueLineEdit.setText(self.value)
-
-        if self.rank < len(self.dimensions) :
-            self.rank = len(self.dimensions)
-        
-        if self.dimensions:
-            label = self.dimensions.__str__()
-            self.dimLabel.setText("%s" % label)
 
         self.populateAttributes()
-
+        
 
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
         self.setupUi(self)
-
+        
         self.updateForm()
 
         self.updateUi()
@@ -108,84 +79,28 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
                      self.addAttribute)
         self.connect(self.removePushButton, SIGNAL("clicked()"), 
                      self.removeAttribute)
-        self.connect(self.dimPushButton, SIGNAL("clicked()"), 
-                     self.changeDimensions)
 
-        self.populateAttributes()
 
-        
     def setFromNode(self, node=None):
         if node:
             self.node = node
         attributeMap = self.node.attributes()
         nNode = self.node.nodeName()
 
-        self.name = attributeMap.namedItem("name").nodeValue() \
-            if attributeMap.contains("name") else ""
-        self.nexusType = attributeMap.namedItem("type").nodeValue() \
-            if attributeMap.contains("type") else ""
-        self.units = attributeMap.namedItem("units").nodeValue() \
-            if attributeMap.contains("units") else ""
-
-        text = self.getText(self.node)    
-        self.value = unicode(text).strip() if text else ""
+        self.name = attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else ""
+        self.nexusType = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
 
         self.attributes.clear()    
         for i in range(attributeMap.count()):
             attribute = attributeMap.item(i)
             attrName = attribute.nodeName()
-            if attrName != "name" and attrName != "type" and attrName != "units":
+            if attrName != "name" and attrName != "type":
                 self.attributes[unicode(attribute.nodeName())] = unicode(attribute.nodeValue())
-
-
-        dimens = self.node.firstChildElement(QString("dimensions"))           
-        attributeMap = dimens.attributes()
-
-        self.dimensions = []
-        if attributeMap.contains("rank"):
-            try:
-                self.rank = int(attributeMap.namedItem("rank").nodeValue())
-                if self.rank < 0: 
-                    self.rank = 0
-            except:
-                self.rank = 0
-        else:
-            self.rank = 0
-        if self.rank > 0:
-            child = dimens.firstChild()
-            maxIndex = 0
-            lengths = {}
-            while not child.isNull():
-                if child.isElement() and child.nodeName() == "dim":
-                    attributeMap = child.attributes()
-                    index = None
-                    value = None
-                    try:                        
-                        if attributeMap.contains("index"):
-                            index = int(attributeMap.namedItem("index").nodeValue())
-                        if attributeMap.contains("value"):
-                            value = int(attributeMap.namedItem("value").nodeValue())
-                    except:
-                        pass
-                    if index < 1: index = None
-                    if value < 1: value = None
-                    if index is not None:
-                        while len(self.dimensions)< index:
-                            self.dimensions.append(None)
-                        self.dimensions[index-1] = value     
-
-                child = child.nextSibling()
-
-        if self.rank < len(self.dimensions) :
-            self.rank = len(self.dimensions)
 
         doc = self.node.firstChildElement(QString("doc"))           
         text = self.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
-
-
-
-
+             
     ## adds an attribute    
     #  \brief It runs the Attribute Dialog and fetches attribute name and value    
     def addAttribute(self):
@@ -200,28 +115,6 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
             else:
                 QMessageBox.warning(self, "Attribute name exists", "To change the attribute value, please edit the value in the attribute table")
                 
-
-
-    ## changing dimensions of the field
-    #  \brief It runs the Dimensions Dialog and fetches rank and dimensions from it
-    def changeDimensions(self):
-        dform  = DimensionsDlg( self)
-        dform.rank = self.rank
-        dform.lengths = self.dimensions
-        dform.doc = self.dimDoc
-        dform.createGUI()
-        if dform.exec_():
-            self.rank = dform.rank
-            self.dimDoc = dform.doc
-            if self.rank:
-                self.dimensions = dform.lengths
-            else:    
-                self.dimensions = []
-            label = self.dimensions.__str__()
-            self.dimLabel.setText("%s" % label)
-                
-                
-
                 
     ## takes a name of the current attribute
     # \returns name of the current attribute            
@@ -273,7 +166,7 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
             item = QTableWidgetItem(name)
             item.setData(Qt.UserRole, QVariant(name))
             self.attributeTableWidget.setItem(row, 0, item)
-            item2 = QTableWidgetItem(self.attributes[name])
+            item2 =  QTableWidgetItem(self.attributes[name])
             self.attributeTableWidget.setItem(row, 1, item2)
             if selectedAttribute is not None and selectedAttribute == name:
                 selected = item2
@@ -289,59 +182,42 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
     ## calls updateUi when the name text is changing
     # \param text the edited text   
     @pyqtSignature("QString")
-    def on_nameLineEdit_textEdited(self, text):
+    def on_typeLineEdit_textEdited(self, text):
         self.updateUi()
 
-    ## updates field user interface
+    ## updates definition user interface
     # \brief It sets enable or disable the OK button
     def updateUi(self):
-        enable = not self.nameLineEdit.text().isEmpty()
-        self.applyPushButton.setEnabled(enable)
+        pass
+#        enable = not self.typeLineEdit.text().isEmpty()
+#        self.applyPushButton.setEnabled(enable)
 
-
-    def appendNode(self, node, parent):
-        if node.nodeName() == 'datasource' :
-            if not self.node:
-                return
-            child = self.node.firstChild()
-            while not child.isNull():
-                if child.nodeName() == 'datasource':
-                    QMessageBox.warning(self, "DataSource exists", 
-                                        "To add a new datasource please remove the old one")
-                    return
-                child = child.nextSibling()    
-        NodeDlg.appendNode(self, node, parent)       
 
 
     ## applys input text strings
-    # \brief It copies the field name and type from lineEdit widgets and apply the dialog
+    # \brief It copies the definition name and type from lineEdit widgets and apply the dialog
     def apply(self):
         self.name = unicode(self.nameLineEdit.text())
         self.nexusType = unicode(self.typeLineEdit.text())
-        self.units = unicode(self.unitsLineEdit.text())
-        self.value = unicode(self.valueLineEdit.text())
 
         self.doc = unicode(self.docTextEdit.toPlainText())
-
+        
         index = self.view.currentIndex()
         finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
 
         if self.node  and self.root and self.node.isElement():
             elem=self.node.toElement()
-
-
+            
             attributeMap = self.node.attributes()
             for i in range(attributeMap.count()):
                 attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
             elem.setAttribute(QString("name"), QString(self.name))
             elem.setAttribute(QString("type"), QString(self.nexusType))
-            elem.setAttribute(QString("units"), QString(self.units))
-
-            self.replaceText(self.node, index, unicode(self.value))
 
             for attr in self.attributes.keys():
                 elem.setAttribute(QString(attr), QString(self.attributes[attr]))
 
+                
             doc = self.node.firstChildElement(QString("doc"))           
             if not self.doc and doc and doc.nodeName() == "doc" :
                 self.removeElement(doc, index)
@@ -354,67 +230,30 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
                 else:
                     self.appendElement(newDoc, index)
 
-            dimens = self.node.firstChildElement(QString("dimensions"))           
-            if not self.dimensions and dimens and dimens.nodeName() == "dimensions":
-                self.removeElement(dimens,index)
-            elif self.dimensions:
-                newDimens = self.root.createElement(QString("dimensions"))
-                newDimens.setAttribute(QString("rank"), QString(unicode(self.rank)))
-                for i in range(min(self.rank,len(self.dimensions))):
-                    dim = self.root.createElement(QString("dim"))
-                    dim.setAttribute(QString("index"), QString(unicode(i+1)))
-                    dim.setAttribute(QString("value"), QString(unicode(self.dimensions[i])))
-                    newDimens.appendChild(dim)
-                if dimens and dimens.nodeName() == "doc" :
-                    self.replaceElement(dimens, newDimens, index)
-                else:
-                    self.appendElement(newDimens, index)
-
-                    
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
-
-
-
+        
 if __name__ == "__main__":
     import sys
 
     ## Qt application
     app = QApplication(sys.argv)
-    ## field form
-    form = FieldDlg()
-    form.name = 'distance'
-    form.nexusType = 'NX_FLOAT'
-    form.units = 'cm'
-    form.attributes = {"signal":"1","long_name":"source detector distance", "interpretation":"spectrum"}
-    form.doc = """Distance between the source and the mca detector.
-It should be defined by client."""
-    form.dimensions = [3]
-    form.dimDoc = "(x,y,z) coordinates"
-    form.value ="1.23,3.43,4.23"
+    ## definition form
+    form = DefinitionDlg()
+    form.name = 'entry'
+    form.nexusType = 'NXentry'
+    form.doc = 'The main entry'
+    form.attributes={"title":"Test run 1", "run_cycle":"2012-1"}
     form.createGUI()
     form.show()
     app.exec_()
-    if form.name:
-        print "Field: name = \'%s\'" % ( form.name )
+
+
     if form.nexusType:
-        print "       type = \'%s\'" % ( form.nexusType )
-    if form.units:
-        print "       units = \'%s\'" % ( form.units )
+        print "Definition: name = \'%s\' type = \'%s\'" % ( form.name, form.nexusType )
     if form.attributes:
         print "Other attributes:"
         for k in form.attributes.keys():
             print  " %s = '%s' " % (k, form.attributes[k])
-    if form.value:
-        print "Value:\n \'%s\'" % ( form.value )
-    if form.rank:
-        print " rank = %s" % ( form.rank )
-    if form.dimensions:
-        print "Dimensions:"
-        for row, ln in enumerate(form.dimensions):
-            print  " %s: %s " % (row+1, ln)
-    if form.dimDoc:
-        print "Dimensions Doc: \n%s" % form.dimDoc
-            
     if form.doc:
         print "Doc: \n%s" % form.doc
     

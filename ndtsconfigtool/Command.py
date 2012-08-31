@@ -372,6 +372,35 @@ class ComponentAddComponentItem(Command):
 
 
 
+
+
+class ComponentAddDataSourceItem(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._cp = None
+        self._cpEdit = None
+        self.itemName = ""
+        
+        
+    def execute(self):
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is not None:
+            if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.model:
+                if hasattr(self._cp.widget,"addDataSourceItem"):
+                    self._cp.widget.addDataSourceItem(self.itemName)
+
+            
+        print "EXEC componentAddDataSourceItem"
+
+    def unexecute(self):
+        print "UNDO componentAddDataSourceItem"
+
+    def clone(self):
+        return ComponentAddDataSourceItem(self.receiver, self._slot) 
+
+
+
 class ComponentNewItem(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)

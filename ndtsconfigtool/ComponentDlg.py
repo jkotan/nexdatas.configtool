@@ -230,7 +230,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                     fh.close()
 
 
-    def addComponentItem(self,filePath = None):
+    def loadComponentItem(self,filePath = None):
         
         if not self.model or not self.view or not self.widget or "component" not in  self.widget.subItems:
             return
@@ -279,8 +279,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
 
-    def addDataSourceItem(self,filePath = None):
-        print "Adding DataSource"
+    def loadDataSourceItem(self,filePath = None):
+        print "Loading DataSource"
         
         if not self.model or not self.view or not self.widget or "datasource" not in  self.widget.subItems:
             return
@@ -333,6 +333,41 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             finally:                 
                 if fh is not None:
                     fh.close()
+
+
+
+
+    def addDataSourceItem(self, dsNode):
+        print "Adding DataSource"
+        
+        if dsNode.nodeName() != 'datasource':
+            return
+        
+        if not self.model or not self.view or not self.widget or "datasource" not in  self.widget.subItems:
+            return
+
+        child = self.widget.node.firstChild()
+        while not child.isNull():
+            if child.nodeName() == 'datasource':
+                QMessageBox.warning(self, "DataSource exists", 
+                                    "To add a new datasource please remove the old one")
+                return
+            child = child.nextSibling()    
+                
+
+        index = self.view.currentIndex()
+        sel = index.internalPointer()
+        if not sel:
+            return
+        node = sel.node
+
+
+        self.widget.node = node
+        self.widget.appendNode(dsNode, index)
+        
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+
+
 
             
 

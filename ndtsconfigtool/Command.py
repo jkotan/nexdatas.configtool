@@ -345,7 +345,7 @@ class ComponentRemoveItem(Command):
 
 
 
-class ComponentAddComponentItem(Command):
+class ComponentLoadComponentItem(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._cp = None
@@ -358,18 +358,46 @@ class ComponentAddComponentItem(Command):
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is not None:
             if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.model:
-                if hasattr(self._cp.widget,"addComponentItem"):
-                    self._cp.widget.addComponentItem(self.itemName)
+                if hasattr(self._cp.widget,"loadComponentItem"):
+                    self._cp.widget.loadComponentItem(self.itemName)
 
             
-        print "EXEC componentAddcomponentItem"
+        print "EXEC componentLoadcomponentItem"
 
     def unexecute(self):
-        print "UNDO componentAddComponentItem"
+        print "UNDO componentLoadComponentItem"
 
     def clone(self):
-        return ComponentAddComponentItem(self.receiver, self._slot) 
+        return ComponentLoadComponentItem(self.receiver, self._slot) 
 
+
+
+
+
+class ComponentLoadDataSourceItem(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._cp = None
+        self._cpEdit = None
+        self.itemName = ""
+        
+        
+    def execute(self):
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is not None:
+            if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.model:
+                if hasattr(self._cp.widget,"loadDataSourceItem"):
+                    self._cp.widget.loadDataSourceItem(self.itemName)
+
+            
+        print "EXEC componentLoadDataSourceItem"
+
+    def unexecute(self):
+        print "UNDO componentLoadDataSourceItem"
+
+    def clone(self):
+        return ComponentLoadDataSourceItem(self.receiver, self._slot) 
 
 
 
@@ -378,17 +406,47 @@ class ComponentAddDataSourceItem(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._cp = None
+        self._ds = None
+        self._dsEdit = None
         self._cpEdit = None
-        self.itemName = ""
+        self._dsNode = None
         
         
     def execute(self):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
-        if self._cp is not None:
-            if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.model:
-                if hasattr(self._cp.widget,"addDataSourceItem"):
-                    self._cp.widget.addDataSourceItem(self.itemName)
+            if self._cp is None:
+                return
+        if self._cp.widget is None or self._cp.widget.view is None or self._cp.widget.model is None:
+            return
+
+        if self._ds is None:
+            self._ds = self.receiver.sourceList.currentListDataSource()
+            if self._ds is None:
+                return
+
+        if self._ds.widget is None:
+            #                self._dsEdit = FieldWg()  
+            self._dsEdit = DataSourceDlg()
+            self._dsEdit.ids = self._ds.id
+            self._dsEdit.directory = self.receiver.sourceList.directory
+            self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
+            self._dsEdit.createGUI()
+            self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
+            self._ds.widget = self._dsEdit 
+        else:
+            self._dsEdit = self._ds.widget 
+                
+        if not hasattr(self._ds.widget,"createNodes"):
+            return
+
+        self._dsNode = self._ds.widget.createNodes()
+        if self._dsNode is None:
+            return
+        
+        if not hasattr(self._cp.widget,"addDataSourceItem"):
+            return
+        self._cp.widget.addDataSourceItem(self._dsNode)
 
             
         print "EXEC componentAddDataSourceItem"

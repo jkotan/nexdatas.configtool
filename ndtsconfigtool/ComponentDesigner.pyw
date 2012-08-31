@@ -163,36 +163,42 @@ class MainWindow(QMainWindow):
         
 
         componentNewGroupAction = self.pool.createCommand(
-            "New Group", "componentNewGroupItem", commandArgs, ComponentNewItem,
+            "New Group Item", "componentNewGroupItem", commandArgs, ComponentNewItem,
             "", "componentnewitem", "Add a new component group")
 
 
         componentNewFieldAction = self.pool.createCommand(
-            "New Field", "componentNewFieldItem", commandArgs, ComponentNewItem,
+            "New Field Item", "componentNewFieldItem", commandArgs, ComponentNewItem,
             "", "componentnewitem", "Add a new  component field")
 
         componentNewAttributeAction = self.pool.createCommand(
-            "New Attribute", "componentNewAttributeItem", commandArgs, ComponentNewItem,
+            "New Attribute Item", "componentNewAttributeItem", commandArgs, ComponentNewItem,
             "", "componentnewitem", "Add a new  component attribute")
 
         componentNewLinkAction = self.pool.createCommand(
-            "New Link", "componentNewLinkItem", commandArgs, ComponentNewItem,
+            "New Link Item", "componentNewLinkItem", commandArgs, ComponentNewItem,
             "", "componentnewitem", "Add a new  component link")
         
 
         componentNewDataSourceAction = self.pool.createCommand(
-            "New DataSource", "componentNewDataSourceItem", commandArgs, ComponentNewItem,
+            "New DataSource Item", "componentNewDataSourceItem", commandArgs, ComponentNewItem,
             "", "componentnewitem", "Add a new component datasource")
 
 
-        componentAddComponentAction = self.pool.createCommand(
-            "Add SubComponent", "componentAddComponentItem", commandArgs, ComponentAddComponentItem,
-            "", "componentadditem", "Add a component part from the file")
+        componentLoadComponentAction = self.pool.createCommand(
+            "Load SubComponent Item", "componentLoadComponentItem", commandArgs, ComponentLoadComponentItem,
+            "", "componentloaditem", "Load a component part from the file")
+
+
+        componentLoadDataSourceAction = self.pool.createCommand(
+            "Load DataSource Item", "componentLoadDataSourceItem", commandArgs, ComponentLoadDataSourceItem,
+            "", "componentloaditem", "Load datasouce from the file")
 
 
         componentAddDataSourceAction = self.pool.createCommand(
-            "Add DataSource", "componentAddDataSourceItem", commandArgs, ComponentAddDataSourceItem,
-            "", "componentadditem", "Add datasouce from the file")
+            "Add DataSource Item", "componentAddDataSourceItem", 
+            commandArgs, ComponentAddDataSourceItem,
+            "", "componentadditem", "add datasouce from the file")
 
 
 
@@ -259,7 +265,10 @@ class MainWindow(QMainWindow):
                                           componentNewGroupAction, componentNewFieldAction, 
                                           componentNewAttributeAction, componentNewLinkAction,
                                           componentNewDataSourceAction,None, 
-                                          componentAddComponentAction, componentAddDataSourceAction))
+                                          componentLoadComponentAction, componentLoadDataSourceAction,
+                                          None,
+                                          componentAddDataSourceAction
+                                          ))
 
         self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
         
@@ -267,6 +276,7 @@ class MainWindow(QMainWindow):
         self.addActions(self.mdi, ( componentNewGroupAction, componentNewFieldAction,
                                     componentNewAttributeAction, componentNewLinkAction,
                                     componentNewDataSourceAction,
+                                    componentLoadComponentAction, componentLoadDataSourceAction
                                     ))
         
 
@@ -414,23 +424,33 @@ class MainWindow(QMainWindow):
 
 
 
-    def componentAddComponentItem(self):
+    def componentLoadComponentItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
-            cmd = self.pool.getCommand('componentAddComponentItem').clone()
+            cmd = self.pool.getCommand('componentLoadComponentItem').clone()
             cmd.execute()
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo",False)
             self.pool.setDisabled("reundo",True)   
+
+
+
+    def componentLoadDataSourceItem(self):
+        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+            cmd = self.pool.getCommand('componentLoadDataSourceItem').clone()
+            cmd.execute()
+            self.cmdStack.append(cmd)
+            self.pool.setDisabled("undo",False)
+            self.pool.setDisabled("reundo",True)   
+
 
 
 
     def componentAddDataSourceItem(self):
-        if isinstance(self.mdi.activeWindow(),ComponentDlg):
-            cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
-            cmd.execute()
-            self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo",False)
-            self.pool.setDisabled("reundo",True)   
+        cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
 
 
 

@@ -525,7 +525,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
         self.doc = unicode(self.docTextEdit.toPlainText())
 
-        index = None
+        index = QModelIndex()
         if self.model:
             index = self.view.currentIndex()
             finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
@@ -558,9 +558,10 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             definition.appendChild(self.node)            
 
 
+            
 
 
-    def updateNode(self,index=QModelIndex()):
+    def createNodes(self):        
         if not self.root or not self.node:
             self.createHeader()
 
@@ -611,10 +612,15 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         newText = self.root.createTextNode(QString(self.doc))
         newDoc.appendChild(newText)
         newDs.appendChild(newDoc)
+
+        return newDs
         
+
+    def updateNode(self,index=QModelIndex()):
+        newDs = self.createNodes()
         oldDs = self.node
-        self.node = self.node.parentNode()
-        
+
+        self.node = self.node.parentNode()        
         if hasattr(index,"parent"):
             parent = index.parent()
         else:

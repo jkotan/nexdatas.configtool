@@ -55,7 +55,7 @@ class Merger(object):
         name2 = attr2.namedItem("name").nodeValue() \
             if attr1.contains("name") else ""
         
-        if name1 != name2:
+        if name1 != name2 or not name1:
             if tagName != 'datasource':
                 return False
             else:

@@ -201,6 +201,11 @@ class MainWindow(QMainWindow):
             "", "componentadditem", "add datasouce from the file")
 
 
+        componentMergeAction = self.pool.createCommand(
+            "Merge the Component", "componentMerge", commandArgs, ComponentMerge,
+            "", "componentmerge", "Merge the internal component structure")
+
+
 
         componentOpenAction = self.pool.createCommand(
             "&Open", "componentOpen", commandArgs, ComponentOpen,
@@ -266,8 +271,9 @@ class MainWindow(QMainWindow):
                                           componentNewAttributeAction, componentNewLinkAction,
                                           componentNewDataSourceAction,None, 
                                           componentLoadComponentAction, componentLoadDataSourceAction,
+                                          componentAddDataSourceAction,
                                           None,
-                                          componentAddDataSourceAction
+                                          componentMergeAction
                                           ))
 
         self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
@@ -276,7 +282,8 @@ class MainWindow(QMainWindow):
         self.addActions(self.mdi, ( componentNewGroupAction, componentNewFieldAction,
                                     componentNewAttributeAction, componentNewLinkAction,
                                     componentNewDataSourceAction,
-                                    componentLoadComponentAction, componentLoadDataSourceAction
+                                    componentLoadComponentAction, componentLoadDataSourceAction,
+                                    componentMergeAction
                                     ))
         
 
@@ -453,6 +460,12 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("reundo",True)   
 
 
+    def componentMerge(self):
+        cmd = self.pool.getCommand('componentMerge').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
 
     def componentRemove(self):
         self.pooling = False

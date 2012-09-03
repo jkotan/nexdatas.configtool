@@ -130,7 +130,7 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
             if selectedComponent is not None and selectedComponent == self.components[cp].id:
                 selected = item
             if self.components[cp].widget is not None:
-                self.components[cp].widget.setWindowTitle("Components: %s" %name)
+                self.components[cp].widget.setWindowTitle("Component: %s" %name)
 
 
         if selected is not None:

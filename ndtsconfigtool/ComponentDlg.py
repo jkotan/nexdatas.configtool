@@ -33,6 +33,8 @@ from DimensionsDlg import DimensionsDlg
 from StrategyDlg import StrategyDlg
 from DefinitionDlg import DefinitionDlg
 
+from Merger import Merger
+
 import os
 
 from ComponentModel import *    
@@ -343,7 +345,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         if dsNode.nodeName() != 'datasource':
             return
         
-        if not self.model or not self.view or not self.widget or "datasource" not in  self.widget.subItems:
+        if not self.model or not self.view or not self.widget \
+                or not hasattr(self.widget,"subItems") or "datasource" not in  self.widget.subItems:
             return
 
         child = self.widget.node.firstChild()
@@ -369,7 +372,14 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
 
-            
+    def merge(self):
+        if not self.model or not self.view or not self.widget:
+            return
+        if not self.document:
+            return
+        mr = Merger(self.document)
+        mr.merge()
+        
 
 
     def createHeader(self):

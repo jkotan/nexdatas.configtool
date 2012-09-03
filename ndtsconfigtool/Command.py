@@ -488,6 +488,55 @@ class ComponentNewItem(Command):
 
 
 
+class ComponentMerge(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._cp = None
+        self._cpEdit = None
+        
+        
+    def execute(self):
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is  None:
+            return
+        if self._cp.widget is None:
+            #                self._cpEdit = FieldWg()  
+            self._cpEdit = ComponentDlg()
+            self._cpEdit.idc = self._cp.id
+            self._cpEdit.directory = self.receiver.componentList.directory
+            self._cpEdit.name = self.receiver.componentList.components[self._cp.id].name
+            self._cpEdit.createGUI()
+            self._cpEdit.createHeader()
+            self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
+        else:
+            self._cpEdit = self._cp.widget 
+                
+        if self._cp.widget in self.receiver.mdi.windowList():
+            self.receiver.mdi.setActiveWindow(self._cp.widget) 
+        else:    
+            self.receiver.mdi.addWindow(self._cpEdit)
+            self._cpEdit.show()
+                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
+            self._cp.widget = self._cpEdit 
+                    
+        if hasattr(self._cp.widget,"merge"):
+            self._cp.widget.merge()
+
+
+            
+        print "EXEC componentMerge"
+
+    def unexecute(self):
+        print "UNDO componentMerge"
+
+    def clone(self):
+        return ComponentMerge(self.receiver, self._slot) 
+
+
+
+
+
 class ComponentListChanged(Command):
     def __init__(self, receiver,slot):
         Command.__init__(self, receiver, slot)

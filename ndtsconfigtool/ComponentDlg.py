@@ -92,7 +92,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     def addItem(self,name):
         if name in self.tagClasses.keys():
             if self.model and self.view and self.widget:
-                if name in self.widget.subItems:
+                if hasattr(self.widget,'subItems') and name in self.widget.subItems:
                     index = self.view.currentIndex()
                     sel = index.internalPointer()
                     if sel:
@@ -183,6 +183,16 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         else:
             self.widget = None
     
+    def addContextMenu(self,actions):
+        self.view.setContextMenuPolicy(Qt.ActionsContextMenu)
+        for action in actions:
+            if action is None:
+                self.view.addSeparator()
+            else:
+                self.view.addAction(action)
+
+
+
     def expanded(self,index):
         for column in range(self.model.columnCount(index)):
             self.view.resizeColumnToContents(column)
@@ -190,7 +200,6 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     def collapsed(self,index):
         for column in range(self.model.columnCount(index)):
             self.view.resizeColumnToContents(column)
-
 
 
     def load(self,filePath = None):

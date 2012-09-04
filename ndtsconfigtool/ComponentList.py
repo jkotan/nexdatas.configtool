@@ -142,7 +142,7 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
 
             
 
-    def loadList(self):
+    def loadList(self, actions):
         dirList=os.listdir(self.directory)
         for fname in dirList:
             if fname[-4:] == '.xml':
@@ -154,6 +154,8 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
             dlg.directory = self.directory
             dlg.name = name
             dlg.createGUI()
+            dlg.addContextMenu(actions)
+
             dlg.load()    
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp

@@ -91,6 +91,7 @@ class ComponentOpen(Command):
             self._cpEdit.idc = self._cp.id
             self._cpEdit.directory = self.receiver.componentList.directory
             self._cpEdit.createGUI()
+            self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
             if self._fpath:
                 path = self._cpEdit.load(self._fpath)
             else:
@@ -189,6 +190,7 @@ class ComponentCurrentItemChanged(Command):
  #               print "STAT", self._cp.id in self.receiver.componentList.components
                 self._cpEdit.name = self.receiver.componentList.components[self._cp.id].name
                 self._cpEdit.createGUI()
+                self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)  
             else:
                 self._cpEdit = self._cp.widget 
@@ -292,6 +294,7 @@ class ComponentEdit(Command):
                 self._cpEdit.directory = self.receiver.componentList.directory
                 self._cpEdit.name = self.receiver.componentList.components[self._cp.id].name
                 self._cpEdit.createGUI()
+                self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 self._cpEdit.createHeader()
                 self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
             else:
@@ -507,6 +510,7 @@ class ComponentMerge(Command):
             self._cpEdit.directory = self.receiver.componentList.directory
             self._cpEdit.name = self.receiver.componentList.components[self._cp.id].name
             self._cpEdit.createGUI()
+            self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
             self._cpEdit.createHeader()
             self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
         else:

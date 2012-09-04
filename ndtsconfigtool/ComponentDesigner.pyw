@@ -43,6 +43,8 @@ class MainWindow(QMainWindow):
         self.dsDirectory = "./datasources"
         self.cpDirectory = "./components"
 
+        self.contextMenuActions = None
+
         self.createGUI()
 
         self.createActions()
@@ -91,6 +93,7 @@ class MainWindow(QMainWindow):
         self.mdi = QWorkspace()
         self.mdi.setScrollBarsEnabled(True)        
         self.setCentralWidget(self.mdi)
+
 
         
     def createActions(self):
@@ -279,12 +282,13 @@ class MainWindow(QMainWindow):
         self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
         
 #        componentsAddMenu = componentsMenu.addMenu("&Add ...")
-        self.addActions(self.mdi, ( componentNewGroupAction, componentNewFieldAction,
+        self.contextMenuActions =  ( componentNewGroupAction, componentNewFieldAction,
                                     componentNewAttributeAction, componentNewLinkAction,
                                     componentNewDataSourceAction,
                                     componentLoadComponentAction, componentLoadDataSourceAction,
                                     componentMergeAction
-                                    ))
+                                   ) 
+#        self.addActions(self.mdi, self.contextMenuActions)
         
 
 
@@ -329,7 +333,7 @@ class MainWindow(QMainWindow):
 
 
     def loadComponents(self):
-        self.componentList.loadList()
+        self.componentList.loadList(self.contextMenuActions)
         idc =  self.componentList.components.itervalues().next().id \
             if len(self.componentList.components) else None
 

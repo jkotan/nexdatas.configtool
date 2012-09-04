@@ -365,7 +365,7 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
                     dim.setAttribute(QString("index"), QString(unicode(i+1)))
                     dim.setAttribute(QString("value"), QString(unicode(self.dimensions[i])))
                     newDimens.appendChild(dim)
-                if dimens and dimens.nodeName() == "doc" :
+                if dimens and dimens.nodeName() == "dimensions" :
                     self.replaceElement(dimens, newDimens, index)
                 else:
                     self.appendElement(newDimens, index)

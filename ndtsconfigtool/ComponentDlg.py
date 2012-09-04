@@ -384,15 +384,16 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             mr = Merger(self.document)
             mr.merge()
             self.view.reset()
+#            self.view.update()
         except IncompatibleNodeError, e: 
             QMessageBox.warning(self, "Merging problem",
                                 "Error in Merging: %s" % unicode(e) )
             print "Error in Merging: %s" % unicode(e)
+            return
         except  Exception, e:    
             print "Exception: %s" % unicode(e)
-
-#        self.view.update()
-        
+            return
+        return True
 
 
     def createHeader(self):
@@ -409,6 +410,11 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
     def save(self):
+        if not self.merge():
+            QMessageBox.warning(self, "Saving problem",
+                                "Document not merged" )
+            
+            return
         error = None
         if self.fPath:
             try:

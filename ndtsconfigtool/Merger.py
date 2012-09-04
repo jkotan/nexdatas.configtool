@@ -19,7 +19,15 @@
 ## \file Merger.py
 # Class for merging DOM component trees
 
+from PyQt4.QtXml import QDomNode
+#from PyQt4.QtXml import (QDomDocument, QDomNode, QXmlDefaultHandler,
+#                         QXmlInputSource, QXmlSimpleReader)
+
+from PyQt4.QtCore import QString
+
 class IncompatibleNodeError(Exception): pass
+
+
 
 
 ## merges the components
@@ -31,6 +39,8 @@ class Merger(object):
         
         ## DOM root node
         self.root = root
+        ## tags which cannot have the same siblings
+        self.singles =['datasource', 'strategy']
 
     def getText(self, node):
         text = QString()
@@ -44,79 +54,113 @@ class Merger(object):
 
 
     def areMergeable(self,elem1, elem2):
+#        print "checking:" ,elem1.nodeName(), elem2.nodeName()
         if elem1.nodeName() != elem2.nodeName():
             return False
-        tagName = elem1.nodeName()
+        tagName = unicode(elem1.nodeName())
         attr1 = elem1.attributes()
         attr2 = elem2.attributes()
-        
+        status = True
+        tags =[]
+
         name1 = attr1.namedItem("name").nodeValue() \
             if attr1.contains("name") else ""
         name2 = attr2.namedItem("name").nodeValue() \
             if attr1.contains("name") else ""
-        
-        if name1 != name2 or not name1:
-            if tagName != 'datasource':
-                return False
-            else:
-                raise IncompatibleNodeError,\
-                    "Two datasource for one field %s %s" % (name1, name2)
+#        print "with names" ,name1,name2        
 
-        ## TODO   correct dim?
+        if name1 != name2 :
+            return False
+
         for i1 in range(attr1.count()):
             for i2 in range(attr2.count()):
                 at1 = attr1.item(i1)
                 at2 = attr2.item(i2)
                 if at1.nodeName() == at2.nodeName() and at1.nodeValue() != at2.nodeValue():
-                    raise IncompatibleNodeError,\
-                        "Incompatible element attributes  %s: %s = %s / %s " \
-                        % (tagName, at1.nodeName(), at1.nodeValue() , at2.nodeValue())
+                    status = False
+                    tags.append((str(tagName), str(at1.nodeName()), 
+                                 str(at1.nodeValue()) , str(at2.nodeValue())))
+
+        if not status  and tagName in self.singles: 
+            raise IncompatibleNodeError,\
+                "Incompatible element attributes  %s: " % str(tags)
+
 
         if tagName == 'field':
-            text1=self.getText(elem1).strip()
-            text2=self.getText(elem2).strip()         
+            text1=unicode(self.getText(elem1)).strip()
+            text2=unicode(self.getText(elem2)).strip()         
             ## TODO white spaces?
             if text1 != text2:
                 raise IncompatibleNodeError,\
                     "Incompatible %s element value   %s \n  %s "  \
-                    % (tagName,text1, text2)
+                    % (str(tagName), text1, text2)
             
-                      
-                      
-#if check tag value are not compatible 
-#        (text additable? :not for fields)
+        return status
 
-        return True
+    def mergeNodes(self,elem1, elem2):
+        tagName = elem1.nodeName()
+        attr1 = elem1.attributes()
+        attr2 = elem2.attributes()
+        texts = []
 
-    def mergeNodes(self,node1, node2):
-        print "merging nodes:" ,node1.nodeName(), node2.nodeName()
+        for i2 in range(attr2.count()):
+            at2 = attr2.item(i2)
+            elem1.setAttribute(at2.nodeName(),at2.nodeValue())
+        
+            
+        child1 = elem1.firstChild()
+        while not child1.isNull(): 
+            if child1.nodeType() == QDomNode.TextNode:
+                texts.append(unicode(child1.toText().data()).strip())
+            child1 = child1.nextSibling()    
+
+        toMove = []    
+
+        child2 = elem2.firstChild()
+        while not child2.isNull(): 
+            if child2.nodeType() == QDomNode.TextNode:
+                if unicode(child2.toText().data()).strip() not in texts:
+                    toMove.append(child2)
+            else:    
+                toMove.append(child2)
+            child2 = child2.nextSibling()    
+
+        for child in toMove:
+            elem1.appendChild(child)
+        toMove = []    
 
 
-#        if node1.nodeType() == QDomNode.TextNode and node2.nodeType() == QDomNode.TextNode:
-# if texnode and value is different
+        parent = elem2.parentNode()    
+        parent.removeChild(elem2)
+
 
     def mergeChildren(self, node):
+        status = False
         if node:
-            print "merging the children of: ", node.nodeName()
-
-            child1 = node.firstChild()
-            child2 = child1.nextSibling()
-            if child1 and child2:
-                while not child1.isNull():
-                    while not child2.isNull():
+#            print "merging the children of: ", node.nodeName()
+            changes = True
+            
+            children = node.childNodes()
+            while changes:
+                
+                changes = False
+                for c1 in range(children.count()):
+                    for c2 in range(children.count()):
+                        child1 = children.item(c1)
+                        child2 = children.item(c2)
                         if child1 != child2:
                             elem1 = child1.toElement()
                             elem2 = child2.toElement()
                             if elem1 is not None and elem2 is not None:
-                                if self.areMergeable(child1,child2):
-                                    self.mergeNodes(child1, child2)
-
-                                print "compering:" ,child1.nodeName(),child2.nodeName()
-                        child2 = child2.nextSibling()
-                    child1 = child1.nextSibling()
-
-
-
+                                if self.areMergeable(elem1,elem2):
+                                    self.mergeNodes(elem1, elem2)
+                                    changes = True
+                                    status = True
+                        if changes:
+                            break
+                    if changes:
+                        break
+                        
             child = node.firstChild()
             if child:
                 while not child.isNull():
@@ -125,10 +169,7 @@ class Merger(object):
 
 
     def merge(self):
-        try:
             self.mergeChildren(self.root)
-        except IncompatibleNodeError, e: 
-            print "Error in Merging: %s" % unicode(e)
 
 if __name__ == "__main__":
     import sys

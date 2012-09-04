@@ -33,7 +33,7 @@ from DimensionsDlg import DimensionsDlg
 from StrategyDlg import StrategyDlg
 from DefinitionDlg import DefinitionDlg
 
-from Merger import Merger
+from Merger import Merger, IncompatibleNodeError
 
 import os
 
@@ -234,7 +234,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
     def loadComponentItem(self,filePath = None):
         
-        if not self.model or not self.view or not self.widget or "component" not in  self.widget.subItems:
+        if not self.model or not self.view or not self.widget \
+                or not hasattr(self.widget, "subItems") or "component" not in  self.widget.subItems:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -284,7 +285,9 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     def loadDataSourceItem(self,filePath = None):
         print "Loading DataSource"
         
-        if not self.model or not self.view or not self.widget or "datasource" not in  self.widget.subItems:
+        if not self.model or not self.view or not self.widget \
+                                or not hasattr(self.widget, "subItems") \
+                                or "datasource" not in  self.widget.subItems:
             return
 
         child = self.widget.node.firstChild()
@@ -377,8 +380,18 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             return
         if not self.document:
             return
-        mr = Merger(self.document)
-        mr.merge()
+        try:
+            mr = Merger(self.document)
+            mr.merge()
+            self.view.reset()
+        except IncompatibleNodeError, e: 
+            QMessageBox.warning(self, "Merging problem",
+                                "Error in Merging: %s" % unicode(e) )
+            print "Error in Merging: %s" % unicode(e)
+        except  Exception, e:    
+            print "Exception: %s" % unicode(e)
+
+#        self.view.update()
         
 
 

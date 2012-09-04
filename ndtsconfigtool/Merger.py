@@ -40,7 +40,8 @@ class Merger(object):
         ## DOM root node
         self.root = root
         ## tags which cannot have the same siblings
-        self.singles =['datasource', 'strategy']
+        self.singles =['datasource', 'strategy', 'dimensions', 'definition',
+                       'record', 'device', 'query', 'database', 'door']
 
     def getText(self, node):
         text = QString()

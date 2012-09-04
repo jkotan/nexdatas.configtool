@@ -90,49 +90,54 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.frame.setLayout(self.frameLayout)
 
     def addItem(self,name):
-        if name in self.tagClasses.keys():
-            if self.model and self.view and self.widget:
-                if hasattr(self.widget,'subItems') and name in self.widget.subItems:
-                    index = self.view.currentIndex()
-                    sel = index.internalPointer()
-                    if sel:
-                        node = sel.node
-                        self.widget.node = node
-                        child = self.widget.root.createElement(QString(name))
-                        self.widget.appendNode(child, index)
-#                        print name, " at ", node.nodeName()
-#                        row=self.widget.getNodeRow(child)
+        if not name in self.tagClasses.keys():
+            return
+        if not self.model or not self.view or not self.widget:
+            return
+        if not hasattr(self.widget,'subItems') or  name not in self.widget.subItems:
+            return
+        index = self.view.currentIndex()
+        sel = index.internalPointer()
+        if not sel:
+            return
+        node = sel.node
+        self.widget.node = node
+        child = self.widget.root.createElement(QString(name))
+        self.widget.appendNode(child, index)
+        #                        print name, " at ", node.nodeName()
+                #                        row=self.widget.getNodeRow(child)
 #                        childIndex=self.model.index(row,0,index)
 #                        self.view.setCurrentIndex(childIndex)
 #                        self.widget = None
 #                        self.tagClicked(childIndex)
-                        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
-
-
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.expand(index)
 
     def removeSelectedItem(self):
         if self.model and self.view:
-            index = self.view.currentIndex()
-            sel = index.internalPointer()
-            if sel:
-                node = sel.node
-                attributeMap = node.attributes()
-                name = ""
-                if attributeMap.contains("name"):
-                    name = attributeMap.namedItem("name").nodeValue()
+            return
+        index = self.view.currentIndex()
+        sel = index.internalPointer()
+        if not sel:
+            return
+        node = sel.node
+        attributeMap = node.attributes()
+        name = ""
+        if attributeMap.contains("name"):
+            name = attributeMap.namedItem("name").nodeValue()
 
-                print "Removing" , node.nodeName(), name
+        print "Removing" , node.nodeName(), name
 #                node = self.widget.node
-
-                self.widget.node = node.parentNode()
-            
-                self.widget.removeNode(node, index.parent())
+        
+        self.widget.node = node.parentNode()
+        
+        self.widget.removeNode(node, index.parent())
                 
-                self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
-                if index.parent().isValid():
-                    self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
-                                    index.parent(),index.parent())
-
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        if index.parent().isValid():
+            self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                            index.parent(),index.parent())
+            
 
     def createGUI(self):
 
@@ -278,6 +283,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
                         
                 self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+                self.view.expand(index)
                     
 
             except (IOError, OSError, ValueError), e:
@@ -339,6 +345,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 #                            node.appendChild(ds)
 
                 self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+                self.view.expand(index)
 
 
             except (IOError, OSError, ValueError), e:
@@ -381,6 +388,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.widget.appendNode(dsNode, index)
         
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.expand(index)
 
 
 

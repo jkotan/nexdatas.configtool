@@ -283,10 +283,11 @@ class MainWindow(QMainWindow):
         
 #        componentsAddMenu = componentsMenu.addMenu("&Add ...")
         self.contextMenuActions =  ( componentNewGroupAction, componentNewFieldAction,
-                                    componentNewAttributeAction, componentNewLinkAction,
-                                    componentNewDataSourceAction,
-                                    componentLoadComponentAction, componentLoadDataSourceAction,
-                                    componentMergeAction
+                                     componentNewAttributeAction, componentNewLinkAction,
+                                     componentNewDataSourceAction, None,
+                                     componentLoadComponentAction, componentLoadDataSourceAction,
+                                     None,
+                                     componentMergeAction
                                    ) 
 #        self.addActions(self.mdi, self.contextMenuActions)
         

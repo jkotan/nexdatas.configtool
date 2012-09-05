@@ -54,6 +54,9 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.frame = None
         self.model = None
         
+
+        self.actions = None
+
         ## component id
         self.idc = None
         self.name = ""
@@ -187,12 +190,24 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             self.frame.show()
         else:
             self.widget = None
-    
+         
+    def openMenu(self,position):
+         menu = QMenu()
+         for action in self.actions:
+             if action is None:
+                 menu.addSeparator()
+             else:
+                 menu.addAction(action)
+         menu.exec_(self.view.viewport().mapToGlobal(position))
+                 
+   
     def addContextMenu(self,actions):
         self.view.setContextMenuPolicy(Qt.ActionsContextMenu)
         for action in actions:
             if action is None:
-                self.view.addSeparator()
+                act = QAction(self)
+                act.setSeparator(True)
+                self.view.addAction(act)
             else:
                 self.view.addAction(action)
 

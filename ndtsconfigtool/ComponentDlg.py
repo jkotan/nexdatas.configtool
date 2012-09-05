@@ -437,6 +437,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
     def save(self):
+        print "saving"
         if not self.merge():
             QMessageBox.warning(self, "Saving problem",
                                 "Document not merged" )

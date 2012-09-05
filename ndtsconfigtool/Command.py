@@ -353,7 +353,6 @@ class ComponentSave(Command):
                 self._cp.widget = self._cpEdit 
                     
             self._cpEdit.save()    
-            self._cpEdit.loadComponents()    
 
             
         print "EXEC componentSave"
@@ -363,6 +362,28 @@ class ComponentSave(Command):
 
     def clone(self):
         return ComponentSave(self.receiver, self._slot) 
+
+
+
+class ComponentSaveAll(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        
+        
+    def execute(self):
+            
+        for icp in self.receiver.componentList.components.keys():
+            cp = self.receiver.componentList.components[icp]
+            if cp.widget is not None:
+                cp.widget.save()    
+
+        print "EXEC componentSaveAll"
+
+    def unexecute(self):
+        print "UNDO componentSaveAll"
+
+    def clone(self):
+        return ComponentSaveAll(self.receiver, self._slot) 
 
 
 

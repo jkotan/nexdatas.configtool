@@ -160,13 +160,18 @@ class MainWindow(QMainWindow):
             "Ctrl+E", "componentedit", "Edit the component")
 
         componentSaveAsAction = self.pool.createCommand(
-            "Save As", "componentSaveAs", commandArgs, ComponentSaveAs,
-            "", "componentedit", "Save the component as ...")
+            "Save &As...", "componentSaveAs", commandArgs, ComponentSaveAs,
+            "", "componentsaveas", "Save the component as ...")
 
 
         componentSaveAction = self.pool.createCommand(
-            "Save", "componentSave", commandArgs, ComponentSave,
-            "", "componentedit", "Save the component")
+            "&Save", "componentSave", commandArgs, ComponentSave,
+            "", "componentsave", "Save the component")
+
+        componentSaveAllAction = self.pool.createCommand(
+            "Save All", "componentSaveAll", commandArgs, ComponentSaveAll,
+            "", "componentsaveall", "Save the all components")
+
         
 
         componentRemoveItemAction = self.pool.createCommand(
@@ -220,7 +225,7 @@ class MainWindow(QMainWindow):
 
 
         componentOpenAction = self.pool.createCommand(
-            "&Open", "componentOpen", commandArgs, ComponentOpen,
+            "&Open...", "componentOpen", commandArgs, ComponentOpen,
             QKeySequence.Open, "componentopen", "Open the component")
         
         componentRemoveAction = self.pool.createCommand(
@@ -273,13 +278,15 @@ class MainWindow(QMainWindow):
 
 
         fileMenu = self.menuBar().addMenu("&File")    
-        self.addActions(fileMenu, ( None, fileQuitAction))
+        self.addActions(fileMenu, (                 
+                componentNewAction, componentOpenAction,componentEditAction,
+                componentSaveAction, componentSaveAsAction,
+                componentSaveAllAction, componentRemoveAction, None, 
+                fileQuitAction))
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (undoAction,reundoAction))
         componentsMenu = self.menuBar().addMenu("&Components")    
         self.addActions(componentsMenu, ( 
-                componentNewAction,  componentOpenAction,componentEditAction,
-                componentSaveAsAction,componentSaveAsAction, componentRemoveAction, 
                 componentRemoveItemAction, None,
                 componentNewGroupAction, componentNewFieldAction, 
                 componentNewAttributeAction, componentNewLinkAction,
@@ -404,6 +411,14 @@ class MainWindow(QMainWindow):
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)
         self.pool.setDisabled("reundo",True)   
+
+    def componentSaveAll(self):
+        cmd = self.pool.getCommand('componentSaveAll').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
 
 
     def componentRemoveItem(self):

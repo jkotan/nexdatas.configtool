@@ -431,6 +431,68 @@ class ComponentSaveAs(Command):
     def clone(self):
         return ComponentSaveAs(self.receiver, self._slot) 
 
+class ComponentReloadList(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        
+        
+    def execute(self):
+        if QMessageBox.question(self.receiver, "Component - Reload List",
+                                "All unsaved components will be lost. Would you like to proceed ?".encode(),
+                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+            return
+
+        
+        dialogs = self.receiver.mdi.windowList()
+        if dialogs:
+            for dialog in dialogs:
+                if isinstance(dialog,ComponentDlg):
+                    self.receiver.mdi.setActiveWindow(dialog)
+                    self.receiver.mdi.closeActiveWindow()
+
+        self.receiver.componentList.components = {} 
+        self.receiver.loadComponents()
+
+        print "EXEC componentReloadList"
+
+    def unexecute(self):
+        print "UNDO componentReloadList"
+
+    def clone(self):
+        return ComponentReloadList(self.receiver, self._slot) 
+
+
+
+class DataSourceReloadList(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        
+        
+    def execute(self):
+        if QMessageBox.question(self.receiver, "DataSource - Reload List",
+                                "All unsaved datasources will be lost. Would you like to proceed ?".encode(),
+                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+            return
+
+
+        dialogs = self.receiver.mdi.windowList()
+        if dialogs:
+            for dialog in dialogs:
+                if isinstance(dialog,DataSourceDlg):
+                    self.receiver.mdi.setActiveWindow(dialog)
+                    self.receiver.mdi.closeActiveWindow()
+
+        self.receiver.sourceList.datasources = {} 
+        self.receiver.loadDataSources()
+
+        print "EXEC componentReloadList"
+
+    def unexecute(self):
+        print "UNDO componentReloadList"
+
+    def clone(self):
+        return DataSourceReloadList(self.receiver, self._slot) 
+
 
 
 class ComponentRemoveItem(Command):

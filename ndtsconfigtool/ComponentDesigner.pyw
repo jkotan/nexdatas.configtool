@@ -221,6 +221,16 @@ class MainWindow(QMainWindow):
         componentMergeAction = self.pool.createCommand(
             "Merge component Items", "componentMerge", commandArgs, ComponentMerge,
             "", "componentmerge", "Merge the component items")
+        
+        
+        componentReloadListAction = self.pool.createCommand(
+            "Reload Component List", "componentReloadList", commandArgs, ComponentReloadList,
+            "", "componentreloadlist", "Reload the component list")
+
+
+        dsourceReloadListAction = self.pool.createCommand(
+            "Reload DataSource List", "dsourceReloadList", commandArgs, DataSourceReloadList,
+            "", "dsourcereloadlist", "Reload the datasource list")
 
 
 
@@ -282,6 +292,9 @@ class MainWindow(QMainWindow):
                 componentNewAction, componentOpenAction, componentEditAction, None, componentRemoveAction,
                 componentSaveAction, componentSaveAsAction,
                 componentSaveAllAction, None, 
+                componentReloadListAction,
+                dsourceReloadListAction,
+                None, 
                 fileQuitAction))
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (undoAction,reundoAction))
@@ -398,6 +411,24 @@ class MainWindow(QMainWindow):
 
     def componentSave(self):
         cmd = self.pool.getCommand('componentSave').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+
+
+    def componentReloadList(self):
+        cmd = self.pool.getCommand('componentReloadList').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+
+
+    def dsourceReloadList(self):
+        cmd = self.pool.getCommand('dsourceReloadList').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)

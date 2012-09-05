@@ -279,9 +279,9 @@ class MainWindow(QMainWindow):
 
         fileMenu = self.menuBar().addMenu("&File")    
         self.addActions(fileMenu, (                 
-                componentNewAction, componentOpenAction,componentEditAction,
+                componentNewAction, componentOpenAction, componentEditAction, None, componentRemoveAction,
                 componentSaveAction, componentSaveAsAction,
-                componentSaveAllAction, componentRemoveAction, None, 
+                componentSaveAllAction, None, 
                 fileQuitAction))
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (undoAction,reundoAction))

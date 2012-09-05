@@ -102,6 +102,10 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         self.document = None
         
 
+        ## allowed subitems
+        self.subItems = ["record", "doc", "device", "database", "query", "door"]
+
+
     def updateForm(self):    
         if self.doc is not None:
             self.docTextEdit.setText(self.doc)

@@ -62,7 +62,7 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
 
 
         ## allowed subitems
-        self.subItems = ["attribute", "datasource"]
+        self.subItems = ["attribute", "datasource", "doc", "dimensions", "enumeration", "strategy"]
 
 
 

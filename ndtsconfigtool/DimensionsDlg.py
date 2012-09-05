@@ -41,6 +41,9 @@ class DimensionsDlg(NodeDlg, ui_dimensionsdlg.Ui_DimensionsDlg):
         ## dimensions lengths
         self.lengths = []
 
+        ## allowed subitems
+        self.subItems = ["dim", "doc"]
+
 
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    

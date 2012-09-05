@@ -43,6 +43,16 @@ class Merger(object):
         self.singles =['datasource', 'strategy', 'dimensions', 'definition',
                        'record', 'device', 'query', 'database', 'door']
 
+        self.children ={
+            "datasource":("record", "doc", "device", "database", "query", "door"),
+            "attribute":("enumeration", "doc"),
+            "definition":("group", "field", "attribute", "link", "component", "doc", "symbols"),
+            "dimensions":("dim", "doc"),
+            "field":("attribute", "datasource", "doc", "dimensions", "enumeration", "strategy"),
+            "group":("group", "field", "attribute", "link", "component", "doc"),
+            "link":("doc")
+            }
+
     def getText(self, node):
         text = QString()
         if node:
@@ -146,11 +156,11 @@ class Merger(object):
                 
                 changes = False
                 for c1 in range(children.count()):
+                    child1 = children.item(c1)
+                    elem1 = child1.toElement()
                     for c2 in range(children.count()):
-                        child1 = children.item(c1)
                         child2 = children.item(c2)
                         if child1 != child2:
-                            elem1 = child1.toElement()
                             elem2 = child2.toElement()
                             if elem1 is not None and elem2 is not None:
                                 if self.areMergeable(elem1,elem2):
@@ -163,8 +173,19 @@ class Merger(object):
                         break
                         
             child = node.firstChild()
+            elem = node.toElement()
+            nName = unicode(elem.nodeName()) if elem  else ""
+            
             if child:
                 while not child.isNull():
+                    if nName and nName in self.children.keys():
+                        childElem = child.toElement()
+                        cName = unicode(childElem.nodeName()) if childElem  else ""
+                        if cName and cName not in self.children[nName]:
+                            raise IncompatibleNodeError,\
+                                "Not allowed <%s> child of <%s> parent"  \
+                                % (cName, nName)
+                            
                     self.mergeChildren(child)
                     child = child.nextSibling()
 

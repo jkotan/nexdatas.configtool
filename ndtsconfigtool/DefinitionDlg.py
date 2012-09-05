@@ -45,7 +45,7 @@ class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
         self.attributes = {}
 
         ## allowed subitems
-        self.subItems = ["group", "field", "attribute", "link", "component"]
+        self.subItems = ["group", "field", "attribute", "link", "component", "doc", "symbols"]
 
     def updateForm(self):
 

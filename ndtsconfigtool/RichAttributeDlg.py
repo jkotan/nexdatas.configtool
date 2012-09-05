@@ -43,6 +43,10 @@ class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
         ## attribute doc
         self.doc = u''
 
+        ## allowed subitems
+        self.subItems = ["enumeration", "doc"]
+
+
     def updateForm(self):
         if self.name is not None :
             self.nameLineEdit.setText(self.name) 

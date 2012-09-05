@@ -41,6 +41,8 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
         ## field doc
         self.doc = u''
 
+        self.subItems=[ "doc"]
+
     def updateForm(self):
         if self.name is not None:
             self.nameLineEdit.setText(self.name) 

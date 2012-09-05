@@ -93,8 +93,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         ## datasource id
         self.ids = None
 
-        ## datasource id
-        self.directory = None
+        ## datasource directory
+        self.directory = ""
         ## datasource name
         self.name = None
 

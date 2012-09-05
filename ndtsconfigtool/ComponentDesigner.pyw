@@ -222,6 +222,20 @@ class MainWindow(QMainWindow):
             "Merge component Items", "componentMerge", commandArgs, ComponentMerge,
             "", "componentmerge", "Merge the component items")
         
+
+        componentChangeDirectoryAction = self.pool.createCommand(
+            "Change Component Directory", "componentChangeDirectory", commandArgs, 
+            ComponentChangeDirectory,
+            "", "componentrechangedirecotry", "Change the component list directory")
+
+
+
+        dsourceChangeDirectoryAction = self.pool.createCommand(
+            "Change DataSource Directory", "dsourceChangeDirectory", commandArgs, 
+            DataSourceChangeDirectory,
+            "", "dsourcerechangedirecotry", "Change the datasource list directory")
+
+
         
         componentReloadListAction = self.pool.createCommand(
             "Reload Component List", "componentReloadList", commandArgs, ComponentReloadList,
@@ -294,6 +308,8 @@ class MainWindow(QMainWindow):
                 componentSaveAllAction, None, 
                 componentReloadListAction,
                 dsourceReloadListAction,
+                componentChangeDirectoryAction,
+                dsourceChangeDirectoryAction,
                 None, 
                 fileQuitAction))
         editMenu = self.menuBar().addMenu("&Edit")
@@ -411,6 +427,21 @@ class MainWindow(QMainWindow):
 
     def componentSave(self):
         cmd = self.pool.getCommand('componentSave').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+    def componentChangeDirectory(self):
+        cmd = self.pool.getCommand('componentChangeDirectory').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+
+    def dsourceChangeDirectory(self):
+        cmd = self.pool.getCommand('dsourceChangeDirectory').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)

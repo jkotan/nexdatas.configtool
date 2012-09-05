@@ -48,8 +48,11 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     def __init__(self, parent=None):
         super(ComponentDlg, self).__init__(parent)
         
-        self.xmlPath = os.path.dirname(".")
+        self.xmlPath = os.path.dirname("./components/")
+        self.componentFile = None
         self.dsPath = os.path.dirname("./datasources/")
+        self.directory = ""
+
         self.view = None
         self.frame = None
         self.model = None
@@ -221,17 +224,17 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         
         if not filePath:
             if not self.name:
-                self.fPath = unicode(QFileDialog.getOpenFileName(
+                self.componentFile = unicode(QFileDialog.getOpenFileName(
                         self,"Open File",self.xmlPath,
                         "XML files (*.xml);;HTML files (*.html);;"
                         "SVG files (*.svg);;User Interface files (*.ui)"))
             else:
-                self.fPath = self.directory + "/" + self.name + ".xml"
+                self.componentFile = self.directory + "/" + self.name + ".xml"
         else:
-            self.fPath = filePath
-        if self.fPath:
+            self.componentFile = filePath
+        if self.componentFile:
             try:
-                fh = QFile(self.fPath)
+                fh = QFile(self.componentFile)
                 if  fh.open(QIODevice.ReadOnly):
                     self.document = QDomDocument()
                 
@@ -241,13 +244,13 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                     newModel = ComponentModel(self.document, self)
                     self.view.setModel(newModel)
                     self.model = newModel
-                    self.xmlPath = self.fPath
-                    fi = QFileInfo(self.fPath);
+                    self.xmlPath = self.componentFile
+                    fi = QFileInfo(self.componentFile);
                     self.name = fi.fileName(); 
 
                     if self.name[-4:] == '.xml':
                         self.name = self.name[:-4]
-                    return self.fPath
+                    return self.componentFile
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
                 print error
@@ -268,22 +271,21 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         node = sel.node
 
         if not filePath:
-                self.fPath = unicode(
+                itemFile = unicode(
                     QFileDialog.getOpenFileName(self,"Open File",self.xmlPath,
                                                 "XML files (*.xml);;HTML files (*.html);;"
                                                 "SVG files (*.svg);;User Interface files (*.ui)"))
         else:
-            self.fPath = filePath
-        if self.fPath:
+            itemFile = filePath
+        if itemFile:
             try:
-                fh = QFile(self.fPath)
+                fh = QFile(itemFile)
                 if  fh.open(QIODevice.ReadOnly):
                     root = QDomDocument()
                     if not root.setContent(fh):
                         raise ValueError, "could not parse XML"
                     definition = root.firstChildElement(QString("definition"))           
                     child = definition.firstChild()
-
                     self.widget.node = node
 
                     while not child.isNull():
@@ -331,15 +333,15 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         node = sel.node
 
         if not filePath:
-                self.fPath = unicode(
+                dsFile = unicode(
                     QFileDialog.getOpenFileName(self,"Open File",self.dsPath,
                                                 "XML files (*.xml);;HTML files (*.html);;"
                                                 "SVG files (*.svg);;User Interface files (*.ui)"))
         else:
-            self.fPath = filePath
-        if self.fPath:
+            dsFile = filePath
+        if dsFile:
             try:
-                fh = QFile(self.fPath)
+                fh = QFile(dsFile)
                 if  fh.open(QIODevice.ReadOnly):
                     root = QDomDocument()
                     if not root.setContent(fh):
@@ -356,7 +358,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
                 self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
                 self.view.expand(index)
-
+                self.dsPath = dsFile
 
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
@@ -444,9 +446,9 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             
             return
         error = None
-        if self.fPath:
+        if self.componentFile:
             try:
-                fh = QFile(self.fPath)
+                fh = QFile(self.componentFile)
                 if not fh.open(QIODevice.WriteOnly):
                     raise IOError, unicode(fh.errorString())
                 stream = QTextStream(fh)
@@ -468,19 +470,20 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             
             return
         error = None
-        self.fPath = unicode(
-            QFileDialog.getSaveFileName(self,"Save Component",self.fPath,
+        self.componentFile = unicode(
+            QFileDialog.getSaveFileName(self,"Save Component",self.componentFile,
                                         "XML files (*.xml);;HTML files (*.html);;"
                                         "SVG files (*.svg);;User Interface files (*.ui)"))
 
         
         try:
-            fh = QFile(self.fPath)
+            fh = QFile(self.componentFile)
             if not fh.open(QIODevice.WriteOnly):
                 raise IOError, unicode(fh.errorString())
             stream = QTextStream(fh)
             stream <<self.document.toString(2)
             #                print self.document.toString(2)
+            ## TODO change item name
         except (IOError, OSError, ValueError), e:
             error = "Failed to save: %s" % e
             print error

@@ -431,6 +431,98 @@ class ComponentSaveAs(Command):
     def clone(self):
         return ComponentSaveAs(self.receiver, self._slot) 
 
+
+
+class ComponentChangeDirectory(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        
+        
+    def execute(self):
+        if QMessageBox.question(self.receiver, "Component - Change Directory",
+                                "All unsaved components will be lost. Would you like to proceed ?".encode(),
+                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+            return
+
+
+        path = unicode(QFileDialog.getExistingDirectory(
+                self.receiver, "Open Directory",
+                self.receiver.cpDirectory,
+                QFileDialog.ShowDirsOnly or QFileDialog.DontResolveSymlinks))
+
+        if not path:
+            return
+        dialogs = self.receiver.mdi.windowList()
+        if dialogs:
+            for dialog in dialogs:
+                if isinstance(dialog,ComponentDlg):
+                    self.receiver.mdi.setActiveWindow(dialog)
+                    self.receiver.mdi.closeActiveWindow()
+
+
+
+        self.receiver.componentList.components = {} 
+        self.receiver.cpDirectory = path
+        self.receiver.componentList.directory = path
+
+        self.receiver.loadComponents()
+
+        print "EXEC componentChangeDirectory"
+
+    def unexecute(self):
+        print "UNDO componentChangeDirectory"
+
+    def clone(self):
+        return ComponentChangeDirectory(self.receiver, self._slot) 
+
+
+
+
+class DataSourceChangeDirectory(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        
+        
+    def execute(self):
+        if QMessageBox.question(self.receiver, "DataSource - Change Directory",
+                                "All unsaved datasources will be lost. Would you like to proceed ?".encode(),
+                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+            return
+
+
+        path = unicode(QFileDialog.getExistingDirectory(
+                self.receiver, "Open Directory",
+                self.receiver.dsDirectory,
+                QFileDialog.ShowDirsOnly or QFileDialog.DontResolveSymlinks))
+
+        if not path:
+            return
+        dialogs = self.receiver.mdi.windowList()
+        if dialogs:
+            for dialog in dialogs:
+                if isinstance(dialog,DataSourceDlg):
+                    self.receiver.mdi.setActiveWindow(dialog)
+                    self.receiver.mdi.closeActiveWindow()
+
+
+
+        self.receiver.sourceList.datasources = {} 
+        self.receiver.dsDirectory = path
+        self.receiver.sourceList.directory = path
+
+        self.receiver.loadDataSources()
+
+        print "EXEC dsourceChangeDirectory"
+
+    def unexecute(self):
+        print "UNDO dsourceChangeDirectory"
+
+    def clone(self):
+        return DataSourceChangeDirectory(self.receiver, self._slot) 
+
+
+
+
 class ComponentReloadList(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
@@ -460,6 +552,8 @@ class ComponentReloadList(Command):
 
     def clone(self):
         return ComponentReloadList(self.receiver, self._slot) 
+
+
 
 
 

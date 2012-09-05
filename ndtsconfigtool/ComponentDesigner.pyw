@@ -158,6 +158,15 @@ class MainWindow(QMainWindow):
         componentEditAction = self.pool.createCommand(
             "&Edit", "componentEdit", commandArgs, ComponentEdit,
             "Ctrl+E", "componentedit", "Edit the component")
+
+        componentSaveAsAction = self.pool.createCommand(
+            "Save As", "componentSaveAs", commandArgs, ComponentSaveAs,
+            "", "componentedit", "Save the component as ...")
+
+
+        componentSaveAction = self.pool.createCommand(
+            "Save", "componentSave", commandArgs, ComponentSave,
+            "", "componentedit", "Save the component")
         
 
         componentRemoveItemAction = self.pool.createCommand(
@@ -205,7 +214,7 @@ class MainWindow(QMainWindow):
 
 
         componentMergeAction = self.pool.createCommand(
-            "Merge the Component Items", "componentMerge", commandArgs, ComponentMerge,
+            "Merge component Items", "componentMerge", commandArgs, ComponentMerge,
             "", "componentmerge", "Merge the component items")
 
 
@@ -268,16 +277,18 @@ class MainWindow(QMainWindow):
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (undoAction,reundoAction))
         componentsMenu = self.menuBar().addMenu("&Components")    
-        self.addActions(componentsMenu, ( componentNewAction,  componentOpenAction,componentEditAction,componentRemoveAction, 
-                                          componentRemoveItemAction, None,
-                                          componentNewGroupAction, componentNewFieldAction, 
-                                          componentNewAttributeAction, componentNewLinkAction,
-                                          componentNewDataSourceAction,None, 
-                                          componentLoadComponentAction, componentLoadDataSourceAction,
-                                          componentAddDataSourceAction,
-                                          None,
-                                          componentMergeAction
-                                          ))
+        self.addActions(componentsMenu, ( 
+                componentNewAction,  componentOpenAction,componentEditAction,
+                componentSaveAsAction,componentSaveAsAction, componentRemoveAction, 
+                componentRemoveItemAction, None,
+                componentNewGroupAction, componentNewFieldAction, 
+                componentNewAttributeAction, componentNewLinkAction,
+                componentNewDataSourceAction,None, 
+                componentLoadComponentAction, componentLoadDataSourceAction,
+                componentAddDataSourceAction,
+                None,
+                componentMergeAction
+                ))
 
         self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
         
@@ -324,6 +335,7 @@ class MainWindow(QMainWindow):
 
 
     def loadDataSources(self):
+#        self.sourceList.datasources = {}
         self.sourceList.loadList()
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
@@ -334,6 +346,7 @@ class MainWindow(QMainWindow):
 
 
     def loadComponents(self):
+#        self.componentList.components = {}
         self.componentList.loadList(self.contextMenuActions)
         idc =  self.componentList.components.itervalues().next().id \
             if len(self.componentList.components) else None
@@ -371,6 +384,22 @@ class MainWindow(QMainWindow):
 
     def componentEdit(self):
         cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+    def componentSave(self):
+        cmd = self.pool.getCommand('componentSave').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+
+
+    def componentSaveAs(self):
+        cmd = self.pool.getCommand('componentSaveAs').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)

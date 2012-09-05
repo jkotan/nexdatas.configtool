@@ -1,23 +1,23 @@
-<?xml version="1.0" ?>
+<?xml version='1.0'?>
 <definition>
-  <group name="entry1" type="NXentry">
-    <group name="instrument" type="NXinstrument">
-      <group name="detector" type="NXdetector">
-        <field name="counter1" type="NX_FLOAT" units="m">
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="m" type="NX_FLOAT" name="counter1">
           <strategy mode="STEP"/>
           <datasource type="CLIENT">
             <record name="exp_c01"/>
           </datasource>
         </field>
-        <field name="counter2" type="NX_FLOAT" units="s">
+        <field units="s" type="NX_FLOAT" name="counter2">
           <strategy mode="STEP"/>
           <datasource type="CLIENT">
             <record name="exp_c02"/>
           </datasource>
         </field>
-        <field name="mca" type="NX_FLOAT" units="">
+        <field units="" type="NX_FLOAT" name="mca">
           <dimensions rank="1">
-            <dim index="1" value="2048"/>
+            <dim value="2048" index="1"/>
           </dimensions>
           <strategy mode="STEP"/>
           <datasource type="TANGO">
@@ -27,18 +27,18 @@
         </field>
       </group>
     </group>
-    <group name="data" type="NXdata">
-      <link name="data" target="/NXentry/NXinstrument/NXdetector/mca">
+    <group type="NXdata" name="data">
+      <link target="/NXentry/NXinstrument/NXdetector/mca" name="data">
         <doc>
           Link to mca in /NXentry/NXinstrument/NXdetector
         </doc>
       </link>
-      <link name="counter1" target="/NXentry/NXinstrument/NXdetector/counter1">
+      <link target="/NXentry/NXinstrument/NXdetector/counter1" name="counter1">
         <doc>
           Link to counter1 in /NXentry/NXinstrument/NXdetector
         </doc>
       </link>
-      <link name="counter2" target="/NXentry/NXinstrument/NXdetector/counter2">
+      <link target="/NXentry/NXinstrument/NXdetector/counter2" name="counter2">
         <doc>
           Link to counter2 in /NXentry/NXinstrument/NXdetector
         </doc>

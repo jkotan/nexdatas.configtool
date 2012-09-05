@@ -146,16 +146,11 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
         self.setupUi(self)
         self.updateForm()
-
         
         self.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
         self.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)
         self.connect(self.view, SIGNAL("expanded(QModelIndex)"), self.expanded)
         self.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self.collapsed)
-
-#        self.pool.createTask("componentClicked",commandArgs, ComponentClicked,
-#                             self.componentList.componentListWidget, 
-#                             "clicked(QModelIndex)")
 
 
     def tagClicked(self, index):
@@ -463,6 +458,35 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             finally:
                 if fh is not None:
                     fh.close()
+
+
+    def saveAs(self):
+        if not self.merge():
+            QMessageBox.warning(self, "Saving problem",
+                                "Document not merged" )
+            
+            return
+        error = None
+        self.fPath = unicode(
+            QFileDialog.getSaveFileName(self,"Save Component",self.fPath,
+                                        "XML files (*.xml);;HTML files (*.html);;"
+                                        "SVG files (*.svg);;User Interface files (*.ui)"))
+
+        
+        try:
+            fh = QFile(self.fPath)
+            if not fh.open(QIODevice.WriteOnly):
+                raise IOError, unicode(fh.errorString())
+            stream = QTextStream(fh)
+            stream <<self.document.toString(2)
+            #                print self.document.toString(2)
+        except (IOError, OSError, ValueError), e:
+            error = "Failed to save: %s" % e
+            print error
+            
+        finally:
+            if fh is not None:
+                fh.close()
 
     
 

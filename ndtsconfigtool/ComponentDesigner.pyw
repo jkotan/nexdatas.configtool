@@ -203,12 +203,12 @@ class MainWindow(QMainWindow):
 
 
         componentLoadComponentAction = self.pool.createCommand(
-            "Load SubComponent Item", "componentLoadComponentItem", commandArgs, ComponentLoadComponentItem,
+            "Load SubComponent Item...", "componentLoadComponentItem", commandArgs, ComponentLoadComponentItem,
             "", "componentloaditem", "Load a component part from the file")
 
 
         componentLoadDataSourceAction = self.pool.createCommand(
-            "Load DataSource Item", "componentLoadDataSourceItem", commandArgs, ComponentLoadDataSourceItem,
+            "Load DataSource Item...", "componentLoadDataSourceItem", commandArgs, ComponentLoadDataSourceItem,
             "", "componentloaditem", "Load datasouce from the file")
 
 
@@ -321,6 +321,7 @@ class MainWindow(QMainWindow):
                 componentNewAttributeAction, componentNewLinkAction,
                 componentNewDataSourceAction,None, 
                 componentLoadComponentAction, componentLoadDataSourceAction,
+                None,
                 componentAddDataSourceAction,
                 None,
                 componentMergeAction
@@ -329,13 +330,16 @@ class MainWindow(QMainWindow):
         self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
         
 #        componentsAddMenu = componentsMenu.addMenu("&Add ...")
-        self.contextMenuActions =  ( componentNewGroupAction, componentNewFieldAction,
-                                     componentNewAttributeAction, componentNewLinkAction,
-                                     componentNewDataSourceAction, None,
-                                     componentLoadComponentAction, componentLoadDataSourceAction,
-                                     None,
-                                     componentMergeAction
-                                   ) 
+        self.contextMenuActions =  ( 
+            componentNewGroupAction, componentNewFieldAction,
+            componentNewAttributeAction, componentNewLinkAction,
+            componentNewDataSourceAction, None,
+            componentLoadComponentAction, componentLoadDataSourceAction,
+            None,
+            componentAddDataSourceAction,
+            None,
+            componentMergeAction
+            ) 
 #        self.addActions(self.mdi, self.contextMenuActions)
         
 

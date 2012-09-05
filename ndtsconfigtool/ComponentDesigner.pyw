@@ -224,14 +224,14 @@ class MainWindow(QMainWindow):
         
 
         componentChangeDirectoryAction = self.pool.createCommand(
-            "Change Component Directory", "componentChangeDirectory", commandArgs, 
+            "Change Component Directory...", "componentChangeDirectory", commandArgs, 
             ComponentChangeDirectory,
             "", "componentrechangedirecotry", "Change the component list directory")
 
 
 
         dsourceChangeDirectoryAction = self.pool.createCommand(
-            "Change DataSource Directory", "dsourceChangeDirectory", commandArgs, 
+            "Change DataSource Directory...", "dsourceChangeDirectory", commandArgs, 
             DataSourceChangeDirectory,
             "", "dsourcerechangedirecotry", "Change the datasource list directory")
 

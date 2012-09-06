@@ -746,7 +746,7 @@ class MainWindow(QMainWindow):
                      tip=None, checkable=False, signal="triggered()"):
         action = QAction(text, self)
         if icon is not None:
-            action.setIcon(QIcon(":/{0}.png".format(icon)))
+            action.setIcon(QIcon(":/%s.png"% str(icon).strip()))
         if shortcut is not None:
             action.setShortcut(shortcut)
         if tip is not None:
@@ -772,14 +772,16 @@ class MainWindow(QMainWindow):
 
     def helpAbout(self):
         QMessageBox.about(self, "About Component Designer",
-                """<b>Component Designer</b> v {0}
+                """<b>Component Designer</b> v %s
                 <p>Copyright &copy; 2012 GNU GENERAL PUBLIC LICENSE
                 <p>This application can be used to create
                 XML configuration file for the Nexus Data Writer.
-                <p>Python {1} - Qt {2} - PyQt {3} on {4}""".format(
-                __version__, platform.python_version(),
-                QT_VERSION_STR, PYQT_VERSION_STR,
-                platform.system()))
+                <p>Python %s - Qt %s - PyQt %s on %s""" % (
+                str(__version__), 
+                str(platform.python_version()),
+                str(QT_VERSION_STR), 
+                str(PYQT_VERSION_STR),
+                str(platform.system())))
 
 
     def updateWindowMenu(self):
@@ -803,10 +805,10 @@ class MainWindow(QMainWindow):
                 menu = menu.addMenu("&More")
             accel = ""
             if i < 10:
-                accel = "&{0} ".format(i)
+                accel = "&%s " % str(i)
             elif i < 36:
-                accel = "&{0} ".format(chr(i + ord("@") - 9))
-            action = menu.addAction("{0}{1}".format(accel, title))
+                accel = "&%s " % str(chr(i + ord("@") - 9))
+            action = menu.addAction("%s%s" % (accel, title))
             self.connect(action, SIGNAL("triggered()"),
                          self.windowMapper, SLOT("map()"))
             self.windowMapper.setMapping(action, dialog)

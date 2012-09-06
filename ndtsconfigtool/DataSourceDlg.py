@@ -337,7 +337,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                 self.setFromNode(ds)
             try:    
                 self.createGUI()
-            except Exception as e:
+            except Exception, e:
                 QMessageBox.warning(self, "dialog not created", 
                                     "Problems in creating a dialog %s :\n\n%s" %(self.name,str(e)))
                 

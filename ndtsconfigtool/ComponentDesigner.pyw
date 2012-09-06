@@ -46,6 +46,7 @@ class MainWindow(QMainWindow):
         self.contextMenuActions = None
 
         self.createGUI()
+        self.resize(1024, 706)
 
         self.createActions()
 
@@ -57,6 +58,7 @@ class MainWindow(QMainWindow):
 
         status = self.statusBar()
         status.setSizeGripEnabled(False)
+        
         status.showMessage("Ready", 5000)
 
         self.setWindowTitle("NDTS Component Designer")

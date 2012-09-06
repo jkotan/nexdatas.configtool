@@ -120,12 +120,13 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.view.expand(index)
 
     def removeSelectedItem(self):
-        if self.model and self.view:
+        if not self.model or not self.view:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
         if not sel:
             return
+
         node = sel.node
         attributeMap = node.attributes()
         name = ""

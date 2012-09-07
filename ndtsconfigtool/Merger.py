@@ -63,6 +63,21 @@ class Merger(object):
                 child = child.nextSibling()
         return text    
 
+    def getAncestors(self, node):
+        res = "" 
+        attr = node.attributes()
+
+        name = attr.namedItem("name").nodeValue() \
+            if attr.contains("name") else ""
+
+        if node.parentNode().nodeName() != '#document':
+            print node.nodeName()
+            res =  self.getAncestors(node.parentNode()) 
+        res += "/" + unicode(node.nodeName()) 
+        if name:
+            res += ":" + name
+        return res 
+
 
     def areMergeable(self,elem1, elem2):
 #        print "checking:" ,elem1.nodeName(), elem2.nodeName()
@@ -89,7 +104,7 @@ class Merger(object):
                 at2 = attr2.item(i2)
                 if at1.nodeName() == at2.nodeName() and at1.nodeValue() != at2.nodeValue():
                     status = False
-                    tags.append((str(tagName), str(at1.nodeName()), 
+                    tags.append((str(self.getAncestors(at1)),
                                  str(at1.nodeValue()) , str(at2.nodeValue())))
 
         if not status  and tagName in self.singles: 
@@ -103,8 +118,8 @@ class Merger(object):
             ## TODO white spaces?
             if text1 != text2:
                 raise IncompatibleNodeError,\
-                    "Incompatible %s element value   %s \n  %s "  \
-                    % (str(tagName), text1, text2)
+                    "Incompatible \n%s element value\n%s \n%s "  \
+                    % (str(self.getAncestors(elem1)), text1, text2)
             
         return status
 
@@ -183,8 +198,8 @@ class Merger(object):
                         cName = unicode(childElem.nodeName()) if childElem  else ""
                         if cName and cName not in self.children[nName]:
                             raise IncompatibleNodeError,\
-                                "Not allowed <%s> child of <%s> parent"  \
-                                % (cName, nName)
+                                "Not allowed <%s> child of \n < %s > \n  parent"  \
+                                % (cName, self.getAncestors(elem))
                             
                     self.mergeChildren(child)
                     child = child.nextSibling()

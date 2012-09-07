@@ -45,20 +45,26 @@ class MainWindow(QMainWindow):
 
         self.contextMenuActions = None
 
+
+        settings = QSettings()
+        self.dsDirectory = unicode(settings.value("DataSources/directory").toString())
+        self.cpDirectory = unicode(settings.value("Components/directory").toString())
+
+
         self.createGUI()
-#        self.resize(1024, 706)
 
         self.createActions()
 
-        settings = QSettings()
+
+        self.loadDataSources()
+
+        self.loadComponents()
+
         self.restoreGeometry(
                 settings.value("MainWindow/Geometry").toByteArray())
         self.restoreState(
                 settings.value("MainWindow/State").toByteArray())
 
-        self.loadDataSources()
-
-        self.loadComponents()
 
         status = self.statusBar()
         status.setSizeGripEnabled(False)
@@ -418,6 +424,10 @@ class MainWindow(QMainWindow):
                           QVariant(self.saveGeometry()))
         settings.setValue("MainWindow/State",
                           QVariant(self.saveState()))
+        settings.setValue("DataSources/directory",
+                          QVariant(self.dsDirectory))
+        settings.setValue("Components/directory",
+                          QVariant(self.cpDirectory))
         files = QStringList()
 #        for widget in self.mdi.windowList():
 #            if not widget.filename.startsWith("Unnamed"):

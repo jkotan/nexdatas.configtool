@@ -171,6 +171,11 @@ class MainWindow(QMainWindow):
             "&Edit", "componentEdit", commandArgs, ComponentEdit,
             "Ctrl+E", "componentedit", "Edit the component")
 
+        componentClearAction = self.pool.createCommand(
+            "Clear", "componentClear", commandArgs, ComponentClear,
+            "", "componentedit", "Clear the component")
+
+
         componentSaveAsAction = self.pool.createCommand(
             "Save &As...", "componentSaveAs", commandArgs, ComponentSaveAs,
             "", "componentsaveas", "Save the component as ...")
@@ -331,9 +336,11 @@ class MainWindow(QMainWindow):
 
         fileMenu = self.menuBar().addMenu("&File")    
         self.addActions(fileMenu, (                 
-                componentNewAction, componentOpenAction, componentEditAction, None, componentRemoveAction,
+                componentNewAction, componentOpenAction, componentEditAction, None, 
                 componentSaveAction, componentSaveAsAction,
                 componentSaveAllAction, None, 
+                componentClearAction,componentRemoveAction,
+                None,
                 componentReloadListAction,
                 dsourceReloadListAction,
                 componentChangeDirectoryAction,
@@ -344,10 +351,10 @@ class MainWindow(QMainWindow):
         self.addActions(editMenu, (undoAction,reundoAction))
         componentsMenu = self.menuBar().addMenu("&Components")    
         self.addActions(componentsMenu, ( 
-                componentRemoveItemAction, None,
                 componentNewGroupAction, componentNewFieldAction, 
                 componentNewAttributeAction, componentNewLinkAction,
                 componentNewDataSourceAction,None, 
+                componentRemoveItemAction, None,
                 componentLoadComponentAction, componentLoadDataSourceAction,
                 None,
                 componentAddDataSourceAction,
@@ -360,6 +367,7 @@ class MainWindow(QMainWindow):
             componentNewGroupAction, componentNewFieldAction,
             componentNewAttributeAction, componentNewLinkAction,
             componentNewDataSourceAction, None,
+            componentRemoveItemAction, None,
             componentLoadComponentAction, componentLoadDataSourceAction,
             None,
             componentAddDataSourceAction,
@@ -486,6 +494,13 @@ class MainWindow(QMainWindow):
 
     def componentEdit(self):
         cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+    def componentClear(self):
+        cmd = self.pool.getCommand('componentClear').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)

@@ -120,7 +120,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.view.expand(index)
 
     def removeSelectedItem(self):
-        if not self.model or not self.view:
+        if not self.model or not self.view or not self.widget:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -136,8 +136,10 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         print "Removing" , node.nodeName(), name
 #                node = self.widget.node
         
-        self.widget.node = node.parentNode()
         
+        if hasattr(self.widget,"node"):
+            self.widget.node = node.parentNode()
+
         self.widget.removeNode(node, index.parent())
                 
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)

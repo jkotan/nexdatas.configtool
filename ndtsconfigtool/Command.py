@@ -387,6 +387,56 @@ class ComponentEdit(Command):
         return ComponentEdit(self.receiver, self._slot) 
 
 
+
+
+class ComponentClear(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._cp = None
+        self._cpEdit = None
+        
+        
+    def execute(self):
+
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if not self._cp:
+            retrun    
+        if QMessageBox.question(self.receiver, "Component - Clear",
+                                "Clear the component: %s ".encode() %  (self._cp.name),
+                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+            return
+
+        if hasattr(self._cp,"widget") and self._cp.widget in self.receiver.mdi.windowList():
+            self._wList = True
+            self.receiver.mdi.setActiveWindow(self._cp.widget)
+            self.receiver.mdi.closeActiveWindow()
+
+        self._cpEdit = ComponentDlg()
+        self._cpEdit.idc = self._cp.id
+        self._cpEdit.directory = self.receiver.componentList.directory
+        self._cpEdit.name = self.receiver.componentList.components[self._cp.id].name
+        self._cpEdit.createGUI()
+        self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
+        self._cpEdit.createHeader()
+        self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
+                
+        if self._cp.widget in self.receiver.mdi.windowList():
+            self.receiver.mdi.setActiveWindow(self._cp.widget) 
+        else:    
+            self.receiver.mdi.addWindow(self._cpEdit)
+            self._cpEdit.show()
+            self._cp.widget = self._cpEdit 
+            
+        print "EXEC componentClear"
+
+    def unexecute(self):
+        print "UNDO componentClear"
+
+    def clone(self):
+        return ComponentClear(self.receiver, self._slot) 
+
+
 class ComponentSave(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)

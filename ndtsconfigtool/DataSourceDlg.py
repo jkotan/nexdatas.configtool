@@ -211,6 +211,62 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
     @pyqtSignature("QString")
     def on_typeComboBox_currentIndexChanged(self, text):
         self.setFrames(text)
+        self.updateUi(unicode(text))
+
+
+    ## calls updateUi when the name text is changing
+    # \param text the edited text   
+    @pyqtSignature("QString")
+    def on_cRecNameLineEdit_textEdited(self, text):
+        combo = unicode(self.typeComboBox.currentText())
+        self.updateUi(combo)
+
+
+    ## calls updateUi when the name text is changing
+    # \param text the edited text   
+    @pyqtSignature("QString")
+    def on_dQueryLineEdit_textEdited(self, text):
+        combo = unicode(self.typeComboBox.currentText())
+        self.updateUi(combo)
+
+
+
+    ## calls updateUi when the name text is changing
+    # \param text the edited text   
+    @pyqtSignature("QString")
+    def on_tDevNameLineEdit_textEdited(self, text):
+        combo = unicode(self.typeComboBox.currentText())
+        self.updateUi(combo)
+
+
+    ## calls updateUi when the name text is changing
+    # \param text the edited text   
+    @pyqtSignature("QString")
+    def on_tMemberNameLineEdit_textEdited(self, text):
+        combo = unicode(self.typeComboBox.currentText())
+        self.updateUi(combo)
+
+
+        
+    ## updates group user interface
+    # \brief It sets enable or disable the OK button
+    def updateUi(self, text):
+        if text == 'CLIENT':
+            enable = not self.cRecNameLineEdit.text().isEmpty()
+            self.applyPushButton.setEnabled(enable)
+        elif text == 'DB':
+            enable = not self.dQueryLineEdit.text().isEmpty()
+            self.applyPushButton.setEnabled(enable)
+        elif text == 'TANGO':    
+            enable = not self.tDevNameLineEdit.text().isEmpty() and \
+                not self.tMemberNameLineEdit.text().isEmpty()
+            self.applyPushButton.setEnabled(enable)
+        else:
+            ## Additional non-supported frame
+            self.applyPushButton.setEnabled(enable)
+        
+
+
 
 
     ## shows and hides frames according to typeComboBox

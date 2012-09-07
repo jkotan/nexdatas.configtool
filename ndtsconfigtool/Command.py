@@ -543,6 +543,111 @@ class ComponentChangeDirectory(Command):
         return ComponentChangeDirectory(self.receiver, self._slot) 
 
 
+class DataSourceSaveAll(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        
+        
+    def execute(self):
+            
+        for icp in self.receiver.sourceList.datasources.keys():
+            cp = self.receiver.sourceList.datasources[icp]
+            if cp.widget is not None:
+                cp.widget.save()    
+
+        print "EXEC dsourceSaveAll"
+
+    def unexecute(self):
+        print "UNDO dsourceSaveAll"
+
+    def clone(self):
+        return DataSourceSaveAll(self.receiver, self._slot) 
+
+
+class DataSourceSave(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._ds = None
+        self._dsEdit = None
+        
+        
+    def execute(self):
+        if self._ds is None:
+            self._ds = self.receiver.sourceList.currentListDataSource()
+        if self._ds is not None:
+            if self._ds.widget is None:
+                self._dsEdit = DataSourceDlg()
+                self._dsEdit.ids = self._ds.id
+                self._dsEdit.directory = self.receiver.sourceList.directory
+                self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
+                self._dsEdit.createGUI()
+                self._dsEdit.createHeader()
+                self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
+            else:
+                self._dsEdit = self._ds.widget 
+                
+            if self._ds.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            else:    
+                self.receiver.mdi.addWindow(self._dsEdit)
+                self._dsEdit.show()
+                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
+                self._ds.widget = self._dsEdit 
+                    
+            self._dsEdit.save()    
+
+            
+        print "EXEC dsourceSave"
+
+    def unexecute(self):
+        print "UNDO dsourceSave"
+
+    def clone(self):
+        return DataSourceSave(self.receiver, self._slot) 
+
+
+class DataSourceSaveAs(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._ds = None
+        self._dsEdit = None
+        
+        
+    def execute(self):
+        if self._ds is None:
+            self._ds = self.receiver.sourceList.currentListDataSource()
+        if self._ds is not None:
+            if self._ds.widget is None:
+                self._dsEdit = DataSourceDlg()
+                self._dsEdit.ids = self._ds.id
+                self._dsEdit.directory = self.receiver.sourceList.directory
+                self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
+                self._dsEdit.createGUI()
+                self._dsEdit.createHeader()
+                self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
+            else:
+                self._dsEdit = self._ds.widget 
+                
+            if self._ds.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            else:    
+                self.receiver.mdi.addWindow(self._dsEdit)
+                self._dsEdit.show()
+                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
+                self._ds.widget = self._dsEdit 
+                    
+            self._dsEdit.saveAs()    
+
+            
+        print "EXEC dsourceSaveAs"
+
+    def unexecute(self):
+        print "UNDO dsourceSaveAs"
+
+    def clone(self):
+        return DataSourceSaveAs(self.receiver, self._slot) 
+
+
 
 
 class DataSourceChangeDirectory(Command):

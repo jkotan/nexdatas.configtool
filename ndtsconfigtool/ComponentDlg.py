@@ -152,7 +152,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.updateForm()
         
         self.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
-        self.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)
+        self.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
         self.connect(self.view, SIGNAL("expanded(QModelIndex)"), self.expanded)
         self.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self.collapsed)
 
@@ -190,27 +190,23 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         else:
             self.widget = None
          
-    def openMenu(self,position):
-         menu = QMenu()
-         for action in self.actions:
-             if action is None:
-                 menu.addSeparator()
-             else:
-                 menu.addAction(action)
-         menu.exec_(self.view.viewport().mapToGlobal(position))
+    def openMenu(self, position):
+        index = self.view.indexAt(position)
+        if index.isValid():
+            self.tagClicked(index)
+        menu = QMenu()
+        for action in self.actions:
+            if action is None:
+                menu.addSeparator()
+            else:
+                menu.addAction(action)
+        menu.exec_(self.view.viewport().mapToGlobal(position))
                  
    
     def addContextMenu(self,actions):
-        self.view.setContextMenuPolicy(Qt.ActionsContextMenu)
-        for action in actions:
-            if action is None:
-                act = QAction(self)
-                act.setSeparator(True)
-                self.view.addAction(act)
-            else:
-                self.view.addAction(action)
-
-
+         self.view.setContextMenuPolicy(Qt.CustomContextMenu)
+         self.view.customContextMenuRequested.connect(self.openMenu)
+         self.actions = actions
 
     def expanded(self,index):
         for column in range(self.model.columnCount(index)):

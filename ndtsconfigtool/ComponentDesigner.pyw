@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         self.contextMenuActions = None
 
         self.createGUI()
-        self.resize(1024, 706)
+#        self.resize(1024, 706)
 
         self.createActions()
 
@@ -173,6 +173,19 @@ class MainWindow(QMainWindow):
         componentSaveAllAction = self.pool.createCommand(
             "Save All", "componentSaveAll", commandArgs, ComponentSaveAll,
             "", "componentsaveall", "Save the all components")
+
+        dsourceSaveAction = self.pool.createCommand(
+            "Save DataSource", "dsourceSave", commandArgs, DataSourceSave,
+            "", "datasourcesave", "Save the datasource")
+
+
+        dsourceSaveAsAction = self.pool.createCommand(
+            "Save DataSource As...", "dsourceSaveAs", commandArgs, DataSourceSaveAs,
+            "", "datasourcesaveas", "Save the datasource as ...")
+
+        dsourceSaveAllAction = self.pool.createCommand(
+            "Save All DataSources", "dsourceSaveAll", commandArgs, DataSourceSaveAll,
+            "", "dsourcessaveall", "Save the all datasources")
 
         
 
@@ -333,8 +346,6 @@ class MainWindow(QMainWindow):
                 ))
 
         self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
-        
-#        componentsAddMenu = componentsMenu.addMenu("&Add ...")
         self.contextMenuActions =  ( 
             componentNewGroupAction, componentNewFieldAction,
             componentNewAttributeAction, componentNewLinkAction,
@@ -345,13 +356,16 @@ class MainWindow(QMainWindow):
             None,
             componentMergeAction
             ) 
-#        self.addActions(self.mdi, self.contextMenuActions)
         
 
 
         datasourcesMenu = self.menuBar().addMenu("Data&Sources")    
         self.addActions(datasourcesMenu, (dsourceNewAction, dsourceOpenAction, 
-                                          dsourceEditAction, dsourceRemoveAction))
+                                          dsourceEditAction, None, 
+                                          dsourceSaveAction,
+                                          dsourceSaveAsAction,
+                                          dsourceSaveAllAction,
+                                          dsourceRemoveAction))
  
         viewMenu = self.menuBar().addMenu("&View")
         self.addActions(viewMenu, (viewDockAction,))
@@ -475,6 +489,26 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo",False)
         self.pool.setDisabled("reundo",True)   
 
+    def dsourceSave(self):
+        cmd = self.pool.getCommand('dsourceSave').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+    def dsourceSaveAs(self):
+        cmd = self.pool.getCommand('dsourceSaveAs').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+    def dsourceSaveAll(self):
+        cmd = self.pool.getCommand('dsourceSaveAll').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
 
 
     def componentSaveAs(self):
@@ -483,6 +517,7 @@ class MainWindow(QMainWindow):
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)
         self.pool.setDisabled("reundo",True)   
+
 
     def componentSaveAll(self):
         cmd = self.pool.getCommand('componentSaveAll').clone()

@@ -470,6 +470,38 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                         fh.close()
 
 
+
+    ## accepts and save input text strings
+    # \brief It copies the parameters and saves the dialog
+    def saveAs(self):
+        if not self.document or not self.node:
+            self.createHeader()
+
+        if self.apply():
+            filename = self.directory + "/" + self.name + ".ds.xml"
+            print "saving in %s"% (filename)
+            error = None
+            filename = unicode(
+            QFileDialog.getSaveFileName(self,"Save DataSource",self.directory,
+                                        "XML files (*.xml);;HTML files (*.html);;"
+                                        "SVG files (*.svg);;User Interface files (*.ui)"))
+            if filename:
+                try:
+                    fh = QFile(filename)
+                    if not fh.open(QIODevice.WriteOnly):
+                        raise IOError, unicode(fh.errorString())
+                    stream = QTextStream(fh)
+                    stream <<self.document.toString(2)
+            #                print self.document.toString(2)
+                except (IOError, OSError, ValueError), e:
+                    error = "Failed to save: %s" % e
+                    print error
+                    
+                finally:
+                    if fh is not None:
+                        fh.close()
+
+
     ## rejects the changes
     # \brief It asks for the cancellation  and reject the changes
     def close(self):

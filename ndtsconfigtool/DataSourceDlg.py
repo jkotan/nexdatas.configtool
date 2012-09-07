@@ -254,16 +254,21 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         if text == 'CLIENT':
             enable = not self.cRecNameLineEdit.text().isEmpty()
             self.applyPushButton.setEnabled(enable)
+            self.savePushButton.setEnabled(enable)
         elif text == 'DB':
             enable = not self.dQueryLineEdit.text().isEmpty()
             self.applyPushButton.setEnabled(enable)
+            self.savePushButton.setEnabled(enable)
         elif text == 'TANGO':    
             enable = not self.tDevNameLineEdit.text().isEmpty() and \
                 not self.tMemberNameLineEdit.text().isEmpty()
             self.applyPushButton.setEnabled(enable)
+            self.savePushButton.setEnabled(enable)
         else:
             ## Additional non-supported frame
+            enable = True
             self.applyPushButton.setEnabled(enable)
+            self.savePushButton.setEnabled(enable)
         
 
 

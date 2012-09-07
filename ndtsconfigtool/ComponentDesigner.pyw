@@ -51,6 +51,10 @@ class MainWindow(QMainWindow):
         self.createActions()
 
         settings = QSettings()
+        self.restoreGeometry(
+                settings.value("MainWindow/Geometry").toByteArray())
+        self.restoreState(
+                settings.value("MainWindow/State").toByteArray())
 
         self.loadDataSources()
 
@@ -392,6 +396,34 @@ class MainWindow(QMainWindow):
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolbar")
         
+
+    def closeEvent(self, event):
+#        failures = []
+#        for widget in self.mdi.windowList():
+#            if widget.isModified():
+#                try:
+#                    widget.save()
+#                except IOError, e:
+#                    failures.append(unicode(e))
+#        if (failures and
+#            QMessageBox.warning(self, "Text Editor -- Save Error",
+#                    "Failed to save%s\nQuit anyway?"  % str(
+#                    "\n\t".join(failures)),
+#                    QMessageBox.Yes|QMessageBox.No) ==
+#                    QMessageBox.No):
+#            event.ignore()
+#            return
+        settings = QSettings()
+        settings.setValue("MainWindow/Geometry",
+                          QVariant(self.saveGeometry()))
+        settings.setValue("MainWindow/State",
+                          QVariant(self.saveState()))
+        files = QStringList()
+#        for widget in self.mdi.windowList():
+#            if not widget.filename.startsWith("Unnamed"):
+#                files.append(widget.filename)
+#        settings.setValue("CurrentFiles", QVariant(files))
+        self.mdi.closeAllWindows()
 
 
     def loadDataSources(self):

@@ -246,8 +246,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                     self.view.setModel(newModel)
                     self.model = newModel
                     self.xmlPath = self.componentFile
-                    fi = QFileInfo(self.componentFile);
-                    self.name = fi.fileName(); 
+                    fi = QFileInfo(self.componentFile)
+                    self.name = fi.fileName() 
 
                     if self.name[-4:] == '.xml':
                         self.name = self.name[:-4]

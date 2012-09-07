@@ -320,7 +320,21 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
     # \param fname optional file name
     def load(self, fname = None):
         if fname is None:
-            filename = self.directory + "/" + self.name + ".ds.xml"
+            if not self.name:
+                filename = unicode(QFileDialog.getOpenFileName(
+                        self,"Open File",self.directory,
+                        "XML files (*.xml);;HTML files (*.html);;"
+                        "SVG files (*.svg);;User Interface files (*.ui)"))
+                fi = QFileInfo(filename)
+                fname = fi.fileName()
+                if fname[-4:] == '.xml':
+                    self. name = fname[:-4]
+                    if self.name[-3:] == '.ds':
+                        self.name = self.name[:-3]
+                    else:
+                        self.name = fname
+            else:
+                filename = self.directory + "/" + self.name + ".ds.xml"
         else:
             filename = fname
 

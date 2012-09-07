@@ -248,6 +248,9 @@ class MainWindow(QMainWindow):
             "Reload DataSource List", "dsourceReloadList", commandArgs, DataSourceReloadList,
             "", "dsourcereloadlist", "Reload the datasource list")
 
+        dsourceOpenAction = self.pool.createCommand(
+            "&Open DataSource...", "dsourceOpen", commandArgs, DataSourceOpen,
+            "", "componentdatasource", "Open the datasource")
 
 
         componentOpenAction = self.pool.createCommand(
@@ -347,7 +350,8 @@ class MainWindow(QMainWindow):
 
 
         datasourcesMenu = self.menuBar().addMenu("Data&Sources")    
-        self.addActions(datasourcesMenu, (dsourceNewAction, dsourceEditAction, dsourceRemoveAction))
+        self.addActions(datasourcesMenu, (dsourceNewAction, dsourceOpenAction, 
+                                          dsourceEditAction, dsourceRemoveAction))
  
         viewMenu = self.menuBar().addMenu("&View")
         self.addActions(viewMenu, (viewDockAction,))
@@ -695,6 +699,16 @@ class MainWindow(QMainWindow):
     def componentOpen(self):
         self.pooling = False
         cmd = self.pool.getCommand('componentOpen').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+        self.pooling = True
+
+
+    def dsourceOpen(self):
+        self.pooling = False
+        cmd = self.pool.getCommand('dsourceOpen').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)

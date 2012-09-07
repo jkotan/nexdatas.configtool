@@ -146,6 +146,73 @@ class ComponentOpen(Command):
 
 
 
+class DataSourceOpen(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
+        self._dsEdit = None
+        self._ds = None
+        self._fpath = None
+        
+    def execute(self):
+        if hasattr(self.receiver,'mdi'):
+            self._ds = LabeledObject("", None)
+            self._dsEdit = DataSourceDlg()
+            self._dsEdit.ids = self._ds.id
+            self._dsEdit.directory = self.receiver.sourceList.directory
+            if self._fpath:
+                path = self._dsEdit.load(self._fpath)
+            else:
+                path = self._dsEdit.load()
+                self._fpath = path
+            if path:   
+                self._ds.name = self._dsEdit.name  
+                self._ds.widget = self._dsEdit
+            
+                self.receiver.sourceList.addDataSource(self._ds,False)
+            #               print  "ID", self._cp.id
+ #               print "STAT", self._cp.id in self.receiver.componentList.components
+                self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)                  
+
+                if self._ds.widget in self.receiver.mdi.windowList():
+                    self.receiver.mdi.setActiveWindow(self._ds.widget) 
+                    self._ds.widget.savePushButton.setFocus()
+                else:    
+ #               print "create"
+                    self.receiver.mdi.addWindow(self._dsEdit)
+                    self._dsEdit.savePushButton.setFocus()
+                    self._dsEdit.show()
+                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
+                    self._ds.widget = self._dsEdit 
+
+
+
+                self.receiver.mdi.addWindow(self._dsEdit)
+#            self._component.setAttribute(Qt.WA_DeleteOnClose)
+                self._dsEdit.show()
+                print "EXEC dsourceOpen"
+
+    def unexecute(self):
+        if hasattr(self._ds, "widget"):
+            if self._fpath:
+                self._ds.widget.setAttribute(Qt.WA_DeleteOnClose)
+
+                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+                self.receiver.mdi.closeActiveWindow() 
+
+                self.receiver.sourceList.removeDataSource(self._ds, False)
+                self._ds.widget = None
+                self._ds = None
+
+
+            
+        print "UNDO dsourceOpen"
+
+    def clone(self):
+        return DataSourceOpen(self.receiver, self._slot) 
+
+
+
+
 class ComponentClicked(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)

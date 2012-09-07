@@ -60,7 +60,15 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
             
 
     def loadList(self):
-        dirList=os.listdir(self.directory)
+        try:
+            dirList=os.listdir(self.directory)
+        except:
+            try:
+                dirList=os.listdir("./datasources")
+            except:
+                return
+            
+
         for fname in dirList:
             if fname[-4:] == '.xml':
                 name = fname[:-4]

@@ -143,7 +143,14 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
             
 
     def loadList(self, actions):
-        dirList=os.listdir(self.directory)
+        try:
+            dirList=os.listdir(self.directory)
+        except:
+            try:
+                dirList=os.listdir("./components")
+            except:
+                return
+            
         for fname in dirList:
             if fname[-4:] == '.xml':
                 name = fname[:-4]

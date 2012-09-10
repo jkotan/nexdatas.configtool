@@ -66,7 +66,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         ## database parameters
         self._dbParam = {}
 
-
+        self._externalSave = None
+        self._externalApply = None
 
 
         ## parameter map for XMLdumper
@@ -186,8 +187,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
         self.connect(self.applyPushButton, SIGNAL("clicked()"), 
                      self.apply)
-        self.connect(self.savePushButton, SIGNAL("clicked()"), 
-                     self.save)
+#        self.connect(self.savePushButton, SIGNAL("clicked()"), 
+#                     self.save)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), 
                      self.reset)
         self.connect(self.closePushButton, SIGNAL("clicked()"), 
@@ -204,6 +205,12 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         
         self.setFrames(self.dataSourceType)
 
+
+    def connectExternalActions(self, externalSave=None , externalApply=None):
+        if externalSave and self._externalSave is None:
+            self.connect(self.savePushButton, SIGNAL("clicked()"), 
+                         externalSave)
+        self._externalSave = externalSave
 
 
     ## shows and hides frames according to typeComboBox
@@ -290,8 +297,9 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             self.dbFrame.show()
             self.tangoFrame.hide()
             self.populateParameters()
+            
+        self.updateUi(text)
 
-        
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   

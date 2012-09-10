@@ -164,6 +164,8 @@ class DataSourceOpen(Command):
             else:
                 path = self._dsEdit.load()
                 self._fpath = path
+            if hasattr(self._dsEdit,"connectExternalActions"):     
+                self._dsEdit.connectExternalActions(self.receiver.dsourceSave)    
             if path:   
                 self._ds.name = self._dsEdit.name  
                 self._ds.widget = self._dsEdit
@@ -635,7 +637,10 @@ class DataSourceSave(Command):
                 self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
             else:
                 self._dsEdit = self._ds.widget 
-                
+
+            if hasattr(self._dsEdit,"connectExternalActions"):     
+                self._dsEdit.connectExternalActions(self.receiver.dsourceSave)    
+    
             if self._ds.widget in self.receiver.mdi.windowList():
                 self.receiver.mdi.setActiveWindow(self._ds.widget) 
             else:    
@@ -678,6 +683,9 @@ class DataSourceSaveAs(Command):
             else:
                 self._dsEdit = self._ds.widget 
                 
+            if hasattr(self._dsEdit,"connectExternalActions"):     
+                self._dsEdit.connectExternalActions(self.receiver.dsourceSave)    
+
             if self._ds.widget in self.receiver.mdi.windowList():
                 self.receiver.mdi.setActiveWindow(self._ds.widget) 
             else:    
@@ -929,6 +937,9 @@ class ComponentAddDataSourceItem(Command):
             self._ds.widget = self._dsEdit 
         else:
             self._dsEdit = self._ds.widget 
+
+        if hasattr(self._dsEdit,"connectExternalActions"):     
+            self._dsEdit.connectExternalActions(self.receiver.dsourceSave)    
                 
         if not hasattr(self._ds.widget,"createNodes"):
             return
@@ -1117,6 +1128,9 @@ class DataSourceEdit(Command):
             else:
                 self._dsEdit = self._ds.widget 
                 
+            if hasattr(self._dsEdit,"connectExternalActions"):     
+                self._dsEdit.connectExternalActions(self.receiver.dsourceSave)    
+
             if self._ds.widget in self.receiver.mdi.windowList():
                 self.receiver.mdi.setActiveWindow(self._ds.widget) 
             else:    
@@ -1274,6 +1288,10 @@ class DataSourceCurrentItemChanged(Command):
                 self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)  
             else:
                 self._dsEdit = self._ds.widget 
+
+            if hasattr(self._dsEdit,"connectExternalActions"):     
+                self._dsEdit.connectExternalActions(self.receiver.dsourceSave)    
+
             if self._ds.widget in self.receiver.mdi.windowList() or self._wasInWS:
                 if self._wasInWS is None : 
                     self._wasInWS = True

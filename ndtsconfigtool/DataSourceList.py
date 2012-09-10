@@ -59,7 +59,7 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
 
             
 
-    def loadList(self):
+    def loadList(self, externalSave = None, externalApply = None ):
         try:
             dirList=os.listdir(self.directory)
         except:
@@ -81,6 +81,9 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
             dlg.directory = self.directory
             dlg.name = name
             dlg.load()    
+            if hasattr(dlg,"connectExternalActions"):     
+                dlg.connectExternalActions(externalSave)    
+            
             ds = LabeledObject(name, dlg)
             self.datasources[id(ds)] =  ds
             if ds.widget is not None:

@@ -446,7 +446,7 @@ class MainWindow(QMainWindow):
 
     def loadDataSources(self):
 #        self.sourceList.datasources = {}
-        self.sourceList.loadList()
+        self.sourceList.loadList(self.dsourceSave)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 

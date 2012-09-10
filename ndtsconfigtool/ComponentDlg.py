@@ -154,6 +154,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.updateForm()
         
         self.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
+        self.connect(self.closePushButton, SIGNAL("clicked()"), self.close)
         self.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
         self.connect(self.view, SIGNAL("expanded(QModelIndex)"), self.expanded)
         self.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self.collapsed)
@@ -460,6 +461,17 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             finally:
                 if fh is not None:
                     fh.close()
+
+
+    def close(self):
+        if QMessageBox.question(self, "Close component",
+                                "Would you like to close the component ?", 
+                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+            return
+#        self.revert()
+        self.reject()
+
+
 
 
     def saveAs(self):

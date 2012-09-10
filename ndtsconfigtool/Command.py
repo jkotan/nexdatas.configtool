@@ -69,6 +69,12 @@ class ComponentNew(Command):
         if self._comp is not None:
             self.receiver.componentList.removeComponent(self._comp, False)
 
+            if hasattr(self._comp,'widget') and \
+                    self._comp.widget in self.receiver.mdi.windowList():
+            
+                self.receiver.mdi.setActiveWindow(self._comp.widget) 
+                self.receiver.mdi.closeActiveWindow() 
+            
         print "UNDO componentNew"
 
     def clone(self):
@@ -136,8 +142,12 @@ class ComponentOpen(Command):
             if self._fpath:
                 self._cp.widget.setAttribute(Qt.WA_DeleteOnClose)
 
-                self.receiver.mdi.setActiveWindow(self._cp.widget) 
-                self.receiver.mdi.closeActiveWindow() 
+
+
+                if hasattr(self._cp,'widget') and \
+                        self._cp.widget in self.receiver.mdi.windowList():
+                    self.receiver.mdi.setActiveWindow(self._cp.widget) 
+                    self.receiver.mdi.closeActiveWindow() 
 
                 self.receiver.componentList.removeComponent(self._cp, False)
                 self._cp.widget = None
@@ -206,8 +216,12 @@ class DataSourceOpen(Command):
             if self._fpath:
                 self._ds.widget.setAttribute(Qt.WA_DeleteOnClose)
 
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
-                self.receiver.mdi.closeActiveWindow() 
+
+                if hasattr(self._ds,'widget') and \
+                        self._ds.widget in self.receiver.mdi.windowList():
+
+                    self.receiver.mdi.setActiveWindow(self._ds.widget) 
+                    self.receiver.mdi.closeActiveWindow() 
 
                 self.receiver.sourceList.removeDataSource(self._ds, False)
                 self._ds.widget = None
@@ -1117,6 +1131,14 @@ class DataSourceNew(Command):
     def unexecute(self):
         if self._ds is not None:
             self.receiver.sourceList.removeDataSource(self._ds, False)
+
+
+            if hasattr(self._ds,'widget') and \
+                    self._ds.widget in self.receiver.mdi.windowList():
+
+                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+                self.receiver.mdi.closeActiveWindow() 
+
         print "UNDO dsourceNew"
 
     def clone(self):

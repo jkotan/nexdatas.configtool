@@ -1278,30 +1278,6 @@ class DataSourceEdit(Command):
 
 
 
-class DataSourceNew(Command):
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
-        self._ds = None
-        
-    def execute(self):
-        
-        if self._ds is None:
-            self._ds = LabeledObject("", None)
-            
-        self.receiver.sourceList.addDataSource(self._ds)
-        print "EXEC dsourceNew"
-
-    def unexecute(self):
-        if self._ds is not None:
-            self.receiver.sourceList.removeDataSource(self._ds, False)
-        print "UNDO dsourceNew"
-
-    def clone(self):
-        return DataSourceNew(self.receiver, self._slot) 
-
-
-
-
 
 
 

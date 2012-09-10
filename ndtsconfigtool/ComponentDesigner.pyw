@@ -345,7 +345,7 @@ class MainWindow(QMainWindow):
                 fileQuitAction))
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (undoAction,reundoAction))
-        componentsMenu = self.menuBar().addMenu("&Components")    
+        componentsMenu = self.menuBar().addMenu("C&omponents")    
         self.addActions(componentsMenu, ( 
                 componentNewGroupAction, componentNewFieldAction, 
                 componentNewAttributeAction, componentNewLinkAction,

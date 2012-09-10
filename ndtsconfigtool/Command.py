@@ -63,6 +63,7 @@ class ComponentNew(Command):
         if self._comp is None:
             self._comp = LabeledObject("", None)
         self.receiver.componentList.addComponent(self._comp)
+        print "EXEC componentNew"
 
     def unexecute(self):
         if self._comp is not None:
@@ -100,7 +101,7 @@ class ComponentOpen(Command):
 
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentSave, 
-                                                    self.receiver.ComponentApplyItem)    
+                                                    self.receiver.componentApplyItem)    
 
 
             if path:   
@@ -1070,34 +1071,29 @@ class ComponentMerge(Command):
 class ComponentListChanged(Command):
     def __init__(self, receiver,slot):
         Command.__init__(self, receiver, slot)
-        self._ds = None
+        self._cp = None
         self.item = None
         self.name = None
         self.newName = None
         
     def execute(self):
-#        print "componentChange"
         if self.item is not None:
-#            print "self.item is not None:"
             if self.newName is None:
-#                print "self.newName is None:"
                 self.newName = unicode(self.item.text())
-            if self._ds is None:
-#                print "self._ds is None:    "
-                self._ds, self.name = self.receiver.componentList.listItemChanged(self.item)
+            if self._cp is None:
+                self._cp, self.name = self.receiver.componentList.listItemChanged(self.item)
             else:
-#                print "not self._ds is None:    "
-#                print "Name:", self.newName
-                self._ds.name = self.newName
-                self.receiver.componentList.populateComponents()
-            if self._ds.widget is not None:
-                self._ds.widget.name = self.newName
+                self._cp.name = self.newName
+            
+            self.receiver.componentList.populateComponents(self._cp.id)
+            if self._cp.widget is not None:
+                self._cp.widget.name = self.newName
         print "EXEC componentChanged"
 
     def unexecute(self):
-        if self._ds is not None:
-            self._ds.name = self.name 
-            self.receiver.componentList.addComponent(self._ds, False)
+        if self._cp is not None:
+            self._cp.name = self.name 
+            self.receiver.componentList.addComponent(self._cp, False)
         print "UNDO componentChanged"
 
     def clone(self):
@@ -1227,20 +1223,15 @@ class DataSourceListChanged(Command):
         self.newName = None
         
     def execute(self):
-#        print "dsourceChange"
         if self.item is not None:
-#            print "self.item is not None:"
             if self.newName is None:
-#                print "self.newName is None:"
                 self.newName = unicode(self.item.text())
             if self._ds is None:
-#                print "self._ds is None:    "
                 self._ds, self.name = self.receiver.sourceList.listItemChanged(self.item)
             else:
-#                print "not self._ds is None:    "
-#                print "Name:", self.newName
                 self._ds.name = self.newName
-                self.receiver.sourceList.populateDataSources()
+
+            self.receiver.sourceList.populateDataSources(self._ds.id)
             if self._ds.widget is not None:
                 self._ds.widget.name = self.newName
         print "EXEC dsourceChanged"

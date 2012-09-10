@@ -1038,7 +1038,7 @@ class ComponentMerge(Command):
             self._cpEdit = self._cp.widget 
 
         if hasattr(self._cpEdit,"connectExternalActions"):     
-            self._dsEdit.connectExternalActions(self.receiver.componentSave, 
+            self._cpEdit.connectExternalActions(self.receiver.componentSave, 
                                                 self.receiver.componentApplyItem)    
 
 

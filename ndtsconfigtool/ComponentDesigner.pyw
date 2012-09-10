@@ -139,20 +139,6 @@ class MainWindow(QMainWindow):
                              "itemChanged(QListWidgetItem*)")
 
 
-        self.pool.createTask("dsourceCurrentItemChanged",commandArgs, DataSourceCurrentItemChanged,
-                             self.sourceList.sourceListWidget, 
-                             "currentItemChanged(QListWidgetItem*,QListWidgetItem*)")
-
-        self.pool.createTask("componentCurrentItemChanged",commandArgs, ComponentCurrentItemChanged,
-                             self.componentList.componentListWidget, 
-                             "currentItemChanged(QListWidgetItem*,QListWidgetItem*)")
-        
-
-#        self.pool.createTask("componentClicked",commandArgs, ComponentClicked,
-#                             self.componentList.componentListWidget, 
-#                             "clicked(QModelIndex)")
-
-
         self.connect(self.mdi, SIGNAL("windowActivated(QWidget*)"), self.mdiWindowActivated)
 
         self.connect(self.sourceList.sourceListWidget, SIGNAL("itemClicked(QListWidgetItem*)"), 
@@ -750,37 +736,6 @@ class MainWindow(QMainWindow):
         self.pooling = True
 
 
-    def componentClicked(self, index):
-        if self.pooling:
-            cmd = self.pool.getCommand('componentClicked').clone()
-            cmd.index = index
-            cmd.execute()
-            self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo",False)
-            self.pool.setDisabled("reundo",True)   
-
-
-
-
-
-    def dsourceCurrentItemChanged(self, item ,previousItem):
-#        print "curr: " , item.text() if hasattr(item, "text") else item
-#        print "prev: " , previousItem.text() if hasattr(previousItem, "text") else previousItem
-        return
-        if self.pooling:
-#            if item == previousItem  :
-#                return
-            if previousItem is None:
-                return
-            cmd = self.pool.getCommand('dsourceCurrentItemChanged').clone()
-            cmd.item = item
-            cmd.previousItem = previousItem
-            cmd.execute()
-            self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo",False)
-            self.pool.setDisabled("reundo",True)   
-
-
     def componentChanged(self, item):
         cmd = self.pool.getCommand('componentChanged').clone()
         cmd.item = item
@@ -789,24 +744,6 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo",False)
         self.pool.setDisabled("reundo",True)   
 
-
-
-    def componentCurrentItemChanged(self, item ,previousItem):
-        return
-#        print "curr: " , item.text() if hasattr(item, "text") else item
-#        print "prev: " , previousItem.text() if hasattr(previousItem, "text") else previousItem
-        if self.pooling:
-#            if item == previousItem  :
-#                return
-            if previousItem is None or item is None :
-                return
-            cmd = self.pool.getCommand('componentCurrentItemChanged').clone()
-            cmd.item = item
-            cmd.previousItem = previousItem
-            cmd.execute()
-            self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo",False)
-            self.pool.setDisabled("reundo",True)   
 
 
     def componentNew(self):

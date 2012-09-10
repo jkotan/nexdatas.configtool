@@ -393,7 +393,7 @@ class MainWindow(QMainWindow):
                                           dsourceEditAction, None, 
                                           dsourceSaveAction,
                                           dsourceSaveAsAction,
-                                          dsourceSaveAllAction,
+                                          dsourceSaveAllAction, None,
                                           dsourceRemoveAction))
  
         viewMenu = self.menuBar().addMenu("&View")

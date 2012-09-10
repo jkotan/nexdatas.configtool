@@ -142,7 +142,7 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
 
             
 
-    def loadList(self, actions):
+    def loadList(self, actions, externalSave = None, externalApply = None ):
         try:
             dirList=os.listdir(self.directory)
         except:
@@ -164,6 +164,9 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
             dlg.addContextMenu(actions)
 
             dlg.load()    
+            if hasattr(dlg,"connectExternalActions"):     
+                dlg.connectExternalActions(externalSave, externalApply)    
+
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp
             if cp.widget is not None:

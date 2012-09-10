@@ -69,17 +69,13 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
 
         self.updateUi()
 
-        self.connect(self.applyPushButton, SIGNAL("clicked()"), 
-                     self.apply)
-        self.connect(self.resetPushButton, SIGNAL("clicked()"), 
-                     self.reset)
-        self.connect(self.attributeTableWidget, 
-                     SIGNAL("itemChanged(QTableWidgetItem*)"),
+#        self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+#                     self.apply)
+        self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.connect(self.attributeTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.tableItemChanged)
-        self.connect(self.addPushButton, SIGNAL("clicked()"), 
-                     self.addAttribute)
-        self.connect(self.removePushButton, SIGNAL("clicked()"), 
-                     self.removeAttribute)
+        self.connect(self.addPushButton, SIGNAL("clicked()"), self.addAttribute)
+        self.connect(self.removePushButton, SIGNAL("clicked()"), self.removeAttribute)
 
 
     def setFromNode(self, node=None):

@@ -42,6 +42,17 @@ class NodeDlg(QDialog):
 
         self.subItems = []
 
+        self.applyPushButton = None
+        self._externalApply = None
+
+
+    def connectExternalActions(self,  externalApply=None):
+        if externalApply and self._externalApply is None and self.applyPushButton:
+            self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+                         externalApply)
+            self._externalApply = externalApply
+        
+
     def reset(self):
         index = self.view.currentIndex()
         self.setFromNode()

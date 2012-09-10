@@ -97,6 +97,12 @@ class ComponentOpen(Command):
             else:
                 path = self._cpEdit.load()
                 self._fpath = path
+
+            if hasattr(self._cpEdit,"connectExternalActions"):     
+                self._cpEdit.connectExternalActions(self.receiver.componentSave, 
+                                                    self.receiver.ComponentApplyItem)    
+
+
             if path:   
                 self._cp.name = self._cpEdit.name  
                 self._cp.widget = self._cpEdit
@@ -265,6 +271,11 @@ class ComponentCurrentItemChanged(Command):
             else:
                 self._cpEdit = self._cp.widget 
 #                print  "ID-e", self._cp.id
+            if hasattr(self._cpEdit,"connectExternalActions"):     
+                self._cpEdit.connectExternalActions(self.receiver.componentSave, 
+                                                    self.receiver.ComponentApplyItem)    
+
+
             if self._cp.widget in self.receiver.mdi.windowList() or self._wasInWS:
  #               print "show"
                 if self._wasInWS is None : 
@@ -370,6 +381,12 @@ class ComponentEdit(Command):
             else:
                 self._cpEdit = self._cp.widget 
                 
+            if hasattr(self._cpEdit,"connectExternalActions"):     
+                self._cpEdit.connectExternalActions(self.receiver.componentSave, 
+                                                    self.receiver.componentApplyItem)    
+
+
+
             if self._cp.widget in self.receiver.mdi.windowList():
                 self.receiver.mdi.setActiveWindow(self._cp.widget) 
             else:    
@@ -424,6 +441,12 @@ class ComponentClear(Command):
         self._cpEdit.createHeader()
         self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
                 
+
+        if hasattr(self._cpEdit,"connectExternalActions"):     
+            self._cpEdit.connectExternalActions(self.receiver.componentSave, 
+                                                self.receiver.componentApplyItem)    
+
+
         if self._cp.widget in self.receiver.mdi.windowList():
             self.receiver.mdi.setActiveWindow(self._cp.widget) 
         else:    
@@ -464,6 +487,12 @@ class ComponentSave(Command):
             else:
                 self._cpEdit = self._cp.widget 
                 
+            if hasattr(self._cpEdit,"connectExternalActions"):     
+                self._cpEdit.connectExternalActions(self.receiver.componentSave, 
+                                                    self.receiver.componentApplyItem)    
+
+
+
             if self._cp.widget in self.receiver.mdi.windowList():
                 self.receiver.mdi.setActiveWindow(self._cp.widget) 
             else:    
@@ -531,6 +560,12 @@ class ComponentSaveAs(Command):
             else:
                 self._cpEdit = self._cp.widget 
                 
+
+            if hasattr(self._cpEdit,"connectExternalActions"):     
+                self._cpEdit.connectExternalActions(self.receiver.componentSave, 
+                                                    self.receiver.componentApplyItem)    
+
+
             if self._cp.widget in self.receiver.mdi.windowList():
                 self.receiver.mdi.setActiveWindow(self._cp.widget) 
             else:    
@@ -1021,6 +1056,32 @@ class ComponentAddDataSourceItem(Command):
 
 
 
+class ComponentApplyItem(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._cp = None
+        self._cpEdit = None
+        
+        
+    def execute(self):
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is not None:
+            if self._cp.widget is not None:
+                if hasattr(self._cp.widget,"applyItem"):
+                    self._cp.widget.applyItem()
+
+            
+        print "EXEC componentApplyItem"
+
+    def unexecute(self):
+        print "UNDO componentApplyItem"
+
+    def clone(self):
+        return ComponentApplyItem(self.receiver, self._slot) 
+
+
+
 class ComponentNewItem(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
@@ -1074,6 +1135,12 @@ class ComponentMerge(Command):
             self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
         else:
             self._cpEdit = self._cp.widget 
+
+        if hasattr(self._cpEdit,"connectExternalActions"):     
+            self._dsEdit.connectExternalActions(self.receiver.componentSave, 
+                                                self.receiver.componentApplyItem)    
+
+
                 
         if self._cp.widget in self.receiver.mdi.windowList():
             self.receiver.mdi.setActiveWindow(self._cp.widget) 

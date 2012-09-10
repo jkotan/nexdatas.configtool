@@ -65,6 +65,10 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.name = ""
         self.fpath = ""
 
+
+        self._externalSave = None
+        self._externalApply = None
+
         self.tagClasses = {"field":FieldDlg, 
                            "group":GroupDlg, 
                            "definition":DefinitionDlg, 
@@ -94,6 +98,14 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.frameLayout = QGridLayout()
         self.frameLayout.addWidget(self.widget)
         self.frame.setLayout(self.frameLayout)
+
+
+    def applyItem(self):
+        if not self.model or not self.view or not self.widget:
+            return
+        if hasattr(self.widget,'apply'):
+            self.widget.apply()
+        
 
     def addItem(self,name):
         if not name in self.tagClasses.keys():
@@ -153,11 +165,20 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.setupUi(self)
         self.updateForm()
         
-        self.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
+#        self.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
         self.connect(self.closePushButton, SIGNAL("clicked()"), self.close)
         self.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
         self.connect(self.view, SIGNAL("expanded(QModelIndex)"), self.expanded)
         self.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self.collapsed)
+
+
+    def connectExternalActions(self, externalSave=None , externalApply=None):
+        if externalSave and self._externalSave is None:
+            self.connect(self.savePushButton, SIGNAL("clicked()"), 
+                         externalSave)
+            self._externalSave = externalSave
+        if externalApply and self._externalApply is None:
+            self._externalApply = externalApply
 
 
     def tagClicked(self, index):
@@ -182,6 +203,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             self.widget.root = self.document
             self.widget.setFromNode(node)
             self.widget.createGUI()
+            if hasattr(self.widget,"connectExternalActions"):
+                self.widget.connectExternalActions(self._externalApply)
             if hasattr(self.widget,"treeMode"):
                 self.widget.treeMode()
             self.widget.model = self.model

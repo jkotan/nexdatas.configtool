@@ -97,19 +97,13 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
 
         self.updateUi()
 
-        self.connect(self.applyPushButton, SIGNAL("clicked()"), 
-                     self.apply)
-        self.connect(self.resetPushButton, SIGNAL("clicked()"), 
-                     self.reset)
+#       self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
+        self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.attributeTableWidget, 
-                     SIGNAL("itemChanged(QTableWidgetItem*)"),
-                     self.tableItemChanged)
-        self.connect(self.addPushButton, SIGNAL("clicked()"), 
-                     self.addAttribute)
-        self.connect(self.removePushButton, SIGNAL("clicked()"), 
-                     self.removeAttribute)
-        self.connect(self.dimPushButton, SIGNAL("clicked()"), 
-                     self.changeDimensions)
+                     SIGNAL("itemChanged(QTableWidgetItem*)"), self.tableItemChanged)
+        self.connect(self.addPushButton, SIGNAL("clicked()"), self.addAttribute)
+        self.connect(self.removePushButton, SIGNAL("clicked()"), self.removeAttribute)
+        self.connect(self.dimPushButton, SIGNAL("clicked()"), self.changeDimensions)
 
         self.populateAttributes()
 

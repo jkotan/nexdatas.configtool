@@ -189,6 +189,11 @@ class MainWindow(QMainWindow):
             "Save All", "componentSaveAll", commandArgs, ComponentSaveAll,
             "", "componentsaveall", "Save the all components")
 
+        componentApplyItemAction = self.pool.createCommand(
+            "&Apply Item", "componentApplyItem", commandArgs, ComponentApplyItem,
+            "", "componentsapplyitem", "Apply the component item")
+
+
         dsourceApplyAction = self.pool.createCommand(
             "Apply DataSource", "dsourceApply", commandArgs, DataSourceApply,
             "", "datasourceapply", "Apply the datasource")
@@ -360,6 +365,7 @@ class MainWindow(QMainWindow):
                 componentNewAttributeAction, componentNewLinkAction,
                 componentNewDataSourceAction,None, 
                 componentRemoveItemAction, None,
+                componentApplyItemAction, None,
                 componentLoadComponentAction, componentLoadDataSourceAction,
                 None,
                 componentAddDataSourceAction,
@@ -462,7 +468,10 @@ class MainWindow(QMainWindow):
 
     def loadComponents(self):
 #        self.componentList.components = {}
-        self.componentList.loadList(self.contextMenuActions)
+        self.componentList.loadList(self.contextMenuActions,
+                                    self.componentSave,
+                                    self.componentApplyItem
+                                    )
         idc =  self.componentList.components.itervalues().next().id \
             if len(self.componentList.components) else None
 
@@ -534,7 +543,6 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("reundo",True)   
 
 
-
     def componentReloadList(self):
         cmd = self.pool.getCommand('componentReloadList').clone()
         cmd.execute()
@@ -542,6 +550,13 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo",False)
         self.pool.setDisabled("reundo",True)   
 
+
+    def componentApplyItem(self):
+        cmd = self.pool.getCommand('componentApplyItem').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
 
 
     def dsourceReloadList(self):
@@ -557,6 +572,7 @@ class MainWindow(QMainWindow):
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)
         self.pool.setDisabled("reundo",True)   
+
 
     def dsourceSave(self):
         cmd = self.pool.getCommand('dsourceSave').clone()

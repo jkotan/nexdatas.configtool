@@ -71,10 +71,8 @@ class StrategyDlg(NodeDlg, ui_strategydlg.Ui_StrategyDlg):
 
         self.updateForm()
 
-        self.connect(self.applyPushButton, SIGNAL("clicked()"), 
-                     self.apply)
-        self.connect(self.resetPushButton, SIGNAL("clicked()"), 
-                     self.reset)
+#        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
+        self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
 
 
     def setFrames(self, text):

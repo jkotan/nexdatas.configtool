@@ -185,8 +185,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
         self.resize(460, 440)
 
-        self.connect(self.applyPushButton, SIGNAL("clicked()"), 
-                     self.apply)
+#        self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+#                     self.apply)
 #        self.connect(self.savePushButton, SIGNAL("clicked()"), 
 #                     self.save)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), 
@@ -211,6 +211,10 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             self.connect(self.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
         self._externalSave = externalSave
+        if externalApply and self._externalApply is None:
+            self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+                     externalApply)
+        self._externalApply = externalApply
 
 
     ## shows and hides frames according to typeComboBox

@@ -189,6 +189,11 @@ class MainWindow(QMainWindow):
             "Save All", "componentSaveAll", commandArgs, ComponentSaveAll,
             "", "componentsaveall", "Save the all components")
 
+        dsourceApplyAction = self.pool.createCommand(
+            "Apply DataSource", "dsourceApply", commandArgs, DataSourceApply,
+            "", "datasourceapply", "Apply the datasource")
+
+
         dsourceSaveAction = self.pool.createCommand(
             "Save DataSource", "dsourceSave", commandArgs, DataSourceSave,
             "", "datasourcesave", "Save the datasource")
@@ -446,7 +451,7 @@ class MainWindow(QMainWindow):
 
     def loadDataSources(self):
 #        self.sourceList.datasources = {}
-        self.sourceList.loadList(self.dsourceSave)
+        self.sourceList.loadList(self.dsourceSave, self.dsourceApply)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 
@@ -541,6 +546,13 @@ class MainWindow(QMainWindow):
 
     def dsourceReloadList(self):
         cmd = self.pool.getCommand('dsourceReloadList').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo",False)
+        self.pool.setDisabled("reundo",True)   
+
+    def dsourceApply(self):
+        cmd = self.pool.getCommand('dsourceApply').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo",False)

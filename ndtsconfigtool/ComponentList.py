@@ -121,8 +121,12 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
     def populateComponents(self, selectedComponent = None, edit = False):
         selected = None
         self.componentListWidget.clear()
-        for cp in self.components.keys():
-            name = self.components[cp].name
+        
+        slist = [(self.components[key].name, key) 
+                 for key in self.components.keys()]
+        slist.sort()
+        
+        for name, cp in slist:
             item  = QListWidgetItem(QString("%s" % name))
             item.setData(Qt.UserRole, QVariant(self.components[cp].id))
             item.setFlags(item.flags() | Qt.ItemIsEditable)

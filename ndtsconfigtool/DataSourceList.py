@@ -149,8 +149,12 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
     def populateDataSources(self, selectedDataSource = None, edit = False):
         selected = None
         self.sourceListWidget.clear()
-        for ds in self.datasources.keys():
-            name = self.datasources[ds].name
+
+        slist = [(self.datasources[key].name, key) 
+                 for key in self.datasources.keys()]
+        slist.sort()
+
+        for name, ds in slist:
             item = QListWidgetItem(QString("%s" % name))
             item.setData(Qt.UserRole, QVariant(self.datasources[ds].id))
             item.setFlags(item.flags() | Qt.ItemIsEditable)

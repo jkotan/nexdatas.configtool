@@ -123,6 +123,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                  self.dbQuery,
                  dbParameters 
                  )
+#        print  "GET", str(state)
         return state
 
 
@@ -142,7 +143,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
          self.dbQuery,
          dbParameters 
          ) = state
-
+#        print "SET",  str(state)
         self.dbParameters = copy.copy(dbParameters)
 
     def updateForm(self):    
@@ -486,72 +487,76 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         
         value = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
         
+
         if value == 'CLIENT':
-            self.dataSourceType = value
+            self.dataSourceType = unicode(value)
 
             record = self.node.firstChildElement(QString("record"))           
             attributeMap = record.attributes()
-            self.clientRecordName = attributeMap.namedItem("name").nodeValue() \
-                if attributeMap.contains("name") else ""
+            self.clientRecordName = unicode(attributeMap.namedItem("name").nodeValue() \
+                                                if attributeMap.contains("name") else "")
+
 
 
         elif value == 'TANGO':
-            self.dataSourceType = value
+            self.dataSourceType = unicode(value)
 
-            record = self.node.firstChildElement(QString("record"))           
+            record = self.node.firstChildElement(QString("record"))
             attributeMap = record.attributes()
-            self.tangoMemberName = attributeMap.namedItem("name").nodeValue() \
-                if attributeMap.contains("name") else ""
+            self.tangoMemberName = unicode(attributeMap.namedItem("name").nodeValue() \
+                                               if attributeMap.contains("name") else "")
 
-            device = self.node.firstChildElement(QString("device"))           
+            device = self.node.firstChildElement(QString("device"))
             attributeMap = device.attributes()
-            self.tangoDeviceName = attributeMap.namedItem("name").nodeValue() \
-                if attributeMap.contains("name") else ""
-            self.tangoMemberType = attributeMap.namedItem("member").nodeValue() \
-                if attributeMap.contains("member") else "attribute"
-            self.tangoHost = attributeMap.namedItem("hostname").nodeValue() \
-                if attributeMap.contains("hostname") else ""
-            self.tangoPort = attributeMap.namedItem("port").nodeValue() \
-                if attributeMap.contains("port") else ""
+            self.tangoDeviceName = unicode(attributeMap.namedItem("name").nodeValue() \
+                                               if attributeMap.contains("name") else "")
+            self.tangoMemberType = unicode(attributeMap.namedItem("member").nodeValue() \
+                                               if attributeMap.contains("member") else "attribute")
+            self.tangoHost = unicode(attributeMap.namedItem("hostname").nodeValue() \
+                                         if attributeMap.contains("hostname") else "")
+            self.tangoPort = unicode(attributeMap.namedItem("port").nodeValue() \
+                                         if attributeMap.contains("port") else "")
 
                                     
         elif value == 'DB':
-            self.dataSourceType = value
+            self.dataSourceType = unicode(value)
             
             database = self.node.firstChildElement(QString("database"))           
             attributeMap = database.attributes()
 
             for i in range(attributeMap.count()):
-                name = attributeMap.item(i).nodeName()
+                name = unicode(attributeMap.item(i).nodeName())
                 if name == 'dbtype':
-                    self.dbType = attributeMap.item(i).nodeValue()
+                    self.dbType = unicode(attributeMap.item(i).nodeValue())
                 elif name in self.dbmap:
-                    self.dbParameters[self.dbmap[name]] = attributeMap.item(i).nodeValue()
-                    self._dbParam[self.dbmap[name]] = attributeMap.item(i).nodeValue()
+                    self.dbParameters[self.dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
+                    self._dbParam[self.dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
 
                     
             if not self.dbType:
                 self.dbType = 'MYSQL'
                     
-            text = self.getText(database)    
+            text = unicode(self.getText(database))
             self.dbParameters['Oracle DSN'] = unicode(text).strip() if text else ""
             self._dbParam['Oracle DSN'] = unicode(text).strip() if text else ""
 
 
-            query = self.node.firstChildElement(QString("query"))           
+            query = self.node.firstChildElement(QString("query"))
             attributeMap = query.attributes()
 
-            self.dbDataFormat = attributeMap.namedItem("format").nodeValue() \
-                if attributeMap.contains("format") else "SCALAR"
+            self.dbDataFormat = unicode(attributeMap.namedItem("format").nodeValue() \
+                                            if attributeMap.contains("format") else "SCALAR")
 
 
-            text = self.getText(query)    
+            text = unicode(self.getText(query))
             self.dbQuery = unicode(text).strip() if text else ""
+
 
         doc = self.node.firstChildElement(QString("doc"))           
         text = self.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
+        print "DONE"
 
     ## accepts and save input text strings
     # \brief It copies the parameters and saves the dialog
@@ -695,7 +700,11 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         if self.node  and self.root and self.node.isElement():
             self.updateNode(index)
 
-            self.view.selectionModel().select(index, QItemSelectionModel.ClearAndSelect or QItemSelectionModel.Rows ) 
+#            if index.isValid():
+#                self.view.selectionModel().select(index, QItemSelectionModel.Rows or QItemSelectionModel.ClearAndSelect ) 
+#                self.view.selectionModel().select(index, QItemSelectionModel.ClearAndSelect ) 
+#            else:
+#                print "Index not valid"
             if self.model:
                 self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
                 self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)

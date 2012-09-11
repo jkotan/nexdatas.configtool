@@ -62,6 +62,7 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
     def loadList(self, externalSave = None, externalApply = None ):
         try:
             dirList=os.listdir(self.directory)
+            print "DS:", str(dirList)
         except:
             try:
                 dirList=os.listdir("./datasources")

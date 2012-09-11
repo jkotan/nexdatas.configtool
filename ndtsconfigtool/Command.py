@@ -973,25 +973,62 @@ class ComponentAddDataSourceItem(Command):
 
 
 
+
+
+
 class ComponentApplyItem(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._cp = None
-        self._cpEdit = None
+        self._oldstate = None
+        self._newstate = None
         
         
     def execute(self):
         if self._cp is None:
-            self._cp = self.receiver.componentList.currentListComponent()
-        if self._cp is not None:
-            if self._cp.widget is not None:
-                if hasattr(self._cp.widget,"applyItem"):
-                    self._cp.widget.applyItem()
+            self._cp = self.receiver.componentList.currentListComponent()    
 
+        if self._cp is not None and self._cp.widget is not None:
+            if self._newstate is None:
+                if self._oldstate is None and hasattr(self._cp.widget,"widget") and \
+                        hasattr(self._cp.widget.widget,"getState"):
+                    self._oldstate = self._cp.widget.widget.getState() 
+                    
+                    if hasattr(self._cp.widget,"applyItem"):
+                        self._cp.widget.applyItem()    
+                        
+            elif hasattr(self._cp.widget,"widget") and hasattr(self._cp.widget.widget,"setState"):
+                self.receiver.componentList.components[self._cp.id].widget.widget.setState(self._newstate)
+                self._cp.widget.widget.updateForm()
+
+            if self._cp.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._cp.widget) 
+            else:    
+                self.receiver.mdi.addWindow(self._cp.widget)
+                self._cp.widget.show()
+    
+                    
+            if hasattr(self._cp.widget,"widget") and hasattr(self._cp.widget.widget,"getState") and \
+                    self._newstate is None:
+                 self._newstate = self._cp.widget.widget.getState() 
             
         print "EXEC componentApplyItem"
 
     def unexecute(self):
+        if self._cp is not None and hasattr(self._cp,'widget') and  self._cp.widget is not None:
+        
+            if hasattr(self._cp.widget,"widget") and hasattr(self._cp.widget.widget,"setState"):
+                self.receiver.componentList.components[self._cp.id].widget.widget.setState(self._oldstate)
+                self.receiver.componentList.components[self._cp.id].widget.widget.updateForm()
+
+
+            if self._cp.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._cp.widget) 
+            else:
+                self.receiver.mdi.addWindow(self._cp.widget)
+                self._cp.widget.show()
+            
+            
         print "UNDO componentApplyItem"
 
     def clone(self):

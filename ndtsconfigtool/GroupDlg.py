@@ -110,17 +110,19 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
         if node:
             self.node = node
         attributeMap = self.node.attributes()
-        nNode = self.node.nodeName()
+        nNode = unicode(self.node.nodeName())
 
-        self.name = attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else ""
-        self.nexusType = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
+        self.name = unicode(
+            attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else "")
+        self.nexusType = unicode(
+            attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else "")
 
         self.attributes.clear()    
         for i in range(attributeMap.count()):
             attribute = attributeMap.item(i)
-            attrName = attribute.nodeName()
+            attrName = unicode(attribute.nodeName())
             if attrName != "name" and attrName != "type":
-                self.attributes[unicode(attribute.nodeName())] = unicode(attribute.nodeValue())
+                self.attributes[attrName] = unicode(attribute.nodeValue())
 
         doc = self.node.firstChildElement(QString("doc"))           
         text = self.getText(doc)    

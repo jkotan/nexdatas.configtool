@@ -29,6 +29,7 @@ from PyQt4.QtXml import (QDomDocument, QDomNode)
 from AttributeDlg import AttributeDlg
 from DimensionsDlg import DimensionsDlg
 
+import copy
 
 from NodeDlg import NodeDlg 
 
@@ -63,6 +64,40 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
 
         ## allowed subitems
         self.subItems = ["attribute", "datasource", "doc", "dimensions", "enumeration", "strategy"]
+
+
+    def getState(self):
+        attributes = copy.copy(self.attributes)
+        dimensions = copy.copy(self.dimensions)
+
+        state = (self.name,
+                 self.nexusType,
+                 self.units,
+                 self.value,
+                 self.doc,
+                 self.dimDoc,
+                 attributes,
+                 dimensions
+                 )
+#        print  "GET", str(state)
+        return state
+
+
+
+    def setState(self, state):
+
+        (self.name,
+         self.nexusType,
+         self.units,
+         self.value,
+         self.doc,
+         self.dimDoc,
+         attributes,
+         dimensions
+         ) = state
+#        print "SET",  str(state)
+        self.attributes = copy.copy(attributes)
+        self.dimensions = copy.copy(dimensions)
 
 
 
@@ -112,14 +147,14 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         if node:
             self.node = node
         attributeMap = self.node.attributes()
-        nNode = self.node.nodeName()
+        nNode = unicode(self.node.nodeName())
 
-        self.name = attributeMap.namedItem("name").nodeValue() \
-            if attributeMap.contains("name") else ""
-        self.nexusType = attributeMap.namedItem("type").nodeValue() \
-            if attributeMap.contains("type") else ""
-        self.units = attributeMap.namedItem("units").nodeValue() \
-            if attributeMap.contains("units") else ""
+        self.name = unicode(attributeMap.namedItem("name").nodeValue() \
+                                if attributeMap.contains("name") else "")
+        self.nexusType = unicode(attributeMap.namedItem("type").nodeValue() \
+                                     if attributeMap.contains("type") else "")
+        self.units = unicode(attributeMap.namedItem("units").nodeValue() \
+                                 if attributeMap.contains("units") else "")
 
         text = self.getText(self.node)    
         self.value = unicode(text).strip() if text else ""
@@ -127,9 +162,9 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         self.attributes.clear()    
         for i in range(attributeMap.count()):
             attribute = attributeMap.item(i)
-            attrName = attribute.nodeName()
+            attrName = unicode(attribute.nodeName())
             if attrName != "name" and attrName != "type" and attrName != "units":
-                self.attributes[unicode(attribute.nodeName())] = unicode(attribute.nodeValue())
+                self.attributes[attrName] = unicode(attribute.nodeValue())
 
 
         dimens = self.node.firstChildElement(QString("dimensions"))           

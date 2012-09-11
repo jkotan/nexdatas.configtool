@@ -3,6 +3,6 @@
   <datasource type="TANGO">
     <record name="position"/>
     <device port="10000" hostname="hasso.desy.de" member="attribute" name="dev/motor1/p09"/>
-    <doc>test tango datasourcesss</doc>
+    <doc>test tango datasource</doc>
   </datasource>
 </definition>

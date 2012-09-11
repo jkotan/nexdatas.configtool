@@ -25,7 +25,7 @@ from PyQt4.QtGui import *
 import ui_datasourcedlg
 from PyQt4.QtXml import (QDomDocument, QDomNode)
 from NodeDlg import NodeDlg 
-
+import copy
 
 ## dialog defining datasources
 class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
@@ -96,6 +96,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
         ## datasource directory
         self.directory = ""
+
         ## datasource name
         self.name = None
 
@@ -106,6 +107,43 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         ## allowed subitems
         self.subItems = ["record", "doc", "device", "database", "query", "door"]
 
+    def getState(self):
+        dbParameters = copy.copy(self.dbParameters)
+
+        state = (self.dataSourceType,
+                 self.doc,
+                 self.clientRecordName, 
+                 self.tangoDeviceName,
+                 self.tangoMemberName,
+                 self.tangoMemberType,
+                 self.tangoHost,
+                 self.tangoPort,
+                 self.dbType,
+                 self.dbDataFormat,
+                 self.dbQuery,
+                 dbParameters 
+                 )
+        return state
+
+
+
+    def setState(self, state):
+
+        (self.dataSourceType,
+         self.doc,
+         self.clientRecordName, 
+         self.tangoDeviceName,
+         self.tangoMemberName,
+         self.tangoMemberType,
+         self.tangoHost,
+         self.tangoPort,
+         self.dbType,
+         self.dbDataFormat,
+         self.dbQuery,
+         dbParameters 
+         )=state
+
+        self.dbParameters = copy.copy(dbParameters)
 
     def updateForm(self):    
         if self.doc is not None:
@@ -155,6 +193,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             self.dQueryLineEdit.setText(self.dbQuery)
                 
         
+        self._dbParam = {}
         for par in self.dbParameters.keys():
             index = self.dParamComboBox.findText(unicode(par))
             if  index < 0 :
@@ -165,6 +204,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             else:
                 self._dbParam[unicode(par)]=self.dbParameters[(unicode(par))]
         self.populateParameters()
+        self.setFrames(self.dataSourceType)
     
     ## sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode 

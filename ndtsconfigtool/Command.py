@@ -30,6 +30,8 @@ from ComponentList import ComponentList
 from ComponentDlg import ComponentDlg
 from LabeledObject import LabeledObject
 
+import copy
+
 ## abstract command
 class Command(object):
     
@@ -550,42 +552,46 @@ class DataSourceApply(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._ds = None
-        self._dsEdit = None
+        self._oldstate = None
+        self._newstate = None
         
         
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
-        if self._ds is not None:
-            if self._ds.widget is None:
-                self._dsEdit = DataSourceDlg()
-                self._dsEdit.ids = self._ds.id
-                self._dsEdit.directory = self.receiver.sourceList.directory
-                self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
-                self._dsEdit.createGUI()
-                self._dsEdit.createHeader()
-                self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
+        if self._ds is not None and self._ds.widget is not None:
+            if self._newstate is None:
+                if self._oldstate is None:
+                    self._oldstate = self._ds.widget.getState() 
             else:
-                self._dsEdit = self._ds.widget 
-
-            if hasattr(self._dsEdit,"connectExternalActions"):     
-                self._dsEdit.connectExternalActions(self.receiver.dsourceSave, 
-                                                    self.receiver.dsourceApply)    
-    
+                self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
+                self._ds.widget.updateForm()
             if self._ds.widget in self.receiver.mdi.windowList():
                 self.receiver.mdi.setActiveWindow(self._ds.widget) 
             else:    
-                self.receiver.mdi.addWindow(self._dsEdit)
-                self._dsEdit.show()
-                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
-                self._ds.widget = self._dsEdit 
+                self.receiver.mdi.addWindow(self._ds.widget)
+                self._ds.widget.show()
+    
                     
-            self._dsEdit.apply()    
-
+            self._ds.widget.apply()    
+            self._newstate = self._ds.widget.getState() 
             
         print "EXEC dsourceApply"
 
     def unexecute(self):
+        if self._ds is not None and hasattr(self._ds,'widget') and  self._ds.widget is not None:
+        
+            self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._oldstate)
+            self.receiver.sourceList.datasources[self._ds.id].widget.updateForm()
+
+
+            if self._ds.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            else:
+                self.receiver.mdi.addWindow(self._ds.widget)
+                self._ds.widget.show()
+            
+            
         print "UNDO dsourceApply"
 
     def clone(self):

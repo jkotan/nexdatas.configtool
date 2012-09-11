@@ -68,7 +68,7 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
         self.updateUi()
 
 
-#        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
+        #        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
 
     def setFromNode(self, node=None):

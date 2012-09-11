@@ -170,7 +170,7 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
 
             dlg.load()    
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(externalSave, externalApply)    
+                dlg.connectExternalActions(externalApply, externalSave)    
 
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp

@@ -167,12 +167,13 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         
 #        self.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
         self.connect(self.closePushButton, SIGNAL("clicked()"), self.close)
+        self.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
         self.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
         self.connect(self.view, SIGNAL("expanded(QModelIndex)"), self.expanded)
         self.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self.collapsed)
 
 
-    def connectExternalActions(self, externalSave=None , externalApply=None):
+    def connectExternalActions(self, externalApply=None , externalSave=None ):
         if externalSave and self._externalSave is None:
             self.connect(self.savePushButton, SIGNAL("clicked()"), 
                          externalSave)

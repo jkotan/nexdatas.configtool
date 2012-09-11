@@ -82,7 +82,7 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
             dlg.name = name
             dlg.load()    
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(externalSave, externalApply)    
+                dlg.connectExternalActions(externalApply, externalSave)    
             
             ds = LabeledObject(name, dlg)
             self.datasources[id(ds)] =  ds

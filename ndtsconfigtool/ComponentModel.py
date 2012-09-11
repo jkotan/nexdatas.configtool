@@ -160,7 +160,8 @@ class ComponentModel(QAbstractItemModel):
         status = item.removeChildren(position, rows)
         self.endRemoveRows()
         return status
-    
+
+
 
 if __name__ == "__main__":
     import sys

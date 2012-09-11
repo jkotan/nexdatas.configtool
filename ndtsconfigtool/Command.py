@@ -108,9 +108,9 @@ class ComponentOpen(Command):
                 self._fpath = path
 
             if hasattr(self._cpEdit,"connectExternalActions"):     
-                self._cpEdit.connectExternalActions(self.receiver.componentSave, 
-                                                    self.receiver.componentApplyItem)    
-
+                self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
+                                                    self.receiver.componentSave)      
+                
 
             if path:   
                 self._cp.name = self._cpEdit.name  
@@ -184,8 +184,7 @@ class DataSourceOpen(Command):
                 path = self._dsEdit.load()
                 self._fpath = path
             if hasattr(self._dsEdit,"connectExternalActions"):     
-                self._dsEdit.connectExternalActions(self.receiver.dsourceSave,
-                                                    self.receiver.dsourceApply)    
+                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)    
             if path:   
                 self._ds.name = self._dsEdit.name  
                 self._ds.widget = self._dsEdit
@@ -299,8 +298,8 @@ class ComponentEdit(Command):
                 self._cpEdit = self._cp.widget 
                 
             if hasattr(self._cpEdit,"connectExternalActions"):     
-                self._cpEdit.connectExternalActions(self.receiver.componentSave, 
-                                                    self.receiver.componentApplyItem)    
+                self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
+                                                    self.receiver.componentSave)
 
 
 
@@ -360,8 +359,7 @@ class ComponentClear(Command):
                 
 
         if hasattr(self._cpEdit,"connectExternalActions"):     
-            self._cpEdit.connectExternalActions(self.receiver.componentSave, 
-                                                self.receiver.componentApplyItem)    
+            self._cpEdit.connectExternalActions(self.receiver.componentApplyItem, self.receiver.componentSave)
 
 
         if self._cp.widget in self.receiver.mdi.windowList():
@@ -405,8 +403,8 @@ class ComponentSave(Command):
                 self._cpEdit = self._cp.widget 
                 
             if hasattr(self._cpEdit,"connectExternalActions"):     
-                self._cpEdit.connectExternalActions(self.receiver.componentSave, 
-                                                    self.receiver.componentApplyItem)    
+                self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
+                                                    self.receiver.componentSave)
 
 
 
@@ -479,8 +477,8 @@ class ComponentSaveAs(Command):
                 
 
             if hasattr(self._cpEdit,"connectExternalActions"):     
-                self._cpEdit.connectExternalActions(self.receiver.componentSave, 
-                                                    self.receiver.componentApplyItem)    
+                self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
+                                                    self.receiver.componentSave)
 
 
             if self._cp.widget in self.receiver.mdi.windowList():
@@ -646,8 +644,7 @@ class DataSourceSave(Command):
                 self._dsEdit = self._ds.widget 
 
             if hasattr(self._dsEdit,"connectExternalActions"):     
-                self._dsEdit.connectExternalActions(self.receiver.dsourceSave,
-                                                    self.receiver.dsourceApply)    
+                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)   
     
             if self._ds.widget in self.receiver.mdi.windowList():
                 self.receiver.mdi.setActiveWindow(self._ds.widget) 
@@ -696,8 +693,8 @@ class DataSourceSaveAs(Command):
                 self._dsEdit = self._ds.widget 
                 
             if hasattr(self._dsEdit,"connectExternalActions"):     
-                self._dsEdit.connectExternalActions(self.receiver.dsourceSave,
-                                                    self.receiver.dsourceApply)    
+                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)
+                                                        
 
             if self._ds.widget in self.receiver.mdi.windowList():
                 self.receiver.mdi.setActiveWindow(self._ds.widget) 
@@ -952,8 +949,7 @@ class ComponentAddDataSourceItem(Command):
             self._dsEdit = self._ds.widget 
 
         if hasattr(self._dsEdit,"connectExternalActions"):     
-            self._dsEdit.connectExternalActions(self.receiver.dsourceSave,
-                                                self.receiver.dsourceApply)    
+            self._dsEdit.connectExternalActions(self.receiver.dsourceApply,self.receiver.dsourceSave)
                 
         if not hasattr(self._ds.widget,"createNodes"):
             return
@@ -1058,9 +1054,7 @@ class ComponentMerge(Command):
             self._cpEdit = self._cp.widget 
 
         if hasattr(self._cpEdit,"connectExternalActions"):     
-            self._cpEdit.connectExternalActions(self.receiver.componentSave, 
-                                                self.receiver.componentApplyItem)    
-
+            self._cpEdit.connectExternalActions(self.receiver.componentApplyItem, self.receiver.componentSave)
 
                 
         if self._cp.widget in self.receiver.mdi.windowList():
@@ -1178,8 +1172,7 @@ class DataSourceEdit(Command):
                 self._dsEdit = self._ds.widget 
                 
             if hasattr(self._dsEdit,"connectExternalActions"):     
-                self._dsEdit.connectExternalActions(self.receiver.dsourceSave,
-                                                    self.receiver.dsourceApply)    
+                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)
 
             if self._ds.widget in self.receiver.mdi.windowList():
                 self.receiver.mdi.setActiveWindow(self._ds.widget) 

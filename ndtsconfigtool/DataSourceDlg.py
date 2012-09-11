@@ -141,7 +141,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
          self.dbDataFormat,
          self.dbQuery,
          dbParameters 
-         )=state
+         ) = state
 
         self.dbParameters = copy.copy(dbParameters)
 
@@ -243,7 +243,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         self.setFrames(self.dataSourceType)
 
 
-    def connectExternalActions(self, externalSave=None , externalApply=None):
+    def connectExternalActions(self, externalApply=None, externalSave=None):
         if externalSave and self._externalSave is None:
             self.connect(self.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
@@ -690,10 +690,12 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             index = self.view.currentIndex()
             finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
 
+
+
         if self.node  and self.root and self.node.isElement():
             self.updateNode(index)
 
-
+            self.view.selectionModel().select(index, QItemSelectionModel.ClearAndSelect or QItemSelectionModel.Rows ) 
             if self.model:
                 self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
                 self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
@@ -780,14 +782,19 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         newDs = self.createNodes()
         oldDs = self.node
 
+
+
         self.node = self.node.parentNode()        
         if hasattr(index,"parent"):
             parent = index.parent()
         else:
             parent = QModelIndex()
+
+
         self.replaceNode(oldDs, newDs, parent)
         self.node = newDs
 
+#        self.view.edit(index)
 
                     
 

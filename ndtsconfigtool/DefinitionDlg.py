@@ -24,6 +24,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ui_definitiondlg
 
+import copy 
+
 from AttributeDlg import AttributeDlg
 from NodeDlg import NodeDlg 
 
@@ -47,6 +49,9 @@ class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
         ## allowed subitems
         self.subItems = ["group", "field", "attribute", "link", "component", "doc", "symbols"]
 
+
+
+
     def updateForm(self):
 
         if self.name is not None:
@@ -58,6 +63,33 @@ class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
 
         self.populateAttributes()
         
+
+
+        
+    def getState(self):
+        attributes = copy.copy(self.attributes)
+
+        state = (self.name,
+                 self.nexusType,
+                 self.doc,
+                 attributes
+                 )
+        print  "GET", str(state)
+        return state
+
+
+
+    def setState(self, state):
+
+        (self.name,
+         self.nexusType,
+         self.doc,
+         attributes
+         ) = state
+        print "SET",  str(state)
+        self.attributes = copy.copy(attributes)
+
+
 
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
@@ -80,17 +112,17 @@ class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
         if node:
             self.node = node
         attributeMap = self.node.attributes()
-        nNode = self.node.nodeName()
+        nNode = unicode(self.node.nodeName())
 
-        self.name = attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else ""
-        self.nexusType = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
+        self.name = unicode(attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else "")
+        self.nexusType = unicode(attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else "")
 
         self.attributes.clear()    
         for i in range(attributeMap.count()):
             attribute = attributeMap.item(i)
-            attrName = attribute.nodeName()
+            attrName = unicode(attribute.nodeName())
             if attrName != "name" and attrName != "type":
-                self.attributes[unicode(attribute.nodeName())] = unicode(attribute.nodeValue())
+                self.attributes[attrName] = unicode(attribute.nodeValue())
 
         doc = self.node.firstChildElement(QString("doc"))           
         text = self.getText(doc)    

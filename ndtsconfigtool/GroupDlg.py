@@ -27,6 +27,8 @@ import ui_groupdlg
 from AttributeDlg import AttributeDlg
 from NodeDlg import NodeDlg 
 
+import copy
+
 ## dialog defining a group tag
 class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
     
@@ -76,6 +78,32 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
                      self.tableItemChanged)
         self.connect(self.addPushButton, SIGNAL("clicked()"), self.addAttribute)
         self.connect(self.removePushButton, SIGNAL("clicked()"), self.removeAttribute)
+
+
+
+    def getState(self):
+        attributes = copy.copy(self.attributes)
+
+        state = (self.name,
+                 self.nexusType,
+                 self.doc,
+                 attributes
+                 )
+#        print  "GET", str(state)
+        return state
+
+
+
+    def setState(self, state):
+
+        (self.name,
+         self.nexusType,
+         self.doc,
+         attributes
+         ) = state
+#        print "SET",  str(state)
+        self.attributes = copy.copy(attributes)
+
 
 
     def setFromNode(self, node=None):

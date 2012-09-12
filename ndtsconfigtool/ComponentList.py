@@ -152,7 +152,8 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
             dirList=os.listdir(self.directory)
         except:
             try:
-                dirList=os.listdir("./components")
+                self.directory = "./components"
+                dirList=os.listdir(self.directory)
             except:
                 return
             

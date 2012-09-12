@@ -62,10 +62,10 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
     def loadList(self, externalSave = None, externalApply = None ):
         try:
             dirList=os.listdir(self.directory)
-            print "DS:", str(dirList)
         except:
             try:
-                dirList=os.listdir("./datasources")
+                self.directory = "./datasources"
+                dirList=os.listdir(self.directory)
             except:
                 return
             
@@ -82,6 +82,7 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
             dlg.directory = self.directory
             dlg.name = name
             dlg.load()    
+
             if hasattr(dlg,"connectExternalActions"):     
                 dlg.connectExternalActions(externalApply, externalSave)    
             

@@ -556,7 +556,6 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         text = self.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
-        print "DONE"
 
     ## accepts and save input text strings
     # \brief It copies the parameters and saves the dialog

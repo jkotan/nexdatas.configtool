@@ -82,8 +82,22 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
         self.currentTag = None
         self.frameLayout = None
-
         self.document = None
+
+    def getState(self):
+        print "getState"
+        return (self.document.toString(0))
+
+
+    def setState(self,state):
+        (xml)=state
+        try:
+            self.loadFromString(xml)
+        except (IOError, OSError, ValueError), e:
+            error = "Failed to load: %s" % e
+            print error
+        self.hideFrame()    
+            
 
     def updateForm(self):
         self.splitter.setStretchFactor(0,1)
@@ -93,11 +107,11 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.view.setModel(self.model)
         
         self.widget = QWidget()
-#        self.widget.createGUI()
-
         self.frameLayout = QGridLayout()
         self.frameLayout.addWidget(self.widget)
         self.frame.setLayout(self.frameLayout)
+
+        
 
 
     def applyItem(self):
@@ -123,13 +137,14 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         child = self.widget.root.createElement(QString(name))
         self.widget.appendNode(child, index)
         #                        print name, " at ", node.nodeName()
-                #                        row=self.widget.getNodeRow(child)
-#                        childIndex=self.model.index(row,0,index)
+#        row=self.widget.getNodeRow(child)
+#        childIndex=self.model.index(row,0,index)
 #                        self.view.setCurrentIndex(childIndex)
 #                        self.widget = None
 #                        self.tagClicked(childIndex)
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         self.view.expand(index)
+        return child
 
     def removeSelectedItem(self):
         if not self.model or not self.view or not self.widget:
@@ -185,6 +200,11 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     def tagClicked(self, index):
         self.currentTag = index
         item  = self.currentTag.internalPointer()
+        if not item :
+            raise Exception, "Unreachable item"
+        if not hasattr(item,'node'):
+            raise Exception, "Unreachable item"
+
         node = item.node
         attributeMap = node.attributes()
         nNode = node.nodeName()
@@ -260,14 +280,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             try:
                 fh = QFile(self.componentFile)
                 if  fh.open(QIODevice.ReadOnly):
-                    self.document = QDomDocument()
-                
-                    if not self.document.setContent(fh):
-                        raise ValueError, "could not parse XML"
-
-                    newModel = ComponentModel(self.document, self)
-                    self.view.setModel(newModel)
-                    self.model = newModel
+                    self.loadFromString(fh)
                     self.xmlPath = self.componentFile
                     fi = QFileInfo(self.componentFile)
                     self.name = fi.fileName() 
@@ -282,6 +295,16 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                 if fh is not None:
                     fh.close()
 
+    def loadFromString(self, xml):
+        self.document = QDomDocument()
+        
+        if not self.document.setContent(xml):
+            raise ValueError, "could not parse XML"
+        
+        newModel = ComponentModel(self.document, self)
+        self.view.setModel(newModel)
+        self.model = newModel
+        
 
     def loadComponentItem(self,filePath = None):
         
@@ -448,6 +471,13 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             return
         return True
 
+    def hideFrame(self):
+        self.widget.setVisible(False)
+        self.widget = QWidget()
+        self.frameLayout.addWidget(self.widget)
+        self.widget.show()
+        self.frame.show()
+
 
     def createHeader(self):
             self.document = QDomDocument()
@@ -460,6 +490,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             newModel = ComponentModel(self.document, self)
             self.view.setModel(newModel)
             self.model = newModel
+            self.hideFrame()
 
 
     def save(self):

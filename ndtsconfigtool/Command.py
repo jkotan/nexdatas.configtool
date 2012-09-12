@@ -31,6 +31,7 @@ from ComponentDlg import ComponentDlg
 from LabeledObject import LabeledObject
 
 import copy
+from ComponentModel import ComponentModel
 
 ## abstract command
 class Command(object):
@@ -323,59 +324,6 @@ class ComponentEdit(Command):
         return ComponentEdit(self.receiver, self._slot) 
 
 
-
-
-class ComponentClear(Command):
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
-        self._cp = None
-        self._cpEdit = None
-        
-        
-    def execute(self):
-
-        if self._cp is None:
-            self._cp = self.receiver.componentList.currentListComponent()
-        if not self._cp:
-            retrun    
-        if QMessageBox.question(self.receiver, "Component - Clear",
-                                "Clear the component: %s ".encode() %  (self._cp.name),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
-            return
-
-        if hasattr(self._cp,"widget") and self._cp.widget in self.receiver.mdi.windowList():
-            self._wList = True
-            self.receiver.mdi.setActiveWindow(self._cp.widget)
-            self.receiver.mdi.closeActiveWindow()
-
-        self._cpEdit = ComponentDlg()
-        self._cpEdit.idc = self._cp.id
-        self._cpEdit.directory = self.receiver.componentList.directory
-        self._cpEdit.name = self.receiver.componentList.components[self._cp.id].name
-        self._cpEdit.createGUI()
-        self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
-        self._cpEdit.createHeader()
-        self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
-                
-
-        if hasattr(self._cpEdit,"connectExternalActions"):     
-            self._cpEdit.connectExternalActions(self.receiver.componentApplyItem, self.receiver.componentSave)
-
-
-        if self._cp.widget in self.receiver.mdi.windowList():
-            self.receiver.mdi.setActiveWindow(self._cp.widget) 
-        else:    
-            self.receiver.mdi.addWindow(self._cpEdit)
-            self._cpEdit.show()
-            self._cp.widget = self._cpEdit 
-            
-        print "EXEC componentClear"
-
-    def unexecute(self):
-        print "UNDO componentClear"
-
-    def clone(self):
-        return ComponentClear(self.receiver, self._slot) 
 
 
 class ComponentSave(Command):
@@ -829,26 +777,147 @@ class DataSourceReloadList(Command):
 
 
 
-class ComponentRemoveItem(Command):
+
+
+class ComponentItemCommand(Command):
     def __init__(self, receiver, slot):
-        Command.__init__(self, receiver,slot)
+        Command.__init__(self, receiver, slot)
         self._cp = None
-        self._cpEdit = None
-        
-        
-    def execute(self):
+        self._oldstate = None
+        self._index = None
+        self._newstate = None
+
+    def preExecute(self):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is not None:
-            if self._cp.widget is not None:
-                if hasattr(self._cp.widget,"removeSelectedItem"):
-                    self._cp.widget.removeSelectedItem()
+            if self._oldstate is None:
+                self._oldstate = self._cp.widget.getState() 
+                self._index = self._cp.widget.view.currentIndex()
+    
+    def postExecute(self):    
+        if self._cp is not None:
+            if self._newstate is None:
+                self._newstate = self._cp.widget.getState() 
+            else:
+                self.receiver.componentList.components[self._cp.id].widget.setState(self._newstate)
+                
+                if self._cp.widget in self.receiver.mdi.windowList():
+                    self.receiver.mdi.setActiveWindow(self._cp.widget) 
+                else:    
+                    self.receiver.mdi.addWindow(self._cp.widget)
+                    self._cp.widget.show()
+
+        
+    def execute(self):
+        if self._cp is None:
+            self.preExecute()
+    
+        self.postExecute()
+
+
+            
+        print "EXEC componentItemCommand"
+
+    def unexecute(self):
+        if self._cp is not None and self._oldstate is not None:
+            self.receiver.componentList.components[self._cp.id].widget.setState(self._oldstate)
+            
+            if self._cp.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._cp.widget) 
+            else:    
+                self.receiver.mdi.addWindow(self._cp.widget)
+                self._cp.widget.show()
+        print "UNDO componentItemComponent"
+
+    def clone(self):
+        return ComponentItemCommand(self.receiver, self._slot) 
+
+
+
+class ComponentClear(ComponentItemCommand):
+    def __init__(self, receiver, slot):
+        ComponentItemCommand.__init__(self, receiver, slot)
+
+
+
+    def execute(self):
+        if self._cp is None:
+            self.preExecute()
+            if self._cp is not None:
+                if QMessageBox.question(self.receiver, "Component - Clear",
+                                        "Clear the component: %s ".encode() %  (self._cp.name),
+                                        QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                    self._oldstate = None
+                    self._index = None
+                    self._cp = None
+                    return
+
+                if hasattr(self._cp,"widget") and self._cp.widget in self.receiver.mdi.windowList():
+                    self._wList = True
+                    self.receiver.mdi.setActiveWindow(self._cp.widget)
+                    self._cp.widget.createHeader()            
+                
+                newModel = ComponentModel(self._cp.widget.document, self._cp.widget)
+                self._cp.widget.view.setModel(newModel)
+                self._cp.widget.model = newModel
+
+                if hasattr(self._cp.widget,"connectExternalActions"):     
+                    self._cp.widget.connectExternalActions(self.receiver.componentApplyItem, 
+                                                           self.receiver.componentSave)
+                
+        self.postExecute()
+            
+
+
+
+
+    def clone(self):
+        return ComponentClear(self.receiver, self._slot) 
+
+
+
+
+class ComponentLoadComponentItem(ComponentItemCommand):
+    def __init__(self, receiver, slot):
+        ComponentItemCommand.__init__(self, receiver, slot)
+        self.itemName = ""        
+        
+    def execute(self):
+        if self._cp is None:
+            self.preExecute()
+            if self._cp is not None:
+                if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.model:
+                    if hasattr(self._cp.widget,"loadComponentItem"):
+                        self._cp.widget.loadComponentItem(self.itemName)
+        self.postExecute()
+            
+        print "EXEC componentLoadcomponentItem"
+
+
+    def clone(self):
+        return ComponentLoadComponentItem(self.receiver, self._slot) 
+
+
+
+class ComponentRemoveItem(CommandItemCommand):
+    def __init__(self, receiver, slot):
+        ComponentItemCommand.__init__(self, receiver,slot)
+
+        
+    def execute(self):
+        if self._cp is None:
+            self.preExecute()
+            if self._cp is not None:
+                if self._cp.widget is not None:
+                    if hasattr(self._cp.widget,"removeSelectedItem"):
+                        self._cp.widget.removeSelectedItem()
+        self.postExecute()
+
 
             
         print "EXEC componentRemoveItem"
 
-    def unexecute(self):
-        print "UNDO componentRemoveItem"
 
     def clone(self):
         return ComponentRemoveItem(self.receiver, self._slot) 
@@ -856,30 +925,7 @@ class ComponentRemoveItem(Command):
 
 
 
-class ComponentLoadComponentItem(Command):
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
-        self._cp = None
-        self._cpEdit = None
-        self.itemName = ""
-        
-        
-    def execute(self):
-        if self._cp is None:
-            self._cp = self.receiver.componentList.currentListComponent()
-        if self._cp is not None:
-            if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.model:
-                if hasattr(self._cp.widget,"loadComponentItem"):
-                    self._cp.widget.loadComponentItem(self.itemName)
 
-            
-        print "EXEC componentLoadcomponentItem"
-
-    def unexecute(self):
-        print "UNDO componentLoadComponentItem"
-
-    def clone(self):
-        return ComponentLoadComponentItem(self.receiver, self._slot) 
 
 
 
@@ -1001,7 +1047,11 @@ class ComponentApplyItem(Command):
                         self._cp.widget.applyItem()    
                         
             elif hasattr(self._cp.widget,"widget") :
+                if not self._index.isValid():
+                    print "invalid index"
+                    return
                 self._cp.widget.view.setCurrentIndex(self._index)
+                
                 self._cp.widget.tagClicked(self._index)
                 
                 if hasattr(self._cp.widget.widget,"setState"):
@@ -1065,20 +1115,51 @@ class ComponentNewItem(Command):
         self._cp = None
         self._cpEdit = None
         self.itemName = ""
-        
+        self._index = None
+        self._childIndex = None
+        self._child = None
+        self._widget = None
         
     def execute(self):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is not None:
             if self._cp.widget is not None:
-                if hasattr(self._cp.widget,"addItem"):
-                    self._cp.widget.addItem(self.itemName)
+                if self._index is None:
+                    
+                    if hasattr(self._cp.widget,"addItem"):
+                        self._child = self._cp.widget.addItem(self.itemName)
+                        if self._child:
+                            self._index = self._cp.widget.view.currentIndex()
+                            row=self._cp.widget.widget.getNodeRow(self._child)
+                            self._childIndex=self._cp.widget.model.index(row, 0, self._index)
+                            self._cp.widget.view.setCurrentIndex(self._childIndex)
+                            self._cp.widget.tagClicked(self._childIndex)
+                            
+                            self._widget = self._cp.widget.widget
+                    
+                else:
+                     self._cp.widget.view.setCurrentIndex(self._index)
+                     self._cp.widget.tagClicked(self._index)
+                     
+                if self._child:
+                    finalIndex = self._cp.widget.model.createIndex(
+                        self._index.row(),2,self._index.parent().internalPointer())
+                    self._cp.widget.model.emit(
+                        SIGNAL("dataChanged(QModelIndex,QModelIndex)"),self._index,finalIndex)
 
             
         print "EXEC componentNewItem"
 
     def unexecute(self):
+        if self._cp is not None:
+            if self._cp.widget is not None:
+                if self._index is not None:
+                     self._cp.widget.view.setCurrentIndex(self._childIndex)
+                     self._cp.widget.tagClicked(self._childIndex)
+#                     self._cp.widget.removeSelectedItem()
+                     
+                     
         print "UNDO componentNewItem"
 
     def clone(self):
@@ -1132,8 +1213,7 @@ class ComponentMerge(Command):
             
         print "EXEC componentMerge"
 
-    def unexecute(self):
-        print "UNDO componentMerge"
+
 
     def clone(self):
         return ComponentMerge(self.receiver, self._slot) 

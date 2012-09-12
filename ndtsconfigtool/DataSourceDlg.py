@@ -703,10 +703,6 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             if index.isValid():
                 self.view.setCurrentIndex(index)
 
-#                self.view.selectionModel().select(index, QItemSelectionModel.Rows or QItemSelectionModel.ClearAndSelect ) 
-#                self.view.selectionModel().select(index, QItemSelectionModel.ClearAndSelect ) 
-#            else:
-#                print "Index not valid"
             if self.model:
                 self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
                 self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)

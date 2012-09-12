@@ -982,6 +982,7 @@ class ComponentApplyItem(Command):
         self._cp = None
         self._oldstate = None
         self._newstate = None
+        self._index = None
         
         
     def execute(self):
@@ -994,12 +995,25 @@ class ComponentApplyItem(Command):
                         hasattr(self._cp.widget.widget,"getState"):
                     self._oldstate = self._cp.widget.widget.getState() 
                     
+                    self._index = self._cp.widget.view.currentIndex()
+
                     if hasattr(self._cp.widget,"applyItem"):
                         self._cp.widget.applyItem()    
                         
-            elif hasattr(self._cp.widget,"widget") and hasattr(self._cp.widget.widget,"setState"):
-                self.receiver.componentList.components[self._cp.id].widget.widget.setState(self._newstate)
-                self._cp.widget.widget.updateForm()
+            elif hasattr(self._cp.widget,"widget") :
+                self._cp.widget.view.setCurrentIndex(self._index)
+                self._cp.widget.tagClicked(self._index)
+                
+                if hasattr(self._cp.widget.widget,"setState"):
+                    self.receiver.componentList.components[self._cp.id].widget.widget.setState(self._newstate)
+                    self._cp.widget.widget.updateForm()
+                    self._cp.widget.widget.updateNode(self._index)
+                    
+            finalIndex = self._cp.widget.model.createIndex(
+                self._index.row(),2,self._index.parent().internalPointer())
+            self._cp.widget.model.emit(
+                SIGNAL("dataChanged(QModelIndex,QModelIndex)"),self._index,finalIndex)
+
 
             if self._cp.widget in self.receiver.mdi.windowList():
                 self.receiver.mdi.setActiveWindow(self._cp.widget) 
@@ -1017,9 +1031,18 @@ class ComponentApplyItem(Command):
     def unexecute(self):
         if self._cp is not None and hasattr(self._cp,'widget') and  self._cp.widget is not None:
         
-            if hasattr(self._cp.widget,"widget") and hasattr(self._cp.widget.widget,"setState"):
-                self.receiver.componentList.components[self._cp.id].widget.widget.setState(self._oldstate)
-                self.receiver.componentList.components[self._cp.id].widget.widget.updateForm()
+            if hasattr(self._cp.widget,"widget") :
+                self._cp.widget.view.setCurrentIndex(self._index)
+                self._cp.widget.tagClicked(self._index)
+                if hasattr(self._cp.widget.widget,"setState"):
+                    self.receiver.componentList.components[self._cp.id].widget.widget.setState(self._oldstate)
+                    self._cp.widget.widget.updateForm()
+                    self._cp.widget.widget.updateNode(self._index)
+
+                    finalIndex = self._cp.widget.model.createIndex(
+                        self._index.row(),2,self._index.parent().internalPointer())
+                    self._cp.widget.model.emit(
+                        SIGNAL("dataChanged(QModelIndex,QModelIndex)"),self._index,finalIndex)
 
 
             if self._cp.widget in self.receiver.mdi.windowList():

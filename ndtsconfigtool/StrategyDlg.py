@@ -43,6 +43,8 @@ class StrategyDlg(NodeDlg, ui_strategydlg.Ui_StrategyDlg):
         ## attribute doc
         self.doc = u''
 
+
+
     def updateForm(self):
         index = -1
         if self.mode is not None:
@@ -73,6 +75,27 @@ class StrategyDlg(NodeDlg, ui_strategydlg.Ui_StrategyDlg):
 
 #        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
+
+
+    def getState(self):
+        state = (self.mode,
+                 self.trigger,
+                 self.postrun,
+                 self.doc
+                 )
+#        print  "GET", str(state)
+        return state
+
+
+
+    def setState(self, state):
+
+        (self.name,
+         self.trigger,
+         self.postrun,
+         self.doc
+         ) = state
+#        print "SET",  str(state)
 
 
     def setFrames(self, text):
@@ -137,34 +160,36 @@ class StrategyDlg(NodeDlg, ui_strategydlg.Ui_StrategyDlg):
 
 
         if self.node  and self.root and self.node.isElement():
-            elem=self.node.toElement()
-
-
-            attributeMap = self.node.attributes()
-            for i in range(attributeMap.count()):
-                attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
-            elem.setAttribute(QString("mode"), QString(self.mode))
-
-            if self.mode == 'STEP':
-                if self.trigger:
-                    elem.setAttribute(QString("trigger"), QString(self.trigger))
-
-            self.replaceText(self.node, index, unicode(self.postrun))
-
-            doc = self.node.firstChildElement(QString("doc"))           
-            if not self.doc and doc and doc.nodeName() == "doc" :
-                self.removeElement(doc, index)
-            elif self.doc:
-                newDoc = self.root.createElement(QString("doc"))
-                newText = self.root.createTextNode(QString(self.doc))
-                newDoc.appendChild(newText)
-                if doc and doc.nodeName() == "doc" :
-                    self.replaceElement(doc, newDoc, index)
-                else:
-                    self.appendElement(newDoc, index)
-
-                    
+            self.updateNode(index)
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+
+    def updateNode(self,index=QModelIndex()):
+        elem=self.node.toElement()
+
+
+        attributeMap = self.node.attributes()
+        for i in range(attributeMap.count()):
+            attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
+        elem.setAttribute(QString("mode"), QString(self.mode))
+
+        if self.mode == 'STEP':
+            if self.trigger:
+                elem.setAttribute(QString("trigger"), QString(self.trigger))
+
+        self.replaceText(self.node, index, unicode(self.postrun))
+
+        doc = self.node.firstChildElement(QString("doc"))           
+        if not self.doc and doc and doc.nodeName() == "doc" :
+            self.removeElement(doc, index)
+        elif self.doc:
+            newDoc = self.root.createElement(QString("doc"))
+            newText = self.root.createTextNode(QString(self.doc))
+            newDoc.appendChild(newText)
+            if doc and doc.nodeName() == "doc" :
+                self.replaceElement(doc, newDoc, index)
+            else:
+                self.appendElement(newDoc, index)
+
 
 
 if __name__ == "__main__":

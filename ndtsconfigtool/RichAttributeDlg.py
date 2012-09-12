@@ -47,6 +47,9 @@ class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
         self.subItems = ["enumeration", "doc"]
 
 
+
+
+
     def updateForm(self):
         if self.name is not None :
             self.nameLineEdit.setText(self.name) 
@@ -89,8 +92,8 @@ class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
         attributeMap = self.node.attributes()
         nNode = self.node.nodeName()
 
-        self.name = attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else ""
-        self.nexusType = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
+        self.name = unicode(attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else "")
+        self.nexusType = unicode(attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else "")
 
 
         text = self.getText(node)    
@@ -104,6 +107,26 @@ class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
 
 
 
+    def getState(self):
+
+        state = (self.name,
+                 self.value,
+                 self.nexusType,
+                 self.doc,
+                 )
+#        print  "GET", str(state)
+        return state
+
+
+
+    def setState(self, state):
+
+        (self.name,
+         self.value,
+         self.nexusType,
+         self.doc,
+         ) = state
+#        print "SET",  str(state)
 
 
     ## calls updateUi when the name text is changing
@@ -159,31 +182,35 @@ class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
         finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
 
         if self.node  and self.root and self.node.isElement():
-            elem=self.node.toElement()
+            self.updateNode(index)
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
 
-            attributeMap = self.node.attributes()
-            for i in range(attributeMap.count()):
-                attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
-            elem.setAttribute(QString("name"), QString(self.name))
-            elem.setAttribute(QString("type"), QString(self.nexusType))
+    def updateNode(self,index=QModelIndex()):
+        elem=self.node.toElement()
 
-            self.replaceText(self.node, index, unicode(self.value))
 
-            doc = self.node.firstChildElement(QString("doc"))           
-            if not self.doc and doc and doc.nodeName() == "doc" :
-                self.removeElement(doc, index)
-            elif self.doc:
-                newDoc = self.root.createElement(QString("doc"))
-                newText = self.root.createTextNode(QString(self.doc))
-                newDoc.appendChild(newText)
-                if doc and doc.nodeName() == "doc" :
-                    self.replaceElement(doc, newDoc, index)
-                else:
-                    self.appendElement(newDoc, index)
+        attributeMap = self.node.attributes()
+        for i in range(attributeMap.count()):
+            attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
+        elem.setAttribute(QString("name"), QString(self.name))
+        elem.setAttribute(QString("type"), QString(self.nexusType))
+
+        self.replaceText(self.node, index, unicode(self.value))
+
+        doc = self.node.firstChildElement(QString("doc"))           
+        if not self.doc and doc and doc.nodeName() == "doc" :
+            self.removeElement(doc, index)
+        elif self.doc:
+            newDoc = self.root.createElement(QString("doc"))
+            newText = self.root.createTextNode(QString(self.doc))
+            newDoc.appendChild(newText)
+            if doc and doc.nodeName() == "doc" :
+                self.replaceElement(doc, newDoc, index)
+            else:
+                self.appendElement(newDoc, index)
 
                     
-        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
 
 if __name__ == "__main__":

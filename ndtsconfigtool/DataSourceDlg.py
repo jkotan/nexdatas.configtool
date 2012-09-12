@@ -700,7 +700,9 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         if self.node  and self.root and self.node.isElement():
             self.updateNode(index)
 
-#            if index.isValid():
+            if index.isValid():
+                self.view.setCurrentIndex(index)
+
 #                self.view.selectionModel().select(index, QItemSelectionModel.Rows or QItemSelectionModel.ClearAndSelect ) 
 #                self.view.selectionModel().select(index, QItemSelectionModel.ClearAndSelect ) 
 #            else:

@@ -43,6 +43,8 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
 
         self.subItems=[ "doc"]
 
+
+
     def updateForm(self):
         if self.name is not None:
             self.nameLineEdit.setText(self.name) 
@@ -71,14 +73,36 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
         #        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
 
+
+    def getState(self):
+
+        state = (self.name,
+                 self.target,
+                 self.doc
+                 )
+#        print  "GET", str(state)
+        return state
+
+
+
+    def setState(self, state):
+
+        (self.name,
+         self.target,
+         self.doc
+         ) = state
+#        print "SET",  str(state)
+
+
+
     def setFromNode(self, node=None):
         if node:
             self.node = node
         attributeMap = self.node.attributes()
-        nNode = self.node.nodeName()
+        nNode = unicode(self.node.nodeName())
 
-        self.name = attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else ""
-        self.target = attributeMap.namedItem("target").nodeValue() if attributeMap.contains("target") else ""
+        self.name = unicode(attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else "")
+        self.target = unicode(attributeMap.namedItem("target").nodeValue() if attributeMap.contains("target") else "")
  
         doc = self.node.firstChildElement(QString("doc"))           
         text = self.getText(doc)    
@@ -122,30 +146,33 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
         finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
 
         if self.node  and self.root and self.node.isElement():
-            elem=self.node.toElement()
-
-
-            attributeMap = self.node.attributes()
-            for i in range(attributeMap.count()):
-                attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
-            elem.setAttribute(QString("name"), QString(self.name))
-            elem.setAttribute(QString("target"), QString(self.target))
-
-
-            doc = self.node.firstChildElement(QString("doc"))           
-            if not self.doc and doc and doc.nodeName() == "doc" :
-                self.removeElement(doc, index)
-            elif self.doc:
-                newDoc = self.root.createElement(QString("doc"))
-                newText = self.root.createTextNode(QString(self.doc))
-                newDoc.appendChild(newText)
-                if doc and doc.nodeName() == "doc" :
-                    self.replaceElement(doc, newDoc, index)
-                else:
-                    self.appendElement(newDoc, index)
-
+            self.updateNode(index)
                     
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+
+
+    def updateNode(self,index=QModelIndex()):
+        elem=self.node.toElement()
+
+
+        attributeMap = self.node.attributes()
+        for i in range(attributeMap.count()):
+            attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
+        elem.setAttribute(QString("name"), QString(self.name))
+        elem.setAttribute(QString("target"), QString(self.target))
+
+
+        doc = self.node.firstChildElement(QString("doc"))           
+        if not self.doc and doc and doc.nodeName() == "doc" :
+            self.removeElement(doc, index)
+        elif self.doc:
+            newDoc = self.root.createElement(QString("doc"))
+            newText = self.root.createTextNode(QString(self.doc))
+            newDoc.appendChild(newText)
+            if doc and doc.nodeName() == "doc" :
+                self.replaceElement(doc, newDoc, index)
+            else:
+                self.appendElement(newDoc, index)
 
 
 

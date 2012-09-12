@@ -356,51 +356,54 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
 
         if self.node  and self.root and self.node.isElement():
-            elem=self.node.toElement()
-
-
-            attributeMap = self.node.attributes()
-            for i in range(attributeMap.count()):
-                attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
-            elem.setAttribute(QString("name"), QString(self.name))
-            elem.setAttribute(QString("type"), QString(self.nexusType))
-            elem.setAttribute(QString("units"), QString(self.units))
-
-            self.replaceText(self.node, index, unicode(self.value))
-
-            for attr in self.attributes.keys():
-                elem.setAttribute(QString(attr), QString(self.attributes[attr]))
-
-            doc = self.node.firstChildElement(QString("doc"))           
-            if not self.doc and doc and doc.nodeName() == "doc" :
-                self.removeElement(doc, index)
-            elif self.doc:
-                newDoc = self.root.createElement(QString("doc"))
-                newText = self.root.createTextNode(QString(self.doc))
-                newDoc.appendChild(newText)
-                if doc and doc.nodeName() == "doc" :
-                    self.replaceElement(doc, newDoc, index)
-                else:
-                    self.appendElement(newDoc, index)
-
-            dimens = self.node.firstChildElement(QString("dimensions"))           
-            if not self.dimensions and dimens and dimens.nodeName() == "dimensions":
-                self.removeElement(dimens,index)
-            elif self.dimensions:
-                newDimens = self.root.createElement(QString("dimensions"))
-                newDimens.setAttribute(QString("rank"), QString(unicode(self.rank)))
-                for i in range(min(self.rank,len(self.dimensions))):
-                    dim = self.root.createElement(QString("dim"))
-                    dim.setAttribute(QString("index"), QString(unicode(i+1)))
-                    dim.setAttribute(QString("value"), QString(unicode(self.dimensions[i])))
-                    newDimens.appendChild(dim)
-                if dimens and dimens.nodeName() == "dimensions" :
-                    self.replaceElement(dimens, newDimens, index)
-                else:
-                    self.appendElement(newDimens, index)
-
+            self.updateNode(index)
                     
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+
+        
+    def updateNode(self,index=QModelIndex()):
+        elem=self.node.toElement()
+
+
+        attributeMap = self.node.attributes()
+        for i in range(attributeMap.count()):
+            attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
+        elem.setAttribute(QString("name"), QString(self.name))
+        elem.setAttribute(QString("type"), QString(self.nexusType))
+        elem.setAttribute(QString("units"), QString(self.units))
+
+        self.replaceText(self.node, index, unicode(self.value))
+        
+        for attr in self.attributes.keys():
+            elem.setAttribute(QString(attr), QString(self.attributes[attr]))
+
+        doc = self.node.firstChildElement(QString("doc"))           
+        if not self.doc and doc and doc.nodeName() == "doc" :
+            self.removeElement(doc, index)
+        elif self.doc:
+            newDoc = self.root.createElement(QString("doc"))
+            newText = self.root.createTextNode(QString(self.doc))
+            newDoc.appendChild(newText)
+            if doc and doc.nodeName() == "doc" :
+                self.replaceElement(doc, newDoc, index)
+            else:
+                self.appendElement(newDoc, index)
+
+        dimens = self.node.firstChildElement(QString("dimensions"))           
+        if not self.dimensions and dimens and dimens.nodeName() == "dimensions":
+            self.removeElement(dimens,index)
+        elif self.dimensions:
+            newDimens = self.root.createElement(QString("dimensions"))
+            newDimens.setAttribute(QString("rank"), QString(unicode(self.rank)))
+            for i in range(min(self.rank,len(self.dimensions))):
+                dim = self.root.createElement(QString("dim"))
+                dim.setAttribute(QString("index"), QString(unicode(i+1)))
+                dim.setAttribute(QString("value"), QString(unicode(self.dimensions[i])))
+                newDimens.appendChild(dim)
+            if dimens and dimens.nodeName() == "dimensions" :
+                self.replaceElement(dimens, newDimens, index)
+            else:
+                self.appendElement(newDimens, index)
 
 
 

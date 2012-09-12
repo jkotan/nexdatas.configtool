@@ -778,7 +778,6 @@ class DataSourceReloadList(Command):
 
 
 
-
 class ComponentItemCommand(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
@@ -853,22 +852,25 @@ class ComponentClear(ComponentItemCommand):
                     self._cp = None
                     return
 
-                if hasattr(self._cp,"widget") and self._cp.widget in self.receiver.mdi.windowList():
-                    self._wList = True
-                    self.receiver.mdi.setActiveWindow(self._cp.widget)
+
+                if hasattr(self._cp,"widget"):
+                    if self._cp.widget in self.receiver.mdi.windowList():
+                        self._wList = True
+                        self.receiver.mdi.setActiveWindow(self._cp.widget)
                     self._cp.widget.createHeader()            
                 
-                newModel = ComponentModel(self._cp.widget.document, self._cp.widget)
-                self._cp.widget.view.setModel(newModel)
-                self._cp.widget.model = newModel
+                    newModel = ComponentModel(self._cp.widget.document, self._cp.widget)
+                    self._cp.widget.view.setModel(newModel)
+                    self._cp.widget.model = newModel
 
-                if hasattr(self._cp.widget,"connectExternalActions"):     
-                    self._cp.widget.connectExternalActions(self.receiver.componentApplyItem, 
-                                                           self.receiver.componentSave)
+                    if hasattr(self._cp.widget,"connectExternalActions"):     
+                        self._cp.widget.connectExternalActions(self.receiver.componentApplyItem, 
+                                                               self.receiver.componentSave)
                 
         self.postExecute()
             
 
+        print "EXEC componentClear"
 
 
 
@@ -900,7 +902,7 @@ class ComponentLoadComponentItem(ComponentItemCommand):
 
 
 
-class ComponentRemoveItem(CommandItemCommand):
+class ComponentRemoveItem(ComponentItemCommand):
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver,slot)
 

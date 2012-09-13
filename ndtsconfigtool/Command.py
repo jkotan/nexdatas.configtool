@@ -1006,18 +1006,18 @@ class UndoCommand(Command):
     def clone(self):
         return UndoCommand(self.receiver, self._slot) 
 
-class ReundoCommand(Command):
+class RedoCommand(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
 
     def execute(self):
-        print "EXEC reundo"
+        print "EXEC redo"
 
     def unexecute(self):
         pass
 
     def clone(self):
-        return ReundoCommand(self.receiver, self._slot) 
+        return RedoCommand(self.receiver, self._slot) 
 
 
 

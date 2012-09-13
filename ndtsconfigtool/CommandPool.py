@@ -44,11 +44,11 @@ class CommandStack(object):
             print "undo",  self._current , len(self._stack) 
             return self._stack[self._current]
 
-    def reundo(self):
+    def redo(self):
 #        print  "st", self._current - 1, self._current , len(self._stack) 
         if self._stack and self._current < len(self._stack) :
             self._current += 1
-            print "reundo",  self._current , len(self._stack) 
+            print "redo",  self._current , len(self._stack) 
             return self._stack[ self._current - 1 ]
 
     def isEmpty(self):
@@ -57,7 +57,7 @@ class CommandStack(object):
     def isFinal(self):
         return self._current == len(self._stack)
 
-    def clean(self):
+    def clear(self):
         self._stack = []
         self._current = 0
         

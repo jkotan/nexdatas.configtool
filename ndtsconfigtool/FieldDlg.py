@@ -55,11 +55,13 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         self.dimDoc = u''
         ## field attributes
         self.attributes = {}
+        self._attributes = {}
 
         ## rank
         self.rank = 0
         ## dimensions
         self.dimensions = []
+        self._dimensions = []
 
 
         ## allowed subitems
@@ -120,6 +122,14 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
             label = self.dimensions.__str__()
             self.dimLabel.setText("%s" % label)
 
+        self._dimensions =[]
+        for dm in self.dimensions:
+            self._dimensions.append(dm)
+
+        self._attributes.clear()
+        for at in self.attributes.keys():
+            self._attributes[unicode(at)]=self.attributes[(unicode(at))]
+
         self.populateAttributes()
 
 
@@ -160,17 +170,20 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         self.value = unicode(text).strip() if text else ""
 
         self.attributes.clear()    
+        self._attributes.clear()    
         for i in range(attributeMap.count()):
             attribute = attributeMap.item(i)
             attrName = unicode(attribute.nodeName())
             if attrName != "name" and attrName != "type" and attrName != "units":
                 self.attributes[attrName] = unicode(attribute.nodeValue())
+                self._attributes[attrName] = unicode(attribute.nodeValue())
 
 
         dimens = self.node.firstChildElement(QString("dimensions"))           
         attributeMap = dimens.attributes()
 
         self.dimensions = []
+        self._dimensions = []
         if attributeMap.contains("rank"):
             try:
                 self.rank = int(attributeMap.namedItem("rank").nodeValue())
@@ -201,12 +214,15 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
                     if index is not None:
                         while len(self.dimensions)< index:
                             self.dimensions.append(None)
+                            self._dimensions.append(None)
+                        self._dimensions[index-1] = value     
                         self.dimensions[index-1] = value     
 
                 child = child.nextSibling()
 
         if self.rank < len(self.dimensions) :
             self.rank = len(self.dimensions)
+            self.rank = len(self._dimensions)
 
         doc = self.node.firstChildElement(QString("doc"))           
         text = self.getText(doc)    
@@ -223,8 +239,8 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
             name = aform.name
             value = aform.value
             
-            if not aform.name in self.attributes.keys():
-                self.attributes[aform.name] = aform.value
+            if not aform.name in self._attributes.keys():
+                self._attributes[aform.name] = aform.value
                 self.populateAttributes(aform.name)
             else:
                 QMessageBox.warning(self, "Attribute name exists", "To change the attribute value, please edit the value in the attribute table")
@@ -236,17 +252,17 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
     def changeDimensions(self):
         dform  = DimensionsDlg( self)
         dform.rank = self.rank
-        dform.lengths = self.dimensions
+        dform.lengths = self._dimensions
         dform.doc = self.dimDoc
         dform.createGUI()
         if dform.exec_():
             self.rank = dform.rank
             self.dimDoc = dform.doc
             if self.rank:
-                self.dimensions = dform.lengths
+                self._dimensions = dform.lengths
             else:    
-                self.dimensions = []
-            label = self.dimensions.__str__()
+                self._dimensions = []
+            label = self._dimensions.__str__()
             self.dimLabel.setText("%s" % label)
                 
                 
@@ -268,22 +284,22 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         if attr is None:
             return
         if QMessageBox.question(self, "Attribute - Remove",
-                                "Remove attribute: %s = \'%s\'".encode() %  (attr, self.attributes[unicode(attr)]),
+                                "Remove attribute: %s = \'%s\'".encode() %  (attr, self._attributes[unicode(attr)]),
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
-        if unicode(attr) in self.attributes.keys():
-            self.attributes.pop(unicode(attr))
+        if unicode(attr) in self._attributes.keys():
+            self._attributes.pop(unicode(attr))
             self.populateAttributes()
 
     ## changes the current value of the attribute        
     # \brief It changes the current value of the attribute and informs the user that attribute names arenot editable
     def tableItemChanged(self, item):
         attr = self.currentTableAttribute()
-        if unicode(attr)  not in self.attributes.keys():
+        if unicode(attr)  not in self._attributes.keys():
             return
         column = self.attributeTableWidget.currentColumn()
         if column == 1:
-            self.attributes[unicode(attr)] = unicode(item.text())
+            self._attributes[unicode(attr)] = unicode(item.text())
         if column == 0:
             QMessageBox.warning(self, "Attribute name is not editable", "To change the attribute name, please remove the attribute and add the new one")
         self.populateAttributes()
@@ -294,15 +310,15 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
         selected = None
         self.attributeTableWidget.clear()
         self.attributeTableWidget.setSortingEnabled(False)
-        self.attributeTableWidget.setRowCount(len(self.attributes))
+        self.attributeTableWidget.setRowCount(len(self._attributes))
         headers = ["Name", "Value"]
         self.attributeTableWidget.setColumnCount(len(headers))
         self.attributeTableWidget.setHorizontalHeaderLabels(headers)	
-        for row, name in enumerate(self.attributes):
+        for row, name in enumerate(self._attributes):
             item = QTableWidgetItem(name)
             item.setData(Qt.UserRole, QVariant(name))
             self.attributeTableWidget.setItem(row, 0, item)
-            item2 = QTableWidgetItem(self.attributes[name])
+            item2 = QTableWidgetItem(self._attributes[name])
             self.attributeTableWidget.setItem(row, 1, item2)
             if selectedAttribute is not None and selectedAttribute == name:
                 selected = item2
@@ -354,6 +370,15 @@ class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
 
         index = self.view.currentIndex()
         finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
+
+
+        self.attributes.clear()
+        for at in self._attributes.keys():
+            self.attributes[at] = self._attributes[at]
+
+        self.dimensions = []
+        for dm in self._dimensions:
+            self.dimensions.append(dm)
 
         if self.node  and self.root and self.node.isElement():
             self.updateNode(index)

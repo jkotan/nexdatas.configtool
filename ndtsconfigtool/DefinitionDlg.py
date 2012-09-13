@@ -45,6 +45,7 @@ class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
         self.doc = u''
         ## definition attributes
         self.attributes = {}
+        self._attributes = {}
 
         ## allowed subitems
         self.subItems = ["group", "field", "attribute", "link", "component", "doc", "symbols"]
@@ -60,6 +61,11 @@ class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
             self.typeLineEdit.setText(self.nexusType) 
         if self.doc is not None:
             self.docTextEdit.setText(self.doc)
+
+
+        self._attributes.clear()
+        for at in self.attributes.keys():
+            self._attributes[unicode(at)]=self.attributes[(unicode(at))]
 
         self.populateAttributes()
         
@@ -118,11 +124,13 @@ class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
         self.nexusType = unicode(attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else "")
 
         self.attributes.clear()    
+        self._attributes.clear()    
         for i in range(attributeMap.count()):
             attribute = attributeMap.item(i)
             attrName = unicode(attribute.nodeName())
             if attrName != "name" and attrName != "type":
                 self.attributes[attrName] = unicode(attribute.nodeValue())
+                self._attributes[attrName] = unicode(attribute.nodeValue())
 
         doc = self.node.firstChildElement(QString("doc"))           
         text = self.getText(doc)    
@@ -136,8 +144,8 @@ class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
             name = aform.name
             value = aform.value
             
-            if not aform.name in self.attributes.keys():
-                self.attributes[aform.name] = aform.value
+            if not aform.name in self._attributes.keys():
+                self._attributes[aform.name] = aform.value
                 self.populateAttributes(aform.name)
             else:
                 QMessageBox.warning(self, "Attribute name exists", "To change the attribute value, please edit the value in the attribute table")
@@ -159,22 +167,22 @@ class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
         if attr is None:
             return
         if QMessageBox.question(self, "Attribute - Remove",
-                                "Remove attribute: %s = \'%s\'".encode() %  (attr, self.attributes[unicode(attr)]),
+                                "Remove attribute: %s = \'%s\'".encode() %  (attr, self._attributes[unicode(attr)]),
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
-        if unicode(attr) in self.attributes.keys():
-            self.attributes.pop(unicode(attr))
+        if unicode(attr) in self._attributes.keys():
+            self._attributes.pop(unicode(attr))
             self.populateAttributes()
 
     ## changes the current value of the attribute        
     # \brief It changes the current value of the attribute and informs the user that attribute names arenot editable
     def tableItemChanged(self, item):
         attr = self.currentTableAttribute()
-        if unicode(attr)  not in self.attributes.keys():
+        if unicode(attr)  not in self._attributes.keys():
             return
         column = self.attributeTableWidget.currentColumn()
         if column == 1:
-            self.attributes[unicode(attr)] = unicode(item.text())
+            self._attributes[unicode(attr)] = unicode(item.text())
         if column == 0:
             QMessageBox.warning(self, "Attribute name is not editable", "To change the attribute name, please remove the attribute and add the new one")
         self.populateAttributes()
@@ -185,15 +193,15 @@ class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
         selected = None
         self.attributeTableWidget.clear()
         self.attributeTableWidget.setSortingEnabled(False)
-        self.attributeTableWidget.setRowCount(len(self.attributes))
+        self.attributeTableWidget.setRowCount(len(self._attributes))
         headers = ["Name", "Value"]
         self.attributeTableWidget.setColumnCount(len(headers))
         self.attributeTableWidget.setHorizontalHeaderLabels(headers)	
-        for row, name in enumerate(self.attributes):
+        for row, name in enumerate(self._attributes):
             item = QTableWidgetItem(name)
             item.setData(Qt.UserRole, QVariant(name))
             self.attributeTableWidget.setItem(row, 0, item)
-            item2 =  QTableWidgetItem(self.attributes[name])
+            item2 =  QTableWidgetItem(self._attributes[name])
             self.attributeTableWidget.setItem(row, 1, item2)
             if selectedAttribute is not None and selectedAttribute == name:
                 selected = item2
@@ -231,6 +239,10 @@ class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
         
         index = self.view.currentIndex()
         finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
+
+        self.attributes.clear()
+        for at in self._attributes.keys():
+            self.attributes[at] = self._attributes[at]
 
         if self.node  and self.root and self.node.isElement():
             self.updateNode(index)

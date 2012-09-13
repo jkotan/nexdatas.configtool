@@ -495,9 +495,9 @@ class MainWindow(QMainWindow):
     def componentEdit(self):
         cmd = self.pool.getCommand('componentEdit').clone()
         cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False)
+#        self.pool.setDisabled("redo", True)   
 
     def componentClear(self):
         cmd = self.pool.getCommand('componentClear').clone()
@@ -719,9 +719,9 @@ class MainWindow(QMainWindow):
     def dsourceEdit(self):
         cmd = self.pool.getCommand('dsourceEdit').clone()
         cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False)
+#        self.pool.setDisabled("redo", True)   
 
 
     def dsourceChanged(self, item):

@@ -101,6 +101,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         index = self.view.currentIndex()
         pindex = index.parent()
         path = []
+        if not index.isValid():
+            return 
         row = 1
         while pindex.isValid() and row is not None:
             child = index.internalPointer().node
@@ -118,6 +120,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         
 
     def getIndex(self, path):
+        if not path:
+            return QModelIndex()
         item = self.model.rootItem
         node = item.node
         index = self.model.createIndex(0,0,item)
@@ -533,7 +537,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         return True
 
     def hideFrame(self):
-        self.widget.setVisible(False)
+        if self.widget:
+            self.widget.setVisible(False)
         self.widget = QWidget()
         self.frameLayout.addWidget(self.widget)
         self.widget.show()

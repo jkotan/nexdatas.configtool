@@ -92,10 +92,11 @@ class NodeDlg(QDialog):
             if row < children.count():
                 return row
 
-    def getNodeRow(self, child):
+    def getNodeRow(self, child, node = None):
         row = 0
-        if self.node:
-            children = self.node.childNodes()
+        lnode =  node if node is not None else self.node
+        if lnode:
+            children = lnode.childNodes()
             for i in range(children.count()):
                 ch = children.item(i)
                 if child == ch:

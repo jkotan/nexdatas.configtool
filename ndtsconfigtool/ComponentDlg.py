@@ -84,13 +84,49 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.frameLayout = None
         self.document = None
 
+
+    def getNodeRow(self, child, node):
+        row = 0
+        if node:
+            children = node.childNodes()
+            for i in range(children.count()):
+                ch = children.item(i)
+                print ch.nodeName()
+                if child == ch:
+                    break
+                row += 1
+            if row < children.count():
+                return row
+
+    def getPath(self):
+        index = self.view.currentIndex()
+        pindex = index.parent()
+        path = []
+        row = 1
+        while pindex.isValid() and row is not None:
+            child = index.internalPointer().node
+            parent = pindex.internalPointer().node
+            row = self.getNodeRow(child, parent)
+            path.append((row,unicode(child.nodeName())))
+            index = pindex
+            pindex = pindex.parent()
+        
+        child = index.internalPointer().node
+        row = self.getNodeRow(child, self.document)
+        path.append((row,unicode(child.nodeName())))
+
+        return path
+        
+
+
     def getState(self):
-        print "getState"
-        return (self.document.toString(0))
+        path = self.getPath()
+        print "getState", path
+        return (self.document.toString(0),path)
 
 
     def setState(self,state):
-        (xml)=state
+        (xml, path)=state
         try:
             self.loadFromString(xml)
         except (IOError, OSError, ValueError), e:
@@ -336,7 +372,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                     self.widget.node = node
 
                     while not child.isNull():
-                        child2 = self.root.importNode(child, True)
+                        child2 = self.document.importNode(child, True)
                         self.widget.appendNode(child2, index)
 
 #                        node.appendChild(child)
@@ -402,7 +438,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
                             self.widget.node = node
-                            ds2 = self.root.importNode(ds, True)
+                            ds2 = self.document.importNode(ds, True)
                             self.widget.appendNode(ds2, index)
 #                            node.appendChild(ds)
 
@@ -447,7 +483,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
         self.widget.node = node
-        dsNode2 = self.root.importNode(dsNode, True)
+        dsNode2 = self.document.importNode(dsNode, True)
         self.widget.appendNode(dsNode2, index)
         
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
@@ -487,12 +523,12 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
     def createHeader(self):
             self.document = QDomDocument()
-            self.root = self.document
-            processing = self.root.createProcessingInstruction("xml", 'version="1.0"') 
-            self.root.appendChild(processing)
+            self.document = self.document
+            processing = self.document.createProcessingInstruction("xml", 'version="1.0"') 
+            self.document.appendChild(processing)
             
-            definition = self.root.createElement(QString("definition"))
-            self.root.appendChild(definition)
+            definition = self.document.createElement(QString("definition"))
+            self.document.appendChild(definition)
             newModel = ComponentModel(self.document, self)
             self.view.setModel(newModel)
             self.model = newModel

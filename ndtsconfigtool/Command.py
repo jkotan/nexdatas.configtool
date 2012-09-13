@@ -23,10 +23,8 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 from DataSourceList import DataSourceList
-from DataSourceDlg import DataSourceDlg
-#from FieldWg import FieldWg
-
 from ComponentList import ComponentList
+from DataSourceDlg import DataSourceDlg
 from ComponentDlg import ComponentDlg
 from LabeledObject import LabeledObject
 

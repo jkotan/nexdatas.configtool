@@ -91,7 +91,6 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             children = node.childNodes()
             for i in range(children.count()):
                 ch = children.item(i)
-                print ch.nodeName()
                 if child == ch:
                     break
                 row += 1
@@ -107,21 +106,40 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             child = index.internalPointer().node
             parent = pindex.internalPointer().node
             row = self.getNodeRow(child, parent)
-            path.append((row,unicode(child.nodeName())))
+            path.insert(0,(row,unicode(child.nodeName())))
             index = pindex
             pindex = pindex.parent()
         
         child = index.internalPointer().node
         row = self.getNodeRow(child, self.document)
-        path.append((row,unicode(child.nodeName())))
+        path.insert(0,(row,unicode(child.nodeName())))
 
         return path
         
 
+    def getIndex(self, path):
+        item = self.model.rootItem
+        node = item.node
+        index = self.model.createIndex(0,0,item)
+        self.view.expand(index)
+        item = index.internalPointer()
+        for step in path:
+            index = self.model.index(step[0],0,index) 
+            self.view.expand(index)
+            item = index.internalPointer()
+        return index    
+
+            
+        
+    def selectItem(self, path):
+        index = self.getIndex(path)
+        if index and index.isValid():
+            self.view.setCurrentIndex(index)
+            self.tagClicked(index)
+            self.view.expand(index)
 
     def getState(self):
         path = self.getPath()
-        print "getState", path
         return (self.document.toString(0),path)
 
 
@@ -133,6 +151,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             error = "Failed to load: %s" % e
             print error
         self.hideFrame()    
+        self.selectItem(path)    
             
 
     def updateForm(self):

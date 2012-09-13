@@ -336,7 +336,9 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                     self.widget.node = node
 
                     while not child.isNull():
-                        self.widget.appendNode(child, index)
+                        child2 = self.root.importNode(child, True)
+                        self.widget.appendNode(child2, index)
+
 #                        node.appendChild(child)
                         child = child.nextSibling()
 
@@ -400,7 +402,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
                             self.widget.node = node
-                            self.widget.appendNode(ds, index)
+                            ds2 = self.root.importNode(ds, True)
+                            self.widget.appendNode(ds2, index)
 #                            node.appendChild(ds)
 
                 self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
@@ -444,7 +447,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
         self.widget.node = node
-        self.widget.appendNode(dsNode, index)
+        dsNode2 = self.root.importNode(dsNode, True)
+        self.widget.appendNode(dsNode2, index)
         
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         self.view.expand(index)

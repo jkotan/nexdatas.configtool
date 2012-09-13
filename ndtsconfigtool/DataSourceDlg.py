@@ -103,7 +103,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         ## DOM document
         self.document = None
         
-
+        self.tree = False
+        
         ## allowed subitems
         self.subItems = ["record", "doc", "device", "database", "query", "door"]
 
@@ -212,7 +213,9 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
     def treeMode(self, enable = True):
         if enable:
             self.frame.hide()
+            self.tree = True
         else:
+            self.tree = False
             self.frame.show()
             
         
@@ -687,7 +690,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
         self.dataSourceType = sourceType
 
-        self.doc = unicode(self.docTextEdit.toPlainText())
+        self.doc = unicode(self.docTextEdit.toPlainText()).strip()
 
         index = QModelIndex()
         if self.model:
@@ -714,40 +717,46 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         return True    
 
     def createHeader(self):
-            self.model = None
-            self.document = QDomDocument()
-            self.root = self.document
-            processing = self.root.createProcessingInstruction("xml", 'version="1.0"') 
-            self.root.appendChild(processing)
+        self.model = None
+        self.document = QDomDocument()
+        self.root = self.document
+        processing = self.root.createProcessingInstruction("xml", 'version="1.0"') 
+        self.root.appendChild(processing)
+
+        definition = self.root.createElement(QString("definition"))
+        self.root.appendChild(definition)
+        self.node = self.root.createElement(QString("datasource"))
+        definition.appendChild(self.node)            
+        
             
-            definition = self.root.createElement(QString("definition"))
-            self.root.appendChild(definition)
-            self.node = self.root.createElement(QString("datasource"))
-            definition.appendChild(self.node)            
 
 
-            
 
+    def createNodes(self,external = False):        
+        if external:
+            root = QDomDocument()
+        else:
+            if not self.root or not self.node:
+                self.createHeader()
+            root = self.root 
 
-    def createNodes(self):        
-        if not self.root or not self.node:
-            self.createHeader()
-
-        newDs = self.root.createElement(QString("datasource"))
+        newDs = root.createElement(QString("datasource"))
         elem=newDs.toElement()
 #        attributeMap = self.newDs.attributes()
         elem.setAttribute(QString("type"), QString(self.dataSourceType))
+        
         if self.dataSourceType == 'CLIENT':
-            record = self.root.createElement(QString("record"))
+            record = root.createElement(QString("record"))
             record.setAttribute(QString("name"), QString(self.clientRecordName))
             newDs.appendChild(record)            
+#            print "Client:", self.clientRecordName
 
         elif self.dataSourceType == 'TANGO':
-            record = self.root.createElement(QString("record"))
+            record = root.createElement(QString("record"))
             record.setAttribute(QString("name"), QString(self.tangoMemberName))
             newDs.appendChild(record)            
 
-            device = self.root.createElement(QString("device"))
+            device = root.createElement(QString("device"))
             device.setAttribute(QString("name"), QString(self.tangoDeviceName))
             device.setAttribute(QString("member"), QString(self.tangoMemberType))
             if self.tangoHost:
@@ -757,38 +766,43 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             newDs.appendChild(device)            
             
         elif self.dataSourceType == 'DB':
-            db = self.root.createElement(QString("database"))
+            db = root.createElement(QString("database"))
             db.setAttribute(QString("dbtype"), QString(self.dbType))
             for par in self.dbParameters.keys():
                 if par == 'Oracle DSN':
-                    newText = self.root.createTextNode(QString(self.dbParameters[par]))
+                    newText = root.createTextNode(QString(self.dbParameters[par]))
                     db.appendChild(newText)
                 else:
                     db.setAttribute(QString(par), QString(self.dbParameters[par]))
             newDs.appendChild(db)            
 
-            query = self.root.createElement(QString("query"))
+            query = root.createElement(QString("query"))
             query.setAttribute(QString("format"), QString(self.dbDataFormat))
             if self.dbQuery:
-                newText = self.root.createTextNode(QString(self.dbQuery))
+                newText = root.createTextNode(QString(self.dbQuery))
                 query.appendChild(newText)
 
             newDs.appendChild(query)            
 
+        if(self.doc):
+            newDoc = root.createElement(QString("doc"))
+            newText = root.createTextNode(QString(self.doc))
+            newDoc.appendChild(newText)
+            newDs.appendChild(newDoc)
 
-        newDoc = self.root.createElement(QString("doc"))
-        newText = self.root.createTextNode(QString(self.doc))
-        newDoc.appendChild(newText)
-        newDs.appendChild(newDoc)
 
-        return newDs
+        if external:
+            rootDs = self.root.importNode(newDs, True)
+        else:
+            rootDs = newDs
+        return rootDs
         
 
+
+
     def updateNode(self,index=QModelIndex()):
-        newDs = self.createNodes()
+        newDs = self.createNodes(self.tree)
         oldDs = self.node
-
-
 
         self.node = self.node.parentNode()        
         if hasattr(index,"parent"):
@@ -796,6 +810,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         else:
             parent = QModelIndex()
 
+#        print "Replace"
 
         self.replaceNode(oldDs, newDs, parent)
         self.node = newDs

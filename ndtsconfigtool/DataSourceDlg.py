@@ -639,7 +639,6 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
    ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
-        print " DS APPLY"
         change  = False
         class CharacterError(Exception): pass
         sourceType = unicode(self.typeComboBox.currentText())
@@ -802,38 +801,14 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
 
     def updateNode(self,index=QModelIndex()):
-        print "update", self.tree
         newDs = self.createNodes(self.tree)
         oldDs = self.node
 
-        doc = QDomDocument()
-        n = doc.importNode(newDs,True)
-        doc.appendChild(n)
-        print "NODE:", doc.toString(2)
-
-
-        doc = QDomDocument()
-        n = doc.importNode(oldDs,True)
-        doc.appendChild(n)
-        print "OLD NODE:", doc.toString(2)
-        
-        self.node = self.node.parentNode()        
-        if self.node:
-            print "No zero"
-        
-        doc = QDomDocument()
-        n = doc.importNode(self.node,True)
-        doc.appendChild(n)
-        print "PARENT:", doc.toString(2)
-
-        print "ROOT NODE:", self.root.toString(2)
 
         if hasattr(index,"parent"):
             parent = index.parent()
-            print "parent"
         else:
             parent = QModelIndex()
-            print "no parent"
 
 #        print "Replace"
 

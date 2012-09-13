@@ -1187,6 +1187,7 @@ class ComponentMerge(ComponentItemCommand):
             if self._cp is not None:
                 if hasattr(self._cp.widget,"merge"):
                     self._cp.widget.merge()
+
         self.postExecute()
             
             

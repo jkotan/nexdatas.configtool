@@ -469,9 +469,11 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             QMessageBox.warning(self, "Merging problem",
                                 "Error in Merging: %s" % unicode(e) )
             print "Error in Merging: %s" % unicode(e)
+            self.view.reset()
             return
         except  Exception, e:    
             print "Exception: %s" % unicode(e)
+            self.view.reset()
             return
         return True
 

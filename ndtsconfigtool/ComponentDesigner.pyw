@@ -509,9 +509,12 @@ class MainWindow(QMainWindow):
     def componentSave(self):
         cmd = self.pool.getCommand('componentSave').clone()
         cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True)
         self.pool.setDisabled("redo", True)   
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False)
+#        self.pool.setDisabled("redo", True)   
 
     def componentChangeDirectory(self):
         cmd = self.pool.getCommand('componentChangeDirectory').clone()
@@ -563,15 +566,21 @@ class MainWindow(QMainWindow):
     def dsourceSave(self):
         cmd = self.pool.getCommand('dsourceSave').clone()
         cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True)
         self.pool.setDisabled("redo", True)   
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False)
+#        self.pool.setDisabled("redo", True)   
 
     def dsourceSaveAs(self):
         cmd = self.pool.getCommand('dsourceSaveAs').clone()
         cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False)
+#        self.pool.setDisabled("redo", True)   
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True)
         self.pool.setDisabled("redo", True)   
 
     def dsourceSaveAll(self):
@@ -585,8 +594,11 @@ class MainWindow(QMainWindow):
     def componentSaveAs(self):
         cmd = self.pool.getCommand('componentSaveAs').clone()
         cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False)
+#        self.pool.setDisabled("redo", True)   
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True)
         self.pool.setDisabled("redo", True)   
 
 

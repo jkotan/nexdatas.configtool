@@ -214,6 +214,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
         name = unicode(clipNode.nodeName())
 
+        print "NAME: ",clipNode.nodeName()
         if name not in self.widget.subItems:
             ## Message
             return        
@@ -225,13 +226,15 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         if not sel:
             ## Message
             return
+
         node = sel.node
 
 
         self.widget.node = node
-        self.widget.appendNode(clipNode, index)
-        
+        self.widget.appendNode(clipNode, index)        
+
         self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        
         self.view.expand(index)
 
 

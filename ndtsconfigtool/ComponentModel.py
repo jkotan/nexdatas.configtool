@@ -32,7 +32,9 @@ class ComponentModel(QAbstractItemModel):
         super(ComponentModel, self).__init__(parent)
         
         self.domDocument = document
-        self.rootItem = ComponentItem(self.domDocument, 0)
+        self.rootItem = ComponentItem(self.domDocument
+#                                      , 0 
+                                      )
 
 
 
@@ -122,7 +124,7 @@ class ComponentModel(QAbstractItemModel):
         if parentItem is None or parentItem == self.rootItem:
             return QModelIndex()
             
-        return self.createIndex(parentItem.row,0, parentItem)
+        return self.createIndex(parentItem.childNumber(), 0, parentItem)
 
         
 

@@ -32,16 +32,19 @@ class ComponentItem(object):
     
     ## constructor
     # \param parent patent instance
-    def __init__(self, node, row, parent = None):
+    def __init__(self, node, parent = None):
         
         
         self.node = node
         self.childItems = []
         self.parent = parent
-        self.row = row
         
 
 
+    def childNumber(self):
+        if self.parent:
+            return self.parent.childItems.index(self)
+        return 0
         
     def child(self, i):
         size = len(self.childItems)
@@ -50,13 +53,12 @@ class ComponentItem(object):
         if i >=0 and i < self.node.childNodes().count():
             childNode = self.node.childNodes().item(i)
             for j in range(size,i+1):                
-                childItem = ComponentItem(childNode, j, self)
+                childItem = ComponentItem(childNode, self)
                 self.childItems.append(childItem)
             return childItem
 
 
     def removeChildren(self,position, count):
-        
         if position < 0 or position + count  >   self.node.childNodes().count():
             return False
         
@@ -76,7 +78,7 @@ class ComponentItem(object):
         for i in range(position,position+count):
             if position <= len(self.childItems):
                 childNode = self.node.childNodes().item(i)
-                childItem = ComponentItem(childNode, i, self)
+                childItem = ComponentItem(childNode, self)
                 self.childItems.insert(i, childItem)
                 
         return True
@@ -87,5 +89,5 @@ if __name__ == "__main__":
     import sys
 
     qdn = QDomNode()
-    di = ComponentItem(qdn, 1,None)
+    di = ComponentItem(qdn, None)
     di.child(0)

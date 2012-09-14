@@ -509,8 +509,6 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         
         value = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
         
-        print "VALUE", value
-
         if value == 'CLIENT':
             self.dataSourceType = unicode(value)
 

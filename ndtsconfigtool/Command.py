@@ -491,6 +491,175 @@ class ComponentChangeDirectory(Command):
         return ComponentChangeDirectory(self.receiver, self._slot) 
 
 
+class DataSourceCopy(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._ds = None
+        self._oldstate = None
+        self._newstate = None
+        
+        
+    def execute(self):
+        if self._ds is None:
+            self._ds = self.receiver.sourceList.currentListDataSource()
+        if self._ds is not None and self._ds.widget is not None:
+            if self._newstate is None:
+                if self._oldstate is None:
+                    self._oldstate = self._ds.widget.getState() 
+
+                self._ds.widget.copyToClipboard()
+            else:
+                self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
+                self._ds.widget.updateForm()
+            if self._ds.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            else:    
+                self.receiver.mdi.addWindow(self._ds.widget)
+                self._ds.widget.show()
+                
+
+            self._newstate = self._ds.widget.getState() 
+            
+        print "EXEC dsourceCopy"
+
+    def unexecute(self):
+        if self._ds is not None and hasattr(self._ds,'widget') and  self._ds.widget is not None:
+        
+            self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._oldstate)
+            self.receiver.sourceList.datasources[self._ds.id].widget.updateForm()
+
+
+            if self._ds.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            else:
+                self.receiver.mdi.addWindow(self._ds.widget)
+                self._ds.widget.show()
+            
+            
+        print "UNDO dsourceCopy"
+        
+    def clone(self):
+        return DataSourceCopy(self.receiver, self._slot) 
+        
+
+
+
+
+class DataSourceCut(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._ds = None
+        self._oldstate = None
+        self._newstate = None
+        
+        
+    def execute(self):
+        if self._ds is None:
+            self._ds = self.receiver.sourceList.currentListDataSource()
+        if self._ds is not None and self._ds.widget is not None:
+            if self._newstate is None:
+                if self._oldstate is None:
+                    self._oldstate = self._ds.widget.getState() 
+                self._ds.widget.copyToClipboard()
+                self._ds.widget.clear()
+                self._ds.widget.createNodes()
+                self._ds.widget.updateForm()
+                self._ds.widget.show()
+            else:
+                self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
+                self._ds.widget.updateForm()
+            if self._ds.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            else:    
+                self.receiver.mdi.addWindow(self._ds.widget)
+                self._ds.widget.show()
+                
+
+            self._newstate = self._ds.widget.getState() 
+            
+        print "EXEC dsourceCut"
+
+    def unexecute(self):
+        if self._ds is not None and hasattr(self._ds,'widget') and  self._ds.widget is not None:
+        
+            self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._oldstate)
+            self.receiver.sourceList.datasources[self._ds.id].widget.updateForm()
+
+
+            if self._ds.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            else:
+                self.receiver.mdi.addWindow(self._ds.widget)
+                self._ds.widget.show()
+            
+            
+        print "UNDO dsourceCut"
+        
+    def clone(self):
+        return DataSourceCut(self.receiver, self._slot) 
+        
+
+
+
+
+class DataSourcePaste(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._ds = None
+        self._oldstate = None
+        self._newstate = None
+        
+        
+    def execute(self):
+        if self._ds is None:
+            self._ds = self.receiver.sourceList.currentListDataSource()
+        if self._ds is not None and self._ds.widget is not None:
+            if self._newstate is None:
+                if self._oldstate is None:
+                    self._oldstate = self._ds.widget.getState() 
+                self._ds.widget.clear()
+                self._ds.widget.copyFromClipboard()
+                self._ds.widget.updateForm()
+                self._ds.widget.setFrames(self._ds.widget.dataSourceType)
+
+#                self._ds.widget.updateForm()
+                self._ds.widget.show()
+            else:
+                self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
+                self._ds.widget.updateForm()
+            if self._ds.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            else:    
+                self.receiver.mdi.addWindow(self._ds.widget)
+                self._ds.widget.show()
+                
+
+            self._newstate = self._ds.widget.getState() 
+            
+        print "EXEC dsourcePaste"
+
+    def unexecute(self):
+        if self._ds is not None and hasattr(self._ds,'widget') and  self._ds.widget is not None:
+        
+            self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._oldstate)
+            self.receiver.sourceList.datasources[self._ds.id].widget.updateForm()
+
+
+            if self._ds.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            else:
+                self.receiver.mdi.addWindow(self._ds.widget)
+                self._ds.widget.show()
+            
+            
+        print "UNDO dsourcePaste"
+        
+    def clone(self):
+        return DataSourcePaste(self.receiver, self._slot) 
+        
+
+
+
 class DataSourceApply(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)

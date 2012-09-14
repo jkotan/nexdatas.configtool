@@ -204,17 +204,24 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         
         if not self.model or not self.view or not self.widget \
                 or not hasattr(self.widget,"subItems") :
+            ## Message
             return
 
         clipboard = QApplication.clipboard()
         clipNode = self.stringToNode(clipboard.text())
         if clipNode is None:
             return
-        print "Text: ",clipboard.text()
+
+        name = unicode(clipNode.nodeName())
+
+        if name not in self.widget.subItems:
+            ## Message
+            return        
 
         index = self.view.currentIndex()
         sel = index.internalPointer()
         if not sel:
+            ## Message
             return
         node = sel.node
 

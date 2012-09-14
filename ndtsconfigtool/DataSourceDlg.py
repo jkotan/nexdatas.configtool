@@ -108,6 +108,25 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         ## allowed subitems
         self.subItems = ["record", "doc", "device", "database", "query", "door"]
 
+    def clear(self):
+        self.dataSourceType = 'CLIENT'
+        self.doc = u''
+
+        self.clientRecordName = u''
+
+        self.tangoDeviceName = u''
+        self.tangoMemberName = u''
+        self.tangoMemberType = u''
+        self.tangoHost = u''
+        self.tangoPort = u''
+
+        self.dbType = 'MYSQL'
+        self.dbDataFormat = 'SCALAR'
+        self.dbQuery = ""
+        self.dbParameters = {}
+        self._dbParam = {}
+        
+
     def getState(self):
         dbParameters = copy.copy(self.dbParameters)
 
@@ -490,6 +509,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         
         value = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
         
+        print "VALUE", value
 
         if value == 'CLIENT':
             self.dataSourceType = unicode(value)
@@ -727,9 +747,28 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         self.root.appendChild(definition)
         self.node = self.root.createElement(QString("datasource"))
         definition.appendChild(self.node)            
-        
+        return self.node
             
+    def copyToClipboard(self):
+        dsNode = self.createNodes()
+        doc = QDomDocument()
+        child = doc.importNode(dsNode,True)
+        doc.appendChild(child)
+        text = unicode(doc.toString(0))
+        print "Text:\n",text
+        clipboard= QApplication.clipboard()
+        clipboard.setText(text)
 
+    def copyFromClipboard(self):
+        clipboard= QApplication.clipboard()
+        text=unicode(clipboard.text())
+        self.document = QDomDocument()
+        self.root = self.document
+        if not self.document.setContent(text):
+            raise ValueError, "could not parse XML"
+
+        ds = self.getFirstElement(self.document, "datasource")           
+        self.setFromNode(ds)
 
 
     def createNodes(self,external = False):        

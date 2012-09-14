@@ -198,6 +198,23 @@ class MainWindow(QMainWindow):
             "Save All DataSources", "dsourceSaveAll", commandArgs, DataSourceSaveAll,
             "", "dsourcessaveall", "Save the all datasources")
 
+
+        dsourceCopyAction = self.pool.createCommand(
+            "Copy DataSource", "dsourceCopy", 
+            commandArgs, DataSourceCopy,
+            "", "dsourcecopy", "copy datasouce")
+
+
+        dsourceCutAction = self.pool.createCommand(
+            "Cut DataSource", "dsourceCut", 
+            commandArgs, DataSourceCut,
+            "", "dsourcecut", "cut datasouce")
+
+
+        dsourcePasteAction = self.pool.createCommand(
+            "Paste DataSource", "dsourcePaste", 
+            commandArgs, DataSourcePaste,
+            "", "dsourcepaste", "paste datasouce")
         
 
         componentRemoveItemAction = self.pool.createCommand(
@@ -360,15 +377,17 @@ class MainWindow(QMainWindow):
                 None, 
                 fileQuitAction))
         editMenu = self.menuBar().addMenu("&Edit")
-        self.addActions(editMenu, (undoAction,redoAction))
+        self.addActions(editMenu, (
+                componentCopyItemAction,
+                componentPasteItemAction,
+                componentRemoveItemAction, None,
+                undoAction,redoAction
+                ))
         componentsMenu = self.menuBar().addMenu("C&omponents")    
         self.addActions(componentsMenu, ( 
                 componentNewGroupAction, componentNewFieldAction, 
                 componentNewAttributeAction, componentNewLinkAction,
                 componentNewDataSourceAction,None, 
-                componentCopyItemAction,
-                componentPasteItemAction,
-                componentRemoveItemAction, None,
                 componentApplyItemAction, None,
                 componentLoadComponentAction, componentLoadDataSourceAction,
                 None,
@@ -382,13 +401,13 @@ class MainWindow(QMainWindow):
             componentNewGroupAction, componentNewFieldAction,
             componentNewAttributeAction, componentNewLinkAction,
             componentNewDataSourceAction, None,
-            componentPasteItemAction,
-            componentCopyItemAction,
-            componentRemoveItemAction, None,
             componentLoadComponentAction, componentLoadDataSourceAction,
             None,
             componentAddDataSourceAction,
             None,
+            componentPasteItemAction,
+            componentCopyItemAction,
+            componentRemoveItemAction, None,
             componentMergeAction
             ) 
         
@@ -400,6 +419,9 @@ class MainWindow(QMainWindow):
                                           dsourceSaveAction,
                                           dsourceSaveAsAction,
                                           dsourceSaveAllAction, None,
+                                          dsourceCopyAction,
+                                          dsourcePasteAction,
+                                          dsourceCutAction,None,
                                           dsourceRemoveAction))
  
         viewMenu = self.menuBar().addMenu("&View")
@@ -652,6 +674,32 @@ class MainWindow(QMainWindow):
 #        self.cmdStack.append(cmd)
 #        self.pool.setDisabled("undo", False)
 #        self.pool.setDisabled("redo", True)   
+
+
+    def dsourceCopy(self):
+        cmd = self.pool.getCommand('dsourceCopy').clone()
+        cmd.execute()
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False)
+#        self.pool.setDisabled("redo", True)   
+
+
+
+    def dsourceCut(self):
+        cmd = self.pool.getCommand('dsourceCut').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False)
+        self.pool.setDisabled("redo", True)   
+
+
+
+    def dsourcePaste(self):
+        cmd = self.pool.getCommand('dsourcePaste').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False)
+        self.pool.setDisabled("redo", True)   
 
 
 

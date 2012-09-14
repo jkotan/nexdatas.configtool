@@ -203,6 +203,11 @@ class MainWindow(QMainWindow):
         componentRemoveItemAction = self.pool.createCommand(
             "&Remove Item", "componentRemoveItem", commandArgs, ComponentRemoveItem,
             "Ctrl+D", "componentremoveitem", "Remove the component item")
+
+
+        componentCopyItemAction = self.pool.createCommand(
+            "&Copy Item", "componentCopyItem", commandArgs, ComponentCopyItem,
+            "Ctrl+C", "componentcopyitem", "Copy the component item")
         
 
         componentNewGroupAction = self.pool.createCommand(
@@ -350,6 +355,7 @@ class MainWindow(QMainWindow):
                 componentNewGroupAction, componentNewFieldAction, 
                 componentNewAttributeAction, componentNewLinkAction,
                 componentNewDataSourceAction,None, 
+                componentCopyItemAction,
                 componentRemoveItemAction, None,
                 componentApplyItemAction, None,
                 componentLoadComponentAction, componentLoadDataSourceAction,
@@ -364,6 +370,7 @@ class MainWindow(QMainWindow):
             componentNewGroupAction, componentNewFieldAction,
             componentNewAttributeAction, componentNewLinkAction,
             componentNewDataSourceAction, None,
+            componentCopyItemAction,
             componentRemoveItemAction, None,
             componentLoadComponentAction, componentLoadDataSourceAction,
             None,
@@ -483,7 +490,7 @@ class MainWindow(QMainWindow):
 
 
 
-    def dsourceRemove(self):
+    def dsourceRemove(eself):
         self.pooling = False
         cmd = self.pool.getCommand('dsourceRemove').clone()
         cmd.execute()
@@ -617,6 +624,15 @@ class MainWindow(QMainWindow):
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False)
         self.pool.setDisabled("redo", True)   
+
+    def componentCopyItem(self):
+        cmd = self.pool.getCommand('componentCopyItem').clone()
+        cmd.execute()
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False)
+#        self.pool.setDisabled("redo", True)   
+
+
 
     def componentNewGroupItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):

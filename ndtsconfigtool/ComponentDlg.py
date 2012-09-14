@@ -178,6 +178,12 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             return
         if hasattr(self.widget,'apply'):
             self.widget.apply()
+
+    def nodeToString(self, node):
+        doc = QDomDocument()
+        doc.importNode(node,True)
+        return unicode(doc.toString(0))
+
         
 
     def addItem(self,name):
@@ -214,14 +220,16 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             return
 
         node = sel.node
+
         attributeMap = node.attributes()
         name = ""
         if attributeMap.contains("name"):
             name = attributeMap.namedItem("name").nodeValue()
-
         print "Removing" , node.nodeName(), name
-#                node = self.widget.node
+
         
+        clipboard = QApplication.clipboard()
+        clipboard.setText(self.nodeToString(node))
         
         if hasattr(self.widget,"node"):
             self.widget.node = node.parentNode()
@@ -232,6 +240,28 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         if index.parent().isValid():
             self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
                             index.parent(),index.parent())
+
+
+    def copySelectedItem(self):
+        if not self.model or not self.view or not self.widget:
+            return
+        index = self.view.currentIndex()
+        sel = index.internalPointer()
+        if not sel:
+            return
+
+        node = sel.node
+
+        attributeMap = node.attributes()
+        name = ""
+        if attributeMap.contains("name"):
+            name = attributeMap.namedItem("name").nodeValue()
+        print "Copying" , node.nodeName(), name
+
+        
+        clipboard = QApplication.clipboard()
+        clipboard.setText(self.nodeToString(node))
+        
             
 
     def createGUI(self):

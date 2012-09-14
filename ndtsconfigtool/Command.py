@@ -1175,6 +1175,29 @@ class ComponentRemoveItem(ComponentItemCommand):
 
 
 
+class ComponentCopyItem(ComponentItemCommand):
+    def __init__(self, receiver, slot):
+        ComponentItemCommand.__init__(self, receiver,slot)
+
+        
+    def execute(self):
+        if self._cp is None:
+            self.preExecute()
+            if self._cp is not None:
+                if self._cp.widget is not None:
+                    if hasattr(self._cp.widget,"copySelectedItem"):
+                        self._cp.widget.copySelectedItem()
+        self.postExecute()
+            
+        print "EXEC componentCopyItem"
+
+
+    def clone(self):
+        return ComponentCopyItem(self.receiver, self._slot) 
+
+
+
+
 class ComponentMerge(ComponentItemCommand):
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)

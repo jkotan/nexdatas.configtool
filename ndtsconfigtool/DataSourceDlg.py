@@ -755,7 +755,6 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         child = doc.importNode(dsNode,True)
         doc.appendChild(child)
         text = unicode(doc.toString(0))
-        print "Text:\n",text
         clipboard= QApplication.clipboard()
         clipboard.setText(text)
 

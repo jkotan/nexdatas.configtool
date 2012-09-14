@@ -54,6 +54,7 @@ class Command(object):
     def clone(self): 
         pass
 
+
 class ComponentNew(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
@@ -1385,6 +1386,91 @@ class ComponentPasteItem(ComponentItemCommand):
 
     def clone(self):
         return ComponentPasteItem(self.receiver, self._slot) 
+
+
+
+
+
+
+
+class CutItem(ComponentItemCommand):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver,slot)
+        self.type = None
+        self.ds = DataSourceCut(receiver, slot)
+        self.cp = ComponentRemoveItem(receiver, slot)
+
+    def execute(self):
+        if self.type == 'component':
+            self.cp.execute()
+        elif self.type == 'datasource':
+            self.ds.execute()
+
+    def unexecute(self):
+        if self.type == 'component':
+            self.cp.unexecute()
+        elif self.type == 'datasource':
+            self.ds.unexecute()
+        
+
+
+    def clone(self):
+        return CutItem(self.receiver, self._slot) 
+
+
+
+
+
+
+class CopyItem(ComponentItemCommand):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver,slot)
+        self.type = None
+        self.ds = DataSourceCopy(receiver, slot)
+        self.cp = ComponentCopyItem(receiver, slot)
+
+    def execute(self):
+        if self.type == 'component':
+            self.cp.execute()
+        elif self.type == 'datasource':
+            self.ds.execute()
+
+    def unexecute(self):
+        if self.type == 'component':
+            self.cp.unexecute()
+        elif self.type == 'datasource':
+            self.ds.unexecute()
+        
+
+
+    def clone(self):
+        return CopyItem(self.receiver, self._slot) 
+
+
+
+class PasteItem(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver,slot)
+        self.type = None
+        self.ds = DataSourcePaste(receiver, slot)
+        self.cp = ComponentPasteItem(receiver, slot)
+
+    def execute(self):
+        if self.type == 'component':
+            self.cp.execute()
+        elif self.type == 'datasource':
+            self.ds.execute()
+
+    def unexecute(self):
+        if self.type == 'component':
+            self.cp.unexecute()
+        elif self.type == 'datasource':
+            self.ds.unexecute()
+        
+
+
+    def clone(self):
+        return PasteItem(self.receiver, self._slot) 
 
 
 

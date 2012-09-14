@@ -218,24 +218,50 @@ class MainWindow(QMainWindow):
         
 
         componentRemoveItemAction = self.pool.createCommand(
-            "C&ut Item", "componentRemoveItem", commandArgs, ComponentRemoveItem,
-            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
+            "C&ut Component Item", "componentRemoveItem", commandArgs, ComponentRemoveItem,
+#            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
 #            "Ctrl+X",
+            "" ,
             "componentremoveitem", "Remove the component item")
 
 
         componentCopyItemAction = self.pool.createCommand(
-            "&Copy Item", "componentCopyItem", commandArgs, ComponentCopyItem,
-            QKeySequence(Qt.CTRL + Qt.SHIFT  + Qt.Key_C),
+            "&Copy Component Item", "componentCopyItem", commandArgs, ComponentCopyItem,
+#            QKeySequence(Qt.CTRL + Qt.SHIFT  + Qt.Key_C),
 #            "Ctrl+C", 
+            "" ,
             "componentcopyitem", "Copy the component item")
 
 
         componentPasteItemAction = self.pool.createCommand(
-            "&Paste Item", "componentPasteItem", commandArgs, ComponentPasteItem,
+            "&Paste Component Item", "componentPasteItem", commandArgs, ComponentPasteItem,
+#            QKeySequence(Qt.CTRL +  Qt.SHIFT  + Qt.Key_V),
+#            "Ctrl+V", 
+            "" ,
+            "componentpasteitem", "Paste the component item")
+
+
+
+
+        cutItemAction = self.pool.createCommand(
+            "C&ut Item", "cutItem", commandArgs, CutItem,
+            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
+#            "Ctrl+X",
+            "cutitem", "Cut the item")
+
+
+        copyItemAction = self.pool.createCommand(
+            "&Copy Item", "copyItem", commandArgs, CopyItem,
+            QKeySequence(Qt.CTRL + Qt.SHIFT  + Qt.Key_C),
+#            "Ctrl+C", 
+            "copyitem", "Copy the item")
+
+
+        pasteItemAction = self.pool.createCommand(
+            "&Paste Item", "pasteItem", commandArgs, PasteItem,
             QKeySequence(Qt.CTRL +  Qt.SHIFT  + Qt.Key_V),
 #            "Ctrl+V", 
-            "componentpasteitem", "Paste the component item")
+            "pasteitem", "Paste the item")
         
 
         componentNewGroupAction = self.pool.createCommand(
@@ -378,10 +404,11 @@ class MainWindow(QMainWindow):
                 fileQuitAction))
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (
-                componentCopyItemAction,
-                componentPasteItemAction,
-                componentRemoveItemAction, None,
-                undoAction,redoAction
+                undoAction,redoAction,
+                None,
+                cutItemAction, 
+                copyItemAction,
+                pasteItemAction,
                 ))
         componentsMenu = self.menuBar().addMenu("C&omponents")    
         self.addActions(componentsMenu, ( 
@@ -390,6 +417,10 @@ class MainWindow(QMainWindow):
                 componentNewDataSourceAction,None, 
                 componentApplyItemAction, None,
                 componentLoadComponentAction, componentLoadDataSourceAction,
+                None,
+                componentRemoveItemAction, 
+                componentCopyItemAction,
+                componentPasteItemAction,
                 None,
                 componentAddDataSourceAction,
                 None,
@@ -405,9 +436,10 @@ class MainWindow(QMainWindow):
             None,
             componentAddDataSourceAction,
             None,
-            componentPasteItemAction,
+            componentRemoveItemAction, 
             componentCopyItemAction,
-            componentRemoveItemAction, None,
+            componentPasteItemAction,
+            None,
             componentMergeAction
             ) 
         
@@ -419,9 +451,10 @@ class MainWindow(QMainWindow):
                                           dsourceSaveAction,
                                           dsourceSaveAsAction,
                                           dsourceSaveAllAction, None,
+                                          dsourceCutAction,
                                           dsourceCopyAction,
                                           dsourcePasteAction,
-                                          dsourceCutAction,None,
+                                          None,
                                           dsourceRemoveAction))
  
         viewMenu = self.menuBar().addMenu("&View")
@@ -696,6 +729,52 @@ class MainWindow(QMainWindow):
 
     def dsourcePaste(self):
         cmd = self.pool.getCommand('dsourcePaste').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False)
+        self.pool.setDisabled("redo", True)   
+
+
+
+    def copyItem(self):
+        cmd = self.pool.getCommand('copyItem').clone()
+        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+            cmd.type = "component"
+        elif isinstance(self.mdi.activeWindow(),DataSourceDlg):
+            cmd.type = "datasource"
+        else:
+            cmd.type = None
+        cmd.execute()
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False)
+#        self.pool.setDisabled("redo", True)   
+
+
+
+    def cutItem(self):
+        cmd = self.pool.getCommand('cutItem').clone()
+        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+            cmd.type = "component"
+        elif isinstance(self.mdi.activeWindow(),DataSourceDlg):
+            cmd.type = "datasource"
+        else:
+            cmd.type = None
+
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False)
+        self.pool.setDisabled("redo", True)   
+
+
+
+    def pasteItem(self):
+        cmd = self.pool.getCommand('pasteItem').clone()
+        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+            cmd.type = "component"
+        elif isinstance(self.mdi.activeWindow(),DataSourceDlg):
+            cmd.type = "datasource"
+        else:
+            cmd.type = None
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False)

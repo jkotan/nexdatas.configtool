@@ -477,11 +477,11 @@ class MainWindow(QMainWindow):
         self.addActions(fileToolbar, (componentOpenAction, componentNewAction,componentEditAction, 
                                       componentRemoveAction, 
                                       None,
-                                      dsourceNewAction,dsourceEditAction,dsourceRemoveAction, 
-                                      None, 
                                       cutItemAction, copyItemAction, pasteItemAction,
                                       None,
-                                      undoAction, redoAction
+                                      undoAction, redoAction,
+                                      None, 
+                                      dsourceNewAction,dsourceEditAction,dsourceRemoveAction
                                       ))
 
         editToolbar = self.addToolBar("Edit")

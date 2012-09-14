@@ -767,7 +767,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             raise ValueError, "could not parse XML"
 
         ds = self.getFirstElement(self.document, "datasource")           
-        self.setFromNode(ds)
+        if ds:
+            self.setFromNode(ds)
 
 
     def createNodes(self,external = False):        

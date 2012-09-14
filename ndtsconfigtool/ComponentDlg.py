@@ -219,6 +219,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             return        
 
         index = self.view.currentIndex()
+        if not index.isValid():
+            return
         sel = index.internalPointer()
         if not sel:
             ## Message

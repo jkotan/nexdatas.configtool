@@ -194,7 +194,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             return
         if not doc.setContent(unicode(xml).strip()):
             raise ValueError, "could not parse XML"
-        if self.document:
+        if self.document and doc and doc.hasChildNodes():
             return self.document.importNode(doc.firstChild(), True)
         
         
@@ -208,10 +208,12 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             return
 
         clipboard = QApplication.clipboard()
+#        print "TEXT: \n",clipboard.text()
         clipNode = self.stringToNode(clipboard.text())
         if clipNode is None:
             return
 
+        print "TEXT: \n",clipboard.text()
         name = unicode(clipNode.nodeName())
 
         print "NAME: ",clipNode.nodeName()

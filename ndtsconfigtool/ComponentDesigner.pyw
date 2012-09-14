@@ -201,13 +201,24 @@ class MainWindow(QMainWindow):
         
 
         componentRemoveItemAction = self.pool.createCommand(
-            "&Remove Item", "componentRemoveItem", commandArgs, ComponentRemoveItem,
-            "Ctrl+D", "componentremoveitem", "Remove the component item")
+            "C&ut Item", "componentRemoveItem", commandArgs, ComponentRemoveItem,
+            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
+#            "Ctrl+X",
+            "componentremoveitem", "Remove the component item")
 
 
         componentCopyItemAction = self.pool.createCommand(
             "&Copy Item", "componentCopyItem", commandArgs, ComponentCopyItem,
-            "Ctrl+C", "componentcopyitem", "Copy the component item")
+            QKeySequence(Qt.CTRL + Qt.SHIFT  + Qt.Key_C),
+#            "Ctrl+C", 
+            "componentcopyitem", "Copy the component item")
+
+
+        componentPasteItemAction = self.pool.createCommand(
+            "&Paste Item", "componentPasteItem", commandArgs, ComponentPasteItem,
+            QKeySequence(Qt.CTRL +  Qt.SHIFT  + Qt.Key_V),
+#            "Ctrl+V", 
+            "componentpasteitem", "Paste the component item")
         
 
         componentNewGroupAction = self.pool.createCommand(
@@ -356,6 +367,7 @@ class MainWindow(QMainWindow):
                 componentNewAttributeAction, componentNewLinkAction,
                 componentNewDataSourceAction,None, 
                 componentCopyItemAction,
+                componentPasteItemAction,
                 componentRemoveItemAction, None,
                 componentApplyItemAction, None,
                 componentLoadComponentAction, componentLoadDataSourceAction,
@@ -370,6 +382,7 @@ class MainWindow(QMainWindow):
             componentNewGroupAction, componentNewFieldAction,
             componentNewAttributeAction, componentNewLinkAction,
             componentNewDataSourceAction, None,
+            componentPasteItemAction,
             componentCopyItemAction,
             componentRemoveItemAction, None,
             componentLoadComponentAction, componentLoadDataSourceAction,
@@ -625,6 +638,14 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo", False)
         self.pool.setDisabled("redo", True)   
 
+
+    def componentPasteItem(self):
+        cmd = self.pool.getCommand('componentPasteItem').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False)
+        self.pool.setDisabled("redo", True)   
+        
     def componentCopyItem(self):
         cmd = self.pool.getCommand('componentCopyItem').clone()
         cmd.execute()

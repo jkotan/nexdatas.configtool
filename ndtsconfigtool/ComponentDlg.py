@@ -181,8 +181,50 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
     def nodeToString(self, node):
         doc = QDomDocument()
-        doc.importNode(node,True)
+        child = doc.importNode(node,True)
+        doc.appendChild(child)
         return unicode(doc.toString(0))
+
+
+
+    def stringToNode(self, xml):
+        doc = QDomDocument()
+        
+        if not unicode(xml).strip():
+            return
+        if not doc.setContent(unicode(xml).strip()):
+            raise ValueError, "could not parse XML"
+        if self.document:
+            return self.document.importNode(doc.firstChild(), True)
+        
+        
+        
+    def pasteItem(self):
+        print "pasting item"
+        
+        if not self.model or not self.view or not self.widget \
+                or not hasattr(self.widget,"subItems") :
+            return
+
+        clipboard = QApplication.clipboard()
+        clipNode = self.stringToNode(clipboard.text())
+        if clipNode is None:
+            return
+        print "Text: ",clipboard.text()
+
+        index = self.view.currentIndex()
+        sel = index.internalPointer()
+        if not sel:
+            return
+        node = sel.node
+
+
+        self.widget.node = node
+        self.widget.appendNode(clipNode, index)
+        
+        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.expand(index)
+
 
         
 
@@ -261,7 +303,6 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         
         clipboard = QApplication.clipboard()
         clipboard.setText(self.nodeToString(node))
-        
             
 
     def createGUI(self):

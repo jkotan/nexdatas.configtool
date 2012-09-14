@@ -9,6 +9,9 @@
 <file alias="dsourceremove.png">images/logout.png</file>
 <file alias="dsourceedit.png">images/symbol_construction.png</file>
 
+<file alias="cut.png">images/cut.png</file>
+<file alias="copy.png">images/copy.png</file>
+<file alias="paste.png">images/paste.png</file>
 <file alias="undo.png">images/undo.png</file>
 <file alias="redo.png">images/redo.png</file>
 

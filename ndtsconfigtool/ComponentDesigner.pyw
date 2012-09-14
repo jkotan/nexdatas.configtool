@@ -247,21 +247,21 @@ class MainWindow(QMainWindow):
             "C&ut Item", "cutItem", commandArgs, CutItem,
             QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
 #            "Ctrl+X",
-            "cutitem", "Cut the item")
+            "cut", "Cut the item")
 
 
         copyItemAction = self.pool.createCommand(
             "&Copy Item", "copyItem", commandArgs, CopyItem,
             QKeySequence(Qt.CTRL + Qt.SHIFT  + Qt.Key_C),
 #            "Ctrl+C", 
-            "copyitem", "Copy the item")
+            "copy", "Copy the item")
 
 
         pasteItemAction = self.pool.createCommand(
             "&Paste Item", "pasteItem", commandArgs, PasteItem,
             QKeySequence(Qt.CTRL +  Qt.SHIFT  + Qt.Key_V),
 #            "Ctrl+V", 
-            "pasteitem", "Paste the item")
+            "paste", "Paste the item")
         
 
         componentNewGroupAction = self.pool.createCommand(
@@ -475,9 +475,14 @@ class MainWindow(QMainWindow):
         fileToolbar.setObjectName("FileToolbar")
 
         self.addActions(fileToolbar, (componentOpenAction, componentNewAction,componentEditAction, 
-                                      componentRemoveAction, None,
-                                      dsourceNewAction,dsourceEditAction,dsourceRemoveAction, None, 
-                                      undoAction, redoAction))
+                                      componentRemoveAction, 
+                                      None,
+                                      dsourceNewAction,dsourceEditAction,dsourceRemoveAction, 
+                                      None, 
+                                      cutItemAction, copyItemAction, pasteItemAction,
+                                      None,
+                                      undoAction, redoAction
+                                      ))
 
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolbar")

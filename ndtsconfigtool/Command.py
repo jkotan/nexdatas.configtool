@@ -385,6 +385,7 @@ class ComponentSaveAll(Command):
         for icp in self.receiver.componentList.components.keys():
             cp = self.receiver.componentList.components[icp]
             if cp.widget is not None:
+                cp.widget.merge()    
                 cp.widget.save()    
 
         print "EXEC componentSaveAll"
@@ -401,44 +402,22 @@ class ComponentSaveAs(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._cp = None
-        self._cpEdit = None
-        
+        self.pathName = None
+        self.newName = None
+        self.directory = None
         
     def execute(self):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is not None:
-            if self._cp.widget is None:
-                #                self._cpEdit = FieldWg()  
-                self._cpEdit = ComponentDlg()
-                self._cpEdit.idc = self._cp.id
-                self._cpEdit.directory = self.receiver.componentList.directory
-                self._cpEdit.name = self.receiver.componentList.components[self._cp.id].name
-                self._cpEdit.createGUI()
-                self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
-                self._cpEdit.createHeader()
-                self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
-            else:
-                self._cpEdit = self._cp.widget 
-                
+            if self._cp.widget is not None:
+                self.pathFile = self._cp.widget.getNewName() 
+                fi = QFileInfo(self.pathFile)
+                self.newName = unicode(fi.fileName())
+                if self.newName[-4:] == '.xml':
+                    self.newName = self.newName[:-4]
+                self.directory = unicode(fi.dir().path())
 
-            if hasattr(self._cpEdit,"connectExternalActions"):     
-                self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
-                                                    self.receiver.componentSave)
-
-
-            if self._cp.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._cp.widget) 
-            else:    
-                self.receiver.mdi.addWindow(self._cpEdit)
-                self._cpEdit.show()
-                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
-                self._cp.widget = self._cpEdit 
-                    
-            self._cpEdit.saveAs()    
-#            self.receiver.loadComponents()
-
-            
         print "EXEC componentSaveAs"
 
     def unexecute(self):
@@ -949,13 +928,6 @@ class DataSourceReloadList(Command):
 
 
 
-
-
-
-
-
-
-
 class ComponentListChanged(Command):
     def __init__(self, receiver,slot):
         Command.__init__(self, receiver, slot)
@@ -963,25 +935,35 @@ class ComponentListChanged(Command):
         self.item = None
         self.name = None
         self.newName = None
+        self.oldDirectory = None
+        self.directory = None
         
     def execute(self):
-        if self.item is not None:
+        if self.item is not None or self.newName is not None:
             if self.newName is None:
                 self.newName = unicode(self.item.text())
             if self._cp is None:
-                self._cp, self.name = self.receiver.componentList.listItemChanged(self.item)
+                self._cp, self.name = self.receiver.componentList.listItemChanged(self.item, self.newName)
             else:
                 self._cp.name = self.newName
-            
+                
             self.receiver.componentList.populateComponents(self._cp.id)
             if self._cp.widget is not None:
-                self._cp.widget.setName(self.newName)
+                self.oldDirectory = self._cp.widget.directory 
+                self._cp.widget.setName(self.newName, self.directory)
+            else:
+                self.oldDirectory =  self.receiver.componentList.directory 
+
+
+              
         print "EXEC componentChanged"
 
     def unexecute(self):
         if self._cp is not None:
             self._cp.name = self.name 
             self.receiver.componentList.addComponent(self._cp, False)
+            if self._cp.widget is not None:
+                self._cp.widget.setName(self.name, self.oldDirectory)
         print "UNDO componentChanged"
 
     def clone(self):

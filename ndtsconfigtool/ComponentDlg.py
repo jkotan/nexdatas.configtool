@@ -85,6 +85,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.document = None
 
 
+        self._merged = False
+
     def getNodeRow(self, child, node):
         row = 0
         if node:
@@ -407,9 +409,12 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         for column in range(self.model.columnCount(index)):
             self.view.resizeColumnToContents(column)
 
-    def setName(self, name):
+    def setName(self, name, directory = None):
         fi = QFileInfo(self.componentFile)
-        dr = unicode(fi.dir().path())
+        if directory is None:
+            dr = unicode(fi.dir().path())
+        else:
+            dr = unicode(directory)
         self.componentFile = dr + "/" + name + ".xml"
         print "FN", self.componentFile 
         self.name = name
@@ -436,7 +441,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                     self.loadFromString(fh)
                     self.xmlPath = self.componentFile
                     fi = QFileInfo(self.componentFile)
-                    self.name = fi.fileName() 
+                    self.name = unicode(fi.fileName())
 
                     if self.name[-4:] == '.xml':
                         self.name = self.name[:-4]
@@ -610,8 +615,10 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
     def merge(self):
         if not self.model or not self.view or not self.widget:
+            self._merged = False
             return
         if not self.document:
+            self._merged = False
             return
         try:
             mr = Merger(self.document)
@@ -623,11 +630,14 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                                 "Error in Merging: %s" % unicode(e) )
             print "Error in Merging: %s" % unicode(e)
             self.view.reset()
+            self._merged = False
             return
         except  Exception, e:    
             print "Exception: %s" % unicode(e)
             self.view.reset()
+            self._merged = False
             return
+        self._merged = True
         return True
 
     def hideFrame(self):
@@ -655,10 +665,9 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
     def save(self):
         print "saving"
-        if not self.merge():
+        if not self._merged:
             QMessageBox.warning(self, "Saving problem",
                                 "Document not merged" )
-            
             return
         error = None
         if self.componentFile:
@@ -686,37 +695,13 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 #        self.revert()
         self.reject()
 
-
-
-
-    def saveAs(self):
-        if not self.merge():
-            QMessageBox.warning(self, "Saving problem",
-                                "Document not merged" )
-            
-            return
-        error = None
+    def getNewName(self):
         self.componentFile = unicode(
             QFileDialog.getSaveFileName(self,"Save Component",self.componentFile,
                                         "XML files (*.xml);;HTML files (*.html);;"
                                         "SVG files (*.svg);;User Interface files (*.ui)"))
-
+        return self.componentFile
         
-        try:
-            fh = QFile(self.componentFile)
-            if not fh.open(QIODevice.WriteOnly):
-                raise IOError, unicode(fh.errorString())
-            stream = QTextStream(fh)
-            stream <<self.document.toString(2)
-            #                print self.document.toString(2)
-            ## TODO change item name
-        except (IOError, OSError, ValueError), e:
-            error = "Failed to save: %s" % e
-            print error
-            
-        finally:
-            if fh is not None:
-                fh.close()
 
     
 

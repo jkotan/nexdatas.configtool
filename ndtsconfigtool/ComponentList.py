@@ -105,13 +105,16 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
 
     ## changes the current value of the component        
     # \brief It changes the current value of the component and informs the user that component names arenot editable
-    def listItemChanged(self, item):
+    def listItemChanged(self, item,  name = None):
         icp = self.currentListComponent().id
 
         if icp in self.components.keys():
             old = self.components[icp] 
             oname = self.components[icp].name
-            self.components[icp].name = unicode(item.text())
+            if name is None:
+                self.components[icp].name = unicode(item.text())
+            else:
+                self.components[icp].name = name
             self.populateComponents()
             return old, oname
 

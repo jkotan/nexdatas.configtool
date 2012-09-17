@@ -26,7 +26,9 @@ from PyQt4.QtCore import *
 
 
 class CommandStack(object):
-    def __init__(self):
+    def __init__(self, length):
+        ## maximal length of the stack
+        self._maxlen = length if length > 1 else 2
         self._stack = []
         self._current = 0
 
@@ -34,7 +36,10 @@ class CommandStack(object):
         while self._current < len(self._stack):
             self._stack.pop()
         self._stack.append(command)    
-        self._current += 1
+        if self._maxlen >= self._current:
+            self._current += 1
+        else:
+            self._stack.pop(0)
         print "append",  self._current , len(self._stack) 
 
     

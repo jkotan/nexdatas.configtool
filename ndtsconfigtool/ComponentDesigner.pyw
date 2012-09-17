@@ -110,7 +110,7 @@ class MainWindow(QMainWindow):
         
     def createActions(self):
         self.pool = CommandPool(self)
-        self.cmdStack = CommandStack()
+        self.cmdStack = CommandStack(20)
         self.pooling = True
 
 

@@ -449,6 +449,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             self.dParameterTableWidget.editItem(selected)
 
 
+
+
     ## loads datasources from default directory
     # \param fname optional file name
     def load(self, fname = None):

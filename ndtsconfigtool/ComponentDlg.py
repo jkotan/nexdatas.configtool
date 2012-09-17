@@ -407,6 +407,15 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         for column in range(self.model.columnCount(index)):
             self.view.resizeColumnToContents(column)
 
+    def setName(self, name):
+        fi = QFileInfo(self.componentFile)
+        dr = unicode(fi.dir().path())
+        self.componentFile = dr + "/" + name + ".xml"
+        print "FN", self.componentFile 
+        self.name = name
+        self.xmlPath = self.componentFile
+        
+
 
     def load(self,filePath = None):
         

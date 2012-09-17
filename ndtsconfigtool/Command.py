@@ -975,7 +975,7 @@ class ComponentListChanged(Command):
             
             self.receiver.componentList.populateComponents(self._cp.id)
             if self._cp.widget is not None:
-                self._cp.widget.name = self.newName
+                self._cp.widget.setName(self.newName)
         print "EXEC componentChanged"
 
     def unexecute(self):
@@ -1129,6 +1129,7 @@ class DataSourceListChanged(Command):
             self.receiver.sourceList.populateDataSources(self._ds.id)
             if self._ds.widget is not None:
                 self._ds.widget.name = self.newName
+
         print "EXEC dsourceChanged"
 
     def unexecute(self):

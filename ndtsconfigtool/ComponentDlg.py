@@ -213,10 +213,10 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         if clipNode is None:
             return
 
-        print "TEXT: \n",clipboard.text()
+#        print "TEXT: \n",clipboard.text()
         name = unicode(clipNode.nodeName())
 
-        print "NAME: ",clipNode.nodeName()
+#        print "NAME: ",clipNode.nodeName()
         if name not in self.widget.subItems:
             ## Message
             return        

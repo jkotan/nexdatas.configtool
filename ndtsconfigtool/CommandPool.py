@@ -56,6 +56,16 @@ class CommandStack(object):
             print "redo",  self._current , len(self._stack) 
             return self._stack[ self._current - 1 ]
 
+    def getUndoName(self) :
+        if self._current > 0 :
+            return self._stack[self._current-1].slot
+
+    def getRedoName(self) :
+        if self._current <  len(self._stack):
+            return self._stack[self._current].slot
+    
+        
+
     def isEmpty(self):
         return self._current == 0
        
@@ -116,9 +126,20 @@ class CommandPool(object):
 
 
 
-    def setDisabled(self, name, flag):
+    def setDisabled(self, name, flag, status = None, toShow = None):
         if name in self._actions.keys():
             self._actions[name].setDisabled(flag)
+            if status is not None:
+                if toShow is not None and toShow in self._actions.keys():
+                    if hasattr(self._actions[toShow],"toolTip"):
+                        tip = QString(status) + self._actions[toShow].toolTip()
+                    else:
+                        tip = QString(status) + toShow
+                else:
+                    tip = QString(status)
+                self._actions[name].setToolTip(tip)
+                self._actions[name].setStatusTip(tip)
+
 
 
     def getCommand(self, name):

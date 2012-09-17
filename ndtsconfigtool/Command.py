@@ -37,12 +37,12 @@ class Command(object):
     ## constructor
     def __init__(self,receiver, slot):
         self.receiver = receiver
-        self._slot = slot
+        self.slot = slot
 
 
     def connectSlot(self):
-        if hasattr(self.receiver, self._slot):
-            return  getattr(self.receiver, self._slot)
+        if hasattr(self.receiver, self.slot):
+            return  getattr(self.receiver, self.slot)
         
     ## 
     def execute(self):
@@ -80,7 +80,7 @@ class ComponentNew(Command):
         print "UNDO componentNew"
 
     def clone(self):
-        return ComponentNew(self.receiver, self._slot) 
+        return ComponentNew(self.receiver, self.slot) 
 
 
 
@@ -160,7 +160,7 @@ class ComponentOpen(Command):
         print "UNDO componentOpen"
 
     def clone(self):
-        return ComponentOpen(self.receiver, self._slot) 
+        return ComponentOpen(self.receiver, self.slot) 
 
 
 
@@ -233,7 +233,7 @@ class DataSourceOpen(Command):
         print "UNDO dsourceOpen"
 
     def clone(self):
-        return DataSourceOpen(self.receiver, self._slot) 
+        return DataSourceOpen(self.receiver, self.slot) 
 
 
 
@@ -269,7 +269,7 @@ class ComponentRemove(Command):
         print "UNDO componentRemove"
 
     def clone(self):
-        return ComponentRemove(self.receiver, self._slot) 
+        return ComponentRemove(self.receiver, self.slot) 
 
 
 class ComponentEdit(Command):
@@ -319,7 +319,7 @@ class ComponentEdit(Command):
         print "UNDO componentEdit"
 
     def clone(self):
-        return ComponentEdit(self.receiver, self._slot) 
+        return ComponentEdit(self.receiver, self.slot) 
 
 
 
@@ -371,7 +371,7 @@ class ComponentSave(Command):
         print "UNDO componentSave"
 
     def clone(self):
-        return ComponentSave(self.receiver, self._slot) 
+        return ComponentSave(self.receiver, self.slot) 
 
 
 
@@ -393,7 +393,7 @@ class ComponentSaveAll(Command):
         print "UNDO componentSaveAll"
 
     def clone(self):
-        return ComponentSaveAll(self.receiver, self._slot) 
+        return ComponentSaveAll(self.receiver, self.slot) 
 
 
 
@@ -445,7 +445,7 @@ class ComponentSaveAs(Command):
         print "UNDO componentSaveAs"
 
     def clone(self):
-        return ComponentSaveAs(self.receiver, self._slot) 
+        return ComponentSaveAs(self.receiver, self.slot) 
 
 
 
@@ -489,7 +489,7 @@ class ComponentChangeDirectory(Command):
         print "UNDO componentChangeDirectory"
 
     def clone(self):
-        return ComponentChangeDirectory(self.receiver, self._slot) 
+        return ComponentChangeDirectory(self.receiver, self.slot) 
 
 
 class DataSourceCopy(Command):
@@ -540,7 +540,7 @@ class DataSourceCopy(Command):
         print "UNDO dsourceCopy"
         
     def clone(self):
-        return DataSourceCopy(self.receiver, self._slot) 
+        return DataSourceCopy(self.receiver, self.slot) 
         
 
 
@@ -597,7 +597,7 @@ class DataSourceCut(Command):
         print "UNDO dsourceCut"
         
     def clone(self):
-        return DataSourceCut(self.receiver, self._slot) 
+        return DataSourceCut(self.receiver, self.slot) 
         
 
 
@@ -656,7 +656,7 @@ class DataSourcePaste(Command):
         print "UNDO dsourcePaste"
         
     def clone(self):
-        return DataSourcePaste(self.receiver, self._slot) 
+        return DataSourcePaste(self.receiver, self.slot) 
         
 
 
@@ -708,7 +708,7 @@ class DataSourceApply(Command):
         print "UNDO dsourceApply"
 
     def clone(self):
-        return DataSourceApply(self.receiver, self._slot) 
+        return DataSourceApply(self.receiver, self.slot) 
 
 
 
@@ -733,7 +733,7 @@ class DataSourceSaveAll(Command):
         print "UNDO dsourceSaveAll"
 
     def clone(self):
-        return DataSourceSaveAll(self.receiver, self._slot) 
+        return DataSourceSaveAll(self.receiver, self.slot) 
 
 
 class DataSourceSave(Command):
@@ -778,7 +778,7 @@ class DataSourceSave(Command):
         print "UNDO dsourceSave"
 
     def clone(self):
-        return DataSourceSave(self.receiver, self._slot) 
+        return DataSourceSave(self.receiver, self.slot) 
 
 
 
@@ -828,7 +828,7 @@ class DataSourceSaveAs(Command):
         print "UNDO dsourceSaveAs"
 
     def clone(self):
-        return DataSourceSaveAs(self.receiver, self._slot) 
+        return DataSourceSaveAs(self.receiver, self.slot) 
 
 
 
@@ -873,7 +873,7 @@ class DataSourceChangeDirectory(Command):
         print "UNDO dsourceChangeDirectory"
 
     def clone(self):
-        return DataSourceChangeDirectory(self.receiver, self._slot) 
+        return DataSourceChangeDirectory(self.receiver, self.slot) 
 
 
 
@@ -906,7 +906,7 @@ class ComponentReloadList(Command):
         print "UNDO componentReloadList"
 
     def clone(self):
-        return ComponentReloadList(self.receiver, self._slot) 
+        return ComponentReloadList(self.receiver, self.slot) 
 
 
 
@@ -940,7 +940,7 @@ class DataSourceReloadList(Command):
         print "UNDO componentReloadList"
 
     def clone(self):
-        return DataSourceReloadList(self.receiver, self._slot) 
+        return DataSourceReloadList(self.receiver, self.slot) 
 
 
 
@@ -985,7 +985,7 @@ class ComponentListChanged(Command):
         print "UNDO componentChanged"
 
     def clone(self):
-        return ComponentListChanged(self.receiver, self._slot) 
+        return ComponentListChanged(self.receiver, self.slot) 
     
 
 
@@ -1016,7 +1016,7 @@ class DataSourceNew(Command):
         print "UNDO dsourceNew"
 
     def clone(self):
-        return DataSourceNew(self.receiver, self._slot) 
+        return DataSourceNew(self.receiver, self.slot) 
 
 
 
@@ -1065,7 +1065,7 @@ class DataSourceEdit(Command):
         print "UNDO dsourceEdit"
 
     def clone(self):
-        return DataSourceEdit(self.receiver, self._slot) 
+        return DataSourceEdit(self.receiver, self.slot) 
 
 
 
@@ -1105,7 +1105,7 @@ class DataSourceRemove(Command):
         print "UNDO dsourceRemove"
 
     def clone(self):
-        return DataSourceRemove(self.receiver, self._slot) 
+        return DataSourceRemove(self.receiver, self.slot) 
 
 
 
@@ -1138,7 +1138,7 @@ class DataSourceListChanged(Command):
         print "UNDO dsourceChanged"
 
     def clone(self):
-        return DataSourceListChanged(self.receiver, self._slot) 
+        return DataSourceListChanged(self.receiver, self.slot) 
     
 
 
@@ -1157,7 +1157,7 @@ class CloseApplication(Command):
         print "UNDO closeApp"
 
     def clone(self):
-        return CloseApplication(self.receiver, self._slot) 
+        return CloseApplication(self.receiver, self.slot) 
 
 
 
@@ -1172,7 +1172,7 @@ class UndoCommand(Command):
         pass
 
     def clone(self):
-        return UndoCommand(self.receiver, self._slot) 
+        return UndoCommand(self.receiver, self.slot) 
 
 class RedoCommand(Command):
     def __init__(self, receiver, slot):
@@ -1185,7 +1185,7 @@ class RedoCommand(Command):
         pass
 
     def clone(self):
-        return RedoCommand(self.receiver, self._slot) 
+        return RedoCommand(self.receiver, self.slot) 
 
 
 
@@ -1249,7 +1249,7 @@ class ComponentItemCommand(Command):
         print "UNDO componentItemComponent"
 
     def clone(self):
-        return ComponentItemCommand(self.receiver, self._slot) 
+        return ComponentItemCommand(self.receiver, self.slot) 
 
 
 
@@ -1293,7 +1293,7 @@ class ComponentClear(ComponentItemCommand):
 
 
     def clone(self):
-        return ComponentClear(self.receiver, self._slot) 
+        return ComponentClear(self.receiver, self.slot) 
 
 
 
@@ -1316,7 +1316,7 @@ class ComponentLoadComponentItem(ComponentItemCommand):
 
 
     def clone(self):
-        return ComponentLoadComponentItem(self.receiver, self._slot) 
+        return ComponentLoadComponentItem(self.receiver, self.slot) 
 
 
 
@@ -1340,7 +1340,7 @@ class ComponentRemoveItem(ComponentItemCommand):
 
 
     def clone(self):
-        return ComponentRemoveItem(self.receiver, self._slot) 
+        return ComponentRemoveItem(self.receiver, self.slot) 
 
 
 
@@ -1363,7 +1363,7 @@ class ComponentCopyItem(ComponentItemCommand):
 
 
     def clone(self):
-        return ComponentCopyItem(self.receiver, self._slot) 
+        return ComponentCopyItem(self.receiver, self.slot) 
 
 
 
@@ -1385,7 +1385,7 @@ class ComponentPasteItem(ComponentItemCommand):
 
 
     def clone(self):
-        return ComponentPasteItem(self.receiver, self._slot) 
+        return ComponentPasteItem(self.receiver, self.slot) 
 
 
 
@@ -1415,7 +1415,7 @@ class CutItem(ComponentItemCommand):
 
 
     def clone(self):
-        return CutItem(self.receiver, self._slot) 
+        return CutItem(self.receiver, self.slot) 
 
 
 
@@ -1444,7 +1444,7 @@ class CopyItem(ComponentItemCommand):
 
 
     def clone(self):
-        return CopyItem(self.receiver, self._slot) 
+        return CopyItem(self.receiver, self.slot) 
 
 
 
@@ -1470,7 +1470,7 @@ class PasteItem(Command):
 
 
     def clone(self):
-        return PasteItem(self.receiver, self._slot) 
+        return PasteItem(self.receiver, self.slot) 
 
 
 
@@ -1494,7 +1494,7 @@ class ComponentMerge(ComponentItemCommand):
 
 
     def clone(self):
-        return ComponentMerge(self.receiver, self._slot) 
+        return ComponentMerge(self.receiver, self.slot) 
 
 
 
@@ -1547,7 +1547,7 @@ class ComponentNewItem(ComponentItemCommand):
 #        print "UNDO componentNewItem"
 
     def clone(self):
-        return ComponentNewItem(self.receiver, self._slot) 
+        return ComponentNewItem(self.receiver, self.slot) 
 
 
 
@@ -1574,7 +1574,7 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
 
         
     def clone(self):
-        return ComponentLoadDataSourceItem(self.receiver, self._slot) 
+        return ComponentLoadDataSourceItem(self.receiver, self.slot) 
 
 
 
@@ -1639,7 +1639,7 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
         print "EXEC componentAddDataSourceItem"
 
     def clone(self):
-        return ComponentAddDataSourceItem(self.receiver, self._slot) 
+        return ComponentAddDataSourceItem(self.receiver, self.slot) 
 
 
 class ComponentApplyItem(ComponentItemCommand):
@@ -1663,7 +1663,7 @@ class ComponentApplyItem(ComponentItemCommand):
 
 
     def clone(self):
-        return ComponentApplyItem(self.receiver, self._slot) 
+        return ComponentApplyItem(self.receiver, self.slot) 
 
 
 

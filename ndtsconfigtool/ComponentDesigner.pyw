@@ -349,9 +349,9 @@ class MainWindow(QMainWindow):
             "Close the application")
 
         undoAction = self.pool.createCommand("&Undo", "undo",  commandArgs, UndoCommand, 
-                                             "Ctrl+Z", "undo", "Undo the last command")
+                                             "Ctrl+Z", "undo", "Can't Undo")
         redoAction = self.pool.createCommand("&Redo", "redo",  commandArgs, RedoCommand,
-                                               "Ctrl+Y", "redo", "Redo the last command")
+                                               "Ctrl+Y", "redo", "Can't Redo")
 
         undoAction.setDisabled(True)
         redoAction.setDisabled(True)
@@ -558,8 +558,8 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('dsourceNew').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")   
 
 
 
@@ -568,126 +568,126 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('dsourceRemove').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
         self.pooling = True
 
     def componentEdit(self):
         cmd = self.pool.getCommand('componentEdit').clone()
         cmd.execute()
 #        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False)
-#        self.pool.setDisabled("redo", True)   
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     def componentClear(self):
         cmd = self.pool.getCommand('componentClear').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     def componentSave(self):
         cmd = self.pool.getCommand('componentSave').clone()
         cmd.execute()
         self.cmdStack.clear()
-        self.pool.setDisabled("undo", True)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 #        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False)
-#        self.pool.setDisabled("redo", True)   
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     def componentChangeDirectory(self):
         cmd = self.pool.getCommand('componentChangeDirectory').clone()
         cmd.execute()
         self.cmdStack.clear()
-        self.pool.setDisabled("undo", True)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def dsourceChangeDirectory(self):
         cmd = self.pool.getCommand('dsourceChangeDirectory').clone()
         cmd.execute()
         self.cmdStack.clear()
-        self.pool.setDisabled("undo", True)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def componentReloadList(self):
         cmd = self.pool.getCommand('componentReloadList').clone()
         cmd.execute()
         self.cmdStack.clear()
-        self.pool.setDisabled("undo", True)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def componentApplyItem(self):
         cmd = self.pool.getCommand('componentApplyItem').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Undo")      
 
 
     def dsourceReloadList(self):
         cmd = self.pool.getCommand('dsourceReloadList').clone()
         cmd.execute()
         self.cmdStack.clear()
-        self.pool.setDisabled("undo", True)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     def dsourceApply(self):
         cmd = self.pool.getCommand('dsourceApply').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def dsourceSave(self):
         cmd = self.pool.getCommand('dsourceSave').clone()
         cmd.execute()
         self.cmdStack.clear()
-        self.pool.setDisabled("undo", True)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 #        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False)
-#        self.pool.setDisabled("redo", True)   
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     def dsourceSaveAs(self):
         cmd = self.pool.getCommand('dsourceSaveAs').clone()
         cmd.execute()
 #        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False)
-#        self.pool.setDisabled("redo", True)   
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
         self.cmdStack.clear()
-        self.pool.setDisabled("undo", True)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     def dsourceSaveAll(self):
         cmd = self.pool.getCommand('dsourceSaveAll').clone()
         cmd.execute()
         self.cmdStack.clear()
-        self.pool.setDisabled("undo", True)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def componentSaveAs(self):
         cmd = self.pool.getCommand('componentSaveAs').clone()
         cmd.execute()
 #        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False)
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
 #        self.pool.setDisabled("redo", True)   
         self.cmdStack.clear()
-        self.pool.setDisabled("undo", True)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def componentSaveAll(self):
         cmd = self.pool.getCommand('componentSaveAll').clone()
         cmd.execute()
         self.cmdStack.clear()
-        self.pool.setDisabled("undo", True)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -695,31 +695,31 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('componentRemoveItem').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def componentPasteItem(self):
         cmd = self.pool.getCommand('componentPasteItem').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
         
     def componentCopyItem(self):
         cmd = self.pool.getCommand('componentCopyItem').clone()
         cmd.execute()
 #        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False)
-#        self.pool.setDisabled("redo", True)   
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def dsourceCopy(self):
         cmd = self.pool.getCommand('dsourceCopy').clone()
         cmd.execute()
 #        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False)
-#        self.pool.setDisabled("redo", True)   
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -727,8 +727,8 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('dsourceCut').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -736,8 +736,8 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('dsourcePaste').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -751,8 +751,8 @@ class MainWindow(QMainWindow):
             cmd.type = None
         cmd.execute()
 #        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False)
-#        self.pool.setDisabled("redo", True)   
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -767,8 +767,8 @@ class MainWindow(QMainWindow):
 
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -782,8 +782,8 @@ class MainWindow(QMainWindow):
             cmd.type = None
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -793,8 +793,8 @@ class MainWindow(QMainWindow):
             cmd.itemName = 'group' 
             cmd.execute()
             self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False)
-            self.pool.setDisabled("redo", True)   
+            self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+            self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def componentNewFieldItem(self):
@@ -803,8 +803,8 @@ class MainWindow(QMainWindow):
             cmd.itemName = 'field' 
             cmd.execute()
             self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False)
-            self.pool.setDisabled("redo", True)   
+            self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+            self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def componentNewAttributeItem(self):
@@ -813,8 +813,8 @@ class MainWindow(QMainWindow):
             cmd.itemName = 'attribute' 
             cmd.execute()
             self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False)
-            self.pool.setDisabled("redo", True)   
+            self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+            self.pool.setDisabled("redo", True, "Can't Redo")      
             
 
     def componentNewLinkItem(self):
@@ -823,8 +823,8 @@ class MainWindow(QMainWindow):
             cmd.itemName = 'link' 
             cmd.execute()
             self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False)
-            self.pool.setDisabled("redo", True)   
+            self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+            self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -834,8 +834,8 @@ class MainWindow(QMainWindow):
             cmd.itemName = 'datasource' 
             cmd.execute()
             self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False)
-            self.pool.setDisabled("redo", True)   
+            self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+            self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -844,8 +844,8 @@ class MainWindow(QMainWindow):
             cmd = self.pool.getCommand('componentLoadComponentItem').clone()
             cmd.execute()
             self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False)
-            self.pool.setDisabled("redo", True)   
+            self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+            self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -854,8 +854,8 @@ class MainWindow(QMainWindow):
             cmd = self.pool.getCommand('componentLoadDataSourceItem').clone()
             cmd.execute()
             self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False)
-            self.pool.setDisabled("redo", True)   
+            self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+            self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -864,24 +864,24 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def componentMerge(self):
         cmd = self.pool.getCommand('componentMerge').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     def componentRemove(self):
         self.pooling = False
         cmd = self.pool.getCommand('componentRemove').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
         self.pooling = True
 
 
@@ -889,8 +889,8 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('dsourceEdit').clone()
         cmd.execute()
 #        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False)
-#        self.pool.setDisabled("redo", True)   
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def dsourceChanged(self, item):
@@ -898,8 +898,8 @@ class MainWindow(QMainWindow):
         cmd.item = item
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def mdiWindowActivated(self, widget):
@@ -922,8 +922,8 @@ class MainWindow(QMainWindow):
         cmd.item = item
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -931,16 +931,16 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('componentNew').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     def componentOpen(self):
         self.pooling = False
         cmd = self.pool.getCommand('componentOpen').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
         self.pooling = True
 
 
@@ -949,8 +949,8 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('dsourceOpen').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
         self.pooling = True
 
 
@@ -966,8 +966,10 @@ class MainWindow(QMainWindow):
             print "Undo not possible"
 
         if self.cmdStack.isEmpty():
-            self.pool.setDisabled("undo", True)
-        self.pool.setDisabled("redo", False)   
+            self.pool.setDisabled("undo", True, "Can't Undo")   
+        else:
+            self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )   
+        self.pool.setDisabled("redo", False, "Redo: ", self.cmdStack.getRedoName() )   
 
         self.pooling = True
 
@@ -983,16 +985,18 @@ class MainWindow(QMainWindow):
             print "Redo not possible"
 
         if self.cmdStack.isFinal():
-            self.pool.setDisabled("redo", True)
-        self.pool.setDisabled("undo", False)   
+            self.pool.setDisabled("redo", True, "Can't Redo")   
+        else:
+            self.pool.setDisabled("redo", False, "Redo: ", self.cmdStack.getRedoName() )    
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )   
         self.pooling = True
 
     def closeApp(self):
         cmd = self.pool.getCommand('closeApp').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False)
-        self.pool.setDisabled("redo", True)   
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 

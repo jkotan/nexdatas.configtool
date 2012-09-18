@@ -5,6 +5,7 @@
 <file alias="componentremove.png">images/symbol_restricted.png</file>
 <file alias="componentedit.png">images/symbol_check.png</file>
 <file alias="componentnew.png">images/symbol_add.png</file>
+<file alias="componentsave.png">images/save.png</file>
 <file alias="dsourceadd.png">images/login.png</file>
 <file alias="dsourceremove.png">images/logout.png</file>
 <file alias="dsourceedit.png">images/symbol_construction.png</file>

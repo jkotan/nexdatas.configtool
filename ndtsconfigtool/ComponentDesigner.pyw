@@ -474,7 +474,9 @@ class MainWindow(QMainWindow):
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolbar")
 
-        self.addActions(fileToolbar, (componentOpenAction, componentNewAction,componentEditAction, 
+        self.addActions(fileToolbar, (componentOpenAction, 
+                                      componentSaveAction,
+                                      componentNewAction,componentEditAction, 
                                       componentRemoveAction, 
                                       None,
                                       cutItemAction, copyItemAction, pasteItemAction,

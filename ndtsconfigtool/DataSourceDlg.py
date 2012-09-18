@@ -483,7 +483,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                     raise ValueError, "could not parse XML"
 
                 ds = self.getFirstElement(self.document, "datasource")           
-                self.setFromNode(ds)
+                if ds:
+                    self.setFromNode(ds)
             try:    
                 self.createGUI()
             except Exception, e:
@@ -601,7 +602,6 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                 except (IOError, OSError, ValueError), e:
                     error = "Failed to save: %s" % e
                     print error
-                    
                 finally:
                     if fh is not None:
                         fh.close()
@@ -616,12 +616,12 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
         if self.apply():
             filename = self.directory + "/" + self.name + ".ds.xml"
-            print "saving in %s"% (filename)
             error = None
             filename = unicode(
             QFileDialog.getSaveFileName(self,"Save DataSource",self.directory,
                                         "XML files (*.xml);;HTML files (*.html);;"
                                         "SVG files (*.svg);;User Interface files (*.ui)"))
+            print "saving in %s"% (filename)
             if filename:
                 try:
                     fh = QFile(filename)
@@ -672,6 +672,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                 self.cRecNameLineEdit.setFocus()
                 return
             self.clientRecordName = recName
+            print "CLT", self.clientRecordName
         elif sourceType == 'TANGO':
             devName = unicode(self.tDevNameLineEdit.text())
             memName = unicode(self.tMemberNameLineEdit.text())
@@ -720,6 +721,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
 
         if self.node  and self.root and self.node.isElement():
+            print "update"
             self.updateNode(index)
 
             if index.isValid():
@@ -783,17 +785,15 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         elem=newDs.toElement()
 #        attributeMap = self.newDs.attributes()
         elem.setAttribute(QString("type"), QString(self.dataSourceType))
-        
         if self.dataSourceType == 'CLIENT':
             record = root.createElement(QString("record"))
             record.setAttribute(QString("name"), QString(self.clientRecordName))
-            newDs.appendChild(record)            
-#            print "Client:", self.clientRecordName
+            elem.appendChild(record)            
 
         elif self.dataSourceType == 'TANGO':
             record = root.createElement(QString("record"))
             record.setAttribute(QString("name"), QString(self.tangoMemberName))
-            newDs.appendChild(record)            
+            elem.appendChild(record)            
 
             device = root.createElement(QString("device"))
             device.setAttribute(QString("name"), QString(self.tangoDeviceName))
@@ -802,7 +802,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                 device.setAttribute(QString("hostname"), QString(self.tangoHost))
             if self.tangoPort:
                 device.setAttribute(QString("port"), QString(self.tangoPort))
-            newDs.appendChild(device)            
+            elem.appendChild(device)            
             
         elif self.dataSourceType == 'DB':
             db = root.createElement(QString("database"))
@@ -813,7 +813,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                     db.appendChild(newText)
                 else:
                     db.setAttribute(QString(par), QString(self.dbParameters[par]))
-            newDs.appendChild(db)            
+            elem.appendChild(db)            
 
             query = root.createElement(QString("query"))
             query.setAttribute(QString("format"), QString(self.dbDataFormat))
@@ -821,19 +821,19 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                 newText = root.createTextNode(QString(self.dbQuery))
                 query.appendChild(newText)
 
-            newDs.appendChild(query)            
+            elem.appendChild(query)            
 
         if(self.doc):
             newDoc = root.createElement(QString("doc"))
             newText = root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
-            newDs.appendChild(newDoc)
+            elem.appendChild(newDoc)
 
 
         if external:
-            rootDs = self.root.importNode(newDs, True)
+            rootDs = self.root.importNode(elem, True)
         else:
-            rootDs = newDs
+            rootDs = elem
         return rootDs
         
 
@@ -849,12 +849,10 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         else:
             parent = QModelIndex()
 
-#        print "Replace"
-
+        self.node = self.node.parentNode()   
         self.replaceNode(oldDs, newDs, parent)
         self.node = newDs
 
-#        self.view.edit(index)
 
                     
 

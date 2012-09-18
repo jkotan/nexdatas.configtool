@@ -69,6 +69,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         self._externalSave = None
         self._externalApply = None
 
+        self.applied = False
 
         ## parameter map for XMLdumper
         self.dbxml = {"DB name":"dbname",
@@ -449,6 +450,10 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             self.dParameterTableWidget.editItem(selected)
 
 
+#TODO
+    def setName(self, name, directory):
+        self.name = unicode(name)
+        self.directory = unicode(directory)
 
 
     ## loads datasources from default directory
@@ -584,10 +589,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
     ## accepts and save input text strings
     # \brief It copies the parameters and saves the dialog
     def save(self):
-        if not self.document or not self.node:
-            self.createHeader()
-
-        if self.apply():
+        if self.applied:
             filename = self.directory + "/" + self.name + ".ds.xml"
             print "saving in %s"% (filename)
             error = None
@@ -607,36 +609,14 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                         fh.close()
 
 
-
-    ## accepts and save input text strings
-    # \brief It copies the parameters and saves the dialog
-    def saveAs(self):
-        if not self.document or not self.node:
-            self.createHeader()
-
-        if self.apply():
-            filename = self.directory + "/" + self.name + ".ds.xml"
-            error = None
-            filename = unicode(
+    def getNewName(self):
+        filename = unicode(
             QFileDialog.getSaveFileName(self,"Save DataSource",self.directory,
                                         "XML files (*.xml);;HTML files (*.html);;"
                                         "SVG files (*.svg);;User Interface files (*.ui)"))
-            print "saving in %s"% (filename)
-            if filename:
-                try:
-                    fh = QFile(filename)
-                    if not fh.open(QIODevice.WriteOnly):
-                        raise IOError, unicode(fh.errorString())
-                    stream = QTextStream(fh)
-                    stream <<self.document.toString(2)
-            #                print self.document.toString(2)
-                except (IOError, OSError, ValueError), e:
-                    error = "Failed to save: %s" % e
-                    print error
-                    
-                finally:
-                    if fh is not None:
-                        fh.close()
+        print "saving in %s"% (filename)
+        return filename
+
 
 
     ## rejects the changes
@@ -659,7 +639,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
    ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
-        change  = False
+        self.applied = False
         class CharacterError(Exception): pass
         sourceType = unicode(self.typeComboBox.currentText())
 
@@ -672,7 +652,6 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                 self.cRecNameLineEdit.setFocus()
                 return
             self.clientRecordName = recName
-            print "CLT", self.clientRecordName
         elif sourceType == 'TANGO':
             devName = unicode(self.tDevNameLineEdit.text())
             memName = unicode(self.tMemberNameLineEdit.text())
@@ -735,7 +714,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
 #        QDialog.accept(self)
 
-        self.emit(SIGNAL("changed"))    
+        self.applied = True
+#        self.emit(SIGNAL("changed"))    
         return True    
 
     def createHeader(self):
@@ -789,7 +769,6 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             record = root.createElement(QString("record"))
             record.setAttribute(QString("name"), QString(self.clientRecordName))
             elem.appendChild(record)            
-
         elif self.dataSourceType == 'TANGO':
             record = root.createElement(QString("record"))
             record.setAttribute(QString("name"), QString(self.tangoMemberName))

@@ -137,12 +137,15 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
 
     ## changes the current value of the datasource        
     # \brief It changes the current value of the datasource and informs the user that datasource names arenot editable
-    def listItemChanged(self, item):
+    def listItemChanged(self, item , name = None):
         ids =  self.currentListDataSource().id 
         if ids in self.datasources.keys():
             old = self.datasources[ids]
             oname = self.datasources[ids].name
-            self.datasources[ids].name = unicode(item.text())
+            if name is None:
+                self.datasources[ids].name = unicode(item.text())
+            else:
+                self.datasources[ids].name = name
             self.populateDataSources()
             return old, oname
 

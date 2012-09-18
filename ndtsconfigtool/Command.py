@@ -719,36 +719,13 @@ class DataSourceSave(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._ds = None
-        self._dsEdit = None
         
         
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
-        if self._ds is not None:
-            if self._ds.widget is None:
-                self._dsEdit = DataSourceDlg()
-                self._dsEdit.ids = self._ds.id
-                self._dsEdit.directory = self.receiver.sourceList.directory
-                self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
-                self._dsEdit.createGUI()
-                self._dsEdit.createHeader()
-                self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
-            else:
-                self._dsEdit = self._ds.widget 
-
-            if hasattr(self._dsEdit,"connectExternalActions"):     
-                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)   
-    
-            if self._ds.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
-            else:    
-                self.receiver.mdi.addWindow(self._dsEdit)
-                self._dsEdit.show()
-                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
-                self._ds.widget = self._dsEdit 
-                    
-            self._dsEdit.save()    
+        if self._ds is not None and hasattr(self._ds,"widget"):
+            self._ds.widget.save()    
 
             
         print "EXEC dsourceSave"
@@ -768,37 +745,25 @@ class DataSourceSaveAs(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._ds = None
-        self._dsEdit = None
-        
+        self.pathName = None
+        self.newName = None
+        self.directory = None
         
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
         if self._ds is not None:
-            if self._ds.widget is None:
-                self._dsEdit = DataSourceDlg()
-                self._dsEdit.ids = self._ds.id
-                self._dsEdit.directory = self.receiver.sourceList.directory
-                self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
-                self._dsEdit.createGUI()
-                self._dsEdit.createHeader()
-                self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
-            else:
-                self._dsEdit = self._ds.widget 
-                
-            if hasattr(self._dsEdit,"connectExternalActions"):     
-                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)
-                                                        
+            if self._ds.widget is not None:
+                self.pathFile = self._ds.widget.getNewName() 
+                fi = QFileInfo(self.pathFile)
+                self.newName = unicode(fi.fileName())
+                if self.newName[-4:] == '.xml':
+                    self.newName = self.newName[:-4]
+                    if self.newName[-3:] == '.ds':
+                        self.newName = self.newName[:-3]
 
-            if self._ds.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
-            else:    
-                self.receiver.mdi.addWindow(self._dsEdit)
-                self._dsEdit.show()
-                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
-                self._ds.widget = self._dsEdit 
-                    
-            self._dsEdit.saveAs()    
+                self.directory = unicode(fi.dir().path())
+
 
             
         print "EXEC dsourceSaveAs"
@@ -1023,6 +988,7 @@ class DataSourceEdit(Command):
                 self._dsEdit.directory = self.receiver.sourceList.directory
                 self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
                 self._dsEdit.createGUI()
+                self._dsEdit.createHeader()
                 self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
             else:
                 self._dsEdit = self._ds.widget 
@@ -1098,19 +1064,26 @@ class DataSourceListChanged(Command):
         self.item = None
         self.name = None
         self.newName = None
+        self.oldDirectory = None
+        self.directory = None
+        
+
         
     def execute(self):
-        if self.item is not None:
+        if self.item is not None or self.newName is not None:
             if self.newName is None:
                 self.newName = unicode(self.item.text())
             if self._ds is None:
-                self._ds, self.name = self.receiver.sourceList.listItemChanged(self.item)
+                self._ds, self.name = self.receiver.sourceList.listItemChanged(self.item, self.newName)
             else:
                 self._ds.name = self.newName
-
+             
             self.receiver.sourceList.populateDataSources(self._ds.id)
             if self._ds.widget is not None:
-                self._ds.widget.name = self.newName
+                self.oldDirectory = self._ds.widget.directory 
+                self._ds.widget.setName(self.newName, self.directory)
+            else:
+                self.oldDirectory =  self.receiver.sourceList.directory 
 
         print "EXEC dsourceChanged"
 
@@ -1118,7 +1091,11 @@ class DataSourceListChanged(Command):
         if self._ds is not None:
             self._ds.name = self.name 
             self.receiver.sourceList.addDataSource(self._ds, False)
+            if self._ds.widget is not None:
+                self._ds.widget.setName(self.name, self.oldDirectory)
         print "UNDO dsourceChanged"
+
+
 
     def clone(self):
         return DataSourceListChanged(self.receiver, self.slot) 

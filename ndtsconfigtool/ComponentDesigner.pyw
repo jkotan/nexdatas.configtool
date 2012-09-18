@@ -128,7 +128,6 @@ class MainWindow(QMainWindow):
             "&Edit DataSource", "dsourceEdit",  commandArgs, 
             DataSourceEdit,"Ctrl+E", "dsourceedit", "Edit the data source")
 
-
        
         self.pool.createTask("dsourceChanged",commandArgs, DataSourceListChanged,
                              self.sourceList.sourceListWidget, 
@@ -444,7 +443,6 @@ class MainWindow(QMainWindow):
             ) 
         
 
-
         datasourcesMenu = self.menuBar().addMenu("Data&Sources")    
         self.addActions(datasourcesMenu, (dsourceNewAction, dsourceOpenAction, 
                                           dsourceEditAction, None, 
@@ -457,8 +455,10 @@ class MainWindow(QMainWindow):
                                           None,
                                           dsourceRemoveAction))
  
+
         viewMenu = self.menuBar().addMenu("&View")
         self.addActions(viewMenu, (viewDockAction,))
+
 
 
         self.windowMenu = self.menuBar().addMenu("&Window")
@@ -649,24 +649,42 @@ class MainWindow(QMainWindow):
 
 
     def dsourceSave(self):
+        cmd = self.pool.getCommand('dsourceEdit').clone()
+        cmd.execute()
+
+        cmd = self.pool.getCommand('dsourceApply').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
         cmd = self.pool.getCommand('dsourceSave').clone()
         cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-#        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     def dsourceSaveAs(self):
-        cmd = self.pool.getCommand('dsourceSaveAs').clone()
+        cmd = self.pool.getCommand('dsourceEdit').clone()
         cmd.execute()
-#        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
+
+        cmd = self.pool.getCommand('dsourceApply').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
+
+        cmdSA = self.pool.getCommand('dsourceSaveAs').clone()
+        cmdSA.execute()
+
+        cmd = self.pool.getCommand('dsourceChanged').clone()
+        cmd.directory = cmdSA.directory
+        cmd.newName = cmdSA.newName
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+        cmd = self.pool.getCommand('dsourceSave').clone()
+        cmd.execute()
+
 
     def dsourceSaveAll(self):
         cmd = self.pool.getCommand('dsourceSaveAll').clone()

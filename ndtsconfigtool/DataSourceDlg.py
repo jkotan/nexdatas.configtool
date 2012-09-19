@@ -611,7 +611,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
     def getNewName(self):
         filename = unicode(
-            QFileDialog.getSaveFileName(self,"Save DataSource",self.directory,
+            QFileDialog.getSaveFileName(self,"Save DataSource As ...",self.directory,
                                         "XML files (*.xml);;HTML files (*.html);;"
                                         "SVG files (*.svg);;User Interface files (*.ui)"))
         print "saving in %s"% (filename)

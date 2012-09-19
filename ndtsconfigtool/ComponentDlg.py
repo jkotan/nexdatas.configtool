@@ -685,7 +685,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
     def getNewName(self):
         self.componentFile = unicode(
-            QFileDialog.getSaveFileName(self,"Save Component",self.componentFile,
+            QFileDialog.getSaveFileName(self,"Save Component As ...",self.componentFile,
                                         "XML files (*.xml);;HTML files (*.html);;"
                                         "SVG files (*.svg);;User Interface files (*.ui)"))
         return self.componentFile

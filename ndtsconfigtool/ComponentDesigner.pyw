@@ -181,17 +181,17 @@ class MainWindow(QMainWindow):
 
         dsourceApplyAction = self.pool.createCommand(
             "Apply DataSource", "dsourceApply", commandArgs, DataSourceApply,
-            "", "datasourceapply", "Apply the datasource")
+            "", "dsourceapply", "Apply the datasource")
 
 
         dsourceSaveAction = self.pool.createCommand(
             "Save DataSource", "dsourceSave", commandArgs, DataSourceSave,
-            "", "datasourcesave", "Save the datasource")
+            "", "dsourcesave", "Save the datasource")
 
 
         dsourceSaveAsAction = self.pool.createCommand(
             "Save DataSource As...", "dsourceSaveAs", commandArgs, DataSourceSaveAs,
-            "", "datasourcesaveas", "Save the datasource as ...")
+            "", "dsourcesaveas", "Save the datasource as ...")
 
         dsourceSaveAllAction = self.pool.createCommand(
             "Save All DataSources", "dsourceSaveAll", commandArgs, DataSourceSaveAll,
@@ -332,7 +332,7 @@ class MainWindow(QMainWindow):
 
         dsourceOpenAction = self.pool.createCommand(
             "&Open DataSource...", "dsourceOpen", commandArgs, DataSourceOpen,
-            "", "componentdatasource", "Open the datasource")
+            "", "dsourceopen", "Open the datasource")
 
 
         componentOpenAction = self.pool.createCommand(
@@ -474,17 +474,25 @@ class MainWindow(QMainWindow):
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolbar")
 
-        self.addActions(fileToolbar, (componentOpenAction, 
-                                      componentSaveAction,
-                                      componentNewAction,componentEditAction, 
-                                      componentRemoveAction, 
-                                      None,
-                                      cutItemAction, copyItemAction, pasteItemAction,
-                                      None,
-                                      undoAction, redoAction,
-                                      None, 
-                                      dsourceNewAction,dsourceEditAction,dsourceRemoveAction
-                                      ))
+        self.addActions(fileToolbar, (
+                componentNewAction,
+                componentOpenAction, 
+                componentSaveAction,
+                componentSaveAsAction,
+                componentEditAction, 
+                componentMergeAction,
+                componentRemoveAction, 
+                None,
+                cutItemAction, copyItemAction, pasteItemAction,
+                None,
+                undoAction, redoAction,
+                None, 
+                dsourceNewAction,
+                dsourceOpenAction,
+                dsourceEditAction,
+                dsourceSaveAction,
+                dsourceRemoveAction
+                ))
 
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolbar")

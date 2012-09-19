@@ -605,7 +605,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
     def merge(self):
-        if not self.view or not self.view.model() or not self.widget:
+        if not self.view or not self.view.model():
             self._merged = False
             return
         if not self.document:

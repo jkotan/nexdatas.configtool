@@ -623,22 +623,21 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         try:
             mr = Merger(self.document)
             mr.merge()
-            self.view.reset()
-#            self.view.update()
+            self._merged = True
         except IncompatibleNodeError, e: 
             QMessageBox.warning(self, "Merging problem",
                                 "Error in Merging: %s" % unicode(e) )
             print "Error in Merging: %s" % unicode(e)
-            self.view.reset()
             self._merged = False
-            return
         except  Exception, e:    
             print "Exception: %s" % unicode(e)
-            self.view.reset()
             self._merged = False
-            return
-        self._merged = True
-        return True
+        finally:
+            newModel = ComponentModel(self.document, self)
+            self.view.setModel(newModel)
+            self.model = newModel
+            self.hideFrame()
+        return self._merged
 
     def hideFrame(self):
         if self.widget:

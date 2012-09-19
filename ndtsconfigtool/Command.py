@@ -1240,7 +1240,6 @@ class ComponentClear(ComponentItemCommand):
                 
                     newModel = ComponentModel(self._cp.widget.document, self._cp.widget)
                     self._cp.widget.view.setModel(newModel)
-                    self._cp.widget.model = newModel
 
                     if hasattr(self._cp.widget,"connectExternalActions"):     
                         self._cp.widget.connectExternalActions(self.receiver.componentApplyItem, 
@@ -1267,7 +1266,7 @@ class ComponentLoadComponentItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.model:
+                if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.view.model():
                     if hasattr(self._cp.widget,"loadComponentItem"):
                         self._cp.widget.loadComponentItem(self.itemName)
         self.postExecute()
@@ -1478,14 +1477,14 @@ class ComponentNewItem(ComponentItemCommand):
                     if self._child:
                         self._index = self._cp.widget.view.currentIndex()
                         row=self._cp.widget.widget.getNodeRow(self._child)
-                        self._childIndex=self._cp.widget.model.index(row, 0, self._index)
+                        self._childIndex=self._cp.widget.view.model().index(row, 0, self._index)
                         self._cp.widget.view.setCurrentIndex(self._childIndex)
                         self._cp.widget.tagClicked(self._childIndex)
                             
             if self._child:
-                finalIndex = self._cp.widget.model.createIndex(
+                finalIndex = self._cp.widget.view.model().createIndex(
                     self._index.row(),2,self._index.parent().internalPointer())
-                self._cp.widget.model.emit(
+                self._cp.widget.view.model().emit(
                     SIGNAL("dataChanged(QModelIndex,QModelIndex)"),self._index,finalIndex)
         self.postExecute()
             
@@ -1524,7 +1523,7 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.model:
+                if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.view.model():
                     if hasattr(self._cp.widget,"loadDataSourceItem"):
                         self._cp.widget.loadDataSourceItem(self.itemName)
         self.postExecute()
@@ -1548,7 +1547,7 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if self._cp.widget is None or self._cp.widget.view is None or self._cp.widget.model is None:
+                if self._cp.widget is None or self._cp.widget.view is None or self._cp.widget.view.model() is None:
                     self._oldstate = None
                     self._index = None
                     self._cp = None

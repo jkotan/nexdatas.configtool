@@ -158,7 +158,7 @@ class MainWindow(QMainWindow):
 
         componentClearAction = self.pool.createCommand(
             "Clear", "componentClear", commandArgs, ComponentClear,
-            "", "componentedit", "Clear the component")
+            "", "componentclear", "Clear the component")
 
 
         componentSaveAsAction = self.pool.createCommand(
@@ -201,19 +201,19 @@ class MainWindow(QMainWindow):
         dsourceCopyAction = self.pool.createCommand(
             "Copy DataSource", "dsourceCopy", 
             commandArgs, DataSourceCopy,
-            "", "dsourcecopy", "Copy the data source")
+            "", "copy", "Copy the data source")
 
 
         dsourceCutAction = self.pool.createCommand(
             "Cut DataSource", "dsourceCut", 
             commandArgs, DataSourceCut,
-            "", "dsourcecut", "Cut the data source")
+            "", "cut", "Cut the data source")
 
 
         dsourcePasteAction = self.pool.createCommand(
             "Paste DataSource", "dsourcePaste", 
             commandArgs, DataSourcePaste,
-            "", "dsourcepaste", "Paste the data source")
+            "", "paste", "Paste the data source")
         
 
         componentRemoveItemAction = self.pool.createCommand(
@@ -221,7 +221,7 @@ class MainWindow(QMainWindow):
 #            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
 #            "Ctrl+X",
             "" ,
-            "componentremoveitem", "Remove the component item")
+            "cut", "Remove the component item")
 
 
         componentCopyItemAction = self.pool.createCommand(
@@ -229,7 +229,7 @@ class MainWindow(QMainWindow):
 #            QKeySequence(Qt.CTRL + Qt.SHIFT  + Qt.Key_C),
 #            "Ctrl+C", 
             "" ,
-            "componentcopyitem", "Copy the component item")
+            "copy", "Copy the component item")
 
 
         componentPasteItemAction = self.pool.createCommand(
@@ -237,7 +237,7 @@ class MainWindow(QMainWindow):
 #            QKeySequence(Qt.CTRL +  Qt.SHIFT  + Qt.Key_V),
 #            "Ctrl+V", 
             "" ,
-            "componentpasteitem", "Paste the component item")
+            "paste", "Paste the component item")
 
 
 
@@ -303,8 +303,8 @@ class MainWindow(QMainWindow):
 
 
         componentMergeAction = self.pool.createCommand(
-            "Merge component Items", "componentMerge", commandArgs, ComponentMerge,
-            "", "componentmerge", "Merge the component items")
+            "Merge Component", "componentMerge", commandArgs, ComponentMerge,
+            "", "componentmerge", "Merge the component")
         
 
         componentChangeDirectoryAction = self.pool.createCommand(
@@ -395,6 +395,8 @@ class MainWindow(QMainWindow):
                 componentSaveAllAction, None, 
                 componentClearAction,componentRemoveAction,
                 None,
+                componentMergeAction,
+                None,
                 componentReloadListAction,
                 dsourceReloadListAction,
                 componentChangeDirectoryAction,
@@ -417,13 +419,11 @@ class MainWindow(QMainWindow):
                 componentApplyItemAction, None,
                 componentLoadComponentAction, componentLoadDataSourceAction,
                 None,
-                componentRemoveItemAction, 
-                componentCopyItemAction,
-                componentPasteItemAction,
-                None,
                 componentAddDataSourceAction,
                 None,
-                componentMergeAction
+                componentRemoveItemAction, 
+                componentCopyItemAction,
+                componentPasteItemAction
                 ))
 
         self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)

@@ -641,7 +641,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             newModel = ComponentModel(self.document, self)
             self.view.setModel(newModel)
             self.hideFrame()
-        except IncompatibleNodeError as e: 
+        except IncompatibleNodeError, e: 
             print "Error in Merging: %s" % unicode(e.value)
             self._merged = False
             newModel = ComponentModel(self.document, self)

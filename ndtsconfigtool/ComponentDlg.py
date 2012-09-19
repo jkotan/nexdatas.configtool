@@ -98,6 +98,23 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             if row < children.count():
                 return row
 
+    def getPathFromNode(self, node):
+        ancestors = [node]
+        path = [] 
+
+        while ancestors[0].parentNode().nodeName() != '#document':
+            ancestors.insert(0, ancestors[0].parentNode())
+        ancestors.insert(0, ancestors[0].parentNode())
+
+
+        parent = None
+        for child in ancestors:   
+            if parent: 
+                row = self.getNodeRow(child, parent)
+                path.append((row,unicode(child.nodeName())))
+            parent = child    
+        return path
+
     def getPath(self):
         index = self.view.currentIndex()
         pindex = index.parent()
@@ -119,6 +136,11 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
         return path
         
+    def showNodes(self,nodes):
+        for node in nodes:
+            path = self.getPathFromNode(node)
+            self.selectItem(path)    
+
 
     def getIndex(self, path):
         if not path:
@@ -138,6 +160,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         
     def selectItem(self, path):
         index = self.getIndex(path)
+        
         if index and index.isValid():
             self.view.setCurrentIndex(index)
             self.tagClicked(index)
@@ -615,18 +638,26 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             mr = Merger(self.document)
             mr.merge()
             self._merged = True
-        except IncompatibleNodeError, e: 
-            QMessageBox.warning(self, "Merging problem",
-                                "Error in Merging: %s" % unicode(e) )
-            print "Error in Merging: %s" % unicode(e)
-            self._merged = False
-        except  Exception, e:    
-            print "Exception: %s" % unicode(e)
-            self._merged = False
-        finally:
             newModel = ComponentModel(self.document, self)
             self.view.setModel(newModel)
             self.hideFrame()
+        except IncompatibleNodeError as e: 
+            print "Error in Merging: %s" % unicode(e.value)
+            self._merged = False
+            newModel = ComponentModel(self.document, self)
+            self.view.setModel(newModel)
+            self.hideFrame()
+            if hasattr(e,"nodes") and e.nodes: 
+                self.showNodes(e.nodes)
+            QMessageBox.warning(self, "Merging problem",
+                                "Error in Merging: %s" % unicode(e.value) )
+        except  Exception, e:    
+            print "Exception: %s" % unicode(e)
+            self._merged = False
+            newModel = ComponentModel(self.document, self)
+            self.view.setModel(newModel)
+            self.hideFrame()
+
         return self._merged
 
     def hideFrame(self):

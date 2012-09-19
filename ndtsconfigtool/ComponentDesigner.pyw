@@ -477,9 +477,9 @@ class MainWindow(QMainWindow):
         self.addActions(fileToolbar, (
                 componentNewAction,
                 componentOpenAction, 
+                componentEditAction, 
                 componentSaveAction,
                 componentSaveAsAction,
-                componentEditAction, 
                 componentMergeAction,
                 componentRemoveAction, 
                 None,

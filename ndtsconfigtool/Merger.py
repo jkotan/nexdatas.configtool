@@ -25,8 +25,11 @@ from PyQt4.QtXml import QDomNode
 
 from PyQt4.QtCore import QString
 
-class IncompatibleNodeError(Exception): pass
-
+class IncompatibleNodeError(Exception): 
+    def __init__(self, value, nodes = []):
+        self.value = value
+        self.nodes = nodes
+        
 
 
 
@@ -87,7 +90,7 @@ class Merger(object):
         attr1 = elem1.attributes()
         attr2 = elem2.attributes()
         status = True
-        tags =[]
+        tags = []
 
         name1 = attr1.namedItem("name").nodeValue() \
             if attr1.contains("name") else ""
@@ -108,8 +111,9 @@ class Merger(object):
                                  str(at1.nodeValue()) , str(at2.nodeValue())))
 
         if not status  and tagName in self.singles: 
-            raise IncompatibleNodeError,\
-                "Incompatible element attributes  %s: " % str(tags)
+            raise IncompatibleNodeError("Incompatible element attributes  %s: " % str(tags),
+                                        [elem1, elem2])
+                
 
 
         if tagName == 'field':
@@ -117,9 +121,11 @@ class Merger(object):
             text2=unicode(self.getText(elem2)).strip()         
             ## TODO white spaces?
             if text1 != text2:
-                raise IncompatibleNodeError,\
+                raise IncompatibleNodeError(
                     "Incompatible \n%s element value\n%s \n%s "  \
-                    % (str(self.getAncestors(elem1)), text1, text2)
+                        % (str(self.getAncestors(elem1)), text1, text2),
+                    [elem1, elem2])
+                    
             
         return status
 
@@ -196,10 +202,11 @@ class Merger(object):
                         childElem = child.toElement()
                         cName = unicode(childElem.nodeName()) if childElem  else ""
                         if cName and cName not in self.children[nName]:
-                            raise IncompatibleNodeError,\
+                            raise IncompatibleNodeError(
                                 "Not allowed <%s> child of \n < %s > \n  parent"  \
-                                % (cName, self.getAncestors(elem))
-                            
+                                    % (cName, self.getAncestors(elem)),
+                                [childElem])
+                                
                     self.mergeChildren(child)
                     child = child.nextSibling()
 

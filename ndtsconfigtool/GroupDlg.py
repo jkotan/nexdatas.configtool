@@ -237,7 +237,7 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
         self.doc = unicode(self.docTextEdit.toPlainText())
         
         index = self.view.currentIndex()
-        finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
+        finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
 
         
         self.attributes.clear()
@@ -246,7 +246,7 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
 
         if self.node  and self.root and self.node.isElement():
             self.updateNode(index)
-        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
 
     def updateNode(self,index=QModelIndex()):

@@ -693,9 +693,9 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         self.doc = unicode(self.docTextEdit.toPlainText()).strip()
 
         index = QModelIndex()
-        if self.model:
+        if self.view and self.view.model():
             index = self.view.currentIndex()
-            finalIndex = self.model.createIndex(index.row(),2,index.parent().internalPointer())
+            finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
 
 
 
@@ -706,20 +706,18 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
             if index.isValid():
                 self.view.setCurrentIndex(index)
 
-            if self.model:
-                self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
-                self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+            if self.view and self.view.model():
+                self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
+                self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
         
 
-#        QDialog.accept(self)
-
         self.applied = True
-#        self.emit(SIGNAL("changed"))    
         return True    
 
     def createHeader(self):
-        self.model = None
+        if self.view:
+            self.view.setModel(None)
         self.document = QDomDocument()
         self.root = self.document
         processing = self.root.createProcessingInstruction("xml", 'version="1.0"') 

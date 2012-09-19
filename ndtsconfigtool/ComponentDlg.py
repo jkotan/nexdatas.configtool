@@ -55,7 +55,6 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
         self.view = None
         self.frame = None
-        self.model = None
         
 
         self.actions = None
@@ -124,13 +123,13 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     def getIndex(self, path):
         if not path:
             return QModelIndex()
-        item = self.model.rootItem
+        item = self.view.model().rootItem
         node = item.node
-        index = self.model.createIndex(0,0,item)
+        index = self.view.model().createIndex(0,0,item)
         self.view.expand(index)
         item = index.internalPointer()
         for step in path:
-            index = self.model.index(step[0],0,index) 
+            index = self.view.model().index(step[0],0,index) 
             self.view.expand(index)
             item = index.internalPointer()
         return index    
@@ -164,8 +163,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.splitter.setStretchFactor(0,1)
         self.splitter.setStretchFactor(1,1)
         
-        self.model = ComponentModel(QDomDocument(),self)
-        self.view.setModel(self.model)
+        model = ComponentModel(QDomDocument(),self)
+        self.view.setModel(model)
         
         self.widget = QWidget()
         self.frameLayout = QGridLayout()
@@ -176,7 +175,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
     def applyItem(self):
-        if not self.model or not self.view or not self.widget:
+        if not self.view or not self.view.model() or not self.widget:
             return
         if hasattr(self.widget,'apply'):
             self.widget.apply()
@@ -204,7 +203,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     def pasteItem(self):
         print "pasting item"
         
-        if not self.model or not self.view or not self.widget \
+        if not self.view or not self.view.model() or not self.widget \
                 or not hasattr(self.widget,"subItems") :
             ## Message
             return
@@ -237,7 +236,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.widget.node = node
         self.widget.appendNode(clipNode, index)        
 
-        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         
         self.view.expand(index)
 
@@ -247,7 +246,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     def addItem(self,name):
         if not name in self.tagClasses.keys():
             return
-        if not self.model or not self.view or not self.widget:
+        if not self.view or not self.view.model() or not self.widget:
             return
         if not hasattr(self.widget,'subItems') or  name not in self.widget.subItems:
             return
@@ -259,18 +258,12 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.widget.node = node
         child = self.widget.root.createElement(QString(name))
         self.widget.appendNode(child, index)
-        #                        print name, " at ", node.nodeName()
-#        row=self.widget.getNodeRow(child)
-#        childIndex=self.model.index(row,0,index)
-#                        self.view.setCurrentIndex(childIndex)
-#                        self.widget = None
-#                        self.tagClicked(childIndex)
-        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         self.view.expand(index)
         return child
 
     def removeSelectedItem(self):
-        if not self.model or not self.view or not self.widget:
+        if not self.view or not self.view.model() or not self.widget:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -294,14 +287,14 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
         self.widget.removeNode(node, index.parent())
                 
-        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         if index.parent().isValid():
-            self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
                             index.parent(),index.parent())
 
 
     def copySelectedItem(self):
-        if not self.model or not self.view or not self.widget:
+        if not self.view or not self.view.model() or not self.widget:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -374,7 +367,6 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                 self.widget.connectExternalActions(self._externalApply)
             if hasattr(self.widget,"treeMode"):
                 self.widget.treeMode()
-            self.widget.model = self.model
             self.widget.view = self.view
             self.frameLayout.addWidget(self.widget)
             self.widget.show()
@@ -402,11 +394,11 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
          self.actions = actions
 
     def expanded(self,index):
-        for column in range(self.model.columnCount(index)):
+        for column in range(self.view.model().columnCount(index)):
             self.view.resizeColumnToContents(column)
 
     def collapsed(self,index):
-        for column in range(self.model.columnCount(index)):
+        for column in range(self.view.model().columnCount(index)):
             self.view.resizeColumnToContents(column)
 
     def setName(self, name, directory = None):
@@ -461,12 +453,11 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         
         newModel = ComponentModel(self.document, self)
         self.view.setModel(newModel)
-        self.model = newModel
         
 
     def loadComponentItem(self,filePath = None):
         
-        if not self.model or not self.view or not self.widget \
+        if not self.view or not self.view.model() or not self.widget \
                 or not hasattr(self.widget, "subItems") or "component" not in  self.widget.subItems:
             return
         index = self.view.currentIndex()
@@ -501,7 +492,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                         child = child.nextSibling()
 
                         
-                self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+                self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
                 self.view.expand(index)
                     
 
@@ -519,7 +510,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     def loadDataSourceItem(self,filePath = None):
         print "Loading DataSource"
         
-        if not self.model or not self.view or not self.widget \
+        if not self.view or not self.view.model() or not self.widget \
                                 or not hasattr(self.widget, "subItems") \
                                 or "datasource" not in  self.widget.subItems:
             return
@@ -564,7 +555,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                             self.widget.appendNode(ds2, index)
 #                            node.appendChild(ds)
 
-                self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+                self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
                 self.view.expand(index)
                 self.dsPath = dsFile
 
@@ -584,7 +575,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         if dsNode.nodeName() != 'datasource':
             return
         
-        if not self.model or not self.view or not self.widget \
+        if not self.view or not self.view.model() or not self.widget \
                 or not hasattr(self.widget,"subItems") or "datasource" not in  self.widget.subItems:
             return
 
@@ -608,13 +599,13 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         dsNode2 = self.document.importNode(dsNode, True)
         self.widget.appendNode(dsNode2, index)
         
-        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         self.view.expand(index)
 
 
 
     def merge(self):
-        if not self.model or not self.view or not self.widget:
+        if not self.view or not self.view.model() or not self.widget:
             self._merged = False
             return
         if not self.document:
@@ -635,7 +626,6 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         finally:
             newModel = ComponentModel(self.document, self)
             self.view.setModel(newModel)
-            self.model = newModel
             self.hideFrame()
         return self._merged
 
@@ -658,7 +648,6 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             self.document.appendChild(definition)
             newModel = ComponentModel(self.document, self)
             self.view.setModel(newModel)
-            self.model = newModel
             self.hideFrame()
 
 

@@ -37,8 +37,6 @@ class NodeDlg(QDialog):
         self.root = None
         ## component tree view
         self.view = None 
-        ## component tree model
-        self.model = None 
 
         self.subItems = []
 
@@ -57,7 +55,7 @@ class NodeDlg(QDialog):
         index = self.view.currentIndex()
         self.setFromNode()
         self.updateForm()
-        self.model.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
 
     def getFirstElement(self, node, name):
@@ -129,54 +127,54 @@ class NodeDlg(QDialog):
     
 
     def removeNode(self, node, parent):
-        if self.model is not None: 
+        if self.view is not None and self.view.model() is not None: 
             row = self.getNodeRow(node)
             print "ROW", row
             if row is not None:
-                self.model.removeRows(row, 1, parent)
+                self.view.model().removeRows(row, 1, parent)
         self.node.removeChild(node)
 
 
     def replaceNode(self, oldNode, newNode, parent):
-        if self.model is not None: 
+        if self.view is not None and self.view.model() is not None: 
             row = self.getNodeRow(oldNode)
         self.node.replaceChild(newNode, oldNode)
-        if self.model is not None: 
+        if self.view is not None and self.view.model() is not None: 
             if row is not None:
-                self.model.removeRows(row, 1, parent)
-                self.model.insertRows(row, 1, parent)
+                self.view.model().removeRows(row, 1, parent)
+                self.view.model().insertRows(row, 1, parent)
 
 
     def appendNode(self, node, parent):
         self.node.appendChild(node)
-        if self.model is not None: 
+        if self.view is not None and self.view.model() is not None: 
             row = self.node.childNodes().count()-1
             if row is not None:
-                self.model.insertRows(row, 1, parent)
+                self.view.model().insertRows(row, 1, parent)
 
 
     def removeElement(self, element, parent):
-        if self.model is not None: 
+        if self.view is not None and self.view.model() is not None: 
             row = self.getElementRow(element)
             if row is not None:
-                self.model.removeRows(row, 1, parent)
+                self.view.model().removeRows(row, 1, parent)
         self.node.removeChild(element)
 
     def replaceElement(self, oldElement, newElement, parent):
-        if self.model is not None: 
+        if self.view is not None and self.view.model() is not None: 
             row = self.getElementRow(oldElement)
         self.node.replaceChild(newElement, oldElement)
-        if self.model is not None: 
+        if self.view is not None and self.view.model() is not None: 
             if row is not None:
-                self.model.removeRows(row, 1, parent)
-                self.model.insertRows(row, 1, parent)
+                self.view.model().removeRows(row, 1, parent)
+                self.view.model().insertRows(row, 1, parent)
 
     def appendElement(self, newElement, parent):
         self.node.appendChild(newElement)
-        if self.model is not None: 
+        if self.view is not None and self.view.model() is not None: 
             row = self.node.childNodes().count()-1
             if row is not None:
-                self.model.insertRows(row, 1, parent)
+                self.view.model().insertRows(row, 1, parent)
 
             
 

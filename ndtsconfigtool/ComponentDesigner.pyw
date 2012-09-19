@@ -118,7 +118,7 @@ class MainWindow(QMainWindow):
 
         dsourceNewAction = self.pool.createCommand(
             "&New DataSource", "dsourceNew",  commandArgs, 
-            DataSourceNew,"Ctrl+S", "dsourceadd", "Create the new data source") 
+            DataSourceNew,"Ctrl+S", "dsourceadd", "Create a new data source") 
 
         dsourceRemoveAction = self.pool.createCommand(
             "&Close DataSource", "dsourceRemove",  commandArgs, 
@@ -150,7 +150,7 @@ class MainWindow(QMainWindow):
 
         componentNewAction = self.pool.createCommand(
             "&New", "componentNew", commandArgs, ComponentNew,
-            QKeySequence.New, "componentnew", "Create the new component")
+            QKeySequence.New, "componentnew", "Create a new component")
 
         componentEditAction = self.pool.createCommand(
             "&Edit", "componentEdit", commandArgs, ComponentEdit,
@@ -181,39 +181,39 @@ class MainWindow(QMainWindow):
 
         dsourceApplyAction = self.pool.createCommand(
             "Apply DataSource", "dsourceApply", commandArgs, DataSourceApply,
-            "", "dsourceapply", "Apply the datasource")
+            "", "dsourceapply", "Apply the data source")
 
 
         dsourceSaveAction = self.pool.createCommand(
             "Save DataSource", "dsourceSave", commandArgs, DataSourceSave,
-            "", "dsourcesave", "Save the datasource")
+            "", "dsourcesave", "Save the data source")
 
 
         dsourceSaveAsAction = self.pool.createCommand(
             "Save DataSource As...", "dsourceSaveAs", commandArgs, DataSourceSaveAs,
-            "", "dsourcesaveas", "Save the datasource as ...")
+            "", "dsourcesaveas", "Save the data source as ...")
 
         dsourceSaveAllAction = self.pool.createCommand(
             "Save All DataSources", "dsourceSaveAll", commandArgs, DataSourceSaveAll,
-            "", "dsourcessaveall", "Save the all datasources")
+            "", "dsourcessaveall", "Save the all data sources")
 
 
         dsourceCopyAction = self.pool.createCommand(
             "Copy DataSource", "dsourceCopy", 
             commandArgs, DataSourceCopy,
-            "", "dsourcecopy", "copy datasouce")
+            "", "dsourcecopy", "Copy the data source")
 
 
         dsourceCutAction = self.pool.createCommand(
             "Cut DataSource", "dsourceCut", 
             commandArgs, DataSourceCut,
-            "", "dsourcecut", "cut datasouce")
+            "", "dsourcecut", "Cut the data source")
 
 
         dsourcePasteAction = self.pool.createCommand(
             "Paste DataSource", "dsourcePaste", 
             commandArgs, DataSourcePaste,
-            "", "dsourcepaste", "paste datasouce")
+            "", "dsourcepaste", "Paste the data source")
         
 
         componentRemoveItemAction = self.pool.createCommand(
@@ -283,23 +283,23 @@ class MainWindow(QMainWindow):
 
         componentNewDataSourceAction = self.pool.createCommand(
             "New DataSource Item", "componentNewDataSourceItem", commandArgs, ComponentNewItem,
-            "", "componentnewitem", "Add a new component datasource")
+            "", "componentnewitem", "Add a new component data source")
 
 
         componentLoadComponentAction = self.pool.createCommand(
             "Load SubComponent Item...", "componentLoadComponentItem", commandArgs, ComponentLoadComponentItem,
-            "", "componentloaditem", "Load a component part from the file")
+            "", "componentloaditem", "Load an existing component part from the file")
 
 
         componentLoadDataSourceAction = self.pool.createCommand(
             "Load DataSource Item...", "componentLoadDataSourceItem", commandArgs, ComponentLoadDataSourceItem,
-            "", "componentloaditem", "Load datasouce from the file")
+            "", "componentloaditem", "Load an existing data source from the file")
 
 
         componentAddDataSourceAction = self.pool.createCommand(
             "Add DataSource Item", "componentAddDataSourceItem", 
             commandArgs, ComponentAddDataSourceItem,
-            "", "componentadditem", "add datasouce from the file")
+            "", "componentadditem", "Add the data source from the file")
 
 
         componentMergeAction = self.pool.createCommand(
@@ -317,7 +317,7 @@ class MainWindow(QMainWindow):
         dsourceChangeDirectoryAction = self.pool.createCommand(
             "Change DataSource Directory...", "dsourceChangeDirectory", commandArgs, 
             DataSourceChangeDirectory,
-            "", "dsourcerechangedirecotry", "Change the datasource list directory")
+            "", "dsourcerechangedirecotry", "Change the data-source list directory")
 
 
         
@@ -328,16 +328,16 @@ class MainWindow(QMainWindow):
 
         dsourceReloadListAction = self.pool.createCommand(
             "Reload DataSource List", "dsourceReloadList", commandArgs, DataSourceReloadList,
-            "", "dsourcereloadlist", "Reload the datasource list")
+            "", "dsourcereloadlist", "Reload the data-source list")
 
         dsourceOpenAction = self.pool.createCommand(
             "&Open DataSource...", "dsourceOpen", commandArgs, DataSourceOpen,
-            "", "dsourceopen", "Open the datasource")
+            "", "dsourceopen", "Open an existing data source")
 
 
         componentOpenAction = self.pool.createCommand(
             "&Open...", "componentOpen", commandArgs, ComponentOpen,
-            QKeySequence.Open, "componentopen", "Open the component")
+            QKeySequence.Open, "componentopen", "Open an existing component")
         
         componentRemoveAction = self.pool.createCommand(
             "&Close", "componentRemove", commandArgs, ComponentRemove,

@@ -166,9 +166,8 @@ class Merger(object):
 #            print "merging the children of: ", node.nodeName()
             changes = True
             
-            children = node.childNodes()
             while changes:
-                
+                children = node.childNodes()
                 changes = False
                 for c1 in range(children.count()):
                     child1 = children.item(c1)
@@ -189,7 +188,7 @@ class Merger(object):
                         
             child = node.firstChild()
             elem = node.toElement()
-            nName = unicode(elem.nodeName()) if elem  else ""
+            nName = unicode(elem.nodeName()) if elem else ""
             
             if child:
                 while not child.isNull():

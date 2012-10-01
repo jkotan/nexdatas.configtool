@@ -52,6 +52,7 @@ class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
         self.subItems = ["group", "field", "attribute", "link", "component", "doc"]
 
 
+
     def updateForm(self):
 
         if self.name is not None:

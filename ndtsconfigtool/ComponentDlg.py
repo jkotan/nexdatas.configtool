@@ -84,7 +84,12 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.document = None
 
 
+        ## if merging compited
         self._merged = False
+
+        ## if changes saved
+        self.dirty = False
+
 
     def getNodeRow(self, child, node):
         row = 0
@@ -168,18 +173,19 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
     def getState(self):
         path = self.getPath()
-        return (self.document.toString(0),path)
+        return (self.document.toString(0),path, self.dirty)
 
 
     def setState(self,state):
-        (xml, path)=state
+        (xml, path, dirty)=state
         try:
             self.loadFromString(xml)
         except (IOError, OSError, ValueError), e:
             error = "Failed to load: %s" % e
             print error
         self.hideFrame()    
-        self.selectItem(path)    
+        self.selectItem(path) 
+        self.dirty = dirty
             
 
     def updateForm(self):
@@ -202,6 +208,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             return
         if hasattr(self.widget,'apply'):
             self.widget.apply()
+            self.dirty = True
 
     def nodeToString(self, node):
         doc = QDomDocument()
@@ -430,6 +437,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             dr = unicode(fi.dir().path())
         else:
             dr = unicode(directory)
+
         self.componentFile = dr + "/" + name + ".xml"
         print "FN", self.componentFile 
         self.name = name
@@ -461,6 +469,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                     if self.name[-4:] == '.xml':
                         self.name = self.name[:-4]
                     return self.componentFile
+                self.dirty = False
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
                 print error
@@ -496,6 +505,9 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                                                 "SVG files (*.svg);;User Interface files (*.ui)"))
         else:
             itemFile = filePath
+
+        self.dirty = True
+
         if itemFile:
             try:
                 fh = QFile(itemFile)
@@ -546,6 +558,8 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                 return
             child = child.nextSibling()    
                 
+
+        self.dirty = True
 
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -696,6 +710,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                     raise IOError, unicode(fh.errorString())
                 stream = QTextStream(fh)
                 stream <<self.document.toString(2)
+                self.dirty = False
 #                print self.document.toString(2)
             except (IOError, OSError, ValueError), e:
                 error = "Failed to save: %s" % e

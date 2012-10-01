@@ -24,4 +24,3 @@ class LabeledObject(object):
         self.name = name
         self.widget = widget
         self.id = id(self)
-

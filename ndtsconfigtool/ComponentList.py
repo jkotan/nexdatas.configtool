@@ -134,12 +134,21 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
             item  = QListWidgetItem(QString("%s" % name))
             item.setData(Qt.UserRole, QVariant(self.components[cp].id))
             item.setFlags(item.flags() | Qt.ItemIsEditable)
+            if self.components[cp].widget is not None:
+                if hasattr(self.components[cp].widget,"dirty") and self.components[cp].widget.dirty:
+                    item.setForeground(Qt.red)
+                else:
+                    item.setForeground(Qt.black)
+                    
+
             self.componentListWidget.addItem(item)
             if selectedComponent is not None and selectedComponent == self.components[cp].id:
                 selected = item
             if self.components[cp].widget is not None:
-                self.components[cp].widget.setWindowTitle("Component: %s" %name)
-
+                if  hasattr(self.components[cp].widget,"dirty") and self.components[cp].widget.dirty:
+                    self.components[cp].widget.setWindowTitle("Component: %s*" %name)
+                else:
+                    self.components[cp].widget.setWindowTitle("Component: %s" %name)
 
         if selected is not None:
             selected.setSelected(True)

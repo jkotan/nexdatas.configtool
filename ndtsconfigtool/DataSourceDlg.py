@@ -109,6 +109,10 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         ## allowed subitems
         self.subItems = ["record", "doc", "device", "database", "query", "door"]
 
+
+        ## if changes saved
+        self.dirty = False
+
     def clear(self):
         self.dataSourceType = 'CLIENT'
         self.doc = u''
@@ -142,7 +146,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                  self.dbType,
                  self.dbDataFormat,
                  self.dbQuery,
-                 dbParameters 
+                 dbParameters,
+                 self.dirty
                  )
 #        print  "GET", str(state)
         return state
@@ -162,7 +167,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
          self.dbType,
          self.dbDataFormat,
          self.dbQuery,
-         dbParameters 
+         dbParameters,
+         self.dirty
          ) = state
 #        print "SET",  str(state)
         self.dbParameters = copy.copy(dbParameters)
@@ -490,6 +496,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                 ds = self.getFirstElement(self.document, "datasource")           
                 if ds:
                     self.setFromNode(ds)
+                self.dirty = False
             try:    
                 self.createGUI()
             except Exception, e:
@@ -601,6 +608,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
                     stream = QTextStream(fh)
                     stream <<self.document.toString(2)
             #                print self.document.toString(2)
+                    self.dirty = True
                 except (IOError, OSError, ValueError), e:
                     error = "Failed to save: %s" % e
                     print error
@@ -639,6 +647,8 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
    ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
+        self.dirty = True
+
         self.applied = False
         class CharacterError(Exception): pass
         sourceType = unicode(self.typeComboBox.currentText())

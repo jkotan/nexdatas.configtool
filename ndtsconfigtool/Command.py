@@ -363,11 +363,19 @@ class ComponentSave(Command):
                 self._cp.widget = self._cpEdit 
                     
             self._cpEdit.save()    
+        if hasattr(self._cp,"id"):
+            self.receiver.componentList.populateComponents(self._cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
 
             
         print "EXEC componentSave"
 
     def unexecute(self):
+        if hasattr(self._cp,"id"):
+            self.receiver.componentList.populateComponents(self._cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
         print "UNDO componentSave"
 
     def clone(self):
@@ -418,9 +426,17 @@ class ComponentSaveAs(Command):
                     self.newName = self.newName[:-4]
                 self.directory = unicode(fi.dir().path())
 
+        if hasattr(self._cp,"id"):
+            self.receiver.componentList.populateComponents(self._cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
         print "EXEC componentSaveAs"
 
     def unexecute(self):
+        if hasattr(self._cp,"id"):
+            self.receiver.componentList.populateComponents(self._cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
         print "UNDO componentSaveAs"
 
     def clone(self):
@@ -668,6 +684,12 @@ class DataSourceApply(Command):
             self._ds.widget.apply()    
             self._newstate = self._ds.widget.getState() 
             
+            
+            if hasattr(self._ds ,"id"):
+                self.receiver.sourceList.populateDataSources(self._ds.id)
+            else:
+                self.receiver.sourceList.populateDataSources()
+
         print "EXEC dsourceApply"
 
     def unexecute(self):
@@ -682,6 +704,11 @@ class DataSourceApply(Command):
             else:
                 self.receiver.mdi.addWindow(self._ds.widget)
                 self._ds.widget.show()
+
+            if hasattr(self._ds ,"id"):
+                self.receiver.sourceList.populateDataSources(self._ds.id)
+            else:
+                self.receiver.sourceList.populateDataSources()
             
             
         print "UNDO dsourceApply"
@@ -727,10 +754,20 @@ class DataSourceSave(Command):
         if self._ds is not None and hasattr(self._ds,"widget"):
             self._ds.widget.save()    
 
+        ds = self.receiver.sourceList.currentListDataSource()
+        if hasattr(ds ,"id"):
+            self.receiver.sourceList.populateDataSources(ds.id)
+        else:
+            self.receiver.sourceList.populateDataSources()
             
         print "EXEC dsourceSave"
 
     def unexecute(self):
+        ds = self.receiver.sourceList.currentListDataSource()
+        if hasattr(ds ,"id"):
+            self.receiver.sourceList.populateDataSources(ds.id)
+        else:
+            self.receiver.sourceList.populateDataSources()
         print "UNDO dsourceSave"
 
     def clone(self):
@@ -920,6 +957,11 @@ class ComponentListChanged(Command):
                 self.oldDirectory =  self.receiver.componentList.directory 
 
 
+        cp = self.receiver.componentList.currentListComponent()
+        if hasattr(cp,"id"):
+            self.receiver.componentList.populateComponents(cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
               
         print "EXEC componentChanged"
 
@@ -929,6 +971,13 @@ class ComponentListChanged(Command):
             self.receiver.componentList.addComponent(self._cp, False)
             if self._cp.widget is not None:
                 self._cp.widget.setName(self.name, self.oldDirectory)
+
+        cp = self.receiver.componentList.currentListComponent()
+        if hasattr(cp,"id"):
+            self.receiver.componentList.populateComponents(cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
+
         print "UNDO componentChanged"
 
     def clone(self):
@@ -1185,6 +1234,10 @@ class ComponentItemCommand(Command):
                 else:    
                     self.receiver.mdi.addWindow(self._cp.widget)
                     self._cp.widget.show()
+        if hasattr(self._cp,"id"):
+            self.receiver.componentList.populateComponents(self._cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
 
         
     def execute(self):
@@ -1206,6 +1259,11 @@ class ComponentItemCommand(Command):
             else:    
                 self.receiver.mdi.addWindow(self._cp.widget)
                 self._cp.widget.show()
+        if hasattr(self._cp,"id"):
+            self.receiver.componentList.populateComponents(self._cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
+
         print "UNDO componentItemComponent"
 
     def clone(self):
@@ -1615,8 +1673,6 @@ class ComponentApplyItem(ComponentItemCommand):
                     self._cp.widget.applyItem()    
         self.postExecute()
 
-
-                        
             
         print "EXEC componentApplyItem"
 

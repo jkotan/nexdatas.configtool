@@ -436,8 +436,11 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             self.view.resizeColumnToContents(column)
 
     def setName(self, name, directory = None):
-        fi = QFileInfo(self.componentFile)
-        if directory is None:
+        fi = None
+        dr = ""
+        if self.componentFile:
+            fi = QFileInfo(self.componentFile)
+        if directory is None and fi:
             dr = unicode(fi.dir().path())
         else:
             dr = unicode(directory)

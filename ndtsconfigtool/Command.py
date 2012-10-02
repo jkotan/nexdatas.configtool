@@ -955,6 +955,7 @@ class ComponentListChanged(Command):
         self.newName = None
         self.oldDirectory = None
         self.directory = None
+        self.oldDirty = None
         
     def execute(self):
         if self.item is not None or self.newName is not None:
@@ -969,6 +970,9 @@ class ComponentListChanged(Command):
             if self._cp.widget is not None:
                 self.oldDirectory = self._cp.widget.directory 
                 self._cp.widget.setName(self.newName, self.directory)
+                self.oldDirty = self._cp.widget.dirty
+                self._cp.widget.dirty = True
+                
             else:
                 self.oldDirectory =  self.receiver.componentList.directory 
 
@@ -987,6 +991,7 @@ class ComponentListChanged(Command):
             self.receiver.componentList.addComponent(self._cp, False)
             if self._cp.widget is not None:
                 self._cp.widget.setName(self.name, self.oldDirectory)
+                self._cp.widget.dirty = self.oldDirty 
 
         cp = self.receiver.componentList.currentListComponent()
         if hasattr(cp,"id"):

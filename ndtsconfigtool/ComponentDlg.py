@@ -210,6 +210,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             self.widget.apply()
             self.dirty = True
 
+
     def nodeToString(self, node):
         doc = QDomDocument()
         child = doc.importNode(node,True)
@@ -227,8 +228,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             raise ValueError, "could not parse XML"
         if self.document and doc and doc.hasChildNodes():
             return self.document.importNode(doc.firstChild(), True)
-        
-        
+                
         
     def pasteItem(self):
         print "pasting item"
@@ -260,6 +260,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             ## Message
             return
 
+        self.dirty = True
         node = sel.node
 
 
@@ -284,6 +285,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         sel = index.internalPointer()
         if not sel:
             return
+        self.dirty = True
         node = sel.node
         self.widget.node = node
         child = self.widget.root.createElement(QString(name))
@@ -291,6 +293,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         self.view.expand(index)
         return child
+
 
     def removeSelectedItem(self):
         if not self.view or not self.view.model() or not self.widget:
@@ -300,6 +303,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         if not sel:
             return
 
+        self.dirty = True
         node = sel.node
 
         attributeMap = node.attributes()
@@ -632,6 +636,9 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         node = sel.node
 
 
+        self.dirty = True
+
+
         self.widget.node = node
         dsNode2 = self.document.importNode(dsNode, True)
         self.widget.appendNode(dsNode2, index)
@@ -648,6 +655,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         if not self.document:
             self._merged = False
             return
+        self.dirty = False
         try:
             mr = Merger(self.document)
             mr.merge()
@@ -694,6 +702,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             newModel = ComponentModel(self.document, self)
             self.view.setModel(newModel)
             self.hideFrame()
+            self.dirty = True 
 
 
     def save(self):

@@ -309,7 +309,6 @@ class ComponentEdit(Command):
                 self._cpEdit.show()
                 #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
-                    
 
 
             
@@ -1136,6 +1135,8 @@ class DataSourceListChanged(Command):
         self.newName = None
         self.oldDirectory = None
         self.directory = None
+        self.directory = None
+        self.oldDirty = None
         
 
         
@@ -1152,8 +1153,16 @@ class DataSourceListChanged(Command):
             if self._ds.widget is not None:
                 self.oldDirectory = self._ds.widget.directory 
                 self._ds.widget.setName(self.newName, self.directory)
+                self.oldDirty = self._ds.widget.dirty
+                self._ds.widget.dirty = True
             else:
                 self.oldDirectory =  self.receiver.sourceList.directory 
+
+        ds = self.receiver.sourceList.currentListDataSource()
+        if hasattr(ds,"id"):
+            self.receiver.sourceList.populateDataSources(ds.id)
+        else:
+            self.receiver.sourceList.populateDataSources()
 
         print "EXEC dsourceChanged"
 
@@ -1163,6 +1172,15 @@ class DataSourceListChanged(Command):
             self.receiver.sourceList.addDataSource(self._ds, False)
             if self._ds.widget is not None:
                 self._ds.widget.setName(self.name, self.oldDirectory)
+                self._ds.widget.dirty = self.oldDirty 
+
+
+        ds = self.receiver.sourceList.currentListDataSource()
+        if hasattr(ds,"id"):
+            self.receiver.sourceList.populateDataSources(ds.id)
+        else:
+            self.receiver.sourceList.populateDataSources()
+
         print "UNDO dsourceChanged"
 
 

@@ -727,6 +727,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         return True    
 
     def createHeader(self):
+        self.dirty = True
         if self.view:
             self.view.setModel(None)
         self.document = QDomDocument()

@@ -695,17 +695,17 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
     def createHeader(self):
-            self.document = QDomDocument()
-            self.document = self.document
-            processing = self.document.createProcessingInstruction("xml", 'version="1.0"') 
-            self.document.appendChild(processing)
-            
-            definition = self.document.createElement(QString("definition"))
-            self.document.appendChild(definition)
-            newModel = ComponentModel(self.document, self)
-            self.view.setModel(newModel)
-            self.hideFrame()
-            self.dirty = True 
+        self.document = QDomDocument()
+        self.document = self.document
+        processing = self.document.createProcessingInstruction("xml", 'version="1.0"') 
+        self.document.appendChild(processing)
+        
+        definition = self.document.createElement(QString("definition"))
+        self.document.appendChild(definition)
+        newModel = ComponentModel(self.document, self)
+        self.view.setModel(newModel)
+        self.hideFrame()
+        self.dirty = True 
 
 
     def save(self):

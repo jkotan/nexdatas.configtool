@@ -292,7 +292,7 @@ class ComponentEdit(Command):
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 self._cpEdit.createHeader()
-                self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
+                self._cpEdit.setWindowTitle("Component: %s*" % self._cp.name)
             else:
                 self._cpEdit = self._cp.widget 
                 
@@ -974,6 +974,7 @@ class ComponentListChanged(Command):
                 
             else:
                 self.oldDirectory =  self.receiver.componentList.directory 
+                self.oldDirty = self._cp.dirty
 
 
         cp = self.receiver.componentList.currentListComponent()
@@ -1058,7 +1059,7 @@ class DataSourceEdit(Command):
                 self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
                 self._dsEdit.createGUI()
                 self._dsEdit.createHeader()
-                self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)
+                self._dsEdit.setWindowTitle("DataSource: %s*" % self._ds.name)
             else:
                 self._dsEdit = self._ds.widget 
                 
@@ -1157,6 +1158,7 @@ class DataSourceListChanged(Command):
                 self._ds.widget.dirty = True
             else:
                 self.oldDirectory =  self.receiver.sourceList.directory 
+                self.oldDirty = self._ds.dirty
 
         ds = self.receiver.sourceList.currentListDataSource()
         if hasattr(ds,"id"):

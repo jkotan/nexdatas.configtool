@@ -58,7 +58,7 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
     def addComponent(self,obj, flag = True):
 
         self.components[obj.id] = obj
-        self.populateComponents(obj.id,flag)
+        self.populateComponents(obj.id, flag)
                 
                 
     ## takes a name of the current component
@@ -135,15 +135,21 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
             item.setData(Qt.UserRole, QVariant(self.components[cp].id))
             item.setFlags(item.flags() | Qt.ItemIsEditable)
             if self.components[cp].widget is not None:
-                if hasattr(self.components[cp].widget,"dirty") and self.components[cp].widget.dirty:
-                    item.setForeground(Qt.red)
+                if hasattr(self.components[cp].widget,"dirty") \
+                        and self.components[cp].widget.dirty:
+                    item.setForeground(Qt.red) 
                 else:
                     item.setForeground(Qt.black)
-                    
+            else:
+                if self.components[cp].dirty:
+                    item.setForeground(Qt.red) 
+                else:
+                    item.setForeground(Qt.black)
 
             self.componentListWidget.addItem(item)
             if selectedComponent is not None and selectedComponent == self.components[cp].id:
                 selected = item
+                               
             if self.components[cp].widget is not None:
                 if  hasattr(self.components[cp].widget,"dirty") and self.components[cp].widget.dirty:
                     self.components[cp].widget.setWindowTitle("Component: %s*" %name)

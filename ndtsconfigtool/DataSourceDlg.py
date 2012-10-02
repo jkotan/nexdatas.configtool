@@ -114,6 +114,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         self.dirty = False
 
     def clear(self):
+        self.dirty = True
         self.dataSourceType = 'CLIENT'
         self.doc = u''
 
@@ -751,6 +752,7 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
     def copyFromClipboard(self):
         clipboard= QApplication.clipboard()
         text=unicode(clipboard.text())
+        self.dirty = True
         self.document = QDomDocument()
         self.root = self.document
         if not self.document.setContent(text):

@@ -572,6 +572,10 @@ class DataSourceCut(Command):
                 
 
             self._newstate = self._ds.widget.getState() 
+        if hasattr(self._ds ,"id"):
+            self.receiver.sourceList.populateDataSources(self._ds.id)
+        else:
+            self.receiver.sourceList.populateDataSources()
             
         print "EXEC dsourceCut"
 
@@ -588,6 +592,10 @@ class DataSourceCut(Command):
                 self.receiver.mdi.addWindow(self._ds.widget)
                 self._ds.widget.show()
             
+        if hasattr(self._ds ,"id"):
+            self.receiver.sourceList.populateDataSources(self._ds.id)
+        else:
+            self.receiver.sourceList.populateDataSources()
             
         print "UNDO dsourceCut"
         
@@ -632,6 +640,10 @@ class DataSourcePaste(Command):
 
             self._newstate = self._ds.widget.getState() 
             
+            if hasattr(self._ds ,"id"):
+                self.receiver.sourceList.populateDataSources(self._ds.id)
+            else:
+                self.receiver.sourceList.populateDataSources()
         print "EXEC dsourcePaste"
 
     def unexecute(self):
@@ -647,6 +659,10 @@ class DataSourcePaste(Command):
                 self.receiver.mdi.addWindow(self._ds.widget)
                 self._ds.widget.show()
             
+            if hasattr(self._ds ,"id"):
+                self.receiver.sourceList.populateDataSources(self._ds.id)
+            else:
+                self.receiver.sourceList.populateDataSources()
             
         print "UNDO dsourcePaste"
         

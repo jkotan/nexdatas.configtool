@@ -658,7 +658,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         if not self.document:
             self._merged = False
             return
-        self.dirty = False
+        self.dirty = True
         try:
             mr = Merger(self.document)
             mr.merge()

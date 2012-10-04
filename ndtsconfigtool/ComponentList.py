@@ -122,7 +122,7 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
     ## fills in the component table      
     # \param selectedComponent selected component    
     def populateComponents(self, selectedComponent = None, edit = False):
-        print "populate"
+#        print "populate"
         selected = None
         self.componentListWidget.clear()
         

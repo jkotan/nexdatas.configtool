@@ -64,6 +64,7 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
     def createGUI(self):
 
         self.setupUi(self)
+        self.targetToolButton.setEnabled(False)
 
         self.updateForm()
 

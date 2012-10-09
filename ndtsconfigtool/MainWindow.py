@@ -68,6 +68,10 @@ class MainWindow(QMainWindow):
         self.pool = None
         ## stack with used commands
         self.cmdStack = None
+
+        ## configuration server
+        self.configServer = None
+        
         ## if pooling applicable
         self.pooling = True
 
@@ -412,7 +416,9 @@ class MainWindow(QMainWindow):
         
         if not PYTANGO_AVAILABLE:
             serverConnectAction.setDisabled(True)
-            
+        else:
+            self.configServer = ConfigurationServer()
+
         serverFetchComponentsAction.setDisabled(True)
         serverStoreComponentAction.setDisabled(True)
         serverDeleteComponentAction.setDisabled(True)
@@ -1063,7 +1069,7 @@ class MainWindow(QMainWindow):
         cmd.execute()
         self.cmdStack.append(cmd)
 
-        self.pool.setDisabled("serverConnect", True)
+#        self.pool.setDisabled("serverConnect", True)
         self.pool.setDisabled("serverFetchComponents", False)
         self.pool.setDisabled("serverStoreComponent", False)
         self.pool.setDisabled("serverDeleteComponent", False)

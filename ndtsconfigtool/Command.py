@@ -55,6 +55,8 @@ class Command(object):
         pass
 
 
+
+
 class ServerConnect(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
@@ -62,6 +64,8 @@ class ServerConnect(Command):
         
 
     def execute(self):       
+        if self.receiver.configServer:
+            self.receiver.configServer.open()
         print "EXEC serverConnect"
 
     def unexecute(self):
@@ -214,6 +218,8 @@ class ServerClose(Command):
         
 
     def execute(self):       
+        if self.receiver.configServer:
+            self.receiver.configServer.close()
         print "EXEC serverClose"
 
     def unexecute(self):

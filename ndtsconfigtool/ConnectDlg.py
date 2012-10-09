@@ -39,12 +39,25 @@ class ConnectDlg(QDialog, ui_connectdlg.Ui_ConnectDlg):
         self.host = u''
         ## port
         self.port = None
+
+
+    def createGUI(self):
         self.setupUi(self)
+        self.updateForm()
         self.updateUi()
 
 
         self.connect(self.connectPushButton, SIGNAL("clicked()"), self.accept)
         self.connect(self.cancelPushButton, SIGNAL("clicked()"), self.reject)
+
+
+    def updateForm(self):
+        if self.device is not None:
+            self.deviceLineEdit.setText(self.device)
+        if self.host is not None:
+            self.hostLineEdit.setText(self.host)
+        if self.port is not None:
+            self.portLineEdit.setText(str(self.port))
 
 
     ## calls updateUi when the name text is changing
@@ -90,6 +103,12 @@ class ConnectDlg(QDialog, ui_connectdlg.Ui_ConnectDlg):
             self.hostLineEdit.setFocus()
             return
 
+        if self.port is None and self.host:
+            QMessageBox.warning(self, "Empty port", 
+                                "Please define the port")
+            self.portLineEdit.setFocus()
+            return
+
         
         QDialog.accept(self)
 
@@ -100,6 +119,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     ## connect form
     form = ConnectDlg()
+    form.createGUI()
     form.show()
     app.exec_() 
 

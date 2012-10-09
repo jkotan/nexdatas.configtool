@@ -47,7 +47,7 @@
        <item row="0" column="0">
         <widget class="QLabel" name="deviceLabel">
          <property name="text">
-          <string> &amp;Device:</string>
+          <string>&amp;Device:</string>
          </property>
          <property name="buddy">
           <cstring>deviceLineEdit</cstring>
@@ -114,14 +114,14 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="connectPushButton">
          <property name="text">
           <string>C&amp;onnect</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="cancelPushButton">
          <property name="text">
           <string>&amp;Canel</string>
          </property>

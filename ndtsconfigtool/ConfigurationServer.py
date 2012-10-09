@@ -19,6 +19,13 @@
 ## \file ConfigurationServer.py
 # Class for merging DOM component trees
 
+try:
+    import PyTango
+    PYTANGO_AVAILABLE = True
+except ImportError, e:
+    PYTANGO_AVAILABLE = False
+    print "PyTango is not available: %s" % e
+
 import PyTango
 
 from ConnectDlg import  ConnectDlg

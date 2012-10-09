@@ -31,20 +31,48 @@ from CommandPool import *
 from DataSourceList import *
 from ComponentList import *
 
+
+from ConfigurationServer import *
+
 #__version__ = "1.0.0"
+## version of the application
 __version__ = "0.0.1"
 
-
+## main window class
 class MainWindow(QMainWindow):
 
+    ## constructor
+    # \param parent parent widget
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
+        ## datasource directory
         self.dsDirectory = "./datasources"
+        ## component directory
         self.cpDirectory = "./components"
 
+        ## component menu under mouse cursor
         self.contextMenuActions = None
 
+        ## dock with components and datasources
+        self.compDockWidget = None
+
+        ## list of datasources
+        self.sourceList =  None
+        ## list of components
+        self.componentList =    None
+        
+        ## multi window workspace
+        self.mdi = None
+        ## pool with commands
+        self.pool = None
+        ## stack with used commands
+        self.cmdStack = None
+        ## if pooling applicable
+        self.pooling = True
+
+        # dictionary with window actions
+        self.windows = {}
 
         settings = QSettings()
         self.dsDirectory = unicode(settings.value("DataSources/directory").toString())
@@ -86,12 +114,12 @@ class MainWindow(QMainWindow):
         self.componentList = ComponentList(self.cpDirectory)
         self.componentList.createGUI()
 
-        self.dockSplitter = QSplitter(Qt.Vertical)
-        self.dockSplitter.addWidget(self.componentList)
-        self.dockSplitter.addWidget(self.sourceList)
-        self.dockSplitter.setStretchFactor(0,3)
-        self.dockSplitter.setStretchFactor(1,1)
-        self.compDockWidget.setWidget(self.dockSplitter)
+        dockSplitter = QSplitter(Qt.Vertical)
+        dockSplitter.addWidget(self.componentList)
+        dockSplitter.addWidget(self.sourceList)
+        dockSplitter.setStretchFactor(0,3)
+        dockSplitter.setStretchFactor(1,1)
+        self.compDockWidget.setWidget(dockSplitter)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.compDockWidget)
 
         self.mdi = QWorkspace()
@@ -381,7 +409,10 @@ class MainWindow(QMainWindow):
             "C&lose", "serverClose", commandArgs, ServerClose,
             "", "serverclose", "Close connection to the configuration server")
 
-
+        
+        if not PYTANGO_AVAILABLE:
+            serverConnectAction.setDisabled(True)
+            
         serverFetchComponentsAction.setDisabled(True)
         serverStoreComponentAction.setDisabled(True)
         serverDeleteComponentAction.setDisabled(True)
@@ -408,23 +439,23 @@ class MainWindow(QMainWindow):
 
 
 
-        self.windowNextAction = self.createAction(
+        self.windows["NextAction"] = self.createAction(
             "&Next", self.mdi.activateNextWindow, 
             QKeySequence.NextChild, tip = "Go to the next window")
-        self.windowPrevAction = self.createAction(
+        self.windows["PrevAction"] = self.createAction(
             "&Previous", self.mdi.activatePreviousWindow,
             QKeySequence.PreviousChild, tip = "Go to the previous window")
-        self.windowCascadeAction = self.createAction(
+        self.windows["CascadeAction"] = self.createAction(
             "Casca&de", self.mdi.cascade, tip = "Cascade the windows")
-        self.windowTileAction = self.createAction(
+        self.windows["TileAction"] = self.createAction(
             "&Tile", self.mdi.tile, tip = "Tile the windows")
-        self.windowRestoreAction = self.createAction(
+        self.windows["RestoreAction"] = self.createAction(
             "&Restore All", self.windowRestoreAll, tip = "Restore the windows")
-        self.windowMinimizeAction = self.createAction(
+        self.windows["MinimizeAction"] = self.createAction(
             "&Iconize All", self.windowMinimizeAll, tip = "Minimize the windows")
-        self.windowArrangeIconsAction = self.createAction(
+        self.windows["ArrangeIconsAction"] = self.createAction(
             "&Arrange Icons", self.mdi.arrangeIcons, tip = "Arrange the icons")
-        self.windowCloseAction = self.createAction(
+        self.windows["CloseAction"] = self.createAction(
             "&Close", self.mdi.closeActiveWindow, QKeySequence.Close,
             tip = "Close the window" )
 
@@ -432,8 +463,8 @@ class MainWindow(QMainWindow):
         viewDockAction.setToolTip("Show/Hide the dock lists")
         viewDockAction.setStatusTip("Show/Hide the dock lists")
 
-        self.windowMapper = QSignalMapper(self)
-        self.connect(self.windowMapper, SIGNAL("mapped(QWidget*)"),
+        self.windows["Mapper"] = QSignalMapper(self)
+        self.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
                      self.mdi, SLOT("setActiveWindow(QWidget*)"))
 
         helpAboutAction = self.createAction("&About Component Designer",
@@ -529,8 +560,8 @@ class MainWindow(QMainWindow):
                 serverCloseAction
                 ))
 
-        self.windowMenu = self.menuBar().addMenu("&Window")
-        self.connect(self.windowMenu, SIGNAL("aboutToShow()"),
+        self.windows["Menu"] = self.menuBar().addMenu("&Window")
+        self.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
                      self.updateWindowMenu)
 
         self.menuBar().addSeparator()
@@ -1269,23 +1300,23 @@ class MainWindow(QMainWindow):
 
 
     def updateWindowMenu(self):
-        self.windowMenu.clear()
-        self.addActions(self.windowMenu, (self.windowNextAction,
-                self.windowPrevAction, self.windowCascadeAction,
-                self.windowTileAction, self.windowRestoreAction,
-                self.windowMinimizeAction,
-                self.windowArrangeIconsAction, None,
-                self.windowCloseAction))
+        self.windows["Menu"].clear()
+        self.addActions(self.windows["Menu"], (self.windows["NextAction"],
+                                               self.windows["PrevAction"], self.windows["CascadeAction"],
+                                               self.windows["TileAction"], self.windows["RestoreAction"],
+                                               self.windows["MinimizeAction"],
+                                               self.windows["ArrangeIconsAction"], None,
+                                               self.windows["CloseAction"]))
         dialogs = self.mdi.windowList()
         if not dialogs:
             return
-        self.windowMenu.addSeparator()
+        self.windows["Menu"].addSeparator()
         i = 1
-        menu = self.windowMenu
+        menu = self.windows["Menu"]
         for dialog in dialogs:
             title = dialog.windowTitle()
             if i == 10:
-                self.windowMenu.addSeparator()
+                self.windows["Menu"].addSeparator()
                 menu = menu.addMenu("&More")
             accel = ""
             if i < 10:
@@ -1294,8 +1325,8 @@ class MainWindow(QMainWindow):
                 accel = "&%s " % str(chr(i + ord("@") - 9))
             action = menu.addAction("%s%s" % (accel, title))
             self.connect(action, SIGNAL("triggered()"),
-                         self.windowMapper, SLOT("map()"))
-            self.windowMapper.setMapping(action, dialog)
+                         self.windows["Mapper"], SLOT("map()"))
+            self.windows["Mapper"].setMapping(action, dialog)
             i += 1
 
 

@@ -55,6 +55,178 @@ class Command(object):
         pass
 
 
+class ServerConnect(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
+        self._comp = None
+        
+
+    def execute(self):       
+        print "EXEC serverConnect"
+
+    def unexecute(self):
+        print "UNDO serverConnect"
+
+    def clone(self):
+        return ServerConnect(self.receiver, self.slot) 
+
+
+
+class ServerFetchComponents(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
+        self._comp = None
+        
+
+    def execute(self):       
+        print "EXEC serverFetchComponents"
+
+    def unexecute(self):
+        print "UNDO serverFetchComponents"
+
+    def clone(self):
+        return ServerFetchComponents(self.receiver, self.slot) 
+
+
+class ServerStoreComponent(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
+        self._comp = None
+        
+
+    def execute(self):       
+        print "EXEC serverStoreComponent"
+
+    def unexecute(self):
+        print "UNDO serverStoreComponent"
+
+    def clone(self):
+        return ServerStoreComponent(self.receiver, self.slot) 
+
+
+
+
+
+class ServerDeleteComponent(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
+        self._comp = None
+        
+
+    def execute(self):       
+        print "EXEC serverDeleteComponent"
+
+    def unexecute(self):
+        print "UNDO serverDeleteComponent"
+
+    def clone(self):
+        return ServerDeleteComponent(self.receiver, self.slot) 
+
+
+
+
+class ServerSetMandatoryComponent(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
+        self._comp = None
+        
+
+    def execute(self):       
+        print "EXEC serverSetMandatoryComponent"
+
+    def unexecute(self):
+        print "UNDO serverSetMandatoryComponent"
+
+    def clone(self):
+        return ServerSetMandatoryComponent(self.receiver, self.slot) 
+
+
+
+
+class ServerUnsetMandatoryComponent(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
+        self._comp = None
+        
+
+    def execute(self):       
+        print "EXEC serverUnsetMandatoryComponent"
+
+    def unexecute(self):
+        print "UNDO serverUnsetMandatoryComponent"
+
+    def clone(self):
+        return ServerUnsetMandatoryComponent(self.receiver, self.slot) 
+
+
+class ServerFetchDataSources(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
+        self._comp = None
+        
+
+    def execute(self):       
+        print "EXEC serverFetchDataSources"
+
+    def unexecute(self):
+        print "UNDO serverFetchDataSources"
+
+    def clone(self):
+        return ServerFetchDataSources(self.receiver, self.slot) 
+
+
+class ServerStoreDataSource(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
+        self._comp = None
+        
+
+    def execute(self):       
+        print "EXEC serverStoreDataSource"
+
+    def unexecute(self):
+        print "UNDO serverStoreDataSource"
+
+    def clone(self):
+        return ServerStoreDataSource(self.receiver, self.slot) 
+
+class ServerDeleteDataSource(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
+        self._comp = None
+        
+
+    def execute(self):       
+        print "EXEC serverFetchDataSource"
+
+    def unexecute(self):
+        print "UNDO serverFetchDataSource"
+
+    def clone(self):
+        return ServerStoreDataSource(self.receiver, self.slot) 
+
+
+
+class ServerClose(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
+        self._comp = None
+        
+
+    def execute(self):       
+        print "EXEC serverClose"
+
+    def unexecute(self):
+        print "UNDO serverClose"
+
+    def clone(self):
+        return ServerClose(self.receiver, self.slot) 
+
+
+
+
+
+
 class ComponentNew(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)

@@ -81,17 +81,9 @@ class MainWindow(QMainWindow):
         self.compDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea |  Qt.RightDockWidgetArea)
 
         self.sourceList = DataSourceList(self.dsDirectory)
-#        ds1 = LabeledObject("dataSource1", None)
-#        self.sourceList.datasources[id(ds1)] =  ds1
-#        ds2 = LabeledObject("dataSource2", None)
-#        self.sourceList.datasources[id(ds2)] =  ds2
         self.sourceList.createGUI()
 
         self.componentList = ComponentList(self.cpDirectory)
-#        cp1 = LabeledObject("component1", None)
-#        self.componentList.components[id(cp1)] =  cp1
-#        cp2 = LabeledObject("component2", None)
-#        self.componentList.components[id(cp2)] =  cp2
         self.componentList.createGUI()
 
         self.dockSplitter = QSplitter(Qt.Vertical)
@@ -343,6 +335,65 @@ class MainWindow(QMainWindow):
             "&Close", "componentRemove", commandArgs, ComponentRemove,
             QKeySequence.Close, "componentremove", "Close the component")
 
+
+
+
+
+        serverConnectAction = self.pool.createCommand(
+            "&Connect ...", "serverConnect", commandArgs, ServerConnect,
+            "", "serverconnect", "Connect to the configuration server")
+
+        serverFetchComponentsAction = self.pool.createCommand(
+            "Fetch Components", "serverFetchComponents", commandArgs, ServerFetchComponents,
+            "", "serverfetchdatasources", "Fetch datasources from the configuration server")
+
+        serverFetchDataSourcesAction = self.pool.createCommand(
+            "Fetch DataSources", "serverFetchDataSources", commandArgs, ServerFetchDataSources,
+            "", "serverfetchdatasources", "Fetch datasources from the configuration server")
+
+        serverStoreComponentAction = self.pool.createCommand(
+            "Store Component", "serverStoreComponent", commandArgs, ServerStoreComponent,
+            "", "serverstoredatasource", "Store datasource in the configuration server")
+
+        serverStoreDataSourceAction = self.pool.createCommand(
+            "Store Datasource", "serverStoreDataSource", commandArgs, ServerStoreDataSource,
+            "", "serverstoredatasource", "Store datasource in the configuration server")
+
+        serverDeleteComponentAction = self.pool.createCommand(
+            "Delete Component", "serverDeleteComponent", commandArgs, ServerDeleteComponent,
+            "", "serverdeletedatasource", "Delete datasource from the configuration server")
+
+        serverDeleteDataSourceAction = self.pool.createCommand(
+            "Delete Datasource", "serverDeleteDataSource", commandArgs, ServerDeleteDataSource,
+            "", "serverdeletedatasource", "Delete datasource from the configuration server")
+
+        serverSetMandatoryComponentAction = self.pool.createCommand(
+            "Set Component Mandatory", "serverSetMandatoryComponent", 
+            commandArgs, ServerSetMandatoryComponent,
+            "", "serversetmandatory", "Set mandatory component on the configuration server")
+
+        serverUnsetMandatoryComponentAction = self.pool.createCommand(
+            "Unset Component Mandatory", "serverUnsetMandatoryComponent", 
+            commandArgs, ServerUnsetMandatoryComponent,
+            "", "serverunsetmandatory", "Unset mandatory component on the configuration server")
+
+        serverCloseAction = self.pool.createCommand(
+            "C&lose", "serverClose", commandArgs, ServerClose,
+            "", "serverclose", "Close connection to the configuration server")
+
+
+        serverFetchComponentsAction.setDisabled(True)
+        serverStoreComponentAction.setDisabled(True)
+        serverDeleteComponentAction.setDisabled(True)
+        serverSetMandatoryComponentAction.setDisabled(True)
+        serverUnsetMandatoryComponentAction.setDisabled(True)
+        serverFetchDataSourcesAction.setDisabled(True)
+        serverStoreDataSourceAction.setDisabled(True)
+        serverDeleteDataSourceAction.setDisabled(True)
+        serverCloseAction.setDisabled(True)
+
+
+
         fileQuitAction = self.pool.createCommand(
             "&Quit", "closeApp", commandArgs, CloseApplication, "Ctrl+Q", "filequit", 
             "Close the application")
@@ -354,6 +405,8 @@ class MainWindow(QMainWindow):
 
         undoAction.setDisabled(True)
         redoAction.setDisabled(True)
+
+
 
         self.windowNextAction = self.createAction(
             "&Next", self.mdi.activateNextWindow, 
@@ -443,7 +496,7 @@ class MainWindow(QMainWindow):
             ) 
         
 
-        datasourcesMenu = self.menuBar().addMenu("Data&Sources")    
+        datasourcesMenu = self.menuBar().addMenu("&DataSources")    
         self.addActions(datasourcesMenu, (dsourceNewAction, dsourceOpenAction, 
                                           dsourceEditAction, None, 
                                           dsourceSaveAction,
@@ -459,7 +512,22 @@ class MainWindow(QMainWindow):
         viewMenu = self.menuBar().addMenu("&View")
         self.addActions(viewMenu, (viewDockAction,))
 
-
+        serverMenu = self.menuBar().addMenu("&Server") 
+        self.addActions(serverMenu, (
+                serverConnectAction,None,
+                serverFetchComponentsAction,
+                serverStoreComponentAction,
+                serverDeleteComponentAction,
+                None,
+                serverSetMandatoryComponentAction,
+                serverUnsetMandatoryComponentAction,
+                None,
+                serverFetchDataSourcesAction,
+                serverStoreDataSourceAction,
+                serverDeleteDataSourceAction,
+                None,
+                serverCloseAction
+                ))
 
         self.windowMenu = self.menuBar().addMenu("&Window")
         self.connect(self.windowMenu, SIGNAL("aboutToShow()"),
@@ -955,6 +1023,109 @@ class MainWindow(QMainWindow):
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+    def serverConnect(self):
+        cmd = self.pool.getCommand('serverConnect').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+
+        self.pool.setDisabled("serverConnect", True)
+        self.pool.setDisabled("serverFetchComponents", False)
+        self.pool.setDisabled("serverStoreComponent", False)
+        self.pool.setDisabled("serverDeleteComponent", False)
+        self.pool.setDisabled("serverSetMandatoryComponent", False)
+        self.pool.setDisabled("serverUnsetMandatoryComponent", False)
+        self.pool.setDisabled("serverFetchDataSources", False)
+        self.pool.setDisabled("serverStoreDataSource", False)
+        self.pool.setDisabled("serverDeleteDataSource", False)
+        self.pool.setDisabled("serverClose", False)
+
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+    def serverFetchComponents(self):
+        cmd = self.pool.getCommand('serverFetchComponents').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+    def serverStoreComponent(self):
+        cmd = self.pool.getCommand('serverStoreComponent').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+    def serverDeleteComponent(self):
+        cmd = self.pool.getCommand('serverDeleteComponent').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+    def serverSetMandatoryComponent(self):
+        cmd = self.pool.getCommand('serverSetMandatoryComponent').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+    def serverUnsetMandatoryComponent(self):
+        cmd = self.pool.getCommand('serverUnsetMandatoryComponent').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+    def serverFetchDataSources(self):
+        cmd = self.pool.getCommand('serverFetchDataSources').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+    def serverStoreDataSource(self):
+        cmd = self.pool.getCommand('serverStoreDataSource').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+
+    def serverDeleteDataSource(self):
+        cmd = self.pool.getCommand('serverDeleteDataSource').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+
+    def serverClose(self):
+        cmd = self.pool.getCommand('serverClose').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+
+        self.pool.setDisabled("serverConnect", False)
+        self.pool.setDisabled("serverFetchComponents", True)
+        self.pool.setDisabled("serverStoreComponent", True)
+        self.pool.setDisabled("serverDeleteComponent", True)
+        self.pool.setDisabled("serverSetMandatoryComponent", True)
+        self.pool.setDisabled("serverUnsetMandatoryComponent", True)
+        self.pool.setDisabled("serverFetchDataSources", True)
+        self.pool.setDisabled("serverStoreDataSource", True)
+        self.pool.setDisabled("serverDeleteDataSource", True)
+        self.pool.setDisabled("serverClose", True)
+
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
 
 
     def mdiWindowActivated(self, widget):

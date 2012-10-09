@@ -586,6 +586,8 @@ class MainWindow(QMainWindow):
                 None,
                 undoAction, redoAction,
                 None, 
+                serverConnectAction,
+                None, 
                 dsourceNewAction,
                 dsourceOpenAction,
                 dsourceEditAction,

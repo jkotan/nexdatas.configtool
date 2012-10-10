@@ -1135,13 +1135,13 @@ class MainWindow(QMainWindow):
     def serverDeleteComponent(self):
         cmd = self.pool.getCommand('serverDeleteComponent').clone()
         cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+#        self.cmdStack.clear()
+#        self.pool.setDisabled("undo", True, "Can't Undo")   
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def serverSetMandatoryComponent(self):
@@ -1191,13 +1191,13 @@ class MainWindow(QMainWindow):
     def serverDeleteDataSource(self):
         cmd = self.pool.getCommand('serverDeleteDataSource').clone()
         cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+#        self.cmdStack.clear()
+#        self.pool.setDisabled("undo", True, "Can't Undo")   
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def serverClose(self):

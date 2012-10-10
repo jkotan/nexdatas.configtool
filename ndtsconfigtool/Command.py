@@ -170,12 +170,12 @@ class ServerStoreComponent(Command):
                 #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
                     
-#            try:
-            xml = self._cpEdit.get()    
-            self.receiver.configServer.storeComponent(self._cpEdit.name, xml)
-            self._cpEdit.dirty = False
-#            except Exception, e:
-#                QMessageBox.warning(self.receiver, "Error in stroring the component", unicode(e))
+            try:
+                xml = self._cpEdit.get()    
+                self.receiver.configServer.storeComponent(self._cpEdit.name, xml)
+                self._cpEdit.dirty = False
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in storing the component", unicode(e))
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
         else:
@@ -201,13 +201,35 @@ class ServerStoreComponent(Command):
 class ServerDeleteComponent(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
-        self._comp = None
+        self._cp = None
+        self._cpEdit = None
         
 
     def execute(self):       
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is not None:
+
+            try:
+                self.receiver.configServer.deleteComponent(self._cp.name)
+                self._cp.dirty = True
+                if hasattr(self._cp,"widget"):
+                    self._cp.widget.dirty = True                
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in deleting the component", unicode(e))
+        if hasattr(self._cp,"id"):
+            self.receiver.componentList.populateComponents(self._cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
+
+            
         print "EXEC serverDeleteComponent"
 
     def unexecute(self):
+        if hasattr(self._cp,"id"):
+            self.receiver.componentList.populateComponents(self._cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
         print "UNDO serverDeleteComponent"
 
     def clone(self):
@@ -301,11 +323,13 @@ class ServerStoreDataSource(Command):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
         if self._ds is not None and hasattr(self._ds,"widget"):
-            xml = self._ds.widget.get()    
-            self.receiver.configServer.storeDataSource(self._ds.widget.name, xml)
-            self._ds.widget.dirty = False
-
-#            self._ds.widget.save()    
+            try:
+                xml = self._ds.widget.get()    
+                self.receiver.configServer.storeDataSource(self._ds.widget.name, xml)
+                self._ds.widget.dirty = False
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in component storing", unicode(e))
+            
 
         ds = self.receiver.sourceList.currentListDataSource()
         if hasattr(ds ,"id"):

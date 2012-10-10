@@ -617,6 +617,11 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
         self.doc = unicode(text).strip() if text else ""
 
 
+    def get(self):
+        if hasattr(self.document,"toString"):
+            return unicode(self.document.toString(0))
+
+
     ## accepts and save input text strings
     # \brief It copies the parameters and saves the dialog
     def save(self):

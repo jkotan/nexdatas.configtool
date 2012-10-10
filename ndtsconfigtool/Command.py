@@ -294,13 +294,33 @@ class ServerFetchDataSources(Command):
 class ServerStoreDataSource(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
-        self._comp = None
+        self._ds = None
         
 
     def execute(self):       
+        if self._ds is None:
+            self._ds = self.receiver.sourceList.currentListDataSource()
+        if self._ds is not None and hasattr(self._ds,"widget"):
+            xml = self._ds.widget.get()    
+            self.receiver.configServer.storeDataSource(self._ds.widget.name, xml)
+            self._ds.widget.dirty = False
+
+#            self._ds.widget.save()    
+
+        ds = self.receiver.sourceList.currentListDataSource()
+        if hasattr(ds ,"id"):
+            self.receiver.sourceList.populateDataSources(ds.id)
+        else:
+            self.receiver.sourceList.populateDataSources()
+            
         print "EXEC serverStoreDataSource"
 
     def unexecute(self):
+        ds = self.receiver.sourceList.currentListDataSource()
+        if hasattr(ds ,"id"):
+            self.receiver.sourceList.populateDataSources(ds.id)
+        else:
+            self.receiver.sourceList.populateDataSources()
         print "UNDO serverStoreDataSource"
 
     def clone(self):
@@ -309,14 +329,13 @@ class ServerStoreDataSource(Command):
 class ServerDeleteDataSource(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
-        self._comp = None
         
 
     def execute(self):       
-        print "EXEC serverFetchDataSource"
+        print "EXEC serverDeleteDataSource"
 
     def unexecute(self):
-        print "UNDO serverFetchDataSource"
+        print "UNDO serverDeleteDataSource"
 
     def clone(self):
         return ServerStoreDataSource(self.receiver, self.slot) 

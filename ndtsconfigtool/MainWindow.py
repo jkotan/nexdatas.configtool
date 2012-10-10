@@ -594,14 +594,14 @@ class MainWindow(QMainWindow):
                 None,
                 undoAction, redoAction,
                 None, 
-                serverConnectAction,
-                serverCloseAction,
-                None, 
                 dsourceNewAction,
                 dsourceOpenAction,
                 dsourceEditAction,
                 dsourceSaveAction,
-                dsourceRemoveAction
+                dsourceRemoveAction,
+                None, 
+                serverConnectAction,
+                serverCloseAction
                 ))
 
         editToolbar = self.addToolBar("Edit")
@@ -1114,9 +1114,9 @@ class MainWindow(QMainWindow):
     def serverFetchComponents(self):
         cmd = self.pool.getCommand('serverFetchComponents').clone()
         cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
         self.cmdStack.clear()
         self.pool.setDisabled("undo", True, "Can't Undo")   
@@ -1124,15 +1124,13 @@ class MainWindow(QMainWindow):
 
 
     def serverStoreComponent(self):
-        cmd = self.pool.getCommand('serverStoreComponent').clone()
+        cmd = self.pool.getCommand('componentMerge').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
-
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = self.pool.getCommand('serverStoreComponent').clone()
+        cmd.execute()
 
     def serverDeleteComponent(self):
         cmd = self.pool.getCommand('serverDeleteComponent').clone()
@@ -1167,9 +1165,9 @@ class MainWindow(QMainWindow):
     def serverFetchDataSources(self):
         cmd = self.pool.getCommand('serverFetchDataSources').clone()
         cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
         self.cmdStack.clear()
         self.pool.setDisabled("undo", True, "Can't Undo")   
@@ -1177,15 +1175,17 @@ class MainWindow(QMainWindow):
 
 
     def serverStoreDataSource(self):
-        cmd = self.pool.getCommand('serverStoreDataSource').clone()
+        cmd = self.pool.getCommand('dsourceEdit').clone()
+        cmd.execute()
+        cmd = self.pool.getCommand('dsourceApply').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = self.pool.getCommand('serverStoreDataSource').clone()
+        cmd.execute()
+
 
 
     def serverDeleteDataSource(self):

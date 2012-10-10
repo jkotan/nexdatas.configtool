@@ -50,17 +50,28 @@ class ConfigurationServer(object):
         ## device proxy
         self._proxy = None
 
+
+    ## allows to store the server state    
+    # \returns the state of the server
+    def getState(self):
+        return (self.device, self.host, self.port, self.connected)
+
+
+    ## allows to store the server state    
+    # \param state the state of the server
+    def setState(self, state):
+        (self.device, self.host, self.port, self.connected) = state
+
     ## connects to the configuration server
     # \brief It opens the configuration Tango device
     def connect(self):
         if self.host and self.port:
             self._proxy = PyTango.DeviceProxy("%s:%s/%s"
-                                        % (self.host.encode(),
-                                           str(self.port),
-                                           self.device.encode()))
+                                              % (self.host.encode(),
+                                                 str(self.port),
+                                                 self.device.encode()))
         else:
             self._proxy = PyTango.DeviceProxy(self.device.encode())
-
         if self._proxy:
             self._proxy.set_timeout_millis(25000)
             self._proxy.Open()
@@ -85,6 +96,7 @@ class ConfigurationServer(object):
             self.host = aform.host
             self.port = aform.port
             self.connect()
+
 
     ## closes connecion 
     # \brief It closes connecion to configuration server

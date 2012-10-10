@@ -60,15 +60,33 @@ class Command(object):
 class ServerConnect(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
-        self._comp = None
+        self._oldstate = None
+        self._state = None
         
 
     def execute(self):       
         if self.receiver.configServer:
-            self.receiver.configServer.open()
+            try:
+                if self._oldstate is None:
+                    self._oldstate = self.receiver.configServer.getState()
+                if  self._state is None:   
+                    self.receiver.configServer.open()
+                    self._state = self.receiver.configServer.getState()
+                else:
+                    self.receiver.configServer.setState(self._state)
+                    self.receiver.configServer.connect()
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in connecting to Configuration Server", unicode(e))
+    
         print "EXEC serverConnect"
 
     def unexecute(self):
+        if self.receiver.configServer:
+            try:
+                self.receiver.configServer.close()
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in Closing Configuration Server Connection", unicode(e))
+
         print "UNDO serverConnect"
 
     def clone(self):
@@ -215,14 +233,33 @@ class ServerClose(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._comp = None
-        
+        self._state = None
 
     def execute(self):       
         if self.receiver.configServer:
             self.receiver.configServer.close()
+
+
+        if self.receiver.configServer:
+            try:
+                if self._state is None:
+                    self._state = self.receiver.configServer.getState()
+                self.receiver.configServer.close()
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in closing connection to Configuration Server", unicode(e))
+    
         print "EXEC serverClose"
 
     def unexecute(self):
+        if self.receiver.configServer:
+            try:
+                if  self._state is None:   
+                    self.receiver.configServer.open()
+                else:
+                    self.receiver.configServer.setState(self._state)
+                    self.receiver.configServer.connect()
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in connecting to Configuration Server", unicode(e))
         print "UNDO serverClose"
 
     def clone(self):

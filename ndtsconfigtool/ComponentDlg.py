@@ -475,14 +475,16 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
                     if self.name[-4:] == '.xml':
                         self.name = self.name[:-4]
+                    self.dirty = False
                     return self.componentFile
-                self.dirty = False
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
                 print error
             finally:                 
                 if fh is not None:
                     fh.close()
+
+
 
     def loadFromString(self, xml):
         self.document = QDomDocument()

@@ -78,7 +78,7 @@ class ConfigurationServer(object):
             self.connected = True
 
 
-    ## open connection to the configuration server
+    ## opens connection to the configuration server
     # \brief It fetches parameters of tango device and calls connect() method
     def open(self):
         aform  = ConnectDlg()
@@ -96,6 +96,30 @@ class ConfigurationServer(object):
             self.host = aform.host
             self.port = aform.port
             self.connect()
+
+            
+    ## fetch all components
+    # \returns dictionary with names : xml of components
+    def fetchComponents(self):
+        names = [] 
+        comps = []
+        if self._proxy and self.connected:
+            names = self._proxy.AvailableComponents()
+            comps = self._proxy.Components(names)
+            return dict(zip(names, comps))
+            
+
+
+    ## fetch all components
+    # \returns dictionary with names : xml of components
+    def fetchDataSources(self):
+        names = [] 
+        ds = []
+        if self._proxy and self.connected:
+            names = self._proxy.AvailableDataSources()
+            ds= self._proxy.DataSources(names)
+            return dict(zip(names, ds))
+            
 
 
     ## closes connecion 

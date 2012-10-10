@@ -645,7 +645,27 @@ class MainWindow(QMainWindow):
             if len(self.sourceList.datasources) else None
 
         self.sourceList.populateDataSources(ids)
+
+
+    def setDataSources(self, datasources):
+#        self.sourceList.datasources = {}
+        self.sourceList.setList(datasources, self.dsourceSave, self.dsourceApply)
+        ids =  self.sourceList.datasources.itervalues().next().id \
+            if len(self.sourceList.datasources) else None
+
+        self.sourceList.populateDataSources(ids)
         
+
+
+    def setComponents(self, components):
+        self.componentList.setList(components, self.contextMenuActions,
+                                    self.componentSave,
+                                    self.componentApplyItem
+                                    )
+        idc =  self.componentList.components.itervalues().next().id \
+            if len(self.componentList.components) else None
+
+        self.componentList.populateComponents(idc)
 
 
 

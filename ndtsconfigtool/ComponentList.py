@@ -199,6 +199,38 @@ class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
             
 
 
+    def setList(self, components, actions, externalSave = None, externalApply = None ):
+        try:
+            dirList=os.listdir(self.directory)
+        except:
+            try:
+                self.directory = "./components"
+            except:
+                ## todo
+                return
+            
+        for name in components.keys():
+                
+            dlg = ComponentDlg()
+            dlg.directory = self.directory
+            dlg.name = name
+            dlg.createGUI()
+            dlg.addContextMenu(actions)
+
+            dlg.set(components[name])    
+            if hasattr(dlg,"connectExternalActions"):     
+                dlg.connectExternalActions(externalApply, externalSave)    
+
+            cp = LabeledObject(name, dlg)
+            self.components[id(cp)] =  cp
+            if cp.widget is not None:
+                cp.widget.idc = cp.id
+            print name
+            
+
+
+
+
 
     ## accepts input text strings
     # \brief It copies the group name and type from lineEdit widgets and accept the dialog

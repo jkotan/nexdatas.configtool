@@ -518,6 +518,29 @@ class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
 
             
 
+
+
+    ## loads datasources from default directory
+    # \param fname optional file name
+    def set(self, xml):
+        self.document = QDomDocument()
+        self.root = self.document
+        if not self.document.setContent(xml):
+            raise ValueError, "could not parse XML"
+
+        ds = self.getFirstElement(self.document, "datasource")           
+        if ds:
+            self.setFromNode(ds)
+        self.dirty = False
+        try:    
+            self.createGUI()
+        except Exception, e:
+            QMessageBox.warning(self, "dialog not created", 
+                                "Problems in creating a dialog %s :\n\n%s" %(self.name,str(e)))
+                
+
+            
+
     def setFromNode(self, node=None):
         if node:
             self.node = node

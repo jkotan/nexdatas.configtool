@@ -486,6 +486,16 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
 
 
+
+    def set(self, xml):
+        self.componentFile = self.directory + "/" + self.name + ".xml"
+        self.loadFromString(xml)
+        self.xmlPath = self.componentFile
+        self.dirty = False
+        return self.componentFile
+
+
+
     def loadFromString(self, xml):
         self.document = QDomDocument()
         

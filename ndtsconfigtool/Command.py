@@ -97,10 +97,32 @@ class ServerConnect(Command):
 class ServerFetchComponents(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
-        self._comp = None
-        
 
     def execute(self):       
+        if QMessageBox.question(self.receiver, "Component - Reload List from Configuration server",
+                                "All unsaved components will be lost. Would you like to proceed ?".encode(),
+                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+            return
+
+        
+        dialogs = self.receiver.mdi.windowList()
+        if dialogs:
+            for dialog in dialogs:
+                if isinstance(dialog,ComponentDlg):
+                    self.receiver.mdi.setActiveWindow(dialog)
+                    self.receiver.mdi.closeActiveWindow()
+
+        self.receiver.componentList.components = {} 
+
+        if self.receiver.configServer:
+            try:
+                cdict = self.receiver.configServer.fetchComponents()
+#                for k in cdict.keys():
+#                    print "dict:", k ," = ", cdict[k]
+                self.receiver.setComponents(cdict)
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in fetching components", unicode(e))
+    
         print "EXEC serverFetchComponents"
 
     def unexecute(self):
@@ -188,6 +210,33 @@ class ServerFetchDataSources(Command):
         
 
     def execute(self):       
+
+        if QMessageBox.question(self.receiver, "DataSource - Reload List from Configuration Server",
+                                "All unsaved datasources will be lost. Would you like to proceed ?".encode(),
+                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+            return
+
+
+        dialogs = self.receiver.mdi.windowList()
+        if dialogs:
+            for dialog in dialogs:
+                if isinstance(dialog,DataSourceDlg):
+                    self.receiver.mdi.setActiveWindow(dialog)
+                    self.receiver.mdi.closeActiveWindow()
+
+        self.receiver.sourceList.datasources = {} 
+
+
+        if self.receiver.configServer:
+            try:
+                cdict = self.receiver.configServer.fetchDataSources()
+#                for k in cdict.keys():
+#                    print "dict:", k ," = ", cdict[k]
+                self.receiver.setDataSources(cdict)
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in fetching datasources", unicode(e))
+    
+
         print "EXEC serverFetchDataSources"
 
     def unexecute(self):

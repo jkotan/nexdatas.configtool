@@ -92,6 +92,35 @@ class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
                 ds.widget.ids = ds.id
             print name
 
+
+
+
+    def setList(self, datasources, externalSave = None, externalApply = None ):
+        try:
+            dirList=os.listdir(self.directory)
+        except:
+            try:
+                self.directory = "./datasources"
+            except:
+                return
+            
+
+        for name in datasources.keys():
+
+            dlg = DataSourceDlg()
+            dlg.directory = self.directory
+            dlg.name = name
+            dlg.set(datasources[name])    
+
+            if hasattr(dlg,"connectExternalActions"):     
+                dlg.connectExternalActions(externalApply, externalSave)    
+            
+            ds = LabeledObject(name, dlg)
+            self.datasources[id(ds)] =  ds
+            if ds.widget is not None:
+                ds.widget.ids = ds.id
+            print name
+
     ## adds an datasource    
     #  \brief It runs the DataSource Dialog and fetches datasource name and value    
     def addDataSource(self, obj, flag = True):

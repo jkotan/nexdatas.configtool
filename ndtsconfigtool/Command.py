@@ -275,7 +275,6 @@ class ServerUnsetMandatoryComponent(Command):
 class ServerFetchDataSources(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
-        self._comp = None
         
 
     def execute(self):       
@@ -328,7 +327,7 @@ class ServerStoreDataSource(Command):
                 self.receiver.configServer.storeDataSource(self._ds.widget.name, xml)
                 self._ds.widget.dirty = False
             except Exception, e:
-                QMessageBox.warning(self.receiver, "Error in component storing", unicode(e))
+                QMessageBox.warning(self.receiver, "Error in datasource storing", unicode(e))
             
 
         ds = self.receiver.sourceList.currentListDataSource()
@@ -353,16 +352,39 @@ class ServerStoreDataSource(Command):
 class ServerDeleteDataSource(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
-        
+        self._ds = None
 
     def execute(self):       
+        if self._ds is None:
+            self._ds = self.receiver.sourceList.currentListDataSource()
+        if self._ds is not None:
+            try:
+                self.receiver.configServer.deleteDataSource(self._ds.name)
+                self._ds.dirty = True
+                if hasattr(self._ds,"widget"):
+                    self._ds.widget.dirty = True                
+
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in datasource deleting", unicode(e))
+            
+
+        ds = self.receiver.sourceList.currentListDataSource()
+        if hasattr(ds ,"id"):
+            self.receiver.sourceList.populateDataSources(ds.id)
+        else:
+            self.receiver.sourceList.populateDataSources()
         print "EXEC serverDeleteDataSource"
 
     def unexecute(self):
+        ds = self.receiver.sourceList.currentListDataSource()
+        if hasattr(ds ,"id"):
+            self.receiver.sourceList.populateDataSources(ds.id)
+        else:
+            self.receiver.sourceList.populateDataSources()
         print "UNDO serverDeleteDataSource"
 
     def clone(self):
-        return ServerStoreDataSource(self.receiver, self.slot) 
+        return ServerDeleteDataSource(self.receiver, self.slot) 
 
 
 

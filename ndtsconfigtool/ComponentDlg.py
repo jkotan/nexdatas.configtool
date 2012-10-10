@@ -720,6 +720,10 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.dirty = True 
 
 
+    def get(self):
+        if hasattr(self.document,"toString"):
+            return unicode(self.document.toString(0))
+
     def save(self):
         print "saving"
         if not self._merged:
@@ -733,7 +737,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
                 if not fh.open(QIODevice.WriteOnly):
                     raise IOError, unicode(fh.errorString())
                 stream = QTextStream(fh)
-                stream <<self.document.toString(2)
+                stream << self.document.toString(2)
                 self.dirty = False
 #                print self.document.toString(2)
             except (IOError, OSError, ValueError), e:

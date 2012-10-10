@@ -135,13 +135,60 @@ class ServerFetchComponents(Command):
 class ServerStoreComponent(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
-        self._comp = None
+        self._cp = None
+        self._cpEdit = None
         
 
     def execute(self):       
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is not None:
+            if self._cp.widget is None:
+                #                self._cpEdit = FieldWg()  
+                self._cpEdit = ComponentDlg()
+                self._cpEdit.idc = self._cp.id
+                self._cpEdit.directory = self.receiver.componentList.directory
+                self._cpEdit.name = self.receiver.componentList.components[self._cp.id].name
+                self._cpEdit.createGUI()
+                self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
+                self._cpEdit.createHeader()
+                self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
+            else:
+                self._cpEdit = self._cp.widget 
+                
+            if hasattr(self._cpEdit,"connectExternalActions"):     
+                self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
+                                                    self.receiver.componentSave)
+
+
+
+            if self._cp.widget in self.receiver.mdi.windowList():
+                self.receiver.mdi.setActiveWindow(self._cp.widget) 
+            else:    
+                self.receiver.mdi.addWindow(self._cpEdit)
+                self._cpEdit.show()
+                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
+                self._cp.widget = self._cpEdit 
+                    
+#            try:
+            xml = self._cpEdit.get()    
+            self.receiver.configServer.storeComponent(self._cpEdit.name, xml)
+            self._cpEdit.dirty = False
+#            except Exception, e:
+#                QMessageBox.warning(self.receiver, "Error in stroring the component", unicode(e))
+        if hasattr(self._cp,"id"):
+            self.receiver.componentList.populateComponents(self._cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
+
+            
         print "EXEC serverStoreComponent"
 
     def unexecute(self):
+        if hasattr(self._cp,"id"):
+            self.receiver.componentList.populateComponents(self._cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
         print "UNDO serverStoreComponent"
 
     def clone(self):
@@ -230,8 +277,6 @@ class ServerFetchDataSources(Command):
         if self.receiver.configServer:
             try:
                 cdict = self.receiver.configServer.fetchDataSources()
-#                for k in cdict.keys():
-#                    print "dict:", k ," = ", cdict[k]
                 self.receiver.setDataSources(cdict)
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in fetching datasources", unicode(e))
@@ -592,7 +637,6 @@ class ComponentSave(Command):
         Command.__init__(self, receiver, slot)
         self._cp = None
         self._cpEdit = None
-        
         
     def execute(self):
         if self._cp is None:

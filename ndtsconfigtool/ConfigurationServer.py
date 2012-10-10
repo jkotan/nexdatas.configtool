@@ -110,8 +110,8 @@ class ConfigurationServer(object):
             
 
 
-    ## fetch all components
-    # \returns dictionary with names : xml of components
+    ## fetch all datasources
+    # \returns dictionary with names : xml of datasources
     def fetchDataSources(self):
         names = [] 
         ds = []
@@ -119,6 +119,28 @@ class ConfigurationServer(object):
             names = self._proxy.AvailableDataSources()
             ds= self._proxy.DataSources(names)
             return dict(zip(names, ds))
+
+
+    ## stores the component
+    # \param name component name
+    # \param xml XML content of the component    
+    def storeComponent(self, name, xml):
+        names = [] 
+        ds = []
+        if self._proxy and self.connected:
+            self._proxy.XMLString = str(xml)
+            self._proxy.StoreComponent(name)
+
+
+    ## stores the datasource
+    # \param name datasource name
+    # \param xml XML content of the datasource
+    def storeDataSource(self, name, xml):
+        names = [] 
+        ds = []
+        if self._proxy and self.connected:
+            self._proxy.XMLString = str(xml)
+            self._proxy.StoreDataSource(name)
             
 
 

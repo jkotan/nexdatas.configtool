@@ -546,8 +546,6 @@ class MainWindow(QMainWindow):
                                           dsourceRemoveAction))
  
 
-        viewMenu = self.menuBar().addMenu("&View")
-        self.addActions(viewMenu, (viewDockAction,))
 
         serverMenu = self.menuBar().addMenu("&Server") 
         self.addActions(serverMenu, (
@@ -565,6 +563,10 @@ class MainWindow(QMainWindow):
                 None,
                 serverCloseAction
                 ))
+
+
+        viewMenu = self.menuBar().addMenu("&View")
+        self.addActions(viewMenu, (viewDockAction,))
 
         self.windows["Menu"] = self.menuBar().addMenu("&Window")
         self.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),

@@ -129,7 +129,7 @@ class ConfigurationServer(object):
         ds = []
         if self._proxy and self.connected:
             self._proxy.XMLString = str(xml)
-            self._proxy.StoreComponent(name)
+            self._proxy.StoreComponent(str(name))
 
 
     ## stores the datasource
@@ -140,7 +140,7 @@ class ConfigurationServer(object):
         ds = []
         if self._proxy and self.connected:
             self._proxy.XMLString = str(xml)
-            self._proxy.StoreDataSource(name)
+            self._proxy.StoreDataSource(str(name))
             
 
 

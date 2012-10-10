@@ -18,7 +18,8 @@
 <file alias="dsourceedit.png">images/symbol_construction.png</file>
 <file alias="dsourcesave.png">images/symbol_check.png</file>
 
-<file alias="serverconnect.png">images/connected.png</file>
+<file alias="serverconnect.png">images/download.png</file>
+<file alias="serverclose.png">images/connected.png</file>
 
 <file alias="cut.png">images/cut.png</file>
 <file alias="copy.png">images/copy.png</file>

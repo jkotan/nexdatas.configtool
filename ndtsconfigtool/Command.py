@@ -1941,6 +1941,70 @@ class PasteItem(Command):
 
 
 
+class ComponentCollect(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver,slot)
+        self.type = None
+        self.file = ComponentSave(receiver, slot)
+        self.server = ServerStoreComponent(receiver, slot)
+
+    def execute(self):
+        if self.type is None:
+            if self.receiver.configServer.connected:
+                self.type = 'Server'
+            else:
+                self.type = 'File'
+        if self.type == 'File':
+            self.file.execute()
+        elif self.type == 'Server':
+            self.server.execute()
+
+    def unexecute(self):
+        if self.type == 'File':
+            self.file.unexecute()
+        elif self.type == 'Server':
+            self.server.unexecute()
+        
+
+
+    def clone(self):
+        return ComponentCollect(self.receiver, self.slot) 
+
+
+
+
+class DataSourceCollect(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver,slot)
+        self.type = None
+        self.file = DataSourceSave(receiver, slot)
+        self.server = ServerStoreDataSource(receiver, slot)
+
+    def execute(self):
+        if self.type is None:
+            if self.receiver.configServer.connected:
+                self.type = 'Server'
+            else:
+                self.type = 'File'
+        if self.type == 'File':
+            self.file.execute()
+        elif self.type == 'Server':
+            self.server.execute()
+
+    def unexecute(self):
+        if self.type == 'File':
+            self.file.unexecute()
+        elif self.type == 'Server':
+            self.server.unexecute()
+        
+
+
+    def clone(self):
+        return DataSourceCollect(self.receiver, self.slot) 
+
+
+
+
 class ComponentMerge(ComponentItemCommand):
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)

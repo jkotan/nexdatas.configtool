@@ -199,16 +199,22 @@ class MainWindow(QMainWindow):
 
         componentSaveAsAction = self.pool.createCommand(
             "Save &As...", "componentSaveAs", commandArgs, ComponentSaveAs,
-            "", "componentsaveas", "Save the component as ...")
+            "", "componentsaveas", "Write the component into a file as ...")
 
+
+        componentCollectAction = self.pool.createCommand(
+            "&Save", "componentCollect", commandArgs, ComponentCollect,
+            "", "componentcollect", "Save the component in a file or in the configuration server")
 
         componentSaveAction = self.pool.createCommand(
             "&Save", "componentSave", commandArgs, ComponentSave,
-            "Ctrl+S", "componentsave", "Save the component")
+            "Ctrl+S", "componentSave", "Write the component into a file")
+
+
 
         componentSaveAllAction = self.pool.createCommand(
             "Save All", "componentSaveAll", commandArgs, ComponentSaveAll,
-            "", "componentsaveall", "Save the all components")
+            "", "componentsaveall", "Write all components into files")
 
         componentApplyItemAction = self.pool.createCommand(
             "&Apply Item", "componentApplyItem", commandArgs, ComponentApplyItem,
@@ -222,16 +228,20 @@ class MainWindow(QMainWindow):
 
         dsourceSaveAction = self.pool.createCommand(
             "&Save DataSource", "dsourceSave", commandArgs, DataSourceSave,
-            "Ctrl+Shift+S", "dsourcesave", "Save the data source")
+            "Ctrl+Shift+S", "dsourcesave", "Write the data source into a file")
+
+        dsourceCollectAction = self.pool.createCommand(
+            "&Save DataSource", "dsourceCollect", commandArgs, DataSourceCollect,
+            "", "dsourcesave", "Save the data source in a file or in the configuration server")
 
 
         dsourceSaveAsAction = self.pool.createCommand(
             "Save DataSource &As...", "dsourceSaveAs", commandArgs, DataSourceSaveAs,
-            "", "dsourcesaveas", "Save the data source as ...")
+            "", "dsourcesaveas", "Write the data source  in a file as ...")
 
         dsourceSaveAllAction = self.pool.createCommand(
             "Save All DataSources", "dsourceSaveAll", commandArgs, DataSourceSaveAll,
-            "", "dsourcessaveall", "Save the all data sources")
+            "", "dsourcessaveall", "Write all data sources in files")
 
 
         dsourceCopyAction = self.pool.createCommand(
@@ -396,11 +406,11 @@ class MainWindow(QMainWindow):
             "Ctrl+Shift+F", "serverfetchdatasources", "Fetch datasources from the configuration server")
 
         serverStoreComponentAction = self.pool.createCommand(
-            "&Store Component", "serverStoreComponent", commandArgs, ServerStoreComponent,
+            "&Save Component", "serverStoreComponent", commandArgs, ServerStoreComponent,
             "Ctrl+B", "serverstoredatasource", "Store datasource in the configuration server")
 
         serverStoreDataSourceAction = self.pool.createCommand(
-            "&Store Datasource", "serverStoreDataSource", commandArgs, ServerStoreDataSource,
+            "&Save Datasource", "serverStoreDataSource", commandArgs, ServerStoreDataSource,
             "Ctrl+Shift+B", "serverstoredatasource", "Store datasource in the configuration server")
 
         serverDeleteComponentAction = self.pool.createCommand(
@@ -677,8 +687,7 @@ class MainWindow(QMainWindow):
 
 
     def loadDataSources(self):
-#        self.sourceList.datasources = {}
-        self.sourceList.loadList(self.dsourceSave, self.dsourceApply)
+        self.sourceList.loadList(self.dsourceCollect, self.dsourceApply)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 
@@ -686,8 +695,7 @@ class MainWindow(QMainWindow):
 
 
     def setDataSources(self, datasources):
-#        self.sourceList.datasources = {}
-        self.sourceList.setList(datasources, self.dsourceSave, self.dsourceApply)
+        self.sourceList.setList(datasources, self.dsourceCollect, self.dsourceApply)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 
@@ -697,7 +705,7 @@ class MainWindow(QMainWindow):
 
     def setComponents(self, components):
         self.componentList.setList(components, self.contextMenuActions,
-                                    self.componentSave,
+                                    self.componentCollect,
                                     self.componentApplyItem
                                     )
         idc =  self.componentList.components.itervalues().next().id \
@@ -710,7 +718,7 @@ class MainWindow(QMainWindow):
     def loadComponents(self):
 #        self.componentList.components = {}
         self.componentList.loadList(self.contextMenuActions,
-                                    self.componentSave,
+                                    self.componentCollect,
                                     self.componentApplyItem
                                     )
         idc =  self.componentList.components.itervalues().next().id \
@@ -750,9 +758,6 @@ class MainWindow(QMainWindow):
     def componentEdit(self):
         cmd = self.pool.getCommand('componentEdit').clone()
         cmd.execute()
-#        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     def componentClear(self):
         cmd = self.pool.getCommand('componentClear').clone()
@@ -769,12 +774,16 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
         cmd = self.pool.getCommand('componentSave').clone()
         cmd.execute()
-#        self.cmdStack.clear()
-#        self.pool.setDisabled("undo", True, "Can't Undo")   
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
-#        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+    def componentCollect(self):
+        cmd = self.pool.getCommand('componentMerge').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = self.pool.getCommand('componentCollect').clone()
+        cmd.execute()
 
     def componentChangeDirectory(self):
         cmd = self.pool.getCommand('componentChangeDirectory').clone()
@@ -823,6 +832,7 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+
     def dsourceSave(self):
         cmd = self.pool.getCommand('dsourceEdit').clone()
         cmd.execute()
@@ -835,6 +845,22 @@ class MainWindow(QMainWindow):
 
         cmd = self.pool.getCommand('dsourceSave').clone()
         cmd.execute()
+
+
+
+    def dsourceCollect(self):
+        cmd = self.pool.getCommand('dsourceEdit').clone()
+        cmd.execute()
+
+        cmd = self.pool.getCommand('dsourceApply').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+        cmd = self.pool.getCommand('dsourceCollect').clone()
+        cmd.execute()
+
 
     def dsourceSaveAs(self):
         cmd = self.pool.getCommand('dsourceEdit').clone()
@@ -894,13 +920,6 @@ class MainWindow(QMainWindow):
         cmd.execute()
 
 
-#        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-#        self.pool.setDisabled("redo", True)   
-#        self.cmdStack.clear()
-#        self.pool.setDisabled("undo", True, "Can't Undo")   
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
-
 
     def componentSaveAll(self):
         cmd = self.pool.getCommand('componentSaveAll').clone()
@@ -929,17 +948,11 @@ class MainWindow(QMainWindow):
     def componentCopyItem(self):
         cmd = self.pool.getCommand('componentCopyItem').clone()
         cmd.execute()
-#        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     def dsourceCopy(self):
         cmd = self.pool.getCommand('dsourceCopy').clone()
         cmd.execute()
-#        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
@@ -970,9 +983,6 @@ class MainWindow(QMainWindow):
         else:
             cmd.type = None
         cmd.execute()
-#        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 

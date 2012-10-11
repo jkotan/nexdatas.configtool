@@ -152,15 +152,17 @@ class MainWindow(QMainWindow):
 
         dsourceNewAction = self.pool.createCommand(
             "&New DataSource", "dsourceNew",  commandArgs, 
-            DataSourceNew,"Ctrl+S", "dsourceadd", "Create a new data source") 
+            DataSourceNew,"Ctrl+Shift+N", "dsourceadd", "Create a new data source") 
 
         dsourceRemoveAction = self.pool.createCommand(
             "&Close DataSource", "dsourceRemove",  commandArgs, 
-            DataSourceRemove,"Ctrl+R", "dsourceremove", "Close the data source")
+            DataSourceRemove,"Ctrl+Shift+R", "dsourceremove", "Close the data source")
 
         dsourceEditAction =  self.pool.createCommand(
             "&Edit DataSource", "dsourceEdit",  commandArgs, 
-            DataSourceEdit,"Ctrl+E", "dsourceedit", "Edit the data source")
+            DataSourceEdit,
+            "Ctrl+Shift+E", 
+            "dsourceedit", "Edit the data source")
 
        
         self.pool.createTask("dsourceChanged",commandArgs, DataSourceListChanged,
@@ -202,7 +204,7 @@ class MainWindow(QMainWindow):
 
         componentSaveAction = self.pool.createCommand(
             "&Save", "componentSave", commandArgs, ComponentSave,
-            "", "componentsave", "Save the component")
+            "Ctrl+S", "componentsave", "Save the component")
 
         componentSaveAllAction = self.pool.createCommand(
             "Save All", "componentSaveAll", commandArgs, ComponentSaveAll,
@@ -210,21 +212,21 @@ class MainWindow(QMainWindow):
 
         componentApplyItemAction = self.pool.createCommand(
             "&Apply Item", "componentApplyItem", commandArgs, ComponentApplyItem,
-            "", "componentsapplyitem", "Apply the component item")
+            "Ctrl+A", "componentsapplyitem", "Apply the component item")
 
 
         dsourceApplyAction = self.pool.createCommand(
             "Apply DataSource", "dsourceApply", commandArgs, DataSourceApply,
-            "", "dsourceapply", "Apply the data source")
+            "Ctrl+Shift+A", "dsourceapply", "Apply the data source")
 
 
         dsourceSaveAction = self.pool.createCommand(
-            "Save DataSource", "dsourceSave", commandArgs, DataSourceSave,
-            "", "dsourcesave", "Save the data source")
+            "&Save DataSource", "dsourceSave", commandArgs, DataSourceSave,
+            "Ctrl+Shift+S", "dsourcesave", "Save the data source")
 
 
         dsourceSaveAsAction = self.pool.createCommand(
-            "Save DataSource As...", "dsourceSaveAs", commandArgs, DataSourceSaveAs,
+            "Save DataSource &As...", "dsourceSaveAs", commandArgs, DataSourceSaveAs,
             "", "dsourcesaveas", "Save the data source as ...")
 
         dsourceSaveAllAction = self.pool.createCommand(
@@ -251,7 +253,7 @@ class MainWindow(QMainWindow):
         
 
         componentRemoveItemAction = self.pool.createCommand(
-            "C&ut Component Item", "componentRemoveItem", commandArgs, ComponentRemoveItem,
+            "Cut Component Item", "componentRemoveItem", commandArgs, ComponentRemoveItem,
 #            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
 #            "Ctrl+X",
             "" ,
@@ -259,7 +261,7 @@ class MainWindow(QMainWindow):
 
 
         componentCopyItemAction = self.pool.createCommand(
-            "&Copy Component Item", "componentCopyItem", commandArgs, ComponentCopyItem,
+            "Copy Component Item", "componentCopyItem", commandArgs, ComponentCopyItem,
 #            QKeySequence(Qt.CTRL + Qt.SHIFT  + Qt.Key_C),
 #            "Ctrl+C", 
             "" ,
@@ -267,7 +269,7 @@ class MainWindow(QMainWindow):
 
 
         componentPasteItemAction = self.pool.createCommand(
-            "&Paste Component Item", "componentPasteItem", commandArgs, ComponentPasteItem,
+            "Paste Component Item", "componentPasteItem", commandArgs, ComponentPasteItem,
 #            QKeySequence(Qt.CTRL +  Qt.SHIFT  + Qt.Key_V),
 #            "Ctrl+V", 
             "" ,
@@ -298,25 +300,25 @@ class MainWindow(QMainWindow):
         
 
         componentNewGroupAction = self.pool.createCommand(
-            "New Group Item", "componentNewGroupItem", commandArgs, ComponentNewItem,
+            "New &Group Item", "componentNewGroupItem", commandArgs, ComponentNewItem,
             "", "componentnewitem", "Add a new component group")
 
 
         componentNewFieldAction = self.pool.createCommand(
-            "New Field Item", "componentNewFieldItem", commandArgs, ComponentNewItem,
+            "New &Field Item", "componentNewFieldItem", commandArgs, ComponentNewItem,
             "", "componentnewitem", "Add a new  component field")
 
         componentNewAttributeAction = self.pool.createCommand(
-            "New Attribute Item", "componentNewAttributeItem", commandArgs, ComponentNewItem,
+            "New A&ttribute Item", "componentNewAttributeItem", commandArgs, ComponentNewItem,
             "", "componentnewitem", "Add a new  component attribute")
 
         componentNewLinkAction = self.pool.createCommand(
-            "New Link Item", "componentNewLinkItem", commandArgs, ComponentNewItem,
+            "New &Link Item", "componentNewLinkItem", commandArgs, ComponentNewItem,
             "", "componentnewitem", "Add a new  component link")
         
 
         componentNewDataSourceAction = self.pool.createCommand(
-            "New DataSource Item", "componentNewDataSourceItem", commandArgs, ComponentNewItem,
+            "New &DataSource Item", "componentNewDataSourceItem", commandArgs, ComponentNewItem,
             "", "componentnewitem", "Add a new component data source")
 
 
@@ -366,7 +368,7 @@ class MainWindow(QMainWindow):
 
         dsourceOpenAction = self.pool.createCommand(
             "&Open DataSource...", "dsourceOpen", commandArgs, DataSourceOpen,
-            "", "dsourceopen", "Open an existing data source")
+            "Ctrl+Shift+O", "dsourceopen", "Open an existing data source")
 
 
         componentOpenAction = self.pool.createCommand(
@@ -375,7 +377,7 @@ class MainWindow(QMainWindow):
         
         componentRemoveAction = self.pool.createCommand(
             "&Close", "componentRemove", commandArgs, ComponentRemove,
-            QKeySequence.Close, "componentremove", "Close the component")
+            "Ctrl+R", "componentremove", "Close the component")
 
 
 
@@ -383,30 +385,30 @@ class MainWindow(QMainWindow):
 
         serverConnectAction = self.pool.createCommand(
             "&Connect ...", "serverConnect", commandArgs, ServerConnect,
-            "", "serverconnect", "Connect to the configuration server")
+            "Ctrl+T", "serverconnect", "Connect to the configuration server")
 
         serverFetchComponentsAction = self.pool.createCommand(
-            "Fetch Components", "serverFetchComponents", commandArgs, ServerFetchComponents,
-            "", "serverfetchdatasources", "Fetch datasources from the configuration server")
+            "&Fetch Components", "serverFetchComponents", commandArgs, ServerFetchComponents,
+            "Ctrl+F", "serverfetchdatasources", "Fetch datasources from the configuration server")
 
         serverFetchDataSourcesAction = self.pool.createCommand(
-            "Fetch DataSources", "serverFetchDataSources", commandArgs, ServerFetchDataSources,
-            "", "serverfetchdatasources", "Fetch datasources from the configuration server")
+            "&Fetch DataSources", "serverFetchDataSources", commandArgs, ServerFetchDataSources,
+            "Ctrl+Shift+F", "serverfetchdatasources", "Fetch datasources from the configuration server")
 
         serverStoreComponentAction = self.pool.createCommand(
-            "Store Component", "serverStoreComponent", commandArgs, ServerStoreComponent,
-            "", "serverstoredatasource", "Store datasource in the configuration server")
+            "&Store Component", "serverStoreComponent", commandArgs, ServerStoreComponent,
+            "Ctrl+B", "serverstoredatasource", "Store datasource in the configuration server")
 
         serverStoreDataSourceAction = self.pool.createCommand(
-            "Store Datasource", "serverStoreDataSource", commandArgs, ServerStoreDataSource,
-            "", "serverstoredatasource", "Store datasource in the configuration server")
+            "&Store Datasource", "serverStoreDataSource", commandArgs, ServerStoreDataSource,
+            "Ctrl+Shift+B", "serverstoredatasource", "Store datasource in the configuration server")
 
         serverDeleteComponentAction = self.pool.createCommand(
-            "Delete Component", "serverDeleteComponent", commandArgs, ServerDeleteComponent,
+            "&Delete Component", "serverDeleteComponent", commandArgs, ServerDeleteComponent,
             "", "serverdeletedatasource", "Delete datasource from the configuration server")
 
         serverDeleteDataSourceAction = self.pool.createCommand(
-            "Delete Datasource", "serverDeleteDataSource", commandArgs, ServerDeleteDataSource,
+            "&Delete Datasource", "serverDeleteDataSource", commandArgs, ServerDeleteDataSource,
             "", "serverdeletedatasource", "Delete datasource from the configuration server")
 
         serverSetMandatoryComponentAction = self.pool.createCommand(
@@ -426,7 +428,7 @@ class MainWindow(QMainWindow):
 
         serverCloseAction = self.pool.createCommand(
             "C&lose", "serverClose", commandArgs, ServerClose,
-            "", "serverclose", "Close connection to the configuration server")
+            "Ctrl+L", "serverclose", "Close connection to the configuration server")
 
         
         if not PYTANGO_AVAILABLE:
@@ -494,10 +496,25 @@ class MainWindow(QMainWindow):
 
         fileMenu = self.menuBar().addMenu("&File")    
         self.addActions(fileMenu, (                 
-                componentNewAction, componentOpenAction, componentEditAction, None, 
-                componentSaveAction, componentSaveAsAction,
-                componentSaveAllAction, None, 
-                componentClearAction,componentRemoveAction,
+                componentNewAction, 
+                dsourceNewAction,
+                componentOpenAction, 
+                dsourceOpenAction, 
+                componentEditAction, 
+                dsourceEditAction, 
+                None, 
+                componentSaveAction, 
+                dsourceSaveAction,
+                componentSaveAsAction,
+                dsourceSaveAsAction,
+                componentSaveAllAction, 
+                dsourceSaveAllAction,
+                None,
+                dsourceApplyAction,
+                None, 
+                componentClearAction,
+                componentRemoveAction,
+                dsourceRemoveAction,
                 None,
                 componentMergeAction,
                 None,
@@ -507,6 +524,10 @@ class MainWindow(QMainWindow):
                 dsourceChangeDirectoryAction,
                 None, 
                 fileQuitAction))
+
+
+                                          
+
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (
                 undoAction,redoAction,
@@ -514,7 +535,16 @@ class MainWindow(QMainWindow):
                 cutItemAction, 
                 copyItemAction,
                 pasteItemAction,
+                None,
+                componentRemoveItemAction, 
+                componentCopyItemAction,
+                componentPasteItemAction,
+                None,
+                dsourceCutAction,
+                dsourceCopyAction,
+                dsourcePasteAction
                 ))
+
         componentsMenu = self.menuBar().addMenu("C&omponents")    
         self.addActions(componentsMenu, ( 
                 componentNewGroupAction, componentNewFieldAction, 
@@ -523,11 +553,7 @@ class MainWindow(QMainWindow):
                 componentApplyItemAction, None,
                 componentLoadComponentAction, componentLoadDataSourceAction,
                 None,
-                componentAddDataSourceAction,
-                None,
-                componentRemoveItemAction, 
-                componentCopyItemAction,
-                componentPasteItemAction
+                componentAddDataSourceAction
                 ))
 
         self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
@@ -547,19 +573,6 @@ class MainWindow(QMainWindow):
             ) 
         
 
-        datasourcesMenu = self.menuBar().addMenu("&DataSources")    
-        self.addActions(datasourcesMenu, (dsourceNewAction, dsourceOpenAction, 
-                                          dsourceEditAction, None, 
-                                          dsourceSaveAction,
-                                          dsourceSaveAsAction,
-                                          dsourceSaveAllAction, None,
-                                          dsourceCutAction,
-                                          dsourceCopyAction,
-                                          dsourcePasteAction,
-                                          None,
-                                          dsourceRemoveAction))
- 
-
 
         serverMenu = self.menuBar().addMenu("&Server") 
         self.addActions(serverMenu, (
@@ -568,13 +581,13 @@ class MainWindow(QMainWindow):
                 serverStoreComponentAction,
                 serverDeleteComponentAction,
                 None,
-                serverGetMandatoryComponentsAction,
-                serverSetMandatoryComponentAction,
-                serverUnsetMandatoryComponentAction,
-                None,
                 serverFetchDataSourcesAction,
                 serverStoreDataSourceAction,
                 serverDeleteDataSourceAction,
+                None,
+                serverGetMandatoryComponentsAction,
+                serverSetMandatoryComponentAction,
+                serverUnsetMandatoryComponentAction,
                 None,
                 serverCloseAction
                 ))

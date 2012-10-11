@@ -412,12 +412,17 @@ class MainWindow(QMainWindow):
         serverSetMandatoryComponentAction = self.pool.createCommand(
             "Set Component Mandatory", "serverSetMandatoryComponent", 
             commandArgs, ServerSetMandatoryComponent,
-            "", "serversetmandatory", "Set mandatory component on the configuration server")
+            "", "serversetmandatory", "Set the component as mandatory  on the configuration server")
+
+        serverGetMandatoryComponentsAction = self.pool.createCommand(
+            "Get Mandatory Components", "serverGetMandatoryComponents", 
+            commandArgs, ServerGetMandatoryComponents,
+            "", "servergetmandatory", "Get mandatory components  from the configuration server")
 
         serverUnsetMandatoryComponentAction = self.pool.createCommand(
             "Unset Component Mandatory", "serverUnsetMandatoryComponent", 
             commandArgs, ServerUnsetMandatoryComponent,
-            "", "serverunsetmandatory", "Unset mandatory component on the configuration server")
+            "", "serverunsetmandatory", "Unset the component as mandatory on the configuration server")
 
         serverCloseAction = self.pool.createCommand(
             "C&lose", "serverClose", commandArgs, ServerClose,
@@ -430,6 +435,7 @@ class MainWindow(QMainWindow):
         serverFetchComponentsAction.setDisabled(True)
         serverStoreComponentAction.setDisabled(True)
         serverDeleteComponentAction.setDisabled(True)
+        serverGetMandatoryComponentsAction.setDisabled(True)
         serverSetMandatoryComponentAction.setDisabled(True)
         serverUnsetMandatoryComponentAction.setDisabled(True)
         serverFetchDataSourcesAction.setDisabled(True)
@@ -562,6 +568,7 @@ class MainWindow(QMainWindow):
                 serverStoreComponentAction,
                 serverDeleteComponentAction,
                 None,
+                serverGetMandatoryComponentsAction,
                 serverSetMandatoryComponentAction,
                 serverUnsetMandatoryComponentAction,
                 None,
@@ -1111,6 +1118,7 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("serverFetchComponents", False)
         self.pool.setDisabled("serverStoreComponent", False)
         self.pool.setDisabled("serverDeleteComponent", False)
+        self.pool.setDisabled("serverGetMandatoryComponents", False)
         self.pool.setDisabled("serverSetMandatoryComponent", False)
         self.pool.setDisabled("serverUnsetMandatoryComponent", False)
         self.pool.setDisabled("serverFetchDataSources", False)
@@ -1162,20 +1170,25 @@ class MainWindow(QMainWindow):
     def serverSetMandatoryComponent(self):
         cmd = self.pool.getCommand('serverSetMandatoryComponent').clone()
         cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+    def serverGetMandatoryComponents(self):
+        cmd = self.pool.getCommand('serverGetMandatoryComponents').clone()
+        cmd.execute()
 
     def serverUnsetMandatoryComponent(self):
         cmd = self.pool.getCommand('serverUnsetMandatoryComponent').clone()
         cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+#        self.cmdStack.clear()
+#        self.pool.setDisabled("undo", True, "Can't Undo")   
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     def serverFetchDataSources(self):
         cmd = self.pool.getCommand('serverFetchDataSources').clone()
@@ -1224,6 +1237,7 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("serverFetchComponents", True)
         self.pool.setDisabled("serverStoreComponent", True)
         self.pool.setDisabled("serverDeleteComponent", True)
+        self.pool.setDisabled("serverGetMandatoryComponents", True)
         self.pool.setDisabled("serverSetMandatoryComponent", True)
         self.pool.setDisabled("serverUnsetMandatoryComponent", True)
         self.pool.setDisabled("serverFetchDataSources", True)

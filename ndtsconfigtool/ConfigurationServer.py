@@ -154,6 +154,33 @@ class ConfigurationServer(object):
 
 
 
+    ## set the given component mandatory
+    # \param name component name
+    def setMandatory(self, name):
+        if self._proxy and self.connected:
+            mandat = self._proxy.MandatoryComponents()
+            if str(name) not in mandat:
+                mandat.append(str(name))
+                self._proxy.setMandatoryComponents(mandat)
+
+
+    ## get the mandatory components
+    # returns list of the mandatory components            
+    def getMandatory(self):
+        if self._proxy and self.connected:
+            return self._proxy.MandatoryComponents()
+
+
+    ## unset the given component mandatory
+    # \param name component name
+    def unsetMandatory(self, name):
+        if self._proxy and self.connected:
+            mandat = self._proxy.MandatoryComponents()
+            if str(name) in mandat:
+                mandat.remove(str(name))
+                self._proxy.setMandatoryComponents(mandat)
+
+
 
     ## closes connecion
     # \brief It closes connecion to configuration server

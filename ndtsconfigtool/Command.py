@@ -241,10 +241,17 @@ class ServerDeleteComponent(Command):
 class ServerSetMandatoryComponent(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
-        self._comp = None
+        self._cp = None
         
 
     def execute(self):       
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is not None:
+            try:
+                self.receiver.configServer.setMandatory(self._cp.name)
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in setting the component as mandatory", unicode(e))
         print "EXEC serverSetMandatoryComponent"
 
     def unexecute(self):
@@ -255,14 +262,42 @@ class ServerSetMandatoryComponent(Command):
 
 
 
+class ServerGetMandatoryComponents(Command):
+    def __init__(self, receiver, slot):
+        Command.__init__(self,receiver, slot)
+        
+
+    def execute(self):       
+        try:
+            mandatory = self.receiver.configServer.getMandatory()
+            QMessageBox.information(self.receiver,"Mandatory", "Mandatory Components: \n %s" % str(mandatory)) 
+        except Exception, e:
+            QMessageBox.warning(self.receiver, "Error in getting the mandatory components", unicode(e))
+        print "EXEC serverGetMandatoryComponent"
+
+    def unexecute(self):
+        print "UNDO serverGetMandatoryComponent"
+
+    def clone(self):
+        return ServerGetMandatoryComponents(self.receiver, self.slot) 
+
+
+
 
 class ServerUnsetMandatoryComponent(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
-        self._comp = None
+        self._cp = None
         
 
     def execute(self):       
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is not None:
+            try:
+                self.receiver.configServer.unsetMandatory(self._cp.name)
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in setting the component as mandatory", unicode(e))
         print "EXEC serverUnsetMandatoryComponent"
 
     def unexecute(self):

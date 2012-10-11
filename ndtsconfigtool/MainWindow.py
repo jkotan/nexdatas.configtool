@@ -208,7 +208,7 @@ class MainWindow(QMainWindow):
 
         componentSaveAction = self.pool.createCommand(
             "&Save", "componentSave", commandArgs, ComponentSave,
-            "Ctrl+S", "componentSave", "Write the component into a file")
+            "Ctrl+S", "componentsave", "Write the component into a file")
 
 
 

@@ -85,8 +85,9 @@ class MainWindow(QMainWindow):
 
         self.createGUI()
 
-        self.createActions()
+            
 
+        self.createActions()
 
         self.loadDataSources()
 
@@ -97,6 +98,15 @@ class MainWindow(QMainWindow):
         self.restoreState(
                 settings.value("MainWindow/State").toByteArray())
 
+
+        if PYTANGO_AVAILABLE:
+            self.configServer = ConfigurationServer()
+            self.configServer.device = unicode(settings.value("ConfigServer/device").toString())
+            self.configServer.host = unicode(settings.value("ConfigServer/host").toString())
+            port = unicode(settings.value("ConfigServer/port").toString())
+            if port:
+                self.configServer.port = int(port)
+            
 
         status = self.statusBar()
         status.setSizeGripEnabled(False)
@@ -416,8 +426,6 @@ class MainWindow(QMainWindow):
         
         if not PYTANGO_AVAILABLE:
             serverConnectAction.setDisabled(True)
-        else:
-            self.configServer = ConfigurationServer()
 
         serverFetchComponentsAction.setDisabled(True)
         serverStoreComponentAction.setDisabled(True)
@@ -633,6 +641,13 @@ class MainWindow(QMainWindow):
                           QVariant(self.dsDirectory))
         settings.setValue("Components/directory",
                           QVariant(self.cpDirectory))
+
+        settings.setValue("ConfigServer/device",
+                          QVariant(self.configServer.device))
+        settings.setValue("ConfigServer/host",
+                          QVariant(self.configServer.host))
+        settings.setValue("ConfigServer/port",
+                          QVariant(self.configServer.port))
         files = QStringList()
 #        for widget in self.mdi.windowList():
 #            if not widget.filename.startsWith("Unnamed"):

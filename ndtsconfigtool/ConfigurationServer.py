@@ -26,7 +26,6 @@ except ImportError, e:
     PYTANGO_AVAILABLE = False
     print "PyTango is not available: %s" % e
 
-import PyTango
 
 from ConnectDlg import  ConnectDlg
 

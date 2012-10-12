@@ -672,12 +672,13 @@ class MainWindow(QMainWindow):
         settings.setValue("Components/directory",
                           QVariant(self.cpDirectory))
 
-        settings.setValue("ConfigServer/device",
-                          QVariant(self.configServer.device))
-        settings.setValue("ConfigServer/host",
-                          QVariant(self.configServer.host))
-        settings.setValue("ConfigServer/port",
-                          QVariant(self.configServer.port))
+        if self.configServer:
+            settings.setValue("ConfigServer/device",
+                              QVariant(self.configServer.device))
+            settings.setValue("ConfigServer/host",
+                              QVariant(self.configServer.host))
+            settings.setValue("ConfigServer/port",
+                              QVariant(self.configServer.port))
         files = QStringList()
 #        for widget in self.mdi.windowList():
 #            if not widget.filename.startsWith("Unnamed"):

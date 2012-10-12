@@ -158,10 +158,7 @@ class ConfigurationServer(object):
     # \param name component name
     def setMandatory(self, name):
         if self._proxy and self.connected:
-            mandat = self._proxy.MandatoryComponents()
-            if str(name) not in mandat:
-                mandat.append(str(name))
-                self._proxy.setMandatoryComponents(mandat)
+            self._proxy.setMandatoryComponents([name])
 
 
     ## get the mandatory components
@@ -175,10 +172,7 @@ class ConfigurationServer(object):
     # \param name component name
     def unsetMandatory(self, name):
         if self._proxy and self.connected:
-            mandat = self._proxy.MandatoryComponents()
-            if str(name) in mandat:
-                mandat.remove(str(name))
-                self._proxy.setMandatoryComponents(mandat)
+            self._proxy.unsetMandatoryComponents([name])
 
 
 

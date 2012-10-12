@@ -23,6 +23,7 @@ from PyQt4.QtXml import QDomNode
 #from PyQt4.QtXml import (QDomDocument, QDomNode, QXmlDefaultHandler,
 #                         QXmlInputSource, QXmlSimpleReader)
 
+
 from PyQt4.QtCore import QString
 
 class IncompatibleNodeError(Exception): 

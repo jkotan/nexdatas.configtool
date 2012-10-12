@@ -28,6 +28,7 @@ from DataSourceDlg import DataSourceDlg
 from ComponentDlg import ComponentDlg
 from LabeledObject import LabeledObject
 
+import time
 import copy
 from ComponentModel import ComponentModel
 
@@ -2002,9 +2003,6 @@ class DataSourceCollect(Command):
     def clone(self):
         return DataSourceCollect(self.receiver, self.slot) 
 
-
-
-
 class ComponentMerge(ComponentItemCommand):
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
@@ -2015,7 +2013,6 @@ class ComponentMerge(ComponentItemCommand):
             if self._cp is not None:
                 if hasattr(self._cp.widget,"merge"):
                     self._cp.widget.merge()
-
         self.postExecute()
             
             

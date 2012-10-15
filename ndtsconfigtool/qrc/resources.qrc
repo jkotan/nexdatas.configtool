@@ -1,0 +1,31 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+<file alias="icon.png">../images/defragmentation.png</file>
+<!-- <file alias="componentremove.png">../images/symbol_restricted.png</file> -->
+<file alias="componentremove.png">../images/thumbs_down.png</file>
+<!-- <file alias="componentedit.png">../images/symbol_check.png</file> -->
+<file alias="componentmerge.png">../images/hourglass.png</file>
+<!-- <file alias="componentnew.png">../images/symbol_add.png</file> -->
+<file alias="componentedit.png">../images/under_construction.png</file>
+<!-- <file alias="componentopen.png">../images/edit.png</file> -->
+<file alias="componentopen.png">../images/network_folder.png</file>
+<file alias="componentnew.png">../images/document.png</file>
+<file alias="componentsave.png">../images/save.png</file>
+<file alias="componentsaveas.png">../images/rename.png</file>
+<file alias="dsourceopen.png">../images/login.png</file>
+<file alias="dsourceadd.png">../images/symbol_add.png</file>
+<file alias="dsourceremove.png">../images/logout.png</file>
+<file alias="dsourceedit.png">../images/symbol_construction.png</file>
+<file alias="dsourcesave.png">../images/symbol_check.png</file>
+
+<file alias="serverconnect.png">../images/download.png</file>
+<file alias="serverclose.png">../images/connected.png</file>
+
+<file alias="cut.png">../images/cut.png</file>
+<file alias="copy.png">../images/copy.png</file>
+<file alias="paste.png">../images/paste.png</file>
+<file alias="undo.png">../images/undo.png</file>
+<file alias="redo.png">../images/redo.png</file>
+
+</qresource>
+</RCC>

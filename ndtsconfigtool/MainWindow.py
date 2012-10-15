@@ -25,7 +25,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 import platform
-import qrc_resources
+from qrc import qrc_resources
 
 from CommandPool import *
 from DataSourceList import *
@@ -131,7 +131,7 @@ class MainWindow(QMainWindow):
         dockSplitter = QSplitter(Qt.Vertical)
         dockSplitter.addWidget(self.componentList)
         dockSplitter.addWidget(self.sourceList)
-        dockSplitter.setStretchFactor(0,3)
+        dockSplitter.setStretchFactor(0,2)
         dockSplitter.setStretchFactor(1,1)
         self.compDockWidget.setWidget(dockSplitter)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.compDockWidget)

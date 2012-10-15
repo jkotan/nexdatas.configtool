@@ -217,7 +217,7 @@ class MainWindow(QMainWindow):
             "", "componentsaveall", "Write all components into files")
 
         componentApplyItemAction = self.pool.createCommand(
-            "&Apply Item", "componentApplyItem", commandArgs, ComponentApplyItem,
+            "&Apply Component Item", "componentApplyItem", commandArgs, ComponentApplyItem,
             "Ctrl+A", "componentsapplyitem", "Apply the component item")
 
 
@@ -512,8 +512,6 @@ class MainWindow(QMainWindow):
                 dsourceOpenAction, 
                 componentEditAction, 
                 dsourceEditAction, 
-                None,
-                dsourceApplyAction,
                 None, 
                 componentSaveAction, 
                 dsourceSaveAction,
@@ -548,11 +546,15 @@ class MainWindow(QMainWindow):
                 None,
                 componentRemoveItemAction, 
                 componentCopyItemAction,
-                componentPasteItemAction,
+                componentPasteItemAction, 
+                None,
+                componentApplyItemAction,
                 None,
                 dsourceCutAction,
                 dsourceCopyAction,
-                dsourcePasteAction
+                dsourcePasteAction,
+                None,
+                dsourceApplyAction
                 ))
 
         componentsMenu = self.menuBar().addMenu("C&omponents")    
@@ -560,7 +562,6 @@ class MainWindow(QMainWindow):
                 componentNewGroupAction, componentNewFieldAction, 
                 componentNewAttributeAction, componentNewLinkAction,
                 componentNewDataSourceAction,None, 
-                componentApplyItemAction, None,
                 componentLoadComponentAction, componentLoadDataSourceAction,
                 None,
                 componentAddDataSourceAction

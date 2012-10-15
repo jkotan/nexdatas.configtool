@@ -68,6 +68,7 @@ class Merger(QThread):
             "link":("doc")
             }
         self.exception = None
+        self.running = True
 
     def getText(self, node):
         text = QString()
@@ -185,7 +186,7 @@ class Merger(QThread):
 #            print "merging the children of: ", node.nodeName()
             changes = True
             
-            while changes:
+            while changes and self.running:
                 children = node.childNodes()
                 changes = False
                 for c1 in range(children.count()):
@@ -210,7 +211,7 @@ class Merger(QThread):
             nName = unicode(elem.nodeName()) if elem else ""
             
             if child:
-                while not child.isNull():
+                while not child.isNull() and self.running:
                     if nName and nName in self.children.keys():
                         childElem = child.toElement()
                         cName = unicode(childElem.nodeName()) if childElem  else ""
@@ -230,6 +231,8 @@ class Merger(QThread):
         if self.root:
             try:
                 self.mergeChildren(self.root)
+                if not self.running:
+                    raise Exception("Merging Interrupted")
             except Exception, e:
                 self.exception = e
             

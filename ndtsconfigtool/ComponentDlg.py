@@ -90,7 +90,10 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
         ## merger dialog
         self.mergerdlg = None
-
+        
+        ## merger
+        self.merger = None
+            
         ## if changes saved
         self.dirty = False
         
@@ -675,6 +678,11 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         if self.mergerdlg:
             self.mergerdlg.accept()
 
+            self.interruptMerger
+
+    def interruptMerger(self):
+        if self.merger:
+            self.merger.running = False
 
     def merge(self):
         if not self.view or not self.view.model():
@@ -685,17 +693,21 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             return
         self.dirty = True
         try:
-            merger = Merger(self.document)
-            self.connect(merger, SIGNAL("finished()"), merger, SLOT("deleteLater()"))
-            self.connect(merger, SIGNAL("finished()"), self.closeMergerDlg)
-            merger.start()
+            self.merger = Merger(self.document)
+            self.connect(self.merger, SIGNAL("finished()"), self.merger, SLOT("deleteLater()"))
+            self.connect(self.merger, SIGNAL("finished()"), self.closeMergerDlg)
+            self.connect(self.mergerdlg, SIGNAL("finished(int)"), self.interruptMerger)
+            self.merger.start()
 
             self.mergerdlg.exec_()
-            while not merger.isFinished():
+            while not self.merger.isFinished():
                 time.sleep(0.01)
             
-            if merger.exception:
-                raise merger.exception
+            if self.merger.exception:
+                raise self.merger.exception
+
+            self.merger = None
+
             self._merged = True
             newModel = ComponentModel(self.document, self)
             self.view.setModel(newModel)
@@ -703,6 +715,7 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
 
         except IncompatibleNodeError, e: 
             print "Error in Merging: %s" % unicode(e.value)
+            self.merger = None
             self._merged = False
             newModel = ComponentModel(self.document, self)
             self.view.setModel(newModel)
@@ -717,7 +730,9 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             newModel = ComponentModel(self.document, self)
             self.view.setModel(newModel)
             self.hideFrame()
-
+            QMessageBox.warning(self, "Warning",
+                                "%s" % unicode(e) )
+ 
         return self._merged
 
     def hideFrame(self):

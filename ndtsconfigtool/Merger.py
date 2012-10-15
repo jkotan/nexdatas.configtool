@@ -24,23 +24,34 @@ from PyQt4.QtXml import QDomNode
 #                         QXmlInputSource, QXmlSimpleReader)
 
 
-from PyQt4.QtCore import QString
+from PyQt4.QtCore import QString, QThread
+from PyQt4.QtGui import QDialog, QWidget, QLabel, QHBoxLayout
 
 class IncompatibleNodeError(Exception): 
     def __init__(self, value, nodes = []):
         self.value = value
         self.nodes = nodes
         
+class MergerDlg(QDialog):
+    def __init__(self,  parent=None):
+        super(MergerDlg, self).__init__(parent)
+        
 
-
+    def createGUI(self):
+        label = QLabel(" Please be patient: Component merging...")
+        layout = QHBoxLayout()
+        layout.addWidget(label)
+        self.setLayout(layout)
+        self.setWindowTitle("Merging")
 
 ## merges the components
-class Merger(object):
+class Merger(QThread):
+
     
     ## constructor
     # \param root  DOM root node
-    def __init__(self, root):
-        
+    def __init__(self,  root):
+        QThread.__init__(self)
         ## DOM root node
         self.root = root
         ## tags which cannot have the same siblings
@@ -56,6 +67,7 @@ class Merger(object):
             "group":("group", "field", "attribute", "link", "component", "doc"),
             "link":("doc")
             }
+        self.exception = None
 
     def getText(self, node):
         text = QString()
@@ -212,9 +224,14 @@ class Merger(object):
                     child = child.nextSibling()
 
 
-    def merge(self):
-            self.mergeChildren(self.root)
+        
 
+    def run(self):
+        if self.root:
+            try:
+                self.mergeChildren(self.root)
+            except Exception, e:
+                self.exception = e
+            
 if __name__ == "__main__":
     import sys
-

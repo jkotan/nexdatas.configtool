@@ -33,9 +33,10 @@ from DimensionsDlg import DimensionsDlg
 from StrategyDlg import StrategyDlg
 from DefinitionDlg import DefinitionDlg
 
-from Merger import Merger, IncompatibleNodeError
+from Merger import Merger, MergerDlg, IncompatibleNodeError
 
 import os
+import time 
 
 from ComponentModel import *    
 from LabeledObject import LabeledObject
@@ -87,9 +88,12 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         ## if merging compited
         self._merged = False
 
+        ## merger dialog
+        self.mergerdlg = None
+
         ## if changes saved
         self.dirty = False
-
+        
 
     def getNodeRow(self, child, node):
         row = 0
@@ -351,8 +355,14 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
     def createGUI(self):
 
         self.setupUi(self)
+
+
+        self.mergerdlg = MergerDlg(self)
+        self.mergerdlg.createGUI()
+
         self.updateForm()
         
+
 #        self.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
         self.connect(self.closePushButton, SIGNAL("clicked()"), self.close)
         self.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
@@ -661,6 +671,9 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         self.view.expand(index)
 
+    def closeMergerDlg(self):
+        if self.mergerdlg:
+            self.mergerdlg.accept()
 
 
     def merge(self):
@@ -672,12 +685,22 @@ class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
             return
         self.dirty = True
         try:
-            mr = Merger(self.document)
-            mr.merge()
+            merger = Merger(self.document)
+            self.connect(merger, SIGNAL("finished()"), merger, SLOT("deleteLater()"))
+            self.connect(merger, SIGNAL("finished()"), self.closeMergerDlg)
+            merger.start()
+
+            self.mergerdlg.exec_()
+            while not merger.isFinished():
+                time.sleep(0.01)
+            
+            if merger.exception:
+                raise merger.exception
             self._merged = True
             newModel = ComponentModel(self.document, self)
             self.view.setModel(newModel)
             self.hideFrame()
+
         except IncompatibleNodeError, e: 
             print "Error in Merging: %s" % unicode(e.value)
             self._merged = False

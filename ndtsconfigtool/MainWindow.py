@@ -983,6 +983,8 @@ class MainWindow(QMainWindow):
         elif isinstance(self.mdi.activeWindow(),DataSourceDlg):
             cmd.type = "datasource"
         else:
+            QMessageBox.warning(self, "Item not selected", 
+                                "Please select one of the items")            
             cmd.type = None
         cmd.execute()
 
@@ -995,6 +997,8 @@ class MainWindow(QMainWindow):
         elif isinstance(self.mdi.activeWindow(),DataSourceDlg):
             cmd.type = "datasource"
         else:
+            QMessageBox.warning(self, "Item not selected", 
+                                "Please select one of the items")            
             cmd.type = None
 
         cmd.execute()
@@ -1011,6 +1015,8 @@ class MainWindow(QMainWindow):
         elif isinstance(self.mdi.activeWindow(),DataSourceDlg):
             cmd.type = "datasource"
         else:
+            QMessageBox.warning(self, "Item not selected", 
+                                "Please select one of the items")            
             cmd.type = None
         cmd.execute()
         self.cmdStack.append(cmd)
@@ -1027,7 +1033,10 @@ class MainWindow(QMainWindow):
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
             self.pool.setDisabled("redo", True, "Can't Redo")      
-
+        else:
+            QMessageBox.warning(self, "Component not created", 
+                                "Please edit one of the components")            
+    
 
     def componentNewFieldItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
@@ -1037,6 +1046,9 @@ class MainWindow(QMainWindow):
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
             self.pool.setDisabled("redo", True, "Can't Redo")      
+        else:
+            QMessageBox.warning(self, "Component not created", 
+                                "Please edit one of the components")            
 
 
     def componentNewAttributeItem(self):
@@ -1047,6 +1059,9 @@ class MainWindow(QMainWindow):
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
             self.pool.setDisabled("redo", True, "Can't Redo")      
+        else:
+            QMessageBox.warning(self, "Component not created", 
+                                "Please edit one of the components")            
             
 
     def componentNewLinkItem(self):
@@ -1057,6 +1072,9 @@ class MainWindow(QMainWindow):
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
             self.pool.setDisabled("redo", True, "Can't Redo")      
+        else:
+            QMessageBox.warning(self, "Component not created", 
+                                "Please edit one of the components")            
 
 
 
@@ -1068,6 +1086,9 @@ class MainWindow(QMainWindow):
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
             self.pool.setDisabled("redo", True, "Can't Redo")      
+        else:
+            QMessageBox.warning(self, "Component not created", 
+                                "Please edit one of the components")            
 
 
 
@@ -1078,6 +1099,9 @@ class MainWindow(QMainWindow):
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
             self.pool.setDisabled("redo", True, "Can't Redo")      
+        else:
+            QMessageBox.warning(self, "Component not created", 
+                                "Please edit one of the components")            
 
 
 
@@ -1088,6 +1112,9 @@ class MainWindow(QMainWindow):
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
             self.pool.setDisabled("redo", True, "Can't Redo")      
+        else:
+            QMessageBox.warning(self, "Component not created", 
+                                "Please edit one of the components")            
 
 
 

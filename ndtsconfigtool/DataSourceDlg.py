@@ -777,7 +777,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         text = unicode(doc.toString(0))
         clipboard= QApplication.clipboard()
         clipboard.setText(text)
-
+        
     def copyFromClipboard(self):
         clipboard= QApplication.clipboard()
         text=unicode(clipboard.text())
@@ -788,9 +788,10 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             raise ValueError, "could not parse XML"
 
         ds = self.getFirstElement(self.document, "datasource")           
-        if ds:
-            self.setFromNode(ds)
-
+        if not ds:
+            return
+        self.setFromNode(ds)
+        return True
 
     def createNodes(self,external = False):        
         if external:

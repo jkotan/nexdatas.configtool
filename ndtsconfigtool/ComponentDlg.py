@@ -278,7 +278,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         
         self.view.expand(index)
-
+        return True
 
         
 

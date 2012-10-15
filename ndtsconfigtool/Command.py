@@ -659,7 +659,10 @@ class ComponentRemove(Command):
             self.receiver.componentList.removeComponent(self._cp, False)
         else:
             self._cp = self.receiver.componentList.currentListComponent()
-            if self._cp is not None:
+            if self._cp is None:                
+                QMessageBox.warning(self.receiver, "Component not selected", 
+                                    "Please select one of the components")            
+            else:
                 self.receiver.componentList.removeComponent(self._cp, True)
             
         ## TODO check     
@@ -692,7 +695,10 @@ class ComponentEdit(Command):
     def execute(self):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
-        if self._cp is not None:
+        if self._cp is None:                
+            QMessageBox.warning(self.receiver, "Component not selected", 
+                                "Please select one of the components")            
+        else:
             if self._cp.widget is None:
                 #                self._cpEdit = FieldWg()  
                 self._cpEdit = ComponentDlg()
@@ -742,7 +748,10 @@ class ComponentSave(Command):
     def execute(self):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
-        if self._cp is not None:
+        if self._cp is None:
+            QMessageBox.warning(self.receiver, "Component not selected", 
+                                "Please select one of the components")            
+        else:
             if self._cp.widget is None:
                 #                self._cpEdit = FieldWg()  
                 self._cpEdit = ComponentDlg()
@@ -825,7 +834,10 @@ class ComponentSaveAs(Command):
     def execute(self):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
-        if self._cp is not None:
+        if self._cp is None:
+            QMessageBox.warning(self.receiver, "Component not selected", 
+                                "Please select one of the components")            
+        else:
             if self._cp.widget is not None:
                 self.pathFile = self._cp.widget.getNewName() 
                 fi = QFileInfo(self.pathFile)
@@ -906,6 +918,9 @@ class DataSourceCopy(Command):
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
+        if self._ds is None:
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
+                                "Please select one of the datasources")            
         if self._ds is not None and self._ds.widget is not None:
             if self._newstate is None:
                 if self._oldstate is None:
@@ -960,6 +975,9 @@ class DataSourceCut(Command):
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
+        if self._ds is None:
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
+                                "Please select one of the datasources")            
         if self._ds is not None and self._ds.widget is not None:
             if self._newstate is None:
                 if self._oldstate is None:
@@ -1025,12 +1043,18 @@ class DataSourcePaste(Command):
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
+        if self._ds is None:
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
+                                "Please select one of the datasources")            
         if self._ds is not None and self._ds.widget is not None:
             if self._newstate is None:
                 if self._oldstate is None:
                     self._oldstate = self._ds.widget.getState() 
                 self._ds.widget.clear()
-                self._ds.widget.copyFromClipboard()
+                if not self._ds.widget.copyFromClipboard():
+                    QMessageBox.warning(self.receiver, "Pasting item not possible", 
+                                        "Probably clipboard does not contain datasource")            
+                    
                 self._ds.widget.updateForm()
                 self._ds.widget.setFrames(self._ds.widget.dataSourceType)
 
@@ -1091,6 +1115,9 @@ class DataSourceApply(Command):
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
+        if self._ds is None:
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
+                                "Please select one of the datasources")            
         if self._ds is not None and self._ds.widget is not None:
             if self._newstate is None:
                 if self._oldstate is None:
@@ -1175,6 +1202,10 @@ class DataSourceSave(Command):
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
+        if self._ds is None:
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
+                                "Please select one of the datasources")            
+
         if self._ds is not None and hasattr(self._ds,"widget"):
             self._ds.widget.save()    
 
@@ -1213,7 +1244,10 @@ class DataSourceSaveAs(Command):
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
-        if self._ds is not None:
+        if self._ds is None:
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
+                                "Please select one of the datasources")            
+        else:
             if self._ds.widget is not None:
                 self.pathFile = self._ds.widget.getNewName() 
                 fi = QFileInfo(self.pathFile)
@@ -1459,7 +1493,10 @@ class DataSourceEdit(Command):
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
-        if self._ds is not None:
+        if self._ds is None:
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
+                                "Please select one of the datasources")            
+        else:
             if self._ds.widget is None:
                 #                self._dsEdit = FieldWg()  
                 self._dsEdit = DataSourceDlg()
@@ -1512,7 +1549,10 @@ class DataSourceRemove(Command):
             self.receiver.sourceList.removeDataSource(self._ds, False)
         else:
             self._ds = self.receiver.sourceList.currentListDataSource()
-            if self._ds is not None:
+            if self._ds is None:
+                QMessageBox.warning(self.receiver, "DataSource not selected", 
+                                    "Please select one of the datasources")            
+            else:
                 self.receiver.sourceList.removeDataSource(self._ds, True)
             
         ## TODO check     
@@ -1668,9 +1708,18 @@ class ComponentItemCommand(Command):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is not None:
-            if self._oldstate is None:
+            if self._oldstate is None and hasattr(self._cp,"widget") \
+                    and hasattr(self._cp.widget,"setState"):
                 self._oldstate = self._cp.widget.getState() 
                 self._index = self._cp.widget.view.currentIndex()
+            else:
+                QMessageBox.warning(self.receiver, "Component not created", 
+                                    "Please edit one of the components")            
+                
+        else:
+            QMessageBox.warning(self.receiver, "Component not selected", 
+                                "Please select one of the components")            
+
     
     def postExecute(self):    
         if self._cp is not None:
@@ -1730,7 +1779,7 @@ class ComponentClear(ComponentItemCommand):
     def execute(self):
         if self._cp is None:
             self.preExecute()
-            if self._cp is not None:
+            if self._cp is not None:                
                 if QMessageBox.question(self.receiver, "Component - Clear",
                                         "Clear the component: %s ".encode() %  (self._cp.name),
                                         QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
@@ -1845,9 +1894,12 @@ class ComponentPasteItem(ComponentItemCommand):
             if self._cp is not None:
                 if self._cp.widget is not None:
                     if hasattr(self._cp.widget,"pasteItem"):
-                        self._cp.widget.pasteItem()
+                        if not self._cp.widget.pasteItem():
+                            QMessageBox.warning(self.receiver, "Pasting item not possible", 
+                                                "Please select another tree item") 
         self.postExecute()
-            
+                            
+        
         print "EXEC componentPasteItem"
 
 
@@ -2010,7 +2062,7 @@ class ComponentMerge(ComponentItemCommand):
     def execute(self):
         if self._cp is None:
             self.preExecute()
-            if self._cp is not None:
+            if self._cp is not None:                
                 if hasattr(self._cp.widget,"merge"):
                     self._cp.widget.merge()
         self.postExecute()
@@ -2040,6 +2092,9 @@ class ComponentNewItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
+                if self._cp.widget is None:                
+                    QMessageBox.warning(self.receiver, "Component Item not selected", 
+                                        "Please select one of the component Items")            
                 if hasattr(self._cp.widget,"addItem"):
                     self._child = self._cp.widget.addItem(self.itemName)
                     if self._child:
@@ -2048,7 +2103,9 @@ class ComponentNewItem(ComponentItemCommand):
                         self._childIndex=self._cp.widget.view.model().index(row, 0, self._index)
                         self._cp.widget.view.setCurrentIndex(self._childIndex)
                         self._cp.widget.tagClicked(self._childIndex)
-                            
+                    else:
+                        QMessageBox.warning(self.receiver, "Creating the %s Item not possible" % self.itemName, 
+                                            "Please select another tree or new item ")                                
             if self._child:
                 finalIndex = self._cp.widget.view.model().createIndex(
                     self._index.row(),2,self._index.parent().internalPointer())

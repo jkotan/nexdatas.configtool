@@ -22,11 +22,11 @@
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_attributedlg
+from ui.ui_attributedlg import Ui_AttributeDlg
 
 
 ## dialog defining a tag attribute 
-class AttributeDlg(QDialog, ui_attributedlg.Ui_AttributeDlg):
+class AttributeDlg(QDialog, Ui_AttributeDlg):
     
     ## constructor
     # \param parent patent instance

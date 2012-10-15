@@ -22,12 +22,12 @@
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_richattributedlg
+from ui.ui_richattributedlg import  Ui_RichAttributeDlg
 
 from NodeDlg import NodeDlg 
 
 ## dialog defining an attribute
-class RichAttributeDlg(NodeDlg, ui_richattributedlg.Ui_RichAttributeDlg):
+class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
     
     ## constructor
     # \param parent patent instance

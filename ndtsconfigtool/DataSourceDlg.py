@@ -22,13 +22,13 @@
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_datasourcedlg
+from ui.ui_datasourcedlg import Ui_DataSourceDlg
 from PyQt4.QtXml import (QDomDocument, QDomNode)
 from NodeDlg import NodeDlg 
 import copy
 
 ## dialog defining datasources
-class DataSourceDlg(NodeDlg, ui_datasourcedlg.Ui_DataSourceDlg):
+class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     
     ## constructor
     # \param parent patent instance

@@ -22,7 +22,7 @@
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_fielddlg
+from ui.ui_fielddlg import Ui_FieldDlg
 from PyQt4.QtXml import (QDomDocument, QDomNode)
 
 
@@ -34,7 +34,7 @@ import copy
 from NodeDlg import NodeDlg 
 
 ## dialog defining a field tag
-class FieldDlg(NodeDlg, ui_fielddlg.Ui_FieldDlg):
+class FieldDlg(NodeDlg, Ui_FieldDlg):
     
     ## constructor
     # \param parent patent instance

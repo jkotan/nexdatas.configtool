@@ -22,7 +22,7 @@
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_definitiondlg
+from ui.ui_definitiondlg import  Ui_DefinitionDlg
 
 import copy 
 
@@ -30,7 +30,7 @@ from AttributeDlg import AttributeDlg
 from NodeDlg import NodeDlg 
 
 ## dialog defining a definition tag
-class DefinitionDlg(NodeDlg, ui_definitiondlg.Ui_DefinitionDlg):
+class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
     
     ## constructor
     # \param parent patent instance

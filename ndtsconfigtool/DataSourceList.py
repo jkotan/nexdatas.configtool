@@ -22,7 +22,7 @@
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_datasourcelist
+from ui.ui_datasourcelist import  Ui_DataSourceList
 from DataSourceDlg import DataSourceDlg
 import os 
 
@@ -31,7 +31,7 @@ from LabeledObject import LabeledObject
 
 
 ## dialog defining a group tag
-class DataSourceList(QWidget, ui_datasourcelist.Ui_DataSourceList):
+class DataSourceList(QWidget, Ui_DataSourceList):
     
     ## constructor
     # \param parent patent instance
@@ -234,16 +234,15 @@ if __name__ == "__main__":
     ## Qt application
     app = QApplication(sys.argv)
     ## group form
-    form = DataSourceList()
+    form = DataSourceList("../datasources")
 #    form.datasources={"title":"Test run 1", "run_cycle":"2012-1"}
     form.createGUI()
     form.show()
     app.exec_()
 
 
-    if form.result():
-        if form.datasources:
-            print "Other datasources:"
-            for k in form.datasources.keys():
-                print  " %s = '%s' " % (k, form.datasources[k])
+    if form.datasources:
+        print "Other datasources:"
+        for k in form.datasources.keys():
+            print  " %s = '%s' " % (k, form.datasources[k])
     

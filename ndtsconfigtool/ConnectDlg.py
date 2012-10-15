@@ -22,11 +22,11 @@
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_connectdlg
+from ui.ui_connectdlg import Ui_ConnectDlg
 
 
 ## dialog defining a tag connect 
-class ConnectDlg(QDialog, ui_connectdlg.Ui_ConnectDlg):
+class ConnectDlg(QDialog, Ui_ConnectDlg):
     
     ## constructor
     # \param parent patent instance

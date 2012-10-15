@@ -22,12 +22,12 @@
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_dimensionsdlg
+from ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
 from NodeDlg import NodeDlg 
 
 ## dialog defining a dimensions tag
-class DimensionsDlg(NodeDlg, ui_dimensionsdlg.Ui_DimensionsDlg):
+class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
     
     ## constructor
     # \param parent patent instance

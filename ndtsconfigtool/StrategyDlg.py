@@ -22,12 +22,12 @@
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_strategydlg
+from ui.ui_strategydlg import Ui_StrategyDlg
 
 from NodeDlg import NodeDlg 
 
 ## dialog defining an attribute
-class StrategyDlg(NodeDlg, ui_strategydlg.Ui_StrategyDlg):
+class StrategyDlg(NodeDlg, Ui_StrategyDlg):
     
     ## constructor
     # \param parent patent instance

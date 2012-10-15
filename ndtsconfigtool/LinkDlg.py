@@ -22,12 +22,12 @@
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_linkdlg
+from ui.ui_linkdlg import Ui_LinkDlg
 
 from NodeDlg import NodeDlg 
 
 ## dialog defining a tag link 
-class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
+class LinkDlg(NodeDlg, Ui_LinkDlg):
     
     ## constructor
     # \param parent patent instance
@@ -54,8 +54,11 @@ class LinkDlg(NodeDlg, ui_linkdlg.Ui_LinkDlg):
         if self.target is not None:    
             self.targetLineEdit.setText(self.target)
 
-        doc = self.node.firstChildElement(QString("doc"))           
-        text = self.getText(doc)    
+        if self.node:    
+            doc = self.node.firstChildElement(QString("doc"))           
+            text = self.getText(doc)    
+        else:
+            text = ""
         self.doc = unicode(text).strip() if text else ""
 
 

@@ -23,7 +23,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtXml import (QDomDocument, QDomNode, QXmlDefaultHandler,
                          QXmlInputSource, QXmlSimpleReader)
-import ui_componentdlg
+
+from ui.ui_componentdlg import Ui_ComponentDlg
 from FieldDlg import FieldDlg 
 from GroupDlg import GroupDlg 
 from LinkDlg import LinkDlg 
@@ -42,7 +43,7 @@ from ComponentModel import *
 from LabeledObject import LabeledObject
 
 ## dialog defining a tag link 
-class ComponentDlg(QDialog,ui_componentdlg.Ui_ComponentDlg):
+class ComponentDlg(QDialog, Ui_ComponentDlg):
     
     ## constructor
     # \param parent patent instance

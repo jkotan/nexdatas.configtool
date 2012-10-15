@@ -22,14 +22,14 @@
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_componentlist
+from ui.ui_componentlist import Ui_ComponentList
 import os
 
 from ComponentDlg import *
 
 
 ## dialog defining a group tag
-class ComponentList(QWidget, ui_componentlist.Ui_ComponentList):
+class ComponentList(QWidget, Ui_ComponentList):
     
     ## constructor
     # \param parent patent instance
@@ -244,16 +244,14 @@ if __name__ == "__main__":
     ## Qt application
     app = QApplication(sys.argv)
     ## group form
-    form = ComponentList()
-    form.components={"title":"Test run 1", "run_cycle":"2012-1"}
+    form = ComponentList("../components")
     form.createGUI()
     form.show()
     app.exec_()
 
 
-    if form.result():
-        if form.components:
-            print "Other components:"
-            for k in form.components.keys():
-                print  " %s = '%s' " % (k, form.components[k])
+    if form.components:
+        print "Other components:"
+        for k in form.components.keys():
+            print  " %s = '%s' " % (k, form.components[k])
     

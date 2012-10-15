@@ -22,7 +22,7 @@
 import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ui_groupdlg
+from ui.ui_groupdlg import Ui_GroupDlg
 
 from AttributeDlg import AttributeDlg
 from NodeDlg import NodeDlg 
@@ -30,7 +30,7 @@ from NodeDlg import NodeDlg
 import copy
 
 ## dialog defining a group tag
-class GroupDlg(NodeDlg, ui_groupdlg.Ui_GroupDlg):
+class GroupDlg(NodeDlg, Ui_GroupDlg):
     
     ## constructor
     # \param parent patent instance

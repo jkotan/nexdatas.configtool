@@ -1847,7 +1847,9 @@ class ComponentRemoveItem(ComponentItemCommand):
             if self._cp is not None:
                 if self._cp.widget is not None:
                     if hasattr(self._cp.widget,"removeSelectedItem"):
-                        self._cp.widget.removeSelectedItem()
+                       if not self._cp.widget.removeSelectedItem():
+                           QMessageBox.warning(self.receiver, "Cutting item not possible", 
+                                               "Please select another tree item") 
         self.postExecute()
 
 
@@ -1872,7 +1874,9 @@ class ComponentCopyItem(ComponentItemCommand):
             if self._cp is not None:
                 if self._cp.widget is not None:
                     if hasattr(self._cp.widget,"copySelectedItem"):
-                        self._cp.widget.copySelectedItem()
+                        if not self._cp.widget.copySelectedItem():
+                            QMessageBox.warning(self.receiver, "Copying item not possible", 
+                                                "Please select another tree item") 
         self.postExecute()
             
         print "EXEC componentCopyItem"

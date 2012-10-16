@@ -333,7 +333,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         if index.parent().isValid():
             self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
                             index.parent(),index.parent())
-
+        return True    
 
     def copySelectedItem(self):
         if not self.view or not self.view.model() or not self.widget:
@@ -354,7 +354,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         
         clipboard = QApplication.clipboard()
         clipboard.setText(self.nodeToString(node))
-            
+        return True    
 
     def createGUI(self):
 

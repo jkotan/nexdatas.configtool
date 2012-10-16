@@ -27,16 +27,27 @@ from PyQt4.QtXml import QDomNode
 from PyQt4.QtCore import QString, QThread
 from PyQt4.QtGui import QDialog, QWidget, QLabel, QHBoxLayout
 
+## merging error for wrong node structure
 class IncompatibleNodeError(Exception): 
+    ## constructor
+    # \param value text of the error
+    # \param nodes list of error related nodes
     def __init__(self, value, nodes = []):
+        ## text of the error
         self.value = value
+        ## list of error related nodes
         self.nodes = nodes
         
+## dialog of the merger
 class MergerDlg(QDialog):
+    ## constructor
+    # \param parent dialog
     def __init__(self,  parent=None):
         super(MergerDlg, self).__init__(parent)
         
 
+    ## creates GUI
+    # It creates dialog with a merging label 
     def createGUI(self):
         label = QLabel(" Please be patient: Component merging...")
         layout = QHBoxLayout()
@@ -50,7 +61,7 @@ class Merger(QThread):
     
     ## constructor
     # \param root  DOM root node
-    def __init__(self,  root):
+    def __init__(self, root):
         QThread.__init__(self)
         ## DOM root node
         self.root = root
@@ -58,6 +69,7 @@ class Merger(QThread):
         self.singles =['datasource', 'strategy', 'dimensions', 'definition',
                        'record', 'device', 'query', 'database', 'door']
 
+        ## allowed children of the given nodes
         self.children ={
             "datasource":("record", "doc", "device", "database", "query", "door"),
             "attribute":("enumeration", "doc"),
@@ -67,9 +79,14 @@ class Merger(QThread):
             "group":("group", "field", "attribute", "link", "component", "doc"),
             "link":("doc")
             }
+
+        ## it contains an exeption instance when the exception was raised
         self.exception = None
+        ## it has to be set on False when we want to break merging
         self.running = True
 
+    ## fetches the text from all DOM child text nodes
+    # \param node the given DOM node
     def getText(self, node):
         text = QString()
         if node:
@@ -80,6 +97,10 @@ class Merger(QThread):
                 child = child.nextSibling()
         return text    
 
+
+    ## fetches node ancestors int the tree
+    # \param node the given DOM node
+    # \returns string with node ancestors in the tree
     def getAncestors(self, node):
         res = "" 
         attr = node.attributes()
@@ -96,6 +117,10 @@ class Merger(QThread):
         return res 
 
 
+    ## checks if the given node elements are mergeable
+    # \param elem1 first node element
+    # \param elem2 secound node element
+    # \returns True if the given elements are mergeable
     def areMergeable(self,elem1, elem2):
 #        print "checking:" ,elem1.nodeName(), elem2.nodeName()
         if elem1.nodeName() != elem2.nodeName():
@@ -143,6 +168,9 @@ class Merger(QThread):
             
         return status
 
+    ## merges the given node elements
+    # \param elem1 first node element
+    # \param elem2 secound node element
     def mergeNodes(self,elem1, elem2):
         tagName = elem1.nodeName()
         attr1 = elem1.attributes()
@@ -180,6 +208,8 @@ class Merger(QThread):
         parent.removeChild(elem2)
 
 
+    ## merge all children of the given DOM node
+    # \param node the given DOM node
     def mergeChildren(self, node):
         status = False
         if node:
@@ -227,6 +257,8 @@ class Merger(QThread):
 
         
 
+    ## runs thread
+    # \brief It runs the mergeChildren with the root node and catches the exceptions if needed
     def run(self):
         if self.root:
             try:

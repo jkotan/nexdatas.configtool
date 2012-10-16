@@ -32,39 +32,55 @@ import time
 import copy
 from ComponentModel import ComponentModel
 
-## abstract command
+## abstract command 
 class Command(object):
     
     ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self,receiver, slot):
+        ## command receiver
         self.receiver = receiver
+        ## command slot name 
         self.slot = slot
 
-
+    ## connects the slot name to receiver
+    # returns callable slot     
     def connectSlot(self):
         if hasattr(self.receiver, self.slot):
             return  getattr(self.receiver, self.slot)
         
-    ## 
+    ## executes the command
+    # \brief It is an abstract member function to reimplement execution of the derived command
     def execute(self):
         pass
-    ## 
+
+    ## unexecutes the command
+    # \brief It is an abstract member function to reimplement un-do execution of the derived command
     def unexecute(self):
         pass
 
+    ## clones the command
+    # \brief It is an abstract member function to reimplement cloning of the derived command
     def clone(self): 
         pass
 
 
 
-
+## Command which performs connection to the configuration server
 class ServerConnect(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._oldstate = None
         self._state = None
         
 
+    ## executes the command
+    # \brief It perform connection to the configuration server
     def execute(self):       
         if self.receiver.configServer:
             try:
@@ -81,6 +97,8 @@ class ServerConnect(Command):
     
         print "EXEC serverConnect"
 
+    ## unexecutes the command
+    # \brief It undo connection to the configuration server, i.e. it close the connection to the server
     def unexecute(self):
         if self.receiver.configServer:
             try:
@@ -90,15 +108,24 @@ class ServerConnect(Command):
 
         print "UNDO serverConnect"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ServerConnect(self.receiver, self.slot) 
 
 
 
+## Command which fetches the components from the configuration server
 class ServerFetchComponents(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
 
+    ## executes the command
+    # \brief It fetches the components from the configuration server
     def execute(self):       
         if QMessageBox.question(self.receiver, "Component - Reload List from Configuration server",
                                 "All unsaved components will be lost. Would you like to proceed ?".encode(),
@@ -126,14 +153,23 @@ class ServerFetchComponents(Command):
     
         print "EXEC serverFetchComponents"
 
+    ## unexecutes the command
+    # \brief It does nothing
     def unexecute(self):
         print "UNDO serverFetchComponents"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ServerFetchComponents(self.receiver, self.slot) 
 
 
+## Command which stores the current component in the configuration server
 class ServerStoreComponent(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._cp = None
@@ -192,6 +228,8 @@ class ServerStoreComponent(Command):
             self.receiver.componentList.populateComponents()
         print "UNDO serverStoreComponent"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ServerStoreComponent(self.receiver, self.slot) 
 
@@ -199,7 +237,12 @@ class ServerStoreComponent(Command):
 
 
 
+## Command which deletes the current component from the configuration server
 class ServerDeleteComponent(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._cp = None
@@ -233,13 +276,20 @@ class ServerDeleteComponent(Command):
             self.receiver.componentList.populateComponents()
         print "UNDO serverDeleteComponent"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ServerDeleteComponent(self.receiver, self.slot) 
 
 
 
 
+## Command which sets on the configuration server the current component as mandatory
 class ServerSetMandatoryComponent(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._cp = None
@@ -263,6 +313,7 @@ class ServerSetMandatoryComponent(Command):
 
 
 
+## Command which fetches a list of the mandatory components from the configuration server
 class ServerGetMandatoryComponents(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
@@ -279,13 +330,20 @@ class ServerGetMandatoryComponents(Command):
     def unexecute(self):
         print "UNDO serverGetMandatoryComponent"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ServerGetMandatoryComponents(self.receiver, self.slot) 
 
 
 
 
+## Command which sets on the configuration server the current component as not mandatory
 class ServerUnsetMandatoryComponent(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._cp = None
@@ -304,10 +362,13 @@ class ServerUnsetMandatoryComponent(Command):
     def unexecute(self):
         print "UNDO serverUnsetMandatoryComponent"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ServerUnsetMandatoryComponent(self.receiver, self.slot) 
 
 
+## Command which fetches the datasources from the configuration server
 class ServerFetchDataSources(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
@@ -344,11 +405,18 @@ class ServerFetchDataSources(Command):
     def unexecute(self):
         print "UNDO serverFetchDataSources"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ServerFetchDataSources(self.receiver, self.slot) 
 
 
+## Command which stores the current datasource in the configuration server
 class ServerStoreDataSource(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._ds = None
@@ -382,10 +450,17 @@ class ServerStoreDataSource(Command):
             self.receiver.sourceList.populateDataSources()
         print "UNDO serverStoreDataSource"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ServerStoreDataSource(self.receiver, self.slot) 
 
+## Command which deletes the current datasource in the configuration server
 class ServerDeleteDataSource(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._ds = None
@@ -419,12 +494,19 @@ class ServerDeleteDataSource(Command):
             self.receiver.sourceList.populateDataSources()
         print "UNDO serverDeleteDataSource"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ServerDeleteDataSource(self.receiver, self.slot) 
 
 
 
+## Command which closes connection to the configuration server
 class ServerClose(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._comp = None
@@ -457,6 +539,8 @@ class ServerClose(Command):
                 QMessageBox.warning(self.receiver, "Error in connecting to Configuration Server", unicode(e))
         print "UNDO serverClose"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ServerClose(self.receiver, self.slot) 
 
@@ -465,7 +549,12 @@ class ServerClose(Command):
 
 
 
+## Command which creates a new component
 class ComponentNew(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._comp = None
@@ -489,6 +578,8 @@ class ComponentNew(Command):
             
         print "UNDO componentNew"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentNew(self.receiver, self.slot) 
 
@@ -496,7 +587,12 @@ class ComponentNew(Command):
 
 
 
+## Command which loads existing component from the file
 class ComponentOpen(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._cpEdit = None
@@ -569,13 +665,20 @@ class ComponentOpen(Command):
             
         print "UNDO componentOpen"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentOpen(self.receiver, self.slot) 
 
 
 
 
+## Command which loads existing datasource from the file
 class DataSourceOpen(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._dsEdit = None
@@ -642,12 +745,19 @@ class DataSourceOpen(Command):
             
         print "UNDO dsourceOpen"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceOpen(self.receiver, self.slot) 
 
 
 
+## Command which removes the current component from the component list
 class ComponentRemove(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._cp = None
@@ -672,8 +782,8 @@ class ComponentRemove(Command):
             self.receiver.mdi.closeActiveWindow()
             
             
-
         print "EXEC componentRemove"
+
 
     def unexecute(self):
         if self._cp is not None:
@@ -681,11 +791,19 @@ class ComponentRemove(Command):
             self.receiver.componentList.addComponent(self._cp, False)
         print "UNDO componentRemove"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentRemove(self.receiver, self.slot) 
 
 
+## Command which opens dialog with the current component 
 class ComponentEdit(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._cp = None
@@ -733,13 +851,21 @@ class ComponentEdit(Command):
     def unexecute(self):
         print "UNDO componentEdit"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentEdit(self.receiver, self.slot) 
 
 
 
 
+## Command which saves with the current component in the file
 class ComponentSave(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._cp = None
@@ -795,12 +921,20 @@ class ComponentSave(Command):
             self.receiver.componentList.populateComponents()
         print "UNDO componentSave"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentSave(self.receiver, self.slot) 
 
 
 
+## Command which saves all components in the file
 class ComponentSaveAll(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         
@@ -818,12 +952,20 @@ class ComponentSaveAll(Command):
     def unexecute(self):
         print "UNDO componentSaveAll"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentSaveAll(self.receiver, self.slot) 
 
 
 
+## Command which saves the current components in the file with a different name
 class ComponentSaveAs(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._cp = None
@@ -859,12 +1001,20 @@ class ComponentSaveAs(Command):
             self.receiver.componentList.populateComponents()
         print "UNDO componentSaveAs"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentSaveAs(self.receiver, self.slot) 
 
 
 
+## Command which changes the current component file directory
 class ComponentChangeDirectory(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         
@@ -903,11 +1053,19 @@ class ComponentChangeDirectory(Command):
     def unexecute(self):
         print "UNDO componentChangeDirectory"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentChangeDirectory(self.receiver, self.slot) 
 
 
+## Command which copies the current datasource into the clipboard
 class DataSourceCopy(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._ds = None
@@ -957,6 +1115,9 @@ class DataSourceCopy(Command):
             
         print "UNDO dsourceCopy"
         
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceCopy(self.receiver, self.slot) 
         
@@ -964,7 +1125,12 @@ class DataSourceCopy(Command):
 
 
 
+## Command which moves the current datasource into the clipboard
 class DataSourceCut(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._ds = None
@@ -1025,6 +1191,9 @@ class DataSourceCut(Command):
             
         print "UNDO dsourceCut"
         
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceCut(self.receiver, self.slot) 
         
@@ -1032,7 +1201,12 @@ class DataSourceCut(Command):
 
 
 
+## Command which pastes the current datasource from the clipboard
 class DataSourcePaste(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._ds = None
@@ -1098,13 +1272,21 @@ class DataSourcePaste(Command):
             
         print "UNDO dsourcePaste"
         
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourcePaste(self.receiver, self.slot) 
         
 
 
 
+## Command which applies the changes from the form for the current datasource 
 class DataSourceApply(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._ds = None
@@ -1167,6 +1349,9 @@ class DataSourceApply(Command):
             
         print "UNDO dsourceApply"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceApply(self.receiver, self.slot) 
 
@@ -1175,7 +1360,12 @@ class DataSourceApply(Command):
 
 
 
+## Command which saves all the datasources in files
 class DataSourceSaveAll(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         
@@ -1192,10 +1382,14 @@ class DataSourceSaveAll(Command):
     def unexecute(self):
         print "UNDO dsourceSaveAll"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceSaveAll(self.receiver, self.slot) 
 
 
+## Command which saves the current datasource in files
 class DataSourceSave(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
@@ -1228,6 +1422,9 @@ class DataSourceSave(Command):
             self.receiver.sourceList.populateDataSources()
         print "UNDO dsourceSave"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceSave(self.receiver, self.slot) 
 
@@ -1236,7 +1433,12 @@ class DataSourceSave(Command):
 
 
 
+## Command which saves the current datasource in files with a different name
 class DataSourceSaveAs(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._ds = None
@@ -1269,13 +1471,21 @@ class DataSourceSaveAs(Command):
     def unexecute(self):
         print "UNDO dsourceSaveAs"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceSaveAs(self.receiver, self.slot) 
 
 
 
 
+## Command which changes the current file directory with datasources
 class DataSourceChangeDirectory(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         
@@ -1314,13 +1524,21 @@ class DataSourceChangeDirectory(Command):
     def unexecute(self):
         print "UNDO dsourceChangeDirectory"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceChangeDirectory(self.receiver, self.slot) 
 
 
 
 
+## Command which reloads the components from the current component directory into the component list
 class ComponentReloadList(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         
@@ -1347,6 +1565,9 @@ class ComponentReloadList(Command):
     def unexecute(self):
         print "UNDO componentReloadList"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentReloadList(self.receiver, self.slot) 
 
@@ -1354,7 +1575,12 @@ class ComponentReloadList(Command):
 
 
 
+## Command which reloads the datasources from the current datasource directory into the datasource list
 class DataSourceReloadList(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         
@@ -1381,6 +1607,9 @@ class DataSourceReloadList(Command):
     def unexecute(self):
         print "UNDO componentReloadList"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceReloadList(self.receiver, self.slot) 
 
@@ -1391,7 +1620,12 @@ class DataSourceReloadList(Command):
 
 
 
+## Command which changes the current datasource file directory
 class ComponentListChanged(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver,slot):
         Command.__init__(self, receiver, slot)
         self._cp = None
@@ -1447,12 +1681,20 @@ class ComponentListChanged(Command):
 
         print "UNDO componentChanged"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentListChanged(self.receiver, self.slot) 
     
 
 
+## Command which creates a new datasource
 class DataSourceNew(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._ds = None
@@ -1478,6 +1720,9 @@ class DataSourceNew(Command):
 
         print "UNDO dsourceNew"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceNew(self.receiver, self.slot) 
 
@@ -1486,7 +1731,12 @@ class DataSourceNew(Command):
 
 
 
+## Command which opens the dialog with the current datasource
 class DataSourceEdit(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver,slot):
         Command.__init__(self, receiver,slot)
         self._ds = None
@@ -1531,6 +1781,9 @@ class DataSourceEdit(Command):
     def unexecute(self):
         print "UNDO dsourceEdit"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceEdit(self.receiver, self.slot) 
 
@@ -1540,7 +1793,12 @@ class DataSourceEdit(Command):
 
 
 
+## Command which removes the current datasource from the datasource list
 class DataSourceRemove(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._ds = None
@@ -1574,12 +1832,20 @@ class DataSourceRemove(Command):
             self.receiver.sourceList.addDataSource(self._ds, False)
         print "UNDO dsourceRemove"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceRemove(self.receiver, self.slot) 
 
 
 
+## Command which performs change of  the current datasource 
 class DataSourceListChanged(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._ds = None
@@ -1639,6 +1905,8 @@ class DataSourceListChanged(Command):
 
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceListChanged(self.receiver, self.slot) 
     
@@ -1646,7 +1914,12 @@ class DataSourceListChanged(Command):
 
 
 
+## Command which is performed during closing the Component Designer
 class CloseApplication(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
 
@@ -1658,12 +1931,20 @@ class CloseApplication(Command):
     def unexecute(self):
         print "UNDO closeApp"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return CloseApplication(self.receiver, self.slot) 
 
 
 
+## Empty undo command. It is no need to implement it 
 class UndoCommand(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
 
@@ -1673,10 +1954,18 @@ class UndoCommand(Command):
     def unexecute(self):
         pass
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return UndoCommand(self.receiver, self.slot) 
 
+## Empty undo command. It is no need to implement it 
 class RedoCommand(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
 
@@ -1686,6 +1975,9 @@ class RedoCommand(Command):
     def unexecute(self):
         pass
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return RedoCommand(self.receiver, self.slot) 
 
@@ -1694,12 +1986,12 @@ class RedoCommand(Command):
 
 
 
-
-
-
-
-
+## Abstract Command which helps in defing commands related to Component item operations
 class ComponentItemCommand(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._cp = None
@@ -1768,12 +2060,20 @@ class ComponentItemCommand(Command):
 
         print "UNDO componentItemComponent"
 
+
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentItemCommand(self.receiver, self.slot) 
 
 
 
+## Command which clears the whole current component
 class ComponentClear(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
 
@@ -1811,13 +2111,20 @@ class ComponentClear(ComponentItemCommand):
 
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentClear(self.receiver, self.slot) 
 
 
 
 
+## Command which loads sub-components into the current component tree from the file
 class ComponentLoadComponentItem(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
         self.itemName = ""        
@@ -1840,12 +2147,19 @@ class ComponentLoadComponentItem(ComponentItemCommand):
         print "EXEC componentLoadcomponentItem"
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentLoadComponentItem(self.receiver, self.slot) 
 
 
 
+## Command which moves the current component item into the clipboard
 class ComponentRemoveItem(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver,slot)
 
@@ -1866,13 +2180,20 @@ class ComponentRemoveItem(ComponentItemCommand):
         print "EXEC componentRemoveItem"
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentRemoveItem(self.receiver, self.slot) 
 
 
 
 
+## Command which copies the current component item into the clipboard
 class ComponentCopyItem(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver,slot)
 
@@ -1896,7 +2217,12 @@ class ComponentCopyItem(ComponentItemCommand):
 
 
 
+## Command which pastes the component item from the clipboard into the current component tree
 class ComponentPasteItem(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver,slot)
 
@@ -1916,6 +2242,8 @@ class ComponentPasteItem(ComponentItemCommand):
         print "EXEC componentPasteItem"
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentPasteItem(self.receiver, self.slot) 
 
@@ -1925,7 +2253,12 @@ class ComponentPasteItem(ComponentItemCommand):
 
 
 
+## Command which moves the current, i.e. datasource or component item, into the clipboard
 class CutItem(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver,slot)
         self.type = None
@@ -1946,6 +2279,8 @@ class CutItem(ComponentItemCommand):
         
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return CutItem(self.receiver, self.slot) 
 
@@ -1954,7 +2289,12 @@ class CutItem(ComponentItemCommand):
 
 
 
+## Command which copies the current item, i.e. datasource or component item, into the clipboard
 class CopyItem(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver,slot)
         self.type = None
@@ -1975,11 +2315,14 @@ class CopyItem(ComponentItemCommand):
         
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return CopyItem(self.receiver, self.slot) 
 
 
 
+## Command which pastes the current item from the clipboard into the current dialog, i.e. the current datasource or the current component item tree
 class PasteItem(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver,slot)
@@ -2001,13 +2344,20 @@ class PasteItem(Command):
         
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return PasteItem(self.receiver, self.slot) 
 
 
 
 
+## Command which stores the current component in the comfiguration server
 class ComponentCollect(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver,slot)
         self.type = None
@@ -2039,7 +2389,12 @@ class ComponentCollect(Command):
 
 
 
+## Command which stores the current datasource in the comfiguration server
 class DataSourceCollect(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver,slot)
         self.type = None
@@ -2065,10 +2420,18 @@ class DataSourceCollect(Command):
         
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return DataSourceCollect(self.receiver, self.slot) 
 
+
+## Command which merges the current component
 class ComponentMerge(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
         
@@ -2085,6 +2448,8 @@ class ComponentMerge(ComponentItemCommand):
 
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentMerge(self.receiver, self.slot) 
 
@@ -2092,6 +2457,7 @@ class ComponentMerge(ComponentItemCommand):
 
 
 
+## Command which creates a new item in the current component tree
 class ComponentNewItem(ComponentItemCommand):
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
@@ -2143,6 +2509,8 @@ class ComponentNewItem(ComponentItemCommand):
 #                     
 #        print "UNDO componentNewItem"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentNewItem(self.receiver, self.slot) 
 
@@ -2150,7 +2518,12 @@ class ComponentNewItem(ComponentItemCommand):
 
 
 
+## Command which loads a datasource from a file into the current component tree
 class ComponentLoadDataSourceItem(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
         self._cp = None
@@ -2177,13 +2550,20 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
         print "EXEC componentMerge"
 
         
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentLoadDataSourceItem(self.receiver, self.slot) 
 
 
 
 
+## Command which adds the current datasource into the current component tree
 class ComponentAddDataSourceItem(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
         
@@ -2255,11 +2635,18 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
             
         print "EXEC componentAddDataSourceItem"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentAddDataSourceItem(self.receiver, self.slot) 
 
 
+## Command which applies the changes from the form for the current component item
 class ComponentApplyItem(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
         self._index = None
@@ -2280,6 +2667,8 @@ class ComponentApplyItem(ComponentItemCommand):
         print "EXEC componentApplyItem"
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentApplyItem(self.receiver, self.slot) 
 

@@ -214,10 +214,11 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     def applyItem(self):
         if not self.view or not self.view.model() or not self.widget:
             return
-        if hasattr(self.widget,'apply'):
-            self.widget.apply()
-            self.dirty = True
-
+        if not hasattr(self.widget,'apply'):
+            return
+        self.widget.apply()
+        self.dirty = True
+        return True
 
     def nodeToString(self, node):
         doc = QDomDocument()
@@ -571,7 +572,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                 if fh is not None:
                     fh.close()
 
-            
+        return True    
 
 
 
@@ -636,7 +637,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                 if fh is not None:
                     fh.close()
 
-
+        return True
 
 
     def addDataSourceItem(self, dsNode):
@@ -674,6 +675,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         self.view.expand(index)
+        return True
 
     def closeMergerDlg(self):
         if self.mergerdlg:

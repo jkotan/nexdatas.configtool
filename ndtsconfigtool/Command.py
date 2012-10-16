@@ -1140,7 +1140,10 @@ class DataSourceApply(Command):
                 self.receiver.sourceList.populateDataSources(self._ds.id)
             else:
                 self.receiver.sourceList.populateDataSources()
-
+        else:
+            QMessageBox.warning(self.receiver, "DataSource not created", 
+                                "Please edit one of the datasources")            
+            
         print "EXEC dsourceApply"
 
     def unexecute(self):
@@ -1825,7 +1828,13 @@ class ComponentLoadComponentItem(ComponentItemCommand):
             if self._cp is not None:
                 if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.view.model():
                     if hasattr(self._cp.widget,"loadComponentItem"):
-                        self._cp.widget.loadComponentItem(self.itemName)
+                        if not self._cp.widget.loadComponentItem(self.itemName):
+                            QMessageBox.warning(self.receiver, "SubComponent not loaded", 
+                                                "Please ensure that you have selected the proper items")            
+                else:
+                    QMessageBox.warning(self.receiver, "Component item not selected", 
+                                        "Please select one of the component items")            
+                        
         self.postExecute()
             
         print "EXEC componentLoadcomponentItem"
@@ -2103,8 +2112,8 @@ class ComponentNewItem(ComponentItemCommand):
                     self._child = self._cp.widget.addItem(self.itemName)
                     if self._child:
                         self._index = self._cp.widget.view.currentIndex()
-                        row=self._cp.widget.widget.getNodeRow(self._child)
-                        self._childIndex=self._cp.widget.view.model().index(row, 0, self._index)
+                        row = self._cp.widget.widget.getNodeRow(self._child)
+                        self._childIndex = self._cp.widget.view.model().index(row, 0, self._index)
                         self._cp.widget.view.setCurrentIndex(self._childIndex)
                         self._cp.widget.tagClicked(self._childIndex)
                     else:
@@ -2154,7 +2163,14 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
             if self._cp is not None:
                 if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.view.model():
                     if hasattr(self._cp.widget,"loadDataSourceItem"):
-                        self._cp.widget.loadDataSourceItem(self.itemName)
+                        if not self._cp.widget.loadDataSourceItem(self.itemName):
+                            QMessageBox.warning(self.receiver, "DataSource not loaded", 
+                                                "Please ensure that you have selected the proper items")            
+                else:
+                    QMessageBox.warning(self.receiver, "Component item not selected", 
+                                        "Please select one of the component items")            
+                    
+                        
         self.postExecute()
             
             
@@ -2180,6 +2196,8 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
                     self._oldstate = None
                     self._index = None
                     self._cp = None
+                    QMessageBox.warning(self.receiver, "Component Item not created", 
+                                        "Please edit one of the component Items")            
                     return
 
                 ds = self.receiver.sourceList.currentListDataSource()
@@ -2187,6 +2205,8 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
                     self._oldstate = None
                     self._index = None
                     self._cp = None
+                    QMessageBox.warning(self.receiver, "DataSource not selected", 
+                                        "Please select one of the datasources")            
                     return
 
                 if ds.widget is None:
@@ -2206,17 +2226,26 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
                 
                 if not hasattr(ds.widget,"createNodes"):
                     self._cp = None
+                    QMessageBox.warning(self.receiver, "Component Item not created", 
+                                        "Please edit one of the component Items")            
                     return
 
                 dsNode = ds.widget.createNodes()
                 if dsNode is None:
                     self._cp = None
+                    QMessageBox.warning(self.receiver, "Datasource node cannot be created", 
+                                        "Problem in importing the external node")            
                     return
         
                 if not hasattr(self._cp.widget,"addDataSourceItem"):
                     self._cp = None
+                    QMessageBox.warning(self.receiver, "Component Item not created", 
+                                        "Please edit one of the component Items")            
                     return
-                self._cp.widget.addDataSourceItem(dsNode)
+                if not self._cp.widget.addDataSourceItem(dsNode):
+                    QMessageBox.warning(self.receiver, "Adding the datasource item not possible", 
+                                        "Please ensure that you have selected the proper items")            
+
 
 
         self.postExecute()
@@ -2241,7 +2270,10 @@ class ComponentApplyItem(ComponentItemCommand):
             self.preExecute()
             if self._cp is not None:
                 if hasattr(self._cp, "widget") and hasattr(self._cp.widget,"applyItem"):
-                    self._cp.widget.applyItem()    
+                    if not self._cp.widget.applyItem():
+                        QMessageBox.warning(self.receiver, "Applying item not possible", 
+                                            "Please select another tree item") 
+
         self.postExecute()
 
             

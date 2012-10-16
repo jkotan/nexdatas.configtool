@@ -31,21 +31,28 @@ from RichAttributeDlg import RichAttributeDlg
 class ComponentItem(object):
     
     ## constructor
+    # \param node DOM node of item
     # \param parent patent instance
     def __init__(self, node, parent = None):
-        
-        
+        ## DOM node        
         self.node = node
+        ## list with child items
         self.childItems = []
+        ## the parent of the item
         self.parent = parent
         
 
-
+    ## provides a number of child Items 
+    # \returns number of children
     def childNumber(self):
         if self.parent:
             return self.parent.childItems.index(self)
         return 0
         
+
+    ## provides the child item for the given list index
+    # \param i child index
+    # \returns requested child Item
     def child(self, i):
         size = len(self.childItems)
         if i in range(size):
@@ -57,8 +64,11 @@ class ComponentItem(object):
                 self.childItems.append(childItem)
             return childItem
 
-
-    def removeChildren(self,position, count):
+    ## removes the given children from the child item list 
+    # \param position list index of the first child to remove 
+    # \param count number of children to remove 
+    # \returns if indices not out of range    
+    def removeChildren(self, position, count):
         if position < 0 or position + count  >   self.node.childNodes().count():
             return False
         
@@ -69,8 +79,11 @@ class ComponentItem(object):
         return True
             
 
+    ## inserts the given children into the child item list 
+    # \param position list index of the first child to remove 
+    # \param count number of children to remove 
+    # \returns if indices not out of range    
     def insertChildren(self, position, count):
-        
         
         if position < 0 or position  >   self.node.childNodes().count():
             return False
@@ -88,6 +101,8 @@ class ComponentItem(object):
 if __name__ == "__main__":
     import sys
 
+    ## DOM node
     qdn = QDomNode()
-    di = ComponentItem(qdn, None)
+    ## instance of component item
+    di = ComponentItem(_dn, None)
     di.child(0)

@@ -19,9 +19,17 @@
 ## \file LabeledObject.py
 # object with label and ID
 
+## item of the component or datasource list
 class LabeledObject(object):
-    def __init__(self, name , widget):
+    ## constructor
+    # \param name item name
+    # \param widget widget related to the item
+    def __init__(self, name, widget):
+        ## item name
         self.name = name
+        ## item widget
         self.widget = widget
+        ## item id
         self.id = id(self)
+        ## status if item was not saved
         self.dirty = True

@@ -59,7 +59,7 @@ class ComponentItem(object):
             return self.childItems[i]
         if i >=0 and i < self.node.childNodes().count():
             childNode = self.node.childNodes().item(i)
-            for j in range(size,i+1):                
+            for j in range(size, i+1):                
                 childItem = ComponentItem(childNode, self)
                 self.childItems.append(childItem)
             return childItem
@@ -69,7 +69,7 @@ class ComponentItem(object):
     # \param count number of children to remove 
     # \returns if indices not out of range    
     def removeChildren(self, position, count):
-        if position < 0 or position + count  >   self.node.childNodes().count():
+        if position < 0 or position + count > self.node.childNodes().count():
             return False
         
         for i in range(count):
@@ -85,10 +85,10 @@ class ComponentItem(object):
     # \returns if indices not out of range    
     def insertChildren(self, position, count):
         
-        if position < 0 or position  >   self.node.childNodes().count():
+        if position < 0 or position  > self.node.childNodes().count():
             return False
 
-        for i in range(position,position+count):
+        for i in range(position, position+count):
             if position <= len(self.childItems):
                 childNode = self.node.childNodes().item(i)
                 childItem = ComponentItem(childNode, self)
@@ -104,5 +104,5 @@ if __name__ == "__main__":
     ## DOM node
     qdn = QDomNode()
     ## instance of component item
-    di = ComponentItem(_dn, None)
+    di = ComponentItem(qdn, None)
     di.child(0)

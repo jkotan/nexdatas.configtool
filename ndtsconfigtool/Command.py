@@ -176,6 +176,8 @@ class ServerStoreComponent(Command):
         self._cpEdit = None
         
 
+    ## executes the command
+    # \brief It stores the current component in the configuration server
     def execute(self):       
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
@@ -221,6 +223,8 @@ class ServerStoreComponent(Command):
             
         print "EXEC serverStoreComponent"
 
+    ## unexecutes the command
+    # \brief It populates only the component list
     def unexecute(self):
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
@@ -249,6 +253,8 @@ class ServerDeleteComponent(Command):
         self._cpEdit = None
         
 
+    ## executes the command
+    # \brief It deletes the current component from the configuration server
     def execute(self):       
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
@@ -269,6 +275,8 @@ class ServerDeleteComponent(Command):
             
         print "EXEC serverDeleteComponent"
 
+    ## unexecutes the command
+    # \brief It populates only the component list
     def unexecute(self):
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
@@ -295,6 +303,8 @@ class ServerSetMandatoryComponent(Command):
         self._cp = None
         
 
+    ## executes the command
+    # \brief It sets on the configuration server the current component as mandatory
     def execute(self):       
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
@@ -305,9 +315,13 @@ class ServerSetMandatoryComponent(Command):
                 QMessageBox.warning(self.receiver, "Error in setting the component as mandatory", unicode(e))
         print "EXEC serverSetMandatoryComponent"
 
+    ## unexecutes the command
+    # \brief It does nothing    
     def unexecute(self):
         print "UNDO serverSetMandatoryComponent"
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ServerSetMandatoryComponent(self.receiver, self.slot) 
 
@@ -315,10 +329,16 @@ class ServerSetMandatoryComponent(Command):
 
 ## Command which fetches a list of the mandatory components from the configuration server
 class ServerGetMandatoryComponents(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         
 
+    ## executes the command
+    # \brief It fetches a list of the mandatory components from the configuration server
     def execute(self):       
         try:
             mandatory = self.receiver.configServer.getMandatory()
@@ -327,6 +347,8 @@ class ServerGetMandatoryComponents(Command):
             QMessageBox.warning(self.receiver, "Error in getting the mandatory components", unicode(e))
         print "EXEC serverGetMandatoryComponent"
 
+    ## unexecutes the command
+    # \brief It does nothing    
     def unexecute(self):
         print "UNDO serverGetMandatoryComponent"
 
@@ -349,6 +371,8 @@ class ServerUnsetMandatoryComponent(Command):
         self._cp = None
         
 
+    ## executes the command
+    # \brief It sets on the configuration server the current component as not mandatory
     def execute(self):       
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
@@ -359,6 +383,8 @@ class ServerUnsetMandatoryComponent(Command):
                 QMessageBox.warning(self.receiver, "Error in setting the component as mandatory", unicode(e))
         print "EXEC serverUnsetMandatoryComponent"
 
+    ## unexecutes the command
+    # \brief It does nothing    
     def unexecute(self):
         print "UNDO serverUnsetMandatoryComponent"
 
@@ -374,6 +400,8 @@ class ServerFetchDataSources(Command):
         Command.__init__(self,receiver, slot)
         
 
+    ## executes the command
+    # \brief It fetches the datasources from the configuration server
     def execute(self):       
 
         if QMessageBox.question(self.receiver, "DataSource - Reload List from Configuration Server",
@@ -402,6 +430,8 @@ class ServerFetchDataSources(Command):
 
         print "EXEC serverFetchDataSources"
 
+    ## unexecutes the command
+    # \brief It does nothing    
     def unexecute(self):
         print "UNDO serverFetchDataSources"
 
@@ -422,6 +452,8 @@ class ServerStoreDataSource(Command):
         self._ds = None
         
 
+    ## executes the command
+    # \brief It fetches the datasources from the configuration server
     def execute(self):       
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
@@ -442,6 +474,8 @@ class ServerStoreDataSource(Command):
             
         print "EXEC serverStoreDataSource"
 
+    ## unexecutes the command
+    # \brief It populates the datasource list
     def unexecute(self):
         ds = self.receiver.sourceList.currentListDataSource()
         if hasattr(ds ,"id"):
@@ -465,6 +499,8 @@ class ServerDeleteDataSource(Command):
         Command.__init__(self,receiver, slot)
         self._ds = None
 
+    ## executes the command
+    # \brief It deletes the current datasource in the configuration server
     def execute(self):       
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
@@ -486,6 +522,8 @@ class ServerDeleteDataSource(Command):
             self.receiver.sourceList.populateDataSources()
         print "EXEC serverDeleteDataSource"
 
+    ## unexecutes the command
+    # \brief It populates the datasource list
     def unexecute(self):
         ds = self.receiver.sourceList.currentListDataSource()
         if hasattr(ds ,"id"):
@@ -512,6 +550,8 @@ class ServerClose(Command):
         self._comp = None
         self._state = None
 
+    ## executes the command
+    # \brief It closes connection to the configuration server
     def execute(self):       
         if self.receiver.configServer:
             self.receiver.configServer.close()
@@ -527,6 +567,8 @@ class ServerClose(Command):
     
         print "EXEC serverClose"
 
+    ## unexecutes the command
+    # \brief It reopen the connection to the configuration server
     def unexecute(self):
         if self.receiver.configServer:
             try:
@@ -560,12 +602,16 @@ class ComponentNew(Command):
         self._comp = None
         
 
+    ## executes the command
+    # \brief It creates a new component
     def execute(self):       
         if self._comp is None:
             self._comp = LabeledObject("", None)
         self.receiver.componentList.addComponent(self._comp)
         print "EXEC componentNew"
 
+    ## unexecutes the command
+    # \brief It removes the new component
     def unexecute(self):
         if self._comp is not None:
             self.receiver.componentList.removeComponent(self._comp, False)
@@ -587,7 +633,7 @@ class ComponentNew(Command):
 
 
 
-## Command which loads existing component from the file
+## Command which loads an existing component from the file
 class ComponentOpen(Command):
 
     ## constructor
@@ -599,6 +645,8 @@ class ComponentOpen(Command):
         self._cp = None
         self._fpath = None
         
+    ## executes the command
+    # \brief It loads an existing component from the file
     def execute(self):
         if hasattr(self.receiver,'mdi'):
             self._cp = LabeledObject("", None)
@@ -645,6 +693,8 @@ class ComponentOpen(Command):
                 self._cpEdit.show()
                 print "EXEC componentOpen"
 
+    ## unexecutes the command
+    # \brief It removes the loaded component from the component list
     def unexecute(self):
         if hasattr(self._cp, "widget"):
             if self._fpath:
@@ -673,7 +723,7 @@ class ComponentOpen(Command):
 
 
 
-## Command which loads existing datasource from the file
+## Command which loads an existing datasource from the file
 class DataSourceOpen(Command):
 
     ## constructor
@@ -684,7 +734,10 @@ class DataSourceOpen(Command):
         self._dsEdit = None
         self._ds = None
         self._fpath = None
+
         
+    ## executes the command
+    # \brief It loads an existing datasource from the file
     def execute(self):
         if hasattr(self.receiver,'mdi'):
             self._ds = LabeledObject("", None)
@@ -725,6 +778,9 @@ class DataSourceOpen(Command):
                 self._dsEdit.show()
                 print "EXEC dsourceOpen"
 
+
+    ## unexecutes the command
+    # \brief It removes the loaded datasource from the datasource list
     def unexecute(self):
         if hasattr(self._ds, "widget"):
             if self._fpath:
@@ -740,8 +796,6 @@ class DataSourceOpen(Command):
                 self.receiver.sourceList.removeDataSource(self._ds, False)
                 self._ds.widget = None
                 self._ds = None
-
-
             
         print "UNDO dsourceOpen"
 
@@ -763,6 +817,9 @@ class ComponentRemove(Command):
         self._cp = None
         self._wList = False
         
+
+    ## executes the command
+    # \brief It removes the current component from the component list
     def execute(self):
         
         if self._cp is not None:
@@ -785,6 +842,8 @@ class ComponentRemove(Command):
         print "EXEC componentRemove"
 
 
+    ## unexecutes the command
+    # \brief It reloads the removed component from the component list
     def unexecute(self):
         if self._cp is not None:
 
@@ -810,6 +869,8 @@ class ComponentEdit(Command):
         self._cpEdit = None
         
         
+    ## executes the command
+    # \brief It opens dialog with the current component 
     def execute(self):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
@@ -848,6 +909,8 @@ class ComponentEdit(Command):
             
         print "EXEC componentEdit"
 
+    ## unexecutes the command
+    # \brief It does nothing
     def unexecute(self):
         print "UNDO componentEdit"
 
@@ -871,6 +934,8 @@ class ComponentSave(Command):
         self._cp = None
         self._cpEdit = None
         
+    ## executes the command
+    # \brief It saves with the current component in the file
     def execute(self):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
@@ -914,6 +979,8 @@ class ComponentSave(Command):
             
         print "EXEC componentSave"
 
+    ## unexecutes the command
+    # \brief It populates the component list
     def unexecute(self):
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
@@ -939,6 +1006,8 @@ class ComponentSaveAll(Command):
         Command.__init__(self, receiver, slot)
         
         
+    ## executes the command
+    # \brief It saves all components in the file
     def execute(self):
             
         for icp in self.receiver.componentList.components.keys():
@@ -949,6 +1018,9 @@ class ComponentSaveAll(Command):
 
         print "EXEC componentSaveAll"
 
+
+    ## unexecutes the command
+    # \brief It does nothing
     def unexecute(self):
         print "UNDO componentSaveAll"
 
@@ -968,11 +1040,17 @@ class ComponentSaveAs(Command):
     # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
-        self._cp = None
-        self.pathName = None
-        self.newName = None
+        ## new name of component
+        self.name = None
+        ## directory of the component file
         self.directory = None
+
+        self._cp = None
+        self._pathName = None
         
+
+    ## executes the command
+    # \brief It saves the current components in the file with a different name
     def execute(self):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
@@ -981,11 +1059,11 @@ class ComponentSaveAs(Command):
                                 "Please select one of the components")            
         else:
             if self._cp.widget is not None:
-                self.pathFile = self._cp.widget.getNewName() 
-                fi = QFileInfo(self.pathFile)
-                self.newName = unicode(fi.fileName())
-                if self.newName[-4:] == '.xml':
-                    self.newName = self.newName[:-4]
+                self._pathFile = self._cp.widget.getNewName() 
+                fi = QFileInfo(self._pathFile)
+                self.name = unicode(fi.fileName())
+                if self.name[-4:] == '.xml':
+                    self.name = self.name[:-4]
                 self.directory = unicode(fi.dir().path())
 
         if hasattr(self._cp,"id"):
@@ -994,6 +1072,8 @@ class ComponentSaveAs(Command):
             self.receiver.componentList.populateComponents()
         print "EXEC componentSaveAs"
 
+    ## unexecutes the command
+    # \brief It populates the Component list
     def unexecute(self):
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
@@ -1019,6 +1099,8 @@ class ComponentChangeDirectory(Command):
         Command.__init__(self, receiver, slot)
         
         
+    ## executes the command
+    # \brief It changes the current component file directory
     def execute(self):
         if QMessageBox.question(self.receiver, "Component - Change Directory",
                                 "All unsaved components will be lost. Would you like to proceed ?".encode(),
@@ -1050,6 +1132,8 @@ class ComponentChangeDirectory(Command):
 
         print "EXEC componentChangeDirectory"
 
+    ## unexecutes the command
+    # \brief It does nothing
     def unexecute(self):
         print "UNDO componentChangeDirectory"
 
@@ -1058,6 +1142,7 @@ class ComponentChangeDirectory(Command):
     # \returns clone of the current instance
     def clone(self):
         return ComponentChangeDirectory(self.receiver, self.slot) 
+
 
 
 ## Command which copies the current datasource into the clipboard
@@ -1073,6 +1158,8 @@ class DataSourceCopy(Command):
         self._newstate = None
         
         
+    ## executes the command
+    # \brief It copies the current datasource into the clipboard
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
@@ -1099,6 +1186,8 @@ class DataSourceCopy(Command):
             
         print "EXEC dsourceCopy"
 
+    ## unexecutes the command
+    # \brief It updates state of datasource to the old state
     def unexecute(self):
         if self._ds is not None and hasattr(self._ds,'widget') and  self._ds.widget is not None:
         
@@ -1138,6 +1227,8 @@ class DataSourceCut(Command):
         self._newstate = None
         
         
+    ## executes the command
+    # \brief It moves the current datasource into the clipboard
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
@@ -1171,6 +1262,8 @@ class DataSourceCut(Command):
             
         print "EXEC dsourceCut"
 
+    ## unexecutes the command
+    # \brief It copy back the removed datasource
     def unexecute(self):
         if self._ds is not None and hasattr(self._ds,'widget') and  self._ds.widget is not None:
         
@@ -1214,6 +1307,8 @@ class DataSourcePaste(Command):
         self._newstate = None
         
         
+    ## executes the command
+    # \brief It pastes the current datasource from the clipboard
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
@@ -1252,6 +1347,8 @@ class DataSourcePaste(Command):
                 self.receiver.sourceList.populateDataSources()
         print "EXEC dsourcePaste"
 
+    ## unexecutes the command
+    # \brief It remove the pasted datasource
     def unexecute(self):
         if self._ds is not None and hasattr(self._ds,'widget') and  self._ds.widget is not None:
         
@@ -1294,6 +1391,8 @@ class DataSourceApply(Command):
         self._newstate = None
         
         
+    ## executes the command
+    # \brief It applies the changes from the form for the current datasource  
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
@@ -1328,6 +1427,9 @@ class DataSourceApply(Command):
             
         print "EXEC dsourceApply"
 
+
+    ## unexecutes the command
+    # \brief It recovers the old state of the current datasource
     def unexecute(self):
         if self._ds is not None and hasattr(self._ds,'widget') and  self._ds.widget is not None:
         
@@ -1370,6 +1472,8 @@ class DataSourceSaveAll(Command):
         Command.__init__(self, receiver, slot)
         
         
+    ## executes the command
+    # \brief It saves all the datasources in files
     def execute(self):
             
         for icp in self.receiver.sourceList.datasources.keys():
@@ -1379,6 +1483,8 @@ class DataSourceSaveAll(Command):
 
         print "EXEC dsourceSaveAll"
 
+    ## executes the command
+    # \brief It does nothing
     def unexecute(self):
         print "UNDO dsourceSaveAll"
 
@@ -1396,6 +1502,8 @@ class DataSourceSave(Command):
         self._ds = None
         
         
+    ## executes the command
+    # \brief It saves the current datasource in files
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
@@ -1414,6 +1522,8 @@ class DataSourceSave(Command):
             
         print "EXEC dsourceSave"
 
+    ## unexecutes the command
+    # \brief It populates the datasource list
     def unexecute(self):
         ds = self.receiver.sourceList.currentListDataSource()
         if hasattr(ds ,"id"):
@@ -1441,11 +1551,17 @@ class DataSourceSaveAs(Command):
     # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
-        self._ds = None
-        self.pathName = None
-        self.newName = None
+        ## new datasource name
+        self.name = None
+        ## new file directory
         self.directory = None
+
+        self._ds = None
+        self._pathName = None
         
+
+    ## executes the command
+    # \brief It saves the current datasource in files with a different name
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
@@ -1454,13 +1570,13 @@ class DataSourceSaveAs(Command):
                                 "Please select one of the datasources")            
         else:
             if self._ds.widget is not None:
-                self.pathFile = self._ds.widget.getNewName() 
-                fi = QFileInfo(self.pathFile)
-                self.newName = unicode(fi.fileName())
-                if self.newName[-4:] == '.xml':
-                    self.newName = self.newName[:-4]
-                    if self.newName[-3:] == '.ds':
-                        self.newName = self.newName[:-3]
+                self._pathFile = self._ds.widget.getNewName() 
+                fi = QFileInfo(self._pathFile)
+                self.name = unicode(fi.fileName())
+                if self.name[-4:] == '.xml':
+                    self.name = self.name[:-4]
+                    if self.name[-3:] == '.ds':
+                        self.name = self.name[:-3]
 
                 self.directory = unicode(fi.dir().path())
 
@@ -1468,6 +1584,8 @@ class DataSourceSaveAs(Command):
             
         print "EXEC dsourceSaveAs"
 
+    ## unexecutes the command
+    # \brief It does nothing
     def unexecute(self):
         print "UNDO dsourceSaveAs"
 
@@ -1490,6 +1608,8 @@ class DataSourceChangeDirectory(Command):
         Command.__init__(self, receiver, slot)
         
         
+    ## executes the command
+    # \brief It changes the current file directory with datasources
     def execute(self):
         if QMessageBox.question(self.receiver, "DataSource - Change Directory",
                                 "All unsaved datasources will be lost. Would you like to proceed ?".encode(),
@@ -1521,6 +1641,8 @@ class DataSourceChangeDirectory(Command):
 
         print "EXEC dsourceChangeDirectory"
 
+    ## unexecutes the command
+    # \brief It does nothing
     def unexecute(self):
         print "UNDO dsourceChangeDirectory"
 
@@ -1543,6 +1665,8 @@ class ComponentReloadList(Command):
         Command.__init__(self, receiver, slot)
         
         
+    ## executes the command
+    # \brief It reloads the components from the current component directory into the component list
     def execute(self):
         if QMessageBox.question(self.receiver, "Component - Reload List",
                                 "All unsaved components will be lost. Would you like to proceed ?".encode(),
@@ -1562,6 +1686,9 @@ class ComponentReloadList(Command):
 
         print "EXEC componentReloadList"
 
+
+    ## unexecutes the command
+    # \brief It does nothing
     def unexecute(self):
         print "UNDO componentReloadList"
 
@@ -1585,6 +1712,8 @@ class DataSourceReloadList(Command):
         Command.__init__(self, receiver, slot)
         
         
+    ## executes the command
+    # \brief It reloads the datasources from the current datasource directory into the datasource list
     def execute(self):
         if QMessageBox.question(self.receiver, "DataSource - Reload List",
                                 "All unsaved datasources will be lost. Would you like to proceed ?".encode(),
@@ -1604,6 +1733,8 @@ class DataSourceReloadList(Command):
 
         print "EXEC componentReloadList"
 
+    ## unexecutes the command
+    # \brief It does nothing
     def unexecute(self):
         print "UNDO componentReloadList"
 
@@ -1620,7 +1751,7 @@ class DataSourceReloadList(Command):
 
 
 
-## Command which changes the current datasource file directory
+## Command which changes the current component in the list
 class ComponentListChanged(Command):
 
     ## constructor
@@ -1628,33 +1759,40 @@ class ComponentListChanged(Command):
     # \param slot slot name of the receiver related to the command
     def __init__(self, receiver,slot):
         Command.__init__(self, receiver, slot)
-        self._cp = None
+        ## new item
         self.item = None
-        self.name = None
-        self.newName = None
-        self.oldDirectory = None
+        ## new directory
         self.directory = None
-        self.oldDirty = None
+        ## new component name
+        self.name = None
+
+        self._cp = None
+        self._oldName = None
+        self._oldDirectory = None
+        self._oldDirty = None
         
+
+    ## executes the command
+    # \brief It changes the current component in the list
     def execute(self):
-        if self.item is not None or self.newName is not None:
-            if self.newName is None:
-                self.newName = unicode(self.item.text())
+        if self.item is not None or self.name is not None:
+            if self.name is None:
+                self.name = unicode(self.item.text())
             if self._cp is None:
-                self._cp, self.name = self.receiver.componentList.listItemChanged(self.item, self.newName)
+                self._cp, self._oldName = self.receiver.componentList.listItemChanged(self.item, self.name)
             else:
-                self._cp.name = self.newName
+                self._cp.name = self.name
                 
             self.receiver.componentList.populateComponents(self._cp.id)
             if self._cp.widget is not None:
-                self.oldDirectory = self._cp.widget.directory 
-                self._cp.widget.setName(self.newName, self.directory)
-                self.oldDirty = self._cp.widget.dirty
+                self._oldDirectory = self._cp.widget.directory 
+                self._cp.widget.setName(self.name, self.directory)
+                self._oldDirty = self._cp.widget.dirty
                 self._cp.widget.dirty = True
                 
             else:
-                self.oldDirectory =  self.receiver.componentList.directory 
-                self.oldDirty = self._cp.dirty
+                self._oldDirectory =  self.receiver.componentList.directory 
+                self._oldDirty = self._cp.dirty
 
 
         cp = self.receiver.componentList.currentListComponent()
@@ -1665,13 +1803,16 @@ class ComponentListChanged(Command):
               
         print "EXEC componentChanged"
 
+
+    ## unexecutes the command
+    # \brief It changes back the current component in the list
     def unexecute(self):
         if self._cp is not None:
-            self._cp.name = self.name 
+            self._cp.name = self._oldName 
             self.receiver.componentList.addComponent(self._cp, False)
             if self._cp.widget is not None:
-                self._cp.widget.setName(self.name, self.oldDirectory)
-                self._cp.widget.dirty = self.oldDirty 
+                self._cp.widget.setName(self._oldName, self._oldDirectory)
+                self._cp.widget.dirty = self._oldDirty 
 
         cp = self.receiver.componentList.currentListComponent()
         if hasattr(cp,"id"):
@@ -1699,14 +1840,17 @@ class DataSourceNew(Command):
         Command.__init__(self, receiver, slot)
         self._ds = None
         
+    ## executes the command
+    # \brief It creates a new datasource
     def execute(self):
-        
         if self._ds is None:
             self._ds = LabeledObject("", None)
             
         self.receiver.sourceList.addDataSource(self._ds)
         print "EXEC dsourceNew"
 
+    ## unexecutes the command
+    # \brief It removes the added datasource
     def unexecute(self):
         if self._ds is not None:
             self.receiver.sourceList.removeDataSource(self._ds, False)
@@ -1738,11 +1882,13 @@ class DataSourceEdit(Command):
     # \param receiver command receiver
     # \param slot slot name of the receiver related to the command
     def __init__(self, receiver,slot):
-        Command.__init__(self, receiver,slot)
+        Command.__init__(self, receiver, slot)
         self._ds = None
         self._dsEdit = None
         
         
+    ## executes the command
+    # \brief It opens the dialog with the current datasource
     def execute(self):
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
@@ -1778,6 +1924,8 @@ class DataSourceEdit(Command):
             
         print "EXEC dsourceEdit"
 
+    ## unexecutes the command
+    # \brief It does nothing
     def unexecute(self):
         print "UNDO dsourceEdit"
 
@@ -1804,6 +1952,8 @@ class DataSourceRemove(Command):
         self._ds = None
         self._wList = False
         
+    ## executes the command
+    # \brief It removes the current datasource from the datasource list
     def execute(self):
         
         if self._ds is not None:
@@ -1826,6 +1976,8 @@ class DataSourceRemove(Command):
 
         print "EXEC dsourceRemove"
 
+    ## unexecutes the command
+    # \brief It adds the removes datasource into the datasource list
     def unexecute(self):
         if self._ds is not None:
 
@@ -1848,35 +2000,40 @@ class DataSourceListChanged(Command):
     # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
-        self._ds = None
+        ## new item
         self.item = None
+        ## new datasource name
         self.name = None
-        self.newName = None
-        self.oldDirectory = None
+        ## new datasource directory
         self.directory = None
-        self.directory = None
-        self.oldDirty = None
+
+        self._ds = None
+        self._oldName = None
+        self._oldDirectory = None
+        self._oldDirty = None
         
 
         
+    ## executes the command
+    # \brief It performs change of  the current datasource 
     def execute(self):
-        if self.item is not None or self.newName is not None:
-            if self.newName is None:
-                self.newName = unicode(self.item.text())
+        if self.item is not None or self.name is not None:
+            if self.name is None:
+                self.name = unicode(self.item.text())
             if self._ds is None:
-                self._ds, self.name = self.receiver.sourceList.listItemChanged(self.item, self.newName)
+                self._ds, self._oldName = self.receiver.sourceList.listItemChanged(self.item, self.name)
             else:
-                self._ds.name = self.newName
+                self._ds.name = self.name
              
             self.receiver.sourceList.populateDataSources(self._ds.id)
             if self._ds.widget is not None:
-                self.oldDirectory = self._ds.widget.directory 
-                self._ds.widget.setName(self.newName, self.directory)
-                self.oldDirty = self._ds.widget.dirty
+                self._oldDirectory = self._ds.widget.directory 
+                self._ds.widget.setName(self.name, self.directory)
+                self._oldDirty = self._ds.widget.dirty
                 self._ds.widget.dirty = True
             else:
-                self.oldDirectory =  self.receiver.sourceList.directory 
-                self.oldDirty = self._ds.dirty
+                self._oldDirectory =  self.receiver.sourceList.directory 
+                self._oldDirty = self._ds.dirty
 
         ds = self.receiver.sourceList.currentListDataSource()
         if hasattr(ds,"id"):
@@ -1886,13 +2043,15 @@ class DataSourceListChanged(Command):
 
         print "EXEC dsourceChanged"
 
+    ## unexecutes the command
+    # \brief It changes back the current datasource 
     def unexecute(self):
         if self._ds is not None:
-            self._ds.name = self.name 
+            self._ds.name = self._oldName 
             self.receiver.sourceList.addDataSource(self._ds, False)
             if self._ds.widget is not None:
-                self._ds.widget.setName(self.name, self.oldDirectory)
-                self._ds.widget.dirty = self.oldDirty 
+                self._ds.widget.setName(self._oldName, self._oldDirectory)
+                self._ds.widget.dirty = self._oldDirty 
 
 
         ds = self.receiver.sourceList.currentListDataSource()
@@ -1923,11 +2082,15 @@ class CloseApplication(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
 
+    ## executes the command
+    # \brief It is performed during closing the Component Designer
     def execute(self):
         if hasattr(self.receiver,'mdi'):
             self.receiver.close()
             print "EXEC closeApp"
 
+    ## executes the command
+    # \brief It does nothing
     def unexecute(self):
         print "UNDO closeApp"
 
@@ -1948,9 +2111,14 @@ class UndoCommand(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
 
+
+    ## executes the command
+    # \brief It does nothing
     def execute(self):
         print "EXEC undo"
 
+    ## unexecutes the command
+    # \brief It does nothing
     def unexecute(self):
         pass
 
@@ -1969,9 +2137,13 @@ class RedoCommand(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
 
+    ## executes the command
+    # \brief It does nothing
     def execute(self):
         print "EXEC redo"
 
+    ## unexecutes the command
+    # \brief It does nothing
     def unexecute(self):
         pass
 
@@ -1999,6 +2171,8 @@ class ComponentItemCommand(Command):
         self._index = None
         self._newstate = None
 
+    ## helps to construct the execute component item command as a pre-executor
+    # \brief It stores the old states of the current component
     def preExecute(self):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
@@ -2016,6 +2190,8 @@ class ComponentItemCommand(Command):
                                 "Please select one of the components")            
 
     
+    ## helps to construct the execute component item command as a post-executor
+    # \brief It stores the new states of the current component
     def postExecute(self):    
         if self._cp is not None:
             if self._newstate is None:
@@ -2034,6 +2210,8 @@ class ComponentItemCommand(Command):
             self.receiver.componentList.populateComponents()
 
         
+    ## executes the command
+    # \brief It execute pre- and post- executors
     def execute(self):
         if self._cp is None:
             self.preExecute()
@@ -2044,6 +2222,8 @@ class ComponentItemCommand(Command):
             
         print "EXEC componentItemCommand"
 
+    ## helps to construct the unexecute component item command 
+    # \brief It changes back the states of the current component to the old state
     def unexecute(self):
         if self._cp is not None and self._oldstate is not None:
             self.receiver.componentList.components[self._cp.id].widget.setState(self._oldstate)
@@ -2079,6 +2259,8 @@ class ComponentClear(ComponentItemCommand):
 
 
 
+    ## executes the command
+    # \brief It clears the whole current component
     def execute(self):
         if self._cp is None:
             self.preExecute()
@@ -2127,15 +2309,18 @@ class ComponentLoadComponentItem(ComponentItemCommand):
     # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
-        self.itemName = ""        
+        ## 
+        self._itemName = ""        
         
+    ## executes the command
+    # \brief It loads sub-components into the current component tree from the file
     def execute(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
                 if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.view.model():
                     if hasattr(self._cp.widget,"loadComponentItem"):
-                        if not self._cp.widget.loadComponentItem(self.itemName):
+                        if not self._cp.widget.loadComponentItem(self._itemName):
                             QMessageBox.warning(self.receiver, "SubComponent not loaded", 
                                                 "Please ensure that you have selected the proper items")            
                 else:
@@ -2164,6 +2349,8 @@ class ComponentRemoveItem(ComponentItemCommand):
         ComponentItemCommand.__init__(self, receiver,slot)
 
         
+    ## executes the command
+    # \brief It moves the current component item into the clipboard
     def execute(self):
         if self._cp is None:
             self.preExecute()
@@ -2198,6 +2385,8 @@ class ComponentCopyItem(ComponentItemCommand):
         ComponentItemCommand.__init__(self, receiver,slot)
 
         
+    ## executes the command
+    # \brief It copies the current component item into the clipboard
     def execute(self):
         if self._cp is None:
             self.preExecute()
@@ -2212,6 +2401,8 @@ class ComponentCopyItem(ComponentItemCommand):
         print "EXEC componentCopyItem"
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentCopyItem(self.receiver, self.slot) 
 
@@ -2227,6 +2418,8 @@ class ComponentPasteItem(ComponentItemCommand):
         ComponentItemCommand.__init__(self, receiver,slot)
 
         
+    ## executes the command
+    # \brief It pastes the component item from the clipboard into the current component tree
     def execute(self):
         if self._cp is None:
             self.preExecute()
@@ -2261,21 +2454,27 @@ class CutItem(ComponentItemCommand):
     # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver,slot)
+        ## type of the cutting item with values: component of datasource
         self.type = None
-        self.ds = DataSourceCut(receiver, slot)
-        self.cp = ComponentRemoveItem(receiver, slot)
 
+        self._ds = DataSourceCut(receiver, slot)
+        self._cp = ComponentRemoveItem(receiver, slot)
+
+    ## executes the command
+    # \brief It moves the current, i.e. datasource or component item, into the clipboard
     def execute(self):
         if self.type == 'component':
-            self.cp.execute()
+            self._cp.execute()
         elif self.type == 'datasource':
-            self.ds.execute()
+            self._ds.execute()
 
+    ## unexecutes the command
+    # \brief It adds back the current, i.e. datasource or component item
     def unexecute(self):
         if self.type == 'component':
-            self.cp.unexecute()
+            self._cp.unexecute()
         elif self.type == 'datasource':
-            self.ds.unexecute()
+            self._ds.unexecute()
         
 
 
@@ -2297,21 +2496,29 @@ class CopyItem(ComponentItemCommand):
     # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver,slot)
+        ## type of the coping item with values: component of datasource
         self.type = None
-        self.ds = DataSourceCopy(receiver, slot)
-        self.cp = ComponentCopyItem(receiver, slot)
 
+        self._ds = DataSourceCopy(receiver, slot)
+        self._cp = ComponentCopyItem(receiver, slot)
+
+
+    ## executes the command
+    # \brief It copies the current item, i.e. datasource or component item, into the clipboard
     def execute(self):
         if self.type == 'component':
-            self.cp.execute()
+            self._cp.execute()
         elif self.type == 'datasource':
-            self.ds.execute()
+            self._ds.execute()
 
+
+    ## unexecutes the command
+    # \brief It unexecutes copy commands for datasources or components
     def unexecute(self):
         if self.type == 'component':
-            self.cp.unexecute()
+            self._cp.unexecute()
         elif self.type == 'datasource':
-            self.ds.unexecute()
+            self._ds.unexecute()
         
 
 
@@ -2326,21 +2533,27 @@ class CopyItem(ComponentItemCommand):
 class PasteItem(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver,slot)
+        ## type of the pasting item with values: component of datasource
         self.type = None
-        self.ds = DataSourcePaste(receiver, slot)
-        self.cp = ComponentPasteItem(receiver, slot)
 
+        self._ds = DataSourcePaste(receiver, slot)
+        self._cp = ComponentPasteItem(receiver, slot)
+
+    ## executes the command
+    # \brief It pastes the current item from the clipboard into the current dialog, i.e. the current datasource or the current component item tree
     def execute(self):
         if self.type == 'component':
-            self.cp.execute()
+            self._cp.execute()
         elif self.type == 'datasource':
-            self.ds.execute()
+            self._ds.execute()
 
+    ## unexecutes the command
+    # \brief It unexecutes paste commands for datasources or components
     def unexecute(self):
         if self.type == 'component':
-            self.cp.unexecute()
+            self._cp.unexecute()
         elif self.type == 'datasource':
-            self.ds.unexecute()
+            self._ds.unexecute()
         
 
 
@@ -2352,7 +2565,7 @@ class PasteItem(Command):
 
 
 
-## Command which stores the current component in the comfiguration server
+## Command which stores the current component in the comfiguration server or in the file
 class ComponentCollect(Command):
 
     ## constructor
@@ -2360,36 +2573,42 @@ class ComponentCollect(Command):
     # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver,slot)
-        self.type = None
-        self.file = ComponentSave(receiver, slot)
-        self.server = ServerStoreComponent(receiver, slot)
+        self._type = None
+        self._file = ComponentSave(receiver, slot)
+        self._server = ServerStoreComponent(receiver, slot)
 
+    ## executes the command
+    # \brief It  stores the current component in the comfiguration server or in the file
     def execute(self):
-        if self.type is None:
+        if self._type is None:
             if self.receiver.configServer.connected:
-                self.type = 'Server'
+                self._type = 'Server'
             else:
-                self.type = 'File'
-        if self.type == 'File':
-            self.file.execute()
-        elif self.type == 'Server':
-            self.server.execute()
+                self._type = 'File'
+        if self._type == 'File':
+            self._file.execute()
+        elif self._type == 'Server':
+            self._server.execute()
 
+    ## unexecutes the command
+    # \brief It unexecutes ComponentCollect commands on the configuration server or on the file system
     def unexecute(self):
-        if self.type == 'File':
-            self.file.unexecute()
-        elif self.type == 'Server':
-            self.server.unexecute()
+        if self._type == 'File':
+            self._file.unexecute()
+        elif self._type == 'Server':
+            self._server.unexecute()
         
 
 
+    ## clones the command
+    # \returns clone of the current instance
     def clone(self):
         return ComponentCollect(self.receiver, self.slot) 
 
 
 
 
-## Command which stores the current datasource in the comfiguration server
+## Command which stores the current datasource in the comfiguration server or in the file
 class DataSourceCollect(Command):
 
     ## constructor
@@ -2397,26 +2616,30 @@ class DataSourceCollect(Command):
     # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver,slot)
-        self.type = None
-        self.file = DataSourceSave(receiver, slot)
-        self.server = ServerStoreDataSource(receiver, slot)
+        self._type = None
+        self._file = DataSourceSave(receiver, slot)
+        self._server = ServerStoreDataSource(receiver, slot)
 
+    ## executes the command
+    # \brief It stores the current datasource in the comfiguration server or in the file
     def execute(self):
-        if self.type is None:
+        if self._type is None:
             if self.receiver.configServer.connected:
-                self.type = 'Server'
+                self._type = 'Server'
             else:
-                self.type = 'File'
-        if self.type == 'File':
-            self.file.execute()
-        elif self.type == 'Server':
-            self.server.execute()
+                self._type = 'File'
+        if self._type == 'File':
+            self._file.execute()
+        elif self._type == 'Server':
+            self._server.execute()
 
+    ## unexecutes the command
+    # \brief It unexecutes DataSourceCollect commands on the configuration server or on the file system
     def unexecute(self):
-        if self.type == 'File':
-            self.file.unexecute()
-        elif self.type == 'Server':
-            self.server.unexecute()
+        if self._type == 'File':
+            self._file.unexecute()
+        elif self._type == 'Server':
+            self._server.unexecute()
         
 
 
@@ -2435,6 +2658,8 @@ class ComponentMerge(ComponentItemCommand):
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
         
+    ## executes the command
+    # \brief It merges the current component
     def execute(self):
         if self._cp is None:
             self.preExecute()
@@ -2461,12 +2686,15 @@ class ComponentMerge(ComponentItemCommand):
 class ComponentNewItem(ComponentItemCommand):
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
+        ## name of the new component item
         self.itemName = ""
         self._index = None
         self._childIndex = None
         self._child = None
                     
 
+    ## executes the command
+    # \brief It creates a new item in the current component tree
     def execute(self):
         if self._cp is None:
             self.preExecute()
@@ -2527,9 +2755,12 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
         self._cp = None
+        ## name of the new datasource item
         self.itemName = ""
         
 
+    ## executes the command
+    # \brief It loads a datasource from a file into the current component tree
     def execute(self):
         if self._cp is None:
             self.preExecute()
@@ -2568,6 +2799,8 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
         ComponentItemCommand.__init__(self, receiver, slot)
         
         
+    ## executes the command
+    # \brief It adds the current datasource into the current component tree
     def execute(self):
         if self._cp is None:
             self.preExecute()
@@ -2652,6 +2885,8 @@ class ComponentApplyItem(ComponentItemCommand):
         self._index = None
         
         
+    ## executes the command
+    # \brief It applies the changes from the form for the current component item
     def execute(self):
         if self._cp is None:
             self.preExecute()
@@ -2683,4 +2918,3 @@ class ComponentApplyItem(ComponentItemCommand):
 if __name__ == "__main__":
     import sys
 
-    pool = []

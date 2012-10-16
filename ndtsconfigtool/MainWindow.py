@@ -879,7 +879,7 @@ class MainWindow(QMainWindow):
 
         cmd = self.pool.getCommand('dsourceChanged').clone()
         cmd.directory = cmdSA.directory
-        cmd.newName = cmdSA.newName
+        cmd.name = cmdSA.name
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
@@ -911,7 +911,7 @@ class MainWindow(QMainWindow):
 
         cmd = self.pool.getCommand('componentChanged').clone()
         cmd.directory = cmdSA.directory
-        cmd.newName = cmdSA.newName
+        cmd.name = cmdSA.name
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )

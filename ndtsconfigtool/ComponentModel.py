@@ -27,17 +27,24 @@ from PyQt4.QtXml import (QDomDocument, QDomNode, QXmlDefaultHandler,
 import os
 from ComponentItem import *
 
+## model for component tree
 class ComponentModel(QAbstractItemModel):
+    ## constuctor
+    # \param document DOM document
+    # \param parent widget
     def __init__(self, document, parent=None):
         super(ComponentModel, self).__init__(parent)
         
-        self.domDocument = document
-        self.rootItem = ComponentItem(self.domDocument
+        self._domDocument = document
+        ## root item of the tree
+        self.rootItem = ComponentItem(self._domDocument
 #                                      , 0 
                                       )
 
-
-
+    ## provides read access to the model data
+    # \param index of the model item         
+    # \param role access type of the data
+    # \returns data defined for the given index and formated according to the role    
     def data(self, index, role = Qt.DisplayRole):
         if not index.isValid() :
             return QVariant()
@@ -73,13 +80,22 @@ class ComponentModel(QAbstractItemModel):
             return QVariant()
         
         
+    ## provides flag of the model item    
+    # \param index of the model item         
+    # \returns flag defined for the given index and formated according to the role    
     def flags(self, index):
         if not index.isValid():
             return Qt.ItemIsEnabled
         return Qt.ItemFlags(QAbstractItemModel.flags(self,index) |
                             Qt.ItemIsEnabled | Qt.ItemIsSelectable )
         
+
     
+    ## provides access to the header data
+    # \param section integer index of the table column 
+    # \param orientation orientation of the header
+    # \param role access type of the header data
+    # \returns header data defined for the given index and formated according to the role    
     def headerData(self, section, orientation, role=Qt.DisplayRole):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole :
             if section == 0 :
@@ -92,6 +108,12 @@ class ComponentModel(QAbstractItemModel):
                 return QVariant()
         
     
+
+    ## provides access to the item index
+    # \param row integer index counting DOM child item
+    # \param column integer index counting table column
+    # \param parent index of the parent item       
+    # \returns index for the required model item 
     def index(self, row, column, parent = QModelIndex()):
         if not self.hasIndex(row, column, parent):
             return QModelIndex()
@@ -103,12 +125,15 @@ class ComponentModel(QAbstractItemModel):
             
         childItem = parentItem.child(row)
         if childItem:
-            return self.createIndex(row,column, childItem)
+            return self.createIndex(row, column, childItem)
         else:
             return QModelIndex()
         
 
 
+    ## provides access to the parent index
+    # \param child  child index
+    # \returns parent index for the given child
     def parent(self, child):
         if not child.isValid():
             return QModelIndex()
@@ -128,6 +153,9 @@ class ComponentModel(QAbstractItemModel):
 
         
 
+    ## provides number of the model rows
+    # \param parent parent index
+    # \returns number of the children for the given parent
     def rowCount(self, parent = QModelIndex()):
         if parent.column() > 0 :
             return 0
@@ -141,9 +169,17 @@ class ComponentModel(QAbstractItemModel):
         return parentItem.node.childNodes().count()
 
 
+    ## provides number of the model columns
+    # \param parent parent index
+    # \returns 3 which corresponds to component tag tree, tag attributes, tag values
     def columnCount(self, parent = QModelIndex()):
         return 3
     
+    ## inserts the given rows into the model
+    # \param position row integer index where rows should be inserted
+    # \param rows numbers of rows to be inserted
+    # \param parent index of the parent item       
+    # \returns True if parent exists
     def insertRows(self, position, rows = 1, parent = QModelIndex()):
         item = parent.internalPointer()
         if not item:
@@ -154,6 +190,11 @@ class ComponentModel(QAbstractItemModel):
         return status
 
 
+    ## removes the given rows from the model
+    # \param position row integer index of the first removed row
+    # \param rows numbers of rows to be removed
+    # \param parent index of the parent item       
+    # \returns True if parent exists
     def removeRows(self, position, rows = 1, parent = QModelIndex()):
         item = parent.internalPointer()
         if not item:

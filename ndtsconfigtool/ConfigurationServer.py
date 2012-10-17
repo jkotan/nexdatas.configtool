@@ -21,6 +21,7 @@
 
 try:
     import PyTango
+    ## if module PyTango avalable
     PYTANGO_AVAILABLE = True
 except ImportError, e:
     PYTANGO_AVAILABLE = False
@@ -182,8 +183,8 @@ class ConfigurationServer(object):
             self._proxy.Close()
             self.connected = False
             
-
-if __name__ == "__main__":
+## test function
+def test():
     import sys
     from PyQt4.QtGui import QApplication
 
@@ -194,4 +195,6 @@ if __name__ == "__main__":
     cs.port = 10000
     cs.open() 
     cs.close()
-    
+
+if __name__ == "__main__":
+    test()

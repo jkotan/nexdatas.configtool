@@ -32,9 +32,12 @@ from ComponentDlg import *
 class ComponentList(QWidget, Ui_ComponentList):
     
     ## constructor
+    # \param directory component directory
     # \param parent patent instance
     def __init__(self, directory, parent=None):
         super(ComponentList, self).__init__(parent)
+
+        ## directory from which components are loaded by default
         self.directory = directory
         
         ## group components
@@ -70,7 +73,7 @@ class ComponentList(QWidget, Ui_ComponentList):
         return self.components[item.data(Qt.UserRole).toLongLong()[0]] 
 
 
-    ## removes an component    
+    ## removes the current component    
     #  \brief It removes the current component asking before about it
     def removeComponent(self,obj = None, question = True):
         if obj is not None:
@@ -103,9 +106,10 @@ class ComponentList(QWidget, Ui_ComponentList):
             self.components.pop(unicode(attr))
             self.populateComponents()
 
+
     ## changes the current value of the component        
     # \brief It changes the current value of the component and informs the user that component names arenot editable
-    def listItemChanged(self, item,  name = None):
+    def listItemChanged(self, item, name = None):
         icp = self.currentListComponent().id
 
         if icp in self.components.keys():
@@ -121,6 +125,7 @@ class ComponentList(QWidget, Ui_ComponentList):
 
     ## fills in the component table      
     # \param selectedComponent selected component    
+    # \param edit flag if edit the selected item
     def populateComponents(self, selectedComponent = None, edit = False):
 #        print "populate"
         selected = None
@@ -164,7 +169,10 @@ class ComponentList(QWidget, Ui_ComponentList):
 
 
             
-
+    ## loads the component list
+    # \param actions actions of the context menu
+    # \param externalSave save action
+    # \param externalApply apply action
     def loadList(self, actions, externalSave = None, externalApply = None ):
         try:
             dirList=os.listdir(self.directory)
@@ -199,6 +207,11 @@ class ComponentList(QWidget, Ui_ComponentList):
             
 
 
+    ## sets the component from the given dictionary
+    # \param components dictionary with the components, i.e. name:xml
+    # \param actions actions of the context menu
+    # \param externalSave save action
+    # \param externalApply apply action
     def setList(self, components, actions, externalSave = None, externalApply = None ):
         try:
             dirList=os.listdir(self.directory)

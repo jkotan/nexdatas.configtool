@@ -33,14 +33,15 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
     def __init__(self, parent=None):
         super(ConnectDlg, self).__init__(parent)
         
-        ## device name
+        ## device name of the configuration server
         self.device = u''
-        ## host name
+        ## host name of the configuration server
         self.host = u''
-        ## port
+        ## port of the configuration server
         self.port = None
 
-
+    ## creates GUI    
+    # \brief It updates GUI and creates connection for required actions
     def createGUI(self):
         self.setupUi(self)
         self.updateForm()
@@ -51,6 +52,8 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
         self.connect(self.cancelPushButton, SIGNAL("clicked()"), self.reject)
 
 
+    ## updates the connect dialog
+    # \brief It sets initial values of the connection form
     def updateForm(self):
         if self.device is not None:
             self.deviceLineEdit.setText(self.device)

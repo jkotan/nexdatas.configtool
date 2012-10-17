@@ -475,23 +475,23 @@ class MainWindow(QMainWindow):
 
 
 
-        self.windows["NextAction"] = self.createAction(
+        self.windows["NextAction"] = self._createAction(
             "&Next", self.mdi.activateNextWindow, 
             QKeySequence.NextChild, tip = "Go to the next window")
-        self.windows["PrevAction"] = self.createAction(
+        self.windows["PrevAction"] = self._createAction(
             "&Previous", self.mdi.activatePreviousWindow,
             QKeySequence.PreviousChild, tip = "Go to the previous window")
-        self.windows["CascadeAction"] = self.createAction(
+        self.windows["CascadeAction"] = self._createAction(
             "Casca&de", self.mdi.cascade, tip = "Cascade the windows")
-        self.windows["TileAction"] = self.createAction(
+        self.windows["TileAction"] = self._createAction(
             "&Tile", self.mdi.tile, tip = "Tile the windows")
-        self.windows["RestoreAction"] = self.createAction(
+        self.windows["RestoreAction"] = self._createAction(
             "&Restore All", self.windowRestoreAll, tip = "Restore the windows")
-        self.windows["MinimizeAction"] = self.createAction(
+        self.windows["MinimizeAction"] = self._createAction(
             "&Iconize All", self.windowMinimizeAll, tip = "Minimize the windows")
-        self.windows["ArrangeIconsAction"] = self.createAction(
+        self.windows["ArrangeIconsAction"] = self._createAction(
             "&Arrange Icons", self.mdi.arrangeIcons, tip = "Arrange the icons")
-        self.windows["CloseAction"] = self.createAction(
+        self.windows["CloseAction"] = self._createAction(
             "&Close", self.mdi.closeActiveWindow, QKeySequence.Close,
             tip = "Close the window" )
 
@@ -503,7 +503,7 @@ class MainWindow(QMainWindow):
         self.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
                      self.mdi, SLOT("setActiveWindow(QWidget*)"))
 
-        helpAboutAction = self.createAction("&About Component Designer",
+        helpAboutAction = self._createAction("&About Component Designer",
                 self.helpAbout, tip = "About Component Designer")
 
 
@@ -1259,6 +1259,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## connect server action
+    # \brief It connects to configuration server
     def serverConnect(self):
         cmd = self.pool.getCommand('serverConnect').clone()
         cmd.execute()
@@ -1284,6 +1286,8 @@ class MainWindow(QMainWindow):
 #        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## fetch server components action
+    # \brief It fetches components from the configuration server
     def serverFetchComponents(self):
         cmd = self.pool.getCommand('serverFetchComponents').clone()
         cmd.execute()
@@ -1296,6 +1300,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## store server component action
+    # \brief It stores the current component in the configuration server
     def serverStoreComponent(self):
         cmd = self.pool.getCommand('componentMerge').clone()
         cmd.execute()
@@ -1305,6 +1311,8 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('serverStoreComponent').clone()
         cmd.execute()
 
+    ## delete server component action
+    # \brief It deletes the current component from the configuration server
     def serverDeleteComponent(self):
         cmd = self.pool.getCommand('serverDeleteComponent').clone()
         cmd.execute()
@@ -1317,6 +1325,8 @@ class MainWindow(QMainWindow):
 #        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## set component mandatory action
+    # \brief It sets the current component as mandatory
     def serverSetMandatoryComponent(self):
         cmd = self.pool.getCommand('serverSetMandatoryComponent').clone()
         cmd.execute()
@@ -1325,10 +1335,15 @@ class MainWindow(QMainWindow):
 #        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## get mandatory components action
+    # \brief It fetches mandatory components
     def serverGetMandatoryComponents(self):
         cmd = self.pool.getCommand('serverGetMandatoryComponents').clone()
         cmd.execute()
 
+
+    ## unset component mandatory action
+    # \brief It unsets the current component as mandatory
     def serverUnsetMandatoryComponent(self):
         cmd = self.pool.getCommand('serverUnsetMandatoryComponent').clone()
         cmd.execute()
@@ -1340,6 +1355,8 @@ class MainWindow(QMainWindow):
 #        self.pool.setDisabled("undo", True, "Can't Undo")   
 #        self.pool.setDisabled("redo", True, "Can't Redo")      
 
+    ## fetch server datasources action
+    # \brief It fetches datasources from the configuration server
     def serverFetchDataSources(self):
         cmd = self.pool.getCommand('serverFetchDataSources').clone()
         cmd.execute()
@@ -1352,6 +1369,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## store server datasource action
+    # \brief It stores the current datasource in the configuration server
     def serverStoreDataSource(self):
         cmd = self.pool.getCommand('dsourceEdit').clone()
         cmd.execute()
@@ -1366,6 +1385,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## delete server datasource action
+    # \brief It deletes the current datasource from the configuration server
     def serverDeleteDataSource(self):
         cmd = self.pool.getCommand('serverDeleteDataSource').clone()
         cmd.execute()
@@ -1378,6 +1399,8 @@ class MainWindow(QMainWindow):
 #        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## close server action
+    # \brief It closes the configuration server
     def serverClose(self):
         cmd = self.pool.getCommand('serverClose').clone()
         cmd.execute()
@@ -1400,6 +1423,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## activated window action, i.e. it changes the current position of the component and datasource lists 
+    # \param widget selected widget window
     def mdiWindowActivated(self, widget):
         self.pooling = False
         if isinstance(widget, DataSourceDlg):
@@ -1427,6 +1452,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## new component action
+    # \brief It creates a new component
     def componentNew(self):
         cmd = self.pool.getCommand('componentNew').clone()
         cmd.execute()
@@ -1434,6 +1461,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
+    ## open component action
+    # \brief It opens component from the file
     def componentOpen(self):
         self.pooling = False
         cmd = self.pool.getCommand('componentOpen').clone()
@@ -1444,6 +1473,8 @@ class MainWindow(QMainWindow):
         self.pooling = True
 
 
+    ## open datasource action
+    # \brief It opens datasource from the file
     def dsourceOpen(self):
         self.pooling = False
         cmd = self.pool.getCommand('dsourceOpen').clone()
@@ -1454,6 +1485,8 @@ class MainWindow(QMainWindow):
         self.pooling = True
 
 
+    ## undo action
+    # \brief It unexecutes the last command
     def undo(self):
         self.pooling = False
         cmd = self.pool.getCommand('undo').clone()
@@ -1473,6 +1506,8 @@ class MainWindow(QMainWindow):
 
         self.pooling = True
 
+    ## redo action
+    # \brief It reexecutes the last undexecuted command
     def redo(self):
         self.pooling = False
         cmd = self.pool.getCommand('redo').clone()
@@ -1491,6 +1526,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )   
         self.pooling = True
 
+    ## close application action
+    # \brief It closes the main application
     def closeApp(self):
         cmd = self.pool.getCommand('closeApp').clone()
         cmd.execute()
@@ -1500,7 +1537,16 @@ class MainWindow(QMainWindow):
 
 
 
-    def createAction(self, text, slot=None, shortcut=None, icon=None,
+    ## creates action
+    # \param text string shown in menu
+    # \param slot action slot 
+    # \param shortcut key short-cut
+    # \param icon qrc_resource icon name
+    # \param tip text for status bar and text hint
+    # \param checkable if command/action checkable
+    # \param signal action signal   
+    # \returns the action instance
+    def _createAction(self, text, slot=None, shortcut=None, icon=None,
                      tip=None, checkable=False, signal="triggered()"):
         action = QAction(text, self)
         if icon is not None:
@@ -1518,16 +1564,22 @@ class MainWindow(QMainWindow):
 
 
 
-
+    ## restores all windows
+    # \brief It restores all windows in MDI
     def windowRestoreAll(self):
         for dialog in self.mdi.windowList():
             dialog.showNormal()
 
 
+    ## minimizes all windows
+    # \brief It minimizes all windows in MDI
     def windowMinimizeAll(self):
         for dialog in self.mdi.windowList():
             dialog.showMinimized()
 
+
+    ## shows help about
+    # \brief It shows message box with help about
     def helpAbout(self):
         QMessageBox.about(self, "About Component Designer",
                 """<b>Component Designer</b> v %s
@@ -1542,6 +1594,8 @@ class MainWindow(QMainWindow):
                 str(platform.system())))
 
 
+    ## updates the window menu
+    # \brief It updates the window menu with the open windows
     def updateWindowMenu(self):
         self.windows["Menu"].clear()
         self._addActions(self.windows["Menu"], (self.windows["NextAction"],

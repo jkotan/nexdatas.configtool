@@ -83,7 +83,7 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
 
     ## provides the state of the link dialog        
     # \returns state of the group in tuple
-     def getState(self):
+    def getState(self):
 
         state = (self.name,
                  self.target,

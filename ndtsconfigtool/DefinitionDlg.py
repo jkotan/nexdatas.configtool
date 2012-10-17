@@ -133,7 +133,7 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
                 self._attributes[attrName] = unicode(attribute.nodeValue())
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self.getText(doc)    
+        text = self._getText(doc)    
         self.doc = unicode(text).strip() if text else ""
              
     ## adds an attribute    
@@ -265,15 +265,15 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
                 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self.removeElement(doc, index)
+            self._removeElement(doc, index)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self.replaceElement(doc, newDoc, index)
+                self._replaceElement(doc, newDoc, index)
             else:
-                self.appendElement(newDoc, index)
+                self._appendElement(newDoc, index)
 
         
 if __name__ == "__main__":

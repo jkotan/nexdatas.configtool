@@ -166,7 +166,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         self.units = unicode(attributeMap.namedItem("units").nodeValue() \
                                  if attributeMap.contains("units") else "")
 
-        text = self.getText(self.node)    
+        text = self._getText(self.node)    
         self.value = unicode(text).strip() if text else ""
 
         self.attributes.clear()    
@@ -225,7 +225,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
             self.rank = len(self._dimensions)
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self.getText(doc)    
+        text = self._getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 
@@ -397,26 +397,26 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         elem.setAttribute(QString("type"), QString(self.nexusType))
         elem.setAttribute(QString("units"), QString(self.units))
 
-        self.replaceText(self.node, index, unicode(self.value))
+        self._replaceText(self.node, index, unicode(self.value))
         
         for attr in self.attributes.keys():
             elem.setAttribute(QString(attr), QString(self.attributes[attr]))
 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self.removeElement(doc, index)
+            self._removeElement(doc, index)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self.replaceElement(doc, newDoc, index)
+                self._replaceElement(doc, newDoc, index)
             else:
-                self.appendElement(newDoc, index)
+                self._appendElement(newDoc, index)
 
         dimens = self.node.firstChildElement(QString("dimensions"))           
         if not self.dimensions and dimens and dimens.nodeName() == "dimensions":
-            self.removeElement(dimens,index)
+            self._removeElement(dimens,index)
         elif self.dimensions:
             newDimens = self.root.createElement(QString("dimensions"))
             newDimens.setAttribute(QString("rank"), QString(unicode(self.rank)))
@@ -426,9 +426,9 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
                 dim.setAttribute(QString("value"), QString(unicode(self.dimensions[i])))
                 newDimens.appendChild(dim)
             if dimens and dimens.nodeName() == "dimensions" :
-                self.replaceElement(dimens, newDimens, index)
+                self._replaceElement(dimens, newDimens, index)
             else:
-                self.appendElement(newDimens, index)
+                self._appendElement(newDimens, index)
 
 
 

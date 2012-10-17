@@ -122,11 +122,11 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
         self.trigger = attributeMap.namedItem("trigger").nodeValue() if attributeMap.contains("trigger") else ""
         self.mode = attributeMap.namedItem("mode").nodeValue() if attributeMap.contains("mode") else ""
 
-        text = self.getText(node)    
+        text = self._getText(node)    
         self.postrun = unicode(text).strip() if text else ""
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self.getText(doc)    
+        text = self._getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 
@@ -176,19 +176,19 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
             if self.trigger:
                 elem.setAttribute(QString("trigger"), QString(self.trigger))
 
-        self.replaceText(self.node, index, unicode(self.postrun))
+        self._replaceText(self.node, index, unicode(self.postrun))
 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self.removeElement(doc, index)
+            self._removeElement(doc, index)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self.replaceElement(doc, newDoc, index)
+                self._replaceElement(doc, newDoc, index)
             else:
-                self.appendElement(newDoc, index)
+                self._appendElement(newDoc, index)
 
 
 

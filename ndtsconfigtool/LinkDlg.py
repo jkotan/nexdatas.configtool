@@ -56,7 +56,7 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
 
         if self.node:    
             doc = self.node.firstChildElement(QString("doc"))           
-            text = self.getText(doc)    
+            text = self._getText(doc)    
         else:
             text = ""
         self.doc = unicode(text).strip() if text else ""
@@ -109,7 +109,7 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
         self.target = unicode(attributeMap.namedItem("target").nodeValue() if attributeMap.contains("target") else "")
  
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self.getText(doc)    
+        text = self._getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
     ## calls updateUi when the name text is changing
@@ -168,15 +168,15 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self.removeElement(doc, index)
+            self._removeElement(doc, index)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self.replaceElement(doc, newDoc, index)
+                self._replaceElement(doc, newDoc, index)
             else:
-                self.appendElement(newDoc, index)
+                self._appendElement(newDoc, index)
 
 
 

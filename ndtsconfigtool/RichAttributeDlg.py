@@ -96,13 +96,13 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
         self.nexusType = unicode(attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else "")
 
 
-        text = self.getText(node)    
+        text = self._getText(node)    
         self.value = unicode(text).strip() if text else ""
 
 
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self.getText(doc)    
+        text = self._getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 
@@ -196,19 +196,19 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
         elem.setAttribute(QString("name"), QString(self.name))
         elem.setAttribute(QString("type"), QString(self.nexusType))
 
-        self.replaceText(self.node, index, unicode(self.value))
+        self._replaceText(self.node, index, unicode(self.value))
 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self.removeElement(doc, index)
+            self._removeElement(doc, index)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self.replaceElement(doc, newDoc, index)
+                self._replaceElement(doc, newDoc, index)
             else:
-                self.appendElement(newDoc, index)
+                self._appendElement(newDoc, index)
 
                     
 

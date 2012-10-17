@@ -30,7 +30,7 @@ except ImportError, e:
 
 from ConnectDlg import  ConnectDlg
 
-## merges the components
+## configuration server
 class ConfigurationServer(object):
     
     ## constructor

@@ -69,11 +69,13 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
     def on_deviceLineEdit_textEdited(self, text):
         self.updateUi()
 
+
     ## updates connect user interface
     # \brief It sets enable or disable the OK button
     def updateUi(self):
         enable = not self.deviceLineEdit.text().isEmpty()
         self.connectPushButton.setEnabled(enable)
+
 
     ## accepts input text strings
     # \brief It copies the connect name and value from lineEdit widgets and accept the dialog
@@ -112,7 +114,6 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
             self.portLineEdit.setFocus()
             return
 
-        
         QDialog.accept(self)
 
 if __name__ == "__main__":

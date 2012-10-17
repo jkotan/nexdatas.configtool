@@ -27,6 +27,7 @@ from PyQt4.QtXml import (QDomDocument, QDomNode)
 from NodeDlg import NodeDlg 
 import copy
 
+
 ## dialog defining datasources
 class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     
@@ -69,18 +70,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self._externalSave = None
         self._externalApply = None
 
-        self.applied = False
-
-        ## parameter map for XMLdumper
-        self.dbxml = {"DB name":"dbname",
-                      "DB host":"host",
-                      "DB port":"port",
-                      "DB user":"user",
-                      "DB password":"passwd",
-                      "Mysql cnf":"mycnf",
-                      "Oracle mode":"mode",
-                      "Oracle DSN":"dsn"
-                     } 
+        self._applied = False
 
         ## parameter map for xml tags
         self.dbmap = {"dbname":"DB name",
@@ -104,7 +94,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## DOM document
         self.document = None
         
-        self.tree = False
+        ## if datasource in the component tree
+        self._tree = False
         
         ## allowed subitems
         self.subItems = ["record", "doc", "device", "database", "query", "door"]
@@ -113,6 +104,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## if changes saved
         self.dirty = False
 
+    ##
     def clear(self):
         self.dirty = True
         self.dataSourceType = 'CLIENT'
@@ -240,9 +232,9 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     def treeMode(self, enable = True):
         if enable:
             self.frame.hide()
-            self.tree = True
+            self._tree = True
         else:
-            self.tree = False
+            self._tree = False
             self.frame.show()
             
         
@@ -494,7 +486,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                 if not self.document.setContent(fh):
                     raise ValueError, "could not parse XML"
 
-                ds = self.getFirstElement(self.document, "datasource")           
+                ds = self._getFirstElement(self.document, "datasource")           
                 if ds:
                     self.setFromNode(ds)
                 self.dirty = False
@@ -528,7 +520,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         if not self.document.setContent(xml):
             raise ValueError, "could not parse XML"
 
-        ds = self.getFirstElement(self.document, "datasource")           
+        ds = self._getFirstElement(self.document, "datasource")           
         if ds:
             self.setFromNode(ds)
         self.dirty = False
@@ -596,7 +588,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             if not self.dbType:
                 self.dbType = 'MYSQL'
                     
-            text = unicode(self.getText(database))
+            text = unicode(self._getText(database))
             self.dbParameters['Oracle DSN'] = unicode(text).strip() if text else ""
             self._dbParam['Oracle DSN'] = unicode(text).strip() if text else ""
 
@@ -608,12 +600,12 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                                             if attributeMap.contains("format") else "SCALAR")
 
 
-            text = unicode(self.getText(query))
+            text = unicode(self._getText(query))
             self.dbQuery = unicode(text).strip() if text else ""
 
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self.getText(doc)    
+        text = self._getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 
@@ -625,7 +617,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     ## accepts and save input text strings
     # \brief It copies the parameters and saves the dialog
     def save(self):
-        if self.applied:
+        if self._applied:
             filename = self.directory + "/" + self.name + ".ds.xml"
             print "saving in %s"% (filename)
             error = None
@@ -678,7 +670,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     def apply(self):
         self.dirty = True
 
-        self.applied = False
+        self._applied = False
         class CharacterError(Exception): pass
         sourceType = unicode(self.typeComboBox.currentText())
 
@@ -751,7 +743,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
         
 
-        self.applied = True
+        self._applied = True
         return True    
 
     def createHeader(self):
@@ -787,7 +779,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         if not self.document.setContent(text):
             raise ValueError, "could not parse XML"
 
-        ds = self.getFirstElement(self.document, "datasource")           
+        ds = self._getFirstElement(self.document, "datasource")           
         if not ds:
             return
         self.setFromNode(ds)
@@ -859,7 +851,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
 
     def updateNode(self,index=QModelIndex()):
-        newDs = self.createNodes(self.tree)
+        newDs = self.createNodes(self._tree)
         oldDs = self.node
 
 
@@ -869,7 +861,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             parent = QModelIndex()
 
         self.node = self.node.parentNode()   
-        self.replaceNode(oldDs, newDs, parent)
+        self._replaceNode(oldDs, newDs, parent)
         self.node = newDs
 
 

@@ -39,7 +39,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
     def __init__(self, directory, parent=None):
         super(DataSourceList, self).__init__(parent)
          ## directory from which components are loaded by default
-       self.directory = directory
+        self.directory = directory
         
         ## group datasources
         self.datasources = {}

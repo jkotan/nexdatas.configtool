@@ -117,6 +117,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ##  creates GUI
+    # \brief It create dialogs for main the window application
     def createGUI(self):
         self.compDockWidget = QDockWidget("&Components",self)
         self.compDockWidget.setObjectName("CompDockWidget")
@@ -141,10 +143,12 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.mdi)
 
 
-        
+
+    ## creates actions
+    # \brief It creates actions and sets the command pool and stack
     def createActions(self):
         self.pool = CommandPool(self)
-        self.cmdStack = CommandStack(20)
+        self.cmdStack = CommandStack(30)
         self.pooling = True
 
 
@@ -505,7 +509,7 @@ class MainWindow(QMainWindow):
 
 
         fileMenu = self.menuBar().addMenu("&File")    
-        self.addActions(fileMenu, (                 
+        self._addActions(fileMenu, (                 
                 componentNewAction, 
                 dsourceNewAction,
                 componentOpenAction, 
@@ -537,7 +541,7 @@ class MainWindow(QMainWindow):
                                           
 
         editMenu = self.menuBar().addMenu("&Edit")
-        self.addActions(editMenu, (
+        self._addActions(editMenu, (
                 undoAction,redoAction,
                 None,
                 cutItemAction, 
@@ -558,7 +562,7 @@ class MainWindow(QMainWindow):
                 ))
 
         componentsMenu = self.menuBar().addMenu("C&omponents")    
-        self.addActions(componentsMenu, ( 
+        self._addActions(componentsMenu, ( 
                 componentNewGroupAction, componentNewFieldAction, 
                 componentNewAttributeAction, componentNewLinkAction,
                 componentNewDataSourceAction,None, 
@@ -586,7 +590,7 @@ class MainWindow(QMainWindow):
 
 
         serverMenu = self.menuBar().addMenu("&Server") 
-        self.addActions(serverMenu, (
+        self._addActions(serverMenu, (
                 serverConnectAction,None,
                 serverFetchComponentsAction,
                 serverStoreComponentAction,
@@ -605,7 +609,7 @@ class MainWindow(QMainWindow):
 
 
         viewMenu = self.menuBar().addMenu("&View")
-        self.addActions(viewMenu, (viewDockAction,))
+        self._addActions(viewMenu, (viewDockAction,))
 
         self.windows["Menu"] = self.menuBar().addMenu("&Window")
         self.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
@@ -614,13 +618,13 @@ class MainWindow(QMainWindow):
         self.menuBar().addSeparator()
 
         helpMenu = self.menuBar().addMenu("&Help") 
-        self.addActions(helpMenu, (helpAboutAction, ))
+        self._addActions(helpMenu, (helpAboutAction, ))
         
 
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolbar")
 
-        self.addActions(fileToolbar, (
+        self._addActions(fileToolbar, (
                 componentNewAction,
                 componentOpenAction, 
                 componentEditAction, 
@@ -647,6 +651,8 @@ class MainWindow(QMainWindow):
         editToolbar.setObjectName("EditToolbar")
         
 
+    ## stores the setting before finishing the application 
+    # \param event Qt event   
     def closeEvent(self, event):
 #        failures = []
 #        for widget in self.mdi.windowList():
@@ -688,6 +694,9 @@ class MainWindow(QMainWindow):
         self.mdi.closeAllWindows()
 
 
+
+    ## loads the datasource list
+    # \brief It loads the datasource list from the default directory
     def loadDataSources(self):
         self.sourceList.loadList(self.dsourceCollect, self.dsourceApply)
         ids =  self.sourceList.datasources.itervalues().next().id \
@@ -696,6 +705,8 @@ class MainWindow(QMainWindow):
         self.sourceList.populateDataSources(ids)
 
 
+    ## sets the datasource list from dictionary
+    # \param datasources dictionary with datasources, i.e. name:xml
     def setDataSources(self, datasources):
         self.sourceList.setList(datasources, self.dsourceCollect, self.dsourceApply)
         ids =  self.sourceList.datasources.itervalues().next().id \
@@ -705,6 +716,8 @@ class MainWindow(QMainWindow):
         
 
 
+    ## sets the component list from the given dictionary
+    # \param components dictionary with components, i.e. name:xml
     def setComponents(self, components):
         self.componentList.setList(components, self.contextMenuActions,
                                     self.componentCollect,
@@ -717,6 +730,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## loads the component list
+    # \brief It loads the component list from the default directory
     def loadComponents(self):
 #        self.componentList.components = {}
         self.componentList.loadList(self.contextMenuActions,
@@ -729,8 +744,10 @@ class MainWindow(QMainWindow):
         self.componentList.populateComponents(idc)
         
 
-
-    def addActions(self, target, actions):
+    ## adds actions to target
+    # \param target action target
+    # \param actions actions to be added   
+    def _addActions(self, target, actions):
         for action in actions:
             if action is None:
                 target.addSeparator()
@@ -1444,7 +1461,7 @@ class MainWindow(QMainWindow):
 
     def updateWindowMenu(self):
         self.windows["Menu"].clear()
-        self.addActions(self.windows["Menu"], (self.windows["NextAction"],
+        self._addActions(self.windows["Menu"], (self.windows["NextAction"],
                                                self.windows["PrevAction"], self.windows["CascadeAction"],
                                                self.windows["TileAction"], self.windows["RestoreAction"],
                                                self.windows["MinimizeAction"],

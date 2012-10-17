@@ -75,7 +75,7 @@ class MainWindow(QMainWindow):
         ## if pooling applicable
         self.pooling = True
 
-        # dictionary with window actions
+        ## dictionary with window actions
         self.windows = {}
 
         settings = QSettings()
@@ -755,7 +755,8 @@ class MainWindow(QMainWindow):
                 target.addAction(action)
 
 
-
+    ## new datasource action
+    # \brief It creates a new datasource      
     def dsourceNew(self):
         cmd = self.pool.getCommand('dsourceNew').clone()
         cmd.execute()
@@ -765,6 +766,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## remove datasource action
+    # \brief It removes the current datasource      
     def dsourceRemove(self):
         self.pooling = False
         cmd = self.pool.getCommand('dsourceRemove').clone()
@@ -774,10 +777,15 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
         self.pooling = True
 
+
+    ## edit component action
+    # \brief It opens a dialog with the current component
     def componentEdit(self):
         cmd = self.pool.getCommand('componentEdit').clone()
         cmd.execute()
 
+    ## clear component action
+    # \brief It clears the current component      
     def componentClear(self):
         cmd = self.pool.getCommand('componentClear').clone()
         cmd.execute()
@@ -785,6 +793,9 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
+
+    ## save component action
+    # \brief It saves the current component      
     def componentSave(self):
         cmd = self.pool.getCommand('componentMerge').clone()
         cmd.execute()
@@ -795,6 +806,8 @@ class MainWindow(QMainWindow):
         cmd.execute()
 
 
+    ## collect component action
+    # \brief It stores in the configuration server or saves in the file the current component      
     def componentCollect(self):
         cmd = self.pool.getCommand('componentMerge').clone()
         cmd.execute()
@@ -804,6 +817,9 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('componentCollect').clone()
         cmd.execute()
 
+
+    ## change component directory action
+    # \brief It changes the default component directory
     def componentChangeDirectory(self):
         cmd = self.pool.getCommand('componentChangeDirectory').clone()
         cmd.execute()
@@ -812,6 +828,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## change datasource directory action
+    # \brief It changes the default datasource directory
     def dsourceChangeDirectory(self):
         cmd = self.pool.getCommand('dsourceChangeDirectory').clone()
         cmd.execute()
@@ -820,6 +838,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## reload component list
+    # \brief It changes the default component directory and reload components
     def componentReloadList(self):
         cmd = self.pool.getCommand('componentReloadList').clone()
         cmd.execute()
@@ -828,6 +848,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## apply component item action
+    # \brief It applies the changes in the current component item 
     def componentApplyItem(self):
         cmd = self.pool.getCommand('componentApplyItem').clone()
         cmd.execute()
@@ -836,6 +858,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Undo")      
 
 
+    ## reload datasource list
+    # \brief It changes the default datasource directory and reload datasources
     def dsourceReloadList(self):
         cmd = self.pool.getCommand('dsourceReloadList').clone()
         cmd.execute()
@@ -843,6 +867,9 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo", True, "Can't Undo")   
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
+
+    ## apply datasource item action
+    # \brief It applies the changes in the current datasource item 
     def dsourceApply(self):
         cmd = self.pool.getCommand('dsourceApply').clone()
         cmd.execute()
@@ -851,7 +878,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
-
+    ## save datasource item action
+    # \brief It saves the changes in the current datasource item 
     def dsourceSave(self):
         cmd = self.pool.getCommand('dsourceEdit').clone()
         cmd.execute()
@@ -867,6 +895,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## collect datasource item action
+    # \brief It collects the changes in the current datasource item  either in the configuration server or in the file
     def dsourceCollect(self):
         cmd = self.pool.getCommand('dsourceEdit').clone()
         cmd.execute()
@@ -881,6 +911,8 @@ class MainWindow(QMainWindow):
         cmd.execute()
 
 
+    ## save datasource item as action
+    # \brief It saves the changes in the current datasource item with a new name
     def dsourceSaveAs(self):
         cmd = self.pool.getCommand('dsourceEdit').clone()
         cmd.execute()
@@ -906,6 +938,8 @@ class MainWindow(QMainWindow):
         cmd.execute()
 
 
+    ## save all datasource item action
+    # \brief It saves the changes in all datasources item
     def dsourceSaveAll(self):
         cmd = self.pool.getCommand('dsourceSaveAll').clone()
         cmd.execute()
@@ -914,6 +948,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## save component item as action
+    # \brief It saves the changes in the current component item with a new name
     def componentSaveAs(self):
         cmd = self.pool.getCommand('componentEdit').clone()
         cmd.execute()
@@ -940,6 +976,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## save all components item action
+    # \brief It saves the changes in all components item
     def componentSaveAll(self):
         cmd = self.pool.getCommand('componentSaveAll').clone()
         cmd.execute()
@@ -949,6 +987,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## remove component item action
+    # \brief It removes the current component item and copies it into the clipboard
     def componentRemoveItem(self):
         cmd = self.pool.getCommand('componentRemoveItem').clone()
         cmd.execute()
@@ -957,24 +997,33 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## paste component item action
+    # \brief It pastes the component item from the clipboard
     def componentPasteItem(self):
         cmd = self.pool.getCommand('componentPasteItem').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
+
         
+    ## copy component item action
+    # \brief It copies the  current component item into the clipboard
     def componentCopyItem(self):
         cmd = self.pool.getCommand('componentCopyItem').clone()
         cmd.execute()
 
 
+    ## copy datasource item action
+    # \brief It copies the  current datasource item into the clipboard
     def dsourceCopy(self):
         cmd = self.pool.getCommand('dsourceCopy').clone()
         cmd.execute()
 
 
 
+    ## cuts datasource item action
+    # \brief It removes the current datasources item and copies it into the clipboard
     def dsourceCut(self):
         cmd = self.pool.getCommand('dsourceCut').clone()
         cmd.execute()
@@ -984,6 +1033,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## paste datasource item action
+    # \brief It pastes the datasource item from the clipboard
     def dsourcePaste(self):
         cmd = self.pool.getCommand('dsourcePaste').clone()
         cmd.execute()
@@ -993,6 +1044,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## copy item action
+    # \brief It copies the current item into the clipboard
     def copyItem(self):
         cmd = self.pool.getCommand('copyItem').clone()
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
@@ -1007,6 +1060,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## cuts item action
+    # \brief It removes the current item and copies it into the clipboard
     def cutItem(self):
         cmd = self.pool.getCommand('cutItem').clone()
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
@@ -1025,6 +1080,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## paste item action
+    # \brief It pastes the item from the clipboard
     def pasteItem(self):
         cmd = self.pool.getCommand('pasteItem').clone()
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
@@ -1042,6 +1099,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## new group component item action
+    # \brief It adds a new group component item
     def componentNewGroupItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
             cmd = self.pool.getCommand('componentNewGroupItem').clone()
@@ -1055,6 +1114,8 @@ class MainWindow(QMainWindow):
                                 "Please edit one of the components")            
     
 
+    ## new field component item action
+    # \brief It adds a new field component item
     def componentNewFieldItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
             cmd = self.pool.getCommand('componentNewFieldItem').clone()
@@ -1068,6 +1129,8 @@ class MainWindow(QMainWindow):
                                 "Please edit one of the components")            
 
 
+    ## new attribute component item action
+    # \brief It adds a new attribute component item 
     def componentNewAttributeItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
             cmd = self.pool.getCommand('componentNewAttributeItem').clone()
@@ -1081,6 +1144,8 @@ class MainWindow(QMainWindow):
                                 "Please edit one of the components")            
             
 
+    ## new link component item action
+    # \brief It adds a new link component item
     def componentNewLinkItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
             cmd = self.pool.getCommand('componentNewLinkItem').clone()
@@ -1095,6 +1160,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## new datasource component item action
+    # \brief It adds a new datasource component item
     def componentNewDataSourceItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
             cmd = self.pool.getCommand('componentNewDataSourceItem').clone()
@@ -1109,6 +1176,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## load sub-component item action
+    # \brief It loads a sub-component item from a file
     def componentLoadComponentItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
             cmd = self.pool.getCommand('componentLoadComponentItem').clone()
@@ -1122,6 +1191,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## load datasource component item action
+    # \brief It loads a datasource component item from a file
     def componentLoadDataSourceItem(self):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
             cmd = self.pool.getCommand('componentLoadDataSourceItem').clone()
@@ -1136,6 +1207,8 @@ class MainWindow(QMainWindow):
 
 
 
+    ## add datasource component item action
+    # \brief It adds the current datasource item into component tree
     def componentAddDataSourceItem(self):
         cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
         cmd.execute()
@@ -1144,6 +1217,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## merge component action
+    # \brief It merges the current component
     def componentMerge(self):
         cmd = self.pool.getCommand('componentMerge').clone()
         cmd.execute()
@@ -1151,6 +1226,8 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
+    ## remove component action
+    # \brief It removes from the component list the current component
     def componentRemove(self):
         self.pooling = False
         cmd = self.pool.getCommand('componentRemove').clone()
@@ -1161,6 +1238,8 @@ class MainWindow(QMainWindow):
         self.pooling = True
 
 
+    ## edit datasource action
+    # \brief It opens a dialog with the current datasource      
     def dsourceEdit(self):
         cmd = self.pool.getCommand('dsourceEdit').clone()
         cmd.execute()
@@ -1169,6 +1248,8 @@ class MainWindow(QMainWindow):
 #        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+    ## datasource change action
+    # \param item new selected item ond the datasource list
     def dsourceChanged(self, item):
         cmd = self.pool.getCommand('dsourceChanged').clone()
         cmd.item = item
@@ -1334,6 +1415,8 @@ class MainWindow(QMainWindow):
         self.pooling = True
 
 
+    ## component change action
+    # \param item new selected item on the component list
     def componentChanged(self, item):
         cmd = self.pool.getCommand('componentChanged').clone()
         cmd.item = item

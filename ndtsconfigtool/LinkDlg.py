@@ -81,7 +81,7 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
 
 
-   ## provides the state of the link dialog        
+    ## provides the state of the link dialog        
     # \returns state of the group in tuple
      def getState(self):
 

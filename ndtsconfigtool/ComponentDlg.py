@@ -430,7 +430,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
 
     ## connects external actions
-    # \brief  connects the save action and stores the apply action
+    # \brief It connects the save action and stores the apply action
     def connectExternalActions(self, externalApply=None , externalSave=None ):
         if externalSave and self._externalSave is None:
             self.connect(self.savePushButton, SIGNAL("clicked()"), 
@@ -886,8 +886,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                                 "Would you like to close the component ?", 
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
-#        self.revert()
         self.reject()
+
 
     ## provides the component name with its path
     # \returns component name with its path 

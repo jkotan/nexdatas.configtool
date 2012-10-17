@@ -75,23 +75,24 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
 
         self.connect(self.dimTableWidget, 
                      SIGNAL("itemChanged(QTableWidgetItem*)"),
-                     self.tableItemChanged)
+                     self._tableItemChanged)
 
         self.dimTableWidget.setSortingEnabled(False)
         self.populateLengths()
         self.rankSpinBox.setFocus()
+
                 
     ## takes a name of the current dim
     # \returns name of the current dim            
-    def currentTableDim(self):
+    def _currentTableDim(self):
         return self.dimTableWidget.currentRow()
 
 
     ## changes the current value of the dim        
     # \brief It changes the current value of the dim 
     # and informs the user about wrong values
-    def tableItemChanged(self, item):
-        row = self.currentTableDim()
+    def _tableItemChanged(self, item):
+        row = self._currentTableDim()
         
         if row not in range(len(self.lengths)):
             return
@@ -109,6 +110,7 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
                 QMessageBox.warning(self, "Value Error", "Wrong value of the edited length")
                 
         self.populateLengths()
+
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   

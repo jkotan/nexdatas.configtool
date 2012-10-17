@@ -45,6 +45,8 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
 
 
 
+    ## updates the field strategy
+    # \brief It sets the form local variables 
     def updateForm(self):
         index = -1
         if self.mode is not None:
@@ -77,6 +79,9 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
 
 
+
+    ## provides the state of the strategy dialog        
+    # \returns state of the strategy in tuple
     def getState(self):
         state = (self.mode,
                  self.trigger,
@@ -87,7 +92,8 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
         return state
 
 
-
+    ## sets the state of the strategy dialog        
+    # \param state strategy state written in tuple 
     def setState(self, state):
 
         (self.name,
@@ -98,6 +104,8 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
 #        print "SET",  str(state)
 
 
+    ## shows and hides frames according to modeComboBox
+    # \param text the edited text   
     def setFrames(self, text):
         if text == 'STEP':
             self.triggerFrame.show()            
@@ -114,8 +122,11 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
 
 
 
+    ## sets the form from the DOM node
+    # \param node DOM node
     def setFromNode(self, node=None):
         if node:
+            ## defined in NodeDlg class
             self.node = node
         attributeMap = self.node.attributes()
 
@@ -132,11 +143,12 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
 
 
 
-    ## calls updateUi when the name text is changing
+    ## calls setFrames when the name text is changing
     # \param text the edited text   
     @pyqtSignature("QString")
     def on_modeComboBox_currentIndexChanged(self, text):
         self.setFrames(text)
+
 
 
     ## accepts input text strings
@@ -163,6 +175,10 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
             self.updateNode(index)
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
+
+
+    ## updates the Node
+    # \brief It sets node from the dialog variables
     def updateNode(self,index=QModelIndex()):
         elem=self.node.toElement()
 

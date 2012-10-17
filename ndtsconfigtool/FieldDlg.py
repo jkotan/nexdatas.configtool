@@ -68,6 +68,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         self.subItems = ["attribute", "datasource", "doc", "dimensions", "enumeration", "strategy"]
 
 
+    ## provides the state of the field dialog        
+    # \returns state of the field in tuple
     def getState(self):
         attributes = copy.copy(self.attributes)
         dimensions = copy.copy(self.dimensions)
@@ -86,6 +88,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
 
 
 
+    ## sets the state of the field dialog        
+    # \param state field state written in tuple 
     def setState(self, state):
 
         (self.name,
@@ -102,7 +106,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         self.dimensions = copy.copy(dimensions)
 
 
-
+    ## updates the field dialog
+    # \brief It sets the form local variables 
     def updateForm(self):
         if self.name is not None:
             self.nameLineEdit.setText(self.name) 
@@ -140,21 +145,24 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
 
         self.updateForm()
 
-        self.updateUi()
+        self._updateUi()
 
 #       self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.attributeTableWidget, 
-                     SIGNAL("itemChanged(QTableWidgetItem*)"), self.tableItemChanged)
-        self.connect(self.addPushButton, SIGNAL("clicked()"), self.addAttribute)
-        self.connect(self.removePushButton, SIGNAL("clicked()"), self.removeAttribute)
-        self.connect(self.dimPushButton, SIGNAL("clicked()"), self.changeDimensions)
+                     SIGNAL("itemChanged(QTableWidgetItem*)"), self._tableItemChanged)
+        self.connect(self.addPushButton, SIGNAL("clicked()"), self._addAttribute)
+        self.connect(self.removePushButton, SIGNAL("clicked()"), self._removeAttribute)
+        self.connect(self.dimPushButton, SIGNAL("clicked()"), self._changeDimensions)
 
         self.populateAttributes()
 
         
+    ## sets the form from the DOM node
+    # \param node DOM node
     def setFromNode(self, node=None):
         if node:
+            ## defined in NodeDlg
             self.node = node
         attributeMap = self.node.attributes()
         nNode = unicode(self.node.nodeName())
@@ -232,8 +240,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
 
 
     ## adds an attribute    
-    #  \brief It runs the Attribute Dialog and fetches attribute name and value    
-    def addAttribute(self):
+    #  \brief It runs the Field Dialog and fetches attribute name and value    
+    def _addAttribute(self):
         aform  = AttributeDlg()
         if aform.exec_():
             name = aform.name
@@ -249,7 +257,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
 
     ## changing dimensions of the field
     #  \brief It runs the Dimensions Dialog and fetches rank and dimensions from it
-    def changeDimensions(self):
+    def _changeDimensions(self):
         dform  = DimensionsDlg( self)
         dform.rank = self.rank
         dform.lengths = self._dimensions
@@ -270,7 +278,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
                 
     ## takes a name of the current attribute
     # \returns name of the current attribute            
-    def currentTableAttribute(self):
+    def _currentTableAttribute(self):
         item = self.attributeTableWidget.item(self.attributeTableWidget.currentRow(), 0)
         if item is None:
             return None
@@ -279,8 +287,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
 
     ## removes an attribute    
     #  \brief It removes the current attribute asking before about it
-    def removeAttribute(self):
-        attr = self.currentTableAttribute()
+    def _removeAttribute(self):
+        attr = self._currentTableAttribute()
         if attr is None:
             return
         if QMessageBox.question(self, "Attribute - Remove",
@@ -293,8 +301,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
 
     ## changes the current value of the attribute        
     # \brief It changes the current value of the attribute and informs the user that attribute names arenot editable
-    def tableItemChanged(self, item):
-        attr = self.currentTableAttribute()
+    def _tableItemChanged(self, item):
+        attr = self._currentTableAttribute()
         if unicode(attr)  not in self._attributes.keys():
             return
         column = self.attributeTableWidget.currentColumn()
@@ -335,15 +343,18 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
     # \param text the edited text   
     @pyqtSignature("QString")
     def on_nameLineEdit_textEdited(self, text):
-        self.updateUi()
+        self._updateUi()
 
     ## updates field user interface
     # \brief It sets enable or disable the OK button
-    def updateUi(self):
+    def _updateUi(self):
         enable = not self.nameLineEdit.text().isEmpty()
         self.applyPushButton.setEnabled(enable)
 
 
+    ## appends node
+    # \param node DOM node to remove
+    # \param parent parent DOM node        
     def appendNode(self, node, parent):
         if node.nodeName() == 'datasource' :
             if not self.node:
@@ -386,6 +397,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
         
+    ## updates the Node
+    # \brief It sets node from the dialog variables
     def updateNode(self,index=QModelIndex()):
         elem=self.node.toElement()
 

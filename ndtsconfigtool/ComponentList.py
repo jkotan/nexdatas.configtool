@@ -169,7 +169,7 @@ class ComponentList(QWidget, Ui_ComponentList):
 
 
             
-    ## loads the component list
+    ## loads the component list from the given dictionary
     # \param actions actions of the context menu
     # \param externalSave save action
     # \param externalApply apply action
@@ -207,7 +207,7 @@ class ComponentList(QWidget, Ui_ComponentList):
             
 
 
-    ## sets the component from the given dictionary
+    ## sets the component
     # \param components dictionary with the components, i.e. name:xml
     # \param actions actions of the context menu
     # \param externalSave save action

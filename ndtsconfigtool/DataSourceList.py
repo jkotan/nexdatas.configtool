@@ -34,10 +34,12 @@ from LabeledObject import LabeledObject
 class DataSourceList(QWidget, Ui_DataSourceList):
     
     ## constructor
+    # \param directory datasource directory
     # \param parent patent instance
     def __init__(self, directory, parent=None):
         super(DataSourceList, self).__init__(parent)
-        self.directory = directory
+         ## directory from which components are loaded by default
+       self.directory = directory
         
         ## group datasources
         self.datasources = {}
@@ -47,18 +49,13 @@ class DataSourceList(QWidget, Ui_DataSourceList):
     def createGUI(self):
 
         self.setupUi(self)
-
-
-
-#        self.connect(self.sourceListWidget, 
-#                     SIGNAL("currentItemChanged(QListWidgetItem*,QListWidgetItem*)"),
-#                     self.dsourceEdit)
-
-        
         self.populateDataSources()
 
             
 
+    ## loads the datasource list from the given dictionary
+    # \param externalSave save action
+    # \param externalApply apply action
     def loadList(self, externalSave = None, externalApply = None ):
         try:
             dirList=os.listdir(self.directory)
@@ -94,7 +91,10 @@ class DataSourceList(QWidget, Ui_DataSourceList):
 
 
 
-
+    ## sets the datasources
+    # \param datasources dictionary with the datasources, i.e. name:xml
+    # \param externalSave save action
+    # \param externalApply apply action
     def setList(self, datasources, externalSave = None, externalApply = None ):
         try:
             dirList=os.listdir(self.directory)
@@ -178,8 +178,10 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             self.populateDataSources()
             return old, oname
 
+
     ## fills in the datasource list      
     # \param selectedDataSource selected datasource    
+    # \param edit flag if edit the selected item
     def populateDataSources(self, selectedDataSource = None, edit = False):
         selected = None
         self.sourceListWidget.clear()
@@ -225,7 +227,6 @@ class DataSourceList(QWidget, Ui_DataSourceList):
     ## accepts input text strings
     # \brief It copies the group name and type from lineEdit widgets and accept the dialog
     def accept(self):
-        
         QWidget.accept(self)
 
 if __name__ == "__main__":

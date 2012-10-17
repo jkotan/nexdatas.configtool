@@ -104,7 +104,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## if changes saved
         self.dirty = False
 
-    ##
+    ## clears the datasource content
+    # \brief It sets the datasource variables to default values
     def clear(self):
         self.dirty = True
         self.dataSourceType = 'CLIENT'
@@ -125,6 +126,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self._dbParam = {}
         
 
+    ## provides the state of the datasource dialog        
+    # \returns state of the datasource in tuple
     def getState(self):
         dbParameters = copy.copy(self.dbParameters)
 
@@ -147,6 +150,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
 
 
+    ## sets the state of the datasource dialog        
+    # \param state state datasource written in tuple 
     def setState(self, state):
 
         (self.dataSourceType,
@@ -166,6 +171,9 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 #        print "SET",  str(state)
         self.dbParameters = copy.copy(dbParameters)
 
+
+    ## updates the datasource dialog
+    # \brief It sets the form local variables
     def updateForm(self):    
         if self.doc is not None:
             self.docTextEdit.setText(self.doc)
@@ -256,7 +264,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
 
         self.connect(self.dAddPushButton, SIGNAL("clicked()"), 
-                     self.addParameter)
+                     self._addParameter)
         self.connect(self.dRemovePushButton, SIGNAL("clicked()"), 
                      self.removeParameter)
         self.connect(self.dParameterTableWidget, 
@@ -266,6 +274,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self.setFrames(self.dataSourceType)
 
 
+    ## connects external actions
+    # \brief It connects the save action and stores the apply action
     def connectExternalActions(self, externalApply=None, externalSave=None):
         if externalSave and self._externalSave is None:
             self.connect(self.savePushButton, SIGNAL("clicked()"), 
@@ -377,7 +387,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
     ## adds an parameter    
     #  \brief It runs the Parameter Dialog and fetches parameter name and value    
-    def addParameter(self):
+    def _addParameter(self):
         name =  unicode(self.dParamComboBox.currentText())
         if name not in self._dbParam.keys():
             self._dbParam[name] = ""
@@ -386,7 +396,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
     ## takes a name of the current parameter
     # \returns name of the current parameter
-    def currentTableParameter(self):
+    def _currentTableParameter(self):
         item = self.dParameterTableWidget.item(self.dParameterTableWidget.currentRow(), 0)
         if item is None:
             return None
@@ -395,7 +405,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     ## removes an parameter    
     #  \brief It removes the current parameter asking before about it
     def removeParameter(self):
-        param = self.currentTableParameter()
+        param = self._currentTableParameter()
         if param is None:
             return
         if QMessageBox.question(self, "Parameter - Remove",
@@ -411,7 +421,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     ## changes the current value of the parameter        
     # \brief It changes the current value of the parameter and informs the user that parameter names arenot editable
     def tableItemChanged(self, item):
-        param = self.currentTableParameter()
+        param = self._currentTableParameter()
         if unicode(param)  not in self._dbParam.keys():
             return
         column = self.dParameterTableWidget.currentColumn()
@@ -449,13 +459,15 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             self.dParameterTableWidget.editItem(selected)
 
 
-#TODO
+    ## sets name of the datasource and its directory
+    # \param name name of the datasource
+    # \param directory directory of the datasources   
     def setName(self, name, directory):
         self.name = unicode(name)
         self.directory = unicode(directory)
 
 
-    ## loads datasources from default directory
+    ## loads datasources from default file directory
     # \param fname optional file name
     def load(self, fname = None):
         if fname is None:
@@ -509,11 +521,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
 
             
-
-
-
-    ## loads datasources from default directory
-    # \param fname optional file name
+    ## sets datasources from xml string
+    # \param xml xml string
     def set(self, xml):
         self.document = QDomDocument()
         self.root = self.document
@@ -533,8 +542,11 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
             
 
+    ## sets the form from the DOM node
+    # \param node DOM node
     def setFromNode(self, node=None):
         if node:
+            ## defined in NodeDlg class
             self.node = node
         attributeMap = self.node.attributes()
         
@@ -609,6 +621,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self.doc = unicode(text).strip() if text else ""
 
 
+    ## provides the datasource in xml string
+    # \returns xml string    
     def get(self):
         if hasattr(self.document,"toString"):
             return unicode(self.document.toString(0))
@@ -638,6 +652,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                         fh.close()
 
 
+    ## provides the datasource name with its path
+    # \returns datasource name with its path 
     def getNewName(self):
         filename = unicode(
             QFileDialog.getSaveFileName(self,"Save DataSource As ...",self.directory,
@@ -655,12 +671,14 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                                 "Would you like to close the datasource?", 
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
-        self.revert()
+        self.updateForm()
         self.reject()
 
 
+    ##  resets the form
+    # \brief It reverts form variables to the last accepted ones    
     def reset(self):
-        self.revert()
+        self.updateForm()
 
 
 
@@ -746,11 +764,15 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self._applied = True
         return True    
 
+
+    ## creates the new empty header
+    # \brief It clean the DOM tree and put into it xml and definition nodes
     def createHeader(self):
         self.dirty = True
         if self.view:
             self.view.setModel(None)
         self.document = QDomDocument()
+        ## defined in NodeDlg class
         self.root = self.document
         processing = self.root.createProcessingInstruction("xml", 'version="1.0"') 
         self.root.appendChild(processing)
@@ -761,6 +783,9 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         definition.appendChild(self.node)            
         return self.node
             
+
+    ## copies the datasource to the clipboard
+    # \brief It copies the current datasource to the clipboard
     def copyToClipboard(self):
         dsNode = self.createNodes()
         doc = QDomDocument()
@@ -770,6 +795,9 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         clipboard= QApplication.clipboard()
         clipboard.setText(text)
         
+
+    ## copies the datasource from the clipboard  to the current datasource dialog
+    # \return status True on success
     def copyFromClipboard(self):
         clipboard= QApplication.clipboard()
         text=unicode(clipboard.text())
@@ -785,6 +813,10 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self.setFromNode(ds)
         return True
 
+
+    ## creates datasource node
+    # \param external True if it should be create on a local DOM root, i.e. in component tree
+    # \returns created DOM node   
     def createNodes(self,external = False):        
         if external:
             root = QDomDocument()
@@ -849,8 +881,9 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         
 
 
-
-    def updateNode(self,index=QModelIndex()):
+    ## updates the Node
+    # \brief It sets node from the dialog variables
+    def updateNode(self, index=QModelIndex()):
         newDs = self.createNodes(self._tree)
         oldDs = self.node
 
@@ -866,34 +899,6 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
 
                     
-
-    def revert(self):
-        self.updateForm()
-
-
-    def  showParameters(self):
-    
-        print "DataSource: %s " % (form.dataSourceType)
-        
-        if form.dataSourceType == 'CLIENT' :
-            print "record name: %s " % (form.clientRecordName)
-
-
-        if form.dataSourceType == 'TANGO' :
-            print "device: %s, member: %s (%s) " % (form.tangoDeviceName,
-                                                    form.tangoMemberName,
-                                                    form.tangoMemberType,
-                                                    )
-            if form.tangoHost:
-                print "host : %s " % form.tangoHost
-            if form.tangoPort:
-                print "port : %s " % form.tangoPort
-        if form.dataSourceType == 'DB' :
-            print "%s database, fetching %s data" % (form.dbType, form.dbDataFormat)
-            for par in form.dbParameters.keys():
-                print "%s = '%s'" % (par, form.dbParameters[par])
-        if form.doc:
-            print "Doc: \n%s" % form.doc
 
 
 if __name__ == "__main__":
@@ -922,7 +927,6 @@ if __name__ == "__main__":
 
     form.createGUI()
 
-    app.connect(form, SIGNAL("changed"), form.showParameters)
     form.show()
     app.exec_()
 

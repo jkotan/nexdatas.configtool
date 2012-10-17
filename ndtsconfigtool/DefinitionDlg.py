@@ -53,6 +53,8 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
 
 
 
+    ## updates the definition dialog
+    # \brief It sets the form local variables
     def updateForm(self):
 
         if self.name is not None:
@@ -72,6 +74,8 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
 
 
         
+    ## provides the state of the definition dialog        
+    # \returns state of the definition in tuple
     def getState(self):
         attributes = copy.copy(self.attributes)
 
@@ -85,6 +89,8 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
 
 
 
+    ## sets the state of the definition dialog        
+    # \param state definition state written in tuple 
     def setState(self, state):
 
         (self.name,
@@ -104,18 +110,21 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
         
         self.updateForm()
 
-        self.updateUi()
+        self._updateUi()
 
 #        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.attributeTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
-                     self.tableItemChanged)
-        self.connect(self.addPushButton, SIGNAL("clicked()"), self.addAttribute)
-        self.connect(self.removePushButton, SIGNAL("clicked()"), self.removeAttribute)
+                     self._tableItemChanged)
+        self.connect(self.addPushButton, SIGNAL("clicked()"), self._addAttribute)
+        self.connect(self.removePushButton, SIGNAL("clicked()"), self._removeAttribute)
 
 
+    ## sets the form from the DOM node
+    # \param node DOM node
     def setFromNode(self, node=None):
         if node:
+            ## defined in NodeDlg class
             self.node = node
         attributeMap = self.node.attributes()
         nNode = unicode(self.node.nodeName())
@@ -137,8 +146,8 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
         self.doc = unicode(text).strip() if text else ""
              
     ## adds an attribute    
-    #  \brief It runs the Attribute Dialog and fetches attribute name and value    
-    def addAttribute(self):
+    #  \brief It runs the Definition Dialog and fetches attribute name and value    
+    def _addAttribute(self):
         aform  = AttributeDlg()
         if aform.exec_():
             name = aform.name
@@ -153,7 +162,7 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
                 
     ## takes a name of the current attribute
     # \returns name of the current attribute            
-    def currentTableAttribute(self):
+    def _currentTableAttribute(self):
         item = self.attributeTableWidget.item(self.attributeTableWidget.currentRow(), 0)
         if item is None:
             return None
@@ -162,8 +171,8 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
 
     ## removes an attribute    
     #  \brief It removes the current attribute asking before about it
-    def removeAttribute(self):
-        attr = self.currentTableAttribute()
+    def _removeAttribute(self):
+        attr = self._currentTableAttribute()
         if attr is None:
             return
         if QMessageBox.question(self, "Attribute - Remove",
@@ -174,10 +183,11 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
             self._attributes.pop(unicode(attr))
             self.populateAttributes()
 
+
     ## changes the current value of the attribute        
     # \brief It changes the current value of the attribute and informs the user that attribute names arenot editable
-    def tableItemChanged(self, item):
-        attr = self.currentTableAttribute()
+    def _tableItemChanged(self, item):
+        attr = self._currentTableAttribute()
         if unicode(attr)  not in self._attributes.keys():
             return
         column = self.attributeTableWidget.currentColumn()
@@ -186,6 +196,7 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
         if column == 0:
             QMessageBox.warning(self, "Attribute name is not editable", "To change the attribute name, please remove the attribute and add the new one")
         self.populateAttributes()
+
 
     ## fills in the attribute table      
     # \param selectedAttribute selected attribute    
@@ -218,11 +229,11 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
     # \param text the edited text   
     @pyqtSignature("QString")
     def on_typeLineEdit_textEdited(self, text):
-        self.updateUi()
+        self._updateUi()
 
     ## updates definition user interface
     # \brief It sets enable or disable the OK button
-    def updateUi(self):
+    def _updateUi(self):
         pass
 #        enable = not self.typeLineEdit.text().isEmpty()
 #        self.applyPushButton.setEnabled(enable)
@@ -250,6 +261,8 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
 
+    ## updates the Node
+    # \brief It sets node from the dialog variables
     def updateNode(self,index=QModelIndex()):
         elem=self.node.toElement()
             

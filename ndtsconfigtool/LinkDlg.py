@@ -41,10 +41,13 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
         ## field doc
         self.doc = u''
 
+        ## allowed subitems
         self.subItems=[ "doc"]
 
 
 
+    ## updates the link dialog
+    # \brief It sets the form local variables
     def updateForm(self):
         if self.name is not None:
             self.nameLineEdit.setText(self.name) 
@@ -71,14 +74,16 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
 
         self.updateForm()
 
-        self.updateUi()
+        self._updateUi()
 
 
         #        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
 
 
-    def getState(self):
+   ## provides the state of the link dialog        
+    # \returns state of the group in tuple
+     def getState(self):
 
         state = (self.name,
                  self.target,
@@ -89,6 +94,8 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
 
 
 
+    ## sets the state of the link dialog        
+    # \param state link state written in tuple 
     def setState(self, state):
 
         (self.name,
@@ -99,8 +106,11 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
 
 
 
+    ## sets the form from the DOM node
+    # \param node DOM node
     def setFromNode(self, node=None):
         if node:
+            ## defined in NodeDlg
             self.node = node
         attributeMap = self.node.attributes()
         nNode = unicode(self.node.nodeName())
@@ -112,15 +122,17 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
         text = self._getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
-    ## calls updateUi when the name text is changing
+
+    ## calls _updateUi when the name text is changing
     # \param text the edited text   
     @pyqtSignature("QString")
     def on_nameLineEdit_textEdited(self, text):
-        self.updateUi()
+        self._updateUi()
+
 
     ## updates link user interface
     # \brief It sets enable or disable the OK button
-    def updateUi(self):
+    def _updateUi(self):
         enable = not self.nameLineEdit.text().isEmpty()
         self.applyPushButton.setEnabled(enable)
 
@@ -155,6 +167,8 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
 
+    ## updates the Node
+    # \brief It sets node from the dialog variables
     def updateNode(self,index=QModelIndex()):
         elem=self.node.toElement()
 

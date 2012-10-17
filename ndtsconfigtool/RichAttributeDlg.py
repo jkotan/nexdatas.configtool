@@ -50,6 +50,8 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
 
 
 
+    ## updates the richattribute dialog
+    # \brief It sets the form local variables 
     def updateForm(self):
         if self.name is not None :
             self.nameLineEdit.setText(self.name) 
@@ -81,13 +83,19 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
 
         self.updateForm()
 
-        self.updateUi()
+        self._updateUi()
 
 #        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
 
+
+
+
+    ## sets the form from the DOM node
+    # \param node DOM node
     def setFromNode(self, node=None):
         if node:
+            ## defined in NodeDlg
             self.node = node
         attributeMap = self.node.attributes()
         nNode = self.node.nodeName()
@@ -107,6 +115,8 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
 
 
 
+    ## provides the state of the richattribute dialog        
+    # \returns state of the richattribute in tuple
     def getState(self):
 
         state = (self.name,
@@ -119,6 +129,8 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
 
 
 
+    ## sets the state of the richattribute dialog        
+    # \param state richattribute state written in tuple 
     def setState(self, state):
 
         (self.name,
@@ -129,11 +141,11 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
 #        print "SET",  str(state)
 
 
-    ## calls updateUi when the name text is changing
+    ## calls _updateUi when the name text is changing
     # \param text the edited text   
     @pyqtSignature("QString")
     def on_nameLineEdit_textEdited(self, text):
-        self.updateUi()
+        self._updateUi()
 
 
     ## calls updateUi when the name text is changing
@@ -146,11 +158,13 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
         else:
             self.otherFrame.hide()
 
+
     ## updates attribute user interface
     # \brief It sets enable or disable the OK button
-    def updateUi(self):
+    def _updateUi(self):
         enable = not self.nameLineEdit.text().isEmpty()
         self.applyPushButton.setEnabled(enable)
+
 
     ## accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
@@ -186,6 +200,8 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
 
+    ## updates the Node
+    # \brief It sets node from the dialog variables
     def updateNode(self,index=QModelIndex()):
         elem=self.node.toElement()
 

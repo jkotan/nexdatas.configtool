@@ -38,19 +38,22 @@ class AttributeDlg(QDialog, Ui_AttributeDlg):
         ## attribute value
         self.value = u''
         self.setupUi(self)
-        self.updateUi()
+        self._updateUi()
+
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
     @pyqtSignature("QString")
     def on_nameLineEdit_textEdited(self, text):
-        self.updateUi()
+        self._updateUi()
+
 
     ## updates attribute user interface
     # \brief It sets enable or disable the OK button
-    def updateUi(self):
+    def _updateUi(self):
         enable = not self.nameLineEdit.text().isEmpty()
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
+
 
     ## accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog

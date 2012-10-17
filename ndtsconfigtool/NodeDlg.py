@@ -21,7 +21,7 @@
 
 from PyQt4.QtGui import QDialog
 from PyQt4.QtXml import QDomNode
-from PyQt4.QtCore import (QString,SIGNAL)
+from PyQt4.QtCore import (QString, SIGNAL, QModelIndex)
 
 ## abstract node dialog 
 class NodeDlg(QDialog):
@@ -230,6 +230,12 @@ class NodeDlg(QDialog):
     ## updates the form
     # \brief abstract class
     def updateForm(self):
+        pass
+
+
+    ## updates the node
+    # \brief abstract class
+    def updateNode(self, index=QModelIndex()):
         pass
         
 

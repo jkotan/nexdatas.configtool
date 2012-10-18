@@ -647,7 +647,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                     stream = QTextStream(fh)
                     stream <<self.document.toString(2)
             #                print self.document.toString(2)
-                    self.dirty = True
+                    self.dirty = False
                 except (IOError, OSError, ValueError), e:
                     error = "Failed to save: %s" % e
                     print error

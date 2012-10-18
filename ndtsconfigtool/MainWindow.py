@@ -222,12 +222,12 @@ class MainWindow(QMainWindow):
 
         componentApplyItemAction = self.pool.createCommand(
             "&Apply Component Item", "componentApplyItem", commandArgs, ComponentApplyItem,
-            "Ctrl+A", "componentsapplyitem", "Apply the component item")
+            "Ctrl+P", "componentsapplyitem", "Apply the component item")
 
 
         dsourceApplyAction = self.pool.createCommand(
             "Apply DataSource", "dsourceApply", commandArgs, DataSourceApply,
-            "Ctrl+Shift+A", "dsourceapply", "Apply the data source")
+            "Ctrl+Shift+P", "dsourceapply", "Apply the data source")
 
 
         dsourceSaveAction = self.pool.createCommand(

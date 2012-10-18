@@ -862,22 +862,23 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                                 "Document not merged" )
             return
         error = None
-        if self._componentFile:
-            try:
-                fh = QFile(self._componentFile)
-                if not fh.open(QIODevice.WriteOnly):
-                    raise IOError, unicode(fh.errorString())
-                stream = QTextStream(fh)
-                stream << self.document.toString(2)
-                self.dirty = False
-#                print self.document.toString(2)
-            except (IOError, OSError, ValueError), e:
-                error = "Failed to save: %s" % e
-                print error
-                
-            finally:
-                if fh is not None:
-                    fh.close()
+        if self._componentFile is None:
+            self.setName(self.name, self.directory)
+        try:
+            fh = QFile(self._componentFile)
+            if not fh.open(QIODevice.WriteOnly):
+                raise IOError, unicode(fh.errorString())
+            stream = QTextStream(fh)
+            stream << self.document.toString(2)
+            self.dirty = False
+            #                print self.document.toString(2)
+        except (IOError, OSError, ValueError), e:
+            error = "Failed to save: %s" % e
+            print error
+            
+        finally:
+            if fh is not None:
+                fh.close()
 
     # asks if component should be removed from the component list
     # \brief It is called on removing  the component from the list
@@ -892,6 +893,9 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     ## provides the component name with its path
     # \returns component name with its path 
     def getNewName(self):
+        if self._componentFile is None:
+            self.setName(self.name, self.directory)
+
         self._componentFile = unicode(
             QFileDialog.getSaveFileName(self,"Save Component As ...",self._componentFile,
                                         "XML files (*.xml);;HTML files (*.html);;"

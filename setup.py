@@ -49,7 +49,6 @@ class toolBuild(build):
 
 
     def run(self):
-        build.run(self)
         try:
             ufiles = [(  ufile[:-3], "%s/ui" % TOOL ) for ufile 
                       in os.listdir("%s/ui" % TOOL) if ufile.endswith('.ui')]
@@ -69,8 +68,11 @@ class toolBuild(build):
         except TypeError:
             print "No .qrc files to build"
 
+        build.run(self)
 
-datas = [('components', ['*']), ('datasources', ['*'])]
+
+#datas = [('components', [ cp for cp in os.listdir("components") if cp.endswith('.xml')]), 
+#         ('datasources', [ ds for ds in os.listdir("datasources") if ds.endswith('.ds.xml')])]
 
 
 ## metadata for distutils
@@ -83,8 +85,8 @@ SETUPDATA=dict(
     license = "GNU GENERAL PUBLIC LICENSE, version 3",
     keywords = "configuration writer Tango component nexus data",
     url = "http://code.google.com/p/nexdatas/",
-    packages=[TOOL],
-    data_files = datas,
+    packages=[TOOL, "%s/ui"% TOOL, "%s/qrc"% TOOL],
+#    data_files = datas,
     scripts = ['ComponentDesigner.pyw'],
 #    package_data={'ndts': ['TDS']},
     long_description= read('README'),

@@ -88,6 +88,8 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
 #        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
 
+        self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        self.connect(self.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._currentIndexChanged)
 
 
 
@@ -141,17 +143,11 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
 #        print "SET",  str(state)
 
 
-    ## calls _updateUi when the name text is changing
-    # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_nameLineEdit_textEdited(self, text):
-        self._updateUi()
 
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_typeComboBox_currentIndexChanged(self, text):
+    def _currentIndexChanged(self, text):
         if text == 'other ...':
             self.otherFrame.show()            
             self.typeLineEdit.setFocus()

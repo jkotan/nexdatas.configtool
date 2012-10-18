@@ -79,6 +79,7 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
 
         #        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
 
 
     ## provides the state of the link dialog        
@@ -122,12 +123,6 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
         text = self._getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
-
-    ## calls _updateUi when the name text is changing
-    # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_nameLineEdit_textEdited(self, text):
-        self._updateUi()
 
 
     ## updates link user interface

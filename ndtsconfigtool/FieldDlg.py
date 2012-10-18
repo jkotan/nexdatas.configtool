@@ -155,6 +155,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         self.connect(self.removePushButton, SIGNAL("clicked()"), self._removeAttribute)
         self.connect(self.dimPushButton, SIGNAL("clicked()"), self._changeDimensions)
 
+        self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+
         self.populateAttributes()
 
         
@@ -337,13 +339,6 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
             selected.setSelected(True)
             self.attributeTableWidget.setCurrentItem(selected)
             
-
-
-    ## calls updateUi when the name text is changing
-    # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_nameLineEdit_textEdited(self, text):
-        self._updateUi()
 
     ## updates field user interface
     # \brief It sets enable or disable the OK button

@@ -45,12 +45,14 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
     def createGUI(self):
         self.setupUi(self)
         self.updateForm()
-        self.updateUi()
+        self._updateUi()
 
 
         self.connect(self.connectPushButton, SIGNAL("clicked()"), self.accept)
         self.connect(self.cancelPushButton, SIGNAL("clicked()"), self.reject)
+        self.connect(self.deviceLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
 
+        
 
     ## updates the connect dialog
     # \brief It sets initial values of the connection form
@@ -63,16 +65,9 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
             self.portLineEdit.setText(str(self.port))
 
 
-    ## calls updateUi when the name text is changing
-    # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_deviceLineEdit_textEdited(self, text):
-        self.updateUi()
-
-
     ## updates connect user interface
     # \brief It sets enable or disable the OK button
-    def updateUi(self):
+    def _updateUi(self):
         enable = not self.deviceLineEdit.text().isEmpty()
         self.connectPushButton.setEnabled(enable)
 

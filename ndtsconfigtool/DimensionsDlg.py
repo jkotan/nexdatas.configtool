@@ -81,6 +81,8 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
         self.populateLengths()
         self.rankSpinBox.setFocus()
 
+        self.connect(self.rankSpinBox, SIGNAL("valueChanged(int)"), self._valueChanged)
+
                 
     ## takes a name of the current dim
     # \returns name of the current dim            
@@ -114,8 +116,7 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
-    @pyqtSignature("int")
-    def on_rankSpinBox_valueChanged(self, text):
+    def _valueChanged(self, text):
         self.rank = int(self.rankSpinBox.value())
         self.populateLengths(self.rank-1)
 

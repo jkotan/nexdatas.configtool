@@ -77,6 +77,7 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
 
 #        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.connect(self.modeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
 
 
 
@@ -140,14 +141,6 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
         text = self._getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
-
-
-
-    ## calls setFrames when the name text is changing
-    # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_modeComboBox_currentIndexChanged(self, text):
-        self.setFrames(text)
 
 
 

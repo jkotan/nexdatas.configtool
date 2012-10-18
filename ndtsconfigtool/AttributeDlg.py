@@ -40,12 +40,7 @@ class AttributeDlg(QDialog, Ui_AttributeDlg):
         self.setupUi(self)
         self._updateUi()
 
-
-    ## calls updateUi when the name text is changing
-    # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_nameLineEdit_textEdited(self, text):
-        self._updateUi()
+        self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
 
 
     ## updates attribute user interface

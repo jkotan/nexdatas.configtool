@@ -271,6 +271,15 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                      SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.tableItemChanged)
         
+
+        self.connect(self.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._typeComboBox)
+        self.connect(self.dParamComboBox, SIGNAL("currentIndexChanged(QString)"), self._dParamComboBox)
+        self.connect(self.cRecNameLineEdit, SIGNAL("textEdited(QString)"), self._cRecNameLineEdit)
+        self.connect(self.dQueryLineEdit, SIGNAL("textEdited(QString)"), self._dQueryLineEdit)
+        self.connect(self.tDevNameLineEdit, SIGNAL("textEdited(QString)"), self._tDevNameLineEdit)
+        self.connect(self.tMemberNameLineEdit, SIGNAL("textEdited(QString)"), self._tMemberNameLineEdit)
+
+
         self.setFrames(self.dataSourceType)
 
 
@@ -289,24 +298,21 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
     ## shows and hides frames according to typeComboBox
     # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_typeComboBox_currentIndexChanged(self, text):
+    def _typeComboBox(self, text):
         self.setFrames(text)
         self.updateUi(unicode(text))
 
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_cRecNameLineEdit_textEdited(self, text):
+    def _cRecNameLineEdit(self, text):
         combo = unicode(self.typeComboBox.currentText())
         self.updateUi(combo)
 
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_dQueryLineEdit_textEdited(self, text):
+    def _dQueryLineEdit(self, text):
         combo = unicode(self.typeComboBox.currentText())
         self.updateUi(combo)
 
@@ -314,16 +320,14 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_tDevNameLineEdit_textEdited(self, text):
+    def _tDevNameLineEdit(self, text):
         combo = unicode(self.typeComboBox.currentText())
         self.updateUi(combo)
 
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_tMemberNameLineEdit_textEdited(self, text):
+    def _tMemberNameLineEdit(self, text):
         combo = unicode(self.typeComboBox.currentText())
         self.updateUi(combo)
 
@@ -378,7 +382,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     ## calls updateUi when the name text is changing
     # \param text the edited text   
     @pyqtSignature("QString")
-    def on_dParamComboBox_currentIndexChanged(self, text):
+    def _dParamComboBox(self, text):
         param = unicode(text)
         if param == 'DB password':
             QMessageBox.warning(self, "Unprotected password", "Please note that there is no support for any password protection")

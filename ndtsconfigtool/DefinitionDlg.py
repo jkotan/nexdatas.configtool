@@ -119,6 +119,8 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
         self.connect(self.addPushButton, SIGNAL("clicked()"), self._addAttribute)
         self.connect(self.removePushButton, SIGNAL("clicked()"), self._removeAttribute)
 
+        self.connect(self.typeLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+
 
     ## sets the form from the DOM node
     # \param node DOM node
@@ -224,12 +226,6 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
             self.attributeTableWidget.setCurrentItem(selected)
             
 
-
-    ## calls updateUi when the name text is changing
-    # \param text the edited text   
-    @pyqtSignature("QString")
-    def on_typeLineEdit_textEdited(self, text):
-        self._updateUi()
 
     ## updates definition user interface
     # \brief It sets enable or disable the OK button

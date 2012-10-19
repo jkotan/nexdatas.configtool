@@ -446,7 +446,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     def tagClicked(self, index):
         self._currentTag = index
         item  = self._currentTag.internalPointer()
-        if not item :
+        if not item:
             raise Exception, "Unreachable item"
         if not hasattr(item,'node'):
             raise Exception, "Unreachable item"
@@ -660,7 +660,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         while not child.isNull():
             if child.nodeName() == 'datasource':
                 QMessageBox.warning(self, "DataSource exists", 
-                                    "To add a new datasource please remove the old one")
+                                   "To add a new datasource please remove the old one")
                 return
             child = child.nextSibling()    
                 
@@ -914,6 +914,7 @@ def test():
     component.show()
     component.load()
     app.exec_()
+
     
 
 if __name__ == "__main__":

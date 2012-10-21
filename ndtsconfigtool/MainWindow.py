@@ -120,7 +120,8 @@ class MainWindow(QMainWindow):
     ##  creates GUI
     # \brief It create dialogs for main the window application
     def createGUI(self):
-        self.compDockWidget = QDockWidget("&Components",self)
+        self.compDockWidget = QDockWidget("Co&llections:",self)
+#        self.compDockWidget = QDockWidget("",self)
         self.compDockWidget.setObjectName("CompDockWidget")
         self.compDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea |  Qt.RightDockWidgetArea)
 

@@ -120,7 +120,8 @@ class MainWindow(QMainWindow):
     ##  creates GUI
     # \brief It create dialogs for main the window application
     def createGUI(self):
-        self.compDockWidget = QDockWidget("Co&llections:",self)
+        self.compDockWidget = QDockWidget(self)
+        self.compDockWidget.setWindowTitle("Co&llections")
 #        self.compDockWidget = QDockWidget("",self)
         self.compDockWidget.setObjectName("CompDockWidget")
         self.compDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea |  Qt.RightDockWidgetArea)
@@ -354,12 +355,12 @@ class MainWindow(QMainWindow):
 
 
         componentMergeAction = self.pool.createCommand(
-            "Merge Component", "componentMerge", commandArgs, ComponentMerge,
+            "Merge", "componentMerge", commandArgs, ComponentMerge,
             "", "componentmerge", "Merge the component")
         
 
         componentChangeDirectoryAction = self.pool.createCommand(
-            "Change Component Directory...", "componentChangeDirectory", commandArgs, 
+            "Change Directory...", "componentChangeDirectory", commandArgs, 
             ComponentChangeDirectory,
             "", "componentrechangedirecotry", "Change the component list directory")
 
@@ -373,7 +374,7 @@ class MainWindow(QMainWindow):
 
         
         componentReloadListAction = self.pool.createCommand(
-            "Reload Component List", "componentReloadList", commandArgs, ComponentReloadList,
+            "Reload List", "componentReloadList", commandArgs, ComponentReloadList,
             "", "componentreloadlist", "Reload the component list")
 
 
@@ -525,9 +526,6 @@ class MainWindow(QMainWindow):
                 componentSaveAllAction, 
                 dsourceSaveAllAction,
                 None,
-                componentMergeAction,
-                None, 
-                componentClearAction,
                 componentRemoveAction,
                 dsourceRemoveAction,
                 None,
@@ -562,14 +560,18 @@ class MainWindow(QMainWindow):
                 dsourceApplyAction
                 ))
 
-        componentsMenu = self.menuBar().addMenu("C&omponents")    
+        componentsMenu = self.menuBar().addMenu("C&omponent Items")    
         self._addActions(componentsMenu, ( 
                 componentNewGroupAction, componentNewFieldAction, 
                 componentNewAttributeAction, componentNewLinkAction,
                 componentNewDataSourceAction,None, 
                 componentLoadComponentAction, componentLoadDataSourceAction,
                 None,
-                componentAddDataSourceAction
+                componentAddDataSourceAction,
+                None,
+                componentMergeAction,
+                None, 
+                componentClearAction,
                 ))
 
         self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)

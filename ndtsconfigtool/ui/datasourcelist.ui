@@ -18,7 +18,7 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="dataSourceTabWidget">
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
@@ -28,7 +28,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="dataSourceTab">
       <attribute name="title">
        <string>  &amp;DataSources  </string>
       </attribute>

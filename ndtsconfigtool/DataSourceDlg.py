@@ -20,8 +20,9 @@
 # Data Source dialog class
 
 import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, Qt, QFileInfo, QFile, QIODevice, 
+                          QTextStream, QVariant)
+from PyQt4.QtGui import (QApplication, QFileDialog, QMessageBox, QTableWidgetItem)
 from ui.ui_datasourcedlg import Ui_DataSourceDlg
 from PyQt4.QtXml import (QDomDocument, QDomNode)
 from NodeDlg import NodeDlg 
@@ -381,7 +382,6 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
-    @pyqtSignature("QString")
     def _dParamComboBox(self, text):
         param = unicode(text)
         if param == 'DB password':

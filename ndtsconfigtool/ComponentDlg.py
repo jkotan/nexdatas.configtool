@@ -19,8 +19,10 @@
 ## \file ComponentDlg.py
 # component classes 
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, Qt, QFileInfo, QFile, QIODevice, 
+                          QTextStream)
+from PyQt4.QtGui import (QDialog, QWidget, QGridLayout, QApplication, QMenu, QFileDialog,
+                         QMessageBox )
 from PyQt4.QtXml import (QDomDocument, QDomNode, QXmlDefaultHandler,
                          QXmlInputSource, QXmlSimpleReader)
 
@@ -39,7 +41,7 @@ from Merger import Merger, MergerDlg, IncompatibleNodeError
 import os
 import time 
 
-from ComponentModel import *    
+from ComponentModel import ComponentModel
 from LabeledObject import LabeledObject
 
 ## dialog defining a tag link 

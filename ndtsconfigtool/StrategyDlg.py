@@ -20,8 +20,7 @@
 # Strategy dialog class
 
 import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
 from ui.ui_strategydlg import Ui_StrategyDlg
 
 from NodeDlg import NodeDlg 
@@ -204,6 +203,7 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
 if __name__ == "__main__":
     import sys
 
+    from PyQt4.QtGui import QApplication
     ## Qt application
     app = QApplication(sys.argv)
     ## attribute form

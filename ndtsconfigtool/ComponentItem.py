@@ -19,10 +19,6 @@
 ## \file ComponentItem.py
 # dom item
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4.QtXml import *
-
 from FieldDlg import FieldDlg
 from GroupDlg import GroupDlg
 from RichAttributeDlg import RichAttributeDlg
@@ -100,6 +96,8 @@ class ComponentItem(object):
 
 if __name__ == "__main__":
     import sys
+
+    from PyQt4.QtXml import QDomNode
 
     ## DOM node
     qdn = QDomNode()

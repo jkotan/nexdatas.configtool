@@ -20,8 +20,8 @@
 # Connect dialog class
 
 import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import SIGNAL
+from PyQt4.QtGui import (QDialog, QMessageBox)
 from ui.ui_connectdlg import Ui_ConnectDlg
 
 
@@ -113,8 +113,9 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
 
 if __name__ == "__main__":
     import sys
+    from PyQt4.QtGui import QApplication
 
-    ## Qt application
+   ## Qt application
     app = QApplication(sys.argv)
     ## connect form
     form = ConnectDlg()

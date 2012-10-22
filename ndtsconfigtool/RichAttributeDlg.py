@@ -20,8 +20,8 @@
 # Rich Attribute dialog class
 
 import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
+from PyQt4.QtGui import QMessageBox
 from ui.ui_richattributedlg import  Ui_RichAttributeDlg
 
 from NodeDlg import NodeDlg 
@@ -227,6 +227,7 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
 
 if __name__ == "__main__":
     import sys
+    from PyQt4.QtGui import QApplication
 
     ## Qt application
     app = QApplication(sys.argv)

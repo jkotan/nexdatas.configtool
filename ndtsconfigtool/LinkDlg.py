@@ -20,8 +20,8 @@
 # Link dialog class
 
 import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
+from PyQt4.QtGui import (QMessageBox)
 from ui.ui_linkdlg import Ui_LinkDlg
 
 from NodeDlg import NodeDlg 
@@ -191,6 +191,7 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
 
 if __name__ == "__main__":
     import sys
+    from PyQt4.QtGui import QApplication
 
     ## Qt application
     app = QApplication(sys.argv)

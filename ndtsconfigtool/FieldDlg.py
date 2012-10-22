@@ -20,8 +20,8 @@
 # Field dialog class
 
 import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (SIGNAL, QString, QVariant, Qt, QModelIndex)
+from PyQt4.QtGui import (QMessageBox, QTableWidgetItem)
 from ui.ui_fielddlg import Ui_FieldDlg
 from PyQt4.QtXml import (QDomDocument, QDomNode)
 
@@ -442,6 +442,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
 
 if __name__ == "__main__":
     import sys
+    from PyQt4.QtGui import QApplication
 
     ## Qt application
     app = QApplication(sys.argv)

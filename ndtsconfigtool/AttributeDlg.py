@@ -20,14 +20,14 @@
 # Attribute dialog class
 
 import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import SIGNAL
+from PyQt4.QtGui import (QDialog, QDialogButtonBox)
 from ui.ui_attributedlg import Ui_AttributeDlg
 
 
 ## dialog defining a tag attribute 
 class AttributeDlg(QDialog, Ui_AttributeDlg):
-    
+
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
@@ -72,6 +72,7 @@ class AttributeDlg(QDialog, Ui_AttributeDlg):
 
 if __name__ == "__main__":
     import sys
+    from PyQt4.QtGui import QApplication
 
     ## Qt application
     app = QApplication(sys.argv)

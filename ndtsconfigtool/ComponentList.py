@@ -20,12 +20,13 @@
 # Data component list class
 
 import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (SIGNAL, Qt, QString, QVariant)
+from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
 from ui.ui_componentlist import Ui_ComponentList
 import os
 
-from ComponentDlg import *
+from ComponentDlg import ComponentDlg
+from LabeledObject import LabeledObject
 
 
 ## dialog defining a group tag
@@ -278,6 +279,7 @@ class ComponentList(QWidget, Ui_ComponentList):
 
 if __name__ == "__main__":
     import sys
+    from PyQt4.QtGui import QApplication
 
     ## Qt application
     app = QApplication(sys.argv)

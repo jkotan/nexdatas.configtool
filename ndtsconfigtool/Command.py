@@ -19,8 +19,8 @@
 ## \file Command.py
 # user commands of GUI application
 
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from PyQt4.QtGui import (QMessageBox, QFileDialog)
+from PyQt4.QtCore import (SIGNAL, Qt, QFileInfo)
 
 from DataSourceList import DataSourceList
 from ComponentList import ComponentList

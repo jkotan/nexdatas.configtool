@@ -19,13 +19,13 @@
 ## \file ComponentModel.py
 # component classes 
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (QAbstractItemModel, QVariant, Qt, QModelIndex, QStringList)
+#from PyQt4.QtGui import 
 from PyQt4.QtXml import (QDomDocument, QDomNode, QXmlDefaultHandler,
                          QXmlInputSource, QXmlSimpleReader)
 
 import os
-from ComponentItem import *
+from ComponentItem import ComponentItem
 
 ## model for component tree
 class ComponentModel(QAbstractItemModel):
@@ -55,18 +55,17 @@ class ComponentModel(QAbstractItemModel):
         node = item.node
 
         attributeMap = node.attributes()
+#        if node.nodeName() == 'xml':
+#            return 
 
         if index.column() == 0:      
-#            print ":DA:, "
             name = None
             if attributeMap.contains("name"):
                 name = attributeMap.namedItem("name").nodeValue()
 
             if name is not None:    
-#                print ":DA:, ", node.nodeName() +": "+ name
                 return node.nodeName() +": "+ name
             else:
-#                print ":DA:, ", node.nodeName()
                 return node.nodeName() 
         elif index.column() == 1:
             attributes = QStringList()

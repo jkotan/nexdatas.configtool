@@ -20,8 +20,8 @@
 # Data source list class
 
 import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (SIGNAL, Qt, QString, QVariant)
+from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
 from ui.ui_datasourcelist import  Ui_DataSourceList
 from DataSourceDlg import DataSourceDlg
 import os 
@@ -257,6 +257,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
 
 if __name__ == "__main__":
     import sys
+    from PyQt4.QtGui import QApplication
 
     ## Qt application
     app = QApplication(sys.argv)

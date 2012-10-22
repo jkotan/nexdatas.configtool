@@ -20,8 +20,8 @@
 # Dimensions dialog class
 
 import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (SIGNAL, Qt, QVariant)
+from PyQt4.QtGui import (QTableWidgetItem, QMessageBox, QDialog)
 from ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
 from NodeDlg import NodeDlg 

@@ -19,10 +19,8 @@
 ## \file CommandPool.py
 # user pool commands of GUI application
 
-from Command import *
-
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from PyQt4.QtGui import  (QAction, QIcon) 
+from PyQt4.QtCore import (QString, SIGNAL)
 
 
 ## stack with the application commands

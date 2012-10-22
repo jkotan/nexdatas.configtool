@@ -20,8 +20,8 @@
 # Definition dialog class
 
 import re
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (SIGNAL, QString, Qt, QVariant, QModelIndex)
+from PyQt4.QtGui import (QMessageBox, QTableWidgetItem)
 from ui.ui_definitiondlg import  Ui_DefinitionDlg
 
 import copy 
@@ -287,6 +287,7 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
         
 if __name__ == "__main__":
     import sys
+    from PyQt4.QtGui import QApplication
 
     ## Qt application
     app = QApplication(sys.argv)

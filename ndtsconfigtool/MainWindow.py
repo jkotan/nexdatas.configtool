@@ -21,18 +21,78 @@
 
 import sys
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (SIGNAL, SLOT, QSettings, Qt,  QSignalMapper, 
+                          QVariant, QT_VERSION_STR, PYQT_VERSION_STR, QStringList )
+from PyQt4.QtGui import (QMainWindow, QDockWidget, QSplitter, QWorkspace ,
+                         QListWidgetItem, QAction, QKeySequence, QMessageBox, QIcon)
 
 import platform
 from qrc import qrc_resources
 
-from CommandPool import *
-from DataSourceList import *
-from ComponentList import *
+from CommandPool import (CommandPool,CommandStack)
+from DataSourceList import DataSourceList
+from ComponentList import ComponentList
+from DataSourceDlg import DataSourceDlg
+from ComponentDlg import ComponentDlg
 
+from Command import (
+     ServerConnect,
+ ServerFetchComponents,
+ ServerStoreComponent,
+ ServerDeleteComponent,
+ ServerSetMandatoryComponent,
+ ServerGetMandatoryComponents,
+ ServerUnsetMandatoryComponent,
+ ServerFetchDataSources,
+ ServerStoreDataSource,
+ ServerDeleteDataSource,
+ ServerClose,
+ ComponentNew,
+ ComponentOpen,
+ DataSourceOpen,
+ ComponentRemove,
+ ComponentEdit,
+ ComponentSave,
+ ComponentSaveAll,
+ ComponentSaveAs,
+ ComponentChangeDirectory,
+ DataSourceCopy,
+ DataSourceCut,
+ DataSourcePaste,
+ DataSourceApply,
+ DataSourceSaveAll,
+ DataSourceSave,
+ DataSourceSaveAs,
+ DataSourceChangeDirectory,
+ ComponentReloadList,
+ DataSourceReloadList,
+ ComponentListChanged,
+ DataSourceNew,
+ DataSourceEdit,
+ DataSourceRemove,
+ DataSourceListChanged,
+ CloseApplication,
+ UndoCommand,
+ RedoCommand,
+ ComponentItemCommand,
+ ComponentClear,
+ ComponentLoadComponentItem,
+ ComponentRemoveItem,
+ ComponentCopyItem,
+ ComponentPasteItem,
+ CutItem,
+ CopyItem,
+ PasteItem,
+ ComponentCollect,
+ DataSourceCollect,
+ ComponentMerge,
+ ComponentNewItem,
+ ComponentLoadDataSourceItem,
+ ComponentAddDataSourceItem,
+ ComponentApplyItem
+)
 
-from ConfigurationServer import *
+from ConfigurationServer import (ConfigurationServer, PYTANGO_AVAILABLE)
 from ndtsconfigtool import __version__
 
 ## main window class

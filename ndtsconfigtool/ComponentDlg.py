@@ -19,7 +19,7 @@
 ## \file ComponentDlg.py
 # component classes 
 
-from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, Qt, QFileInfo, QFile, QIODevice, 
+from PyQt4.QtCore import (SIGNAL, SLOT, QModelIndex, QString, Qt, QFileInfo, QFile, QIODevice, 
                           QTextStream)
 from PyQt4.QtGui import (QDialog, QWidget, QGridLayout, QApplication, QMenu, QFileDialog,
                          QMessageBox )
@@ -339,7 +339,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
-        if not sel:
+        if not sel or not index.isValid():
             return
         self.dirty = True
         node = sel.node
@@ -358,7 +358,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
-        if not sel:
+        if not sel or not index.isValid():
             return
 
         self.dirty = True
@@ -600,7 +600,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
-        if not sel:
+        if not sel or not index.isValid():
             return
         node = sel.node
 
@@ -671,7 +671,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
         index = self.view.currentIndex()
         sel = index.internalPointer()
-        if not sel:
+        if not sel or not index.isValid():
             return
         node = sel.node
 
@@ -737,7 +737,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
         index = self.view.currentIndex()
         sel = index.internalPointer()
-        if not sel:
+        if not sel or not index.isValid():
             return
         node = sel.node
 

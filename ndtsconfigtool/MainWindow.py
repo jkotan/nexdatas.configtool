@@ -37,60 +37,60 @@ from ComponentDlg import ComponentDlg
 
 from Command import (
      ServerConnect,
- ServerFetchComponents,
- ServerStoreComponent,
- ServerDeleteComponent,
- ServerSetMandatoryComponent,
- ServerGetMandatoryComponents,
- ServerUnsetMandatoryComponent,
- ServerFetchDataSources,
- ServerStoreDataSource,
- ServerDeleteDataSource,
- ServerClose,
- ComponentNew,
- ComponentOpen,
- DataSourceOpen,
- ComponentRemove,
- ComponentEdit,
- ComponentSave,
- ComponentSaveAll,
- ComponentSaveAs,
- ComponentChangeDirectory,
- DataSourceCopy,
- DataSourceCut,
- DataSourcePaste,
- DataSourceApply,
- DataSourceSaveAll,
- DataSourceSave,
- DataSourceSaveAs,
- DataSourceChangeDirectory,
- ComponentReloadList,
- DataSourceReloadList,
- ComponentListChanged,
- DataSourceNew,
- DataSourceEdit,
- DataSourceRemove,
- DataSourceListChanged,
- CloseApplication,
- UndoCommand,
- RedoCommand,
- ComponentItemCommand,
- ComponentClear,
- ComponentLoadComponentItem,
- ComponentRemoveItem,
- ComponentCopyItem,
- ComponentPasteItem,
- CutItem,
- CopyItem,
- PasteItem,
- ComponentCollect,
- DataSourceCollect,
- ComponentMerge,
- ComponentNewItem,
- ComponentLoadDataSourceItem,
- ComponentAddDataSourceItem,
- ComponentApplyItem
-)
+     ServerFetchComponents,
+     ServerStoreComponent,
+     ServerDeleteComponent,
+     ServerSetMandatoryComponent,
+     ServerGetMandatoryComponents,
+     ServerUnsetMandatoryComponent,
+     ServerFetchDataSources,
+     ServerStoreDataSource,
+     ServerDeleteDataSource,
+     ServerClose,
+     ComponentNew,
+     ComponentOpen,
+     DataSourceOpen,
+     ComponentRemove,
+     ComponentEdit,
+     ComponentSave,
+     ComponentSaveAll,
+     ComponentSaveAs,
+     ComponentChangeDirectory,
+     DataSourceCopy,
+     DataSourceCut,
+     DataSourcePaste,
+     DataSourceApply,
+     DataSourceSaveAll,
+     DataSourceSave,
+     DataSourceSaveAs,
+     DataSourceChangeDirectory,
+     ComponentReloadList,
+     DataSourceReloadList,
+     ComponentListChanged,
+     DataSourceNew,
+     DataSourceEdit,
+     DataSourceRemove,
+     DataSourceListChanged,
+     CloseApplication,
+     UndoCommand,
+     RedoCommand,
+     ComponentItemCommand,
+     ComponentClear,
+     ComponentLoadComponentItem,
+     ComponentRemoveItem,
+     ComponentCopyItem,
+     ComponentPasteItem,
+     CutItem,
+     CopyItem,
+     PasteItem,
+     ComponentCollect,
+     DataSourceCollect,
+     ComponentMerge,
+     ComponentNewItem,
+     ComponentLoadDataSourceItem,
+     ComponentAddDataSourceItem,
+     ComponentApplyItem
+     )
 
 from ConfigurationServer import (ConfigurationServer, PYTANGO_AVAILABLE)
 from ndtsconfigtool import __version__
@@ -190,7 +190,7 @@ class MainWindow(QMainWindow):
     # \brief It create dialogs for main the window application
     def createGUI(self):
         self.compDockWidget = QDockWidget(self)
-        self.compDockWidget.setWindowTitle("Co&llections")
+        self.compDockWidget.setWindowTitle("Collections")
 #        self.compDockWidget = QDockWidget("",self)
         self.compDockWidget.setObjectName("CompDockWidget")
         self.compDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea |  Qt.RightDockWidgetArea)
@@ -251,11 +251,24 @@ class MainWindow(QMainWindow):
 
         self.connect(self.mdi, SIGNAL("windowActivated(QWidget*)"), self.mdiWindowActivated)
 
-        self.connect(self.sourceList.sourceListWidget, SIGNAL("itemClicked(QListWidgetItem*)"), 
-                     self.dsourceEdit)
+#        self.connect(self.sourceList.sourceListWidget, 
+#                     SIGNAL("currentItemChanged(QListWidgetItem*,QListWidgetItem*)"), 
+#                     self.sourceChangeEdit)
 
-        self.connect(self.componentList.componentListWidget, SIGNAL("itemClicked(QListWidgetItem*)"), 
-                     self.componentEdit)
+#        self.connect(self.componentList.componentListWidget, 
+#                     SIGNAL("currentItemChanged(QListWidgetItem*,QListWidgetItem*)"), 
+#                     self.componentChangeEdit)
+
+        
+
+
+#        self.connect(self.sourceList.sourceListWidget, 
+#                     SIGNAL("itemClicked(QListWidgetItem*)"), 
+#                     self.dsourceEdit)
+
+#        self.connect(self.componentList.componentListWidget, 
+#                     SIGNAL("itemClicked(QListWidgetItem*)"), 
+#                     self.componentEdit)
 
         
 
@@ -565,6 +578,14 @@ class MainWindow(QMainWindow):
         self.windows["CloseAction"] = self._createAction(
             "&Close", self.mdi.closeActiveWindow, QKeySequence.Close,
             tip = "Close the window" )
+        self.windows["ComponentListAction"] = self._createAction(
+            "&Component List", self.gotoComponentList, "Ctrl+<",
+            tip = "Go to the component list" )
+        self.windows["DataSourceListAction"] = self._createAction(
+            "&DataSource List", self.gotoDataSourceList, "Ctrl+>",
+            tip = "Go to the component list" )
+
+
 
         viewDockAction = self.compDockWidget.toggleViewAction()
         viewDockAction.setToolTip("Show/Hide the dock lists")
@@ -643,7 +664,7 @@ class MainWindow(QMainWindow):
                 componentAddDataSourceAction,
                 None,
                 componentMergeAction,
-                None, 
+                None,
                 componentClearAction,
                 ))
 
@@ -660,7 +681,8 @@ class MainWindow(QMainWindow):
             componentCopyItemAction,
             componentPasteItemAction,
             None,
-            componentMergeAction
+            componentMergeAction,
+            componentApplyItemAction
             ) 
         
 
@@ -1551,6 +1573,23 @@ class MainWindow(QMainWindow):
         self.pooling = True
 
 
+    ## component change edit action
+    # \param newItem new selected item on the component list
+    # \param oldItem new selected item on the component list
+    def componentChangeEdit(self, newItem, oldItem):
+        if newItem is not None and oldItem is not None and newItem.text() == oldItem.text():
+            self.componentEdit()
+        print "change"
+
+
+    ## datasource change edit action
+    # \param newItem new selected item on the datasource list
+    # \param oldItem new selected item on the datasource list
+    def sourceChangeEdit(self, newItem, oldItem):
+        if newItem is not None and oldItem is not None and newItem.text() == oldItem.text():
+            self.dsourceEdit()
+        print "change"
+
     ## component change action
     # \param item new selected item on the component list
     def componentChanged(self, item):
@@ -1677,6 +1716,16 @@ class MainWindow(QMainWindow):
 
     ## restores all windows
     # \brief It restores all windows in MDI
+    def gotoComponentList(self):
+        self.componentList.componentListWidget.setFocus()
+  
+  ## restores all windows
+    # \brief It restores all windows in MDI
+    def gotoDataSourceList(self):
+        self.sourceList.sourceListWidget.setFocus()
+  
+    ## restores all windows
+    # \brief It restores all windows in MDI
     def windowRestoreAll(self):
         for dialog in self.mdi.windowList():
             dialog.showNormal()
@@ -1710,11 +1759,13 @@ class MainWindow(QMainWindow):
     def updateWindowMenu(self):
         self.windows["Menu"].clear()
         self._addActions(self.windows["Menu"], (self.windows["NextAction"],
-                                               self.windows["PrevAction"], self.windows["CascadeAction"],
-                                               self.windows["TileAction"], self.windows["RestoreAction"],
-                                               self.windows["MinimizeAction"],
-                                               self.windows["ArrangeIconsAction"], None,
-                                               self.windows["CloseAction"]))
+                                                self.windows["PrevAction"], self.windows["CascadeAction"],
+                                                self.windows["TileAction"], self.windows["RestoreAction"],
+                                                self.windows["MinimizeAction"],
+                                                self.windows["ArrangeIconsAction"], None,
+                                                self.windows["ComponentListAction"], 
+                                                self.windows["DataSourceListAction"], None,
+                                                self.windows["CloseAction"]))
         dialogs = self.mdi.windowList()
         if not dialogs:
             return

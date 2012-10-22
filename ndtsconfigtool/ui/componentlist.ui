@@ -18,7 +18,7 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QTabWidget" name="ComponentTabWidget">
+    <widget class="QTabWidget" name="componentTabWidget">
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
@@ -28,9 +28,9 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="ComponentTab">
+     <widget class="QWidget" name="componentTab">
       <attribute name="title">
-       <string>  &amp;Components  </string>
+       <string>  Components  </string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
@@ -44,7 +44,7 @@
  </widget>
  <tabstops>
   <tabstop>componentListWidget</tabstop>
-  <tabstop>ComponentTabWidget</tabstop>
+  <tabstop>componentTabWidget</tabstop>
  </tabstops>
  <resources/>
  <connections/>

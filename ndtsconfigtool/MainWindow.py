@@ -33,10 +33,7 @@ from ComponentList import *
 
 
 from ConfigurationServer import *
-
-#__version__ = "1.0.0"
-## version of the application
-__version__ = "0.0.1"
+from ndtsconfigtool import __version__
 
 ## main window class
 class MainWindow(QMainWindow):
@@ -51,8 +48,14 @@ class MainWindow(QMainWindow):
         ## component directory
         self.cpDirectory = "./components"
 
-        ## component menu under mouse cursor
+        ## component tree menu under mouse cursor
         self.contextMenuActions = None
+
+        ## component list menu under mouse cursor
+        self.componentListMenuActions = None
+
+        ## datasource list menu under mouse cursor
+        self.dsourceListMenuActions = None
 
         ## dock with components and datasources
         self.compDockWidget = None
@@ -88,6 +91,12 @@ class MainWindow(QMainWindow):
             
 
         self.createActions()
+
+        if self.componentList:
+            self.componentList.setActions(self.componentListMenuActions)
+
+        if self.sourceList:
+            self.sourceList.setActions(self.dsourceListMenuActions)
 
         self.loadDataSources()
 
@@ -562,10 +571,14 @@ class MainWindow(QMainWindow):
 
         componentsMenu = self.menuBar().addMenu("C&omponent Items")    
         self._addActions(componentsMenu, ( 
-                componentNewGroupAction, componentNewFieldAction, 
-                componentNewAttributeAction, componentNewLinkAction,
-                componentNewDataSourceAction,None, 
-                componentLoadComponentAction, componentLoadDataSourceAction,
+                componentNewGroupAction, 
+                componentNewFieldAction, 
+                componentNewAttributeAction, 
+                componentNewLinkAction,
+                componentNewDataSourceAction,
+                None, 
+                componentLoadComponentAction, 
+                componentLoadDataSourceAction,
                 None,
                 componentAddDataSourceAction,
                 None,
@@ -588,6 +601,38 @@ class MainWindow(QMainWindow):
             componentPasteItemAction,
             None,
             componentMergeAction
+            ) 
+        
+
+        self.componentListMenuActions =  ( 
+            componentNewAction, 
+            componentOpenAction, 
+            componentEditAction, 
+            None, 
+            componentSaveAction, 
+            componentSaveAsAction,
+            componentSaveAllAction, 
+            None,
+            componentRemoveAction,
+            None,
+            componentReloadListAction,
+            componentChangeDirectoryAction
+            ) 
+
+
+        self.dsourceListMenuActions =  ( 
+            dsourceNewAction,
+            dsourceOpenAction, 
+            dsourceEditAction, 
+            None, 
+            dsourceSaveAction,
+            dsourceSaveAsAction,
+            dsourceSaveAllAction,
+            None,
+            dsourceRemoveAction,
+            None,
+            dsourceReloadListAction,
+            dsourceChangeDirectoryAction
             ) 
         
 
@@ -722,10 +767,12 @@ class MainWindow(QMainWindow):
     ## sets the component list from the given dictionary
     # \param components dictionary with components, i.e. name:xml
     def setComponents(self, components):
-        self.componentList.setList(components, self.contextMenuActions,
-                                    self.componentCollect,
-                                    self.componentApplyItem
-                                    )
+        self.componentList.setList(
+            components, 
+            self.contextMenuActions,
+            self.componentCollect,
+            self.componentApplyItem
+            )
         idc =  self.componentList.components.itervalues().next().id \
             if len(self.componentList.components) else None
 
@@ -737,10 +784,11 @@ class MainWindow(QMainWindow):
     # \brief It loads the component list from the default directory
     def loadComponents(self):
 #        self.componentList.components = {}
-        self.componentList.loadList(self.contextMenuActions,
-                                    self.componentCollect,
-                                    self.componentApplyItem
-                                    )
+        self.componentList.loadList(
+            self.contextMenuActions,
+            self.componentCollect,
+            self.componentApplyItem
+            )
         idc =  self.componentList.components.itervalues().next().id \
             if len(self.componentList.components) else None
 

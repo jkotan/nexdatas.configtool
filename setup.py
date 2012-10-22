@@ -24,15 +24,21 @@ from distutils.core import setup
 from distutils.command.build import build
 from distutils.command.clean import clean
 
+## package name
 TOOL = "ndtsconfigtool"
+## package instance
 ITOOL = __import__(TOOL)
 
 ## reading a file
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+## ui and qrc builder for python
 class toolBuild(build):
 
+    ## creates the python qrc files
+    # \param qfile qrc file name
+    # \param path  qrc file path 
     def makeqrc(self, qfile, path):
         compiled = os.system("pyrcc4 %s/%s.qrc -o %s/qrc_%s.py" % (path, qfile, path, qfile))
         if compiled == 0:
@@ -40,6 +46,9 @@ class toolBuild(build):
         else:
             print "Warning: Cannot build  %s%s.qrc"  % (path, qfile)
 
+    ## creates the python ui files
+    # \param ufile ui file name
+    # \param path  ui file path 
     def makeui(self, ufile, path):
         compiled = os.system("pyuic4 %s/%s.ui -o %s/ui_%s.py" % (path, ufile, path, ufile))
         if compiled == 0:
@@ -47,7 +56,8 @@ class toolBuild(build):
         else:
             print "Warning: Cannot build %s/ui_%s.py"  % (path, ufile)
 
-
+    ## runner
+    # \brief It is run during building
     def run(self):
         try:
             ufiles = [(  ufile[:-3], "%s/ui" % TOOL ) for ufile 

@@ -43,6 +43,9 @@ class ComponentList(QWidget, Ui_ComponentList):
         ## group components
         self.components = {}
 
+        ## actions
+        self._actions = []
+
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
@@ -55,6 +58,28 @@ class ComponentList(QWidget, Ui_ComponentList):
 #                     self.listItemChanged)
 
         self.populateComponents()
+
+
+    ## opens context Menu        
+    # \param position in the component list
+    def _openMenu(self, position):
+        menu = QMenu()
+        for action in self._actions:
+            if action is None:
+                menu.addSeparator()
+            else:
+                menu.addAction(action)
+        menu.exec_(self.componentListWidget.viewport().mapToGlobal(position))
+
+
+    ## sets context menu actions for the component list
+    # \param actions tuple with actions 
+    def setActions(self, actions):
+        self.componentListWidget.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.componentListWidget.customContextMenuRequested.connect(self._openMenu)
+        self._actions = actions
+        
+        
 
     ## adds an component    
     #  \brief It runs the Component Dialog and fetches component name and value    
@@ -170,10 +195,10 @@ class ComponentList(QWidget, Ui_ComponentList):
 
             
     ## loads the component list from the given dictionary
-    # \param actions actions of the context menu
+    # \param itemActions actions of the context menu
     # \param externalSave save action
     # \param externalApply apply action
-    def loadList(self, actions, externalSave = None, externalApply = None ):
+    def loadList(self, itemActions, externalSave = None, externalApply = None ):
         try:
             dirList=os.listdir(self.directory)
         except:
@@ -193,7 +218,7 @@ class ComponentList(QWidget, Ui_ComponentList):
             dlg.directory = self.directory
             dlg.name = name
             dlg.createGUI()
-            dlg.addContextMenu(actions)
+            dlg.addContextMenu(itemActions)
 
             dlg.load()    
             if hasattr(dlg,"connectExternalActions"):     
@@ -209,10 +234,10 @@ class ComponentList(QWidget, Ui_ComponentList):
 
     ## sets the component
     # \param components dictionary with the components, i.e. name:xml
-    # \param actions actions of the context menu
+    # \param itemActions actions of the tree context menu
     # \param externalSave save action
     # \param externalApply apply action
-    def setList(self, components, actions, externalSave = None, externalApply = None ):
+    def setList(self, components,  itemActions, externalSave = None, externalApply = None ):
         try:
             dirList=os.listdir(self.directory)
         except:
@@ -228,7 +253,7 @@ class ComponentList(QWidget, Ui_ComponentList):
             dlg.directory = self.directory
             dlg.name = name
             dlg.createGUI()
-            dlg.addContextMenu(actions)
+            dlg.addContextMenu(itemActions)
 
             dlg.set(components[name])    
             if hasattr(dlg,"connectExternalActions"):     

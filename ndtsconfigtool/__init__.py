@@ -16,8 +16,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndtsconfigtool nexdatas
-## \file __init__.py
+## \file ndtsconfigtool/__init__.py
 # package constructor
 
+## version of the application
 __version__ = "0.1.0"
 

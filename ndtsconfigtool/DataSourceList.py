@@ -44,6 +44,10 @@ class DataSourceList(QWidget, Ui_DataSourceList):
         ## group datasources
         self.datasources = {}
 
+        ## actions
+        self._actions = []
+
+
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
@@ -51,6 +55,28 @@ class DataSourceList(QWidget, Ui_DataSourceList):
         self.setupUi(self)
         self.populateDataSources()
 
+
+
+
+    ## opens context Menu        
+    # \param position in the datasource list
+    def _openMenu(self, position):
+        menu = QMenu()
+        for action in self._actions:
+            if action is None:
+                menu.addSeparator()
+            else:
+                menu.addAction(action)
+        menu.exec_(self.sourceListWidget.viewport().mapToGlobal(position))
+
+
+    ## sets context menu actions for the datasource list
+    # \param actions tuple with actions 
+    def setActions(self, actions):
+        self.sourceListWidget.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.sourceListWidget.customContextMenuRequested.connect(self._openMenu)
+        self._actions = actions
+        
             
 
     ## loads the datasource list from the given dictionary

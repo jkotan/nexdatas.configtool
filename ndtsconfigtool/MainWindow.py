@@ -784,7 +784,8 @@ class MainWindow(QMainWindow):
                 status= QMessageBox.question(self, "Component - Save",
                                              "Do you want to save the component: %s".encode() \
                                                  %  (cp.name),
-                                             QMessageBox.Yes | QMessageBox.No| QMessageBox.Cancel)
+                                             QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
+                                             QMessageBox.Save)
 
                 if status == QMessageBox.Yes:
                     try:
@@ -808,7 +809,8 @@ class MainWindow(QMainWindow):
                 status= QMessageBox.question(self, "DataSource - Save",
                                              "Do you want to save the datasource: %s".encode() \
                                                  %  (ds.name),
-                                             QMessageBox.Yes | QMessageBox.No| QMessageBox.Cancel)
+                                             QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
+                                             QMessageBox.Save)
 
                 if status == QMessageBox.Yes:
                     try:

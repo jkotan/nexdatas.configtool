@@ -180,6 +180,7 @@ class MainWindow(QMainWindow):
         status = self.statusBar()
         status.setSizeGripEnabled(False)
         
+        self.updateWindowMenu()
         status.showMessage("Ready", 5000)
 
         self.setWindowTitle("NDTS Component Designer")
@@ -1692,12 +1693,14 @@ class MainWindow(QMainWindow):
     # \brief It restores all windows in MDI
     def gotoComponentList(self):
         self.componentList.componentListWidget.setFocus()
+
   
   ## restores all windows
     # \brief It restores all windows in MDI
     def gotoDataSourceList(self):
         self.sourceList.sourceListWidget.setFocus()
-  
+
+
     ## restores all windows
     # \brief It restores all windows in MDI
     def windowRestoreAll(self):

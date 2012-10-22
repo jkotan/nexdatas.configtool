@@ -251,24 +251,15 @@ class MainWindow(QMainWindow):
 
         self.connect(self.mdi, SIGNAL("windowActivated(QWidget*)"), self.mdiWindowActivated)
 
-#        self.connect(self.sourceList.sourceListWidget, 
-#                     SIGNAL("currentItemChanged(QListWidgetItem*,QListWidgetItem*)"), 
-#                     self.sourceChangeEdit)
-
-#        self.connect(self.componentList.componentListWidget, 
-#                     SIGNAL("currentItemChanged(QListWidgetItem*,QListWidgetItem*)"), 
-#                     self.componentChangeEdit)
-
-        
 
 
-#        self.connect(self.sourceList.sourceListWidget, 
-#                     SIGNAL("itemClicked(QListWidgetItem*)"), 
-#                     self.dsourceEdit)
+        self.connect(self.sourceList.sourceListWidget, 
+                     SIGNAL("itemClicked(QListWidgetItem*)"), 
+                     self.dsourceEdit)
 
-#        self.connect(self.componentList.componentListWidget, 
-#                     SIGNAL("itemClicked(QListWidgetItem*)"), 
-#                     self.componentEdit)
+        self.connect(self.componentList.componentListWidget, 
+                     SIGNAL("itemClicked(QListWidgetItem*)"), 
+                     self.componentEdit)
 
         
 
@@ -1572,23 +1563,6 @@ class MainWindow(QMainWindow):
                         self.componentList.populateComponents(widget.idc)
         self.pooling = True
 
-
-    ## component change edit action
-    # \param newItem new selected item on the component list
-    # \param oldItem new selected item on the component list
-    def componentChangeEdit(self, newItem, oldItem):
-        if newItem is not None and oldItem is not None and newItem.text() == oldItem.text():
-            self.componentEdit()
-        print "change"
-
-
-    ## datasource change edit action
-    # \param newItem new selected item on the datasource list
-    # \param oldItem new selected item on the datasource list
-    def sourceChangeEdit(self, newItem, oldItem):
-        if newItem is not None and oldItem is not None and newItem.text() == oldItem.text():
-            self.dsourceEdit()
-        print "change"
 
     ## component change action
     # \param item new selected item on the component list

@@ -877,10 +877,11 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         except (IOError, OSError, ValueError), e:
             error = "Failed to save: %s" % e
             print error
-            
         finally:
             if fh is not None:
                 fh.close()
+        if not error:
+            return True
 
     # asks if component should be removed from the component list
     # \brief It is called on removing  the component from the list

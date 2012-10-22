@@ -776,21 +776,61 @@ class MainWindow(QMainWindow):
     ## stores the setting before finishing the application 
     # \param event Qt event   
     def closeEvent(self, event):
-#        failures = []
-#        for widget in self.mdi.windowList():
-#            if widget.isModified():
-#                try:
-#                    widget.save()
-#                except IOError, e:
-#                    failures.append(unicode(e))
-#        if (failures and
-#            QMessageBox.warning(self, "Text Editor -- Save Error",
-#                    "Failed to save%s\nQuit anyway?"  % str(
-#                    "\n\t".join(failures)),
-#                    QMessageBox.Yes|QMessageBox.No) ==
-#                    QMessageBox.No):
-#            event.ignore()
-#            return
+        failures = []
+        for k in self.componentList.components.keys():
+            cp = self.componentList.components[k]
+            que = False
+            if hasattr(cp,"widget") and hasattr(cp.widget,"dirty") and cp.widget.dirty:
+                status= QMessageBox.question(self, "Component - Save",
+                                             "Do you want to save the component: %s".encode() \
+                                                 %  (cp.name),
+                                             QMessageBox.Yes | QMessageBox.No| QMessageBox.Cancel)
+
+                if status == QMessageBox.Yes:
+                    try:
+                        cp.widget.merge()
+                        if not cp.widget.save():
+                            event.ignore()
+                            return
+                            
+                    except IOError, e:
+                        failures.append(unicode(e))
+                        
+                elif status == QMessageBox.Cancel:
+                    event.ignore()
+                    return
+
+
+        for k in self.sourceList.datasources.keys():
+            ds = self.sourceList.datasources[k]
+            que = False
+            if hasattr(ds,"widget") and hasattr(ds.widget,"dirty") and ds.widget.dirty:
+                status= QMessageBox.question(self, "DataSource - Save",
+                                             "Do you want to save the datasource: %s".encode() \
+                                                 %  (ds.name),
+                                             QMessageBox.Yes | QMessageBox.No| QMessageBox.Cancel)
+
+                if status == QMessageBox.Yes:
+                    try:
+                        if not ds.widget.save():
+                            event.ignore()
+                            return
+                            
+                    except IOError, e:
+                        failures.append(unicode(e))
+                        
+                elif status == QMessageBox.Cancel:
+                    event.ignore()
+                    return
+
+
+        if (failures and
+            QMessageBox.warning(self, "NDTS Component Designer -- Save Error",
+                                "Failed to save%s\nQuit anyway?"  % str("\n\t".join(failures)),
+                                QMessageBox.Yes|QMessageBox.No) ==
+            QMessageBox.No):
+            event.ignore()
+            return
         settings = QSettings()
         settings.setValue("MainWindow/Geometry",
                           QVariant(self.saveGeometry()))
@@ -1739,10 +1779,13 @@ class MainWindow(QMainWindow):
                                                 self.windows["PrevAction"], self.windows["CascadeAction"],
                                                 self.windows["TileAction"], self.windows["RestoreAction"],
                                                 self.windows["MinimizeAction"],
-                                                self.windows["ArrangeIconsAction"], None,
+                                                self.windows["ArrangeIconsAction"], 
+                                                None,
+                                                self.windows["CloseAction"],
+                                                None,
                                                 self.windows["ComponentListAction"], 
-                                                self.windows["DataSourceListAction"], None,
-                                                self.windows["CloseAction"]))
+                                                self.windows["DataSourceListAction"]
+                                               ))
         dialogs = self.mdi.windowList()
         if not dialogs:
             return

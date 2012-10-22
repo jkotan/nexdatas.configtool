@@ -654,7 +654,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                 finally:
                     if fh is not None:
                         fh.close()
-
+        if not error:
+            return True
 
     ## provides the datasource name with its path
     # \returns datasource name with its path 

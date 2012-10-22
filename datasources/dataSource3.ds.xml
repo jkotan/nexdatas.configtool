@@ -3,6 +3,6 @@
   <datasource type="DB">
     <database dbtype="MYSQL">complicated DSN string</database>
     <query format="IMAGE">select * from device</query>
-    <doc>test database datasource</doc>
+    <doc>the test database datasource</doc>
   </datasource>
 </definition>

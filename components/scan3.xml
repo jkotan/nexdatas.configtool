@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<definition>
+<definition type="" name="">
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
       <group minOccurs="2" type="NXdetector" name="detector">
@@ -46,4 +46,5 @@
       </link>
     </group>
   </group>
+  <doc>Third scan</doc>
 </definition>

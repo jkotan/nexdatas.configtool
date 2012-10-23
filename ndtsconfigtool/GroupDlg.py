@@ -264,8 +264,10 @@ class GroupDlg(NodeDlg, Ui_GroupDlg):
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
-        elem.setAttribute(QString("name"), QString(self.name))
-        elem.setAttribute(QString("type"), QString(self.nexusType))
+        if self.name:    
+            elem.setAttribute(QString("name"), QString(self.name))
+        if self.nexusType:
+            elem.setAttribute(QString("type"), QString(self.nexusType))
 
         for attr in self.attributes.keys():
             elem.setAttribute(QString(attr), QString(self.attributes[attr]))

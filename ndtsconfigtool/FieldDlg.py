@@ -401,9 +401,12 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
-        elem.setAttribute(QString("name"), QString(self.name))
-        elem.setAttribute(QString("type"), QString(self.nexusType))
-        elem.setAttribute(QString("units"), QString(self.units))
+        if self.name:
+            elem.setAttribute(QString("name"), QString(self.name))
+        if self.nexusType:
+            elem.setAttribute(QString("type"), QString(self.nexusType))
+        if self.units:
+            elem.setAttribute(QString("units"), QString(self.units))
 
         self._replaceText(self.node, index, unicode(self.value))
         

@@ -171,8 +171,10 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
-        elem.setAttribute(QString("name"), QString(self.name))
-        elem.setAttribute(QString("target"), QString(self.target))
+        if self.name:    
+            elem.setAttribute(QString("name"), QString(self.name))
+        if self.target:    
+            elem.setAttribute(QString("target"), QString(self.target))
 
 
         doc = self.node.firstChildElement(QString("doc"))           

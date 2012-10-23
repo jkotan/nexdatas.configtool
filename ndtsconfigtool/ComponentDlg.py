@@ -256,6 +256,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             return
         self.widget.apply()
         self.dirty = True
+        self.view.resizeColumnToContents(0)
+        self.view.resizeColumnToContents(1)
         return True
 
     ## converts DOM node to XML string

@@ -237,7 +237,6 @@ class Merger(QThread):
             if elem1.nodeName() in self._requiredAttr.keys():
                 for at1 in self._requiredAttr[str(elem1.nodeName())]:
                     if not attr1.contains(at1) or not str(attr1.namedItem(at1).nodeValue()).strip():
-                        print "atribu: '%s'" % str(attr1.namedItem(at1).nodeValue()).strip()
                         message = "Not defined %s attribute of %s%s " \
                             % (at1, str(elem1.nodeName()), (":"+ str(name1)) if str(name1).strip() else  " ")
                         raise IncompatibleNodeError(message, [elem1])

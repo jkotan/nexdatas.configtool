@@ -387,6 +387,10 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         if index.parent().isValid():
             self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
                             index.parent(),index.parent())
+            self.tagClicked(index.parent())
+        else:
+            self.tagClicked(QModelIndex())
+            
         return True    
 
 

@@ -111,6 +111,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         ## merger
         self._merger = None
             
+        ## show all attribures or only the type attribute
+        self._allAttributes = False
         
 
     ## provides the row number of the given child item
@@ -235,7 +237,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         self.splitter.setStretchFactor(0,1)
         self.splitter.setStretchFactor(1,1)
         
-        model = ComponentModel(QDomDocument(),self)
+        model = ComponentModel(QDomDocument(),self._allAttributes,self)
         self.view.setModel(model)
         
         self.widget = QWidget()
@@ -442,6 +444,18 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             self._externalApply = externalApply
 
 
+    # switches between all attributes in the try or only type attribute
+    # \param status all attributes are shown if True
+    def viewAttributes(self, status):
+        if status == self._allAttributes:
+            return
+        self._allAttributes = status
+        if hasattr(self,"view"):
+             model = self.view.model()   
+             model.setAttributeView(self._allAttributes)
+             self.view.reset()
+
+
     ## sets selected component item in the item frame
     # \brief It is executed  when component tree item is selected
     # \param index of component tree item
@@ -587,7 +601,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         if not self.document.setContent(xml):
             raise ValueError, "could not parse XML"
         
-        newModel = ComponentModel(self.document, self)
+        newModel = ComponentModel(self.document,self._allAttributes, self)
         self.view.setModel(newModel)
         
 
@@ -795,7 +809,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             self._merger = None
 
             self._merged = True
-            newModel = ComponentModel(self.document, self)
+            newModel = ComponentModel(self.document, self._allAttributes ,self)
             self.view.setModel(newModel)
             self._hideFrame()
 
@@ -803,7 +817,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             print "Error in Merging: %s" % unicode(e.value)
             self._merger = None
             self._merged = False
-            newModel = ComponentModel(self.document, self)
+            newModel = ComponentModel(self.document, self._allAttributes, self)
             self.view.setModel(newModel)
             self._hideFrame()
             if hasattr(e,"nodes") and e.nodes: 
@@ -813,7 +827,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         except  Exception, e:    
             print "Exception: %s" % unicode(e)
             self._merged = False
-            newModel = ComponentModel(self.document, self)
+            newModel = ComponentModel(self.document, self._allAttributes, self)
             self.view.setModel(newModel)
             self._hideFrame()
             QMessageBox.warning(self, "Warning",
@@ -843,7 +857,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         
         definition = self.document.createElement(QString("definition"))
         self.document.appendChild(definition)
-        newModel = ComponentModel(self.document, self)
+        newModel = ComponentModel(self.document, self._allAttributes, self)
         self.view.setModel(newModel)
         self._hideFrame()
         self.dirty = True 

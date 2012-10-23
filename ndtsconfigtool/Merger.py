@@ -280,8 +280,6 @@ class Merger(QThread):
                     raise IncompatibleNodeError(
                         "Empty content of the query tag: %s" % (self._getAncestors(elem)),
                         [elem])
-
-                
             
             if child:
                 while not child.isNull() and self.running:

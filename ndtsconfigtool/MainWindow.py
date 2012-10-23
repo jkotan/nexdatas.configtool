@@ -577,6 +577,12 @@ class MainWindow(QMainWindow):
             "&DataSource List", self.gotoDataSourceList, "Ctrl+>",
             tip = "Go to the component list" )
 
+        viewAllAttributesAction = self._createAction(
+            "&All Attributes", self.viewAllAttributes, "",
+            tip = "Go to the component list", checkable=True)
+
+
+
 
 
         viewDockAction = self.compDockWidget.toggleViewAction()
@@ -731,7 +737,7 @@ class MainWindow(QMainWindow):
 
 
         viewMenu = self.menuBar().addMenu("&View")
-        self._addActions(viewMenu, (viewDockAction,))
+        self._addActions(viewMenu, (viewDockAction, viewAllAttributesAction))
 
         self.windows["Menu"] = self.menuBar().addMenu("&Window")
         self.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
@@ -1772,7 +1778,12 @@ class MainWindow(QMainWindow):
                 str(PYQT_VERSION_STR),
                 str(platform.system())))
 
-
+    ## shows all attributes in the tree
+    # \brief switch between all attributes in the tree or only type attribute    
+    def viewAllAttributes(self):
+        self.componentList.viewAttributes(not self.componentList.viewAttributes())
+        
+        
     ## updates the window menu
     # \brief It updates the window menu with the open windows
     def updateWindowMenu(self):

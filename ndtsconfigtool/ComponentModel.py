@@ -19,7 +19,7 @@
 ## \file ComponentModel.py
 # component classes 
 
-from PyQt4.QtCore import (QAbstractItemModel, QVariant, Qt, QModelIndex, QStringList)
+from PyQt4.QtCore import (QAbstractItemModel, QVariant, Qt, QModelIndex, QStringList, QString)
 #from PyQt4.QtGui import 
 from PyQt4.QtXml import (QDomDocument, QDomNode, QXmlDefaultHandler,
                          QXmlInputSource, QXmlSimpleReader)
@@ -32,14 +32,26 @@ class ComponentModel(QAbstractItemModel):
     ## constuctor
     # \param document DOM document
     # \param parent widget
-    def __init__(self, document, parent=None):
+    # \param allAttributes True if show all attributes in the tree
+    def __init__(self, document, allAttributes, parent=None):
         super(ComponentModel, self).__init__(parent)
         
+        ## DOM document
         self._domDocument = document
+
+        ## show all attribures or only the type attribute
+        self._allAttributes = allAttributes
+        
         ## root item of the tree
         self.rootItem = ComponentItem(self._domDocument
 #                                      , 0 
                                       )
+
+    # switches between all attributes in the try or only type attribute
+    # \param allAttributes all attributes are shown if True
+    def setAttributeView(self, allAttributes):
+        self._allAttributes = allAttributes
+        
 
     ## provides read access to the model data
     # \param index of the model item         
@@ -68,11 +80,16 @@ class ComponentModel(QAbstractItemModel):
             else:
                 return node.nodeName() 
         elif index.column() == 1:
-            attributes = QStringList()
-            for i in range(attributeMap.count()):
-                attribute = attributeMap.item(i)
-                attributes.append(attribute.nodeName() + "=\"" +attribute.nodeValue() + "\"")
-            return attributes.join(" ")   
+            if self._allAttributes:
+                attributes = QStringList()
+                for i in range(attributeMap.count()):
+                    attribute = attributeMap.item(i)
+                    attributes.append(attribute.nodeName() + "=\"" +attribute.nodeValue() + "\"")
+                return attributes.join(" ")   
+            else:
+                return attributeMap.namedItem("type").nodeValue() \
+                    if attributeMap.contains("type") else QString("")
+                 
         elif index.column() == 2:
             return node.nodeValue().split("\n").join(" ")
         else:
@@ -100,7 +117,10 @@ class ComponentModel(QAbstractItemModel):
             if section == 0 :
                 return QVariant("Name")
             elif section == 1:
-                return QVariant("Attribute")
+                if self._allAttributes:
+                    return QVariant("Attribute")
+                else:
+                    return QVariant("Type")
             elif section == 2:
                 return QVariant("Value")
             else:

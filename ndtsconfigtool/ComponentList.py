@@ -46,6 +46,9 @@ class ComponentList(QWidget, Ui_ComponentList):
 
         ## actions
         self._actions = []
+        
+        ## show all attribures or only the type attribute
+        self._allAttributes = False
 
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
@@ -60,6 +63,17 @@ class ComponentList(QWidget, Ui_ComponentList):
 
         self.populateComponents()
 
+
+    # switches between all attributes in the try or only type attribute
+    # \param status all attributes are shown if True
+    def viewAttributes(self, status = None):
+        if status is None:
+            return self._allAttributes
+        self._allAttributes = True if status else False
+        for k in self.components.keys():
+            if hasattr(self.components[k], "widget") and self.components[k].widget:
+                 self.components[k].widget.viewAttributes(self._allAttributes)
+            
 
     ## opens context Menu        
     # \param position in the component list

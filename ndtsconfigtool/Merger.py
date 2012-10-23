@@ -274,6 +274,14 @@ class Merger(QThread):
             child = node.firstChild()
             elem = node.toElement()
             nName = unicode(elem.nodeName()) if elem else ""
+
+            if elem and nName =='query':
+                if not str(elem.text()).strip():
+                    raise IncompatibleNodeError(
+                        "Empty content of the query tag: %s" % (self._getAncestors(elem)),
+                        [elem])
+
+                
             
             if child:
                 while not child.isNull() and self.running:

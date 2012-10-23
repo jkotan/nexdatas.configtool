@@ -85,10 +85,10 @@ class ComponentModel(QAbstractItemModel):
                 for i in range(attributeMap.count()):
                     attribute = attributeMap.item(i)
                     attributes.append(attribute.nodeName() + "=\"" +attribute.nodeValue() + "\"")
-                return attributes.join(" ")   
+                return attributes.join(" ") + "  "    
             else:
-                return attributeMap.namedItem("type").nodeValue() \
-                    if attributeMap.contains("type") else QString("")
+                return (attributeMap.namedItem("type").nodeValue() + "  ") \
+                    if attributeMap.contains("type") else QString("  ")
                  
         elif index.column() == 2:
             return node.nodeValue().split("\n").join(" ")
@@ -118,7 +118,7 @@ class ComponentModel(QAbstractItemModel):
                 return QVariant("Name")
             elif section == 1:
                 if self._allAttributes:
-                    return QVariant("Attribute")
+                    return QVariant("Attributes")
                 else:
                     return QVariant("Type")
             elif section == 2:

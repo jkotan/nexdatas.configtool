@@ -69,13 +69,30 @@ class Merger(QThread):
 
         ## allowed children of the given nodes
         self._children ={
-            "datasource":("record", "doc", "device", "database", "query", "door"),
-            "attribute":("enumeration", "doc"),
-            "definition":("group", "field", "attribute", "link", "component", "doc", "symbols"),
-            "dimensions":("dim", "doc"),
-            "field":("attribute", "datasource", "doc", "dimensions", "enumeration", "strategy"),
-            "group":("group", "field", "attribute", "link", "component", "doc"),
-            "link":("doc")
+            "datasource":["record", "doc", "device", "database", "query", "door"],
+            "attribute":["enumeration", "doc"],
+            "definition":["group", "field", "attribute", "link", "component", "doc", "symbols"],
+            "dimensions":["dim", "doc"],
+            "field":["attribute", "datasource", "doc", "dimensions", "enumeration", "strategy"],
+            "group":["group", "field", "attribute", "link", "component", "doc"],
+            "link":["doc"]
+            }
+
+
+        self._requiredAttr ={
+            "attribute":["name"],
+            "definition":[],
+            "dimensions":["rank"],
+            "dim":["index", "value"],
+            "field":["name"],
+            "group":["type"],
+            "link":["name","target"],
+            "strategy":["mode"],
+            "datasource":["type"],
+            "record":["name"],
+            "device":["member","name"],
+            "database":["dbtype"],
+            "query":["format"]
             }
 
         ## it contains an exeption instance when the exception was raised
@@ -139,13 +156,16 @@ class Merger(QThread):
             return False
 
         for i1 in range(attr1.count()):
+            at1 = attr1.item(i1)
             for i2 in range(attr2.count()):
-                at1 = attr1.item(i1)
                 at2 = attr2.item(i2)
                 if at1.nodeName() == at2.nodeName() and at1.nodeValue() != at2.nodeValue():
                     status = False
                     tags.append((str(self._getAncestors(at1)),
                                  str(at1.nodeValue()) , str(at2.nodeValue())))
+
+                    
+            
 
         if not status  and tagName in self._singles: 
             raise IncompatibleNodeError("Incompatible element attributes  %s: " % str(tags),
@@ -206,14 +226,32 @@ class Merger(QThread):
         parent.removeChild(elem2)
 
 
+    ## checks if the nodes has required attributes
+    # \param node the given DOM node
+    def _hasAttributes(self, node):
+        elem1 = node.toElement()
+        if elem1 is not None:
+            attr1 = elem1.attributes()
+            name1 = attr1.namedItem("name").nodeValue() \
+                if attr1.contains("name") else ""
+            if elem1.nodeName() in self._requiredAttr.keys():
+                for at1 in self._requiredAttr[str(elem1.nodeName())]:
+                    if not attr1.contains(at1) or not str(attr1.namedItem(at1).nodeValue()).strip():
+                        print "atribu: '%s'" % str(attr1.namedItem(at1).nodeValue()).strip()
+                        message = "Not defined %s attribute of %s%s " \
+                            % (at1, str(elem1.nodeName()), (":"+ str(name1)) if str(name1).strip() else  " ")
+                        raise IncompatibleNodeError(message, [elem1])
+        
+
     ## merge all children of the given DOM node
     # \param node the given DOM node
     def _mergeChildren(self, node):
         status = False
         if node:
+            self._hasAttributes(node)
+
 #            print "merging the children of: ", node.nodeName()
-            changes = True
-            
+            changes = True            
             while changes and self.running:
                 children = node.childNodes()
                 changes = False
@@ -245,7 +283,7 @@ class Merger(QThread):
                         cName = unicode(childElem.nodeName()) if childElem  else ""
                         if cName and cName not in self._children[nName]:
                             raise IncompatibleNodeError(
-                                "Not allowed <%s> child of \n < %s > \n  parent"  \
+                                "Not allowed <%s> child of \n < %s > \n parent"  \
                                     % (cName, self._getAncestors(elem)),
                                 [childElem])
                                 

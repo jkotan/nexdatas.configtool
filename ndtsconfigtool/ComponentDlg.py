@@ -459,7 +459,10 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         if hasattr(self,"view"):
              model = self.view.model()   
              model.setAttributeView(self._allAttributes)
-             self.view.reset()
+#             self.view.reset()
+             newModel = ComponentModel(self.document, self._allAttributes ,self)
+             self.view.setModel(newModel)
+             self._hideFrame()
 
 
     ## sets selected component item in the item frame

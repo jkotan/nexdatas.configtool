@@ -2586,7 +2586,8 @@ class ComponentCollect(Command):
     # \brief It  stores the current component in the comfiguration server or in the file
     def execute(self):
         if self._type is None:
-            if self.receiver.configServer.connected:
+            
+            if self.receiver.configServer and self.receiver.configServer.connected:
                 self._type = 'Server'
             else:
                 self._type = 'File'
@@ -2629,7 +2630,7 @@ class DataSourceCollect(Command):
     # \brief It stores the current datasource in the comfiguration server or in the file
     def execute(self):
         if self._type is None:
-            if self.receiver.configServer.connected:
+            if self.receiver.configServer and self.receiver.configServer.connected:
                 self._type = 'Server'
             else:
                 self._type = 'File'

@@ -92,6 +92,8 @@ class ServerConnect(Command):
                 else:
                     self.receiver.configServer.setState(self._state)
                     self.receiver.configServer.connect()
+
+                self.receiver.disableServer(False)
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in connecting to Configuration Server", unicode(e))
     
@@ -103,6 +105,7 @@ class ServerConnect(Command):
         if self.receiver.configServer:
             try:
                 self.receiver.configServer.close()
+                self.receiver.disableServer(True)
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in Closing Configuration Server Connection", unicode(e))
 
@@ -562,6 +565,7 @@ class ServerClose(Command):
                 if self._state is None:
                     self._state = self.receiver.configServer.getState()
                 self.receiver.configServer.close()
+                self.receiver.disableServer(True)
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in closing connection to Configuration Server", unicode(e))
     
@@ -577,6 +581,7 @@ class ServerClose(Command):
                 else:
                     self.receiver.configServer.setState(self._state)
                     self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in connecting to Configuration Server", unicode(e))
         print "UNDO serverClose"

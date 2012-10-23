@@ -865,6 +865,23 @@ class MainWindow(QMainWindow):
 
 
 
+    ## disables/enable the server actions
+    # \param status True for disable
+    def disableServer(self, status):
+        self.pool.setDisabled("serverFetchComponents", status)
+        self.pool.setDisabled("serverStoreComponent", status)
+        self.pool.setDisabled("serverDeleteComponent", status)
+        self.pool.setDisabled("serverGetMandatoryComponents", status)
+        self.pool.setDisabled("serverSetMandatoryComponent", status)
+        self.pool.setDisabled("serverUnsetMandatoryComponent", status)
+        self.pool.setDisabled("serverFetchDataSources", status)
+        self.pool.setDisabled("serverStoreDataSource", status)
+        self.pool.setDisabled("serverDeleteDataSource", status)
+        self.pool.setDisabled("serverClose", status)
+        
+
+
+
     ## loads the datasource list
     # \brief It loads the datasource list from the default directory
     def loadDataSources(self):
@@ -1431,7 +1448,6 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
-
     ## connect server action
     # \brief It connects to configuration server
     def serverConnect(self):
@@ -1440,16 +1456,6 @@ class MainWindow(QMainWindow):
         self.cmdStack.append(cmd)
 
 #        self.pool.setDisabled("serverConnect", True)
-        self.pool.setDisabled("serverFetchComponents", False)
-        self.pool.setDisabled("serverStoreComponent", False)
-        self.pool.setDisabled("serverDeleteComponent", False)
-        self.pool.setDisabled("serverGetMandatoryComponents", False)
-        self.pool.setDisabled("serverSetMandatoryComponent", False)
-        self.pool.setDisabled("serverUnsetMandatoryComponent", False)
-        self.pool.setDisabled("serverFetchDataSources", False)
-        self.pool.setDisabled("serverStoreDataSource", False)
-        self.pool.setDisabled("serverDeleteDataSource", False)
-        self.pool.setDisabled("serverClose", False)
 
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
@@ -1579,17 +1585,6 @@ class MainWindow(QMainWindow):
         cmd.execute()
         self.cmdStack.append(cmd)
 
-        self.pool.setDisabled("serverConnect", False)
-        self.pool.setDisabled("serverFetchComponents", True)
-        self.pool.setDisabled("serverStoreComponent", True)
-        self.pool.setDisabled("serverDeleteComponent", True)
-        self.pool.setDisabled("serverGetMandatoryComponents", True)
-        self.pool.setDisabled("serverSetMandatoryComponent", True)
-        self.pool.setDisabled("serverUnsetMandatoryComponent", True)
-        self.pool.setDisabled("serverFetchDataSources", True)
-        self.pool.setDisabled("serverStoreDataSource", True)
-        self.pool.setDisabled("serverDeleteDataSource", True)
-        self.pool.setDisabled("serverClose", True)
 
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      

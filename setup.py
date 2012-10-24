@@ -85,6 +85,7 @@ class toolBuild(build):
 #         ('datasources', [ ds for ds in os.listdir("datasources") if ds.endswith('.ds.xml')])]
 
 
+
 ## metadata for distutils
 SETUPDATA=dict(
     name = "nexdatas.configtool",

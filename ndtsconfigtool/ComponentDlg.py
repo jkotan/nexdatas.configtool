@@ -131,6 +131,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             if row < children.count():
                 return row
 
+
     ## provides the path of component tree for a given node
     # \param node DOM node
     # \returns path represented as a list with elements: (row number, node name)
@@ -173,6 +174,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         path.insert(0, (row, unicode(child.nodeName())))
 
         return path
+
         
     ## selects and opens the last nodes of the given list in the component tree
     # \param nodes list of DOM nodes 
@@ -180,6 +182,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         for node in nodes:
             path = self._getPathFromNode(node)
             self._selectItem(path)    
+
 
 
     ## provides  index of the component item defiend by the path
@@ -609,7 +612,11 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         
         if not self.document.setContent(xml):
             raise ValueError, "could not parse XML"
-        
+        children = self.document.childNodes()
+        for i in range(children.count()):
+            ch = children.item(i)
+            if ch.nodeName() == 'xml':
+                self.document.removeChild(ch)
         newModel = ComponentModel(self.document,self._allAttributes, self)
         self.view.setModel(newModel)
         
@@ -861,8 +868,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     def createHeader(self):
         self.document = QDomDocument()
         self.document = self.document
-        processing = self.document.createProcessingInstruction("xml", 'version="1.0"') 
-        self.document.appendChild(processing)
+#        processing = self.document.createProcessingInstruction("xml", 'version="1.0"') 
+#        self.document.appendChild(processing)
         
         definition = self.document.createElement(QString("definition"))
         self.document.appendChild(definition)
@@ -876,7 +883,12 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     # \returns xml string    
     def get(self):
         if hasattr(self.document,"toString"):
-            return unicode(self.document.toString(0))
+            processing = self.document.createProcessingInstruction("xml", 'version="1.0"') 
+            self.document.insertBefore(processing, self.document.firstChild())
+            string = unicode(self.document.toString(0))
+            self.document.removeChild(processing)
+            return string
+
 
     ## saves the component
     # \brief It saves the component in the xml file 
@@ -894,7 +906,12 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             if not fh.open(QIODevice.WriteOnly):
                 raise IOError, unicode(fh.errorString())
             stream = QTextStream(fh)
-            stream << self.document.toString(2)
+            string  = self.get()
+            if string:
+                stream << string
+            else:
+                raise ErrorValue, "Empty component"
+    
             self.dirty = False
             #                print self.document.toString(2)
         except (IOError, OSError, ValueError), e:

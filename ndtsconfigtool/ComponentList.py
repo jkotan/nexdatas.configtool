@@ -98,7 +98,7 @@ class ComponentList(QWidget, Ui_ComponentList):
 
     ## adds an component    
     #  \brief It runs the Component Dialog and fetches component name and value    
-    def addComponent(self,obj, flag = True):
+    def addComponent(self, obj, flag = True):
 
         self.components[obj.id] = obj
         self.populateComponents(obj.id, flag)

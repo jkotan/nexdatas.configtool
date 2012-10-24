@@ -975,7 +975,8 @@ class ComponentSave(Command):
                 #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
                     
-            self._cpEdit.save()    
+            if self._cpEdit.save():
+                self._cp.savedName = self._cp.name
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
         else:
@@ -1517,7 +1518,9 @@ class DataSourceSave(Command):
                                 "Please select one of the datasources")            
 
         if self._ds is not None and hasattr(self._ds,"widget"):
-            self._ds.widget.save()    
+            if self._ds.widget.save():
+                self._ds.savedName = self._ds.name
+
 
         ds = self.receiver.sourceList.currentListDataSource()
         if hasattr(ds ,"id"):

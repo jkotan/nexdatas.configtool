@@ -122,6 +122,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         string = self.get()
         return False if string == self.savedXML else True
 
+
     ## provides the row number of the given child item
     # \param child DOM child node
     # \param node DOM parent node
@@ -552,11 +553,14 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             fi = QFileInfo(self._componentFile)
         if directory is None and fi:
             dr = unicode(fi.dir().path())
-        else:
+        elif directory:
             dr = unicode(directory)
-
+        elif self.directory:
+            dr = self.directory
+        else:
+            dr = '.'
+        
         self._componentFile = dr + "/" + name + ".xml"
-        print "FN", self._componentFile 
         self.name = name
         self._xmlPath = self._componentFile
         

@@ -105,6 +105,13 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self.savedXML = None
 
 
+    ## checks if not saved
+    # \returns True if it is not saved     
+    def isDirty(self):
+        string = self.get()
+        return False if string == self.savedXML else True
+
+
     ## clears the datasource content
     # \brief It sets the datasource variables to default values
     def clear(self):
@@ -465,7 +472,9 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     # \param directory directory of the datasources   
     def setName(self, name, directory):
         self.name = unicode(name)
-        self.directory = unicode(directory)
+        if directory:
+            self.directory = unicode(directory)
+            
 
 
     ## loads datasources from default file directory
@@ -760,8 +769,11 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
-        
-
+        print "TREE", self._tree
+        if not self._tree:
+            self.createNodes()
+            print "CREATED"
+                
         self._applied = True
         return True    
 

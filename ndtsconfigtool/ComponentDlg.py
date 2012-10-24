@@ -42,7 +42,7 @@ import os
 import time 
 
 from ComponentModel import ComponentModel
-from LabeledObject import LabeledObject
+#from LabeledObject import LabeledObject
 
 ## dialog defining a tag link 
 class ComponentDlg(QDialog, Ui_ComponentDlg):
@@ -69,8 +69,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         ## component DOM document
         self.document = None        
 
-        ## flag True if changes saved
-        self.dirty = False
 
         self._xmlPath = os.path.dirname("./components/")
         self._componentFile = None
@@ -114,6 +112,16 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         ## show all attribures or only the type attribute
         self._allAttributes = False
         
+        ## saved XML
+        self.savedXML = None
+
+        self.dirty = False
+
+    ## checks if not saved
+    # \returns True if it is not saved     
+    def isDirty(self):
+        string = self.get()
+        return False if string == self.savedXML else True
 
     ## provides the row number of the given child item
     # \param child DOM child node
@@ -214,16 +222,16 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             self.view.expand(index)
 
     ## provides the state of the component dialog        
-    # \returns tuple with (xml string, path, dirty flag)        
+    # \returns tuple with (xml string, path)        
     def getState(self):
         path = self._getPath()
-        return (self.document.toString(0),path, self.dirty)
+        return (self.document.toString(0),path)
 
 
     ## sets the state of the component dialog        
-    # \param state tuple with (xml string, path, dirty flag)        
+    # \param state tuple with (xml string, path)        
     def setState(self, state):
-        (xml, path, dirty)=state
+        (xml, path)=state
         try:
             self._loadFromString(xml)
         except (IOError, OSError, ValueError), e:
@@ -231,7 +239,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             print error
         self._hideFrame()    
         self._selectItem(path) 
-        self.dirty = dirty
             
 
     ## updates the component dialog
@@ -584,7 +591,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
                     if self.name[-4:] == '.xml':
                         self.name = self.name[:-4]
-                    self.dirty = False
+                    self.savedXML = self.get()
                     return self._componentFile
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
@@ -601,7 +608,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         self._componentFile = self.directory + "/" + self.name + ".xml"
         self._loadFromString(xml)
         self._xmlPath = self._componentFile
-        self.dirty = False
+        self.savedXML = self.get()
         return self._componentFile
 
 
@@ -905,13 +912,13 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             if not fh.open(QIODevice.WriteOnly):
                 raise IOError, unicode(fh.errorString())
             stream = QTextStream(fh)
-            string  = self.get(2)
+            string  = self.get(0)
             if string:
                 stream << string
             else:
                 raise ErrorValue, "Empty component"
     
-            self.dirty = False
+            self.savedXML = self.get()
             #                print self.document.toString(2)
         except (IOError, OSError, ValueError), e:
             error = "Failed to save: %s" % e

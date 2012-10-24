@@ -215,7 +215,7 @@ class ServerStoreComponent(Command):
             try:
                 xml = self._cpEdit.get()    
                 self.receiver.configServer.storeComponent(self._cpEdit.name, xml)
-                self._cpEdit.dirty = False
+                self._cpEdit.savedXML = xml
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in storing the component", unicode(e))
         if hasattr(self._cp,"id"):
@@ -265,9 +265,9 @@ class ServerDeleteComponent(Command):
 
             try:
                 self.receiver.configServer.deleteComponent(self._cp.name)
-                self._cp.dirty = True
+                self._cp.savedName = ""
                 if hasattr(self._cp,"widget"):
-                    self._cp.widget.dirty = True                
+                    self._cp.widget.savedXML = ""
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in deleting the component", unicode(e))
         if hasattr(self._cp,"id"):
@@ -464,7 +464,7 @@ class ServerStoreDataSource(Command):
             try:
                 xml = self._ds.widget.get()    
                 self.receiver.configServer.storeDataSource(self._ds.widget.name, xml)
-                self._ds.widget.dirty = False
+                self._ds.widget.savedXML = xml
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in datasource storing", unicode(e))
             
@@ -510,9 +510,9 @@ class ServerDeleteDataSource(Command):
         if self._ds is not None:
             try:
                 self.receiver.configServer.deleteDataSource(self._ds.name)
-                self._ds.dirty = True
+                self._ds.savedName = ""
                 if hasattr(self._ds,"widget"):
-                    self._ds.widget.dirty = True                
+                    self._ds.widget.savedXML = ""
 
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in datasource deleting", unicode(e))
@@ -1774,7 +1774,6 @@ class ComponentListChanged(Command):
         self._cp = None
         self._oldName = None
         self._oldDirectory = None
-        self._oldDirty = None
         
 
     ## executes the command
@@ -1792,12 +1791,8 @@ class ComponentListChanged(Command):
             if self._cp.widget is not None:
                 self._oldDirectory = self._cp.widget.directory 
                 self._cp.widget.setName(self.name, self.directory)
-                self._oldDirty = self._cp.widget.dirty
-                self._cp.widget.dirty = True
-                
             else:
                 self._oldDirectory =  self.receiver.componentList.directory 
-                self._oldDirty = self._cp.dirty
 
 
         cp = self.receiver.componentList.currentListComponent()
@@ -1817,7 +1812,6 @@ class ComponentListChanged(Command):
             self.receiver.componentList.addComponent(self._cp, False)
             if self._cp.widget is not None:
                 self._cp.widget.setName(self._oldName, self._oldDirectory)
-                self._cp.widget.dirty = self._oldDirty 
 
         cp = self.receiver.componentList.currentListComponent()
         if hasattr(cp,"id"):
@@ -2015,7 +2009,6 @@ class DataSourceListChanged(Command):
         self._ds = None
         self._oldName = None
         self._oldDirectory = None
-        self._oldDirty = None
         
 
         
@@ -2034,11 +2027,8 @@ class DataSourceListChanged(Command):
             if self._ds.widget is not None:
                 self._oldDirectory = self._ds.widget.directory 
                 self._ds.widget.setName(self.name, self.directory)
-                self._oldDirty = self._ds.widget.dirty
-                self._ds.widget.dirty = True
             else:
                 self._oldDirectory =  self.receiver.sourceList.directory 
-                self._oldDirty = self._ds.dirty
 
         ds = self.receiver.sourceList.currentListDataSource()
         if hasattr(ds,"id"):
@@ -2056,7 +2046,6 @@ class DataSourceListChanged(Command):
             self.receiver.sourceList.addDataSource(self._ds, False)
             if self._ds.widget is not None:
                 self._ds.widget.setName(self._oldName, self._oldDirectory)
-                self._ds.widget.dirty = self._oldDirty 
 
 
         ds = self.receiver.sourceList.currentListDataSource()

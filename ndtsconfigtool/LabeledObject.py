@@ -27,9 +27,14 @@ class LabeledObject(object):
     def __init__(self, name, widget):
         ## item name
         self.name = name
+        ## saved item name
+        self.savedName = name
         ## item widget
         self.widget = widget
         ## item id
         self.id = id(self)
-        ## status if item was not saved
-        self.dirty = True
+
+    ## checks if the name is not saved
+    # returns False if the name is not saved
+    def isDirty(self):
+        return False if self.name == self.savedName else True

@@ -220,22 +220,25 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             item = QListWidgetItem(QString("%s" % name))
             item.setData(Qt.UserRole, QVariant(self.datasources[ds].id))
             item.setFlags(item.flags() | Qt.ItemIsEditable)
-            if  hasattr(self.datasources[ds].widget,"dirty") :
-                if self.datasources[ds].widget.dirty:
-                    item.setForeground(Qt.red)
-                else:
-                    item.setForeground(Qt.black)
+            dirty = False
+            if hasattr(self.datasources[ds],"isDirty") \
+                    and self.datasources[ds].isDirty():
+                dirty = True
+            if self.datasources[ds].widget is not None:
+                if hasattr(self.datasources[ds].widget,"isDirty") \
+                        and self.datasources[ds].widget.isDirty():
+                    dirty = True
+            if dirty:
+                item.setForeground(Qt.red) 
             else:
-                if self.datasources[ds].dirty:
-                    item.setForeground(Qt.red) 
-                else:
-                    item.setForeground(Qt.black)
+                item.setForeground(Qt.black)
+
 
             self.sourceListWidget.addItem(item)
             if selectedDataSource is not None and selectedDataSource == self.datasources[ds].id:
                 selected = item
             if self.datasources[ds].widget is not None:
-                if  hasattr(self.datasources[ds].widget,"dirty") and self.datasources[ds].widget.dirty:
+                if  dirty:
                     self.datasources[ds].widget.setWindowTitle("DataSource: %s*" %name)
                 else:
                     self.datasources[ds].widget.setWindowTitle("DataSource: %s" %name)

@@ -101,8 +101,9 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## allowed subitems
         self.subItems = ["record", "doc", "device", "database", "query", "door"]
 
+        ## saved XML
+        self.savedXML = None
 
-        ## if changes saved
         self.dirty = False
 
     ## clears the datasource content
@@ -505,7 +506,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                 ds = self._getFirstElement(self.document, "datasource")           
                 if ds:
                     self.setFromNode(ds)
-                self.dirty = False
+                self.savedXML = self.document.toString(0)
             try:    
                 self.createGUI()
             except Exception, e:
@@ -536,7 +537,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ds = self._getFirstElement(self.document, "datasource")           
         if ds:
             self.setFromNode(ds)
-        self.dirty = False
+            self.savedXML = self.document.toString(0)
         try:    
             self.createGUI()
         except Exception, e:
@@ -627,9 +628,9 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
     ## provides the datasource in xml string
     # \returns xml string    
-    def get(self):
+    def get(self, indent = 0):
         if hasattr(self.document,"toString"):
-            return unicode(self.document.toString(0))
+            return unicode(self.document.toString(indent))
 
 
     ## accepts and save input text strings
@@ -647,7 +648,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                     stream = QTextStream(fh)
                     stream <<self.document.toString(2)
             #                print self.document.toString(2)
-                    self.dirty = False
+                    self.savedXML = self.document.toString(0)
                 except (IOError, OSError, ValueError), e:
                     error = "Failed to save: %s" % e
                     print error

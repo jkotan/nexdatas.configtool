@@ -179,24 +179,25 @@ class ComponentList(QWidget, Ui_ComponentList):
             item  = QListWidgetItem(QString("%s" % name))
             item.setData(Qt.UserRole, QVariant(self.components[cp].id))
             item.setFlags(item.flags() | Qt.ItemIsEditable)
+            dirty = False
+            if hasattr(self.components[cp],"isDirty") \
+                    and self.components[cp].isDirty():
+                dirty = True
             if self.components[cp].widget is not None:
-                if hasattr(self.components[cp].widget,"dirty") \
-                        and self.components[cp].widget.dirty:
-                    item.setForeground(Qt.red) 
-                else:
-                    item.setForeground(Qt.black)
+                if hasattr(self.components[cp].widget,"isDirty") \
+                        and self.components[cp].widget.isDirty():
+                    dirty = True
+            if dirty:
+                item.setForeground(Qt.red) 
             else:
-                if self.components[cp].dirty:
-                    item.setForeground(Qt.red) 
-                else:
-                    item.setForeground(Qt.black)
+                item.setForeground(Qt.black)
 
             self.componentListWidget.addItem(item)
             if selectedComponent is not None and selectedComponent == self.components[cp].id:
                 selected = item
                                
             if self.components[cp].widget is not None:
-                if  hasattr(self.components[cp].widget,"dirty") and self.components[cp].widget.dirty:
+                if dirty:
                     self.components[cp].widget.setWindowTitle("Component: %s*" %name)
                 else:
                     self.components[cp].widget.setWindowTitle("Component: %s" %name)

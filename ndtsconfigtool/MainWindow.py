@@ -786,7 +786,8 @@ class MainWindow(QMainWindow):
         for k in self.componentList.components.keys():
             cp = self.componentList.components[k]
             que = False
-            if hasattr(cp,"widget") and hasattr(cp.widget,"dirty") and cp.widget.dirty:
+            if (hasattr(cp,"isDirty") and cp.isDirty()) or \
+                    (hasattr(cp,"widget") and hasattr(cp.widget,"isDirty") and cp.widget.isDirty()):
                 status= QMessageBox.question(self, "Component - Save",
                                              "Do you want to save the component: %s".encode() \
                                                  %  (cp.name),
@@ -811,7 +812,8 @@ class MainWindow(QMainWindow):
         for k in self.sourceList.datasources.keys():
             ds = self.sourceList.datasources[k]
             que = False
-            if hasattr(ds,"widget") and hasattr(ds.widget,"dirty") and ds.widget.dirty:
+            if (hasattr(ds,"isDirty") and ds.isDirty()) or \
+                    (hasattr(ds,"widget") and hasattr(ds.widget,"isDirty") and ds.widget.isDirty()):
                 status= QMessageBox.question(self, "DataSource - Save",
                                              "Do you want to save the datasource: %s".encode() \
                                                  %  (ds.name),
@@ -1441,6 +1443,8 @@ class MainWindow(QMainWindow):
     ## datasource change action
     # \param item new selected item ond the datasource list
     def dsourceChanged(self, item):
+        cmd = self.pool.getCommand('dsourceEdit').clone()
+        cmd.execute()
         cmd = self.pool.getCommand('dsourceChanged').clone()
         cmd.item = item
         cmd.execute()
@@ -1611,6 +1615,8 @@ class MainWindow(QMainWindow):
     ## component change action
     # \param item new selected item on the component list
     def componentChanged(self, item):
+        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
         cmd = self.pool.getCommand('componentChanged').clone()
         cmd.item = item
         cmd.execute()

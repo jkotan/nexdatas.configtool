@@ -902,7 +902,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             if not fh.open(QIODevice.WriteOnly):
                 raise IOError, unicode(fh.errorString())
             stream = QTextStream(fh)
-            string  = self.get(0)
+            string  = self.get(2)
             if string:
                 stream << string
             else:

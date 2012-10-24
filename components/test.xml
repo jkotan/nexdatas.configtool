@@ -5,6 +5,7 @@
       <group type="NXsource" name="source">
         <field units="m" type="NX_FLOAT" name="distance">
           100.
+        <strategy mode="STEP"/>
         </field>
         <field type="NX_CHAR" name="single_mysql_record_string">
           <dimensions rank="1">

@@ -393,6 +393,10 @@ class MainWindow(QMainWindow):
             "New &Group Item", "componentNewGroupItem", commandArgs, ComponentNewItem,
             "", "componentnewitem", "Add a new component group")
 
+        componentNewStrategyAction = self.pool.createCommand(
+            "New &Strategy Item", "componentNewStrategyItem", commandArgs, ComponentNewItem,
+            "", "componentnewitem", "Add a new component strategy")
+
 
         componentNewFieldAction = self.pool.createCommand(
             "New &Field Item", "componentNewFieldItem", commandArgs, ComponentNewItem,
@@ -652,9 +656,10 @@ class MainWindow(QMainWindow):
         self._addActions(componentsMenu, ( 
                 componentNewGroupAction, 
                 componentNewFieldAction, 
+                componentNewStrategyAction, 
+                componentNewDataSourceAction,
                 componentNewAttributeAction, 
                 componentNewLinkAction,
-                componentNewDataSourceAction,
                 None, 
                 componentLoadComponentAction, 
                 componentLoadDataSourceAction,
@@ -668,9 +673,13 @@ class MainWindow(QMainWindow):
 
         self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.contextMenuActions =  ( 
-            componentNewGroupAction, componentNewFieldAction,
-            componentNewAttributeAction, componentNewLinkAction,
-            componentNewDataSourceAction, None,
+            componentNewGroupAction, 
+            componentNewFieldAction,
+            componentNewDataSourceAction, 
+            componentNewStrategyAction, 
+            componentNewAttributeAction, 
+            componentNewLinkAction,
+            None,
             componentLoadComponentAction, componentLoadDataSourceAction,
             None,
             componentAddDataSourceAction,
@@ -1297,6 +1306,21 @@ class MainWindow(QMainWindow):
         if isinstance(self.mdi.activeWindow(),ComponentDlg):
             cmd = self.pool.getCommand('componentNewGroupItem').clone()
             cmd.itemName = 'group' 
+            cmd.execute()
+            self.cmdStack.append(cmd)
+            self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+            self.pool.setDisabled("redo", True, "Can't Redo")      
+        else:
+            QMessageBox.warning(self, "Component not created", 
+                                "Please edit one of the components")            
+
+
+    ## new group component item action
+    # \brief It adds a new group component item
+    def componentNewStrategyItem(self):
+        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+            cmd = self.pool.getCommand('componentNewStrategyItem').clone()
+            cmd.itemName = 'strategy' 
             cmd.execute()
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )

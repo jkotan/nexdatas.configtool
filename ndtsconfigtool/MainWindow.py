@@ -391,29 +391,29 @@ class MainWindow(QMainWindow):
 
         componentNewGroupAction = self.pool.createCommand(
             "New &Group Item", "componentNewGroupItem", commandArgs, ComponentNewItem,
-            "", "componentnewitem", "Add a new component group")
+            "", "componentnewitem", "Add a new component group item")
 
         componentNewStrategyAction = self.pool.createCommand(
             "New &Strategy Item", "componentNewStrategyItem", commandArgs, ComponentNewItem,
-            "", "componentnewitem", "Add a new component strategy")
+            "", "componentnewitem", "Add a new component strategy item")
 
 
         componentNewFieldAction = self.pool.createCommand(
             "New &Field Item", "componentNewFieldItem", commandArgs, ComponentNewItem,
-            "", "componentnewitem", "Add a new  component field")
+            "", "componentnewitem", "Add a new  component field item")
 
         componentNewAttributeAction = self.pool.createCommand(
             "New A&ttribute Item", "componentNewAttributeItem", commandArgs, ComponentNewItem,
-            "", "componentnewitem", "Add a new  component attribute")
+            "", "componentnewitem", "Add a new component attribute item")
 
         componentNewLinkAction = self.pool.createCommand(
             "New &Link Item", "componentNewLinkItem", commandArgs, ComponentNewItem,
-            "", "componentnewitem", "Add a new  component link")
+            "", "componentnewitem", "Add a new  component link" item)
         
 
         componentNewDataSourceAction = self.pool.createCommand(
             "New &DataSource Item", "componentNewDataSourceItem", commandArgs, ComponentNewItem,
-            "", "componentnewitem", "Add a new component data source")
+            "", "componentnewitem", "Add a new component data source item")
 
 
         componentLoadComponentAction = self.pool.createCommand(
@@ -429,7 +429,7 @@ class MainWindow(QMainWindow):
         componentAddDataSourceAction = self.pool.createCommand(
             "Add DataSource Item", "componentAddDataSourceItem", 
             commandArgs, ComponentAddDataSourceItem,
-            "", "componentadditem", "Add the data source from the file")
+            "", "componentadditem", "Add the data source from the list")
 
 
         componentMergeAction = self.pool.createCommand(

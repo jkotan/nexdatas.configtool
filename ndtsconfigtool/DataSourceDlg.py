@@ -104,12 +104,10 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## saved XML
         self.savedXML = None
 
-        self.dirty = False
 
     ## clears the datasource content
     # \brief It sets the datasource variables to default values
     def clear(self):
-        self.dirty = True
         self.dataSourceType = 'CLIENT'
         self.doc = u''
 
@@ -144,8 +142,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                  self.dbType,
                  self.dbDataFormat,
                  self.dbQuery,
-                 dbParameters,
-                 self.dirty
+                 dbParameters
                  )
 #        print  "GET", str(state)
         return state
@@ -167,8 +164,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
          self.dbType,
          self.dbDataFormat,
          self.dbQuery,
-         dbParameters,
-         self.dirty
+         dbParameters
          ) = state
 #        print "SET",  str(state)
         self.dbParameters = copy.copy(dbParameters)
@@ -692,7 +688,6 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
    ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
-        self.dirty = True
 
         self._applied = False
         class CharacterError(Exception): pass
@@ -774,7 +769,6 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     ## creates the new empty header
     # \brief It clean the DOM tree and put into it xml and definition nodes
     def createHeader(self):
-        self.dirty = True
         if self.view:
             self.view.setModel(None)
         self.document = QDomDocument()
@@ -807,7 +801,6 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     def copyFromClipboard(self):
         clipboard= QApplication.clipboard()
         text=unicode(clipboard.text())
-        self.dirty = True
         self.document = QDomDocument()
         self.root = self.document
         if not self.document.setContent(text):

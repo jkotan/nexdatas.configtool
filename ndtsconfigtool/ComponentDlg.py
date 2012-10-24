@@ -115,7 +115,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         ## saved XML
         self.savedXML = None
 
-        self.dirty = False
 
     ## checks if not saved
     # \returns True if it is not saved     
@@ -265,7 +264,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         if not hasattr(self.widget,'apply'):
             return
         self.widget.apply()
-        self.dirty = True
         self.view.resizeColumnToContents(0)
         self.view.resizeColumnToContents(1)
         return True
@@ -327,7 +325,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             ## Message
             return
 
-        self.dirty = True
         node = sel.node
 
 
@@ -355,7 +352,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         sel = index.internalPointer()
         if not sel or not index.isValid():
             return
-        self.dirty = True
         node = sel.node
         self.widget.node = node
         child = self.widget.root.createElement(QString(name))
@@ -375,7 +371,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         if not sel or not index.isValid():
             return
 
-        self.dirty = True
         node = sel.node
 
         attributeMap = node.attributes()
@@ -649,7 +644,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         else:
             itemFile = filePath
 
-        self.dirty = True
 
         if itemFile:
             try:
@@ -704,7 +698,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             child = child.nextSibling()    
                 
 
-        self.dirty = True
 
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -779,7 +772,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         node = sel.node
 
 
-        self.dirty = True
 
 
         self.widget.node = node
@@ -814,7 +806,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         if not self.document:
             self._merged = False
             return
-        self.dirty = True
         try:
             self._merger = Merger(self.document)
             self.connect(self._merger, SIGNAL("finished()"), self._merger, SLOT("deleteLater()"))
@@ -881,7 +872,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         newModel = ComponentModel(self.document, self._allAttributes, self)
         self.view.setModel(newModel)
         self._hideFrame()
-        self.dirty = True 
 
 
     ## provides the component in xml string

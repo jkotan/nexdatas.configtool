@@ -408,7 +408,7 @@ class MainWindow(QMainWindow):
 
         componentNewLinkAction = self.pool.createCommand(
             "New &Link Item", "componentNewLinkItem", commandArgs, ComponentNewItem,
-            "", "componentnewitem", "Add a new  component link" item)
+            "", "componentnewitem", "Add a new  component link item")
         
 
         componentNewDataSourceAction = self.pool.createCommand(

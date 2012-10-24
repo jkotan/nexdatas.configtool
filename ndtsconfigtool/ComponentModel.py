@@ -43,9 +43,8 @@ class ComponentModel(QAbstractItemModel):
         self._allAttributes = allAttributes
         
         ## root item of the tree
-        self.rootItem = ComponentItem(self._domDocument
-#                                      , 0 
-                                      )
+        self.rootItem = ComponentItem(self._domDocument)
+
 
     # switches between all attributes in the try or only type attribute
     # \param allAttributes all attributes are shown if True
@@ -96,6 +95,8 @@ class ComponentModel(QAbstractItemModel):
             return QVariant()
         
         
+
+
     ## provides flag of the model item    
     # \param index of the model item         
     # \returns flag defined for the given index and formated according to the role    
@@ -184,7 +185,7 @@ class ComponentModel(QAbstractItemModel):
         else:
             parentItem = parent.internalPointer()
             
-
+            
         return parentItem.node.childNodes().count()
 
 
@@ -194,6 +195,7 @@ class ComponentModel(QAbstractItemModel):
     def columnCount(self, parent = QModelIndex()):
         return 3
     
+
     ## inserts the given rows into the model
     # \param position row integer index where rows should be inserted
     # \param rows numbers of rows to be inserted

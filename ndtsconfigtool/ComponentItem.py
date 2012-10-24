@@ -60,6 +60,7 @@ class ComponentItem(object):
                 self.childItems.append(childItem)
             return childItem
 
+
     ## removes the given children from the child item list 
     # \param position list index of the first child to remove 
     # \param count number of children to remove 

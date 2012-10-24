@@ -868,8 +868,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     def createHeader(self):
         self.document = QDomDocument()
         self.document = self.document
-#        processing = self.document.createProcessingInstruction("xml", 'version="1.0"') 
-#        self.document.appendChild(processing)
         
         definition = self.document.createElement(QString("definition"))
         self.document.appendChild(definition)
@@ -880,12 +878,13 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
 
     ## provides the component in xml string
+    # \param indent number of added spaces during pretty printing
     # \returns xml string    
-    def get(self):
+    def get(self, indent=0):
         if hasattr(self.document,"toString"):
             processing = self.document.createProcessingInstruction("xml", 'version="1.0"') 
             self.document.insertBefore(processing, self.document.firstChild())
-            string = unicode(self.document.toString(0))
+            string = unicode(self.document.toString(indent))
             self.document.removeChild(processing)
             return string
 
@@ -893,7 +892,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     ## saves the component
     # \brief It saves the component in the xml file 
     def save(self):
-        print "saving"
         if not self._merged:
             QMessageBox.warning(self, "Saving problem",
                                 "Document not merged" )
@@ -901,12 +899,13 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         error = None
         if self._componentFile is None:
             self.setName(self.name, self.directory)
+        print "saving ", self._componentFile
         try:
             fh = QFile(self._componentFile)
             if not fh.open(QIODevice.WriteOnly):
                 raise IOError, unicode(fh.errorString())
             stream = QTextStream(fh)
-            string  = self.get()
+            string  = self.get(2)
             if string:
                 stream << string
             else:

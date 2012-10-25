@@ -84,14 +84,13 @@ class DataSourceList(QWidget, Ui_DataSourceList):
     # \param externalApply apply action
     def loadList(self, externalSave = None, externalApply = None ):
         try:
-            dirList=os.listdir(self.directory)
+            dirList=[l for l in  os.listdir(self.directory) if l.endswith(".ds.xml")]
         except:
             try:
                 self.directory = "./datasources"
-                dirList=os.listdir(self.directory)
+                dirList=[l for l in  os.listdir(self.directory) if l.endswith(".ds.xml")]
             except:
                 return
-            
 
         for fname in dirList:
             if fname[-4:] == '.xml':

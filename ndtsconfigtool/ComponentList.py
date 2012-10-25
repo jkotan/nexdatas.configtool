@@ -216,11 +216,11 @@ class ComponentList(QWidget, Ui_ComponentList):
     # \param externalApply apply action
     def loadList(self, itemActions, externalSave = None, externalApply = None ):
         try:
-            dirList=os.listdir(self.directory)
+            dirList=[l for l in os.listdir(self.directory) if l.endswith(".xml")]
         except:
             try:
                 self.directory = "./components"
-                dirList=os.listdir(self.directory)
+                dirList=[l for l in os.listdir(self.directory) if l.endswith(".xml")]
             except:
                 return
             

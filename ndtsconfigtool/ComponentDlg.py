@@ -160,6 +160,23 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             parent = child    
         return path
 
+
+    ## provides the current component tree item
+    # \returns DOM node instance
+    def _getCurrentNode(self):
+        index = self.view.currentIndex()
+        if not index.isValid():
+            return
+        item = index.internalPointer()
+        if not item:
+            return
+        return item.node
+        
+        
+        
+
+
+
     ## provides the path of component tree for the current component tree item
     # \returns path represented as a list with elements: (row number, node name)
     def _getPath(self):
@@ -815,6 +832,10 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             self.connect(self._merger, SIGNAL("finished()"), self._merger, SLOT("deleteLater()"))
             self.connect(self._merger, SIGNAL("finished()"), self._closeMergerDlg)
             self.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
+            cNode = self._getCurrentNode()
+            if cNode:
+                print "NODE", cNode.nodeName()
+                self._merger.selectedNode = cNode
             self._merger.start()
 
             self._mergerdlg.exec_()
@@ -830,6 +851,12 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             newModel = ComponentModel(self.document, self._allAttributes ,self)
             self.view.setModel(newModel)
             self._hideFrame()
+            print "NN"
+            if  self._merger.selectedNode:
+                print "NODE2",  self._merger.selectedNode.nodeName()
+            if hasattr(self._merger, "selectedNode") and self._merger.selectedNode: 
+
+                self._showNodes(self._merger.selectedNode)
 
         except IncompatibleNodeError, e: 
             print "Error in Merging: %s" % unicode(e.value)
@@ -838,7 +865,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             newModel = ComponentModel(self.document, self._allAttributes, self)
             self.view.setModel(newModel)
             self._hideFrame()
-            if hasattr(e,"nodes") and e.nodes: 
+            if hasattr(e, "nodes") and e.nodes: 
                 self._showNodes(e.nodes)
             QMessageBox.warning(self, "Merging problem",
                                 "Error in Merging: %s" % unicode(e.value) )

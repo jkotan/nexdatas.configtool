@@ -35,6 +35,8 @@ class IncompatibleNodeError(Exception):
         self.value = value
         ## list of error related nodes
         self.nodes = nodes
+        ## selected node
+        self.selectedNode = None
         
 ## dialog of the merger
 class MergerDlg(QDialog):
@@ -186,6 +188,7 @@ class Merger(QThread):
             
         return status
 
+
     ## merges the given node elements
     # \param elem1 first node element
     # \param elem2 secound node element
@@ -223,6 +226,8 @@ class Merger(QThread):
 
 
         parent = elem2.parentNode()    
+        if self.selectedNode == elem2:
+            selectedNode = elem1
         parent.removeChild(elem2)
 
 

@@ -480,12 +480,15 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             return
         self._allAttributes = status
         if hasattr(self,"view"):
+             cNode = self._getCurrentNode()
              model = self.view.model()   
              model.setAttributeView(self._allAttributes)
 #             self.view.reset()
              newModel = ComponentModel(self.document, self._allAttributes ,self)
              self.view.setModel(newModel)
              self._hideFrame()
+             if cNode:
+                 self._showNodes([cNode])
 
 
     ## sets selected component item in the item frame

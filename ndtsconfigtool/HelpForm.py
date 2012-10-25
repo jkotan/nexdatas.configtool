@@ -20,10 +20,6 @@
 # Detail help for Component Designer
 
 
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-#from future_builtins import *
 
 from PyQt4.QtCore import (QUrl, Qt, SIGNAL, SLOT)
 from PyQt4.QtGui import (QAction, QApplication, QDialog, QIcon,
@@ -67,7 +63,7 @@ class HelpForm(QDialog):
         self.textBrowser.setSearchPaths([":/help"])
         self.textBrowser.setSource(QUrl(self._page))
         self.resize(400, 600)
-        self.setWindowTitle("{0} Help".format(
+        self.setWindowTitle("%s Help" % (
                 QApplication.applicationName()))
 
 

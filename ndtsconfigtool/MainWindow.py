@@ -144,7 +144,6 @@ class MainWindow(QMainWindow):
         settings = QSettings()
         self.dsDirectory = unicode(settings.value("DataSources/directory").toString())
         self.cpDirectory = unicode(settings.value("Components/directory").toString())
-        print "DIR: ",self.dsDirectory, self.cpDirectory
 
         self.createGUI()
 

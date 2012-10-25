@@ -829,13 +829,15 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             return
         try:
             self._merger = Merger(self.document)
+
             self.connect(self._merger, SIGNAL("finished()"), self._merger, SLOT("deleteLater()"))
             self.connect(self._merger, SIGNAL("finished()"), self._closeMergerDlg)
             self.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
             cNode = self._getCurrentNode()
+
             if cNode:
-                print "NODE", cNode.nodeName()
                 self._merger.selectedNode = cNode
+
             self._merger.start()
 
             self._mergerdlg.exec_()
@@ -845,18 +847,15 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             if self._merger.exception:
                 raise self._merger.exception
 
-            self._merger = None
-
             self._merged = True
             newModel = ComponentModel(self.document, self._allAttributes ,self)
             self.view.setModel(newModel)
             self._hideFrame()
-            print "NN"
-            if  self._merger.selectedNode:
-                print "NODE2",  self._merger.selectedNode.nodeName()
-            if hasattr(self._merger, "selectedNode") and self._merger.selectedNode: 
 
-                self._showNodes(self._merger.selectedNode)
+            if hasattr(self._merger, "selectedNode") and self._merger.selectedNode: 
+                self._showNodes([self._merger.selectedNode])
+            self._merger = None
+
 
         except IncompatibleNodeError, e: 
             print "Error in Merging: %s" % unicode(e.value)

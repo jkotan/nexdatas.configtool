@@ -112,7 +112,19 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         if self.name is not None:
             self.nameLineEdit.setText(self.name) 
         if self.nexusType is not None:
-            self.typeLineEdit.setText(self.nexusType) 
+            index = self.typeComboBox.findText(unicode(self.nexusType))
+            if  index > -1 :
+                self.typeComboBox.setCurrentIndex(index)
+                self.otherFrame.hide()
+            else:
+                index2 = self.typeComboBox.findText('other ...')
+                self.typeComboBox.setCurrentIndex(index2)
+                self.typeLineEdit.setText(self.nexusType) 
+                self.otherFrame.show()
+        else:
+            index = self.typeComboBox.findText(unicode("None"))
+            self.typeComboBox.setCurrentIndex(index)
+            self.otherFrame.hide()
         if self.doc is not None:
             self.docTextEdit.setText(self.doc)
         if self.units is not None:    
@@ -156,6 +168,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         self.connect(self.dimPushButton, SIGNAL("clicked()"), self._changeDimensions)
 
         self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        self.connect(self.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._currentIndexChanged)
 
         self.populateAttributes()
 
@@ -340,6 +353,17 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
             self.attributeTableWidget.setCurrentItem(selected)
             
 
+    ## calls updateUi when the name text is changing
+    # \param text the edited text   
+    def _currentIndexChanged(self, text):
+        if text == 'other ...':
+            self.otherFrame.show()            
+            self.typeLineEdit.setFocus()
+        else:
+            self.otherFrame.hide()
+
+
+
     ## updates field user interface
     # \brief It sets enable or disable the OK button
     def _updateUi(self):
@@ -368,9 +392,17 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
     # \brief It copies the field name and type from lineEdit widgets and apply the dialog
     def apply(self):
         self.name = unicode(self.nameLineEdit.text())
-        self.nexusType = unicode(self.typeLineEdit.text())
         self.units = unicode(self.unitsLineEdit.text())
         self.value = unicode(self.valueLineEdit.text())
+
+
+        self.nexusType = unicode(self.typeComboBox.currentText())
+        if self.nexusType ==  'other ...':
+            self.nexusType =  unicode(self.typeLineEdit.text())
+        elif self.nexusType ==  'None':    
+            self.nexusType =  u'';
+
+
 
         self.doc = unicode(self.docTextEdit.toPlainText())
 
@@ -407,6 +439,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
             elem.setAttribute(QString("type"), QString(self.nexusType))
         if self.units:
             elem.setAttribute(QString("units"), QString(self.units))
+
+
 
         self._replaceText(self.node, index, unicode(self.value))
         

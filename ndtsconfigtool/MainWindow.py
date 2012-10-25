@@ -27,6 +27,7 @@ from PyQt4.QtGui import (QMainWindow, QDockWidget, QSplitter, QWorkspace ,
                          QListWidgetItem, QAction, QKeySequence, QMessageBox, QIcon)
 
 import platform
+
 from qrc import qrc_resources
 
 from CommandPool import (CommandPool,CommandStack)
@@ -34,6 +35,8 @@ from DataSourceList import DataSourceList
 from ComponentList import ComponentList
 from DataSourceDlg import DataSourceDlg
 from ComponentDlg import ComponentDlg
+
+from HelpForm import HelpForm
 
 from Command import (
      ServerConnect,
@@ -187,7 +190,7 @@ class MainWindow(QMainWindow):
 
 
     ##  creates GUI
-    # \brief It create dialogs for main the window application
+    # \brief It create dialogs for the main window application
     def createGUI(self):
         self.compDockWidget = QDockWidget(self)
         self.compDockWidget.setWindowTitle("Collections")
@@ -596,10 +599,13 @@ class MainWindow(QMainWindow):
         self.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
                      self.mdi, SLOT("setActiveWindow(QWidget*)"))
 
-        helpAboutAction = self._createAction("&About Component Designer",
-                self.helpAbout, tip = "About Component Designer")
+        helpAboutAction = self._createAction(
+            "&About Component Designer",
+            self.helpAbout, tip = "About Component Designer")
 
-
+        helpHelpAction = self._createAction(
+            "Component Desigener &Help", self.helpHelp,
+            QKeySequence.HelpContents, icon = "help", tip = "Detail help")
 
         fileMenu = self.menuBar().addMenu("&File")    
         self._addActions(fileMenu, (                 
@@ -754,7 +760,7 @@ class MainWindow(QMainWindow):
         self.menuBar().addSeparator()
 
         helpMenu = self.menuBar().addMenu("&Help") 
-        self._addActions(helpMenu, (helpAboutAction, ))
+        self._addActions(helpMenu, (helpHelpAction,helpAboutAction ))
         
 
         fileToolbar = self.addToolBar("File")
@@ -780,7 +786,9 @@ class MainWindow(QMainWindow):
                 dsourceRemoveAction,
                 None, 
                 serverConnectAction,
-                serverCloseAction
+                serverCloseAction,
+                None,
+                helpHelpAction
                 ))
 
         editToolbar = self.addToolBar("Edit")
@@ -1802,8 +1810,17 @@ class MainWindow(QMainWindow):
                 str(PYQT_VERSION_STR),
                 str(platform.system())))
 
+
+
+    ## shows the detail help 
+    # \brief It shows the detail help from help directory
+    def helpHelp(self):
+        form = HelpForm("index.html", self)
+        form.show()
+
+
     ## shows all attributes in the tree
-    # \brief switch between all attributes in the tree or only type attribute    
+    # \brief switch between all attributes in the tree or only type attribute
     def viewAllAttributes(self):
         self.componentList.viewAttributes(not self.componentList.viewAttributes())
         
@@ -1813,8 +1830,10 @@ class MainWindow(QMainWindow):
     def updateWindowMenu(self):
         self.windows["Menu"].clear()
         self._addActions(self.windows["Menu"], (self.windows["NextAction"],
-                                                self.windows["PrevAction"], self.windows["CascadeAction"],
-                                                self.windows["TileAction"], self.windows["RestoreAction"],
+                                                self.windows["PrevAction"], 
+                                                self.windows["CascadeAction"],
+                                                self.windows["TileAction"], 
+                                                self.windows["RestoreAction"],
                                                 self.windows["MinimizeAction"],
                                                 self.windows["ArrangeIconsAction"], 
                                                 None,

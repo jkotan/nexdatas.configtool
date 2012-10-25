@@ -27,5 +27,11 @@
 <file alias="undo.png">../images/undo.png</file>
 <file alias="redo.png">../images/redo.png</file>
 
+<file alias="forward.png">../images/arrow_left.png</file>
+<file alias="back.png">../images/arrow_right.png</file>
+<file alias="help.png">../images/help.png</file>
+<file alias="home.png">../images/symbol_help.png</file>
+
+<file>../help/index.html</file>
 </qresource>
 </RCC>

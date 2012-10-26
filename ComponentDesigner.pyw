@@ -34,7 +34,7 @@ if __name__ == "__main__":
     app.setWindowIcon(QIcon(":/icon.png"))
     app.setOrganizationName("DESY")
     app.setOrganizationDomain("desy.de")
-    app.setApplicationName("Component Designer")
+    app.setApplicationName("NDTS Component Designer")
     form = MainWindow()
     form.show()
     app.exec_()

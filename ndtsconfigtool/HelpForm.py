@@ -87,7 +87,7 @@ class HelpForm(QDialog):
         self.toolBar.addAction(forwardAction)
         self.toolBar.addAction(homeAction)
 
-        self.toolBar.addWidget(self.pageLabel)
+#        self.toolBar.addWidget(self.pageLabel)
 
         self.connect(
             backAction, SIGNAL("triggered()"),

@@ -30,6 +30,8 @@ import platform
 
 from qrc import qrc_resources
 
+from collections import Iterable
+
 from CommandPool import (CommandPool,CommandStack)
 from DataSourceList import DataSourceList
 from ComponentList import ComponentList
@@ -763,36 +765,51 @@ class MainWindow(QMainWindow):
         self._addActions(helpMenu, (helpHelpAction,helpAboutAction ))
         
 
-        fileToolbar = self.addToolBar("File")
-        fileToolbar.setObjectName("FileToolbar")
+        componentToolbar = self.addToolBar("Component")
+        componentToolbar.setObjectName("ComponentToolbar")
 
-        self._addActions(fileToolbar, (
+        self._addActions(componentToolbar, (
                 componentNewAction,
                 componentOpenAction, 
                 componentEditAction, 
                 componentSaveAction,
                 componentSaveAsAction,
                 componentMergeAction,
-                componentRemoveAction, 
-                None,
-                cutItemAction, copyItemAction, pasteItemAction,
-                None,
-                undoAction, redoAction,
-                None, 
-                dsourceNewAction,
-                dsourceOpenAction,
-                dsourceEditAction,
-                dsourceSaveAction,
-                dsourceRemoveAction,
-                None, 
-                serverConnectAction,
-                serverCloseAction,
-                None,
-                helpHelpAction
+                componentRemoveAction
                 ))
 
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolbar")
+        self._addActions(editToolbar, (
+                cutItemAction, copyItemAction, pasteItemAction,
+                None,
+                undoAction, redoAction,
+                ))
+
+
+        dsourceToolbar = self.addToolBar("DataSource")
+        dsourceToolbar.setObjectName("DataSourceToolbar")
+        self._addActions(dsourceToolbar, (
+                dsourceNewAction,
+                dsourceOpenAction,
+                dsourceEditAction,
+                dsourceSaveAction,
+                dsourceRemoveAction
+                ))
+
+
+        serverToolbar = self.addToolBar("ServerToolbar")
+        serverToolbar.setObjectName("ServerToolbar")
+        self._addActions(dsourceToolbar, (
+                serverConnectAction,
+                serverCloseAction
+                ))
+
+        helpToolbar = self.addToolBar("HelpToolbar")
+        helpToolbar.setObjectName("HelpToolbar")
+        self._addActions(helpToolbar, (
+                helpHelpAction,
+                ))
         
 
     ## stores the setting before finishing the application 
@@ -956,6 +973,8 @@ class MainWindow(QMainWindow):
     # \param target action target
     # \param actions actions to be added   
     def _addActions(self, target, actions):
+        if not isinstance(actions, Iterable):
+            target.addAction(actions)
         for action in actions:
             if action is None:
                 target.addSeparator()

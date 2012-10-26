@@ -603,7 +603,7 @@ class MainWindow(QMainWindow):
 
         helpAboutAction = self._createAction(
             "&About Component Designer",
-            self.helpAbout, tip = "About Component Designer")
+            self.helpAbout, icon = "icon",tip = "About Component Designer")
 
         helpHelpAction = self._createAction(
             "Component Desigener &Help", self.helpHelp,

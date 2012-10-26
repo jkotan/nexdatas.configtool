@@ -62,7 +62,7 @@ class HelpForm(QDialog):
         self.setLayout(layout)
         self.textBrowser.setSearchPaths([":/help"])
         self.textBrowser.setSource(QUrl(self._page))
-        self.resize(650, 700)
+        self.resize(660, 700)
         self.setWindowTitle("%s Help" % (
                 QApplication.applicationName()))
 
@@ -108,9 +108,9 @@ class HelpForm(QDialog):
     # \brief It resets the pageLabel withg the document title
     def updatePageTitle(self):
         self.pageLabel.setText(
-            "<P><b><i><FONT COLOR='#2222ee' FONT SIZE = 4>" +
+            "<p><b><i><font color='#0066ee' font size = 4>" +
             "&nbsp;&nbsp;" + self.textBrowser.documentTitle() 
-            + "</i></b></P></br>"
+            + "</i></b></p></br>"
             )
 
 

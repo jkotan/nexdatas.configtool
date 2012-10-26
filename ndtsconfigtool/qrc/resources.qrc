@@ -37,5 +37,10 @@
 <file>../help/editmenu.html</file>
 <file>../help/itemsmenu.html</file>
 <file>../help/servermenu.html</file>
+<file>../help/viewmenu.html</file>
+<file>../help/windowmenu.html</file>
+<file>../help/helpmenu.html</file>
+<file>../help/dsourcewindow.html</file>
+<file>../help/componentwindow.html</file>
 </qresource>
 </RCC>

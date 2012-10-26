@@ -46,7 +46,7 @@ class ComponentModel(QAbstractItemModel):
         self.rootItem = ComponentItem(self._domDocument)
 
 
-    # switches between all attributes in the try or only type attribute
+    ## switches between all attributes in the try or only type attribute
     # \param allAttributes all attributes are shown if True
     def setAttributeView(self, allAttributes):
         self._allAttributes = allAttributes

@@ -473,7 +473,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             self._externalApply = externalApply
 
 
-    # switches between all attributes in the try or only type attribute
+    ## switches between all attributes in the try or only type attribute
     # \param status all attributes are shown if True
     def viewAttributes(self, status):
         if status == self._allAttributes:

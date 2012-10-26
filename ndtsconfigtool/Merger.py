@@ -35,8 +35,6 @@ class IncompatibleNodeError(Exception):
         self.value = value
         ## list of error related nodes
         self.nodes = nodes
-        ## selected node
-        self.selectedNode = None
         
 ## dialog of the merger
 class MergerDlg(QDialog):
@@ -101,6 +99,8 @@ class Merger(QThread):
         self.exception = None
         ## it has to be set on False when we want to break merging
         self.running = True
+        ## selected node
+        self.selectedNode = None
 
     ## fetches the text from all DOM child text nodes
     # \param node the given DOM node

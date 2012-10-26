@@ -64,7 +64,7 @@ class ComponentList(QWidget, Ui_ComponentList):
         self.populateComponents()
 
 
-    # switches between all attributes in the try or only type attribute
+    ## switches between all attributes in the try or only type attribute
     # \param status all attributes are shown if True
     def viewAttributes(self, status = None):
         if status is None:

@@ -30,8 +30,6 @@ import platform
 
 from qrc import qrc_resources
 
-from collections import Iterable
-
 from CommandPool import (CommandPool,CommandStack)
 from DataSourceList import DataSourceList
 from ComponentList import ComponentList
@@ -973,7 +971,7 @@ class MainWindow(QMainWindow):
     # \param target action target
     # \param actions actions to be added   
     def _addActions(self, target, actions):
-        if not isinstance(actions, Iterable):
+        if not  hasattr(actions, '__iter__'):
             target.addAction(actions)
         for action in actions:
             if action is None:

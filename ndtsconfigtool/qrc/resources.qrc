@@ -23,7 +23,7 @@
 
 <file alias="cut.png">../images/cut.png</file>
 <file alias="copy.png">../images/copy.png</file>
-<file alias="paste.png">../images/paste.png</file>
+<file alias="paste.png">../images/paste.png</file>M
 <file alias="undo.png">../images/undo.png</file>
 <file alias="redo.png">../images/redo.png</file>
 
@@ -33,5 +33,9 @@
 <file alias="home.png">../images/symbol_help.png</file>
 
 <file>../help/index.html</file>
+<file>../help/filemenu.html</file>
+<file>../help/editmenu.html</file>
+<file>../help/itemsmenu.html</file>
+<file>../help/servermenu.html</file>
 </qresource>
 </RCC>

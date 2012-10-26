@@ -23,7 +23,7 @@
 
 from PyQt4.QtCore import (QUrl, Qt, SIGNAL, SLOT)
 from PyQt4.QtGui import (QAction, QApplication, QDialog, QIcon,
-        QKeySequence, QLabel, QTextBrowser, QToolBar, QVBoxLayout)
+        QKeySequence, QLabel, QTextBrowser, QToolBar, QVBoxLayout, QFrame)
 
 from qrc import qrc_resources
 
@@ -62,7 +62,7 @@ class HelpForm(QDialog):
         self.setLayout(layout)
         self.textBrowser.setSearchPaths([":/help"])
         self.textBrowser.setSource(QUrl(self._page))
-        self.resize(500, 600)
+        self.resize(650, 700)
         self.setWindowTitle("%s Help" % (
                 QApplication.applicationName()))
 
@@ -86,8 +86,8 @@ class HelpForm(QDialog):
         self.toolBar.addAction(backAction)
         self.toolBar.addAction(forwardAction)
         self.toolBar.addAction(homeAction)
-
-#        self.toolBar.addWidget(self.pageLabel)
+        self.toolBar.addSeparator()
+        self.toolBar.addWidget(self.pageLabel)
 
         self.connect(
             backAction, SIGNAL("triggered()"),
@@ -107,7 +107,11 @@ class HelpForm(QDialog):
     ## updates the title page
     # \brief It resets the pageLabel withg the document title
     def updatePageTitle(self):
-        self.pageLabel.setText(self.textBrowser.documentTitle())
+        self.pageLabel.setText(
+            "<P><b><i><FONT COLOR='#2222ee' FONT SIZE = 4>" +
+            "&nbsp;&nbsp;" + self.textBrowser.documentTitle() 
+            + "</i></b></P></br>"
+            )
 
 
 if __name__ == "__main__":

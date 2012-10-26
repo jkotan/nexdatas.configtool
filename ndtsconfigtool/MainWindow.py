@@ -800,7 +800,7 @@ class MainWindow(QMainWindow):
 
         serverToolbar = self.addToolBar("ServerToolbar")
         serverToolbar.setObjectName("ServerToolbar")
-        self._addActions(dsourceToolbar, (
+        self._addActions(serverToolbar, (
                 serverConnectAction,
                 serverCloseAction
                 ))

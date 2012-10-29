@@ -44,7 +44,8 @@ class ComponentModel(QAbstractItemModel):
         
         ## root item of the tree
         self.rootItem = ComponentItem(self._domDocument)
-
+        ## index of the root item
+        self.rootIndex = self.createIndex(0, 0, self.rootItem)
 
     ## switches between all attributes in the try or only type attribute
     # \param allAttributes all attributes are shown if True
@@ -161,14 +162,21 @@ class ComponentModel(QAbstractItemModel):
         childItem = child.internalPointer()
 
         ## TODO when it is performed
-        if not hasattr(childItem,"parent"):
+        if not hasattr(childItem, "parent"):
             return QModelIndex()            
         
         parentItem = childItem.parent
 
         if parentItem is None or parentItem == self.rootItem:
             return QModelIndex()
-            
+
+#        if parentItem is None:
+#            return QModelIndex()
+
+#        if parentItem == self.rootItem:
+#            self.rootIndex
+
+
         return self.createIndex(parentItem.childNumber(), 0, parentItem)
 
         

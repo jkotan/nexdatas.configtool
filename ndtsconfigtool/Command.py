@@ -2704,7 +2704,7 @@ class ComponentNewItem(ComponentItemCommand):
                     self._child = self._cp.widget.addItem(self.itemName)
                     if self._child:
                         self._index = self._cp.widget.view.currentIndex()
-                        if  self._index.column() != 0:
+                        if  self._index.column() != 0: 
                             self._index = self._cp.widget.view.model().index(self._index.row(), 0, self._index.parent())
                         row = self._cp.widget.widget.getNodeRow(self._child)
                         self._childIndex = self._cp.widget.view.model().index(row, 0, self._index)
@@ -2713,11 +2713,18 @@ class ComponentNewItem(ComponentItemCommand):
                     else:
                         QMessageBox.warning(self.receiver, "Creating the %s Item not possible" % self.itemName, 
                                             "Please select another tree or new item ")                                
-            if self._child:
-                finalIndex = self._cp.widget.view.model().createIndex(
-                    self._index.row(),2,self._index.parent().internalPointer())
+            if self._child and self._index.isValid():
+                if self._index.isValid():
+                    finalIndex = self._cp.widget.view.model().index(
+                        self._index.parent().row(), 2, self._index.parent().parent())
+                else:
+                    finalIndex = self._cp.widget.view.model().index(
+                        0, 2, self._index.parent().parent())
+                    
                 self._cp.widget.view.model().emit(
-                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"),self._index,finalIndex)
+                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"), self._index, self._index)
+                self._cp.widget.view.model().emit(
+                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"), finalIndex, self._childIndex)
         self.postExecute()
             
             

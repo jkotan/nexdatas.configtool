@@ -238,6 +238,7 @@ class GroupDlg(NodeDlg, Ui_GroupDlg):
     ## applys input text strings
     # \brief It copies the group name and type from lineEdit widgets and apply the dialog
     def apply(self):
+        print "applyaaaaa"
         self.name = unicode(self.nameLineEdit.text())
         self.nexusType = unicode(self.typeLineEdit.text())
 
@@ -253,6 +254,8 @@ class GroupDlg(NodeDlg, Ui_GroupDlg):
 
         if self.node  and self.root and self.node.isElement():
             self.updateNode(index)
+        if  index.column() != 0:
+            index = self.view.model().index(index.row(), 0, index.parent())
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
 

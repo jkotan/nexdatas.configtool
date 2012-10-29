@@ -210,19 +210,17 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
 
 
-    ## provides  index of the component item defiend by the path
+    ## provides  index of the component item defined by the path
     # \param path path represented as a list with elements: (row number, node name)
     # \returns component item index        
     def _getIndex(self, path):
         if not path:
             return QModelIndex()
-        item = self.view.model().rootItem
-        node = item.node
-        index = self.view.model().createIndex(0,0,item)
+        index = self.view.model().rootIndex
         self.view.expand(index)
         item = index.internalPointer()
         for step in path:
-            index = self.view.model().index(step[0],0,index) 
+            index = self.view.model().index(step[0], 0, index) 
             self.view.expand(index)
             item = index.internalPointer()
         return index    
@@ -347,6 +345,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
 
         self.widget.node = node
+        if  index.column() != 0:
+            index = self.view.model().index(index.row(), 0, index.parent())
         self.widget.appendNode(clipNode, index)        
 
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
@@ -373,8 +373,10 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         node = sel.node
         self.widget.node = node
         child = self.widget.root.createElement(QString(name))
+        if  index.column() != 0:
+            index = self.view.model().index(index.row(), 0, index.parent())
         self.widget.appendNode(child, index)
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         self.view.expand(index)
         return child
 
@@ -406,6 +408,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
         self.widget.removeNode(node, index.parent())
                 
+        if  index.column() != 0:
+            index = self.view.model().index(index.row(), 0, index.parent())
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         if index.parent().isValid():
             self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
@@ -691,6 +695,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                     child = definition.firstChild()
                     self.widget.node = node
 
+                    if  index.column() != 0:
+                        index = self.view.model().index(index.row(), 0, index.parent())
                     while not child.isNull():
                         child2 = self.document.importNode(child, True)
                         self.widget.appendNode(child2, index)
@@ -760,6 +766,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                         if ds:
 
 
+                            if  index.column() != 0:
+                                index = self.view.model().index(index.row(), 0, index.parent())
                             self.widget.node = node
                             ds2 = self.document.importNode(ds, True)
                             self.widget.appendNode(ds2, index)
@@ -814,6 +822,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
         self.widget.node = node
         dsNode2 = self.document.importNode(dsNode, True)
+        if  index.column() != 0:
+            index = self.view.model().index(index.row(), 0, index.parent())
         self.widget.appendNode(dsNode2, index)
         
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)

@@ -62,6 +62,8 @@ class NodeDlg(QDialog):
         index = self.view.currentIndex()
         self.setFromNode()
         self.updateForm()
+        if  index.column() != 0:
+            index = self.view.model().index(index.row(), 0, index.parent())
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
 

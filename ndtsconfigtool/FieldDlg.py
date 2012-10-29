@@ -421,6 +421,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         if self.node  and self.root and self.node.isElement():
             self.updateNode(index)
                     
+        if  index.column() != 0:
+            index = self.view.model().index(index.row(), 0, index.parent())
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
         

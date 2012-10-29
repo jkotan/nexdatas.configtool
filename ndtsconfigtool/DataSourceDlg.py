@@ -767,6 +767,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
             if self.view and self.view.model():
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
+                if  index.column() != 0:
+                    index = self.view.model().index(index.row(), 0, index.parent())
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
         print "TREE", self._tree

@@ -2704,6 +2704,8 @@ class ComponentNewItem(ComponentItemCommand):
                     self._child = self._cp.widget.addItem(self.itemName)
                     if self._child:
                         self._index = self._cp.widget.view.currentIndex()
+                        if  self._index.column() != 0:
+                            self._index = self._cp.widget.view.model().index(self._index.row(), 0, self._index.parent())
                         row = self._cp.widget.widget.getNodeRow(self._child)
                         self._childIndex = self._cp.widget.view.model().index(row, 0, self._index)
                         self._cp.widget.view.setCurrentIndex(self._childIndex)

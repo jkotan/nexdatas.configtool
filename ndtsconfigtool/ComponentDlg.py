@@ -495,12 +495,21 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     # \brief It is executed  when component tree item is selected
     # \param index of component tree item
     def tagClicked(self, index):
+        if not index.isValid():
+            print "Not valid index"
+            return
         self._currentTag = index
         item  = self._currentTag.internalPointer()
-        if not item:
-            raise Exception, "Unreachable item"
-        if not hasattr(item,'node'):
-            raise Exception, "Unreachable item"
+        if item is None:
+            print "Not valid index item"
+            return
+
+#        if item is None:
+#            raise Exception, "Unreachable item None"
+#        if not item:
+#            raise Exception, "Unreachable item"
+#        if not hasattr(item,'node'):
+#            raise Exception, "Unreachable: item without node"
 
         node = item.node
         attributeMap = node.attributes()
@@ -540,6 +549,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         index = self.view.indexAt(position)
         if index.isValid():
             self.tagClicked(index)
+            
         menu = QMenu()
         for action in self._actions:
             if action is None:
@@ -655,6 +665,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                 or not hasattr(self.widget, "subItems") or "component" not in  self.widget.subItems:
             return
         index = self.view.currentIndex()
+#        print "L index", index.column()
         sel = index.internalPointer()
         if not sel or not index.isValid():
             return
@@ -790,12 +801,15 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                 
 
         index = self.view.currentIndex()
-        sel = index.internalPointer()
-        if not sel or not index.isValid():
+        if not index.isValid():
             return
+        
+        sel = index.internalPointer()
+        if not sel:
+            return
+
         node = sel.node
-
-
+        
 
 
         self.widget.node = node

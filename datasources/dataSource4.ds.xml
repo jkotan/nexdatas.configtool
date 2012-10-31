@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <definition>
-  <datasource type="CLIENT">
-    <record name="nowosc"/>
-    <doc></doc>
+  <datasource type="TANGO">
+    <record name="Image"/>
+    <device port="10000" encoding="VDEO" hostname="haspp0xtdot01" member="attribute" name="x/x/pco.edge.01"/>
   </datasource>
 </definition>

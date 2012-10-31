@@ -46,16 +46,18 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## client record name
         self.clientRecordName = u''
 
-        ## tango device name
+        ## Tango device name
         self.tangoDeviceName = u''
-        ## tango member name
+        ## Tango member name
         self.tangoMemberName = u''
-        ## tango member name
+        ## Tango member name
         self.tangoMemberType = u''
-        ## tango host name
+        ## Tango host name
         self.tangoHost = u''
-        ## tango host name
+        ## Tango host name
         self.tangoPort = u''
+        ## encoding for DevEncoded Tango types
+        self.tangoEncoding = u''
 
         ## database type
         self.dbType = 'MYSQL'
@@ -125,6 +127,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self.tangoMemberType = u''
         self.tangoHost = u''
         self.tangoPort = u''
+        self.tangoEncoding = u''
 
         self.dbType = 'MYSQL'
         self.dbDataFormat = 'SCALAR'
@@ -146,6 +149,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                  self.tangoMemberType,
                  self.tangoHost,
                  self.tangoPort,
+                 self.tangoEncoding,
                  self.dbType,
                  self.dbDataFormat,
                  self.dbQuery,
@@ -168,6 +172,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
          self.tangoMemberType,
          self.tangoHost,
          self.tangoPort,
+         self.tangoEncoding,
          self.dbType,
          self.dbDataFormat,
          self.dbQuery,
@@ -207,6 +212,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             self.tHostLineEdit.setText(self.tangoHost)
         if self.tangoPort is not None:
             self.tPortLineEdit.setText(self.tangoPort)
+        if self.tangoEncoding is not None:
+            self.tEncodingLineEdit.setText(self.tangoEncoding)
 
 
 
@@ -590,6 +597,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                                          if attributeMap.contains("hostname") else "")
             self.tangoPort = unicode(attributeMap.namedItem("port").nodeValue() \
                                          if attributeMap.contains("port") else "")
+            self.tangoEncoding = unicode(attributeMap.namedItem("encoding").nodeValue() \
+                                         if attributeMap.contains("encoding") else "")
 
                                     
         elif value == 'DB':
@@ -729,6 +738,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             self.tangoMemberType = unicode(self.tMemberComboBox.currentText())
             self.tangoHost = unicode(self.tHostLineEdit.text())
             self.tangoPort = unicode(self.tPortLineEdit.text())
+            self.tangoEncoding = unicode(self.tEncodingLineEdit.text())
                 
         elif sourceType == 'DB':
             query = unicode(self.dQueryLineEdit.text())
@@ -858,6 +868,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                 device.setAttribute(QString("hostname"), QString(self.tangoHost))
             if self.tangoPort:
                 device.setAttribute(QString("port"), QString(self.tangoPort))
+            if self.tangoEncoding:
+                device.setAttribute(QString("encoding"), QString(self.tangoEncoding))
             elem.appendChild(device)            
             
         elif self.dataSourceType == 'DB':
@@ -932,6 +944,7 @@ if __name__ == "__main__":
     form.tangoMemberType = 'attribute'
     form.tangoHost = 'hasso.desy.de'
     form.tangoPort = '10000'
+    form.tangoEncoding = 'LIMA2D'
 
     form.dataSourceType = 'DB'
     form.dbType = 'PGSQL'

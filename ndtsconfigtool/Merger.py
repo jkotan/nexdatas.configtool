@@ -227,7 +227,7 @@ class Merger(QThread):
 
         parent = elem2.parentNode()    
         if self.selectedNode == elem2:
-            selectedNode = elem1
+            self.selectedNode = elem1
         parent.removeChild(elem2)
 
 

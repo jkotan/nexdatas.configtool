@@ -769,11 +769,14 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
 
         if self.node  and self.root and self.node.isElement():
-            print "update"
+
             self.updateNode(index)
 
             if index.isValid():
-                self.view.setCurrentIndex(index)
+                self.view.setCurrentIndex(self.view.model().index(index.row(),index.column(), 
+                                                                  index.parent()))
+
+
 
             if self.view and self.view.model():
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
@@ -785,6 +788,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         if not self._tree:
             self.createNodes()
             print "CREATED"
+#        else: 
+#            self.createNodes(self._tree)
                 
         self._applied = True
         return True    
@@ -921,7 +926,6 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self.node = self.node.parentNode()   
         self._replaceNode(oldDs, newDs, parent)
         self.node = newDs
-
 
                     
 

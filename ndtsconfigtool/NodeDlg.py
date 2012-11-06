@@ -162,7 +162,6 @@ class NodeDlg(QDialog):
     def removeNode(self, node, parent):
         if self.view is not None and self.view.model() is not None: 
             row = self.getNodeRow(node)
-            print "ROW", row
             if row is not None:
                 self.view.model().removeRows(row, 1, parent)
         self.node.removeChild(node)

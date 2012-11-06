@@ -138,7 +138,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                 row += 1
             if row < children.count():
                 return row
-
+    
 
     ## provides the path of component tree for a given node
     # \param node DOM node
@@ -147,17 +147,24 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         ancestors = [node]
         path = [] 
 
-        while ancestors[0].parentNode().nodeName() != '#document':
+        while str(ancestors[0].parentNode().nodeName()).strip() != '#document' and \
+                str(ancestors[0].parentNode().nodeName()).strip() != '':
             ancestors.insert(0, ancestors[0].parentNode())
         ancestors.insert(0, ancestors[0].parentNode())
-
-
+        
         parent = None
         for child in ancestors:   
             if parent: 
                 row = self._getNodeRow(child, parent)
+
+                if row is None:
+                    path = []
+                    break
+        
                 path.append((row, unicode(child.nodeName())))
             parent = child    
+        if not path:
+            path = [(0, 'definition')]
         return path
 
 
@@ -209,7 +216,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             self._selectItem(path)    
 
 
-
     ## provides  index of the component item defined by the path
     # \param path path represented as a list with elements: (row number, node name)
     # \returns component item index        
@@ -232,7 +238,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         index = self._getIndex(path)
         
         if index and index.isValid():
-            self.view.setCurrentIndex(index)
+            self.view.setCurrentIndex(self.view.model().index(index.row(),index.column(), 
+                                                              index.parent()))
             self.tagClicked(index)
             self.view.expand(index)
 
@@ -882,7 +889,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             if hasattr(self._merger, "selectedNode") and self._merger.selectedNode: 
                 self._showNodes([self._merger.selectedNode])
             self._merger = None
-
 
         except IncompatibleNodeError, e: 
             print "Error in Merging: %s" % unicode(e.value)

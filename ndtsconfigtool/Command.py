@@ -2899,9 +2899,11 @@ class ComponentApplyItem(ComponentItemCommand):
             self.preExecute()
             if self._cp is not None:
                 if hasattr(self._cp, "widget") and hasattr(self._cp.widget,"applyItem"):
+
                     if not self._cp.widget.applyItem():
                         QMessageBox.warning(self.receiver, "Applying item not possible", 
                                             "Please select another tree item") 
+
 
         self.postExecute()
 

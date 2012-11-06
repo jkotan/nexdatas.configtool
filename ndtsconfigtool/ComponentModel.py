@@ -136,8 +136,10 @@ class ComponentModel(QAbstractItemModel):
     # \param parent index of the parent item       
     # \returns index for the required model item 
     def index(self, row, column, parent = QModelIndex()):
+
         if not self.hasIndex(row, column, parent):
             return QModelIndex()
+            
 
         if not parent.isValid():
             parentItem = self.rootItem

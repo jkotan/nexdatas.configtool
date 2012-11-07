@@ -29,7 +29,8 @@ from ndtsconfigtool.MainWindow import MainWindow
 
 
 if __name__ == "__main__":
-
+    import gc
+    gc.set_debug(gc.DEBUG_LEAK)
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon(":/icon.png"))
     app.setOrganizationName("DESY")

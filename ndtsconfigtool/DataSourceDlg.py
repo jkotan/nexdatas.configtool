@@ -27,7 +27,7 @@ from ui.ui_datasourcedlg import Ui_DataSourceDlg
 from PyQt4.QtXml import (QDomDocument, QDomNode)
 from NodeDlg import NodeDlg 
 import copy
-
+import gc
 
 ## dialog defining datasources
 class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
@@ -706,6 +706,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
    ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
+        gc.collect()
         print "A1"
         self._applied = False
         class CharacterError(Exception): pass
@@ -767,6 +768,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
 
         print "AX1"
+#        gc.collect()
 
         row = index.row()
         column = index.column()
@@ -777,6 +779,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
             self.updateNode(index)
             print "AX2"
+#            gc.collect()
 
             if index.isValid():
                 ind = self.view.model().index(row, column, parent)
@@ -784,6 +787,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                 print "AX2b", ind.isValid()
                 print "iRCP", ind.row(),ind.column(), ind.parent().internalPointer().node.nodeName(),ind.parent().parent().internalPointer().node.nodeName()
 
+#                gc.collect()
                 self.view.setCurrentIndex(ind)
 
 

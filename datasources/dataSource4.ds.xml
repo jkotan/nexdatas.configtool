@@ -2,6 +2,6 @@
 <definition>
   <datasource type="TANGO">
     <record name="Image"/>
-    <device port="10000" encoding="VDEO" hostname="haspp0xtdot01" member="attribute" name="x/x/pco.edge.01"/>
+    <device port="10000" encoding="LIMA_VIDEO_IMAGE" hostname="haspp0xtdot01" member="attribute" name="x/x/pco.edge.01"/>
   </datasource>
 </definition>

@@ -787,7 +787,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                 print "AX2b", ind.isValid()
                 print "iRCP", ind.row(),ind.column(), ind.parent().internalPointer().node.nodeName(),ind.parent().parent().internalPointer().node.nodeName()
 
-#                gc.collect()
+ #               gc.collect()
                 self.view.setCurrentIndex(ind)
 
 

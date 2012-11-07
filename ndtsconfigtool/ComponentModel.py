@@ -111,6 +111,7 @@ class ComponentModel(QAbstractItemModel):
     def flags(self, index):
         print "FL"
         gc.collect()
+        print "FLL"
         if not index.isValid():
             print "FL2I"
             return Qt.ItemIsEnabled

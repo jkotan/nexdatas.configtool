@@ -110,7 +110,6 @@ class ComponentModel(QAbstractItemModel):
     # \returns flag defined for the given index and formated according to the role    
     def flags(self, index):
         print "FL"
-        print "Garbage", gc.garbage
         gc.collect()
         if not index.isValid():
             print "FL2I"

@@ -238,8 +238,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         index = self._getIndex(path)
         
         if index and index.isValid():
-            self.view.setCurrentIndex(self.view.model().index(index.row(),index.column(), 
-                                                              index.parent()))
+            self.view.setCurrentIndex(index)
             self.tagClicked(index)
             self.view.expand(index)
 

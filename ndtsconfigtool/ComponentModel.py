@@ -35,6 +35,7 @@ class ComponentModel(QAbstractItemModel):
     # \param allAttributes True if show all attributes in the tree
     def __init__(self, document, allAttributes, parent=None):
         super(ComponentModel, self).__init__(parent)
+        print "CM"
         
         ## DOM document
         self._domDocument = document
@@ -50,7 +51,8 @@ class ComponentModel(QAbstractItemModel):
     ## switches between all attributes in the try or only type attribute
     # \param allAttributes all attributes are shown if True
     def setAttributeView(self, allAttributes):
-        self._allAttributes = allAttributes
+         print "SA"
+         self._allAttributes = allAttributes
         
 
     ## provides read access to the model data
@@ -58,6 +60,7 @@ class ComponentModel(QAbstractItemModel):
     # \param role access type of the data
     # \returns data defined for the given index and formated according to the role    
     def data(self, index, role = Qt.DisplayRole):
+        print "DA"
         if not index.isValid() :
             return QVariant()
         if role != Qt.DisplayRole:
@@ -102,11 +105,31 @@ class ComponentModel(QAbstractItemModel):
     # \param index of the model item         
     # \returns flag defined for the given index and formated according to the role    
     def flags(self, index):
+        print "FL"
         if not index.isValid():
+            print "FL2I"
             return Qt.ItemIsEnabled
-        return Qt.ItemFlags(QAbstractItemModel.flags(self,index) |
-                            Qt.ItemIsEnabled | Qt.ItemIsSelectable )
+#        return Qt.ItemFlags(QAbstractItemModel.flags(self,index) |
+#                            Qt.ItemIsEnabled | Qt.ItemIsSelectable )
+        print "FL1"
         
+        fl1 = Qt.ItemFlags()
+        print "FL1a"
+#        fl = Qt.ItemIsUserCheckable
+#        print "FL1a2", int(fl)
+#        fl1 |= 33
+        print "FL1b"
+        fl1 |= Qt.ItemIsEnabled
+        print "FL1c"
+        fl1 |= Qt.ItemIsSelectable
+        print "FL1d"
+        
+#        fl1 =  QAbstractItemModel.flags(self,index) | Qt.ItemIsEnabled | Qt.ItemIsSelectable 
+#        print "FL1b",fl1.__str__()
+        
+        f = Qt.ItemFlags(fl1)
+        print "FL2"
+        return f
 
     
     ## provides access to the header data
@@ -115,6 +138,7 @@ class ComponentModel(QAbstractItemModel):
     # \param role access type of the header data
     # \returns header data defined for the given index and formated according to the role    
     def headerData(self, section, orientation, role=Qt.DisplayRole):
+        print "HD"
         if orientation == Qt.Horizontal and role == Qt.DisplayRole :
             if section == 0 :
                 return QVariant("Name")
@@ -136,7 +160,7 @@ class ComponentModel(QAbstractItemModel):
     # \param parent index of the parent item       
     # \returns index for the required model item 
     def index(self, row, column, parent = QModelIndex()):
-
+        print "ID"
         if not self.hasIndex(row, column, parent):
             return QModelIndex()
             
@@ -158,6 +182,7 @@ class ComponentModel(QAbstractItemModel):
     # \param child  child index
     # \returns parent index for the given child
     def parent(self, child):
+        print "PA"
         if not child.isValid():
             return QModelIndex()
 
@@ -187,6 +212,7 @@ class ComponentModel(QAbstractItemModel):
     # \param parent parent index
     # \returns number of the children for the given parent
     def rowCount(self, parent = QModelIndex()):
+        print "RC"
         if parent.column() > 0 :
             return 0
         
@@ -203,6 +229,7 @@ class ComponentModel(QAbstractItemModel):
     # \param parent parent index
     # \returns 3 which corresponds to component tag tree, tag attributes, tag values
     def columnCount(self, parent = QModelIndex()):
+        print "CC"
         return 3
     
 
@@ -212,6 +239,7 @@ class ComponentModel(QAbstractItemModel):
     # \param parent index of the parent item       
     # \returns True if parent exists
     def insertRows(self, position, rows = 1, parent = QModelIndex()):
+        print "IR"
         item = parent.internalPointer()
         if not item:
             return False
@@ -227,6 +255,7 @@ class ComponentModel(QAbstractItemModel):
     # \param parent index of the parent item       
     # \returns True if parent exists
     def removeRows(self, position, rows = 1, parent = QModelIndex()):
+        print "RR"
         item = parent.internalPointer()
         if not item:
             return False

@@ -706,7 +706,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
    ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
-
+        print "A1"
         self._applied = False
         class CharacterError(Exception): pass
         sourceType = unicode(self.typeComboBox.currentText())
@@ -766,18 +766,29 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             index = self.view.currentIndex()
             finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
 
+        print "AX1"
 
+        row = index.row()
+        column = index.column()
+        parent = index.parent()
+        print "RCP", row, column, parent, parent.internalPointer() ,parent.internalPointer().node,parent.internalPointer().node.nodeName()
 
         if self.node  and self.root and self.node.isElement():
 
             self.updateNode(index)
+            print "AX2"
 
             if index.isValid():
-                self.view.setCurrentIndex(self.view.model().index(index.row(),index.column(), 
-                                                                  index.parent()))
+                ind = self.view.model().index(row, column, parent)
+#                ind = self.view.model().createIndex(row, column, parent.internalPointer().child(row))
+                print "AX2b", ind.isValid()
+                print "iRCP", ind.row(),ind.column(), ind.parent().internalPointer().node.nodeName(),ind.parent().parent().internalPointer().node.nodeName()
+
+                self.view.setCurrentIndex(ind)
 
 
-
+            print "AX3"
+        
             if self.view and self.view.model():
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
                 if  index.column() != 0:
@@ -792,6 +803,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 #            self.createNodes(self._tree)
                 
         self._applied = True
+        print "AX"
+
         return True    
 
 

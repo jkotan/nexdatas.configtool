@@ -706,8 +706,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
    ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
-        gc.collect()
-        print "A1"
+#        gc.collect()
         self._applied = False
         class CharacterError(Exception): pass
         sourceType = unicode(self.typeComboBox.currentText())
@@ -767,31 +766,20 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             index = self.view.currentIndex()
             finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
 
-        print "AX1"
-#        gc.collect()
 
         row = index.row()
         column = index.column()
         parent = index.parent()
-        print "RCP", row, column, parent, parent.internalPointer() ,parent.internalPointer().node,parent.internalPointer().node.nodeName()
 
         if self.node  and self.root and self.node.isElement():
 
             self.updateNode(index)
-            print "AX2"
-#            gc.collect()
 
             if index.isValid():
-                ind = self.view.model().index(row, column, parent)
-#                ind = self.view.model().createIndex(row, column, parent.internalPointer().child(row))
-                print "AX2b", ind.isValid()
-                print "iRCP", ind.row(),ind.column(), ind.parent().internalPointer().node.nodeName(),ind.parent().parent().internalPointer().node.nodeName()
+                index = self.view.model().index(row, column, parent)
+                self.view.setCurrentIndex(index)
+                self.view.expand(index)
 
- #               gc.collect()
-                self.view.setCurrentIndex(ind)
-
-
-            print "AX3"
         
             if self.view and self.view.model():
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
@@ -799,15 +787,12 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                     index = self.view.model().index(index.row(), 0, index.parent())
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
-        print "TREE", self._tree
+#        print "TREE", self._tree
         if not self._tree:
             self.createNodes()
-            print "CREATED"
-#        else: 
-#            self.createNodes(self._tree)
+#            print "CREATED"
                 
         self._applied = True
-        print "AX"
 
         return True    
 

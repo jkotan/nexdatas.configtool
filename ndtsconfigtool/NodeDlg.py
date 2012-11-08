@@ -158,74 +158,74 @@ class NodeDlg(QDialog):
 
     ## removes node
     # \param node DOM node to remove
-    # \param parent parent DOM node        
+    # \param parent parent node index        
     def removeNode(self, node, parent):
         if self.view is not None and self.view.model() is not None: 
             row = self.getNodeRow(node)
             if row is not None:
-                self.view.model().removeRows(row, 1, parent)
-        self.node.removeChild(node)
+                self.view.model().removeItem(row, node, parent)
+#        self.node.removeChild(node)
 
 
     ## replaces node
     # \param oldNode old DOM node 
     # \param newNode new DOM node 
-    # \param parent parent DOM node        
+    # \param parent parent node index
     def _replaceNode(self, oldNode, newNode, parent):
         if self.view is not None and self.view.model() is not None: 
             row = self.getNodeRow(oldNode)
-        self.node.replaceChild(newNode, oldNode)
+#        self.node.replaceChild(newNode, oldNode)
         if self.view is not None and self.view.model() is not None: 
             if row is not None:
-                self.view.model().removeRows(row, 1, parent)
-                self.view.model().insertRows(row, 1, parent)
+                self.view.model().removeItem(row, oldNode, parent)
+                self.view.model().appendItem(row, newNode, parent)
 
 
     ## appends node
     # \param node DOM node to remove
-    # \param parent parent DOM node        
+    # \param parent parent node index
     def appendNode(self, node, parent):
-        self.node.appendChild(node)
+#        self.node.appendChild(node)
         if self.view is not None and self.view.model() is not None: 
             row = self.node.childNodes().count()-1
             if row is not None:
-                self.view.model().insertRows(row, 1, parent)
+                self.view.model().appendItem(row, node, parent)
 
 
     ## removes node element
     # \param element DOM node element to remove
-    # \param parent parent DOM node        
+    # \param parent parent node index      
     def _removeElement(self, element, parent):
         if self.view is not None and self.view.model() is not None: 
             row = self._getElementRow(element)
             if row is not None:
-                self.view.model().removeRows(row, 1, parent)
-        self.node.removeChild(element)
+                self.view.model().removeItem(row, element, parent)
+#        self.node.removeChild(element)
 
 
     ## replaces node element
     # \param oldElement old DOM node element 
     # \param newElement new DOM node element 
-    # \param parent parent DOM node        
+    # \param parent parent node index
     def _replaceElement(self, oldElement, newElement, parent):
         if self.view is not None and self.view.model() is not None: 
             row = self._getElementRow(oldElement)
-        self.node.replaceChild(newElement, oldElement)
+#        self.node.replaceChild(newElement, oldElement)
         if self.view is not None and self.view.model() is not None: 
             if row is not None:
-                self.view.model().removeRows(row, 1, parent)
-                self.view.model().insertRows(row, 1, parent)
+                self.view.model().removeItem(row, oldElement, parent)
+                self.view.model().appendItem(row, newElement, parent)
 
 
-    ## replaces node element
+    ## appends node element
     # \param newElement new DOM node element 
-    # \param parent parent DOM node        
+    # \param parent parent node index      
     def _appendElement(self, newElement, parent):
-        self.node.appendChild(newElement)
+#        self.node.appendChild(newElement)
         if self.view is not None and self.view.model() is not None: 
             row = self.node.childNodes().count()-1
             if row is not None:
-                self.view.model().insertRows(row, 1, parent)
+                self.view.model().appendItem(row, newElement, parent)
 
             
     ## updates the form

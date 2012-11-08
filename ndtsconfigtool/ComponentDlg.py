@@ -285,13 +285,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             return
         if not hasattr(self.widget,'apply'):
             return
-        path = self._getPath()       
         self.widget.apply()
-
-        newModel = ComponentModel(self.document, self._allAttributes ,self)
-        self.view.setModel(newModel)
-        self._hideFrame()
-        self._selectItem(path) 
 
         self.view.resizeColumnToContents(0)
         self.view.resizeColumnToContents(1)

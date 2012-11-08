@@ -27,7 +27,7 @@ from ui.ui_datasourcedlg import Ui_DataSourceDlg
 from PyQt4.QtXml import (QDomDocument, QDomNode)
 from NodeDlg import NodeDlg 
 import copy
-
+import gc
 
 ## dialog defining datasources
 class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
@@ -773,14 +773,10 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         if self.node  and self.root and self.node.isElement():
 
             self.updateNode(index)
-
-#            if index.isValid():
-#                ind = self.view.model().index(row, column, parent)
-#                ind = self.view.model().createIndex(row, column, parent.internalPointer().child(row))
-
-#                self.view.setCurrentIndex(ind)
-
-
+            if index.isValid():
+                index = self.view.model().index(row, column, parent)
+                self.view.setCurrentIndex(index)
+                self.view.expand(index)
         
             if self.view and self.view.model():
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
@@ -788,12 +784,10 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                     index = self.view.model().index(index.row(), 0, index.parent())
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 
-        print "TREE", self._tree
+#        print "TREE", self._tree
         if not self._tree:
             self.createNodes()
-            print "CREATED"
-#        else: 
-#            self.createNodes(self._tree)
+#            print "CREATED"
                 
         self._applied = True
 

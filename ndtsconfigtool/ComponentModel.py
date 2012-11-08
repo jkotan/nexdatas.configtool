@@ -23,7 +23,8 @@ from PyQt4.QtCore import (QAbstractItemModel, QVariant, Qt, QModelIndex, QString
 #from PyQt4.QtGui import 
 from PyQt4.QtXml import (QDomDocument, QDomNode, QXmlDefaultHandler,
                          QXmlInputSource, QXmlSimpleReader)
-
+import gc
+        
 import os
 from ComponentItem import ComponentItem
 
@@ -50,7 +51,7 @@ class ComponentModel(QAbstractItemModel):
     ## switches between all attributes in the try or only type attribute
     # \param allAttributes all attributes are shown if True
     def setAttributeView(self, allAttributes):
-         self._allAttributes = allAttributes
+        self._allAttributes = allAttributes
         
 
     ## provides read access to the model data
@@ -127,8 +128,6 @@ class ComponentModel(QAbstractItemModel):
             else:
                 return QVariant()
         
-    
-
     ## provides access to the item index
     # \param row integer index counting DOM child item
     # \param column integer index counting table column
@@ -170,16 +169,13 @@ class ComponentModel(QAbstractItemModel):
         if parentItem is None or parentItem == self.rootItem:
             return QModelIndex()
 
-#        if parentItem is None:
-#            return QModelIndex()
+        if parentItem is None:
+            return QModelIndex()
 
 #        if parentItem == self.rootItem:
 #            self.rootIndex
 
-
-        return self.createIndex(parentItem.childNumber(), 0, parentItem)
-
-        
+        return  self.createIndex(parentItem.childNumber(), 0, parentItem)
 
     ## provides number of the model rows
     # \param parent parent index
@@ -194,7 +190,6 @@ class ComponentModel(QAbstractItemModel):
             parentItem = parent.internalPointer()
             
         if not hasattr(parentItem,"node"):
-            ## TODO??
             return 0  
         return parentItem.node.childNodes().count()
 
@@ -208,32 +203,43 @@ class ComponentModel(QAbstractItemModel):
 
     ## inserts the given rows into the model
     # \param position row integer index where rows should be inserted
-    # \param rows numbers of rows to be inserted
+    # \param node DOM node to append
     # \param parent index of the parent item       
     # \returns True if parent exists
-    def insertRows(self, position, rows = 1, parent = QModelIndex()):
+    def appendItem(self, position, node, parent = QModelIndex()):
         item = parent.internalPointer()
         if not item:
             return False
-        self.beginInsertRows(parent, position, position+rows-1)
-        status = item.insertChildren(position, rows)
+        
+        self.beginInsertRows(parent, position, position)
+
+        pIndex = self.index(position, 0, parent)
+        previous = pIndex.node if pIndex.isValid() else QDomNode()
+
+        item.node.insertAfter(node, previous)
+        status = item.insertChildren(position, 1)
+
         self.endInsertRows()
         return status
 
 
     ## removes the given rows from the model
     # \param position row integer index of the first removed row
-    # \param rows numbers of rows to be removed
+    # \param node DOM node to remove
     # \param parent index of the parent item       
     # \returns True if parent exists
-    def removeRows(self, position, rows = 1, parent = QModelIndex()):
+    def removeItem(self, position, node,  parent = QModelIndex()):
         item = parent.internalPointer()
         if not item:
-            return False
-        self.beginRemoveRows(parent, position, position+rows-1)
-        status = item.removeChildren(position, rows)
+            return False     
+        self.beginRemoveRows(parent, position, position)
+
+        status = item.removeChildren(position, 1)
+        item.node.removeChild(node)
+
         self.endRemoveRows()
         return status
+
 
 
 

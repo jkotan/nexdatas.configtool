@@ -383,7 +383,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
                 if child.nodeName() == 'datasource':
                     QMessageBox.warning(self, "DataSource exists", 
                                         "To add a new datasource please remove the old one")
-                    return
+#                    return
+                    #TODO
                 child = child.nextSibling()    
         NodeDlg.appendNode(self, node, parent)       
 

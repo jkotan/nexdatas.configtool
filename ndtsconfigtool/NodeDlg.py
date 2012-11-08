@@ -164,7 +164,6 @@ class NodeDlg(QDialog):
             row = self.getNodeRow(node)
             if row is not None:
                 self.view.model().removeItem(row, node, parent)
-#        self.node.removeChild(node)
 
 
     ## replaces node
@@ -174,7 +173,6 @@ class NodeDlg(QDialog):
     def _replaceNode(self, oldNode, newNode, parent):
         if self.view is not None and self.view.model() is not None: 
             row = self.getNodeRow(oldNode)
-#        self.node.replaceChild(newNode, oldNode)
         if self.view is not None and self.view.model() is not None: 
             if row is not None:
                 self.view.model().removeItem(row, oldNode, parent)
@@ -185,7 +183,6 @@ class NodeDlg(QDialog):
     # \param node DOM node to remove
     # \param parent parent node index
     def appendNode(self, node, parent):
-#        self.node.appendChild(node)
         if self.view is not None and self.view.model() is not None: 
             row = self.node.childNodes().count()-1
             if row is not None:
@@ -200,7 +197,6 @@ class NodeDlg(QDialog):
             row = self._getElementRow(element)
             if row is not None:
                 self.view.model().removeItem(row, element, parent)
-#        self.node.removeChild(element)
 
 
     ## replaces node element
@@ -210,7 +206,6 @@ class NodeDlg(QDialog):
     def _replaceElement(self, oldElement, newElement, parent):
         if self.view is not None and self.view.model() is not None: 
             row = self._getElementRow(oldElement)
-#        self.node.replaceChild(newElement, oldElement)
         if self.view is not None and self.view.model() is not None: 
             if row is not None:
                 self.view.model().removeItem(row, oldElement, parent)
@@ -221,7 +216,6 @@ class NodeDlg(QDialog):
     # \param newElement new DOM node element 
     # \param parent parent node index      
     def _appendElement(self, newElement, parent):
-#        self.node.appendChild(newElement)
         if self.view is not None and self.view.model() is not None: 
             row = self.node.childNodes().count()-1
             if row is not None:

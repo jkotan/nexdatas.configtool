@@ -708,7 +708,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                         child2 = self.document.importNode(child, True)
                         self.widget.appendNode(child2, index)
 
-#                        node.appendChild(child)
                         child = child.nextSibling()
 
                         
@@ -778,7 +777,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                             self.widget.node = node
                             ds2 = self.document.importNode(ds, True)
                             self.widget.appendNode(ds2, index)
-#                            node.appendChild(ds)
 
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
                 self.view.expand(index)

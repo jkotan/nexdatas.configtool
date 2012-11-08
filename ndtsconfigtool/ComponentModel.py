@@ -214,7 +214,7 @@ class ComponentModel(QAbstractItemModel):
         self.beginInsertRows(parent, position, position)
 
         pIndex = self.index(position, 0, parent)
-        previous = pIndex.node if pIndex.isValid() else QDomNode()
+        previous = pIndex.internalPointer().node if pIndex.isValid() else QDomNode()
 
         item.node.insertAfter(node, previous)
         status = item.insertChildren(position, 1)

@@ -378,10 +378,12 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         if not sel or not index.isValid():
             return
         node = sel.node
+        print "parent", node.nodeName()
         self.widget.node = node
         child = self.widget.root.createElement(QString(name))
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
+        print "child", child.nodeName()    
         self.widget.appendNode(child, index)
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         self.view.expand(index)

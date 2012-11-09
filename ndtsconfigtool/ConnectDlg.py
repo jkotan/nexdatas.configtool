@@ -88,7 +88,7 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
         
         self.port = None
         try:
-            port = unicode(self.portLineEdit.text())
+            port = str(self.portLineEdit.text())
             if port:
                 self.port = int(port)
         except:

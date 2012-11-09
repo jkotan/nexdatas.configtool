@@ -125,7 +125,7 @@ class CommandPool(object):
                      tip=None, checkable=False, signal="triggered()"):
         action = QAction(text, self._origin)
         if icon is not None:
-            action.setIcon(QIcon(":/%s.png" % str(icon).strip()))
+            action.setIcon(QIcon(":/%s.png" % unicode(icon).strip()))
         if shortcut is not None:
             action.setShortcut(shortcut)
         if tip is not None:

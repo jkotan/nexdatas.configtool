@@ -90,7 +90,7 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
                  self.target,
                  self.doc
                  )
-#        print  "GET", str(state)
+#        print  "GET", unicode(state)
         return state
 
 
@@ -103,7 +103,7 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
          self.target,
          self.doc
          ) = state
-#        print "SET",  str(state)
+#        print "SET",  unicode(state)
 
 
 

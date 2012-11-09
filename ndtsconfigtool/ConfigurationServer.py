@@ -126,8 +126,8 @@ class ConfigurationServer(object):
     # \param xml XML content of the component    
     def storeComponent(self, name, xml):
         if self._proxy and self.connected:
-            self._proxy.XMLString = str(xml)
-            self._proxy.StoreComponent(str(name))
+            self._proxy.XMLString = unicode(xml)
+            self._proxy.StoreComponent(unicode(name))
 
 
     ## stores the datasource
@@ -135,22 +135,22 @@ class ConfigurationServer(object):
     # \param xml XML content of the datasource
     def storeDataSource(self, name, xml):
         if self._proxy and self.connected:
-            self._proxy.XMLString = str(xml)
-            self._proxy.StoreDataSource(str(name))
+            self._proxy.XMLString = unicode(xml)
+            self._proxy.StoreDataSource(unicode(name))
             
 
     ## stores the component
     # \param name component name
     def deleteComponent(self, name):
         if self._proxy and self.connected:
-            self._proxy.DeleteComponent(str(name))
+            self._proxy.DeleteComponent(unicode(name))
 
 
     ## stores the datasource
     # \param name datasource name
     def deleteDataSource(self, name):
         if self._proxy and self.connected:
-            self._proxy.DeleteDataSource(str(name))
+            self._proxy.DeleteDataSource(unicode(name))
 
 
 

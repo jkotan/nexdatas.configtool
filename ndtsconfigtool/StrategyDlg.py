@@ -88,7 +88,7 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
                  self.postrun,
                  self.doc
                  )
-#        print  "GET", str(state)
+#        print  "GET", unicode(state)
         return state
 
 
@@ -101,7 +101,7 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
          self.postrun,
          self.doc
          ) = state
-#        print "SET",  str(state)
+#        print "SET",  unicode(state)
 
 
     ## shows and hides frames according to modeComboBox

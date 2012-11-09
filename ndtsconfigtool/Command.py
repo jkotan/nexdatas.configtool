@@ -345,7 +345,7 @@ class ServerGetMandatoryComponents(Command):
     def execute(self):       
         try:
             mandatory = self.receiver.configServer.getMandatory()
-            QMessageBox.information(self.receiver,"Mandatory", "Mandatory Components: \n %s" % str(mandatory)) 
+            QMessageBox.information(self.receiver,"Mandatory", "Mandatory Components: \n %s" % unicode(mandatory)) 
         except Exception, e:
             QMessageBox.warning(self.receiver, "Error in getting the mandatory components", unicode(e))
         print "EXEC serverGetMandatoryComponent"

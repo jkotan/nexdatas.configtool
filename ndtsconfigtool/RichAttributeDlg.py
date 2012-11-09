@@ -126,7 +126,7 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
                  self.nexusType,
                  self.doc,
                  )
-#        print  "GET", str(state)
+#        print  "GET", unicode(state)
         return state
 
 
@@ -140,7 +140,7 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
          self.nexusType,
          self.doc,
          ) = state
-#        print "SET",  str(state)
+#        print "SET",  unicode(state)
 
 
 

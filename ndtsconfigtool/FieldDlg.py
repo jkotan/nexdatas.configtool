@@ -83,7 +83,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
                  attributes,
                  dimensions
                  )
-#        print  "GET", str(state)
+#        print  "GET", unicode(state)
         return state
 
 
@@ -101,7 +101,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
          attributes,
          dimensions
          ) = state
-#        print "SET",  str(state)
+#        print "SET",  unicode(state)
         self.attributes = copy.copy(attributes)
         self.dimensions = copy.copy(dimensions)
 

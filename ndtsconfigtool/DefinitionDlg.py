@@ -84,7 +84,7 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
                  self.doc,
                  attributes
                  )
-#        print  "GET", str(state)
+#        print  "GET", unicode(state)
         return state
 
 
@@ -98,7 +98,7 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
          self.doc,
          attributes
          ) = state
-#        print "SET",  str(state)
+#        print "SET",  unicode(state)
         self.attributes = copy.copy(attributes)
 
 

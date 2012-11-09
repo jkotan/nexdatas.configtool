@@ -163,14 +163,14 @@ class Merger(QThread):
                 at2 = attr2.item(i2)
                 if at1.nodeName() == at2.nodeName() and at1.nodeValue() != at2.nodeValue():
                     status = False
-                    tags.append((str(self._getAncestors(at1)),
-                                 str(at1.nodeValue()) , str(at2.nodeValue())))
+                    tags.append((unicode(self._getAncestors(at1)),
+                                 unicode(at1.nodeValue()) , unicode(at2.nodeValue())))
 
                     
             
 
         if not status  and tagName in self._singles: 
-            raise IncompatibleNodeError("Incompatible element attributes  %s: " % str(tags),
+            raise IncompatibleNodeError("Incompatible element attributes  %s: " % unicode(tags),
                                         [elem1, elem2])
                 
 
@@ -182,7 +182,7 @@ class Merger(QThread):
             if text1 != text2:
                 raise IncompatibleNodeError(
                     "Incompatible \n%s element value\n%s \n%s "  \
-                        % (str(self._getAncestors(elem1)), text1, text2),
+                        % (unicode(self._getAncestors(elem1)), text1, text2),
                     [elem1, elem2])
                     
             
@@ -240,10 +240,10 @@ class Merger(QThread):
             name1 = attr1.namedItem("name").nodeValue() \
                 if attr1.contains("name") else ""
             if elem1.nodeName() in self._requiredAttr.keys():
-                for at1 in self._requiredAttr[str(elem1.nodeName())]:
-                    if not attr1.contains(at1) or not str(attr1.namedItem(at1).nodeValue()).strip():
+                for at1 in self._requiredAttr[unicode(elem1.nodeName())]:
+                    if not attr1.contains(at1) or not unicode(attr1.namedItem(at1).nodeValue()).strip():
                         message = "Not defined %s attribute of %s%s " \
-                            % (at1, str(elem1.nodeName()), (":"+ str(name1)) if str(name1).strip() else  " ")
+                            % (at1, unicode(elem1.nodeName()), (":"+ unicode(name1)) if unicode(name1).strip() else  " ")
                         raise IncompatibleNodeError(message, [elem1])
         
 
@@ -281,7 +281,7 @@ class Merger(QThread):
             nName = unicode(elem.nodeName()) if elem else ""
 
             if elem and nName =='query':
-                if not str(elem.text()).strip():
+                if not unicode(elem.text()).strip():
                     raise IncompatibleNodeError(
                         "Empty content of the query tag: %s" % (self._getAncestors(elem)),
                         [elem])

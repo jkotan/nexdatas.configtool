@@ -174,7 +174,7 @@ class MainWindow(QMainWindow):
             self.configServer = ConfigurationServer()
             self.configServer.device = unicode(settings.value("ConfigServer/device").toString())
             self.configServer.host = unicode(settings.value("ConfigServer/host").toString())
-            port = unicode(settings.value("ConfigServer/port").toString())
+            port = str(settings.value("ConfigServer/port").toString())
             if port:
                 self.configServer.port = int(port)
             
@@ -867,7 +867,7 @@ class MainWindow(QMainWindow):
 
         if (failures and
             QMessageBox.warning(self, "NDTS Component Designer -- Save Error",
-                                "Failed to save%s\nQuit anyway?"  % str("\n\t".join(failures)),
+                                "Failed to save%s\nQuit anyway?"  % unicode("\n\t".join(failures)),
                                 QMessageBox.Yes|QMessageBox.No) ==
             QMessageBox.No):
             event.ignore()
@@ -1772,7 +1772,7 @@ class MainWindow(QMainWindow):
                      tip=None, checkable=False, signal="triggered()"):
         action = QAction(text, self)
         if icon is not None:
-            action.setIcon(QIcon(":/%s.png"% str(icon).strip()))
+            action.setIcon(QIcon(":/%s.png"% unicode(icon).strip()))
         if shortcut is not None:
             action.setShortcut(shortcut)
         if tip is not None:
@@ -1821,11 +1821,11 @@ class MainWindow(QMainWindow):
                 <p>This application can be used to create
                 XML configuration file for the Nexus Data Writer.
                 <p>Python %s - Qt %s - PyQt %s on %s""" % (
-                str(__version__), 
-                str(platform.python_version()),
-                str(QT_VERSION_STR), 
-                str(PYQT_VERSION_STR),
-                str(platform.system())))
+                unicode(__version__), 
+                unicode(platform.python_version()),
+                unicode(QT_VERSION_STR), 
+                unicode(PYQT_VERSION_STR),
+                unicode(platform.system())))
 
 
 
@@ -1872,9 +1872,9 @@ class MainWindow(QMainWindow):
                 menu = menu.addMenu("&More")
             accel = ""
             if i < 10:
-                accel = "&%s " % str(i)
+                accel = "&%s " % unicode(i)
             elif i < 36:
-                accel = "&%s " % str(chr(i + ord("@") - 9))
+                accel = "&%s " % unicode(chr(i + ord("@") - 9))
             action = menu.addAction("%s%s" % (accel, title))
             self.connect(action, SIGNAL("triggered()"),
                          self.windows["Mapper"], SLOT("map()"))

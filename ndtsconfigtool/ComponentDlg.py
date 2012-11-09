@@ -147,8 +147,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         ancestors = [node]
         path = [] 
 
-        while str(ancestors[0].parentNode().nodeName()).strip() != '#document' and \
-                str(ancestors[0].parentNode().nodeName()).strip() != '':
+        while unicode(ancestors[0].parentNode().nodeName()).strip() != '#document' and \
+                unicode(ancestors[0].parentNode().nodeName()).strip() != '':
             ancestors.insert(0, ancestors[0].parentNode())
         ancestors.insert(0, ancestors[0].parentNode())
         
@@ -530,7 +530,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         if attributeMap.contains("name"):
             name = attributeMap.namedItem("name").nodeValue()
 
-        print "Clicked:", nNode, ": "+ name if name else "" 
+        print "Clicked:", nNode, ": "+ unicode(name) if name else "" 
 
         
         if self.widget:

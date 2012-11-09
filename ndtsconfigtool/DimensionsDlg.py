@@ -134,10 +134,10 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
         headers = ["Length"]
         self.dimTableWidget.setColumnCount(len(headers))
         self.dimTableWidget.setHorizontalHeaderLabels(headers)	
-        self.dimTableWidget.setVerticalHeaderLabels( [str(l+1) for l in range(self.rank)] )	
+        self.dimTableWidget.setVerticalHeaderLabels( [unicode(l+1) for l in range(self.rank)] )	
         for row, ln in enumerate(self.lengths):
             if ln:
-                item = QTableWidgetItem(str(ln))
+                item = QTableWidgetItem(unicode(ln))
             else:
                 item = QTableWidgetItem("")
             item.setData(Qt.UserRole, QVariant(long(row)))

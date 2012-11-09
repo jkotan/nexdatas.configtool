@@ -155,7 +155,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                  self.dbQuery,
                  dbParameters
                  )
-#        print  "GET", str(state)
+#        print  "GET", unicode(state)
         return state
 
 
@@ -178,7 +178,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
          self.dbQuery,
          dbParameters
          ) = state
-#        print "SET",  str(state)
+#        print "SET",  unicode(state)
         self.dbParameters = copy.copy(dbParameters)
 
 
@@ -523,7 +523,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                 self.createGUI()
             except Exception, e:
                 QMessageBox.warning(self, "dialog not created", 
-                                    "Problems in creating a dialog %s :\n\n%s" %(self.name,str(e)))
+                                    "Problems in creating a dialog %s :\n\n%s" %(self.name,unicode(e)))
                 
         except (IOError, OSError, ValueError), e:
             error = "Failed to load: %s" % e
@@ -554,7 +554,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             self.createGUI()
         except Exception, e:
             QMessageBox.warning(self, "dialog not created", 
-                                "Problems in creating a dialog %s :\n\n%s" %(self.name,str(e)))
+                                "Problems in creating a dialog %s :\n\n%s" %(self.name,unicode(e)))
                 
 
             

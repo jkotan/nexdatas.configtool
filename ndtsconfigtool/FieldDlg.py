@@ -383,11 +383,11 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
                 if child.nodeName() == 'datasource':
                     QMessageBox.warning(self, "DataSource exists", 
                                         "To add a new datasource please remove the old one")
-#                    return
-                    #TODO
-                child = child.nextSibling()    
-        NodeDlg.appendNode(self, node, parent)       
 
+                    return False
+                child = child.nextSibling()    
+        return NodeDlg.appendNode(self, node, parent)       
+        
 
     ## applys input text strings
     # \brief It copies the field name and type from lineEdit widgets and apply the dialog

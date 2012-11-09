@@ -186,8 +186,9 @@ class NodeDlg(QDialog):
         if self.view is not None and self.view.model() is not None: 
             row = self.node.childNodes().count()
             if row is not None:
-                self.view.model().appendItem(row, node, parent)
-
+                if self.view.model().appendItem(row, node, parent):
+                    return True
+        return False        
 
     ## removes node element
     # \param element DOM node element to remove

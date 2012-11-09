@@ -384,10 +384,11 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         print "child", child.nodeName()    
-        self.widget.appendNode(child, index)
+        status = self.widget.appendNode(child, index)
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         self.view.expand(index)
-        return child
+        if status:
+            return child
 
 
     ## removes the currenct component tree item if possible

@@ -210,17 +210,17 @@ class NodeDlg(QDialog):
         if self.view is not None and self.view.model() is not None: 
             if row is not None:
                 self.view.model().removeItem(row, oldElement, parent)
-                self.view.model().appendItem(row, newElement, parent)
-
+                if row  < self.node.childNodes().count():
+                    self.view.model().insertItem(row, newElement, parent)
+                else:
+                    self.view.model().appendItem(newElement, parent)
 
     ## appends node element
     # \param newElement new DOM node element 
     # \param parent parent node index      
     def _appendElement(self, newElement, parent):
         if self.view is not None and self.view.model() is not None: 
-            row = self.node.childNodes().count()
-            if row is not None:
-                self.view.model().appendItem(row, newElement, parent)
+            self.view.model().appendItem(newElement, parent)
 
             
     ## updates the form

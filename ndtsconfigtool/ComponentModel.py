@@ -206,7 +206,8 @@ class ComponentModel(QAbstractItemModel):
     # \param node DOM node to append
     # \param parent index of the parent item       
     # \returns True if parent exists
-    def appendItem(self, position, node, parent = QModelIndex()):
+    def insertItem(self, position, node, parent = QModelIndex()):
+        print "position", position
         item = parent.internalPointer()
         if not item:
             return False
@@ -215,11 +216,34 @@ class ComponentModel(QAbstractItemModel):
 
         pIndex = self.index(position, 0, parent)
         previous = pIndex.internalPointer().node if pIndex.isValid() else QDomNode()
-
-        item.node.insertAfter(node, previous)
+        item.node.insertBefore(node, previous)
+#
         status = item.insertChildren(position, 1)
 
         self.endInsertRows()
+
+
+        return status
+
+    ## append the given DOM node into parent item
+    # \param node DOM node to append
+    # \param parent index of the parent item       
+    # \returns True if parent exists
+    def appendItem(self, node, parent = QModelIndex()):
+        item = parent.internalPointer()
+        if not item:
+            return False
+        position = item.node.childNodes().count()
+        self.beginInsertRows(parent, position, position)
+
+        pIndex = self.index(position, 0, parent)
+        previous = pIndex.internalPointer().node if pIndex.isValid() else QDomNode()
+        item.node.insertAfter(node, previous)
+#
+        status = item.insertChildren(position, 1)
+
+        self.endInsertRows()
+
         return status
 
 

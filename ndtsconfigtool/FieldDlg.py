@@ -424,7 +424,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
                     
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+#        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
 #        self.view.expand(index)    
 
         

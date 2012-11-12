@@ -176,7 +176,10 @@ class NodeDlg(QDialog):
         if self.view is not None and self.view.model() is not None: 
             if row is not None:
                 self.view.model().removeItem(row, oldNode, parent)
-                self.view.model().appendItem(row, newNode, parent)
+                if row  < self.node.childNodes().count():
+                    self.view.model().insertItem(row, newNode, parent)
+                else:
+                    self.view.model().appendItem(newNode, parent)
 
 
     ## appends node
@@ -184,9 +187,8 @@ class NodeDlg(QDialog):
     # \param parent parent node index
     def appendNode(self, node, parent):
         if self.view is not None and self.view.model() is not None: 
-            row = self.node.childNodes().count()
             if row is not None:
-                if self.view.model().appendItem(row, node, parent):
+                if self.view.model().appendItem(node, parent):
                     return True
         return False        
 

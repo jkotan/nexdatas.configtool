@@ -251,12 +251,14 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
         for at in self._attributes.keys():
             self.attributes[at] = self._attributes[at]
 
+        self.view.expand(index)    
         if self.node  and self.root and self.node.isElement():
             self.updateNode(index)
 
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+        self.view.expand(index)    
 
 
     ## updates the Node

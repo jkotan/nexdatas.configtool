@@ -190,12 +190,14 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
 
         index = self.view.currentIndex()
         finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
+        self.view.expand(index)    
 
         if self.node  and self.root and self.node.isElement():
             self.updateNode(index)
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+        self.view.expand(index)    
 
 
     ## updates the Node

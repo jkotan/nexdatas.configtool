@@ -410,6 +410,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         index = self.view.currentIndex()
         finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
 
+        self.view.expand(index)    
 
         self.attributes.clear()
         for at in self._attributes.keys():

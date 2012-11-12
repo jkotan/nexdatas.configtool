@@ -424,8 +424,9 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
                     
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-#        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
-#        self.view.expand(index)    
+        self.view.expand(index)    
+        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
         
     ## updates the Node
@@ -464,11 +465,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
                 self._appendElement(newDoc, index)
 
         dimens = self.node.firstChildElement(QString("dimensions"))           
-        print "field node", self.node.nodeName()
-        print "dimens node", dimens.nodeName()
         if not self.dimensions and dimens and dimens.nodeName() == "dimensions":
             self._removeElement(dimens,index)
-            print "remove"
         elif self.dimensions:
             newDimens = self.root.createElement(QString("dimensions"))
             newDimens.setAttribute(QString("rank"), QString(unicode(self.rank)))
@@ -478,14 +476,10 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
                 dim.setAttribute(QString("value"), QString(unicode(self.dimensions[i])))
                 newDimens.appendChild(dim)
             if dimens and dimens.nodeName() == "dimensions" :
-                print "d replace"
-                print "new dimens node", newDimens.nodeName()
                 self._replaceElement(dimens, newDimens, index)
             else:
-                print "d append"
                 self._appendElement(newDimens, index)
 
-        print "applied"
 
 if __name__ == "__main__":
     import sys

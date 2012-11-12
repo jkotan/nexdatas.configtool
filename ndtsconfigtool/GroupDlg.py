@@ -238,7 +238,6 @@ class GroupDlg(NodeDlg, Ui_GroupDlg):
     ## applys input text strings
     # \brief It copies the group name and type from lineEdit widgets and apply the dialog
     def apply(self):
-        print "applyaaaaa"
         self.name = unicode(self.nameLineEdit.text())
         self.nexusType = unicode(self.typeLineEdit.text())
 

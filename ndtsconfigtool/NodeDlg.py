@@ -206,7 +206,7 @@ class NodeDlg(QDialog):
         if self.view is not None and self.view.model() is not None: 
             if row is not None and row  < self.node.childNodes().count()-1:
                 self.view.model().removeItem(row, node, parent)
-                if row  < self.node.childNodes().count()-2:
+                if row  < self.node.childNodes().count()-1:
                     self.view.model().insertItem(row+1, node, parent)
                 else:
                     self.view.model().appendItem(node, parent)

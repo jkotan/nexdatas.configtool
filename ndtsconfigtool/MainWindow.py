@@ -92,7 +92,9 @@ from Command import (
      ComponentNewItem,
      ComponentLoadDataSourceItem,
      ComponentAddDataSourceItem,
-     ComponentApplyItem
+     ComponentApplyItem,
+     ComponentMoveUpItem,
+     ComponentMoveDownItem
      )
 
 from ConfigurationServer import (ConfigurationServer, PYTANGO_AVAILABLE)
@@ -301,6 +303,16 @@ class MainWindow(QMainWindow):
         componentApplyItemAction = self.pool.createCommand(
             "&Apply Component Item", "componentApplyItem", commandArgs, ComponentApplyItem,
             "Ctrl+P", "componentsapplyitem", "Apply the component item")
+
+
+        componentMoveUpItemAction = self.pool.createCommand(
+            "&Move Up Component Item", "componentMoveUpItem", commandArgs, ComponentMoveUpItem,
+            "Ctrl+[", "componentsmoveupitem", "Move up the component item")
+
+
+        componentMoveDownItemAction = self.pool.createCommand(
+            "&Move Down Component Item", "componentMoveDownItem", commandArgs, ComponentMoveDownItem,
+            "Ctrl+]", "componentsmovedownitem", "Move down the component item")
 
 
         dsourceApplyAction = self.pool.createCommand(
@@ -648,8 +660,6 @@ class MainWindow(QMainWindow):
                 componentCopyItemAction,
                 componentPasteItemAction, 
                 None,
-                componentApplyItemAction,
-                None,
                 dsourceCutAction,
                 dsourceCopyAction,
                 dsourcePasteAction,
@@ -671,7 +681,11 @@ class MainWindow(QMainWindow):
                 None,
                 componentAddDataSourceAction,
                 None,
+                componentApplyItemAction,
                 componentMergeAction,
+                None,
+                componentMoveUpItemAction,
+                componentMoveDownItemAction,
                 None,
                 componentClearAction,
                 ))
@@ -694,7 +708,10 @@ class MainWindow(QMainWindow):
             componentPasteItemAction,
             None,
             componentMergeAction,
-            componentApplyItemAction
+            componentApplyItemAction,
+            None,
+            componentMoveUpItemAction,
+            componentMoveDownItemAction
             ) 
         
 
@@ -1077,6 +1094,26 @@ class MainWindow(QMainWindow):
     # \brief It applies the changes in the current component item 
     def componentApplyItem(self):
         cmd = self.pool.getCommand('componentApplyItem').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Undo")      
+
+
+    ## move-up component item action
+    # \brief It moves the current component item up
+    def componentMoveUpItem(self):
+        cmd = self.pool.getCommand('componentMoveUpItem').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Undo")      
+
+
+    ## move-down component item action
+    # \brief It moves the current component item down
+    def componentMoveDownItem(self):
+        cmd = self.pool.getCommand('componentMoveDownItem').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )

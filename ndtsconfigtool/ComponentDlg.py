@@ -291,6 +291,63 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         self.view.resizeColumnToContents(1)
         return True
 
+
+
+    
+    ## moves component item up
+    # \returns the new row number if item move othewise None
+    def moveUpItem(self):
+        if not self.view or not self.view.model() or not self.widget:
+            return       
+        index = self.view.currentIndex()
+        sel = index.internalPointer()
+        if not sel or not index.isValid():
+            return
+        node = sel.node
+        parent = index.parent()
+        if  index.column() != 0:
+            index = self.view.model().index(index.row(), 0, parent)
+        if not hasattr(self.widget,'moveNodeUp'):
+            return
+        self.widget.node = node.parentNode()
+        row = self.widget.moveNodeUp(node, parent)
+        self.widget.node = node
+        if row is not None: 
+            index = self.view.model().index(row, 0, parent)
+            self.view.setCurrentIndex(index)
+            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), parent,parent)
+            return row
+
+
+
+    ## moves component item up
+    # \returns the new row number if item move othewise None
+    def moveDownItem(self):
+        if not self.view or not self.view.model() or not self.widget:
+            return       
+        index = self.view.currentIndex()
+        sel = index.internalPointer()
+        if not sel or not index.isValid():
+            return
+        node = sel.node
+        parent = index.parent()
+        if  index.column() != 0:
+            index = self.view.model().index(index.row(), 0, parent)
+        if not hasattr(self.widget,'moveNodeUp'):
+            return
+        self.widget.node = node.parentNode()
+        row = self.widget.moveNodeDown(node, parent)
+        self.widget.node = node
+        if row is not None: 
+            index = self.view.model().index(row, 0, parent)
+            self.view.setCurrentIndex(index)
+            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), parent,parent)
+            return row
+
+
+
     ## converts DOM node to XML string
     # \param component DOM node
     # \returns XML string

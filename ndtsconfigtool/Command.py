@@ -2925,6 +2925,87 @@ class ComponentApplyItem(ComponentItemCommand):
 
 
 
+## Command which move the current component item up
+class ComponentMoveUpItem(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
+    def __init__(self, receiver, slot):
+        ComponentItemCommand.__init__(self, receiver, slot)
+        self._index = None
+        
+        
+    ## executes the command
+    # \brief It applies the changes from the form for the current component item
+    def execute(self):
+        if self._cp is None:
+            self.preExecute()
+            if self._cp is not None:
+                if hasattr(self._cp, "widget") and hasattr(self._cp.widget,"moveUpItem"):
+
+                    if self._cp.widget.moveUpItem() is None:
+                        QMessageBox.warning(self.receiver, "Moving item up not possible", 
+                                            "Please select another tree item") 
+
+
+        self.postExecute()
+
+            
+        print "EXEC componentMoveUpItem"
+
+
+    ## clones the command
+    # \returns clone of the current instance
+    def clone(self):
+        return ComponentMoveUpItem(self.receiver, self.slot) 
+
+
+
+
+
+
+## Command which move the current component item down
+class ComponentMoveDownItem(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
+    def __init__(self, receiver, slot):
+        ComponentItemCommand.__init__(self, receiver, slot)
+        self._index = None
+        
+        
+    ## executes the command
+    # \brief It applies the changes from the form for the current component item
+    def execute(self):
+        if self._cp is None:
+            self.preExecute()
+            if self._cp is not None:
+                if hasattr(self._cp, "widget") and hasattr(self._cp.widget,"moveDownItem"):
+
+                    if self._cp.widget.moveDownItem() is None:
+                        QMessageBox.warning(self.receiver, "Moving item down not possible", 
+                                            "Please select another tree item") 
+
+
+        self.postExecute()
+
+            
+        print "EXEC componentMoveDownItem"
+
+
+    ## clones the command
+    # \returns clone of the current instance
+    def clone(self):
+        return ComponentMoveDownItem(self.receiver, self.slot) 
+
+
+
+
+
+
+
         
 
 if __name__ == "__main__":

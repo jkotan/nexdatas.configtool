@@ -186,7 +186,7 @@ class NodeDlg(QDialog):
     # \param node DOM node 
     # \param parent parent node index
     # \returns the new row number if changed otherwise None                 
-    def _moveNodeUp(self, node, parent):
+    def moveNodeUp(self, node, parent):
         if self.view is not None and self.view.model() is not None: 
             row = self.getNodeRow(node)
         if self.view is not None and self.view.model() is not None: 
@@ -200,13 +200,16 @@ class NodeDlg(QDialog):
     # \param node DOM node 
     # \param parent parent node index
     # \returns the new row number if changed otherwise None                 
-    def _moveNodeDown(self, node, parent):
+    def moveNodeDown(self, node, parent):
         if self.view is not None and self.view.model() is not None: 
             row = self.getNodeRow(node)
         if self.view is not None and self.view.model() is not None: 
             if row is not None and row  < self.node.childNodes().count()-1:
                 self.view.model().removeItem(row, node, parent)
-                self.view.model().insertItem(row+1, node, parent)
+                if row  < self.node.childNodes().count()-2:
+                    self.view.model().insertItem(row+1, node, parent)
+                else:
+                    self.view.model().appendItem(node, parent)
                 return row+1
 
     ## appends node

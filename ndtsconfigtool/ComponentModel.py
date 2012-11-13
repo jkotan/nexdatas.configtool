@@ -207,7 +207,6 @@ class ComponentModel(QAbstractItemModel):
     # \param parent index of the parent item       
     # \returns True if parent exists
     def insertItem(self, position, node, parent = QModelIndex()):
-        print "position", position
         item = parent.internalPointer()
         if not item:
             return False

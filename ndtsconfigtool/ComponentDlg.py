@@ -293,11 +293,55 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
 
 
+
+
+
+    ## moving node up
+    # \param node DOM node 
+    # \param parent parent node index
+    # \returns the new row number if changed otherwise None                 
+    def _moveNodeUp(self, node, parent):
+        if self.view is not None and self.view.model() is not None: 
+            if not parent.isValid():
+                parentItem = self.rootItem
+            else:
+                parentItem = parent.internalPointer()
+            pnode = parentItem.node
+            row = self._getNodeRow(node, pnode)
+        if self.view is not None and self.view.model() is not None: 
+            if row is not None and row != 0:
+                self.view.model().removeItem(row, node, parent)
+                self.view.model().insertItem(row-1, node, parent)
+                return row-1
+
+
+    ## moving node down
+    # \param node DOM node 
+    # \param parent parent node index
+    # \returns the new row number if changed otherwise None                 
+    def _moveNodeDown(self, node, parent):
+        if self.view is not None and self.view.model() is not None: 
+            if not parent.isValid():
+                parentItem = self.rootItem
+            else:
+                parentItem = parent.internalPointer()
+            pnode = parentItem.node
+            row = self._getNodeRow(node, pnode)
+        if self.view is not None and self.view.model() is not None: 
+            if row is not None and row  < pnode.childNodes().count()-1:
+                self.view.model().removeItem(row, node, parent)
+                if row  < pnode.childNodes().count()-1:
+                    self.view.model().insertItem(row+1, node, parent)
+                else:
+                    self.view.model().appendItem(node, parent)
+                return row+1
+
+
     
     ## moves component item up
     # \returns the new row number if item move othewise None
     def moveUpItem(self):
-        if not self.view or not self.view.model() or not self.widget:
+        if not self.view or not self.view.model():
             return       
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -307,11 +351,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         parent = index.parent()
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, parent)
-        if not hasattr(self.widget,'moveNodeUp'):
-            return
-        self.widget.node = node.parentNode()
-        row = self.widget.moveNodeUp(node, parent)
-        self.widget.node = node
+        row = self._moveNodeUp(node, parent)
         if row is not None: 
             index = self.view.model().index(row, 0, parent)
             self.view.setCurrentIndex(index)
@@ -324,7 +364,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     ## moves component item up
     # \returns the new row number if item move othewise None
     def moveDownItem(self):
-        if not self.view or not self.view.model() or not self.widget:
+        if not self.view or not self.view.model():
             return       
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -334,11 +374,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         parent = index.parent()
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, parent)
-        if not hasattr(self.widget,'moveNodeUp'):
-            return
-        self.widget.node = node.parentNode()
-        row = self.widget.moveNodeDown(node, parent)
-        self.widget.node = node
+        row = self._moveNodeDown(node, parent)
         if row is not None: 
             index = self.view.model().index(row, 0, parent)
             self.view.setCurrentIndex(index)

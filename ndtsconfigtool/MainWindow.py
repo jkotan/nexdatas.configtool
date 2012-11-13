@@ -681,11 +681,12 @@ class MainWindow(QMainWindow):
                 None,
                 componentAddDataSourceAction,
                 None,
-                componentApplyItemAction,
-                componentMergeAction,
-                None,
                 componentMoveUpItemAction,
                 componentMoveDownItemAction,
+                None,
+                componentApplyItemAction,
+                None,
+                componentMergeAction,
                 None,
                 componentClearAction,
                 ))
@@ -707,11 +708,12 @@ class MainWindow(QMainWindow):
             componentCopyItemAction,
             componentPasteItemAction,
             None,
-            componentMergeAction,
+            componentMoveUpItemAction,
+            componentMoveDownItemAction,
+            None,
             componentApplyItemAction,
             None,
-            componentMoveUpItemAction,
-            componentMoveDownItemAction
+            componentMergeAction
             ) 
         
 

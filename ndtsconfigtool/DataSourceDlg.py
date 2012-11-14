@@ -153,7 +153,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                  self.dbType,
                  self.dbDataFormat,
                  self.dbQuery,
-                 dbParameters
+                 dbParameters,
+                 self.name
                  )
 #        print  "GET", unicode(state)
         return state
@@ -176,8 +177,11 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
          self.dbType,
          self.dbDataFormat,
          self.dbQuery,
-         dbParameters
+         dbParameters,
+         name
          ) = state
+        if self._tree:
+            self.name = name
 #        print "SET",  unicode(state)
         self.dbParameters = copy.copy(dbParameters)
 
@@ -195,6 +199,9 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             else:
                 self.dataSourceType = 'CLIENT'    
     
+        if self.name is not None:
+            self.nameLineEdit.setText(self.name)
+
         if self.clientRecordName is not None:
             self.cRecNameLineEdit.setText(self.clientRecordName)
 
@@ -251,11 +258,13 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     # \param enable logical variable which dis-/enables mode 
     def treeMode(self, enable = True):
         if enable:
-            self.frame.hide()
+            self.closeSaveFrame.hide()
+            self.nameFrame.show()
             self._tree = True
         else:
             self._tree = False
-            self.frame.show()
+            self.closeSaveFrame.show()
+            self.nameFrame.hide()
             
         
     ##  creates GUI
@@ -291,8 +300,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self.connect(self.tDevNameLineEdit, SIGNAL("textEdited(QString)"), self._tDevNameLineEdit)
         self.connect(self.tMemberNameLineEdit, SIGNAL("textEdited(QString)"), self._tMemberNameLineEdit)
 
-
         self.setFrames(self.dataSourceType)
+        self.treeMode(self._tree)
 
 
     ## connects external actions
@@ -479,10 +488,12 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     # \param directory directory of the datasources   
     def setName(self, name, directory):
         self.name = unicode(name)
+        self.nameLineEdit.setText(self.name)
         if directory:
             self.directory = unicode(directory)
-            
 
+            
+            
 
     ## loads datasources from default file directory
     # \param fname optional file name
@@ -496,7 +507,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                 fi = QFileInfo(filename)
                 fname = fi.fileName()
                 if fname[-4:] == '.xml':
-                    self. name = fname[:-4]
+                    self.name = fname[:-4]
                     if self.name[-3:] == '.ds':
                         self.name = self.name[:-3]
                     else:
@@ -505,9 +516,9 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                 filename = self.directory + "/" + self.name + ".ds.xml"
         else:
             filename = fname
-
         try:
 
+            print "lname1", self.name 
             fh = QFile(filename)
             if  fh.open(QIODevice.ReadOnly):
                 self.document = QDomDocument()
@@ -516,11 +527,14 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                     raise ValueError, "could not parse XML"
 
                 ds = self._getFirstElement(self.document, "datasource")           
+                print "lname2", self.name 
                 if ds:
                     self.setFromNode(ds)
+                print "lname3", self.name 
                 self.savedXML = self.document.toString(0)
             try:    
                 self.createGUI()
+                print "lname4", self.name 
             except Exception, e:
                 QMessageBox.warning(self, "dialog not created", 
                                     "Problems in creating a dialog %s :\n\n%s" %(self.name,unicode(e)))
@@ -568,6 +582,9 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         attributeMap = self.node.attributes()
         
         value = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
+
+        if attributeMap.contains("name"):
+            self.name = attributeMap.namedItem("name").nodeValue()
         
         if value == 'CLIENT':
             self.dataSourceType = unicode(value)
@@ -709,6 +726,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self._applied = False
         class CharacterError(Exception): pass
         sourceType = unicode(self.typeComboBox.currentText())
+        self.name = unicode(self.nameLineEdit.text())
 
         if sourceType == 'CLIENT':
             recName = unicode(self.cRecNameLineEdit.text())
@@ -817,6 +835,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     ## copies the datasource to the clipboard
     # \brief It copies the current datasource to the clipboard
     def copyToClipboard(self):
+        print "name", self.name
         dsNode = self.createNodes()
         doc = QDomDocument()
         child = doc.importNode(dsNode,True)
@@ -839,7 +858,11 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ds = self._getFirstElement(self.document, "datasource")           
         if not ds:
             return
+        name = self.name
         self.setFromNode(ds)
+        self.name = name
+        self.nameLineEdit.setText(self.name)
+        
         return True
 
 
@@ -858,6 +881,10 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         elem=newDs.toElement()
 #        attributeMap = self.newDs.attributes()
         elem.setAttribute(QString("type"), QString(self.dataSourceType))
+        if self.name:
+            elem.setAttribute(QString("name"), QString(self.name))
+        else:
+            print "name not defined"
         if self.dataSourceType == 'CLIENT':
             record = root.createElement(QString("record"))
             record.setAttribute(QString("name"), QString(self.clientRecordName))

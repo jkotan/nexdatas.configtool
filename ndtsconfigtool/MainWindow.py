@@ -908,13 +908,14 @@ class MainWindow(QMainWindow):
                               QVariant(self.configServer.host))
             settings.setValue("ConfigServer/port",
                               QVariant(self.configServer.port))
-        files = QStringList()
+            self.configServer.close()
+
+#        files = QStringList()
 #        for widget in self.mdi.windowList():
 #            if not widget.filename.startsWith("Unnamed"):
 #                files.append(widget.filename)
 #        settings.setValue("CurrentFiles", QVariant(files))
         self.mdi.closeAllWindows()
-
 
 
     ## disables/enable the server actions

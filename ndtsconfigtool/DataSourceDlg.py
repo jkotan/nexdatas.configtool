@@ -518,7 +518,6 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             filename = fname
         try:
 
-            print "lname1", self.name 
             fh = QFile(filename)
             if  fh.open(QIODevice.ReadOnly):
                 self.document = QDomDocument()
@@ -527,14 +526,11 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                     raise ValueError, "could not parse XML"
 
                 ds = self._getFirstElement(self.document, "datasource")           
-                print "lname2", self.name 
                 if ds:
                     self.setFromNode(ds)
-                print "lname3", self.name 
                 self.savedXML = self.document.toString(0)
             try:    
                 self.createGUI()
-                print "lname4", self.name 
             except Exception, e:
                 QMessageBox.warning(self, "dialog not created", 
                                     "Problems in creating a dialog %s :\n\n%s" %(self.name,unicode(e)))

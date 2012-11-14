@@ -126,8 +126,8 @@ class ConfigurationServer(object):
     # \param xml XML content of the component    
     def storeComponent(self, name, xml):
         if self._proxy and self.connected:
-            self._proxy.XMLString = unicode(xml)
-            self._proxy.StoreComponent(unicode(name))
+            self._proxy.XMLString = str(xml)
+            self._proxy.StoreComponent(str(name))
 
 
     ## stores the datasource
@@ -135,22 +135,22 @@ class ConfigurationServer(object):
     # \param xml XML content of the datasource
     def storeDataSource(self, name, xml):
         if self._proxy and self.connected:
-            self._proxy.XMLString = unicode(xml)
-            self._proxy.StoreDataSource(unicode(name))
+            self._proxy.XMLString = str(xml)
+            self._proxy.StoreDataSource(str(name))
             
 
     ## stores the component
     # \param name component name
     def deleteComponent(self, name):
         if self._proxy and self.connected:
-            self._proxy.DeleteComponent(unicode(name))
+            self._proxy.DeleteComponent(str(name))
 
 
     ## stores the datasource
     # \param name datasource name
     def deleteDataSource(self, name):
         if self._proxy and self.connected:
-            self._proxy.DeleteDataSource(unicode(name))
+            self._proxy.DeleteDataSource(str(name))
 
 
 
@@ -158,7 +158,7 @@ class ConfigurationServer(object):
     # \param name component name
     def setMandatory(self, name):
         if self._proxy and self.connected:
-            self._proxy.setMandatoryComponents([name])
+            self._proxy.setMandatoryComponents([str(name)])
 
 
     ## get the mandatory components
@@ -172,7 +172,7 @@ class ConfigurationServer(object):
     # \param name component name
     def unsetMandatory(self, name):
         if self._proxy and self.connected:
-            self._proxy.unsetMandatoryComponents([name])
+            self._proxy.unsetMandatoryComponents([str(name)])
 
 
 

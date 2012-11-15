@@ -92,6 +92,7 @@ from Command import (
      ComponentNewItem,
      ComponentLoadDataSourceItem,
      ComponentAddDataSourceItem,
+     ComponentTakeDataSources,
      ComponentApplyItem,
      ComponentMoveUpItem,
      ComponentMoveDownItem
@@ -446,6 +447,13 @@ class MainWindow(QMainWindow):
             "componentadditem", "Add the data source from the list")
 
 
+        componentTakeDataSourcesAction = self.pool.createCommand(
+            "Take DataSources " , "componentTakeDataSources", 
+            commandArgs, ComponentTakeDataSources,
+            "",
+            "componenttakedatasource", "Take data sources from the component")
+
+
         componentMergeAction = self.pool.createCommand(
             "Merge", "componentMerge", commandArgs, ComponentMerge,
             "", "componentmerge", "Merge the component")
@@ -513,7 +521,7 @@ class MainWindow(QMainWindow):
 
         serverDeleteComponentAction = self.pool.createCommand(
             "&Delete Component", "serverDeleteComponent", commandArgs, ServerDeleteComponent,
-            "", "serverdeletedatasource", "Delete datasource from the configuration server")
+            "", "serverdeletedatasource", "Delete datalsource from the configuration server")
 
         serverDeleteDataSourceAction = self.pool.createCommand(
             "&Delete Datasource", "serverDeleteDataSource", commandArgs, ServerDeleteDataSource,
@@ -688,6 +696,8 @@ class MainWindow(QMainWindow):
                 None,
                 componentMergeAction,
                 None,
+                componentTakeDataSourcesAction,
+                None,
                 componentClearAction,
                 ))
 
@@ -703,7 +713,6 @@ class MainWindow(QMainWindow):
             componentLoadComponentAction, componentLoadDataSourceAction,
             None,
             componentAddDataSourceAction,
-            None,
             componentRemoveItemAction, 
             componentCopyItemAction,
             componentPasteItemAction,
@@ -733,7 +742,9 @@ class MainWindow(QMainWindow):
             serverDeleteComponentAction,
             None,
             componentReloadListAction,
-            componentChangeDirectoryAction
+            componentChangeDirectoryAction,
+            None,
+            componentTakeDataSourcesAction
             ) 
 
 
@@ -1495,6 +1506,21 @@ class MainWindow(QMainWindow):
 
 
 
+    ## take datasources 
+    # \brief It takes datasources from the current component
+    def componentTakeDataSources(self):
+        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
+        cmd = self.pool.getCommand('componentTakeDataSources').clone()
+        cmd.execute()
+#        self.cmdStack.append(cmd)
+#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+#        self.pool.setDisabled("redo", True, "Can't Redo")      
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
     ## add datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentAddDataSourceItem(self):
@@ -1712,7 +1738,7 @@ class MainWindow(QMainWindow):
 
     ## component change action
     # \param item new selected item on the component list
-    def componentChanged(self, item):
+    def componentChanged(self, item): 
         cmd = self.pool.getCommand('componentEdit').clone()
         cmd.execute()
         cmd = self.pool.getCommand('componentChanged').clone()

@@ -1712,6 +1712,56 @@ class ComponentReloadList(Command):
         return ComponentReloadList(self.receiver, self.slot) 
 
 
+## Command which takes the datasources from the current component
+class ComponentTakeDataSources(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._cp = None
+       
+
+    ## executes the command
+    # \brief It reloads the datasources from the current datasource directory into the datasource list
+    def execute(self):
+        if QMessageBox.question(self.receiver, "DataSource - Take Data Sources",
+                                "Unsaved datasources may be overwritten. Would you like to proceed ?".encode(),
+                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+            return
+
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is None:
+            QMessageBox.warning(self.receiver, "Component not selected", 
+                                "Please select one of the components")            
+        else:
+            if self._cp.widget is not None:
+                datasources = self._cp.widget.getDataSources()
+        
+                dialogs = self.receiver.mdi.windowList()
+                if dialogs:
+                    for dialog in dialogs:
+                        if isinstance(dialog, DataSourceDlg):
+                            self.receiver.mdi.setActiveWindow(dialog)
+                            self.receiver.mdi.closeActiveWindow()
+        
+                self.receiver.setDataSources(datasources)
+
+        print "EXEC componentTakeDataSources"
+
+    ## unexecutes the command
+    # \brief It does nothing
+    def unexecute(self):
+        print "UNDO componentTakeDataSources"
+
+
+    ## clones the command
+    # \returns clone of the current instance
+    def clone(self):
+        return ComponentTakeDataSources(self.receiver, self.slot) 
+
 
 
 

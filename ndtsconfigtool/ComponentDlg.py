@@ -115,6 +115,9 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         ## saved XML
         self.savedXML = None
 
+        ## tag counter
+        self._tagCnt = 0
+
 
     ## checks if not saved
     # \returns True if it is not saved     
@@ -180,7 +183,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         return item.node
         
         
-        
+    
 
 
 
@@ -735,7 +738,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                     fh.close()
 
 
-
     ## sets component from XML string and reset component file name
     # \param xml XML string               
     def set(self, xml):
@@ -1027,6 +1029,44 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         newModel = ComponentModel(self.document, self._allAttributes, self)
         self.view.setModel(newModel)
         self._hideFrame()
+
+
+    ## fetches tags with a given name  from the node branch
+    # \param name of the    
+    # \returns dictionary with the required tags
+    def _getTags(self, node, tagName):
+        ds = {}
+        if node:
+            children = node.childNodes()
+            for c1 in range(children.count()):
+                child = children.item(c1)
+                if child.nodeName() == tagName:
+                    attr = child.attributes()
+                    if attr.contains("name"):
+                        name = unicode(attr.namedItem("name").nodeValue())
+                    else:
+                        self._tagCnt +=1
+                        name = "__datasource__%s" % self._tagCnt
+                    ds[name] = self._nodeToString(child)
+                    
+            child = node.firstChild()
+            if child:
+                while not child.isNull():
+                    childElem = child.toElement()
+                    if childElem:
+                        ds.update(self._getTags(childElem, tagName))
+                    child = child.nextSibling()
+
+        return ds
+
+    ## fetches the datasources from the component
+    # \returns dictionary with datasources                
+    def getDataSources(self):
+        ds = {}
+        if hasattr(self.document,"toString"):
+            self._tagCnt = 0
+            ds.update(self._getTags(self.document, "datasource"))
+        return ds
 
 
     ## provides the component in xml string

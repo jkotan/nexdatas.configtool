@@ -512,10 +512,10 @@ class ServerDeleteDataSource(Command):
             self._ds = self.receiver.sourceList.currentListDataSource()
         if self._ds is not None:
             try:
-                self.receiver.configServer.deleteDataSource(self._ds.name)
-                self._ds.savedName = ""
                 if hasattr(self._ds,"widget"):
                     self._ds.widget.savedXML = ""
+                    self.receiver.configServer.deleteDataSource(self._ds.widget.dataSourceName)
+                    self._ds.savedName = ""
 
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in datasource deleting", unicode(e))

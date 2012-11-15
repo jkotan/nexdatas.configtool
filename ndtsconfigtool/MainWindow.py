@@ -1667,6 +1667,8 @@ class MainWindow(QMainWindow):
     ## delete server datasource action
     # \brief It deletes the current datasource from the configuration server
     def serverDeleteDataSource(self):
+        cmd = self.pool.getCommand('dsourceEdit').clone()
+        cmd.execute()
         cmd = self.pool.getCommand('serverDeleteDataSource').clone()
         cmd.execute()
 #        self.cmdStack.append(cmd)

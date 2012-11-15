@@ -504,11 +504,11 @@ class MainWindow(QMainWindow):
             "Ctrl+Shift+F", "serverfetchdatasources", "Fetch datasources from the configuration server")
 
         serverStoreComponentAction = self.pool.createCommand(
-            "&Save Component", "serverStoreComponent", commandArgs, ServerStoreComponent,
+            "&Store Component", "serverStoreComponent", commandArgs, ServerStoreComponent,
             "Ctrl+B", "serverstoredatasource", "Store datasource in the configuration server")
 
         serverStoreDataSourceAction = self.pool.createCommand(
-            "&Save Datasource", "serverStoreDataSource", commandArgs, ServerStoreDataSource,
+            "&Store Datasource", "serverStoreDataSource", commandArgs, ServerStoreDataSource,
             "Ctrl+Shift+B", "serverstoredatasource", "Store datasource in the configuration server")
 
         serverDeleteComponentAction = self.pool.createCommand(

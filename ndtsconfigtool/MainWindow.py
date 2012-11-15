@@ -292,8 +292,7 @@ class MainWindow(QMainWindow):
 
         componentSaveAction = self.pool.createCommand(
             "&Save", "componentSave", commandArgs, ComponentSave,
-            "Ctrl+S", "componentsave", "Write the component into a file")
-
+            QKeySequence.Save, "componentsave", "Write the component into a file")
 
 
         componentSaveAllAction = self.pool.createCommand(
@@ -443,7 +442,8 @@ class MainWindow(QMainWindow):
         componentAddDataSourceAction = self.pool.createCommand(
             "Add DataSource Item", "componentAddDataSourceItem", 
             commandArgs, ComponentAddDataSourceItem,
-            "", "componentadditem", "Add the data source from the list")
+            QKeySequence(Qt.CTRL + + Qt.Key_Plus),
+            "componentadditem", "Add the data source from the list")
 
 
         componentMergeAction = self.pool.createCommand(

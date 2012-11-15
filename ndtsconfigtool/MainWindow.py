@@ -728,6 +728,10 @@ class MainWindow(QMainWindow):
             None,
             componentRemoveAction,
             None,
+            serverFetchComponentsAction,
+            serverStoreComponentAction,
+            serverDeleteComponentAction,
+            None,
             componentReloadListAction,
             componentChangeDirectoryAction
             ) 
@@ -743,6 +747,10 @@ class MainWindow(QMainWindow):
             dsourceSaveAllAction,
             None,
             dsourceRemoveAction,
+            None,
+            serverFetchDataSourcesAction,
+            serverStoreDataSourceAction,
+            serverDeleteDataSourceAction,
             None,
             dsourceReloadListAction,
             dsourceChangeDirectoryAction

@@ -120,7 +120,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
     # \param datasources dictionary with the datasources, i.e. name:xml
     # \param externalSave save action
     # \param externalApply apply action
-    def setList(self, datasources, externalSave = None, externalApply = None ):
+    def setList(self, datasources, externalSave = None, externalApply = None , new = False):
         try:
             dirList=os.listdir(self.directory)
         except:
@@ -143,6 +143,8 @@ class DataSourceList(QWidget, Ui_DataSourceList):
                 dlg.connectExternalActions(externalApply, externalSave)    
             
             ds = LabeledObject(name, dlg)
+            if new:
+                ds.savedName = ""
 
             self.datasources[id(ds)] =  ds
             if ds.widget is not None:

@@ -450,7 +450,7 @@ class MainWindow(QMainWindow):
         componentTakeDataSourcesAction = self.pool.createCommand(
             "Take DataSources " , "componentTakeDataSources", 
             commandArgs, ComponentTakeDataSources,
-            "",
+            "Ctrl+G",
             "componenttakedatasource", "Take data sources from the component")
 
 
@@ -966,8 +966,8 @@ class MainWindow(QMainWindow):
 
     ## sets the datasource list from dictionary
     # \param datasources dictionary with datasources, i.e. name:xml
-    def setDataSources(self, datasources):
-        self.sourceList.setList(datasources, self.dsourceCollect, self.dsourceApply)
+    def setDataSources(self, datasources, new = False):
+        self.sourceList.setList(datasources, self.dsourceCollect, self.dsourceApply, new)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 

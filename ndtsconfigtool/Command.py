@@ -1728,7 +1728,8 @@ class ComponentTakeDataSources(Command):
     def execute(self):
         if QMessageBox.question(self.receiver, "DataSource - Take Data Sources",
                                 "Unsaved datasources may be overwritten. Would you like to proceed ?".encode(),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                QMessageBox.No | QMessageBox.Yes,
+                                QMessageBox.Yes  ) == QMessageBox.No:
             return
 
         if self._cp is None:
@@ -1747,7 +1748,7 @@ class ComponentTakeDataSources(Command):
                             self.receiver.mdi.setActiveWindow(dialog)
                             self.receiver.mdi.closeActiveWindow()
         
-                self.receiver.setDataSources(datasources)
+                self.receiver.setDataSources(datasources, new = True)
 
         print "EXEC componentTakeDataSources"
 

@@ -1410,11 +1410,13 @@ class DataSourceApply(Command):
                 if self._oldstate is None:
                     self._oldstate = self._ds.widget.getState() 
             else:
+            
                 self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
                 self._ds.widget.updateForm()
             if self._ds.widget in self.receiver.mdi.windowList():
                 self.receiver.mdi.setActiveWindow(self._ds.widget) 
             else:    
+
                 self.receiver.mdi.addWindow(self._ds.widget)
                 self._ds.widget.show()
     

@@ -525,8 +525,10 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                 if not self.document.setContent(fh):
                     raise ValueError, "could not parse XML"
 
-                ds = self._getFirstElement(self.document, "datasource")           
+                ds = self._getFirstElement(self.document, "datasource")
                 if ds:
+                    if self.name:
+                        ds.toElement().setAttribute(QString("name"), QString(self.name))
                     self.setFromNode(ds)
                 self.savedXML = self.document.toString(0)
             try:    
@@ -558,6 +560,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
         ds = self._getFirstElement(self.document, "datasource")           
         if ds:
+            if self.name:
+                ds.toElement().setAttribute(QString("name"), QString(self.name))
             self.setFromNode(ds)
             self.savedXML = self.document.toString(0)
         try:    
@@ -854,9 +858,13 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ds = self._getFirstElement(self.document, "datasource")           
         if not ds:
             return
+
         name = self.name
         self.setFromNode(ds)
         self.name = name
+        if self.name:
+            ds.toElement().setAttribute(QString("name"), QString(self.name))
+            self.setFromNode(ds)
         self.nameLineEdit.setText(self.name)
         
         return True
@@ -948,7 +956,10 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             parent = QModelIndex()
 
         self.node = self.node.parentNode()   
-        self._replaceNode(oldDs, newDs, parent)
+        if self._tree:
+            self._replaceNode(oldDs, newDs, parent)
+        else:
+            self.node.replaceChild(newDs, oldDs)
         self.node = newDs
 
                     

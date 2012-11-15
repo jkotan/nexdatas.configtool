@@ -463,7 +463,10 @@ class ServerStoreDataSource(Command):
         if self._ds is not None and hasattr(self._ds,"widget"):
             try:
                 xml = self._ds.widget.get()    
-                self.receiver.configServer.storeDataSource(self._ds.widget.name, xml)
+                if self._ds.widget.name:
+                    self.receiver.configServer.storeDataSource(self._ds.widget.dataSourceName, xml)
+                else:
+                    self.receiver.configServer.storeDataSource(self._ds.widget.name, xml)
                 self._ds.widget.savedXML = xml
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in datasource storing", unicode(e))

@@ -130,17 +130,22 @@ class DataSourceList(QWidget, Ui_DataSourceList):
                 return
             
 
-        for name in datasources.keys():
+        for dsname in datasources.keys():
 
+            name =  "".join(x.replace('/','_').replace('\\','_').replace(':','_') \
+                                for x in dsname if (x.isalnum() or x in ["/","\\",":"]))
+            print name
+#            name = dsname
             dlg = DataSourceDlg()
             dlg.directory = self.directory
             dlg.name = name
-            dlg.set(datasources[name])    
+            dlg.set(datasources[dsname])    
 
             if hasattr(dlg,"connectExternalActions"):     
                 dlg.connectExternalActions(externalApply, externalSave)    
             
             ds = LabeledObject(name, dlg)
+
             self.datasources[id(ds)] =  ds
             if ds.widget is not None:
                 ds.widget.ids = ds.id

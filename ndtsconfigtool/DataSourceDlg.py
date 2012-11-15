@@ -43,6 +43,9 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## attribute doc
         self.doc = u''
 
+        ## datasource name
+        self.dataSourceName = None
+
         ## client record name
         self.clientRecordName = u''
 
@@ -91,7 +94,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## datasource directory
         self.directory = ""
 
-        ## datasource name
+        ## datasource file name
         self.name = None
 
         ## DOM document
@@ -118,6 +121,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     # \brief It sets the datasource variables to default values
     def clear(self):
         self.dataSourceType = 'CLIENT'
+        self.dataSourceName = ''
         self.doc = u''
 
         self.clientRecordName = u''
@@ -154,7 +158,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                  self.dbDataFormat,
                  self.dbQuery,
                  dbParameters,
-                 self.name
+#                 self.name
+                 self.dataSourceName
                  )
 #        print  "GET", unicode(state)
         return state
@@ -178,10 +183,11 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
          self.dbDataFormat,
          self.dbQuery,
          dbParameters,
-         name
+#         name
+         self.dataSourceName
          ) = state
-        if self._tree:
-            self.name = name
+#        if self._tree:
+#            self.name = name
 #        print "SET",  unicode(state)
         self.dbParameters = copy.copy(dbParameters)
 
@@ -199,8 +205,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             else:
                 self.dataSourceType = 'CLIENT'    
     
-        if self.name is not None:
-            self.nameLineEdit.setText(self.name)
+        if self.dataSourceName is not None:
+            self.nameLineEdit.setText(self.dataSourceName)
 
         if self.clientRecordName is not None:
             self.cRecNameLineEdit.setText(self.clientRecordName)
@@ -259,12 +265,12 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     def treeMode(self, enable = True):
         if enable:
             self.closeSaveFrame.hide()
-            self.nameFrame.show()
+#            self.nameFrame.show()
             self._tree = True
         else:
             self._tree = False
             self.closeSaveFrame.show()
-            self.nameFrame.hide()
+#            self.nameFrame.hide()
             
         
     ##  creates GUI
@@ -301,7 +307,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self.connect(self.tMemberNameLineEdit, SIGNAL("textEdited(QString)"), self._tMemberNameLineEdit)
 
         self.setFrames(self.dataSourceType)
-        self.treeMode(self._tree)
+#        self.treeMode(self._tree)
 
 
     ## connects external actions
@@ -483,7 +489,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             self.dParameterTableWidget.editItem(selected)
 
 
-    ## sets name of the datasource and its directory
+    ## sets file name of the datasource and its directory
     # \param name name of the datasource
     # \param directory directory of the datasources   
     def setName(self, name, directory):
@@ -527,8 +533,6 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
                 ds = self._getFirstElement(self.document, "datasource")
                 if ds:
-                    if self.name:
-                        ds.toElement().setAttribute(QString("name"), QString(self.name))
                     self.setFromNode(ds)
                 self.savedXML = self.document.toString(0)
             try:    
@@ -560,8 +564,6 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
         ds = self._getFirstElement(self.document, "datasource")           
         if ds:
-            if self.name:
-                ds.toElement().setAttribute(QString("name"), QString(self.name))
             self.setFromNode(ds)
             self.savedXML = self.document.toString(0)
         try:    
@@ -584,7 +586,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         value = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
 
         if attributeMap.contains("name"):
-            self.name = attributeMap.namedItem("name").nodeValue()
+            self.dataSourceName = attributeMap.namedItem("name").nodeValue()
         
         if value == 'CLIENT':
             self.dataSourceType = unicode(value)
@@ -726,7 +728,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self._applied = False
         class CharacterError(Exception): pass
         sourceType = unicode(self.typeComboBox.currentText())
-        self.name = unicode(self.nameLineEdit.text())
+        self.dataSourceName = unicode(self.nameLineEdit.text())
 
         if sourceType == 'CLIENT':
             recName = unicode(self.cRecNameLineEdit.text())
@@ -835,7 +837,6 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     ## copies the datasource to the clipboard
     # \brief It copies the current datasource to the clipboard
     def copyToClipboard(self):
-        print "name", self.name
         dsNode = self.createNodes()
         doc = QDomDocument()
         child = doc.importNode(dsNode,True)
@@ -859,14 +860,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         if not ds:
             return
 
-        name = self.name
         self.setFromNode(ds)
-        self.name = name
-        if self.name:
-            ds.toElement().setAttribute(QString("name"), QString(self.name))
-            self.setFromNode(ds)
-        self.nameLineEdit.setText(self.name)
-        
         return True
 
 
@@ -885,8 +879,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         elem=newDs.toElement()
 #        attributeMap = self.newDs.attributes()
         elem.setAttribute(QString("type"), QString(self.dataSourceType))
-        if self.name:
-            elem.setAttribute(QString("name"), QString(self.name))
+        if self.dataSourceName:
+            elem.setAttribute(QString("name"), QString(self.dataSourceName))
         else:
             print "name not defined"
         if self.dataSourceType == 'CLIENT':

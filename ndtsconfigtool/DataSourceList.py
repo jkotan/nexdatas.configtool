@@ -134,8 +134,6 @@ class DataSourceList(QWidget, Ui_DataSourceList):
 
             name =  "".join(x.replace('/','_').replace('\\','_').replace(':','_') \
                                 for x in dsname if (x.isalnum() or x in ["/","\\",":"]))
-            print name
-#            name = dsname
             dlg = DataSourceDlg()
             dlg.directory = self.directory
             dlg.name = name

@@ -456,7 +456,7 @@ class MainWindow(QMainWindow):
 
         componentMergeAction = self.pool.createCommand(
             "Merge Component Items", "componentMerge", commandArgs, ComponentMerge,
-            "", "componentmerge", "Merge the component items")
+            "Ctrl+M", "componentmerge", "Merge the component items")
         
 
         componentChangeDirectoryAction = self.pool.createCommand(

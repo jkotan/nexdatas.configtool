@@ -80,6 +80,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
                  self.value,
                  self.doc,
                  self.dimDoc,
+                 self.rank,
                  attributes,
                  dimensions
                  )
@@ -98,6 +99,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
          self.value,
          self.doc,
          self.dimDoc,
+         self.rank,
          attributes,
          dimensions
          ) = state
@@ -138,6 +140,10 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         if self.dimensions:
             label = self.dimensions.__str__()
             self.dimLabel.setText("%s" % label)
+        elif self.rank > 0:
+            label = [None for r in range(self.rank)].__str__()
+            self.dimLabel.setText("%s" % label)
+            
 
         self._dimensions =[]
         for dm in self.dimensions:
@@ -472,11 +478,17 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         elif self.dimensions:
             newDimens = self.root.createElement(QString("dimensions"))
             newDimens.setAttribute(QString("rank"), QString(unicode(self.rank)))
+            dimDefined = True
             for i in range(min(self.rank,len(self.dimensions))):
-                dim = self.root.createElement(QString("dim"))
-                dim.setAttribute(QString("index"), QString(unicode(i+1)))
-                dim.setAttribute(QString("value"), QString(unicode(self.dimensions[i])))
-                newDimens.appendChild(dim)
+                if self.dimensions[i] is None:
+                    dimDefined = False
+            if dimDefined:
+                for i in range(min(self.rank,len(self.dimensions))):
+                    dim = self.root.createElement(QString("dim"))
+                    dim.setAttribute(QString("index"), QString(unicode(i+1)))
+                    dim.setAttribute(QString("value"), QString(unicode(self.dimensions[i])))
+                    newDimens.appendChild(dim)
+                
             if dimens and dimens.nodeName() == "dimensions" :
                 self._replaceElement(dimens, newDimens, index)
             else:

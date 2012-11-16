@@ -237,7 +237,7 @@ class MainWindow(QMainWindow):
 
         dsourceRemoveAction = self.pool.createCommand(
             "&Close DataSource", "dsourceRemove",  commandArgs, 
-            DataSourceRemove,"Ctrl+Shift+R", "dsourceremove", "Close the data source")
+            DataSourceRemove,"Ctrl+Shift+P", "dsourceremove", "Close the data source")
 
         dsourceEditAction =  self.pool.createCommand(
             "&Edit DataSource", "dsourceEdit",  commandArgs, 
@@ -302,7 +302,7 @@ class MainWindow(QMainWindow):
 
         componentApplyItemAction = self.pool.createCommand(
             "&Apply Component Item", "componentApplyItem", commandArgs, ComponentApplyItem,
-            "Ctrl+P", "componentsapplyitem", "Apply the component item")
+            "Ctrl+R", "componentsapplyitem", "Apply the component item")
 
 
         componentMoveUpItemAction = self.pool.createCommand(
@@ -317,7 +317,7 @@ class MainWindow(QMainWindow):
 
         dsourceApplyAction = self.pool.createCommand(
             "Apply DataSource", "dsourceApply", commandArgs, DataSourceApply,
-            "Ctrl+Shift+P", "dsourceapply", "Apply the data source")
+            "Ctrl+Shift+R", "dsourceapply", "Apply the data source")
 
 
         dsourceSaveAction = self.pool.createCommand(
@@ -493,7 +493,7 @@ class MainWindow(QMainWindow):
         
         componentRemoveAction = self.pool.createCommand(
             "&Close", "componentRemove", commandArgs, ComponentRemove,
-            "Ctrl+R", "componentremove", "Close the component")
+            "Ctrl+P", "componentremove", "Close the component")
 
 
 

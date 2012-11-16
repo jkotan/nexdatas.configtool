@@ -958,7 +958,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         try:
             self._merger = Merger(self.document)
 
-            self.connect(self._merger, SIGNAL("finished()"), self._merger, SLOT("deleteLater()"))
+#            self.connect(self._merger, SIGNAL("finished()"), self._merger, SLOT("deleteLater()"))
             self.connect(self._merger, SIGNAL("finished()"), self._closeMergerDlg)
             self.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
             cNode = self._getCurrentNode()
@@ -968,8 +968,16 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
             self._merger.start()
 
-            self._mergerdlg.exec_()
+            self._mergerdlg.show()
+#            self._mergerdlg.finished.connect( self._closeMergerDlg)
+#            self._mergerdlg.exec_()
+
+            import gc
+            gc.collect()
+
+#            while self._merger and not self._merger.isFinished():
             while not self._merger.isFinished():
+                print "Working"
                 time.sleep(0.01)
             
             if self._merger.exception:

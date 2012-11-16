@@ -274,12 +274,12 @@ class MainWindow(QMainWindow):
             QKeySequence.New, "componentnew", "Create a new component")
 
         componentEditAction = self.pool.createCommand(
-            "&Edit", "componentEdit", commandArgs, ComponentEdit,
+            "&Edit Component", "componentEdit", commandArgs, ComponentEdit,
             "Ctrl+E", "componentedit", "Edit the component")
 
         componentClearAction = self.pool.createCommand(
-            "Clear", "componentClear", commandArgs, ComponentClear,
-            "", "componentclear", "Clear the component")
+            "Clear Component Items", "componentClear", commandArgs, ComponentClear,
+            "", "componentclear", "Removes all component items")
 
 
         componentSaveAsAction = self.pool.createCommand(
@@ -455,8 +455,8 @@ class MainWindow(QMainWindow):
 
 
         componentMergeAction = self.pool.createCommand(
-            "Merge", "componentMerge", commandArgs, ComponentMerge,
-            "", "componentmerge", "Merge the component")
+            "Merge Component Items", "componentMerge", commandArgs, ComponentMerge,
+            "", "componentmerge", "Merge the component items")
         
 
         componentChangeDirectoryAction = self.pool.createCommand(
@@ -633,8 +633,6 @@ class MainWindow(QMainWindow):
                 dsourceNewAction,
                 componentOpenAction, 
                 dsourceOpenAction, 
-                componentEditAction, 
-                dsourceEditAction, 
                 None, 
                 componentSaveAction, 
                 dsourceSaveAction,
@@ -672,6 +670,10 @@ class MainWindow(QMainWindow):
                 dsourceCopyAction,
                 dsourcePasteAction,
                 None,
+                componentEditAction, 
+                componentTakeDataSourcesAction,
+                None,
+                dsourceEditAction, 
                 dsourceApplyAction
                 ))
 
@@ -692,13 +694,10 @@ class MainWindow(QMainWindow):
                 componentMoveUpItemAction,
                 componentMoveDownItemAction,
                 None,
+                componentMergeAction,
                 componentApplyItemAction,
                 None,
-                componentMergeAction,
-                None,
-                componentTakeDataSourcesAction,
-                None,
-                componentClearAction,
+                componentClearAction
                 ))
 
         self.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
@@ -721,8 +720,9 @@ class MainWindow(QMainWindow):
             componentMoveDownItemAction,
             None,
             componentApplyItemAction,
+            componentMergeAction,
             None,
-            componentMergeAction
+            componentClearAction
             ) 
         
 
@@ -740,6 +740,8 @@ class MainWindow(QMainWindow):
             serverFetchComponentsAction,
             serverStoreComponentAction,
             serverDeleteComponentAction,
+            serverSetMandatoryComponentAction,
+            serverUnsetMandatoryComponentAction,
             None,
             componentReloadListAction,
             componentChangeDirectoryAction,

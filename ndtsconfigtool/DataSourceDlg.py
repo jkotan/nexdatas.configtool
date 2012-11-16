@@ -441,7 +441,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         if QMessageBox.question(self, "Parameter - Remove",
                                 "Remove parameter: %s = \'%s\'".encode() 
                                 %  (param, self._dbParam[unicode(param)]),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.Yes )  == QMessageBox.No :
             return
         if unicode(param) in self._dbParam.keys():
             self._dbParam.pop(unicode(param))
@@ -708,7 +709,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     def close(self):
         if QMessageBox.question(self, "Close datasource",
                                 "Would you like to close the datasource?", 
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.Yes ) == QMessageBox.No :
             return
         self.updateForm()
         self.reject()

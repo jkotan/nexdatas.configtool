@@ -129,7 +129,8 @@ class ComponentList(QWidget, Ui_ComponentList):
             if question :
                 if QMessageBox.question(self, "Component - Close",
                                         "Close the component: %s ".encode() %  (self.components[oid].name),
-                                        QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                        QMessageBox.Yes | QMessageBox.No,
+                                        QMessageBox.Yes ) == QMessageBox.No :
                     return
 
             self.components.pop(oid)
@@ -140,7 +141,8 @@ class ComponentList(QWidget, Ui_ComponentList):
             return
         if QMessageBox.question(self, "Component - Remove",
                                 "Remove component: %s = \'%s\'".encode() %  (attr, self.components[unicode(attr)]),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.Yes ) == QMessageBox.No :
             return
         if unicode(attr) in self.components.keys():
             self.components.pop(unicode(attr))

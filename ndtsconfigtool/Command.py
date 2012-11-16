@@ -132,7 +132,8 @@ class ServerFetchComponents(Command):
     def execute(self):       
         if QMessageBox.question(self.receiver, "Component - Reload List from Configuration server",
                                 "All unsaved components will be lost. Would you like to proceed ?".encode(),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.Yes) == QMessageBox.No :
             return
 
         
@@ -409,7 +410,8 @@ class ServerFetchDataSources(Command):
 
         if QMessageBox.question(self.receiver, "DataSource - Reload List from Configuration Server",
                                 "All unsaved datasources will be lost. Would you like to proceed ?".encode(),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.Yes ) == QMessageBox.No :
             return
 
 
@@ -1113,7 +1115,8 @@ class ComponentChangeDirectory(Command):
     def execute(self):
         if QMessageBox.question(self.receiver, "Component - Change Directory",
                                 "All unsaved components will be lost. Would you like to proceed ?".encode(),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.Yes ) == QMessageBox.No :
             return
 
 
@@ -1626,7 +1629,8 @@ class DataSourceChangeDirectory(Command):
     def execute(self):
         if QMessageBox.question(self.receiver, "DataSource - Change Directory",
                                 "All unsaved datasources will be lost. Would you like to proceed ?".encode(),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.Yes ) == QMessageBox.No :
             return
 
 
@@ -1683,7 +1687,8 @@ class ComponentReloadList(Command):
     def execute(self):
         if QMessageBox.question(self.receiver, "Component - Reload List",
                                 "All unsaved components will be lost. Would you like to proceed ?".encode(),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.Yes ) == QMessageBox.No :
             return
 
         
@@ -1781,7 +1786,8 @@ class DataSourceReloadList(Command):
     def execute(self):
         if QMessageBox.question(self.receiver, "DataSource - Reload List",
                                 "All unsaved datasources will be lost. Would you like to proceed ?".encode(),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.Yes ) == QMessageBox.No :
             return
 
 
@@ -2320,7 +2326,8 @@ class ComponentClear(ComponentItemCommand):
             if self._cp is not None:                
                 if QMessageBox.question(self.receiver, "Component - Clear",
                                         "Clear the component: %s ".encode() %  (self._cp.name),
-                                        QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                        QMessageBox.Yes | QMessageBox.No,
+                                        QMessageBox.Yes ) == QMessageBox.No :
                     self._oldstate = None
                     self._index = None
                     self._cp = None

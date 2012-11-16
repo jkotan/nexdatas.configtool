@@ -180,7 +180,8 @@ class GroupDlg(NodeDlg, Ui_GroupDlg):
             return
         if QMessageBox.question(self, "Attribute - Remove",
                                 "Remove attribute: %s = \'%s\'".encode() %  (attr, self._attributes[unicode(attr)]),
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.Yes ) == QMessageBox.No :
             return
         if unicode(attr) in self._attributes.keys():
             self._attributes.pop(unicode(attr))

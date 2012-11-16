@@ -185,7 +185,8 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             if question :
                 if QMessageBox.question(self, "DataSource - Close",
                                         "Close datasource: %s ".encode() %  (self.datasources[oid].name),
-                                        QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                                        QMessageBox.Yes | QMessageBox.No,
+                                        QMessageBox.Yes ) == QMessageBox.No :
                     return
 
             self.datasources.pop(oid)

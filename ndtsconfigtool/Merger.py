@@ -56,7 +56,11 @@ class MergerDlg(QDialog):
 ## merges the components
 class Merger(QThread):
 
+
+#    def __del__(self):
+#        self.wait()
     
+
     ## constructor
     # \param root  DOM root node
     def __init__(self, root):
@@ -313,6 +317,10 @@ class Merger(QThread):
                     raise Exception("Merging Interrupted")
             except Exception, e:
                 self.exception = e
-            
+#       self.terminate()
+# communicate via signal , and QMutex
+# disconnect signal before connecting 
+
+           
 if __name__ == "__main__":
     import sys

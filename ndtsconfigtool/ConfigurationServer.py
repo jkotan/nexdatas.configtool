@@ -180,8 +180,12 @@ class ConfigurationServer(object):
     # \brief It closes connecion to configuration server
     def close(self):
         if self._proxy and self.connected:
-            self._proxy.Close()
-            self.connected = False
+            if self._proxy.State() == PyTango.DevState.OPEN:
+                self._proxy.Close()
+                self.connected = False
+#            if self._proxy.State() == PyTango.DevState.RUNNING:
+#                print "Configuration server is still runnning therefore it cannot be closed."
+                
             
 ## test function
 def test():

@@ -558,8 +558,11 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
         self._mergerdlg = MergerDlg(self)
         self._mergerdlg.createGUI()
+        
 
         self.updateForm()
+
+        self.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
 
 #        self.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
         self.connect(self.closePushButton, SIGNAL("clicked()"), self._close)
@@ -934,7 +937,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     ## accepts merger dialog and interrupts merging
     # \brief It is connected to closing Merger dialog
     def _closeMergerDlg(self):
-        print "closeMerger"
         if self._mergerdlg:
             self._mergerdlg.accept()
 
@@ -944,7 +946,6 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     ## interrupts merging
     # \brief It sets running flag of Merger to False
     def _interruptMerger(self):
-#        print "interruptMerger"
         if self._merger:
             self._merger.running = False
 
@@ -961,11 +962,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         try:
             self._merger = Merger(self.document)
                     
-
 #            self.connect(self._merger, SIGNAL("finished()"), self._merger, SLOT("deleteLater()"))
-            self.connect(self._merger, SIGNAL("finished()"), self._closeMergerDlg)
-#            self.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
-
             cNode = self._getCurrentNode()
             if cNode:
                 self._merger.selectedNode = cNode
@@ -976,27 +973,19 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             self.view.setModel(newModel)
             self.view.reset()
             self._hideFrame()
-                
+            
+            self.connect(self._merger, SIGNAL("finished()"), self._closeMergerDlg)
             self._mergerdlg.show()
-            print "start"
+
+
             self._merger.start()
-            print "show"
 
-
-#            self._mergerdlg.finished.connect( self._closeMergerDlg)
-#            self._mergerdlg.exec_()
-
-            print "collect"
-            import gc
-            gc.collect()
 
 #            while self._merger and not self._merger.isFinished():
             while not self._merger.isFinished():
-                print "Working"
+#                print "Working"
                 time.sleep(0.01)
 
-            print "end while"
-            
             if self._merger.exception:
                 raise self._merger.exception
 

@@ -57,8 +57,8 @@ class MergerDlg(QDialog):
 class Merger(QThread):
 
 
-#    def __del__(self):
-#        self.wait()
+    def __del__(self):
+        self.wait()
     
 
     ## constructor

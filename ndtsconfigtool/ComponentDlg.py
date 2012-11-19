@@ -934,6 +934,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     ## accepts merger dialog and interrupts merging
     # \brief It is connected to closing Merger dialog
     def _closeMergerDlg(self):
+        print "closeMerger"
         if self._mergerdlg:
             self._mergerdlg.accept()
 
@@ -943,12 +944,14 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     ## interrupts merging
     # \brief It sets running flag of Merger to False
     def _interruptMerger(self):
+#        print "interruptMerger"
         if self._merger:
             self._merger.running = False
 
     ## merges the component tree
     # \returns True on success
     def merge(self):
+        document = None
         if not self.view or not self.view.model():
             self._merged = False
             return
@@ -957,21 +960,33 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             return
         try:
             self._merger = Merger(self.document)
+                    
 
 #            self.connect(self._merger, SIGNAL("finished()"), self._merger, SLOT("deleteLater()"))
             self.connect(self._merger, SIGNAL("finished()"), self._closeMergerDlg)
-            self.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
-            cNode = self._getCurrentNode()
+#            self.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
 
+            cNode = self._getCurrentNode()
             if cNode:
                 self._merger.selectedNode = cNode
 
-            self._merger.start()
-
+            document = self.document
+            self.document = QDomDocument()
+            newModel = ComponentModel(self.document, self._allAttributes, self)
+            self.view.setModel(newModel)
+            self.view.reset()
+            self._hideFrame()
+                
             self._mergerdlg.show()
+            print "start"
+            self._merger.start()
+            print "show"
+
+
 #            self._mergerdlg.finished.connect( self._closeMergerDlg)
 #            self._mergerdlg.exec_()
 
+            print "collect"
             import gc
             gc.collect()
 
@@ -979,12 +994,15 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             while not self._merger.isFinished():
                 print "Working"
                 time.sleep(0.01)
+
+            print "end while"
             
             if self._merger.exception:
                 raise self._merger.exception
 
             self._merged = True
-            newModel = ComponentModel(self.document, self._allAttributes ,self)
+            newModel = ComponentModel(document, self._allAttributes ,self)
+            self.document = document
             self.view.setModel(newModel)
             self._hideFrame()
 
@@ -996,7 +1014,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             print "Error in Merging: %s" % unicode(e.value)
             self._merger = None
             self._merged = False
-            newModel = ComponentModel(self.document, self._allAttributes, self)
+            newModel = ComponentModel(document, self._allAttributes, self)
+            self.document = document
             self.view.setModel(newModel)
             self._hideFrame()
             if hasattr(e, "nodes") and e.nodes: 
@@ -1006,7 +1025,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         except  Exception, e:    
             print "Exception: %s" % unicode(e)
             self._merged = False
-            newModel = ComponentModel(self.document, self._allAttributes, self)
+            newModel = ComponentModel(document, self._allAttributes, self)
+            self.document = document
             self.view.setModel(newModel)
             self._hideFrame()
             QMessageBox.warning(self, "Warning",

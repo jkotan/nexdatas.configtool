@@ -759,10 +759,15 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         if not self.document.setContent(xml):
             raise ValueError, "could not parse XML"
         children = self.document.childNodes()
+
+        j=0
         for i in range(children.count()):
-            ch = children.item(i)
-            if ch.nodeName() == 'xml':
+            ch = children.item(j)
+            if str(ch.nodeName()).strip() in ['xml', 'xml-stylesheet', "#comment"] :
                 self.document.removeChild(ch)
+            else:
+                j += 1
+
         newModel = ComponentModel(self.document,self._allAttributes, self)
         self.view.setModel(newModel)
         

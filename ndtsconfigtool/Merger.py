@@ -74,7 +74,7 @@ class Merger(QThread):
         ## allowed children of the given nodes
         self._children ={
             "datasource":["record", "doc", "device", "database", "query", "door"],
-            "attribute":["enumeration", "doc"],
+            "attribute":["datasource", "strategy", "enumeration", "doc"],
             "definition":["group", "field", "attribute", "link", "component", "doc", "symbols"],
             "dimensions":["dim", "doc"],
             "field":["attribute", "datasource", "doc", "dimensions", "enumeration", "strategy"],

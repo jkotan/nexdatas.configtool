@@ -44,7 +44,7 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
         self.doc = u''
 
         ## allowed subitems
-        self.subItems = ["enumeration", "doc"]
+        self.subItems = ["enumeration", "doc", "datasource", "strategy"]
 
 
 

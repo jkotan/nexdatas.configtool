@@ -2253,16 +2253,18 @@ class ComponentItemCommand(Command):
     # \brief It stores the new states of the current component
     def postExecute(self):    
         if self._cp is not None:
-            if self._newstate is None:
+            if self._newstate is None and hasattr(self._cp.widget, "getState"):
                 self._newstate = self._cp.widget.getState() 
             else:
-                self.receiver.componentList.components[self._cp.id].widget.setState(self._newstate)
+                if hasattr(self.receiver.componentList.components[self._cp.id].widget,"setState"): 
+                    self.receiver.componentList.components[self._cp.id].widget.setState(self._newstate)
                 
                 if self._cp.widget in self.receiver.mdi.windowList():
                     self.receiver.mdi.setActiveWindow(self._cp.widget) 
                 else:    
                     self.receiver.mdi.addWindow(self._cp.widget)
-                    self._cp.widget.show()
+                    if hasattr(self._cp.widget,"show"):
+                        self._cp.widget.show()
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
         else:

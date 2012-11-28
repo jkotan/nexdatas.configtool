@@ -37,6 +37,8 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
         self.mode = u''
         ## trigger label
         self.trigger = u''
+        ## growing dimension
+        self.grows = u''
         ## postrun  label
         self.postrun = u''
         ## attribute doc
@@ -61,6 +63,15 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
                 
         if self.trigger is not None :
             self.triggerLineEdit.setText(self.trigger) 
+        if self.grows is not None :
+            try:
+                grows = int(self.grows)
+                print "GROWS", grows
+                if grows < 0:
+                    grows = 0
+            except:
+                grows = 0
+            self.growsSpinBox.setValue(grows) 
         if self.postrun is not None :
             self.postLineEdit.setText(self.postrun) 
         if self.doc is not None:
@@ -85,6 +96,7 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
     def getState(self):
         state = (self.mode,
                  self.trigger,
+                 self.grows,
                  self.postrun,
                  self.doc
                  )
@@ -98,6 +110,7 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
 
         (self.name,
          self.trigger,
+         self.grows,
          self.postrun,
          self.doc
          ) = state
@@ -131,6 +144,7 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
         attributeMap = self.node.attributes()
 
         self.trigger = attributeMap.namedItem("trigger").nodeValue() if attributeMap.contains("trigger") else ""
+        self.grows = attributeMap.namedItem("grows").nodeValue() if attributeMap.contains("grows") else ""
         self.mode = attributeMap.namedItem("mode").nodeValue() if attributeMap.contains("mode") else ""
 
         text = self._getText(node)    
@@ -149,11 +163,15 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
         class CharacterError(Exception): pass
 
         self.trigger = ''
+        self.grows = ''
         self.postrun = ''
 
         self.mode = unicode(self.modeComboBox.currentText())
         if self.mode ==  'STEP':
             self.trigger = unicode(self.triggerLineEdit.text())
+            grows = int(self.growsSpinBox.value())
+            if grows > 0:
+                self.grows= str(grows)
         if self.mode ==  'POSTRUN':
             self.postrun = unicode(self.postLineEdit.text())
 
@@ -187,6 +205,8 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
         if self.mode == 'STEP':
             if self.trigger:
                 elem.setAttribute(QString("trigger"), QString(self.trigger))
+            if self.grows:
+                elem.setAttribute(QString("grows"), QString(self.grows))
 
         self._replaceText(self.node, index, unicode(self.postrun))
 

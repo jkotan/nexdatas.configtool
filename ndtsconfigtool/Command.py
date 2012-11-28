@@ -2724,12 +2724,20 @@ class ComponentMerge(ComponentItemCommand):
     ## executes the command
     # \brief It merges the current component
     def execute(self):
+        print "c1"
         if self._cp is None:
+            print "c2"
             self.preExecute()
+            print "c3"
             if self._cp is not None:                
+                print "c4"
                 if hasattr(self._cp.widget,"merge"):
+                    print "c5"
                     self._cp.widget.merge()
+                    print "c6"
+        print "c7"
         self.postExecute()
+        print "c8"
             
             
         print "EXEC componentMerge"

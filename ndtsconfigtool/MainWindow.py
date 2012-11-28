@@ -23,7 +23,7 @@ import sys
 
 from PyQt4.QtCore import (SIGNAL, SLOT, QSettings, Qt,  QSignalMapper, 
                           QVariant, QT_VERSION_STR, PYQT_VERSION_STR, QStringList )
-from PyQt4.QtGui import (QMainWindow, QDockWidget, QSplitter, QWorkspace ,
+from PyQt4.QtGui import (QMainWindow, QDockWidget, QSplitter, QWorkspace , QMdiArea,
                          QListWidgetItem, QAction, QKeySequence, QMessageBox, QIcon)
 
 import platform
@@ -215,7 +215,9 @@ class MainWindow(QMainWindow):
         self.compDockWidget.setWidget(dockSplitter)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.compDockWidget)
 
+#        self.mdi = QMdiArea()
         self.mdi = QWorkspace()
+##       BARS 
         self.mdi.setScrollBarsEnabled(True)        
         self.setCentralWidget(self.mdi)
 
@@ -1536,11 +1538,17 @@ class MainWindow(QMainWindow):
     ## merge component action
     # \brief It merges the current component
     def componentMerge(self):
+        print "cm1"
         cmd = self.pool.getCommand('componentMerge').clone()
+        print "cm2"
         cmd.execute()
+        print "cm3"
         self.cmdStack.append(cmd)
+        print "cm4"
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        print "cm5"
         self.pool.setDisabled("redo", True, "Can't Redo")      
+        print "cm6"
 
     ## remove component action
     # \brief It removes from the component list the current component
@@ -1723,7 +1731,7 @@ class MainWindow(QMainWindow):
 
     ## activated window action, i.e. it changes the current position of the component and datasource lists 
     # \param widget selected widget window
-    def mdiWindowActivated(self, widget):
+    def mdiWindowActivated(self, widget): 
         self.pooling = False
         if isinstance(widget, DataSourceDlg):
             if widget.ids is not None:
@@ -1736,7 +1744,6 @@ class MainWindow(QMainWindow):
                     if self.componentList.currentListComponent().id != widget.idc:
                         self.componentList.populateComponents(widget.idc)
         self.pooling = True
-
 
     ## component change action
     # \param item new selected item on the component list

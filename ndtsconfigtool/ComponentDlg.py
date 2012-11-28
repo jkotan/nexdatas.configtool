@@ -957,6 +957,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     ## merges the component tree
     # \returns True on success
     def merge(self):
+        print "m0"
         document = None
         if not self.view or not self.view.model():
             self._merged = False
@@ -978,28 +979,42 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             self.view.reset()
             self._hideFrame()
             
+            print "a0"
             self._mergerdlg.show()
+            print "a1"
 
 
             self._merger.start()
+            print "a2"
 
 
             while self._merger and not self._merger.isFinished():
                 time.sleep(0.01)
                 
+            print "a3"
             self._closeMergerDlg()
+            print "a4"
             if self._merger.exception:
                 raise self._merger.exception
+            print "a5"
 
             self._merged = True
+            print "a6"
             newModel = ComponentModel(document, self._allAttributes ,self)
+            print "a7"
             self.document = document
+            print "a8"
             self.view.setModel(newModel)
+            print "a9"
             self._hideFrame()
+            print "a10"
 
             if hasattr(self._merger, "selectedNode") and self._merger.selectedNode: 
                 self._showNodes([self._merger.selectedNode])
+            print "a11"
+
             self._merger = None
+            print "a12"
 
         except IncompatibleNodeError, e: 
             print "Error in Merging: %s" % unicode(e.value)

@@ -32,6 +32,7 @@ import time
 import copy
 from ComponentModel import ComponentModel
 
+
 ## abstract command 
 class Command(object):
     
@@ -137,12 +138,13 @@ class ServerFetchComponents(Command):
             return
 
         
-        dialogs = self.receiver.mdi.windowList()
-        if dialogs:
-            for dialog in dialogs:
+        subwindows = self.receiver.mdi.subWindowList()
+        if subwindows:
+            for subwindow in subwindows:
+                dialog = subwindow.widget()
                 if isinstance(dialog,ComponentDlg):
-                    self.receiver.mdi.setActiveWindow(dialog)
-                    self.receiver.mdi.closeActiveWindow()
+                    self.receiver.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.mdi.closeActiveSubWindow()
 
         self.receiver.componentList.components = {} 
 
@@ -178,6 +180,7 @@ class ServerStoreComponent(Command):
         Command.__init__(self,receiver, slot)
         self._cp = None
         self._cpEdit = None
+        self._subwindow = None
         
 
     ## executes the command
@@ -205,10 +208,10 @@ class ServerStoreComponent(Command):
 
 
 
-            if self._cp.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._cp.widget) 
+            if self._subwindow in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._subwindow) 
             else:    
-                self.receiver.mdi.addWindow(self._cpEdit)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
                 self._cpEdit.show()
                 #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
@@ -415,12 +418,13 @@ class ServerFetchDataSources(Command):
             return
 
 
-        dialogs = self.receiver.mdi.windowList()
-        if dialogs:
-            for dialog in dialogs:
+        subwindows = self.receiver.mdi.subWindowList()
+        if subwindows:
+            for subwindow in subwindows:
+                dialog = subwindow.widget()
                 if isinstance(dialog,DataSourceDlg):
-                    self.receiver.mdi.setActiveWindow(dialog)
-                    self.receiver.mdi.closeActiveWindow()
+                    self.receiver.mdi.setActiveSubWindow(dialog)
+                    self.receiver.mdi.closeActiveSubWindow()
 
         self.receiver.sourceList.datasources = {} 
 
@@ -615,8 +619,12 @@ class ComponentNew(Command):
     ## executes the command
     # \brief It creates a new component
     def execute(self):       
+            
         if self._comp is None:
             self._comp = LabeledObject("", None)
+        else:    
+            self._comp.widget = None
+        
         self.receiver.componentList.addComponent(self._comp)
         print "EXEC componentNew"
 
@@ -626,11 +634,15 @@ class ComponentNew(Command):
         if self._comp is not None:
             self.receiver.componentList.removeComponent(self._comp, False)
 
-            if hasattr(self._comp,'widget') and \
-                    self._comp.widget in self.receiver.mdi.windowList():
-            
-                self.receiver.mdi.setActiveWindow(self._comp.widget) 
-                self.receiver.mdi.closeActiveWindow() 
+            if hasattr(self._comp,'widget') and self._comp.widget:
+                subwindow = self.receiver.subWindow(self._comp.widget, self.receiver.mdi.subWindowList())
+                if subwindow:
+                    self.receiver.mdi.setActiveSubWindow(subwindow) 
+#                    subwindow.setAttribute(Qt.WA_DeleteOnClose,False)
+#                    self._comp.widget.setAttribute(Qt.WA_DeleteOnClose,False)
+                    self.receiver.mdi.closeActiveSubWindow() 
+#            import gc
+#            gc.collect()
             
         print "UNDO componentNew"
 
@@ -685,12 +697,12 @@ class ComponentOpen(Command):
  #               print "STAT", self._cp.id in self.receiver.componentList.components
                 self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)                  
 
-                if self._cp.widget in self.receiver.mdi.windowList():
-                    self.receiver.mdi.setActiveWindow(self._cp.widget) 
+                if self._cp.widget in self.receiver.mdi.subWindowList():
+                    self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
                     self._cp.widget.savePushButton.setFocus()
                 else:    
  #               print "create"
-                    self.receiver.mdi.addWindow(self._cpEdit)
+                    self.receiver.mdi.addSubWindow(self._cpEdit)
                     self._cpEdit.savePushButton.setFocus()
                     self._cpEdit.show()
                 #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
@@ -698,7 +710,7 @@ class ComponentOpen(Command):
 
 
 
-                self.receiver.mdi.addWindow(self._cpEdit)
+                self.receiver.mdi.addSubWindow(self._cpEdit)
 #            self._component.setAttribute(Qt.WA_DeleteOnClose)
                 self._cpEdit.show()
                 print "EXEC componentOpen"
@@ -713,9 +725,9 @@ class ComponentOpen(Command):
 
 
                 if hasattr(self._cp,'widget') and \
-                        self._cp.widget in self.receiver.mdi.windowList():
-                    self.receiver.mdi.setActiveWindow(self._cp.widget) 
-                    self.receiver.mdi.closeActiveWindow() 
+                        self._cp.widget in self.receiver.mdi.subWindowList():
+                    self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
+                    self.receiver.mdi.closeActiveSubWindow() 
 
                 self.receiver.componentList.removeComponent(self._cp, False)
                 self._cp.widget = None
@@ -770,12 +782,12 @@ class DataSourceOpen(Command):
  #               print "STAT", self._cp.id in self.receiver.componentList.components
                 self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)                  
 
-                if self._ds.widget in self.receiver.mdi.windowList():
-                    self.receiver.mdi.setActiveWindow(self._ds.widget) 
+                if self._ds.widget in self.receiver.mdi.subWindowList():
+                    self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
                     self._ds.widget.savePushButton.setFocus()
                 else:    
  #               print "create"
-                    self.receiver.mdi.addWindow(self._dsEdit)
+                    self.receiver.mdi.addSubWindow(self._dsEdit)
                     self._dsEdit.savePushButton.setFocus()
                     self._dsEdit.show()
                 #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
@@ -783,7 +795,7 @@ class DataSourceOpen(Command):
 
 
 
-                self.receiver.mdi.addWindow(self._dsEdit)
+                self.receiver.mdi.addSubWindow(self._dsEdit)
 #            self._component.setAttribute(Qt.WA_DeleteOnClose)
                 self._dsEdit.show()
                 print "EXEC dsourceOpen"
@@ -798,10 +810,10 @@ class DataSourceOpen(Command):
 
 
                 if hasattr(self._ds,'widget') and \
-                        self._ds.widget in self.receiver.mdi.windowList():
+                        self._ds.widget in self.receiver.mdi.subWindowList():
 
-                    self.receiver.mdi.setActiveWindow(self._ds.widget) 
-                    self.receiver.mdi.closeActiveWindow() 
+                    self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
+                    self.receiver.mdi.closeActiveSubWindow() 
 
                 self.receiver.sourceList.removeDataSource(self._ds, False)
                 self._ds.widget = None
@@ -843,10 +855,10 @@ class ComponentRemove(Command):
                 self.receiver.componentList.removeComponent(self._cp, True)
             
         ## TODO check     
-        if hasattr(self._cp,"widget") and self._cp.widget in self.receiver.mdi.windowList():
+        if hasattr(self._cp,"widget") and self._cp.widget in self.receiver.mdi.subWindowList():
             self._wList = True
-            self.receiver.mdi.setActiveWindow(self._cp.widget)
-            self.receiver.mdi.closeActiveWindow()
+            self.receiver.mdi.setActiveSubWindow(self._cp.widget)
+            self.receiver.mdi.closeActiveSubWindow()
             
             
         print "EXEC componentRemove"
@@ -877,6 +889,7 @@ class ComponentEdit(Command):
         Command.__init__(self, receiver, slot)
         self._cp = None
         self._cpEdit = None
+        self._subwindow = None
         
         
     ## executes the command
@@ -907,10 +920,10 @@ class ComponentEdit(Command):
 
 
 
-            if self._cp.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._cp.widget) 
+            if self._subwindow in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._subwindow) 
             else:    
-                self.receiver.mdi.addWindow(self._cpEdit)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
                 self._cpEdit.show()
                 #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
@@ -972,10 +985,10 @@ class ComponentSave(Command):
 
 
 
-            if self._cp.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._cp.widget) 
+            if self._cp.widget in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
             else:    
-                self.receiver.mdi.addWindow(self._cpEdit)
+                self.receiver.mdi.addSubWindow(self._cpEdit)
                 self._cpEdit.show()
                 #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
@@ -1127,12 +1140,12 @@ class ComponentChangeDirectory(Command):
 
         if not path:
             return
-        dialogs = self.receiver.mdi.windowList()
+        dialogs = self.receiver.mdi.subWindowList()
         if dialogs:
             for dialog in dialogs:
                 if isinstance(dialog,ComponentDlg):
-                    self.receiver.mdi.setActiveWindow(dialog)
-                    self.receiver.mdi.closeActiveWindow()
+                    self.receiver.mdi.setActiveSubWindow(dialog)
+                    self.receiver.mdi.closeActiveSubWindow()
 
 
 
@@ -1187,10 +1200,10 @@ class DataSourceCopy(Command):
             else:
                 self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
                 self._ds.widget.updateForm()
-            if self._ds.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            if self._ds.widget in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:    
-                self.receiver.mdi.addWindow(self._ds.widget)
+                self.receiver.mdi.addSubWindow(self._ds.widget)
                 self._ds.widget.show()
                 
 
@@ -1207,10 +1220,10 @@ class DataSourceCopy(Command):
             self.receiver.sourceList.datasources[self._ds.id].widget.updateForm()
 
 
-            if self._ds.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            if self._ds.widget in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:
-                self.receiver.mdi.addWindow(self._ds.widget)
+                self.receiver.mdi.addSubWindow(self._ds.widget)
                 self._ds.widget.show()
             
             
@@ -1259,10 +1272,10 @@ class DataSourceCut(Command):
             else:
                 self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
                 self._ds.widget.updateForm()
-            if self._ds.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            if self._ds.widget in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:    
-                self.receiver.mdi.addWindow(self._ds.widget)
+                self.receiver.mdi.addSubWindow(self._ds.widget)
                 self._ds.widget.show()
                 
 
@@ -1283,10 +1296,10 @@ class DataSourceCut(Command):
             self.receiver.sourceList.datasources[self._ds.id].widget.updateForm()
 
 
-            if self._ds.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            if self._ds.widget in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:
-                self.receiver.mdi.addWindow(self._ds.widget)
+                self.receiver.mdi.addSubWindow(self._ds.widget)
                 self._ds.widget.show()
             
         if hasattr(self._ds ,"id"):
@@ -1344,10 +1357,10 @@ class DataSourcePaste(Command):
             else:
                 self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
                 self._ds.widget.updateForm()
-            if self._ds.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            if self._ds.widget in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:    
-                self.receiver.mdi.addWindow(self._ds.widget)
+                self.receiver.mdi.addSubWindow(self._ds.widget)
                 self._ds.widget.show()
                 
 
@@ -1368,10 +1381,10 @@ class DataSourcePaste(Command):
             self.receiver.sourceList.datasources[self._ds.id].widget.updateForm()
 
 
-            if self._ds.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            if self._ds.widget in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:
-                self.receiver.mdi.addWindow(self._ds.widget)
+                self.receiver.mdi.addSubWindow(self._ds.widget)
                 self._ds.widget.show()
             
             if hasattr(self._ds ,"id"):
@@ -1419,11 +1432,11 @@ class DataSourceApply(Command):
             
                 self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
                 self._ds.widget.updateForm()
-            if self._ds.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            if self._ds.widget in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:    
 
-                self.receiver.mdi.addWindow(self._ds.widget)
+                self.receiver.mdi.addSubWindow(self._ds.widget)
                 self._ds.widget.show()
     
                     
@@ -1451,10 +1464,10 @@ class DataSourceApply(Command):
             self.receiver.sourceList.datasources[self._ds.id].widget.updateForm()
 
 
-            if self._ds.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            if self._ds.widget in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:
-                self.receiver.mdi.addWindow(self._ds.widget)
+                self.receiver.mdi.addSubWindow(self._ds.widget)
                 self._ds.widget.show()
 
             if hasattr(self._ds ,"id"):
@@ -1641,12 +1654,12 @@ class DataSourceChangeDirectory(Command):
 
         if not path:
             return
-        dialogs = self.receiver.mdi.windowList()
+        dialogs = self.receiver.mdi.subWindowList()
         if dialogs:
             for dialog in dialogs:
                 if isinstance(dialog,DataSourceDlg):
-                    self.receiver.mdi.setActiveWindow(dialog)
-                    self.receiver.mdi.closeActiveWindow()
+                    self.receiver.mdi.setActiveSubWindow(dialog)
+                    self.receiver.mdi.closeActiveSubWindow()
 
 
 
@@ -1692,12 +1705,12 @@ class ComponentReloadList(Command):
             return
 
         
-        dialogs = self.receiver.mdi.windowList()
+        dialogs = self.receiver.mdi.subWindowList()
         if dialogs:
             for dialog in dialogs:
                 if isinstance(dialog,ComponentDlg):
-                    self.receiver.mdi.setActiveWindow(dialog)
-                    self.receiver.mdi.closeActiveWindow()
+                    self.receiver.mdi.setActiveSubWindow(dialog)
+                    self.receiver.mdi.closeActiveSubWindow()
 
         self.receiver.componentList.components = {} 
         self.receiver.loadComponents()
@@ -1746,12 +1759,12 @@ class ComponentTakeDataSources(Command):
             if self._cp.widget is not None:
                 datasources = self._cp.widget.getDataSources()
         
-                dialogs = self.receiver.mdi.windowList()
+                dialogs = self.receiver.mdi.subWindowList()
                 if dialogs:
                     for dialog in dialogs:
                         if isinstance(dialog, DataSourceDlg):
-                            self.receiver.mdi.setActiveWindow(dialog)
-                            self.receiver.mdi.closeActiveWindow()
+                            self.receiver.mdi.setActiveSubWindow(dialog)
+                            self.receiver.mdi.closeActiveSubWindow()
         
                 self.receiver.setDataSources(datasources, new = True)
 
@@ -1791,12 +1804,12 @@ class DataSourceReloadList(Command):
             return
 
 
-        dialogs = self.receiver.mdi.windowList()
+        dialogs = self.receiver.mdi.subWindowList()
         if dialogs:
             for dialog in dialogs:
                 if isinstance(dialog,DataSourceDlg):
-                    self.receiver.mdi.setActiveWindow(dialog)
-                    self.receiver.mdi.closeActiveWindow()
+                    self.receiver.mdi.setActiveSubWindow(dialog)
+                    self.receiver.mdi.closeActiveSubWindow()
 
         self.receiver.sourceList.datasources = {} 
         self.receiver.loadDataSources()
@@ -1909,7 +1922,8 @@ class DataSourceNew(Command):
     def execute(self):
         if self._ds is None:
             self._ds = LabeledObject("", None)
-            
+        else:
+            self._ds.widget = None
         self.receiver.sourceList.addDataSource(self._ds)
         print "EXEC dsourceNew"
 
@@ -1920,11 +1934,11 @@ class DataSourceNew(Command):
             self.receiver.sourceList.removeDataSource(self._ds, False)
 
 
-            if hasattr(self._ds,'widget') and \
-                    self._ds.widget in self.receiver.mdi.windowList():
-
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
-                self.receiver.mdi.closeActiveWindow() 
+            if hasattr(self._ds,'widget'):
+                subwindow = self.receiver.subWindow(self._ds.widget, self.receiver.mdi.subWindowList())
+                if subwindow:
+                    self.receiver.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.mdi.closeActiveSubWindow() 
 
         print "UNDO dsourceNew"
 
@@ -1975,10 +1989,10 @@ class DataSourceEdit(Command):
             if hasattr(self._dsEdit,"connectExternalActions"):     
                 self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)
 
-            if self._ds.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._ds.widget) 
+            if self._ds.widget in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:    
-                self.receiver.mdi.addWindow(self._dsEdit)
+                self.receiver.mdi.addSubWindow(self._dsEdit)
                 self._dsEdit.show()
                 #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
                 self._ds.widget = self._dsEdit 
@@ -2031,10 +2045,10 @@ class DataSourceRemove(Command):
                 self.receiver.sourceList.removeDataSource(self._ds, True)
             
         ## TODO check     
-        if hasattr(self._ds,"widget") and self._ds.widget in self.receiver.mdi.windowList():
+        if hasattr(self._ds,"widget") and self._ds.widget in self.receiver.mdi.subWindowList():
             self._wList = True
-            self.receiver.mdi.setActiveWindow(self._ds.widget)
-            self.receiver.mdi.closeActiveWindow()
+            self.receiver.mdi.setActiveSubWindow(self._ds.widget)
+            self.receiver.mdi.closeActiveSubWindow()
             
             
 
@@ -2259,10 +2273,10 @@ class ComponentItemCommand(Command):
                 if hasattr(self.receiver.componentList.components[self._cp.id].widget,"setState"): 
                     self.receiver.componentList.components[self._cp.id].widget.setState(self._newstate)
                 
-                if self._cp.widget in self.receiver.mdi.windowList():
-                    self.receiver.mdi.setActiveWindow(self._cp.widget) 
+                if self._cp.widget in self.receiver.mdi.subWindowList():
+                    self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
                 else:    
-                    self.receiver.mdi.addWindow(self._cp.widget)
+                    self.receiver.mdi.addSubWindow(self._cp.widget)
                     if hasattr(self._cp.widget,"show"):
                         self._cp.widget.show()
         if hasattr(self._cp,"id"):
@@ -2289,10 +2303,10 @@ class ComponentItemCommand(Command):
         if self._cp is not None and self._oldstate is not None:
             self.receiver.componentList.components[self._cp.id].widget.setState(self._oldstate)
             
-            if self._cp.widget in self.receiver.mdi.windowList():
-                self.receiver.mdi.setActiveWindow(self._cp.widget) 
+            if self._cp.widget in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
             else:    
-                self.receiver.mdi.addWindow(self._cp.widget)
+                self.receiver.mdi.addSubWindow(self._cp.widget)
                 self._cp.widget.show()
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
@@ -2337,9 +2351,9 @@ class ComponentClear(ComponentItemCommand):
 
 
                 if hasattr(self._cp,"widget"):
-                    if self._cp.widget in self.receiver.mdi.windowList():
+                    if self._cp.widget in self.receiver.mdi.subWindowList():
                         self._wList = True
-                        self.receiver.mdi.setActiveWindow(self._cp.widget)
+                        self.receiver.mdi.setActiveSubWindow(self._cp.widget)
                     self._cp.widget.createHeader()            
                 
                     newModel = ComponentModel(self._cp.widget.document, self._cp.widget._allAttributes, self._cp.widget)

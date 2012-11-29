@@ -215,10 +215,13 @@ class MainWindow(QMainWindow):
         self.compDockWidget.setWidget(dockSplitter)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.compDockWidget)
 
-#        self.mdi = QMdiArea()
-        self.mdi = QWorkspace()
-##       BARS 
-        self.mdi.setScrollBarsEnabled(True)        
+        self.mdi = QMdiArea()
+
+
+        self.mdi.setOption(QMdiArea.DontMaximizeSubWindowOnActivation)
+        self.mdi.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded ) 
+        self.mdi.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded ) 
+
         self.setCentralWidget(self.mdi)
 
 
@@ -257,7 +260,7 @@ class MainWindow(QMainWindow):
                              "itemChanged(QListWidgetItem*)")
 
 
-        self.connect(self.mdi, SIGNAL("windowActivated(QWidget*)"), self.mdiWindowActivated)
+        self.connect(self.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"), self.mdiWindowActivated)
 
 
 
@@ -580,23 +583,23 @@ class MainWindow(QMainWindow):
 
 
         self.windows["NextAction"] = self._createAction(
-            "&Next", self.mdi.activateNextWindow, 
+            "&Next", self.mdi.activateNextSubWindow, 
             QKeySequence.NextChild, tip = "Go to the next window")
         self.windows["PrevAction"] = self._createAction(
-            "&Previous", self.mdi.activatePreviousWindow,
+            "&Previous", self.mdi.activatePreviousSubWindow,
             QKeySequence.PreviousChild, tip = "Go to the previous window")
         self.windows["CascadeAction"] = self._createAction(
-            "Casca&de", self.mdi.cascade, tip = "Cascade the windows")
+            "Casca&de", self.mdi.cascadeSubWindows , tip = "Cascade the windows")
         self.windows["TileAction"] = self._createAction(
-            "&Tile", self.mdi.tile, tip = "Tile the windows")
+            "&Tile", self.mdi.tileSubWindows, tip = "Tile the windows")
         self.windows["RestoreAction"] = self._createAction(
             "&Restore All", self.windowRestoreAll, tip = "Restore the windows")
         self.windows["MinimizeAction"] = self._createAction(
             "&Iconize All", self.windowMinimizeAll, tip = "Minimize the windows")
-        self.windows["ArrangeIconsAction"] = self._createAction(
-            "&Arrange Icons", self.mdi.arrangeIcons, tip = "Arrange the icons")
+#A        self.windows["ArrangeIconsAction"] = self._createAction(
+#A            "&Arrange Icons", self.mdi.arrangeIcons, tip = "Arrange the icons")
         self.windows["CloseAction"] = self._createAction(
-            "&Close", self.mdi.closeActiveWindow, QKeySequence.Close,
+            "&Close", self.mdi.closeActiveSubWindow, QKeySequence.Close,
             tip = "Close the window" )
         self.windows["ComponentListAction"] = self._createAction(
             "&Component List", self.gotoComponentList, "Ctrl+<",
@@ -934,11 +937,11 @@ class MainWindow(QMainWindow):
             self.configServer.close()
 
 #        files = QStringList()
-#        for widget in self.mdi.windowList():
+#        for widget in self.mdi.subWindowList():
 #            if not widget.filename.startsWith("Unnamed"):
 #                files.append(widget.filename)
 #        settings.setValue("CurrentFiles", QVariant(files))
-        self.mdi.closeAllWindows()
+        self.mdi.closeAllSubWindows()
 
 
     ## disables/enable the server actions
@@ -1336,9 +1339,9 @@ class MainWindow(QMainWindow):
     # \brief It copies the current item into the clipboard
     def copyItem(self):
         cmd = self.pool.getCommand('copyItem').clone()
-        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd.type = "component"
-        elif isinstance(self.mdi.activeWindow(),DataSourceDlg):
+        elif isinstance(self.mdi.activeSubWindow().widget(),DataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self, "Item not selected", 
@@ -1352,9 +1355,9 @@ class MainWindow(QMainWindow):
     # \brief It removes the current item and copies it into the clipboard
     def cutItem(self):
         cmd = self.pool.getCommand('cutItem').clone()
-        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd.type = "component"
-        elif isinstance(self.mdi.activeWindow(),DataSourceDlg):
+        elif isinstance(self.mdi.activeSubWindow().widget(),DataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self, "Item not selected", 
@@ -1372,9 +1375,9 @@ class MainWindow(QMainWindow):
     # \brief It pastes the item from the clipboard
     def pasteItem(self):
         cmd = self.pool.getCommand('pasteItem').clone()
-        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd.type = "component"
-        elif isinstance(self.mdi.activeWindow(),DataSourceDlg):
+        elif isinstance(self.mdi.activeSubWindow().widget(),DataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self, "Item not selected", 
@@ -1390,7 +1393,7 @@ class MainWindow(QMainWindow):
     ## new group component item action
     # \brief It adds a new group component item
     def componentNewGroupItem(self):
-        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd = self.pool.getCommand('componentNewGroupItem').clone()
             cmd.itemName = 'group' 
             cmd.execute()
@@ -1405,7 +1408,7 @@ class MainWindow(QMainWindow):
     ## new group component item action
     # \brief It adds a new group component item
     def componentNewStrategyItem(self):
-        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd = self.pool.getCommand('componentNewStrategyItem').clone()
             cmd.itemName = 'strategy' 
             cmd.execute()
@@ -1420,7 +1423,7 @@ class MainWindow(QMainWindow):
     ## new field component item action
     # \brief It adds a new field component item
     def componentNewFieldItem(self):
-        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd = self.pool.getCommand('componentNewFieldItem').clone()
             cmd.itemName = 'field' 
             cmd.execute()
@@ -1435,7 +1438,7 @@ class MainWindow(QMainWindow):
     ## new attribute component item action
     # \brief It adds a new attribute component item 
     def componentNewAttributeItem(self):
-        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd = self.pool.getCommand('componentNewAttributeItem').clone()
             cmd.itemName = 'attribute' 
             cmd.execute()
@@ -1450,7 +1453,7 @@ class MainWindow(QMainWindow):
     ## new link component item action
     # \brief It adds a new link component item
     def componentNewLinkItem(self):
-        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd = self.pool.getCommand('componentNewLinkItem').clone()
             cmd.itemName = 'link' 
             cmd.execute()
@@ -1466,7 +1469,7 @@ class MainWindow(QMainWindow):
     ## new datasource component item action
     # \brief It adds a new datasource component item
     def componentNewDataSourceItem(self):
-        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd = self.pool.getCommand('componentNewDataSourceItem').clone()
             cmd.itemName = 'datasource' 
             cmd.execute()
@@ -1482,7 +1485,7 @@ class MainWindow(QMainWindow):
     ## load sub-component item action
     # \brief It loads a sub-component item from a file
     def componentLoadComponentItem(self):
-        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd = self.pool.getCommand('componentLoadComponentItem').clone()
             cmd.execute()
             self.cmdStack.append(cmd)
@@ -1497,7 +1500,7 @@ class MainWindow(QMainWindow):
     ## load datasource component item action
     # \brief It loads a datasource component item from a file
     def componentLoadDataSourceItem(self):
-        if isinstance(self.mdi.activeWindow(),ComponentDlg):
+        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd = self.pool.getCommand('componentLoadDataSourceItem').clone()
             cmd.execute()
             self.cmdStack.append(cmd)
@@ -1731,7 +1734,8 @@ class MainWindow(QMainWindow):
 
     ## activated window action, i.e. it changes the current position of the component and datasource lists 
     # \param widget selected widget window
-    def mdiWindowActivated(self, widget): 
+    def mdiWindowActivated(self, subwindow):
+        widget = subwindow.widget() if hasattr(subwindow, "widget") else None
         self.pooling = False
         if isinstance(widget, DataSourceDlg):
             if widget.ids is not None:
@@ -1886,14 +1890,14 @@ class MainWindow(QMainWindow):
     ## restores all windows
     # \brief It restores all windows in MDI
     def windowRestoreAll(self):
-        for dialog in self.mdi.windowList():
+        for dialog in self.mdi.subWindowList():
             dialog.showNormal()
 
 
     ## minimizes all windows
     # \brief It minimizes all windows in MDI
     def windowMinimizeAll(self):
-        for dialog in self.mdi.windowList():
+        for dialog in self.mdi.subWindowList():
             dialog.showMinimized()
 
 
@@ -1926,6 +1930,14 @@ class MainWindow(QMainWindow):
     def viewAllAttributes(self):
         self.componentList.viewAttributes(not self.componentList.viewAttributes())
         
+    def subWindow(self, widget, subwindows):
+        swin = None
+        for sw in subwindows:
+            if hasattr(sw,"widget") and sw.widget() == widget:
+                swin = sw
+                break
+        return swin
+        
         
     ## updates the window menu
     # \brief It updates the window menu with the open windows
@@ -1937,14 +1949,14 @@ class MainWindow(QMainWindow):
                                                 self.windows["TileAction"], 
                                                 self.windows["RestoreAction"],
                                                 self.windows["MinimizeAction"],
-                                                self.windows["ArrangeIconsAction"], 
+#A                                                self.windows["ArrangeIconsAction"], 
                                                 None,
                                                 self.windows["CloseAction"],
                                                 None,
                                                 self.windows["ComponentListAction"], 
                                                 self.windows["DataSourceListAction"]
                                                ))
-        dialogs = self.mdi.windowList()
+        dialogs = self.mdi.subWindowList()
         if not dialogs:
             return
         self.windows["Menu"].addSeparator()

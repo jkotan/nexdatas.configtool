@@ -25,7 +25,7 @@ from PyQt4.QtCore import (SIGNAL, Qt, QFileInfo)
 from DataSourceList import DataSourceList
 from ComponentList import ComponentList
 from DataSourceDlg import DataSourceDlg
-from ComponentDlg import ComponentDlg
+from ComponentDlg import (Component, ComponentDlg)
 from LabeledObject import LabeledObject
 
 import time
@@ -191,14 +191,14 @@ class ServerStoreComponent(Command):
         if self._cp is not None:
             if self._cp.widget is None:
                 #                self._cpEdit = FieldWg()  
-                self._cpEdit = ComponentDlg()
+                self._cpEdit = Component()
                 self._cpEdit.idc = self._cp.id
                 self._cpEdit.directory = self.receiver.componentList.directory
                 self._cpEdit.name = self.receiver.componentList.components[self._cp.id].name
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 self._cpEdit.createHeader()
-                self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
+                self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)
             else:
                 self._cpEdit = self._cp.widget 
                 
@@ -213,7 +213,7 @@ class ServerStoreComponent(Command):
             else:    
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
                 self._cpEdit.show()
-                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
+                #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
                     
             try:
@@ -671,7 +671,7 @@ class ComponentOpen(Command):
     def execute(self):
         if hasattr(self.receiver,'mdi'):
             self._cp = LabeledObject("", None)
-            self._cpEdit = ComponentDlg()
+            self._cpEdit = Component()
             self._cpEdit.idc = self._cp.id
             self._cpEdit.directory = self.receiver.componentList.directory
             self._cpEdit.createGUI()
@@ -694,7 +694,7 @@ class ComponentOpen(Command):
                 self.receiver.componentList.addComponent(self._cp,False)
             #               print  "ID", self._cp.id
  #               print "STAT", self._cp.id in self.receiver.componentList.components
-                self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)                  
+                self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)                  
 
                 if self._cp.widget in self.receiver.mdi.subWindowList():
                     self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
@@ -704,7 +704,7 @@ class ComponentOpen(Command):
                     self.receiver.mdi.addSubWindow(self._cpEdit)
                     self._cpEdit.savePushButton.setFocus()
                     self._cpEdit.show()
-                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
+                #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                     self._cp.widget = self._cpEdit 
 
 
@@ -789,7 +789,7 @@ class DataSourceOpen(Command):
                     self.receiver.mdi.addSubWindow(self._dsEdit)
                     self._dsEdit.savePushButton.setFocus()
                     self._dsEdit.show()
-                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
+                #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                     self._ds.widget = self._dsEdit 
 
 
@@ -902,14 +902,14 @@ class ComponentEdit(Command):
         else:
             if self._cp.widget is None:
                 #                self._cpEdit = FieldWg()  
-                self._cpEdit = ComponentDlg()
+                self._cpEdit = Component()
                 self._cpEdit.idc = self._cp.id
                 self._cpEdit.directory = self.receiver.componentList.directory
                 self._cpEdit.name = self.receiver.componentList.components[self._cp.id].name
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 self._cpEdit.createHeader()
-                self._cpEdit.setWindowTitle("Component: %s*" % self._cp.name)
+                self._cpEdit.dialog.setWindowTitle("Component: %s*" % self._cp.name)
             else:
                 self._cpEdit = self._cp.widget 
                 
@@ -924,7 +924,7 @@ class ComponentEdit(Command):
             else:    
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
                 self._cpEdit.dialog.show()
-                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
+                #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
 
 
@@ -967,14 +967,14 @@ class ComponentSave(Command):
         else:
             if self._cp.widget is None:
                 #                self._cpEdit = FieldWg()  
-                self._cpEdit = ComponentDlg()
+                self._cpEdit = Component()
                 self._cpEdit.idc = self._cp.id
                 self._cpEdit.directory = self.receiver.componentList.directory
                 self._cpEdit.name = self.receiver.componentList.components[self._cp.id].name
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 self._cpEdit.createHeader()
-                self._cpEdit.setWindowTitle("Component: %s" % self._cp.name)
+                self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)
             else:
                 self._cpEdit = self._cp.widget 
                 
@@ -989,7 +989,7 @@ class ComponentSave(Command):
             else:    
                 self.receiver.mdi.addSubWindow(self._cpEdit)
                 self._cpEdit.show()
-                #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
+                #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
                     
             if self._cpEdit.save():

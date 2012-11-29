@@ -622,7 +622,7 @@ class MainWindow(QMainWindow):
 
         self.windows["Mapper"] = QSignalMapper(self)
         self.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
-                     self.mdi, SLOT("setActiveWindow(QWidget*)"))
+                     self.mdi, SLOT("setActiveWindow(QMdiSubWindow*)"))
 
         helpAboutAction = self._createAction(
             "&About Component Designer",

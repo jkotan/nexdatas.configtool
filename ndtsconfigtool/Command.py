@@ -559,7 +559,6 @@ class ServerClose(Command):
     # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
-        self._comp = None
         self._state = None
 
     ## executes the command

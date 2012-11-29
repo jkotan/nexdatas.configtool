@@ -44,6 +44,7 @@ import time
 from ComponentModel import ComponentModel
 #from LabeledObject import LabeledObject
 
+
 ## dialog defining a tag link 
 class ComponentDlg(QDialog, Ui_ComponentDlg):
     
@@ -51,7 +52,18 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     # \param parent patent instance
     def __init__(self, parent=None):
         super(ComponentDlg, self).__init__(parent)
+        
+        
 
+## Component  defining a tag link 
+class Component(object):
+    
+    ## constructor
+    # \param parent patent instance
+    def __init__(self, parent=None):
+
+
+        self.parent = parent
         ## directory from which components are loaded by default
         self.directory = ""
         
@@ -63,8 +75,12 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         ## component name
         self.name = ""
 
-        ## widget of component item
-        self.widget = None
+        ## component dialog
+        self.dialog = None
+
+
+#        ## widget of component item
+#        self.widget = None
 
         ## component DOM document
         self.document = None        
@@ -74,8 +90,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         self._componentFile = None
         self._dsPath = os.path.dirname("./datasources/")
 
-        ## item frame
-        self.frame = None
+#        ## item frame
+#        self.frame = None
         ## component actions
         self._actions = None
 
@@ -268,27 +284,27 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     ## updates the component dialog
     # \brief It creates model and frame item    
     def updateForm(self):
-        self.splitter.setStretchFactor(0,1)
-        self.splitter.setStretchFactor(1,1)
+        self.dialog.splitter.setStretchFactor(0,1)
+        self.dialog.splitter.setStretchFactor(1,1)
         
-        model = ComponentModel(QDomDocument(),self._allAttributes,self)
+        model = ComponentModel(QDomDocument(),self._allAttributes,self.parent)
         self.view.setModel(model)
         
-        self.widget = QWidget()
+        self.dialog.widget = QWidget()
         self._frameLayout = QGridLayout()
-        self._frameLayout.addWidget(self.widget)
-        self.frame.setLayout(self._frameLayout)
+        self._frameLayout.addWidget(self.dialog.widget)
+        self.dialog.frame.setLayout(self._frameLayout)
 
         
 
     ## applies component item
     # \brief it checks if item widget exists and calls apply of the item widget
     def applyItem(self):
-        if not self.view or not self.view.model() or not self.widget:
+        if not self.view or not self.view.model() or not self.dialog.widget:
             return
-        if not hasattr(self.widget,'apply'):
+        if not hasattr(self.dialog.widget,'apply'):
             return
-        self.widget.apply()
+        self.dialog.widget.apply()
 
         self.view.resizeColumnToContents(0)
         self.view.resizeColumnToContents(1)
@@ -417,8 +433,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     def pasteItem(self):
         print "pasting item"
         
-        if not self.view or not self.view.model() or not self.widget \
-                or not hasattr(self.widget,"subItems") :
+        if not self.view or not self.view.model() or not self.dialog.widget \
+                or not hasattr(self.dialog.widget,"subItems") :
             ## Message
             return
 
@@ -432,7 +448,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         name = unicode(clipNode.nodeName())
 
 #        print "NAME: ",clipNode.nodeName()
-        if name not in self.widget.subItems:
+        if name not in self.dialog.widget.subItems:
             ## Message
             return        
 
@@ -447,10 +463,10 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         node = sel.node
 
 
-        self.widget.node = node
+        self.dialog.widget.node = node
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.widget.appendNode(clipNode, index)        
+        self.dialog.widget.appendNode(clipNode, index)        
 
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         
@@ -465,20 +481,20 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     def addItem(self, name):
         if not name in self._tagClasses.keys():
             return
-        if not self.view or not self.view.model() or not self.widget:
+        if not self.view or not self.view.model() or not self.dialog.widget:
             return
-        if not hasattr(self.widget,'subItems') or  name not in self.widget.subItems:
+        if not hasattr(self.dialog.widget,'subItems') or  name not in self.dialog.widget.subItems:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
         if not sel or not index.isValid():
             return
         node = sel.node
-        self.widget.node = node
-        child = self.widget.root.createElement(QString(name))
+        self.dialog.widget.node = node
+        child = self.dialog.widget.root.createElement(QString(name))
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        status = self.widget.appendNode(child, index)
+        status = self.dialog.widget.appendNode(child, index)
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         self.view.expand(index)
         if status:
@@ -488,7 +504,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     ## removes the currenct component tree item if possible
     # \returns True on success
     def removeSelectedItem(self):
-        if not self.view or not self.view.model() or not self.widget:
+        if not self.view or not self.view.model() or not self.dialog.widget:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -507,10 +523,10 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         clipboard = QApplication.clipboard()
         clipboard.setText(self._nodeToString(node))
         
-        if hasattr(self.widget,"node"):
-            self.widget.node = node.parentNode()
+        if hasattr(self.dialog.widget,"node"):
+            self.dialog.widget.node = node.parentNode()
 
-        self.widget.removeNode(node, index.parent())
+        self.dialog.widget.removeNode(node, index.parent())
                 
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
@@ -528,7 +544,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     ## copies the currenct component tree item if possible
     # \returns True on success
     def copySelectedItem(self):
-        if not self.view or not self.view.model() or not self.widget:
+        if not self.view or not self.view.model() or not self.dialog.widget:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -553,23 +569,28 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     # It calls setupUi and creates required action connections
     def createGUI(self):
 
-        self.setupUi(self)
+
+        self.dialog = ComponentDlg(self.parent)
+        self.dialog.setupUi(self.dialog)
+        self.view = self.dialog.view
+
+#        self.createGUI()
 
 
-        self._mergerdlg = MergerDlg(self)
+        self._mergerdlg = MergerDlg(self.parent)
         self._mergerdlg.createGUI()
         
 
         self.updateForm()
 
-        self.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
+        self.dialog.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
 
 #        self.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
-        self.connect(self.closePushButton, SIGNAL("clicked()"), self._close)
-        self.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
-        self.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
-        self.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
-        self.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)
+        self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self._close)
+        self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
+        self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
+        self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
+        self.dialog.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)
 
 
 
@@ -577,7 +598,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     # \brief It connects the save action and stores the apply action
     def connectExternalActions(self, externalApply=None , externalSave=None ):
         if externalSave and self._externalSave is None:
-            self.connect(self.savePushButton, SIGNAL("clicked()"), 
+            self.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
             self._externalSave = externalSave
         if externalApply and self._externalApply is None:
@@ -595,7 +616,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
              model = self.view.model()   
              model.setAttributeView(self._allAttributes)
 #             self.view.reset()
-             newModel = ComponentModel(self.document, self._allAttributes ,self)
+             newModel = ComponentModel(self.document, self._allAttributes ,self.parent)
              self.view.setModel(newModel)
              self._hideFrame()
              if cNode:
@@ -632,26 +653,26 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         print "Clicked:", nNode, ": "+ unicode(name) if name else "" 
 
         
-        if self.widget:
-            self.widget.setVisible(False)
+        if self.dialog.widget:
+            self.dialog.widget.setVisible(False)
         if unicode(nNode) in self._tagClasses.keys():
-            self.frame.hide()
-            self._frameLayout.removeWidget(self.widget)
-            self.widget = self._tagClasses[unicode(nNode)]()
-            self.widget.root = self.document
-            self.widget.setFromNode(node)
-            self.widget.createGUI()
-            if hasattr(self.widget,"connectExternalActions"):
-                self.widget.connectExternalActions(self._externalApply)
-            if hasattr(self.widget,"treeMode"):
-                self.widget.treeMode()
-            self.widget.view = self.view
-            self._frameLayout.addWidget(self.widget)
-            self.widget.show()
+            self.dialog.frame.hide()
+            self._frameLayout.removeWidget(self.dialog.widget)
+            self.dialog.widget = self._tagClasses[unicode(nNode)]()
+            self.dialog.widget.root = self.document
+            self.dialog.widget.setFromNode(node)
+            self.dialog.widget.createGUI()
+            if hasattr(self.dialog.widget,"connectExternalActions"):
+                self.dialog.widget.connectExternalActions(self._externalApply)
+            if hasattr(self.dialog.widget,"treeMode"):
+                self.dialog.widget.treeMode()
+            self.dialog.widget.view = self.view
+            self._frameLayout.addWidget(self.dialog.widget)
+            self.dialog.widget.show()
 #            self._frameLayout.update()
-            self.frame.show()
+            self.dialog.frame.show()
         else:
-            self.widget = None
+            self.dialog.widget = None
 
 
     ## opens context Menu        
@@ -768,7 +789,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             else:
                 j += 1
 
-        newModel = ComponentModel(self.document,self._allAttributes, self)
+        newModel = ComponentModel(self.document,self._allAttributes, self.parent)
         self.view.setModel(newModel)
         
 
@@ -776,8 +797,8 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     # \param filePath xml file name with full path    
     def loadComponentItem(self,filePath = None):
         
-        if not self.view or not self.view.model() or not self.widget \
-                or not hasattr(self.widget, "subItems") or "component" not in  self.widget.subItems:
+        if not self.view or not self.view.model() or not self.dialog.widget \
+                or not hasattr(self.dialog.widget, "subItems") or "component" not in  self.dialog.widget.subItems:
             return
         index = self.view.currentIndex()
 #        print "L index", index.column()
@@ -804,13 +825,13 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
                         raise ValueError, "could not parse XML"
                     definition = root.firstChildElement(QString("definition"))           
                     child = definition.firstChild()
-                    self.widget.node = node
+                    self.dialog.widget.node = node
 
                     if  index.column() != 0:
                         index = self.view.model().index(index.row(), 0, index.parent())
                     while not child.isNull():
                         child2 = self.document.importNode(child, True)
-                        self.widget.appendNode(child2, index)
+                        self.dialog.widget.appendNode(child2, index)
 
                         child = child.nextSibling()
 
@@ -835,12 +856,12 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     def loadDataSourceItem(self,filePath = None):
         print "Loading DataSource"
         
-        if not self.view or not self.view.model() or not self.widget \
-                                or not hasattr(self.widget, "subItems") \
-                                or "datasource" not in  self.widget.subItems:
+        if not self.view or not self.view.model() or not self.dialog.widget \
+                                or not hasattr(self.dialog.widget, "subItems") \
+                                or "datasource" not in  self.dialog.widget.subItems:
             return
 
-        child = self.widget.node.firstChild()
+        child = self.dialog.widget.node.firstChild()
         while not child.isNull():
             if child.nodeName() == 'datasource':
                 QMessageBox.warning(self, "DataSource exists", 
@@ -878,9 +899,9 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
                             if  index.column() != 0:
                                 index = self.view.model().index(index.row(), 0, index.parent())
-                            self.widget.node = node
+                            self.dialog.widget.node = node
                             ds2 = self.document.importNode(ds, True)
-                            self.widget.appendNode(ds2, index)
+                            self.dialog.widget.appendNode(ds2, index)
 
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
                 self.view.expand(index)
@@ -904,11 +925,11 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         if dsNode.nodeName() != 'datasource':
             return
         
-        if not self.view or not self.view.model() or not self.widget \
-                or not hasattr(self.widget,"subItems") or "datasource" not in  self.widget.subItems:
+        if not self.view or not self.view.model() or not self.dialog.widget \
+                or not hasattr(self.dialog.widget,"subItems") or "datasource" not in  self.dialog.widget.subItems:
             return
 
-        child = self.widget.node.firstChild()
+        child = self.dialog.widget.node.firstChild()
         while not child.isNull():
             if child.nodeName() == 'datasource':
                 QMessageBox.warning(self, "DataSource exists", 
@@ -929,11 +950,11 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         
 
 
-        self.widget.node = node
+        self.dialog.widget.node = node
         dsNode2 = self.document.importNode(dsNode, True)
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.widget.appendNode(dsNode2, index)
+        self.dialog.widget.appendNode(dsNode2, index)
         
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         self.view.expand(index)
@@ -974,7 +995,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
             document = self.document
             self.document = QDomDocument()
-            newModel = ComponentModel(self.document, self._allAttributes, self)
+            newModel = ComponentModel(self.document, self._allAttributes, self.parent)
             self.view.setModel(newModel)
             self.view.reset()
             self._hideFrame()
@@ -1000,7 +1021,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
 
             self._merged = True
             print "a6"
-            newModel = ComponentModel(document, self._allAttributes ,self)
+            newModel = ComponentModel(document, self._allAttributes ,self.parent)
             print "a7"
             self.document = document
             print "a8"
@@ -1020,7 +1041,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
             print "Error in Merging: %s" % unicode(e.value)
             self._merger = None
             self._merged = False
-            newModel = ComponentModel(document, self._allAttributes, self)
+            newModel = ComponentModel(document, self._allAttributes, self,parent)
             self.document = document
             self.view.setModel(newModel)
             self._hideFrame()
@@ -1031,7 +1052,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         except  Exception, e:    
             print "Exception: %s" % unicode(e)
             self._merged = False
-            newModel = ComponentModel(document, self._allAttributes, self)
+            newModel = ComponentModel(document, self._allAttributes, self.parent)
             self.document = document
             self.view.setModel(newModel)
             self._hideFrame()
@@ -1044,12 +1065,12 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     ## hides the component item frame
     # \brief It puts an empty widget into the widget frame
     def _hideFrame(self):
-        if self.widget:
-            self.widget.setVisible(False)
-        self.widget = QWidget()
-        self._frameLayout.addWidget(self.widget)
-        self.widget.show()
-        self.frame.show()
+        if self.dialog.widget:
+            self.dialog.widget.setVisible(False)
+        self.dialog.widget = QWidget()
+        self._frameLayout.addWidget(self.dialog.widget)
+        self.dialog.widget.show()
+        self.dialog.frame.show()
 
         
     ## creates the new empty header
@@ -1060,7 +1081,7 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         
         definition = self.document.createElement(QString("definition"))
         self.document.appendChild(definition)
-        newModel = ComponentModel(self.document, self._allAttributes, self)
+        newModel = ComponentModel(self.document, self._allAttributes, self.parent)
         self.view.setModel(newModel)
         self._hideFrame()
 
@@ -1151,11 +1172,11 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     # asks if component should be removed from the component list
     # \brief It is called on removing  the component from the list
     def _close(self):
-        if QMessageBox.question(self, "Close component",
+        if QMessageBox.question(self.dialog, "Close component",
                                 "Would you like to close the component ?", 
                                 QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
-        self.reject()
+        self.dialog.reject()
 
 
     ## provides the component name with its path
@@ -1177,10 +1198,13 @@ def test():
 
     ## Qt application
     app = QApplication(sys.argv)
-    component = ComponentDlg()
-    component.resize(640, 480)
-    component.show()
-    component.load()
+    component = Component()
+    component.createGUI()
+    component.dialog.resize(640, 480)
+    component.createHeader()
+    component.dialog.show()        
+    component.dialog.setWindowTitle("Component: %s" % component.name)
+
     app.exec_()
 
     

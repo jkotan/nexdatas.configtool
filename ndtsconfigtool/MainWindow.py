@@ -1743,10 +1743,10 @@ class MainWindow(QMainWindow):
                     if self.sourceList.currentListDataSource().id != widget.ids: 
                         self.sourceList.populateDataSources(widget.ids)
         elif isinstance(widget, ComponentDlg):
-            if widget.idc is not None:
+            if widget.component.idc is not None:
                 if hasattr(self.componentList.currentListComponent(),"id"):
-                    if self.componentList.currentListComponent().id != widget.idc:
-                        self.componentList.populateComponents(widget.idc)
+                    if self.componentList.currentListComponent().id != widget.component.idc:
+                        self.componentList.populateComponents(widget.component.idc)
         self.pooling = True
 
     ## component change action

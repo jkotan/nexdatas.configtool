@@ -50,9 +50,9 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
     
     ## constructor
     # \param parent patent instance
-    def __init__(self, parent=None):
+    def __init__(self, component, parent=None):
         super(ComponentDlg, self).__init__(parent)
-        
+        self.component = component 
         
 
 ## Component  defining a tag link 
@@ -570,7 +570,7 @@ class Component(object):
     def createGUI(self):
 
 
-        self.dialog = ComponentDlg(self.parent)
+        self.dialog = ComponentDlg(self, self.parent)
         self.dialog.setupUi(self.dialog)
         self.view = self.dialog.view
 
@@ -585,7 +585,7 @@ class Component(object):
 
         self.dialog.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
 
-#        self.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
+#        self.dialog.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
         self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self._close)
         self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
@@ -598,7 +598,7 @@ class Component(object):
     # \brief It connects the save action and stores the apply action
     def connectExternalActions(self, externalApply=None , externalSave=None ):
         if externalSave and self._externalSave is None:
-            self.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
+            self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
             self._externalSave = externalSave
         if externalApply and self._externalApply is None:

@@ -26,6 +26,7 @@ from ui.ui_componentlist import Ui_ComponentList
 import os
 
 from ComponentDlg import ComponentDlg
+from ComponentDlg import Component
 from LabeledObject import LabeledObject
 
 
@@ -200,9 +201,9 @@ class ComponentList(QWidget, Ui_ComponentList):
                                
             if self.components[cp].widget is not None:
                 if dirty:
-                    self.components[cp].widget.setWindowTitle("Component: %s*" %name)
+                    self.components[cp].widget.dialog.setWindowTitle("Component: %s*" %name)
                 else:
-                    self.components[cp].widget.setWindowTitle("Component: %s" %name)
+                    self.components[cp].widget.dialog.setWindowTitle("Component: %s" %name)
 
         if selected is not None:
             selected.setSelected(True)
@@ -232,7 +233,7 @@ class ComponentList(QWidget, Ui_ComponentList):
             else:
                 name = fname
                 
-            dlg = ComponentDlg()
+            dlg = Component()
             dlg.directory = self.directory
             dlg.name = name
             dlg.createGUI()

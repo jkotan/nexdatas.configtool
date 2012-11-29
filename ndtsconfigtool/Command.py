@@ -922,8 +922,8 @@ class ComponentEdit(Command):
             if self._subwindow in self.receiver.mdi.subWindowList():
                 self.receiver.mdi.setActiveSubWindow(self._subwindow) 
             else:    
-                self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
-                self._cpEdit.show()
+                self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
+                self._cpEdit.dialog.show()
                 #                self._cpEdit.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
 

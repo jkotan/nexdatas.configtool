@@ -999,16 +999,18 @@ class ComponentSave(Command):
 
 
 
-            if self._cp.instance in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._cp.instance) 
+
+            subwindow = self.receiver.subWindow(
+                self._cpEdit, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
             else:    
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
                 self._subwindow.resize(640,480)
-
                 self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
-                self._cp.instance = self._cpEdit 
-                    
+            self._cp.instance = self._cpEdit 
+
             if self._cpEdit.save():
                 self._cp.savedName = self._cp.name
         if hasattr(self._cp,"id"):
@@ -2297,12 +2299,16 @@ class ComponentItemCommand(Command):
                 if hasattr(self.receiver.componentList.components[self._cp.id].instance,"setState"): 
                     self.receiver.componentList.components[self._cp.id].instance.setState(self._newstate)
                 
-                if self._cp.instance in self.receiver.mdi.subWindowList():
-                    self.receiver.mdi.setActiveSubWindow(self._cp.instance) 
+
+                subwindow = self.receiver.subWindow(
+                    self._cp.instance, self.receiver.mdi.subWindowList())
+                if subwindow:
+                    self.receiver.mdi.setActiveSubWindow(subwindow) 
                 else:    
                     self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
                     self._subwindow.resize(640,480)
-                    if hasattr(self._cp.instance,"show"):
+
+                    if hasattr(self._cp.instance.dialog,"show"):
                         self._cp.instance.dialog.show()
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
@@ -2328,11 +2334,15 @@ class ComponentItemCommand(Command):
         if self._cp is not None and self._oldstate is not None:
             self.receiver.componentList.components[self._cp.id].instance.setState(self._oldstate)
             
-            if self._cp.instance in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._cp.instance) 
+
+            subwindow = self.receiver.subWindow(
+                self._cp.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
             else:    
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
                 self._subwindow.resize(640,480)
+
                 self._cp.instance.dialog.show()
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)

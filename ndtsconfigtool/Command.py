@@ -865,11 +865,13 @@ class ComponentRemove(Command):
             else:
                 self.receiver.componentList.removeComponent(self._cp, True)
             
-        ## TODO check     
-        if hasattr(self._cp,"instance") and self._cp.instance in self.receiver.mdi.subWindowList():
-            self._wList = True
-            self.receiver.mdi.setActiveSubWindow(self._cp.instance)
-            self.receiver.mdi.closeActiveSubWindow()
+        if hasattr(self._cp,"instance"):
+            subwindow = self.receiver.subWindow(
+                self._cp.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self._wList = True
+                self.receiver.mdi.setActiveSubWindow(subwindow)
+                self.receiver.mdi.closeActiveSubWindow()
             
             
         print "EXEC componentRemove"

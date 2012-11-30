@@ -863,7 +863,7 @@ class MainWindow(QMainWindow):
             cp = self.componentList.components[k]
             que = False
             if (hasattr(cp,"isDirty") and cp.isDirty()) or \
-                    (hasattr(cp,"widget") and hasattr(cp.widget,"isDirty") and cp.widget.isDirty()):
+                    (hasattr(cp,"instance") and hasattr(cp.instance,"isDirty") and cp.instance.isDirty()):
                 status= QMessageBox.question(self, "Component - Save",
                                              "Do you want to save the component: %s".encode() \
                                                  %  (cp.name),
@@ -872,8 +872,8 @@ class MainWindow(QMainWindow):
 
                 if status == QMessageBox.Yes:
                     try:
-                        cp.widget.merge()
-                        if not cp.widget.save():
+                        cp.instance.merge()
+                        if not cp.instance.save():
                             event.ignore()
                             return
                             
@@ -889,7 +889,7 @@ class MainWindow(QMainWindow):
             ds = self.sourceList.datasources[k]
             que = False
             if (hasattr(ds,"isDirty") and ds.isDirty()) or \
-                    (hasattr(ds,"widget") and hasattr(ds.widget,"isDirty") and ds.widget.isDirty()):
+                    (hasattr(ds,"instance") and hasattr(ds.instance,"isDirty") and ds.instance.isDirty()):
                 status= QMessageBox.question(self, "DataSource - Save",
                                              "Do you want to save the datasource: %s".encode() \
                                                  %  (ds.name),
@@ -898,7 +898,7 @@ class MainWindow(QMainWindow):
 
                 if status == QMessageBox.Yes:
                     try:
-                        if not ds.widget.save():
+                        if not ds.instance.save():
                             event.ignore()
                             return
                             
@@ -937,9 +937,9 @@ class MainWindow(QMainWindow):
             self.configServer.close()
 
 #        files = QStringList()
-#        for widget in self.mdi.subWindowList():
-#            if not widget.filename.startsWith("Unnamed"):
-#                files.append(widget.filename)
+#        for instance in self.mdi.subWindowList():
+#            if not instance.filename.startsWith("Unnamed"):
+#                files.append(instance.filename)
 #        settings.setValue("CurrentFiles", QVariant(files))
         self.mdi.closeAllSubWindows()
 
@@ -1930,7 +1930,17 @@ class MainWindow(QMainWindow):
     def viewAllAttributes(self):
         self.componentList.viewAttributes(not self.componentList.viewAttributes())
         
-    def subWindow(self, widget, subwindows):
+    def subWindow(self, instance, subwindows):
+        swin = None
+        for sw in subwindows:
+            if hasattr(sw,"widget") and hasattr(sw.widget(),"component")\
+                    and  sw.widget().component == instance:
+                swin = sw
+                break
+        return swin
+
+
+    def widgetSubWindow(self, widget, subwindows):
         swin = None
         for sw in subwindows:
             if hasattr(sw,"widget") and sw.widget() == widget:

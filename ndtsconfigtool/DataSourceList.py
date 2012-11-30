@@ -110,8 +110,8 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             
             ds = LabeledObject(name, dlg)
             self.datasources[id(ds)] =  ds
-            if ds.widget is not None:
-                ds.widget.ids = ds.id
+            if ds.instance is not None:
+                ds.instance.ids = ds.id
             print name
 
 
@@ -147,8 +147,8 @@ class DataSourceList(QWidget, Ui_DataSourceList):
                 ds.savedName = ""
 
             self.datasources[id(ds)] =  ds
-            if ds.widget is not None:
-                ds.widget.ids = ds.id
+            if ds.instance is not None:
+                ds.instance.ids = ds.id
             print name
 
     ## adds an datasource    
@@ -229,9 +229,9 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             if hasattr(self.datasources[ds],"isDirty") \
                     and self.datasources[ds].isDirty():
                 dirty = True
-            if self.datasources[ds].widget is not None:
-                if hasattr(self.datasources[ds].widget,"isDirty") \
-                        and self.datasources[ds].widget.isDirty():
+            if self.datasources[ds].instance is not None:
+                if hasattr(self.datasources[ds].instance,"isDirty") \
+                        and self.datasources[ds].instance.isDirty():
                     dirty = True
             if dirty:
                 item.setForeground(Qt.red) 
@@ -242,11 +242,11 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             self.sourceListWidget.addItem(item)
             if selectedDataSource is not None and selectedDataSource == self.datasources[ds].id:
                 selected = item
-            if self.datasources[ds].widget is not None:
+            if self.datasources[ds].instance is not None:
                 if  dirty:
-                    self.datasources[ds].widget.setWindowTitle("DataSource: %s*" %name)
+                    self.datasources[ds].instance.setWindowTitle("DataSource: %s*" %name)
                 else:
-                    self.datasources[ds].widget.setWindowTitle("DataSource: %s" %name)
+                    self.datasources[ds].instance.setWindowTitle("DataSource: %s" %name)
 
         if selected is not None:
             selected.setSelected(True)

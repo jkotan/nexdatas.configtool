@@ -24,13 +24,13 @@ class LabeledObject(object):
     ## constructor
     # \param name item name
     # \param widget widget related to the item
-    def __init__(self, name, widget):
+    def __init__(self, name, instance):
         ## item name
         self.name = name
         ## saved item name
         self.savedName = name
         ## item widget
-        self.widget = widget
+        self.instance = instance
         ## item id
         self.id = id(self)
 

@@ -180,7 +180,6 @@ class ServerStoreComponent(Command):
         Command.__init__(self,receiver, slot)
         self._cp = None
         self._cpEdit = None
-        self._subwindow = None
         
 
     ## executes the command
@@ -189,7 +188,7 @@ class ServerStoreComponent(Command):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is not None:
-            if self._cp.widget is None:
+            if self._cp.instance is None:
                 #                self._cpEdit = FieldWg()  
                 self._cpEdit = Component()
                 self._cpEdit.idc = self._cp.id
@@ -200,22 +199,24 @@ class ServerStoreComponent(Command):
                 self._cpEdit.createHeader()
                 self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)
             else:
-                self._cpEdit = self._cp.widget 
+                self._cpEdit = self._cp.instance 
                 
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
                                                     self.receiver.componentSave)
 
 
-
-            if self._subwindow in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._subwindow) 
+                
+            subwindow = self.receiver.subWindow(
+                self._cpEdit, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
             else:    
-                self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
-                self._subwindow.resize(640,480)
-                self._cpEdit.show()
+                subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
+                subwindow.resize(640,480)
+                self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
-                self._cp.widget = self._cpEdit 
+                self._cp.instance = self._cpEdit 
                     
             try:
                 xml = self._cpEdit.get()    
@@ -271,8 +272,8 @@ class ServerDeleteComponent(Command):
             try:
                 self.receiver.configServer.deleteComponent(self._cp.name)
                 self._cp.savedName = ""
-                if hasattr(self._cp,"widget"):
-                    self._cp.widget.savedXML = ""
+                if hasattr(self._cp,"instance"):
+                    self._cp.instance.savedXML = ""
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in deleting the component", unicode(e))
         if hasattr(self._cp,"id"):
@@ -467,14 +468,14 @@ class ServerStoreDataSource(Command):
     def execute(self):       
         if self._ds is None:
             self._ds = self.receiver.sourceList.currentListDataSource()
-        if self._ds is not None and hasattr(self._ds,"widget"):
+        if self._ds is not None and hasattr(self._ds,"instance"):
             try:
-                xml = self._ds.widget.get()    
-                if self._ds.widget.name:
-                    self.receiver.configServer.storeDataSource(self._ds.widget.dataSourceName, xml)
+                xml = self._ds.instance.get()    
+                if self._ds.instance.name:
+                    self.receiver.configServer.storeDataSource(self._ds.instance.dataSourceName, xml)
                 else:
-                    self.receiver.configServer.storeDataSource(self._ds.widget.name, xml)
-                self._ds.widget.savedXML = xml
+                    self.receiver.configServer.storeDataSource(self._ds.instance.name, xml)
+                self._ds.instance.savedXML = xml
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in datasource storing", unicode(e))
             
@@ -519,9 +520,9 @@ class ServerDeleteDataSource(Command):
             self._ds = self.receiver.sourceList.currentListDataSource()
         if self._ds is not None:
             try:
-                if hasattr(self._ds,"widget"):
-                    self._ds.widget.savedXML = ""
-                    self.receiver.configServer.deleteDataSource(self._ds.widget.dataSourceName)
+                if hasattr(self._ds,"instance"):
+                    self._ds.instance.savedXML = ""
+                    self.receiver.configServer.deleteDataSource(self._ds.instance.dataSourceName)
                     self._ds.savedName = ""
 
             except Exception, e:
@@ -623,23 +624,23 @@ class ComponentNew(Command):
         if self._comp is None:
             self._comp = LabeledObject("", None)
         else:    
-            self._comp.widget = None
+            self._comp.instance = None
         
         self.receiver.componentList.addComponent(self._comp)
         print "EXEC componentNew"
-
+        
     ## unexecutes the command
     # \brief It removes the new component
     def unexecute(self):
         if self._comp is not None:
             self.receiver.componentList.removeComponent(self._comp, False)
 
-            if hasattr(self._comp,'widget') and self._comp.widget:
-                subwindow = self.receiver.subWindow(self._comp.widget, self.receiver.mdi.subWindowList())
+            if hasattr(self._comp,'instance') and self._comp.instance:
+                subwindow = self.receiver.subWindow(self._comp.instance, self.receiver.mdi.subWindowList())
                 if subwindow:
                     self.receiver.mdi.setActiveSubWindow(subwindow) 
 #                    subwindow.setAttribute(Qt.WA_DeleteOnClose,False)
-#                    self._comp.widget.setAttribute(Qt.WA_DeleteOnClose,False)
+#                    self._comp.instance.setAttribute(Qt.WA_DeleteOnClose,False)
                     self.receiver.mdi.closeActiveSubWindow() 
 #            import gc
 #            gc.collect()
@@ -690,16 +691,16 @@ class ComponentOpen(Command):
 
             if path:   
                 self._cp.name = self._cpEdit.name  
-                self._cp.widget = self._cpEdit
+                self._cp.instance = self._cpEdit
             
                 self.receiver.componentList.addComponent(self._cp,False)
             #               print  "ID", self._cp.id
  #               print "STAT", self._cp.id in self.receiver.componentList.components
                 self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)                  
 
-                if self._cp.widget in self.receiver.mdi.subWindowList():
-                    self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
-                    self._cp.widget.savePushButton.setFocus()
+                if self._cp.instance in self.receiver.mdi.subWindowList():
+                    self.receiver.mdi.setActiveSubWindow(self._cp.instance) 
+                    self._cp.instance.savePushButton.setFocus()
                 else:    
  #               print "create"
                     self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
@@ -707,7 +708,7 @@ class ComponentOpen(Command):
                     self._cpEdit.savePushButton.setFocus()
                     self._cpEdit.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
-                    self._cp.widget = self._cpEdit 
+                    self._cp.instance = self._cpEdit 
 
 
 
@@ -720,19 +721,19 @@ class ComponentOpen(Command):
     ## unexecutes the command
     # \brief It removes the loaded component from the component list
     def unexecute(self):
-        if hasattr(self._cp, "widget"):
+        if hasattr(self._cp, "instance"):
             if self._fpath:
-                self._cp.widget.setAttribute(Qt.WA_DeleteOnClose)
+                self._cp.instance.setAttribute(Qt.WA_DeleteOnClose)
 
 
 
-                if hasattr(self._cp,'widget') and \
-                        self._cp.widget in self.receiver.mdi.subWindowList():
-                    self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
+                if hasattr(self._cp,'instance') and \
+                        self._cp.instance in self.receiver.mdi.subWindowList():
+                    self.receiver.mdi.setActiveSubWindow(self._cp.instance) 
                     self.receiver.mdi.closeActiveSubWindow() 
 
                 self.receiver.componentList.removeComponent(self._cp, False)
-                self._cp.widget = None
+                self._cp.instance = None
                 self._cp = None
 
 
@@ -777,16 +778,16 @@ class DataSourceOpen(Command):
                 self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)    
             if path:   
                 self._ds.name = self._dsEdit.name  
-                self._ds.widget = self._dsEdit
+                self._ds.instance = self._dsEdit
             
                 self.receiver.sourceList.addDataSource(self._ds,False)
             #               print  "ID", self._cp.id
  #               print "STAT", self._cp.id in self.receiver.componentList.components
                 self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)                  
 
-                if self._ds.widget in self.receiver.mdi.subWindowList():
-                    self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
-                    self._ds.widget.savePushButton.setFocus()
+                if self._ds.instance in self.receiver.mdi.subWindowList():
+                    self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
+                    self._ds.instance.savePushButton.setFocus()
                 else:    
  #               print "create"
                     self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit)
@@ -794,7 +795,7 @@ class DataSourceOpen(Command):
                     self._dsEdit.savePushButton.setFocus()
                     self._dsEdit.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
-                    self._ds.widget = self._dsEdit 
+                    self._ds.instance = self._dsEdit 
 
 
 
@@ -809,19 +810,19 @@ class DataSourceOpen(Command):
     ## unexecutes the command
     # \brief It removes the loaded datasource from the datasource list
     def unexecute(self):
-        if hasattr(self._ds, "widget"):
+        if hasattr(self._ds, "instance"):
             if self._fpath:
-                self._ds.widget.setAttribute(Qt.WA_DeleteOnClose)
+                self._ds.instance.setAttribute(Qt.WA_DeleteOnClose)
 
 
-                if hasattr(self._ds,'widget') and \
-                        self._ds.widget in self.receiver.mdi.subWindowList():
+                if hasattr(self._ds,'instance') and \
+                        self._ds.instance in self.receiver.mdi.subWindowList():
 
-                    self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
+                    self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
                     self.receiver.mdi.closeActiveSubWindow() 
 
                 self.receiver.sourceList.removeDataSource(self._ds, False)
-                self._ds.widget = None
+                self._ds.instance = None
                 self._ds = None
             
         print "UNDO dsourceOpen"
@@ -860,9 +861,9 @@ class ComponentRemove(Command):
                 self.receiver.componentList.removeComponent(self._cp, True)
             
         ## TODO check     
-        if hasattr(self._cp,"widget") and self._cp.widget in self.receiver.mdi.subWindowList():
+        if hasattr(self._cp,"instance") and self._cp.instance in self.receiver.mdi.subWindowList():
             self._wList = True
-            self.receiver.mdi.setActiveSubWindow(self._cp.widget)
+            self.receiver.mdi.setActiveSubWindow(self._cp.instance)
             self.receiver.mdi.closeActiveSubWindow()
             
             
@@ -906,7 +907,7 @@ class ComponentEdit(Command):
             QMessageBox.warning(self.receiver, "Component not selected", 
                                 "Please select one of the components")            
         else:
-            if self._cp.widget is None:
+            if self._cp.instance is None:
                 #                self._cpEdit = FieldWg()  
                 self._cpEdit = Component()
                 self._cpEdit.idc = self._cp.id
@@ -917,7 +918,7 @@ class ComponentEdit(Command):
                 self._cpEdit.createHeader()
                 self._cpEdit.dialog.setWindowTitle("Component: %s*" % self._cp.name)
             else:
-                self._cpEdit = self._cp.widget 
+                self._cpEdit = self._cp.instance 
                 
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
@@ -932,7 +933,7 @@ class ComponentEdit(Command):
                 self._subwindow.resize(640,480)
                 self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
-                self._cp.widget = self._cpEdit 
+                self._cp.instance = self._cpEdit 
 
 
             
@@ -972,7 +973,7 @@ class ComponentSave(Command):
             QMessageBox.warning(self.receiver, "Component not selected", 
                                 "Please select one of the components")            
         else:
-            if self._cp.widget is None:
+            if self._cp.instance is None:
                 #                self._cpEdit = FieldWg()  
                 self._cpEdit = Component()
                 self._cpEdit.idc = self._cp.id
@@ -983,7 +984,7 @@ class ComponentSave(Command):
                 self._cpEdit.createHeader()
                 self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)
             else:
-                self._cpEdit = self._cp.widget 
+                self._cpEdit = self._cp.instance 
                 
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
@@ -991,15 +992,15 @@ class ComponentSave(Command):
 
 
 
-            if self._cp.widget in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
+            if self._cp.instance in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._cp.instance) 
             else:    
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
                 self._subwindow.resize(640,480)
 
                 self._cpEdit.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
-                self._cp.widget = self._cpEdit 
+                self._cp.instance = self._cpEdit 
                     
             if self._cpEdit.save():
                 self._cp.savedName = self._cp.name
@@ -1044,9 +1045,9 @@ class ComponentSaveAll(Command):
             
         for icp in self.receiver.componentList.components.keys():
             cp = self.receiver.componentList.components[icp]
-            if cp.widget is not None:
-                cp.widget.merge()    
-                cp.widget.save()    
+            if cp.instance is not None:
+                cp.instance.merge()    
+                cp.instance.save()    
 
         print "EXEC componentSaveAll"
 
@@ -1090,8 +1091,8 @@ class ComponentSaveAs(Command):
             QMessageBox.warning(self.receiver, "Component not selected", 
                                 "Please select one of the components")            
         else:
-            if self._cp.widget is not None:
-                self._pathFile = self._cp.widget.getNewName() 
+            if self._cp.instance is not None:
+                self._pathFile = self._cp.instance.getNewName() 
                 fi = QFileInfo(self._pathFile)
                 self.name = unicode(fi.fileName())
                 if self.name[-4:] == '.xml':
@@ -1199,42 +1200,42 @@ class DataSourceCopy(Command):
         if self._ds is None:
             QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")            
-        if self._ds is not None and self._ds.widget is not None:
+        if self._ds is not None and self._ds.instance is not None:
             if self._newstate is None:
                 if self._oldstate is None:
-                    self._oldstate = self._ds.widget.getState() 
+                    self._oldstate = self._ds.instance.getState() 
 
-                self._ds.widget.copyToClipboard()
+                self._ds.instance.copyToClipboard()
             else:
-                self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
-                self._ds.widget.updateForm()
-            if self._ds.widget in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
+                self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._newstate)
+                self._ds.instance.updateForm()
+            if self._ds.instance in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
             else:    
-                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
                 self._subwindow.resize(640,480)
-                self._ds.widget.show()
+                self._ds.instance.show()
                 
 
-            self._newstate = self._ds.widget.getState() 
+            self._newstate = self._ds.instance.getState() 
             
         print "EXEC dsourceCopy"
 
     ## unexecutes the command
     # \brief It updates state of datasource to the old state
     def unexecute(self):
-        if self._ds is not None and hasattr(self._ds,'widget') and  self._ds.widget is not None:
+        if self._ds is not None and hasattr(self._ds,'instance') and  self._ds.instance is not None:
         
-            self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._oldstate)
-            self.receiver.sourceList.datasources[self._ds.id].widget.updateForm()
+            self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._oldstate)
+            self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
 
 
-            if self._ds.widget in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
+            if self._ds.instance in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
             else:
-                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
                 self._subwindow.resize(640,480)
-                self._ds.widget.show()
+                self._ds.instance.show()
             
             
         print "UNDO dsourceCopy"
@@ -1270,27 +1271,27 @@ class DataSourceCut(Command):
         if self._ds is None:
             QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")            
-        if self._ds is not None and self._ds.widget is not None:
+        if self._ds is not None and self._ds.instance is not None:
             if self._newstate is None:
                 if self._oldstate is None:
-                    self._oldstate = self._ds.widget.getState() 
-                self._ds.widget.copyToClipboard()
-                self._ds.widget.clear()
-                self._ds.widget.createNodes()
-                self._ds.widget.updateForm()
-                self._ds.widget.show()
+                    self._oldstate = self._ds.instance.getState() 
+                self._ds.instance.copyToClipboard()
+                self._ds.instance.clear()
+                self._ds.instance.createNodes()
+                self._ds.instance.updateForm()
+                self._ds.instance.show()
             else:
-                self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
-                self._ds.widget.updateForm()
-            if self._ds.widget in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
+                self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._newstate)
+                self._ds.instance.updateForm()
+            if self._ds.instance in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
             else:    
-                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
                 self._subwindow.resize(640,480)
-                self._ds.widget.show()
+                self._ds.instance.show()
                 
 
-            self._newstate = self._ds.widget.getState() 
+            self._newstate = self._ds.instance.getState() 
         if hasattr(self._ds ,"id"):
             self.receiver.sourceList.populateDataSources(self._ds.id)
         else:
@@ -1301,18 +1302,18 @@ class DataSourceCut(Command):
     ## unexecutes the command
     # \brief It copy back the removed datasource
     def unexecute(self):
-        if self._ds is not None and hasattr(self._ds,'widget') and  self._ds.widget is not None:
+        if self._ds is not None and hasattr(self._ds,'instance') and  self._ds.instance is not None:
         
-            self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._oldstate)
-            self.receiver.sourceList.datasources[self._ds.id].widget.updateForm()
+            self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._oldstate)
+            self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
 
 
-            if self._ds.widget in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
+            if self._ds.instance in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
             else:
-                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
                 self._subwindow.resize(640,480)
-                self._ds.widget.show()
+                self._ds.instance.show()
             
         if hasattr(self._ds ,"id"):
             self.receiver.sourceList.populateDataSources(self._ds.id)
@@ -1352,32 +1353,32 @@ class DataSourcePaste(Command):
         if self._ds is None:
             QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")            
-        if self._ds is not None and self._ds.widget is not None:
+        if self._ds is not None and self._ds.instance is not None:
             if self._newstate is None:
                 if self._oldstate is None:
-                    self._oldstate = self._ds.widget.getState() 
-                self._ds.widget.clear()
-                if not self._ds.widget.copyFromClipboard():
+                    self._oldstate = self._ds.instance.getState() 
+                self._ds.instance.clear()
+                if not self._ds.instance.copyFromClipboard():
                     QMessageBox.warning(self.receiver, "Pasting item not possible", 
                                         "Probably clipboard does not contain datasource")            
                     
-                self._ds.widget.updateForm()
-                self._ds.widget.setFrames(self._ds.widget.dataSourceType)
+                self._ds.instance.updateForm()
+                self._ds.instance.setFrames(self._ds.instance.dataSourceType)
 
-#                self._ds.widget.updateForm()
-                self._ds.widget.show()
+#                self._ds.instance.updateForm()
+                self._ds.instance.show()
             else:
-                self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
-                self._ds.widget.updateForm()
-            if self._ds.widget in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
+                self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._newstate)
+                self._ds.instance.updateForm()
+            if self._ds.instance in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
             else:    
-                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
                 self._subwindow.resize(640,480)
-                self._ds.widget.show()
+                self._ds.instance.show()
                 
 
-            self._newstate = self._ds.widget.getState() 
+            self._newstate = self._ds.instance.getState() 
             
             if hasattr(self._ds ,"id"):
                 self.receiver.sourceList.populateDataSources(self._ds.id)
@@ -1388,18 +1389,18 @@ class DataSourcePaste(Command):
     ## unexecutes the command
     # \brief It remove the pasted datasource
     def unexecute(self):
-        if self._ds is not None and hasattr(self._ds,'widget') and  self._ds.widget is not None:
+        if self._ds is not None and hasattr(self._ds,'instance') and  self._ds.instance is not None:
         
-            self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._oldstate)
-            self.receiver.sourceList.datasources[self._ds.id].widget.updateForm()
+            self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._oldstate)
+            self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
 
 
-            if self._ds.widget in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
+            if self._ds.instance in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
             else:
-                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
                 self._subwindow.resize(640,480)
-                self._ds.widget.show()
+                self._ds.instance.show()
             
             if hasattr(self._ds ,"id"):
                 self.receiver.sourceList.populateDataSources(self._ds.id)
@@ -1438,25 +1439,25 @@ class DataSourceApply(Command):
         if self._ds is None:
             QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")            
-        if self._ds is not None and self._ds.widget is not None:
+        if self._ds is not None and self._ds.instance is not None:
             if self._newstate is None:
                 if self._oldstate is None:
-                    self._oldstate = self._ds.widget.getState() 
+                    self._oldstate = self._ds.instance.getState() 
             else:
             
-                self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._newstate)
-                self._ds.widget.updateForm()
-            if self._ds.widget in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
+                self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._newstate)
+                self._ds.instance.updateForm()
+            if self._ds.instance in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
             else:    
 
-                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
                 self._subwindow.resize(640,480)
-                self._ds.widget.show()
+                self._ds.instance.show()
     
                     
-            self._ds.widget.apply()    
-            self._newstate = self._ds.widget.getState() 
+            self._ds.instance.apply()    
+            self._newstate = self._ds.instance.getState() 
             
             
             if hasattr(self._ds ,"id"):
@@ -1473,17 +1474,17 @@ class DataSourceApply(Command):
     ## unexecutes the command
     # \brief It recovers the old state of the current datasource
     def unexecute(self):
-        if self._ds is not None and hasattr(self._ds,'widget') and  self._ds.widget is not None:
+        if self._ds is not None and hasattr(self._ds,'instance') and  self._ds.instance is not None:
         
-            self.receiver.sourceList.datasources[self._ds.id].widget.setState(self._oldstate)
-            self.receiver.sourceList.datasources[self._ds.id].widget.updateForm()
+            self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._oldstate)
+            self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
 
 
-            if self._ds.widget in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
+            if self._ds.instance in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
             else:
-                self.receiver.mdi.addSubWindow(self._ds.widget)
-                self._ds.widget.show()
+                self.receiver.mdi.addSubWindow(self._ds.instance)
+                self._ds.instance.show()
 
             if hasattr(self._ds ,"id"):
                 self.receiver.sourceList.populateDataSources(self._ds.id)
@@ -1520,8 +1521,8 @@ class DataSourceSaveAll(Command):
             
         for icp in self.receiver.sourceList.datasources.keys():
             cp = self.receiver.sourceList.datasources[icp]
-            if cp.widget is not None:
-                cp.widget.save()    
+            if cp.instance is not None:
+                cp.instance.save()    
 
         print "EXEC dsourceSaveAll"
 
@@ -1553,8 +1554,8 @@ class DataSourceSave(Command):
             QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")            
 
-        if self._ds is not None and hasattr(self._ds,"widget"):
-            if self._ds.widget.save():
+        if self._ds is not None and hasattr(self._ds,"instance"):
+            if self._ds.instance.save():
                 self._ds.savedName = self._ds.name
 
 
@@ -1613,8 +1614,8 @@ class DataSourceSaveAs(Command):
             QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")            
         else:
-            if self._ds.widget is not None:
-                self._pathFile = self._ds.widget.getNewName() 
+            if self._ds.instance is not None:
+                self._pathFile = self._ds.instance.getNewName() 
                 fi = QFileInfo(self._pathFile)
                 self.name = unicode(fi.fileName())
                 if self.name[-4:] == '.xml':
@@ -1771,8 +1772,8 @@ class ComponentTakeDataSources(Command):
             QMessageBox.warning(self.receiver, "Component not selected", 
                                 "Please select one of the components")            
         else:
-            if self._cp.widget is not None:
-                datasources = self._cp.widget.getDataSources()
+            if self._cp.instance is not None:
+                datasources = self._cp.instance.getDataSources()
         
                 dialogs = self.receiver.mdi.subWindowList()
                 if dialogs:
@@ -1881,9 +1882,9 @@ class ComponentListChanged(Command):
                 self._cp.name = self.name
                 
             self.receiver.componentList.populateComponents(self._cp.id)
-            if self._cp.widget is not None:
-                self._oldDirectory = self._cp.widget.directory 
-                self._cp.widget.setName(self.name, self.directory)
+            if self._cp.instance is not None:
+                self._oldDirectory = self._cp.instance.directory 
+                self._cp.instance.setName(self.name, self.directory)
             else:
                 self._oldDirectory =  self.receiver.componentList.directory 
 
@@ -1903,8 +1904,8 @@ class ComponentListChanged(Command):
         if self._cp is not None:
             self._cp.name = self._oldName 
             self.receiver.componentList.addComponent(self._cp, False)
-            if self._cp.widget is not None:
-                self._cp.widget.setName(self._oldName, self._oldDirectory)
+            if self._cp.instance is not None:
+                self._cp.instance.setName(self._oldName, self._oldDirectory)
 
         cp = self.receiver.componentList.currentListComponent()
         if hasattr(cp,"id"):
@@ -1938,7 +1939,7 @@ class DataSourceNew(Command):
         if self._ds is None:
             self._ds = LabeledObject("", None)
         else:
-            self._ds.widget = None
+            self._ds.instance = None
         self.receiver.sourceList.addDataSource(self._ds)
         print "EXEC dsourceNew"
 
@@ -1949,8 +1950,8 @@ class DataSourceNew(Command):
             self.receiver.sourceList.removeDataSource(self._ds, False)
 
 
-            if hasattr(self._ds,'widget'):
-                subwindow = self.receiver.subWindow(self._ds.widget, self.receiver.mdi.subWindowList())
+            if hasattr(self._ds,'instance'):
+                subwindow = self.receiver.subWindow(self._ds.instance, self.receiver.mdi.subWindowList())
                 if subwindow:
                     self.receiver.mdi.setActiveSubWindow(subwindow) 
                     self.receiver.mdi.closeActiveSubWindow() 
@@ -1989,7 +1990,7 @@ class DataSourceEdit(Command):
             QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")            
         else:
-            if self._ds.widget is None:
+            if self._ds.instance is None:
                 #                self._dsEdit = FieldWg()  
                 self._dsEdit = DataSourceDlg()
                 self._dsEdit.ids = self._ds.id
@@ -1999,19 +2000,19 @@ class DataSourceEdit(Command):
                 self._dsEdit.createHeader()
                 self._dsEdit.setWindowTitle("DataSource: %s*" % self._ds.name)
             else:
-                self._dsEdit = self._ds.widget 
+                self._dsEdit = self._ds.instance 
                 
             if hasattr(self._dsEdit,"connectExternalActions"):     
                 self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)
 
-            if self._ds.widget in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
+            if self._ds.instance in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
             else:    
                 self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit)
                 self._subwindow.resize(640,480)
                 self._dsEdit.show()
                 #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
-                self._ds.widget = self._dsEdit 
+                self._ds.instance = self._dsEdit 
                     
 
 
@@ -2061,9 +2062,9 @@ class DataSourceRemove(Command):
                 self.receiver.sourceList.removeDataSource(self._ds, True)
             
         ## TODO check     
-        if hasattr(self._ds,"widget") and self._ds.widget in self.receiver.mdi.subWindowList():
+        if hasattr(self._ds,"instance") and self._ds.instance in self.receiver.mdi.subWindowList():
             self._wList = True
-            self.receiver.mdi.setActiveSubWindow(self._ds.widget)
+            self.receiver.mdi.setActiveSubWindow(self._ds.instance)
             self.receiver.mdi.closeActiveSubWindow()
             
             
@@ -2119,9 +2120,9 @@ class DataSourceListChanged(Command):
                 self._ds.name = self.name
              
             self.receiver.sourceList.populateDataSources(self._ds.id)
-            if self._ds.widget is not None:
-                self._oldDirectory = self._ds.widget.directory 
-                self._ds.widget.setName(self.name, self.directory)
+            if self._ds.instance is not None:
+                self._oldDirectory = self._ds.instance.directory 
+                self._ds.instance.setName(self.name, self.directory)
             else:
                 self._oldDirectory =  self.receiver.sourceList.directory 
 
@@ -2139,8 +2140,8 @@ class DataSourceListChanged(Command):
         if self._ds is not None:
             self._ds.name = self._oldName 
             self.receiver.sourceList.addDataSource(self._ds, False)
-            if self._ds.widget is not None:
-                self._ds.widget.setName(self._oldName, self._oldDirectory)
+            if self._ds.instance is not None:
+                self._ds.instance.setName(self._oldName, self._oldDirectory)
 
 
         ds = self.receiver.sourceList.currentListDataSource()
@@ -2266,10 +2267,10 @@ class ComponentItemCommand(Command):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is not None:
-            if self._oldstate is None and hasattr(self._cp,"widget") \
-                    and hasattr(self._cp.widget,"setState"):
-                self._oldstate = self._cp.widget.getState() 
-                self._index = self._cp.widget.view.currentIndex()
+            if self._oldstate is None and hasattr(self._cp,"instance") \
+                    and hasattr(self._cp.instance,"setState"):
+                self._oldstate = self._cp.instance.getState() 
+                self._index = self._cp.instance.view.currentIndex()
             else:
                 QMessageBox.warning(self.receiver, "Component not created", 
                                     "Please edit one of the components")            
@@ -2283,19 +2284,19 @@ class ComponentItemCommand(Command):
     # \brief It stores the new states of the current component
     def postExecute(self):    
         if self._cp is not None:
-            if self._newstate is None and hasattr(self._cp.widget, "getState"):
-                self._newstate = self._cp.widget.getState() 
+            if self._newstate is None and hasattr(self._cp.instance, "getState"):
+                self._newstate = self._cp.instance.getState() 
             else:
-                if hasattr(self.receiver.componentList.components[self._cp.id].widget,"setState"): 
-                    self.receiver.componentList.components[self._cp.id].widget.setState(self._newstate)
+                if hasattr(self.receiver.componentList.components[self._cp.id].instance,"setState"): 
+                    self.receiver.componentList.components[self._cp.id].instance.setState(self._newstate)
                 
-                if self._cp.widget in self.receiver.mdi.subWindowList():
-                    self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
+                if self._cp.instance in self.receiver.mdi.subWindowList():
+                    self.receiver.mdi.setActiveSubWindow(self._cp.instance) 
                 else:    
-                    self._subwindow = self.receiver.mdi.addSubWindow(self._cp.widget)
+                    self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance)
                     self._subwindow.resize(640,480)
-                    if hasattr(self._cp.widget,"show"):
-                        self._cp.widget.show()
+                    if hasattr(self._cp.instance,"show"):
+                        self._cp.instance.show()
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
         else:
@@ -2318,14 +2319,14 @@ class ComponentItemCommand(Command):
     # \brief It changes back the states of the current component to the old state
     def unexecute(self):
         if self._cp is not None and self._oldstate is not None:
-            self.receiver.componentList.components[self._cp.id].widget.setState(self._oldstate)
+            self.receiver.componentList.components[self._cp.id].instance.setState(self._oldstate)
             
-            if self._cp.widget in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
+            if self._cp.instance in self.receiver.mdi.subWindowList():
+                self.receiver.mdi.setActiveSubWindow(self._cp.instance) 
             else:    
-                self._subwindow = self.receiver.mdi.addSubWindow(self._cp.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance)
                 self._subwindow.resize(640,480)
-                self._cp.widget.show()
+                self._cp.instance.show()
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
         else:
@@ -2368,17 +2369,17 @@ class ComponentClear(ComponentItemCommand):
                     return
 
 
-                if hasattr(self._cp,"widget"):
-                    if self._cp.widget in self.receiver.mdi.subWindowList():
+                if hasattr(self._cp,"instance"):
+                    if self._cp.instance in self.receiver.mdi.subWindowList():
                         self._wList = True
-                        self.receiver.mdi.setActiveSubWindow(self._cp.widget)
-                    self._cp.widget.createHeader()            
+                        self.receiver.mdi.setActiveSubWindow(self._cp.instance)
+                    self._cp.instance.createHeader()            
                 
-                    newModel = ComponentModel(self._cp.widget.document, self._cp.widget._allAttributes, self._cp.widget)
-                    self._cp.widget.view.setModel(newModel)
+                    newModel = ComponentModel(self._cp.instance.document, self._cp.instance._allAttributes, self._cp.instance)
+                    self._cp.instance.view.setModel(newModel)
 
-                    if hasattr(self._cp.widget,"connectExternalActions"):     
-                        self._cp.widget.connectExternalActions(self.receiver.componentApplyItem, 
+                    if hasattr(self._cp.instance,"connectExternalActions"):     
+                        self._cp.instance.connectExternalActions(self.receiver.componentApplyItem, 
                                                                self.receiver.componentSave)
         self.postExecute()
             
@@ -2412,9 +2413,9 @@ class ComponentLoadComponentItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.view.model():
-                    if hasattr(self._cp.widget,"loadComponentItem"):
-                        if not self._cp.widget.loadComponentItem(self._itemName):
+                if self._cp.instance is not None and self._cp.instance.view and  self._cp.instance.view.model():
+                    if hasattr(self._cp.instance,"loadComponentItem"):
+                        if not self._cp.instance.loadComponentItem(self._itemName):
                             QMessageBox.warning(self.receiver, "SubComponent not loaded", 
                                                 "Please ensure that you have selected the proper items")            
                 else:
@@ -2449,9 +2450,9 @@ class ComponentRemoveItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if self._cp.widget is not None:
-                    if hasattr(self._cp.widget,"removeSelectedItem"):
-                       if not self._cp.widget.removeSelectedItem():
+                if self._cp.instance is not None:
+                    if hasattr(self._cp.instance,"removeSelectedItem"):
+                       if not self._cp.instance.removeSelectedItem():
                            QMessageBox.warning(self.receiver, "Cutting item not possible", 
                                                "Please select another tree item") 
         self.postExecute()
@@ -2485,9 +2486,9 @@ class ComponentCopyItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if self._cp.widget is not None:
-                    if hasattr(self._cp.widget,"copySelectedItem"):
-                        if not self._cp.widget.copySelectedItem():
+                if self._cp.instance is not None:
+                    if hasattr(self._cp.instance,"copySelectedItem"):
+                        if not self._cp.instance.copySelectedItem():
                             QMessageBox.warning(self.receiver, "Copying item not possible", 
                                                 "Please select another tree item") 
         self.postExecute()
@@ -2518,9 +2519,9 @@ class ComponentPasteItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if self._cp.widget is not None:
-                    if hasattr(self._cp.widget,"pasteItem"):
-                        if not self._cp.widget.pasteItem():
+                if self._cp.instance is not None:
+                    if hasattr(self._cp.instance,"pasteItem"):
+                        if not self._cp.instance.pasteItem():
                             QMessageBox.warning(self.receiver, "Pasting item not possible", 
                                                 "Please select another tree item") 
         self.postExecute()
@@ -2763,9 +2764,9 @@ class ComponentMerge(ComponentItemCommand):
             print "c3"
             if self._cp is not None:                
                 print "c4"
-                if hasattr(self._cp.widget,"merge"):
+                if hasattr(self._cp.instance,"merge"):
                     print "c5"
-                    self._cp.widget.merge()
+                    self._cp.instance.merge()
                     print "c6"
         print "c7"
         self.postExecute()
@@ -2802,36 +2803,36 @@ class ComponentNewItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if self._cp.widget is None:                
+                if self._cp.instance is None:                
                     QMessageBox.warning(self.receiver, "Component Item not selected", 
                                         "Please select one of the component Items")            
-                if hasattr(self._cp.widget,"addItem"):
-                    self._child = self._cp.widget.addItem(self.itemName)
+                if hasattr(self._cp.instance,"addItem"):
+                    self._child = self._cp.instance.addItem(self.itemName)
                     if self._child:
-                        self._index = self._cp.widget.view.currentIndex()
+                        self._index = self._cp.instance.view.currentIndex()
                             
                         if  self._index.column() != 0 and self._index.row() is not None:
                             
-                            self._index = self._cp.widget.view.model().index(self._index.row(), 0, self._index.parent())
-                        row = self._cp.widget.widget.getNodeRow(self._child)
+                            self._index = self._cp.instance.view.model().index(self._index.row(), 0, self._index.parent())
+                        row = self._cp.instance.dialog.widget.getNodeRow(self._child)
                         if row is not None:
-                            self._childIndex = self._cp.widget.view.model().index(row, 0, self._index)
-                            self._cp.widget.view.setCurrentIndex(self._childIndex)
-                            self._cp.widget.tagClicked(self._childIndex)
+                            self._childIndex = self._cp.instance.view.model().index(row, 0, self._index)
+                            self._cp.instance.view.setCurrentIndex(self._childIndex)
+                            self._cp.instance.tagClicked(self._childIndex)
                     else:
                         QMessageBox.warning(self.receiver, "Creating the %s Item not possible" % self.itemName, 
                                             "Please select another tree or new item ")                                
             if self._child and self._index.isValid():
                 if self._index.isValid():
-                    finalIndex = self._cp.widget.view.model().index(
+                    finalIndex = self._cp.instance.view.model().index(
                         self._index.parent().row(), 2, self._index.parent().parent())
                 else:
-                    finalIndex = self._cp.widget.view.model().index(
+                    finalIndex = self._cp.instance.view.model().index(
                         0, 2, self._index.parent().parent())
                     
-                self._cp.widget.view.model().emit(
+                self._cp.instance.view.model().emit(
                     SIGNAL("dataChanged(QModelIndex,QModelIndex)"), self._index, self._index)
-                self._cp.widget.view.model().emit(
+                self._cp.instance.view.model().emit(
                     SIGNAL("dataChanged(QModelIndex,QModelIndex)"), finalIndex, self._childIndex)
         self.postExecute()
             
@@ -2845,10 +2846,10 @@ class ComponentNewItem(ComponentItemCommand):
 #    def unexecute(self):
 #        ComponentItemCommand.unexecute(self)
 #        if self._cp is not None:
-#            if self._cp.widget is not None:
+#            if self._cp.instance is not None:
 #                if self._index is not None:
-#                     self._cp.widget.view.setCurrentIndex(self._childIndex)
-#                     self._cp.widget.tagClicked(self._childIndex)
+#                     self._cp.instance.view.setCurrentIndex(self._childIndex)
+#                     self._cp.instance.tagClicked(self._childIndex)
 #                     
 #        print "UNDO componentNewItem"
 
@@ -2880,9 +2881,9 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if self._cp.widget is not None and self._cp.widget.view and  self._cp.widget.view.model():
-                    if hasattr(self._cp.widget,"loadDataSourceItem"):
-                        if not self._cp.widget.loadDataSourceItem(self.itemName):
+                if self._cp.instance is not None and self._cp.instance.view and  self._cp.instance.view.model():
+                    if hasattr(self._cp.instance,"loadDataSourceItem"):
+                        if not self._cp.instance.loadDataSourceItem(self.itemName):
                             QMessageBox.warning(self.receiver, "DataSource not loaded", 
                                                 "Please ensure that you have selected the proper items")            
                 else:
@@ -2920,7 +2921,7 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if self._cp.widget is None or self._cp.widget.view is None or self._cp.widget.view.model() is None:
+                if self._cp.instance is None or self._cp.instance.view is None or self._cp.instance.view.model() is None:
                     self._oldstate = None
                     self._index = None
                     self._cp = None
@@ -2937,40 +2938,40 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
                                         "Please select one of the datasources")            
                     return
 
-                if ds.widget is None:
+                if ds.instance is None:
                     dsEdit = DataSourceDlg()
                     dsEdit.ids = ds.id
                     dsEdit.directory = self.receiver.sourceList.directory
                     dsEdit.name = self.receiver.sourceList.datasources[ds.id].name
                     dsEdit.createGUI()
                     dsEdit.setWindowTitle("DataSource: %s" % ds.name)
-                    ds.widget = dsEdit 
+                    ds.instance = dsEdit 
                 else:
-                    dsEdit = ds.widget 
+                    dsEdit = ds.instance 
 
 
                 if hasattr(dsEdit,"connectExternalActions"):     
                     dsEdit.connectExternalActions(self.receiver.dsourceApply,self.receiver.dsourceSave)
                 
-                if not hasattr(ds.widget,"createNodes"):
+                if not hasattr(ds.instance,"createNodes"):
                     self._cp = None
                     QMessageBox.warning(self.receiver, "Component Item not created", 
                                         "Please edit one of the component Items")            
                     return
 
-                dsNode = ds.widget.createNodes()
+                dsNode = ds.instance.createNodes()
                 if dsNode is None:
                     self._cp = None
                     QMessageBox.warning(self.receiver, "Datasource node cannot be created", 
                                         "Problem in importing the external node")            
                     return
         
-                if not hasattr(self._cp.widget,"addDataSourceItem"):
+                if not hasattr(self._cp.instance,"addDataSourceItem"):
                     self._cp = None
                     QMessageBox.warning(self.receiver, "Component Item not created", 
                                         "Please edit one of the component Items")            
                     return
-                if not self._cp.widget.addDataSourceItem(dsNode):
+                if not self._cp.instance.addDataSourceItem(dsNode):
                     QMessageBox.warning(self.receiver, "Adding the datasource item not possible", 
                                         "Please ensure that you have selected the proper items")            
 
@@ -3006,9 +3007,9 @@ class ComponentApplyItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if hasattr(self._cp, "widget") and hasattr(self._cp.widget,"applyItem"):
+                if hasattr(self._cp, "instance") and hasattr(self._cp.instance,"applyItem"):
 
-                    if not self._cp.widget.applyItem():
+                    if not self._cp.instance.applyItem():
                         QMessageBox.warning(self.receiver, "Applying item not possible", 
                                             "Please select another tree item") 
 
@@ -3047,9 +3048,9 @@ class ComponentMoveUpItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if hasattr(self._cp, "widget") and hasattr(self._cp.widget,"moveUpItem"):
+                if hasattr(self._cp, "instance") and hasattr(self._cp.instance,"moveUpItem"):
 
-                    if self._cp.widget.moveUpItem() is None:
+                    if self._cp.instance.moveUpItem() is None:
                         QMessageBox.warning(self.receiver, "Moving item up not possible", 
                                             "Please select another tree item") 
 
@@ -3087,9 +3088,9 @@ class ComponentMoveDownItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if hasattr(self._cp, "widget") and hasattr(self._cp.widget,"moveDownItem"):
+                if hasattr(self._cp, "instance") and hasattr(self._cp.instance,"moveDownItem"):
 
-                    if self._cp.widget.moveDownItem() is None:
+                    if self._cp.instance.moveDownItem() is None:
                         QMessageBox.warning(self.receiver, "Moving item down not possible", 
                                             "Please select another tree item") 
 

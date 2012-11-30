@@ -902,7 +902,6 @@ class ComponentEdit(Command):
         Command.__init__(self, receiver, slot)
         self._cp = None
         self._cpEdit = None
-        self._subwindow = None
         
         
     ## executes the command
@@ -932,15 +931,16 @@ class ComponentEdit(Command):
                                                     self.receiver.componentSave)
 
 
-
-            if self._subwindow in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._subwindow) 
+            subwindow = self.receiver.subWindow(
+                self._cpEdit, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
             else:    
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
                 self._subwindow.resize(640,480)
                 self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
-                self._cp.instance = self._cpEdit 
+            self._cp.instance = self._cpEdit 
 
 
             

@@ -1158,10 +1158,10 @@ class ComponentChangeDirectory(Command):
 
         if not path:
             return
-        dialogs = self.receiver.mdi.subWindowList()
-        if dialogs:
-            for dialog in dialogs:
-                if isinstance(dialog,ComponentDlg):
+        subwindows = self.receiver.mdi.subWindowList()
+        if subwindows:
+            for subwindow in subwindows:
+                if isinstance(subwindow.widget(), ComponentDlg):
                     self.receiver.mdi.setActiveSubWindow(dialog)
                     self.receiver.mdi.closeActiveSubWindow()
 

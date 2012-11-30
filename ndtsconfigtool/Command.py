@@ -703,7 +703,7 @@ class ComponentOpen(Command):
                     self._cp.instance.savePushButton.setFocus()
                 else:    
  #               print "create"
-                    self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
+                    self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
                     self._subwindow.resize(640,480)
                     self._cpEdit.savePushButton.setFocus()
                     self._cpEdit.show()
@@ -712,7 +712,7 @@ class ComponentOpen(Command):
 
 
 
-                self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
                 self._subwindow.resize(640,480)
 #            self._component.setAttribute(Qt.WA_DeleteOnClose)
                 self._cpEdit.show()
@@ -995,7 +995,7 @@ class ComponentSave(Command):
             if self._cp.instance in self.receiver.mdi.subWindowList():
                 self.receiver.mdi.setActiveSubWindow(self._cp.instance) 
             else:    
-                self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
                 self._subwindow.resize(640,480)
 
                 self._cpEdit.show()
@@ -2293,7 +2293,7 @@ class ComponentItemCommand(Command):
                 if self._cp.instance in self.receiver.mdi.subWindowList():
                     self.receiver.mdi.setActiveSubWindow(self._cp.instance) 
                 else:    
-                    self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance)
+                    self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
                     self._subwindow.resize(640,480)
                     if hasattr(self._cp.instance,"show"):
                         self._cp.instance.show()
@@ -2324,7 +2324,7 @@ class ComponentItemCommand(Command):
             if self._cp.instance in self.receiver.mdi.subWindowList():
                 self.receiver.mdi.setActiveSubWindow(self._cp.instance) 
             else:    
-                self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
                 self._subwindow.resize(640,480)
                 self._cp.instance.show()
         if hasattr(self._cp,"id"):

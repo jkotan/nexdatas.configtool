@@ -212,6 +212,7 @@ class ServerStoreComponent(Command):
                 self.receiver.mdi.setActiveSubWindow(self._subwindow) 
             else:    
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
+                self._subwindow.resize(640,480)
                 self._cpEdit.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
@@ -701,7 +702,8 @@ class ComponentOpen(Command):
                     self._cp.widget.savePushButton.setFocus()
                 else:    
  #               print "create"
-                    self.receiver.mdi.addSubWindow(self._cpEdit)
+                    self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
+                    self._subwindow.resize(640,480)
                     self._cpEdit.savePushButton.setFocus()
                     self._cpEdit.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
@@ -709,7 +711,8 @@ class ComponentOpen(Command):
 
 
 
-                self.receiver.mdi.addSubWindow(self._cpEdit)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
+                self._subwindow.resize(640,480)
 #            self._component.setAttribute(Qt.WA_DeleteOnClose)
                 self._cpEdit.show()
                 print "EXEC componentOpen"
@@ -786,7 +789,8 @@ class DataSourceOpen(Command):
                     self._ds.widget.savePushButton.setFocus()
                 else:    
  #               print "create"
-                    self.receiver.mdi.addSubWindow(self._dsEdit)
+                    self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit)
+                    self._subwindow.resize(640,480)
                     self._dsEdit.savePushButton.setFocus()
                     self._dsEdit.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
@@ -794,7 +798,9 @@ class DataSourceOpen(Command):
 
 
 
-                self.receiver.mdi.addSubWindow(self._dsEdit)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit)
+                self._subwindow.resize(640,480)
+                    
 #            self._component.setAttribute(Qt.WA_DeleteOnClose)
                 self._dsEdit.show()
                 print "EXEC dsourceOpen"
@@ -923,6 +929,7 @@ class ComponentEdit(Command):
                 self.receiver.mdi.setActiveSubWindow(self._subwindow) 
             else:    
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
+                self._subwindow.resize(640,480)
                 self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
@@ -987,7 +994,9 @@ class ComponentSave(Command):
             if self._cp.widget in self.receiver.mdi.subWindowList():
                 self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
             else:    
-                self.receiver.mdi.addSubWindow(self._cpEdit)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit)
+                self._subwindow.resize(640,480)
+
                 self._cpEdit.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.widget = self._cpEdit 
@@ -1202,7 +1211,8 @@ class DataSourceCopy(Command):
             if self._ds.widget in self.receiver.mdi.subWindowList():
                 self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:    
-                self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow.resize(640,480)
                 self._ds.widget.show()
                 
 
@@ -1222,7 +1232,8 @@ class DataSourceCopy(Command):
             if self._ds.widget in self.receiver.mdi.subWindowList():
                 self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:
-                self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow.resize(640,480)
                 self._ds.widget.show()
             
             
@@ -1274,7 +1285,8 @@ class DataSourceCut(Command):
             if self._ds.widget in self.receiver.mdi.subWindowList():
                 self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:    
-                self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow.resize(640,480)
                 self._ds.widget.show()
                 
 
@@ -1298,7 +1310,8 @@ class DataSourceCut(Command):
             if self._ds.widget in self.receiver.mdi.subWindowList():
                 self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:
-                self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow.resize(640,480)
                 self._ds.widget.show()
             
         if hasattr(self._ds ,"id"):
@@ -1359,7 +1372,8 @@ class DataSourcePaste(Command):
             if self._ds.widget in self.receiver.mdi.subWindowList():
                 self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:    
-                self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow.resize(640,480)
                 self._ds.widget.show()
                 
 
@@ -1383,7 +1397,8 @@ class DataSourcePaste(Command):
             if self._ds.widget in self.receiver.mdi.subWindowList():
                 self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:
-                self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow.resize(640,480)
                 self._ds.widget.show()
             
             if hasattr(self._ds ,"id"):
@@ -1435,7 +1450,8 @@ class DataSourceApply(Command):
                 self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:    
 
-                self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.widget)
+                self._subwindow.resize(640,480)
                 self._ds.widget.show()
     
                     
@@ -1991,7 +2007,8 @@ class DataSourceEdit(Command):
             if self._ds.widget in self.receiver.mdi.subWindowList():
                 self.receiver.mdi.setActiveSubWindow(self._ds.widget) 
             else:    
-                self.receiver.mdi.addSubWindow(self._dsEdit)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit)
+                self._subwindow.resize(640,480)
                 self._dsEdit.show()
                 #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
                 self._ds.widget = self._dsEdit 
@@ -2275,7 +2292,8 @@ class ComponentItemCommand(Command):
                 if self._cp.widget in self.receiver.mdi.subWindowList():
                     self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
                 else:    
-                    self.receiver.mdi.addSubWindow(self._cp.widget)
+                    self._subwindow = self.receiver.mdi.addSubWindow(self._cp.widget)
+                    self._subwindow.resize(640,480)
                     if hasattr(self._cp.widget,"show"):
                         self._cp.widget.show()
         if hasattr(self._cp,"id"):
@@ -2305,7 +2323,8 @@ class ComponentItemCommand(Command):
             if self._cp.widget in self.receiver.mdi.subWindowList():
                 self.receiver.mdi.setActiveSubWindow(self._cp.widget) 
             else:    
-                self.receiver.mdi.addSubWindow(self._cp.widget)
+                self._subwindow = self.receiver.mdi.addSubWindow(self._cp.widget)
+                self._subwindow.resize(640,480)
                 self._cp.widget.show()
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)

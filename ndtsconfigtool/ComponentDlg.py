@@ -734,7 +734,7 @@ class Component(object):
         if not filePath:
             if not self.name:
                 self._componentFile = unicode(QFileDialog.getOpenFileName(
-                        self,"Open File",self._xmlPath,
+                        self.dialog,"Open File",self._xmlPath,
                         "XML files (*.xml);;HTML files (*.html);;"
                         "SVG files (*.svg);;User Interface files (*.ui)"))
             else:
@@ -809,7 +809,7 @@ class Component(object):
 
         if not filePath:
                 itemFile = unicode(
-                    QFileDialog.getOpenFileName(self,"Open File",self._xmlPath,
+                    QFileDialog.getOpenFileName(self.dialog, "Open File",self._xmlPath,
                                                 "XML files (*.xml);;HTML files (*.html);;"
                                                 "SVG files (*.svg);;User Interface files (*.ui)"))
         else:
@@ -879,7 +879,7 @@ class Component(object):
 
         if not filePath:
                 dsFile = unicode(
-                    QFileDialog.getOpenFileName(self,"Open File",self._dsPath,
+                    QFileDialog.getOpenFileName(self.dialog, "Open File",self._dsPath,
                                                 "XML files (*.xml);;HTML files (*.html);;"
                                                 "SVG files (*.svg);;User Interface files (*.ui)"))
         else:

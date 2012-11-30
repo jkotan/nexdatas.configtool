@@ -523,6 +523,15 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
                 filename = self.directory + "/" + self.name + ".ds.xml"
         else:
             filename = fname
+            if not self.name:
+                fi = QFileInfo(filename)
+                fname = fi.fileName()
+                if fname[-4:] == '.xml':
+                    self.name = fname[:-4]
+                    if self.name[-3:] == '.ds':
+                        self.name = self.name[:-3]
+                    else:
+                        self.name = fname
         try:
 
             fh = QFile(filename)

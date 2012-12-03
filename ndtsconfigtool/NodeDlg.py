@@ -106,7 +106,6 @@ class NodeDlg(QDialog):
             if row < children.count():
                 return row
 
-
     ## provides row number of the given node
     # \param child child item
     # \param node parent node        

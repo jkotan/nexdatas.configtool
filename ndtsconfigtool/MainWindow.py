@@ -973,6 +973,7 @@ class MainWindow(QMainWindow):
 
     ## sets the datasource list from dictionary
     # \param datasources dictionary with datasources, i.e. name:xml
+    # \param new logical variable set to True if objects are not saved    
     def setDataSources(self, datasources, new = False):
         self.sourceList.setList(datasources, self.dsourceCollect, self.dsourceApply, new)
         ids =  self.sourceList.datasources.itervalues().next().id \
@@ -1733,7 +1734,7 @@ class MainWindow(QMainWindow):
 
 
     ## activated window action, i.e. it changes the current position of the component and datasource lists 
-    # \param widget selected widget window
+    # \param subwindow selected subwindow
     def mdiWindowActivated(self, subwindow):
         widget = subwindow.widget() if hasattr(subwindow, "widget") else None
         self.pooling = False
@@ -1930,6 +1931,10 @@ class MainWindow(QMainWindow):
     def viewAllAttributes(self):
         self.componentList.viewAttributes(not self.componentList.viewAttributes())
         
+    ## provides subwindow defined by instance
+    # \param instance given instance
+    # \param subwindows list of subwindows
+    # \returns required subwindow
     def subWindow(self, instance, subwindows):
         swin = None
         for sw in subwindows:
@@ -1940,6 +1945,10 @@ class MainWindow(QMainWindow):
         return swin
 
 
+    ## provides subwindow defined by widget
+    # \param widget given widget
+    # \param subwindows list of subwindows
+    # \returns required subwindow
     def widgetSubWindow(self, widget, subwindows):
         swin = None
         for sw in subwindows:

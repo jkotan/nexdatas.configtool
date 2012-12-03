@@ -29,265 +29,30 @@ from NodeDlg import NodeDlg
 import copy
 import gc
 
+
+
 ## dialog defining datasources
-class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
+class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     
     ## constructor
+    # \param datasource instance
     # \param parent patent instance
-    def __init__(self, parent=None):
-        super(DataSourceDlg, self).__init__(parent)
-        
+    def __init__(self, datasource, parent=None):
+        super(CommonDataSourceDlg, self).__init__(parent)
 
-        ## data source type
-        self.dataSourceType = 'CLIENT'
-        ## attribute doc
-        self.doc = u''
+        ##  datasource instance
+        self.datasource = datasource
 
-        ## datasource name
-        self.dataSourceName = None
-
-        ## client record name
-        self.clientRecordName = u''
-
-        ## Tango device name
-        self.tangoDeviceName = u''
-        ## Tango member name
-        self.tangoMemberName = u''
-        ## Tango member name
-        self.tangoMemberType = u''
-        ## Tango host name
-        self.tangoHost = u''
-        ## Tango host name
-        self.tangoPort = u''
-        ## encoding for DevEncoded Tango types
-        self.tangoEncoding = u''
-
-        ## database type
-        self.dbType = 'MYSQL'
-        ## database format
-        self.dbDataFormat = 'SCALAR'
-        ## database query
-        self.dbQuery = ""
         ## database parameters
-        self.dbParameters = {}
-        ## database parameters
-        self._dbParam = {}
+        self.dbParam = {}
 
         self._externalSave = None
         self._externalApply = None
 
-        self._applied = False
 
-        ## parameter map for xml tags
-        self.dbmap = {"dbname":"DB name",
-                      "hostname":"DB host",
-                      "port":"DB port",
-                      "user":"DB user",
-                      "passwd":"DB password",
-                      "mycnf":"Mysql cnf",
-                      "mode":"Oracle mode"
-                     } 
-
-        ## datasource id
-        self.ids = None
-
-        ## datasource directory
-        self.directory = ""
-
-        ## datasource file name
-        self.name = None
-
-        ## DOM document
-        self.document = None
+    ## connects the dialog actions 
+    def connect(self):
         
-        ## if datasource in the component tree
-        self._tree = False
-        
-        ## allowed subitems
-        self.subItems = ["record", "doc", "device", "database", "query", "door"]
-
-        ## saved XML
-        self.savedXML = None
-
-
-    ## checks if not saved
-    # \returns True if it is not saved     
-    def isDirty(self):
-        string = self.get()
-        return False if string == self.savedXML else True
-
-
-    ## clears the datasource content
-    # \brief It sets the datasource variables to default values
-    def clear(self):
-        self.dataSourceType = 'CLIENT'
-        self.dataSourceName = ''
-        self.doc = u''
-
-        self.clientRecordName = u''
-
-        self.tangoDeviceName = u''
-        self.tangoMemberName = u''
-        self.tangoMemberType = u''
-        self.tangoHost = u''
-        self.tangoPort = u''
-        self.tangoEncoding = u''
-
-        self.dbType = 'MYSQL'
-        self.dbDataFormat = 'SCALAR'
-        self.dbQuery = ""
-        self.dbParameters = {}
-        self._dbParam = {}
-        
-
-    ## provides the state of the datasource dialog        
-    # \returns state of the datasource in tuple
-    def getState(self):
-        dbParameters = copy.copy(self.dbParameters)
-
-        state = (self.dataSourceType,
-                 self.doc,
-                 self.clientRecordName, 
-                 self.tangoDeviceName,
-                 self.tangoMemberName,
-                 self.tangoMemberType,
-                 self.tangoHost,
-                 self.tangoPort,
-                 self.tangoEncoding,
-                 self.dbType,
-                 self.dbDataFormat,
-                 self.dbQuery,
-                 dbParameters,
-#                 self.name
-                 self.dataSourceName
-                 )
-#        print  "GET", unicode(state)
-        return state
-
-
-
-    ## sets the state of the datasource dialog        
-    # \param state state datasource written in tuple 
-    def setState(self, state):
-
-        (self.dataSourceType,
-         self.doc,
-         self.clientRecordName, 
-         self.tangoDeviceName,
-         self.tangoMemberName,
-         self.tangoMemberType,
-         self.tangoHost,
-         self.tangoPort,
-         self.tangoEncoding,
-         self.dbType,
-         self.dbDataFormat,
-         self.dbQuery,
-         dbParameters,
-#         name
-         self.dataSourceName
-         ) = state
-#        if self._tree:
-#            self.name = name
-#        print "SET",  unicode(state)
-        self.dbParameters = copy.copy(dbParameters)
-
-
-    ## updates the datasource dialog
-    # \brief It sets the form local variables
-    def updateForm(self):    
-        if self.doc is not None:
-            self.docTextEdit.setText(self.doc)
-
-        if self.dataSourceType is not None:
-            index = self.typeComboBox.findText(unicode(self.dataSourceType))
-            if  index > -1 :
-                self.typeComboBox.setCurrentIndex(index)
-            else:
-                self.dataSourceType = 'CLIENT'    
-    
-        if self.dataSourceName is not None:
-            self.nameLineEdit.setText(self.dataSourceName)
-
-        if self.clientRecordName is not None:
-            self.cRecNameLineEdit.setText(self.clientRecordName)
-
-        if self.tangoDeviceName is not None:
-            self.tDevNameLineEdit.setText(self.tangoDeviceName)
-        if self.tangoMemberName is not None:
-            self.tMemberNameLineEdit.setText(self.tangoMemberName)
-        if self.tangoMemberType is not None:
-            index = self.tMemberComboBox.findText(unicode(self.tangoMemberType))
-            if  index > -1 :
-                self.tMemberComboBox.setCurrentIndex(index)
-            else:
-                self.tangoMemberType = 'attribute'    
-        if self.tangoHost is not None:
-            self.tHostLineEdit.setText(self.tangoHost)
-        if self.tangoPort is not None:
-            self.tPortLineEdit.setText(self.tangoPort)
-        if self.tangoEncoding is not None:
-            self.tEncodingLineEdit.setText(self.tangoEncoding)
-
-
-
-        if self.dbType  is not None:
-            index = self.dTypeComboBox.findText(unicode(self.dbType))
-            if  index > -1 :
-                self.dTypeComboBox.setCurrentIndex(index)
-            else:
-                self.dbType = 'MYSQL'    
-        if self.dbDataFormat is not None:
-            index = self.dFormatComboBox.findText(unicode(self.dbDataFormat))
-            if  index > -1 :
-                self.dFormatComboBox.setCurrentIndex(index)
-            else:
-                self.dbDataFormat = 'INIT'    
-        
-        if self.dbQuery is not None:        
-            self.dQueryLineEdit.setText(self.dbQuery)
-                
-        
-        self._dbParam = {}
-        for par in self.dbParameters.keys():
-            index = self.dParamComboBox.findText(unicode(par))
-            if  index < 0 :
-                QMessageBox.warning(self, "Unregistered parameter", 
-                                    "Unknown parameter %s = '%s' will be removed." 
-                                    % (par, self.dbParameters[unicode(par)]) )
-                self.dbParameters.pop(unicode(par))
-            else:
-                self._dbParam[unicode(par)]=self.dbParameters[(unicode(par))]
-        self.populateParameters()
-        self.setFrames(self.dataSourceType)
-    
-    ## sets the tree mode used in ComponentDlg without save/close buttons
-    # \param enable logical variable which dis-/enables mode 
-    def treeMode(self, enable = True):
-        if enable:
-            self.closeSaveFrame.hide()
-#            self.nameFrame.show()
-            self._tree = True
-        else:
-            self._tree = False
-            self.closeSaveFrame.show()
-#            self.nameFrame.hide()
-            
-        
-    ##  creates GUI
-    # \brief It calls setupUi and  connects signals and slots    
-    def createGUI(self):
-
-
-        self.setupUi(self)
-        self.updateForm()
-
-        self.resize(460, 440)
-
-#        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
-#        self.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
-
-        self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(self.closePushButton, SIGNAL("clicked()"), self.close)
 
 
         self.connect(self.dAddPushButton, SIGNAL("clicked()"), 
@@ -307,21 +72,6 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self.connect(self.tMemberNameLineEdit, SIGNAL("textEdited(QString)"), self._tMemberNameLineEdit)
 
         self.setFrames(self.dataSourceType)
-#        self.treeMode(self._tree)
-
-
-    ## connects external actions
-    # \brief It connects the save action and stores the apply action
-    def connectExternalActions(self, externalApply=None, externalSave=None):
-        if externalSave and self._externalSave is None:
-            self.connect(self.savePushButton, SIGNAL("clicked()"), 
-                         externalSave)
-            self._externalSave = externalSave
-        if externalApply and self._externalApply is None:
-            self.connect(self.applyPushButton, SIGNAL("clicked()"), 
-                     externalApply)
-            self._externalApply = externalApply
-
 
     ## shows and hides frames according to typeComboBox
     # \param text the edited text   
@@ -490,6 +240,111 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             self.dParameterTableWidget.editItem(selected)
 
 
+
+
+
+## dialog defining datasources
+class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
+    
+    ## constructor
+    # \param parent patent instance
+    def __init__(self, parent=None):
+        super(DataSourceDlg, self).__init__(parent)
+        
+
+
+    ## gets the current node
+    # \returns the current node  
+    def _getnode(self):
+        if self.datasource and self.datasource.dialog and hasattr(self.datasource.dialog,"node"):
+            return self.datasource.dialog.node
+
+    ## sets the current node 
+    # \param node value to be set 
+    def _setvalue(self, node):
+        if self.datasource and self.datasource.dialog and hasattr(self.datasource.dialog,"node"):
+            self.datasource.dialog.node = node
+
+    ## attribute value       
+    node = property(_getnode, _setnode)            
+
+        
+
+    ## gets the current view
+    # \returns the current view  
+    def _getview(self):
+        if self.datasource and self.datasource.dialog and hasattr(self.datasource.dialog,"view"):
+            return self.datasource.dialog.view
+
+    ## sets the current view
+    # \param view value to be set 
+    def _setview(self, view):
+        if self.datasource and self.datasource.dialog and hasattr(self.datasource.dialog,"view"):
+            self.datasource.dialog.view = view
+            self.datasource.view = view
+
+    ## attribute value       
+    view = property(_getview, _setview)            
+
+
+
+    ## gets the current root
+    # \returns the current root  
+    def _getroot(self):
+        if self.datasource and self.datasource.dialog and hasattr(self.datasource.dialog,"root"):
+            return self.datasource.dialog.root
+
+    ## sets the current root
+    # \param root value to be set 
+    def _setroot(self, root):
+        if self.datasource and self.datasource.dialog and hasattr(self.datasource.dialog,"root"):
+            self.datasource.dialog.root = root
+            self.datasource.root = root
+
+    ## attribute value       
+    root = property(_getroot, _setroot)            
+
+        
+
+
+        
+
+## dialog defining datasources
+class DataSource(CommonDataSource):
+    
+    ## constructor
+    # \param parent patent instance
+    def __init__(self, parent=None):
+
+        ## datasource id
+        self.ids = None
+
+        ## datasource directory
+        self.directory = ""
+
+        ## datasource file name
+        self.name = None
+
+        ## DOM document
+        self.document = None
+        ## saved XML
+        self.savedXML = None
+        
+
+    ## checks if not saved
+    # \returns True if it is not saved     
+    def isDirty(self):
+        string = self.get()
+        return False if string == self.savedXML else True
+
+
+    ## provides the datasource in xml string
+    # \returns xml string    
+    def get(self, indent = 0):
+        if hasattr(self.document,"toString"):
+            return unicode(self.document.toString(indent))
+
+
     ## sets file name of the datasource and its directory
     # \param name name of the datasource
     # \param directory directory of the datasources   
@@ -499,8 +354,7 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         if directory:
             self.directory = unicode(directory)
 
-            
-            
+
 
     ## loads datasources from default file directory
     # \param fname optional file name
@@ -582,6 +436,367 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             QMessageBox.warning(self, "dialog not created", 
                                 "Problems in creating a dialog %s :\n\n%s" %(self.name,unicode(e)))
                 
+
+    ## accepts and save input text strings
+    # \brief It copies the parameters and saves the dialog
+    def save(self):
+        if self._applied:
+            filename = self.directory + "/" + self.name + ".ds.xml"
+            print "saving in %s"% (filename)
+            error = None
+            if filename:
+                try:
+                    fh = QFile(filename)
+                    if not fh.open(QIODevice.WriteOnly):
+                        raise IOError, unicode(fh.errorString())
+                    stream = QTextStream(fh)
+                    stream <<self.document.toString(2)
+            #                print self.document.toString(2)
+                    self.savedXML = self.document.toString(0)
+                except (IOError, OSError, ValueError), e:
+                    error = "Failed to save: %s" % e
+                    print error
+                finally:
+                    if fh is not None:
+                        fh.close()
+        if not error:
+            return True
+
+    ## provides the datasource name with its path
+    # \returns datasource name with its path 
+    def getNewName(self):
+        filename = unicode(
+            QFileDialog.getSaveFileName(self,"Save DataSource As ...",self.directory,
+                                        "XML files (*.xml);;HTML files (*.html);;"
+                                        "SVG files (*.svg);;User Interface files (*.ui)"))
+        print "saving in %s"% (filename)
+        return filename
+
+
+
+    ## rejects the changes
+    # \brief It asks for the cancellation  and reject the changes
+    def close(self):
+        if QMessageBox.question(self, "Close datasource",
+                                "Would you like to close the datasource?", 
+                                QMessageBox.Yes | QMessageBox.No,
+                                QMessageBox.Yes ) == QMessageBox.No :
+            return
+        self.updateForm()
+        self.reject()
+
+
+    ## creates the new empty header
+    # \brief It clean the DOM tree and put into it xml and definition nodes
+    def createHeader(self):
+        if self.view:
+            self.view.setModel(None)
+        self.document = QDomDocument()
+        ## defined in NodeDlg class
+        self.root = self.document
+        processing = self.root.createProcessingInstruction("xml", 'version="1.0"') 
+        self.root.appendChild(processing)
+
+        definition = self.root.createElement(QString("definition"))
+        self.root.appendChild(definition)
+        self.node = self.root.createElement(QString("datasource"))
+        definition.appendChild(self.node)            
+        return self.node
+            
+
+    ## copies the datasource to the clipboard
+    # \brief It copies the current datasource to the clipboard
+    def copyToClipboard(self):
+        dsNode = self.createNodes()
+        doc = QDomDocument()
+        child = doc.importNode(dsNode,True)
+        doc.appendChild(child)
+        text = unicode(doc.toString(0))
+        clipboard= QApplication.clipboard()
+        clipboard.setText(text)
+        
+
+    ## copies the datasource from the clipboard  to the current datasource dialog
+    # \return status True on success
+    def copyFromClipboard(self):
+        clipboard= QApplication.clipboard()
+        text=unicode(clipboard.text())
+        self.document = QDomDocument()
+        self.root = self.document
+        if not self.document.setContent(text):
+            raise ValueError, "could not parse XML"
+
+        ds = self._getFirstElement(self.document, "datasource")           
+        if not ds:
+            return
+
+        self.setFromNode(ds)
+        return True
+
+    ## connects external actions
+    # \brief It connects the save action and stores the apply action
+    def connectExternalActions(self, externalApply=None, externalSave=None):
+        if externalSave and self._externalSave is None:
+            self.connect(self.savePushButton, SIGNAL("clicked()"), 
+                         externalSave)
+            self._externalSave = externalSave
+        if externalApply and self._externalApply is None:
+            self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+                     externalApply)
+            self._externalApply = externalApply
+
+
+
+    ##  resets the form
+    # \brief It reverts form variables to the last accepted ones    
+    def reset(self):
+        self.updateForm()
+
+## dialog defining datasources
+class CommonDataSource(object):
+    
+    ## constructor
+    # \param parent patent instance
+    def __init__(self, parent=None):
+        
+
+        ## datasource dialog parent
+        self.parent = parent
+
+        ## data source type
+        self.dataSourceType = 'CLIENT'
+        ## attribute doc
+        self.doc = u''
+
+        ## datasource dialog
+        self.dialog = None
+
+        ## datasource name
+        self.dataSourceName = None
+
+        ## client record name
+        self.clientRecordName = u''
+
+        ## Tango device name
+        self.tangoDeviceName = u''
+        ## Tango member name
+        self.tangoMemberName = u''
+        ## Tango member name
+        self.tangoMemberType = u''
+        ## Tango host name
+        self.tangoHost = u''
+        ## Tango host name
+        self.tangoPort = u''
+        ## encoding for DevEncoded Tango types
+        self.tangoEncoding = u''
+
+        ## database type
+        self.dbType = 'MYSQL'
+        ## database format
+        self.dbDataFormat = 'SCALAR'
+        ## database query
+        self.dbQuery = ""
+        ## database parameters
+        self.dbParameters = {}
+
+
+        self._applied = False
+
+        ## parameter map for xml tags
+        self.dbmap = {"dbname":"DB name",
+                      "hostname":"DB host",
+                      "port":"DB port",
+                      "user":"DB user",
+                      "passwd":"DB password",
+                      "mycnf":"Mysql cnf",
+                      "mode":"Oracle mode"
+                     } 
+
+        
+        ## if datasource in the component tree
+        self._tree = False
+        
+        ## allowed subitems
+        self.subItems = ["record", "doc", "device", "database", "query", "door"]
+
+
+    ## clears the datasource content
+    # \brief It sets the datasource variables to default values
+    def clear(self):
+        self.dataSourceType = 'CLIENT'
+        self.dataSourceName = ''
+        self.doc = u''
+
+        self.clientRecordName = u''
+
+        self.tangoDeviceName = u''
+        self.tangoMemberName = u''
+        self.tangoMemberType = u''
+        self.tangoHost = u''
+        self.tangoPort = u''
+        self.tangoEncoding = u''
+
+        self.dbType = 'MYSQL'
+        self.dbDataFormat = 'SCALAR'
+        self.dbQuery = ""
+        self.dbParameters = {}
+        self._dbParam = {}
+        
+
+    ## provides the state of the datasource dialog        
+    # \returns state of the datasource in tuple
+    def getState(self):
+        dbParameters = copy.copy(self.dbParameters)
+
+        state = (self.dataSourceType,
+                 self.doc,
+                 self.clientRecordName, 
+                 self.tangoDeviceName,
+                 self.tangoMemberName,
+                 self.tangoMemberType,
+                 self.tangoHost,
+                 self.tangoPort,
+                 self.tangoEncoding,
+                 self.dbType,
+                 self.dbDataFormat,
+                 self.dbQuery,
+                 dbParameters,
+#                 self.name
+                 self.dataSourceName
+                 )
+#        print  "GET", unicode(state)
+        return state
+
+
+
+    ## sets the state of the datasource dialog        
+    # \param state state datasource written in tuple 
+    def setState(self, state):
+
+        (self.dataSourceType,
+         self.doc,
+         self.clientRecordName, 
+         self.tangoDeviceName,
+         self.tangoMemberName,
+         self.tangoMemberType,
+         self.tangoHost,
+         self.tangoPort,
+         self.tangoEncoding,
+         self.dbType,
+         self.dbDataFormat,
+         self.dbQuery,
+         dbParameters,
+#         name
+         self.dataSourceName
+         ) = state
+#        if self._tree:
+#            self.name = name
+#        print "SET",  unicode(state)
+        self.dbParameters = copy.copy(dbParameters)
+
+
+    ## updates the datasource dialog
+    # \brief It sets the form local variables
+    def updateForm(self):    
+        if self.doc is not None:
+            self.docTextEdit.setText(self.doc)
+
+        if self.dataSourceType is not None:
+            index = self.typeComboBox.findText(unicode(self.dataSourceType))
+            if  index > -1 :
+                self.typeComboBox.setCurrentIndex(index)
+            else:
+                self.dataSourceType = 'CLIENT'    
+    
+        if self.dataSourceName is not None:
+            self.nameLineEdit.setText(self.dataSourceName)
+
+        if self.clientRecordName is not None:
+            self.cRecNameLineEdit.setText(self.clientRecordName)
+
+        if self.tangoDeviceName is not None:
+            self.tDevNameLineEdit.setText(self.tangoDeviceName)
+        if self.tangoMemberName is not None:
+            self.tMemberNameLineEdit.setText(self.tangoMemberName)
+        if self.tangoMemberType is not None:
+            index = self.tMemberComboBox.findText(unicode(self.tangoMemberType))
+            if  index > -1 :
+                self.tMemberComboBox.setCurrentIndex(index)
+            else:
+                self.tangoMemberType = 'attribute'    
+        if self.tangoHost is not None:
+            self.tHostLineEdit.setText(self.tangoHost)
+        if self.tangoPort is not None:
+            self.tPortLineEdit.setText(self.tangoPort)
+        if self.tangoEncoding is not None:
+            self.tEncodingLineEdit.setText(self.tangoEncoding)
+
+
+
+        if self.dbType  is not None:
+            index = self.dTypeComboBox.findText(unicode(self.dbType))
+            if  index > -1 :
+                self.dTypeComboBox.setCurrentIndex(index)
+            else:
+                self.dbType = 'MYSQL'    
+        if self.dbDataFormat is not None:
+            index = self.dFormatComboBox.findText(unicode(self.dbDataFormat))
+            if  index > -1 :
+                self.dFormatComboBox.setCurrentIndex(index)
+            else:
+                self.dbDataFormat = 'INIT'    
+        
+        if self.dbQuery is not None:        
+            self.dQueryLineEdit.setText(self.dbQuery)
+                
+        
+        self._dbParam = {}
+        for par in self.dbParameters.keys():
+            index = self.dParamComboBox.findText(unicode(par))
+            if  index < 0 :
+                QMessageBox.warning(self, "Unregistered parameter", 
+                                    "Unknown parameter %s = '%s' will be removed." 
+                                    % (par, self.dbParameters[unicode(par)]) )
+                self.dbParameters.pop(unicode(par))
+            else:
+                self._dbParam[unicode(par)]=self.dbParameters[(unicode(par))]
+        self.populateParameters()
+        self.setFrames(self.dataSourceType)
+    
+    ## sets the tree mode used in ComponentDlg without save/close buttons
+    # \param enable logical variable which dis-/enables mode 
+    def treeMode(self, enable = True):
+        if enable:
+            self.closeSaveFrame.hide()
+#            self.nameFrame.show()
+            self._tree = True
+        else:
+            self._tree = False
+            self.closeSaveFrame.show()
+#            self.nameFrame.hide()
+            
+        
+    ##  creates GUI
+    # \brief It calls setupUi and  connects signals and slots    
+    def createGUI(self):
+
+        self.dialog = CommonDataSourceDlg(self, self.parent)
+        self.dialog.setupUi(self.dialog)
+
+        self.updateForm()
+
+        self.resize(460, 440)
+
+        self.connect(self.dialog.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self.close)
+
+        self.dialog.connect()
+
+#        self.treeMode(self._tree)
+
+
+            
+            
 
             
 
@@ -669,66 +884,8 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         self.doc = unicode(text).strip() if text else ""
 
 
-    ## provides the datasource in xml string
-    # \returns xml string    
-    def get(self, indent = 0):
-        if hasattr(self.document,"toString"):
-            return unicode(self.document.toString(indent))
 
 
-    ## accepts and save input text strings
-    # \brief It copies the parameters and saves the dialog
-    def save(self):
-        if self._applied:
-            filename = self.directory + "/" + self.name + ".ds.xml"
-            print "saving in %s"% (filename)
-            error = None
-            if filename:
-                try:
-                    fh = QFile(filename)
-                    if not fh.open(QIODevice.WriteOnly):
-                        raise IOError, unicode(fh.errorString())
-                    stream = QTextStream(fh)
-                    stream <<self.document.toString(2)
-            #                print self.document.toString(2)
-                    self.savedXML = self.document.toString(0)
-                except (IOError, OSError, ValueError), e:
-                    error = "Failed to save: %s" % e
-                    print error
-                finally:
-                    if fh is not None:
-                        fh.close()
-        if not error:
-            return True
-
-    ## provides the datasource name with its path
-    # \returns datasource name with its path 
-    def getNewName(self):
-        filename = unicode(
-            QFileDialog.getSaveFileName(self,"Save DataSource As ...",self.directory,
-                                        "XML files (*.xml);;HTML files (*.html);;"
-                                        "SVG files (*.svg);;User Interface files (*.ui)"))
-        print "saving in %s"% (filename)
-        return filename
-
-
-
-    ## rejects the changes
-    # \brief It asks for the cancellation  and reject the changes
-    def close(self):
-        if QMessageBox.question(self, "Close datasource",
-                                "Would you like to close the datasource?", 
-                                QMessageBox.Yes | QMessageBox.No,
-                                QMessageBox.Yes ) == QMessageBox.No :
-            return
-        self.updateForm()
-        self.reject()
-
-
-    ##  resets the form
-    # \brief It reverts form variables to the last accepted ones    
-    def reset(self):
-        self.updateForm()
 
 
 
@@ -826,53 +983,6 @@ class DataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
         return True    
 
-
-    ## creates the new empty header
-    # \brief It clean the DOM tree and put into it xml and definition nodes
-    def createHeader(self):
-        if self.view:
-            self.view.setModel(None)
-        self.document = QDomDocument()
-        ## defined in NodeDlg class
-        self.root = self.document
-        processing = self.root.createProcessingInstruction("xml", 'version="1.0"') 
-        self.root.appendChild(processing)
-
-        definition = self.root.createElement(QString("definition"))
-        self.root.appendChild(definition)
-        self.node = self.root.createElement(QString("datasource"))
-        definition.appendChild(self.node)            
-        return self.node
-            
-
-    ## copies the datasource to the clipboard
-    # \brief It copies the current datasource to the clipboard
-    def copyToClipboard(self):
-        dsNode = self.createNodes()
-        doc = QDomDocument()
-        child = doc.importNode(dsNode,True)
-        doc.appendChild(child)
-        text = unicode(doc.toString(0))
-        clipboard= QApplication.clipboard()
-        clipboard.setText(text)
-        
-
-    ## copies the datasource from the clipboard  to the current datasource dialog
-    # \return status True on success
-    def copyFromClipboard(self):
-        clipboard= QApplication.clipboard()
-        text=unicode(clipboard.text())
-        self.document = QDomDocument()
-        self.root = self.document
-        if not self.document.setContent(text):
-            raise ValueError, "could not parse XML"
-
-        ds = self._getFirstElement(self.document, "datasource")           
-        if not ds:
-            return
-
-        self.setFromNode(ds)
-        return True
 
 
     ## creates datasource node

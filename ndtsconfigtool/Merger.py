@@ -82,7 +82,7 @@ class Merger(QThread):
             "link":["doc"]
             }
 
-
+        ## required attributes
         self._requiredAttr ={
             "attribute":["name"],
             "definition":[],

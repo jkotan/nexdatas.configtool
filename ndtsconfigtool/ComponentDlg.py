@@ -49,9 +49,11 @@ from ComponentModel import ComponentModel
 class ComponentDlg(QDialog, Ui_ComponentDlg):
     
     ## constructor
+    # \param component component instance
     # \param parent patent instance
     def __init__(self, component, parent=None):
         super(ComponentDlg, self).__init__(parent)
+        ## component instance
         self.component = component 
         
 
@@ -63,7 +65,9 @@ class Component(object):
     def __init__(self, parent=None):
 
 
+        ## component dialog parent
         self.parent = parent
+
         ## directory from which components are loaded by default
         self.directory = ""
         
@@ -667,6 +671,7 @@ class Component(object):
             if hasattr(self.dialog.widget,"treeMode"):
                 self.dialog.widget.treeMode()
             self.dialog.widget.view = self.view
+            self.dialog.view = self.view
             self._frameLayout.addWidget(self.dialog.widget)
             self.dialog.widget.show()
 #            self._frameLayout.update()

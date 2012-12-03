@@ -1162,7 +1162,7 @@ class ComponentChangeDirectory(Command):
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), ComponentDlg):
-                    self.receiver.mdi.setActiveSubWindow(dialog)
+                    self.receiver.mdi.setActiveSubWindow(subwindow)
                     self.receiver.mdi.closeActiveSubWindow()
 
 
@@ -1218,8 +1218,10 @@ class DataSourceCopy(Command):
             else:
                 self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._newstate)
                 self._ds.instance.updateForm()
-            if self._ds.instance in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
+            subwindow = self.receiver.widgetSubWindow(
+                self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
             else:    
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
                 self._subwindow.resize(640,480)
@@ -1239,8 +1241,10 @@ class DataSourceCopy(Command):
             self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
 
 
-            if self._ds.instance in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
+            subwindow = self.receiver.widgetSubWindow(
+                self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
             else:
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
                 self._subwindow.resize(640,480)

@@ -120,6 +120,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
     # \param datasources dictionary with the datasources, i.e. name:xml
     # \param externalSave save action
     # \param externalApply apply action
+    # \param new logical variableset to True if datasource is not saved
     def setList(self, datasources, externalSave = None, externalApply = None , new = False):
         try:
             dirList=os.listdir(self.directory)

@@ -23,7 +23,7 @@ import re
 from PyQt4.QtCore import (SIGNAL, Qt, QString, QVariant)
 from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
 from ui.ui_datasourcelist import  Ui_DataSourceList
-from DataSourceDlg import DataSourceDlg
+from DataSourceDlg import DataSource
 import os 
 
 
@@ -100,9 +100,10 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             else:
                 name = fname
                 
-            dlg = DataSourceDlg()
+            dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
+            dlg.createGUI()
             dlg.load()    
 
             if hasattr(dlg,"connectExternalActions"):     
@@ -135,9 +136,10 @@ class DataSourceList(QWidget, Ui_DataSourceList):
 
             name =  "".join(x.replace('/','_').replace('\\','_').replace(':','_') \
                                 for x in dsname if (x.isalnum() or x in ["/","\\",":","_"]))
-            dlg = DataSourceDlg()
+            dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
+            dlg.createGUI()
             dlg.set(datasources[dsname])    
 
             if hasattr(dlg,"connectExternalActions"):     
@@ -243,11 +245,13 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             self.sourceListWidget.addItem(item)
             if selectedDataSource is not None and selectedDataSource == self.datasources[ds].id:
                 selected = item
-            if self.datasources[ds].instance is not None:
+
+
+            if self.datasources[ds].instance is not None and self.datasources[ds].instance.dialog is not None:
                 if  dirty:
-                    self.datasources[ds].instance.setWindowTitle("DataSource: %s*" %name)
+                    self.datasources[ds].instance.dialog.setWindowTitle("DataSource: %s*" %name)
                 else:
-                    self.datasources[ds].instance.setWindowTitle("DataSource: %s" %name)
+                    self.datasources[ds].instance.dialog.setWindowTitle("DataSource: %s" %name)
 
         if selected is not None:
             selected.setSelected(True)

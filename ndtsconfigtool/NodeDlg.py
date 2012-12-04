@@ -60,12 +60,14 @@ class NodeDlg(QDialog):
     ## resets the dialog
     # \brief It sets forms and dialog from DOM    
     def reset(self):
-        index = self.view.currentIndex()
+        if self.view and hasattr(self.view,"currentIndex"):
+            index = self.view.currentIndex()
         self.setFromNode()
         self.updateForm()
-        if  index.column() != 0:
-            index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        if self.view:
+            if  index.column() != 0:
+                index = self.view.model().index(index.row(), 0, index.parent())
+            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
 
     ## provides the first element in the tree with the given name

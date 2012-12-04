@@ -498,8 +498,12 @@ class CommonDataSource(object):
 
         self.dialog.resize(460, 440)
 
-        self.dialog.connect(self.dialog.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self.close)
+        if hasattr(self, "reset"):
+            self.dialog.connect(self.dialog.resetPushButton, SIGNAL("clicked()"), self.reset)
+        else:
+            self.dialog.connect(self.dialog.resetPushButton, SIGNAL("clicked()"), self.dialog.reset)
+        if hasattr(self, "close"):
+            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self.close)
 
         self.dialog.connectWidgets()
 
@@ -601,7 +605,7 @@ class CommonDataSource(object):
 
 
 
-   ## accepts input text strings
+    ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
         self._applied = False
@@ -661,9 +665,10 @@ class CommonDataSource(object):
 
         index = QModelIndex()
         if self.view and self.view.model():
-            index = self.view.currentIndex()
-            finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
-            self.view.expand(index)    
+            if hasattr(self.view,"currentIndex"):
+                index = self.view.currentIndex()
+                finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
+                self.view.expand(index)    
 
 
         row = index.row()
@@ -1022,11 +1027,11 @@ class DataSource(CommonDataSource):
     # \brief It connects the save action and stores the apply action
     def connectExternalActions(self, externalApply=None, externalSave=None):
         if externalSave and self._externalSave is None:
-            self.connect(self.savePushButton, SIGNAL("clicked()"), 
+            self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
             self._externalSave = externalSave
         if externalApply and self._externalApply is None:
-            self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+            self.dialog.connect(self.dialog.applyPushButton, SIGNAL("clicked()"), 
                      externalApply)
             self._externalApply = externalApply
 
@@ -1041,28 +1046,32 @@ class DataSource(CommonDataSource):
 
 
 ## dialog defining separate datasource
-class DataSourceDlg(CommonDataSource,NodeDlg):
+class DataSourceDlg(NodeDlg):
     
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
-#        super(DataSourceDlg, self).__init__(parent)
-        CommonDataSource.__init__(self, parent)
-        NodeDlg.__init__(self, parent)
-        
-
+        # datasource
+        super(DataSourceDlg, self).__init__(parent)
+        self.datasource = CommonDataSource(parent)
+#        CommonDataSource.__init__(self, parent)
+#        NodeDlg.__init__(self, parent)
+#        print self.datasource 
 
     ## gets the current node
     # \returns the current node  
     def _getnode(self):
-        if self.dialog and hasattr(self.dialog,"node"):
-            return self.dialog.node
+        
+        if hasattr(self,"datasource")  and self.datasource:
+            if self.datasource.dialog and hasattr(self.datasource.dialog,"node"):
+                return self.datasource.dialog.node
 
     ## sets the current node 
     # \param node value to be set 
     def _setnode(self, node):
-        if self.dialog and hasattr(self.dialog,"node"):
-            self.dialog.node = node
+        if hasattr(self,"datasource")  and self.datasource:
+            if self.datasource.dialog and hasattr(self.datasource.dialog,"node"):
+                self.datasource.dialog.node = node
 
     ## attribute value       
     node = property(_getnode, _setnode)            
@@ -1072,27 +1081,106 @@ class DataSourceDlg(CommonDataSource,NodeDlg):
     ## gets the current view
     # \returns the current view  
     def _getview(self):
-        if self.dialog and hasattr(self.dialog,"view"):
-            return self.dialog.view
+        if hasattr(self,"datasource")  and self.datasource:
+            if self.datasource.dialog and hasattr(self.datasource.dialog,"view"):
+                return self.datasource.dialog.view
 
     ## sets the current view
     # \param view value to be set 
     def _setview(self, view):
-        if self.dialog and hasattr(self.dialog,"view"):
-            self.dialog.view = view
-            self.view = view
+        if hasattr(self,"datasource")  and self.datasource:
+            if self.datasource.dialog and hasattr(self.datasource.dialog,"view"):
+                self.datasource.dialog.view = view
+                self.datasource.view = view
 
     ## shows dialog
     # \bief It adapts the dialog method
     def show(self):
-        if self.dialog:
-            self.dialog.show()
+        if hasattr(self,"datasource")  and self.datasource:
+            if self.datasource.dialog:
+                return self.datasource.dialog.show()
 
 
     ## attribute value       
     view = property(_getview, _setview)            
 
 
+    ## gets the current root
+    # \returns the current root  
+    def _getroot(self):
+        if hasattr(self,"datasource")  and self.datasource:
+            if self.datasource.dialog and hasattr(self.datasource.dialog,"root"):
+                return self.datasource.dialog.root
+
+    ## sets the current root
+    # \param root value to be set 
+    def _setroot(self, root):
+        if hasattr(self,"datasource")  and self.datasource:
+            if self.datasource.dialog and hasattr(self.datasource.dialog,"root"):
+                self.datasource.dialog.root = root
+
+    ## attribute value       
+    root = property(_getroot, _setroot)            
+
+
+    ## gets the datasource subItems
+    # \returns the datasource subItems
+    def _getsubItems(self):
+        if hasattr(self,"datasource")  and self.datasource:
+            if self.datasource.dialog and hasattr(self.datasource.dialog,"subItems"):
+                return self.datasource.dialog.subItems
+
+    ## sets the current root
+    # \param root value to be set 
+    def _setsubItems(self, subItems):
+        if hasattr(self,"datasource")  and self.datasource:
+            if self.datasource.dialog and hasattr(self.datasource.dialog,"root"):
+                self.datasource.dialog.subItems = subItems
+
+    ## attribute value       
+    subItems = property(_getsubItems,_setsubItems)            
+
+
+            
+    ## updates the form
+    # \brief abstract class
+    def updateForm(self):
+        if hasattr(self,"datasource")  and self.datasource:
+            return self.datasource.updateForm()
+
+
+    ## updates the node
+    # \brief abstract class
+    def updateNode(self, index=QModelIndex()):
+        if hasattr(self,"datasource")  and self.datasource:
+            return self.datasource.updateNode(index)
+        
+
+    ## creates GUI
+    # \brief abstract class
+    def createGUI(self):
+        if hasattr(self,"datasource")  and self.datasource:
+            return self.datasource.createGUI()
+
+        
+    ## sets the form from the DOM node
+    # \param node DOM node
+    def setFromNode(self, node=None):
+        if hasattr(self,"datasource")  and self.datasource:
+            return self.datasource.setFromNode(node)
+        
+
+    ## accepts input text strings
+    # \brief It copies the parameters and accept the dialog
+    def apply(self):
+        if hasattr(self,"datasource")  and self.datasource:
+            return self.datasource.apply()
+
+     ## sets the tree mode used in ComponentDlg without save/close buttons
+    # \param enable logical variable which dis-/enables mode 
+    def treeMode(self, enable = True):
+        if hasattr(self,"datasource")  and self.datasource:
+            return self.datasource.treeMode(enable)
 
 
 
@@ -1131,7 +1219,7 @@ if __name__ == "__main__":
 
     form2.show()
 
-#    form.dialog.show()
+    form.dialog.show()
 
 
     app.exec_()

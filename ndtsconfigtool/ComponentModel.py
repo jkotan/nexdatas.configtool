@@ -35,7 +35,7 @@ class ComponentModel(QAbstractItemModel):
     # \param parent widget
     # \param allAttributes True if show all attributes in the tree
     def __init__(self, document, allAttributes, parent=None):
-        super(ComponentModel, self).__init__(parent)
+#        super(ComponentModel, self).__init__(parent)
         
         ## DOM document
         self._domDocument = document

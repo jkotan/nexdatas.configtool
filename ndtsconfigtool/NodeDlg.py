@@ -31,6 +31,7 @@ class NodeDlg(QDialog):
     def __init__(self, parent=None):
         super(NodeDlg, self).__init__(parent)
 
+#        print "parent :", parent
         ## DOM node    
         self.node = None
         ## DOM root

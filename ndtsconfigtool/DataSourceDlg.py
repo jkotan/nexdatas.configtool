@@ -1045,9 +1045,8 @@ class DataSource(CommonDataSource):
 
 
 
-
 ## dialog defining separate datasource
-class DataSourceDlg(CommonDataSourceDlg):
+class DataSourceDlg(NodeDlg):
     
     ## constructor
     # \param parent patent instance
@@ -1057,7 +1056,7 @@ class DataSourceDlg(CommonDataSourceDlg):
         self.datasource = CommonDataSource(parent)
 #        CommonDataSource.__init__(self, parent)
 #        NodeDlg.__init__(self, parent)
-        print "parent", type(self.parent)
+        
 
     ## gets the current node
     # \returns the current node  
@@ -1076,6 +1075,20 @@ class DataSourceDlg(CommonDataSourceDlg):
 
     ## attribute value       
     node = property(_getnode, _setnode)            
+
+
+
+    ## gets the current widget
+    # \returns the current widget  
+    def _getwidget(self):
+        
+        if hasattr(self,"datasource")  and self.datasource:
+            if self.datasource.dialog: 
+                return self.datasource.dialog
+
+
+    ## attribute value       
+    widget = property(_getwidget)            
 
         
 

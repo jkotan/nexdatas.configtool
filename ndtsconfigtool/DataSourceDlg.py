@@ -262,7 +262,7 @@ class CommonDataSource(object):
         self.doc = u''
 
         ## datasource dialog
-        self.dialog = None
+        self.dialog = NodeDlg()
 
         ## datasource name
         self.dataSourceName = None
@@ -494,8 +494,8 @@ class CommonDataSource(object):
         self.dialog = CommonDataSourceDlg(self, self.parent)
         self.dialog.setupUi(self.dialog)
 
-        self.updateForm()
 
+        self.updateForm()
         self.dialog.resize(460, 440)
 
         if hasattr(self, "reset"):
@@ -597,6 +597,7 @@ class CommonDataSource(object):
         doc = self.node.firstChildElement(QString("doc"))           
         text = self.dialog._getText(doc)    
         self.doc = unicode(text).strip() if text else ""
+
 
 
 
@@ -1046,7 +1047,7 @@ class DataSource(CommonDataSource):
 
 
 ## dialog defining separate datasource
-class DataSourceDlg(NodeDlg):
+class DataSourceDlg(CommonDataSourceDlg):
     
     ## constructor
     # \param parent patent instance
@@ -1056,7 +1057,7 @@ class DataSourceDlg(NodeDlg):
         self.datasource = CommonDataSource(parent)
 #        CommonDataSource.__init__(self, parent)
 #        NodeDlg.__init__(self, parent)
-#        print self.datasource 
+        print "parent", type(self.parent)
 
     ## gets the current node
     # \returns the current node  

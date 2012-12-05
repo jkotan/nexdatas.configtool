@@ -168,7 +168,7 @@ class ComponentList(QWidget, Ui_ComponentList):
 
     ## fills in the component table      
     # \param selectedComponent selected component    
-    # \param edit flag if edit the selected item
+    # \param dialog flag if the component dialog is in mdi
     def populateComponents(self, selectedComponent = None, edit = False):
 #        print "populate"
         selected = None
@@ -200,11 +200,14 @@ class ComponentList(QWidget, Ui_ComponentList):
                 selected = item
                                
             if self.components[cp].instance is not None and self.components[cp].instance.dialog is not None:
-                if dirty:
-                    self.components[cp].instance.dialog.setWindowTitle("Component: %s*" %name)
-                else:
-                    self.components[cp].instance.dialog.setWindowTitle("Component: %s" %name)
-
+                try:
+                    if dirty:
+                        self.components[cp].instance.dialog.setWindowTitle("Component: %s*" %name)
+                    else:
+                        self.components[cp].instance.dialog.setWindowTitle("Component: %s" %name)
+                except:
+                    # C++ dialog was deleted
+                    self.components[cp].instance.dialog =  None
         if selected is not None:
             selected.setSelected(True)
             self.componentListWidget.setCurrentItem(selected)

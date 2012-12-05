@@ -212,6 +212,15 @@ class ServerStoreComponent(Command):
             if subwindow:
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
             else:    
+                self._cpEdit.createGUI()
+
+                self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
+                if self._cpEdit.isDirty():
+                    self._cpEdit.dialog.setWindowTitle("Component: %s*" % self._cp.name)
+                else:
+                    self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)
+                     
+                self._cpEdit.reconnectSaveAction()
                 subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
                 subwindow.resize(640,480)
                 self._cpEdit.dialog.show()
@@ -276,10 +285,9 @@ class ServerDeleteComponent(Command):
                     self._cp.instance.savedXML = ""
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in deleting the component", unicode(e))
-        if hasattr(self._cp,"id"):
-            self.receiver.componentList.populateComponents(self._cp.id)
-        else:
-            self.receiver.componentList.populateComponents()
+
+        cid = self._cp.id if hasattr(self._cp,"id") else None
+        self.receiver.componentList.populateComponents(cid)
 
             
         print "EXEC serverDeleteComponent"
@@ -2293,7 +2301,8 @@ class ComponentItemCommand(Command):
             if self._oldstate is None and hasattr(self._cp,"instance") \
                     and hasattr(self._cp.instance,"setState"):
                 self._oldstate = self._cp.instance.getState() 
-                self._index = self._cp.instance.view.currentIndex()
+                self._index = self._cp.instance.currentIndex()
+
             else:
                 QMessageBox.warning(self.receiver, "Component not created", 
                                     "Please edit one of the components")            
@@ -2319,11 +2328,22 @@ class ComponentItemCommand(Command):
                 if subwindow:
                     self.receiver.mdi.setActiveSubWindow(subwindow) 
                 else:    
+                    self._cp.instance.createGUI()
+
+                    self._cp.instance.addContextMenu(self.receiver.contextMenuActions)
+                    if self._cp.instance.isDirty():
+                        self._cp.instance.dialog.setWindowTitle("Component: %s*" % self._cp.name)
+                    else:
+                        self._cp.instance.dialog.setWindowTitle("Component: %s" % self._cp.name)
+                     
+                    self._cp.instance.reconnectSaveAction()
                     self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
                     self._subwindow.resize(640,480)
 
                     if hasattr(self._cp.instance.dialog,"show"):
                         self._cp.instance.dialog.show()
+
+
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
         else:
@@ -2788,20 +2808,12 @@ class ComponentMerge(ComponentItemCommand):
     ## executes the command
     # \brief It merges the current component
     def execute(self):
-        print "c1"
         if self._cp is None:
-            print "c2"
             self.preExecute()
-            print "c3"
             if self._cp is not None:                
-                print "c4"
                 if hasattr(self._cp.instance,"merge"):
-                    print "c5"
                     self._cp.instance.merge()
-                    print "c6"
-        print "c7"
         self.postExecute()
-        print "c8"
             
             
         print "EXEC componentMerge"

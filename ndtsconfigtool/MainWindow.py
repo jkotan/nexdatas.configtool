@@ -1069,6 +1069,8 @@ class MainWindow(QMainWindow):
     ## save component action
     # \brief It saves the current component      
     def componentSave(self):
+        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
         cmd = self.pool.getCommand('componentMerge').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
@@ -1542,17 +1544,13 @@ class MainWindow(QMainWindow):
     ## merge component action
     # \brief It merges the current component
     def componentMerge(self):
-        print "cm1"
-        cmd = self.pool.getCommand('componentMerge').clone()
-        print "cm2"
+        cmd = self.pool.getCommand('componentEdit').clone()
         cmd.execute()
-        print "cm3"
+        cmd = self.pool.getCommand('componentMerge').clone()
+        cmd.execute()
         self.cmdStack.append(cmd)
-        print "cm4"
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-        print "cm5"
         self.pool.setDisabled("redo", True, "Can't Redo")      
-        print "cm6"
 
     ## remove component action
     # \brief It removes from the component list the current component
@@ -1622,6 +1620,8 @@ class MainWindow(QMainWindow):
     ## store server component action
     # \brief It stores the current component in the configuration server
     def serverStoreComponent(self):
+        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
         cmd = self.pool.getCommand('componentMerge').clone()
         cmd.execute()
         self.cmdStack.append(cmd)

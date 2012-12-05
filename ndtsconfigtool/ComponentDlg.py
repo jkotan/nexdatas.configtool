@@ -203,14 +203,22 @@ class Component(object):
         return item.node
         
         
-    
+    ## provides the current view index
+    # \returns the current view index
+    def currentIndex(self):
+        try:
+            index = self.view.currentIndex()
+        except:
+            index = QModelIndex()
+        return index
+        
 
 
 
     ## provides the path of component tree for the current component tree item
     # \returns path represented as a list with elements: (row number, node name)
     def _getPath(self):
-        index = self.view.currentIndex()
+        index = self.currentIndex()
         pindex = index.parent()
         path = []
         if not index.isValid():
@@ -1014,9 +1022,13 @@ class Component(object):
     def merge(self):
         print "m0"
         document = None
-        if not self.view or not self.view.model():
-            self._merged = False
-            return
+        dialog = False
+        try:
+            if self.view and self.view.model():
+                dialog = True
+        except:
+            pass
+       
         if not self.document:
             self._merged = False
             return
@@ -1029,14 +1041,15 @@ class Component(object):
 
             document = self.document
             self.document = QDomDocument()
-            newModel = ComponentModel(self.document, self._allAttributes, self.parent)
-            self.view.setModel(newModel)
-            self.view.reset()
-            self._hideFrame()
+            if dialog:
+                newModel = ComponentModel(self.document, self._allAttributes, self.parent)
+                self.view.setModel(newModel)
+                self.view.reset()
+                self._hideFrame()
             
-            print "a0"
-            self._mergerdlg.show()
-            print "a1"
+                print "a0"
+                self._mergerdlg.show()
+                print "a1"
 
 
             self._merger.start()
@@ -1046,27 +1059,31 @@ class Component(object):
             while self._merger and not self._merger.isFinished():
                 time.sleep(0.01)
                 
-            print "a3"
-            self._closeMergerDlg()
-            print "a4"
+            if dialog:
+                print "a3"
+                self._closeMergerDlg()
+                print "a4"
+
             if self._merger.exception:
                 raise self._merger.exception
             print "a5"
 
             self._merged = True
             print "a6"
-            newModel = ComponentModel(document, self._allAttributes ,self.parent)
+            if dialog:
+                newModel = ComponentModel(document, self._allAttributes ,self.parent)
             print "a7"
             self.document = document
             print "a8"
-            self.view.setModel(newModel)
-            print "a9"
-            self._hideFrame()
-            print "a10"
+            if dialog:
+                self.view.setModel(newModel)
+                print "a9"
+                self._hideFrame()
+                print "a10"
 
-            if hasattr(self._merger, "selectedNode") and self._merger.selectedNode: 
-                self._showNodes([self._merger.selectedNode])
-            print "a11"
+                if hasattr(self._merger, "selectedNode") and self._merger.selectedNode: 
+                    self._showNodes([self._merger.selectedNode])
+                    print "a11"
 
             self._merger = None
             print "a12"
@@ -1075,23 +1092,28 @@ class Component(object):
             print "Error in Merging: %s" % unicode(e.value)
             self._merger = None
             self._merged = False
-            newModel = ComponentModel(document, self._allAttributes, self,parent)
+            if dialog:
+                newModel = ComponentModel(document, self._allAttributes, self.parent)
             self.document = document
-            self.view.setModel(newModel)
-            self._hideFrame()
-            if hasattr(e, "nodes") and e.nodes: 
-                self._showNodes(e.nodes)
-            QMessageBox.warning(self, "Merging problem",
-                                "Error in Merging: %s" % unicode(e.value) )
+            if dialog:
+                self.view.setModel(newModel)
+                self._hideFrame()
+                if hasattr(e, "nodes") and e.nodes: 
+                    self._showNodes(e.nodes)
+            if dialog:    
+                QMessageBox.warning(self.dialog, "Merging problem",
+                                    "Error in %s Merging: %s" % (unicode(self.name), unicode(e.value)) )
         except  Exception, e:    
             print "Exception: %s" % unicode(e)
             self._merged = False
-            newModel = ComponentModel(document, self._allAttributes, self.parent)
-            self.document = document
-            self.view.setModel(newModel)
-            self._hideFrame()
-            QMessageBox.warning(self, "Warning",
-                                "%s" % unicode(e) )
+            if dialog:
+                newModel = ComponentModel(document, self._allAttributes, self.parent)
+                self.document = document
+                self.view.setModel(newModel)
+                self._hideFrame()
+            if dialog:    
+                QMessageBox.warning(self.dialog, "Warning",
+                                    "%s" % unicode(e) )
  
         return self._merged
 
@@ -1100,7 +1122,10 @@ class Component(object):
     # \brief It puts an empty widget into the widget frame
     def _hideFrame(self):
         if self.dialog.widget:
-            self.dialog.widget.setVisible(False)
+            if hasattr(self.dialog.widget,"widget"):
+                self.dialog.widget.widget.setVisible(False)
+            else:
+                self.dialog.widget.setVisible(False)
         self.dialog.widget = QWidget()
         self._frameLayout.addWidget(self.dialog.widget)
         self.dialog.widget.show()
@@ -1174,7 +1199,7 @@ class Component(object):
     # \brief It saves the component in the xml file 
     def save(self):
         if not self._merged:
-            QMessageBox.warning(self, "Saving problem",
+            QMessageBox.warning(self.dialog, "Saving problem",
                                 "Document not merged" )
             return
         error = None

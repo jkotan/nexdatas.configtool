@@ -926,16 +926,26 @@ class ComponentEdit(Command):
             else:
                 self._cpEdit = self._cp.instance 
                 
+
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
                                                     self.receiver.componentSave)
-
 
             subwindow = self.receiver.subWindow(
                 self._cpEdit, self.receiver.mdi.subWindowList())
             if subwindow:
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self._cpEdit.reconnectSaveAction()
             else:    
+                self._cpEdit.createGUI()
+
+                self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
+                if self._cpEdit.isDirty():
+                    self._cpEdit.dialog.setWindowTitle("Component: %s*" % self._cp.name)
+                else:
+                    self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)
+                     
+                self._cpEdit.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
                 self._subwindow.resize(640,480)
                 self._cpEdit.dialog.show()

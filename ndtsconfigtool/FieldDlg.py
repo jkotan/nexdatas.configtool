@@ -40,7 +40,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
     # \param parent patent instance
     def __init__(self, parent=None):
         super(FieldDlg, self).__init__(parent)
-        print "fparent", self.parent
+#        print "fparent", self.parent
         
         ## field name
         self.name = u''

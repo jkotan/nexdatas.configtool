@@ -291,7 +291,8 @@ class Component(object):
         self.dialog.splitter.setStretchFactor(0,1)
         self.dialog.splitter.setStretchFactor(1,1)
         
-        model = ComponentModel(QDomDocument(),self._allAttributes,self.parent)
+        model = ComponentModel(self.document,self._allAttributes,self.parent)
+#        model = ComponentModel(QDomDocument(),self._allAttributes,self.parent)
         self.view.setModel(model)
         
         self.dialog.widget = QWidget()
@@ -608,6 +609,16 @@ class Component(object):
         if externalApply and self._externalApply is None:
             self._externalApply = externalApply
 
+    ## reconnects save actions
+    # \brief It reconnects the save action 
+    def reconnectSaveAction(self):
+        if self._externalSave:
+            self.dialog.disconnect(self.dialog.savePushButton, SIGNAL("clicked()"), 
+                         self._externalSave)
+            self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
+                         self._externalSave)
+        print "reconnect"
+
 
     ## switches between all attributes in the try or only type attribute
     # \param status all attributes are shown if True
@@ -672,7 +683,7 @@ class Component(object):
             self.dialog.widget.root = self.document
             self.dialog.widget.setFromNode(node)
             self.dialog.widget.createGUI()
-            print "type", type(self.dialog.widget)
+#            print "type", type(self.dialog.widget)
             if hasattr(self.dialog.widget,"connectExternalActions"):
                 self.dialog.widget.connectExternalActions(self._externalApply)
             if hasattr(self.dialog.widget,"treeMode"):

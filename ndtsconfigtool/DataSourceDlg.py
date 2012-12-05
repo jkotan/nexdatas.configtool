@@ -1046,7 +1046,7 @@ class DataSource(CommonDataSource):
 
 
 ## dialog defining separate datasource
-class DataSourceDlg(NodeDlg):
+class DataSourceDlg(CommonDataSourceDlg):
     
     ## constructor
     # \param parent patent instance

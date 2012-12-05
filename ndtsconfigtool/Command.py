@@ -24,7 +24,7 @@ from PyQt4.QtCore import (SIGNAL, Qt, QFileInfo)
 
 from DataSourceList import DataSourceList
 from ComponentList import ComponentList
-from DataSourceDlg import DataSourceDlg
+from DataSourceDlg import (DataSource, DataSourceDlg, CommonDataSourceDlg)
 from ComponentDlg import (Component, ComponentDlg)
 from LabeledObject import LabeledObject
 
@@ -231,6 +231,7 @@ class ServerStoreComponent(Command):
                 xml = self._cpEdit.get()    
                 self.receiver.configServer.storeComponent(self._cpEdit.name, xml)
                 self._cpEdit.savedXML = xml
+                self._cp.savedName = self._cp.name
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in storing the component", unicode(e))
         if hasattr(self._cp,"id"):
@@ -432,10 +433,10 @@ class ServerFetchDataSources(Command):
         if subwindows:
             for subwindow in subwindows:
                 dialog = subwindow.widget()
-                if isinstance(dialog, DataSourceDlg):
+                if isinstance(dialog, CommonDataSourceDlg):
                     self.receiver.mdi.setActiveSubWindow(subwindow)
                     self.receiver.mdi.closeActiveSubWindow()
-
+                    
         self.receiver.sourceList.datasources = {} 
 
 
@@ -1851,22 +1852,23 @@ class DataSourceReloadList(Command):
             return
 
 
-        dialogs = self.receiver.mdi.subWindowList()
-        if dialogs:
-            for dialog in dialogs:
-                if isinstance(dialog, DataSourceDlg):
-                    self.receiver.mdi.setActiveSubWindow(dialog)
+        subwindows = self.receiver.mdi.subWindowList()
+        if subwindows:
+            for subwindow in subwindows:
+                dialog = subwindow.widget()
+                if isinstance(dialog, CommonDataSourceDlg):
+                    self.receiver.mdi.setActiveSubWindow(subwindow)
                     self.receiver.mdi.closeActiveSubWindow()
-
+                    
         self.receiver.sourceList.datasources = {} 
         self.receiver.loadDataSources()
 
-        print "EXEC componentReloadList"
+        print "EXEC dsourceReloadList"
 
     ## unexecutes the command
     # \brief It does nothing
     def unexecute(self):
-        print "UNDO componentReloadList"
+        print "UNDO dsourceReloadList"
 
 
     ## clones the command
@@ -2023,7 +2025,7 @@ class DataSourceEdit(Command):
         else:
             if self._ds.instance is None:
                 #                self._dsEdit = FieldWg()  
-                self._dsEdit = DataSourceDlg()
+                self._dsEdit = DataSource()
                 self._dsEdit.ids = self._ds.id
                 self._dsEdit.directory = self.receiver.sourceList.directory
                 self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
@@ -2036,12 +2038,23 @@ class DataSourceEdit(Command):
             if hasattr(self._dsEdit,"connectExternalActions"):     
                 self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)
 
-            if self._ds.instance in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self._ds.instance.reconnectSaveAction()
             else:    
-                self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit)
-                self._subwindow.resize(640,480)
-                self._dsEdit.show()
+                self._ds.instance.createGUI()
+
+                if self._ds.instance.isDirty():
+                    self._ds.instance.dialog.setWindowTitle("Component: %s*" % self._ds.name)
+                else:
+                    self._ds.instance.dialog.setWindowTitle("Component: %s" % self._ds.name)
+                     
+                self._ds.instance.reconnectSaveAction()
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
+                self._subwindow.resize(440,480)
+                self._dsEdit.dialog.show()
                 #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
                 self._ds.instance = self._dsEdit 
                     

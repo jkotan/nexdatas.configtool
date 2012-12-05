@@ -1024,6 +1024,17 @@ class DataSource(CommonDataSource):
         self.setFromNode(ds)
         return True
 
+
+    ## reconnects save actions
+    # \brief It reconnects the save action 
+    def reconnectSaveAction(self):
+        if self._externalSave:
+            self.dialog.disconnect(self.dialog.savePushButton, SIGNAL("clicked()"), 
+                         self._externalSave)
+            self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
+                         self._externalSave)
+
+
     ## connects external actions
     # \brief It connects the save action and stores the apply action
     def connectExternalActions(self, externalApply=None, externalSave=None):

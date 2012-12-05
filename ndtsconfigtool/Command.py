@@ -485,6 +485,7 @@ class ServerStoreDataSource(Command):
                 else:
                     self.receiver.configServer.storeDataSource(self._ds.instance.name, xml)
                 self._ds.instance.savedXML = xml
+                self._ds.savedName = self._ds.name
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in datasource storing", unicode(e))
             
@@ -531,7 +532,11 @@ class ServerDeleteDataSource(Command):
             try:
                 if hasattr(self._ds,"instance"):
                     self._ds.instance.savedXML = ""
-                    self.receiver.configServer.deleteDataSource(self._ds.instance.dataSourceName)
+                    print "DEL", self._ds.instance.dataSourceName
+                    name = self._ds.instance.dataSourceName 
+                    if name is None:
+                        name = ""
+                    self.receiver.configServer.deleteDataSource(name)
                     self._ds.savedName = ""
 
             except Exception, e:

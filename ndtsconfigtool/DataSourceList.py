@@ -106,6 +106,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             dlg.createGUI()
             dlg.load()    
 
+            
             if hasattr(dlg,"connectExternalActions"):     
                 dlg.connectExternalActions(externalApply, externalSave)    
             
@@ -141,6 +142,8 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             dlg.name = name
             dlg.createGUI()
             dlg.set(datasources[dsname])    
+
+            dlg.dataSourceName = dsname
 
             if hasattr(dlg,"connectExternalActions"):     
                 dlg.connectExternalActions(externalApply, externalSave)    

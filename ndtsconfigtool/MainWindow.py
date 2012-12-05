@@ -1741,8 +1741,8 @@ class MainWindow(QMainWindow):
         if isinstance(widget, DataSourceDlg):
             if widget.ids is not None:
                 if hasattr(self.sourceList.currentListDataSource(),"id"):
-                    if self.sourceList.currentListDataSource().id != widget.ids: 
-                        self.sourceList.populateDataSources(widget.ids)
+                    if self.sourceList.currentListDataSource().id != widget.datasource.ids: 
+                        self.sourceList.populateDataSources(widget.datasource.ids)
         elif isinstance(widget, ComponentDlg):
             if widget.component.idc is not None:
                 if hasattr(self.componentList.currentListComponent(),"id"):

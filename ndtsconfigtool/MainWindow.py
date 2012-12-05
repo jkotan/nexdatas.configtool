@@ -1938,10 +1938,15 @@ class MainWindow(QMainWindow):
     def subWindow(self, instance, subwindows):
         swin = None
         for sw in subwindows:
-            if hasattr(sw,"widget") and hasattr(sw.widget(),"component")\
-                    and  sw.widget().component == instance:
-                swin = sw
-                break
+            if hasattr(sw,"widget"):
+                if hasattr(sw.widget(),"component")\
+                        and  sw.widget().component == instance:
+                    swin = sw
+                    break
+                elif hasattr(sw.widget(),"datasource")\
+                        and  sw.widget().datasource == instance:
+                    swin = sw
+                    break
         return swin
 
 

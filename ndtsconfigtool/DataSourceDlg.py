@@ -665,7 +665,7 @@ class CommonDataSource(object):
         self.doc = unicode(self.dialog.docTextEdit.toPlainText()).strip()
 
         index = QModelIndex()
-        if self.view and self.view.model():
+        if hasattr(self,"view") and self.view and self.view.model():
             if hasattr(self.view,"currentIndex"):
                 index = self.view.currentIndex()
                 finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
@@ -684,7 +684,7 @@ class CommonDataSource(object):
                 self.view.setCurrentIndex(index)
                 self.view.expand(index)
         
-            if self.view and self.view.model():
+            if hasattr(self,"view")  and self.view and self.view.model():
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
                 if  index.column() != 0:
                     index = self.view.model().index(index.row(), 0, index.parent())
@@ -980,7 +980,7 @@ class DataSource(CommonDataSource):
     ## creates the new empty header
     # \brief It clean the DOM tree and put into it xml and definition nodes
     def createHeader(self):
-        if self.view:
+        if hasattr(self,"view") and self.view:
             self.view.setModel(None)
         self.document = QDomDocument()
         ## defined in NodeDlg class
@@ -1033,6 +1033,11 @@ class DataSource(CommonDataSource):
                          self._externalSave)
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
                          self._externalSave)
+        if self._externalApply:
+            self.dialog.disconnect(self.dialog.applyPushButton, SIGNAL("clicked()"), 
+                         self._externalApply)
+            self.dialog.connect(self.dialog.applyPushButton, SIGNAL("clicked()"), 
+                         self._externalApply)
 
 
     ## connects external actions

@@ -1476,16 +1476,29 @@ class DataSourceApply(Command):
                 if self._oldstate is None:
                     self._oldstate = self._ds.instance.getState() 
             else:
-            
-                self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._newstate)
+                self.receiver.sourceList.datasources[self._ds.id].instance.setState(
+                    self._newstate)
                 self._ds.instance.updateForm()
-            if self._ds.instance in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
-            else:    
 
-                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
-                self._subwindow.resize(640,480)
-                self._ds.instance.show()
+
+
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self._ds.instance.reconnectSaveAction()
+            else:    
+                self._ds.instance.createGUI()
+
+                if self._ds.instance.isDirty():
+                    self._ds.instance.dialog.setWindowTitle("Component: %s*" % self._ds.name)
+                else:
+                    self._ds.instance.dialog.setWindowTitle("Component: %s" % self._ds.name)
+                     
+                self._ds.instance.reconnectSaveAction()
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
+                self._subwindow.resize(440,480)
+                self._ds.instance.dialog.show()
     
                     
             self._ds.instance.apply()    
@@ -1512,11 +1525,26 @@ class DataSourceApply(Command):
             self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
 
 
-            if self._ds.instance in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
-            else:
-                self.receiver.mdi.addSubWindow(self._ds.instance)
-                self._ds.instance.show()
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self._ds.instance.reconnectSaveAction()
+            else:    
+                self._ds.instance.createGUI()
+
+                if self._ds.instance.isDirty():
+                    self._ds.instance.dialog.setWindowTitle("Component: %s*" % self._ds.name)
+                else:
+                    self._ds.instance.dialog.setWindowTitle("Component: %s" % self._ds.name)
+                     
+                self._ds.instance.reconnectSaveAction()
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
+                self._subwindow.resize(440,480)
+                self._ds.instance.dialog.show()
+    
+
+
 
             if hasattr(self._ds ,"id"):
                 self.receiver.sourceList.populateDataSources(self._ds.id)
@@ -2032,6 +2060,7 @@ class DataSourceEdit(Command):
                 self._dsEdit.createGUI()
                 self._dsEdit.createHeader()
                 self._dsEdit.setWindowTitle("DataSource: %s*" % self._ds.name)
+                self._ds.instance = self._dsEdit 
             else:
                 self._dsEdit = self._ds.instance 
                 
@@ -2039,24 +2068,23 @@ class DataSourceEdit(Command):
                 self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)
 
             subwindow = self.receiver.subWindow(
-                self._ds.instance, self.receiver.mdi.subWindowList())
+                self._dsEdit, self.receiver.mdi.subWindowList())
             if subwindow:
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
-                self._ds.instance.reconnectSaveAction()
+                self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
-                    self._ds.instance.dialog.setWindowTitle("Component: %s*" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
                 else:
-                    self._ds.instance.dialog.setWindowTitle("Component: %s" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("DataSource: %s" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
                 self._subwindow.resize(440,480)
                 self._dsEdit.dialog.show()
                 #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
-                self._ds.instance = self._dsEdit 
                     
 
 

@@ -1230,7 +1230,7 @@ class Component(object):
             self.setName(self.name, self.directory)
 
         self._componentFile = unicode(
-            QFileDialog.getSaveFileName(self,"Save Component As ...",self._componentFile,
+            QFileDialog.getSaveFileName(self.dialog,"Save Component As ...",self._componentFile,
                                         "XML files (*.xml);;HTML files (*.html);;"
                                         "SVG files (*.svg);;User Interface files (*.ui)"))
         return self._componentFile

@@ -1173,7 +1173,7 @@ class Component(object):
     # \returns xml string    
     def get(self, indent=0):
         if hasattr(self.document,"toString"):
-            processing = self.document.createProcessingInstruction("xml", 'version="1.0"') 
+            processing = self.document.createProcessingInstruction("xml", "version='1.0'") 
             self.document.insertBefore(processing, self.document.firstChild())
             string = unicode(self.document.toString(indent))
             self.document.removeChild(processing)

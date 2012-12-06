@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <definition>
   <group type="NXentry" name="entry2">
     <group type="NXinstrument" name="instrument">

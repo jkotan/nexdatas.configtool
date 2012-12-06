@@ -767,7 +767,7 @@ class CommonDataSource(object):
             elem.appendChild(newDoc)
 
 
-        if external:
+        if external and hasattr(self.root,"importNode"):
             rootDs = self.root.importNode(elem, True)
         else:
             rootDs = elem
@@ -824,6 +824,10 @@ class DataSource(CommonDataSource):
     # \returns True if it is not saved     
     def isDirty(self):
         string = self.get()
+#        if string != self.savedXML:
+#            print "name:", self.name
+#            print "string", string
+#            print "saved string", self.savedXML 
         return False if string == self.savedXML else True
 
 
@@ -888,6 +892,7 @@ class DataSource(CommonDataSource):
                 if ds:
                     self.setFromNode(ds)
                 self.savedXML = self.document.toString(0)
+                print "s1", self.savedXML
             try:    
                 self.createGUI()
             except Exception, e:
@@ -919,6 +924,7 @@ class DataSource(CommonDataSource):
         if ds:
             self.setFromNode(ds)
             self.savedXML = self.document.toString(0)
+            print "s2", self.savedXML
         try:    
             self.createGUI()
         except Exception, e:
@@ -929,10 +935,10 @@ class DataSource(CommonDataSource):
     ## accepts and save input text strings
     # \brief It copies the parameters and saves the dialog
     def save(self):
+        error = None
         if self._applied:
             filename = self.directory + "/" + self.name + ".ds.xml"
             print "saving in %s"% (filename)
-            error = None
             if filename:
                 try:
                     fh = QFile(filename)
@@ -942,6 +948,7 @@ class DataSource(CommonDataSource):
                     stream <<self.document.toString(2)
             #                print self.document.toString(2)
                     self.savedXML = self.document.toString(0)
+                    print "s3", self.savedXML
                 except (IOError, OSError, ValueError), e:
                     error = "Failed to save: %s" % e
                     print error
@@ -985,7 +992,7 @@ class DataSource(CommonDataSource):
         self.document = QDomDocument()
         ## defined in NodeDlg class
         self.root = self.document
-        processing = self.root.createProcessingInstruction("xml", 'version="1.0"') 
+        processing = self.root.createProcessingInstruction("xml", "version='1.0'") 
         self.root.appendChild(processing)
 
         definition = self.root.createElement(QString("definition"))
@@ -998,7 +1005,7 @@ class DataSource(CommonDataSource):
     ## copies the datasource to the clipboard
     # \brief It copies the current datasource to the clipboard
     def copyToClipboard(self):
-        dsNode = self.createNodes()
+        dsNode = self.createNodes(True)
         doc = QDomDocument()
         child = doc.importNode(dsNode,True)
         doc.appendChild(child)
@@ -1017,9 +1024,22 @@ class DataSource(CommonDataSource):
         if not self.document.setContent(text):
             raise ValueError, "could not parse XML"
 
-        ds = self._getFirstElement(self.document, "datasource")           
+
+
+        processing = self.root.createProcessingInstruction("xml", "version='1.0'") 
+        self.root.appendChild(processing)
+
+        definition = self.root.createElement(QString("definition"))
+        self.root.appendChild(definition)
+
+
+        ds = self.dialog._getFirstElement(self.document, "datasource")           
         if not ds:
             return
+        # self.node = self.root.createElement(QString("datasource"))
+        self.root.removeChild(ds)            
+        
+        definition.appendChild(ds)            
 
         self.setFromNode(ds)
         return True

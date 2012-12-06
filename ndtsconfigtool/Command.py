@@ -1264,7 +1264,7 @@ class DataSourceCopy(Command):
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
                 self._subwindow.resize(440,480)
-                self._ds.instance.show()
+                self._ds.instance.dialog.show()
                 
 
             self._newstate = self._ds.instance.getState() 
@@ -1296,7 +1296,7 @@ class DataSourceCopy(Command):
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
                 self._subwindow.resize(440,480)
-                self._ds.instance.show()
+                self._ds.instance.dialog.show()
             
             
         print "UNDO dsourceCopy"
@@ -1338,18 +1338,31 @@ class DataSourceCut(Command):
                     self._oldstate = self._ds.instance.getState() 
                 self._ds.instance.copyToClipboard()
                 self._ds.instance.clear()
-                self._ds.instance.createNodes()
+#                self._ds.instance.createNodes()
                 self._ds.instance.updateForm()
                 self._ds.instance.dialog.show()
             else:
                 self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._newstate)
                 self._ds.instance.updateForm()
-            if self._ds.instance in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
+
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self._ds.instance.reconnectSaveAction() 
             else:    
-                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
-                self._subwindow.resize(640,480)
-                self._ds.instance.show()
+                self._ds.instance.createGUI()
+
+                if self._ds.instance.isDirty():
+                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                else:
+                    self._ds.instance.dialog.setWindowTitle("DataSource: %s" % self._ds.name)
+                     
+                self._ds.instance.reconnectSaveAction()
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
+                self._subwindow.resize(440,480)
+                self._ds.instance.dialog.show()
+                
                 
 
             self._newstate = self._ds.instance.getState() 
@@ -1367,14 +1380,25 @@ class DataSourceCut(Command):
         
             self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._oldstate)
             self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
+#            self.receiver.sourceList.datasources[self._ds.id].instance.updateNode()
 
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self._ds.instance.reconnectSaveAction() 
+            else:    
+                self._ds.instance.createGUI()
 
-            if self._ds.instance in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
-            else:
-                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
-                self._subwindow.resize(640,480)
-                self._ds.instance.show()
+                if self._ds.instance.isDirty():
+                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                else:
+                    self._ds.instance.dialog.setWindowTitle("DataSource: %s" % self._ds.name)
+                     
+                self._ds.instance.reconnectSaveAction()
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
+                self._subwindow.resize(440,480)
+                self._ds.instance.dialog.show()
             
         if hasattr(self._ds ,"id"):
             self.receiver.sourceList.populateDataSources(self._ds.id)
@@ -1424,20 +1448,35 @@ class DataSourcePaste(Command):
                                         "Probably clipboard does not contain datasource")            
                     
                 self._ds.instance.updateForm()
-                self._ds.instance.setFrames(self._ds.instance.dataSourceType)
+#                self._ds.instance.updateNode()
+                self._ds.instance.dialog.setFrames(self._ds.instance.dataSourceType)
 
 #                self._ds.instance.updateForm()
-                self._ds.instance.show()
+                self._ds.instance.dialog.show()
             else:
                 self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._newstate)
                 self._ds.instance.updateForm()
-            if self._ds.instance in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
+#                self._ds.instance.updateNode()
+
+
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self._ds.instance.reconnectSaveAction() 
             else:    
-                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
-                self._subwindow.resize(640,480)
-                self._ds.instance.show()
-                
+                self._ds.instance.createGUI()
+
+                if self._ds.instance.isDirty():
+                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                else:
+                    self._ds.instance.dialog.setWindowTitle("DataSource: %s" % self._ds.name)
+                     
+                self._ds.instance.reconnectSaveAction()
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
+                self._subwindow.resize(440,480)
+                self._ds.instance.dialog.show()
+                                
 
             self._newstate = self._ds.instance.getState() 
             
@@ -1456,12 +1495,23 @@ class DataSourcePaste(Command):
             self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
 
 
-            if self._ds.instance in self.receiver.mdi.subWindowList():
-                self.receiver.mdi.setActiveSubWindow(self._ds.instance) 
-            else:
-                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance)
-                self._subwindow.resize(640,480)
-                self._ds.instance.show()
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self._ds.instance.reconnectSaveAction() 
+            else:    
+                self._ds.instance.createGUI()
+
+                if self._ds.instance.isDirty():
+                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                else:
+                    self._ds.instance.dialog.setWindowTitle("DataSource: %s" % self._ds.name)
+                     
+                self._ds.instance.reconnectSaveAction()
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
+                self._subwindow.resize(440,480)
+                self._ds.instance.dialog.show()
             
             if hasattr(self._ds ,"id"):
                 self.receiver.sourceList.populateDataSources(self._ds.id)
@@ -1608,10 +1658,18 @@ class DataSourceSaveAll(Command):
     # \brief It saves all the datasources in files
     def execute(self):
             
-        for icp in self.receiver.sourceList.datasources.keys():
-            cp = self.receiver.sourceList.datasources[icp]
-            if cp.instance is not None:
-                cp.instance.save()    
+        for ids in self.receiver.sourceList.datasources.keys():
+            ds = self.receiver.sourceList.datasources[ids]
+            if ds.instance is not None:
+                if ds.instance.save():
+                    ds.savedName = ds.name
+
+        ds = self.receiver.sourceList.currentListDataSource()
+        if hasattr(ds ,"id"):
+            self.receiver.sourceList.populateDataSources(ds.id)
+        else:
+            self.receiver.sourceList.populateDataSources()
+
 
         print "EXEC dsourceSaveAll"
 

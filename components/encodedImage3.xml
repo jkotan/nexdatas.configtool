@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <definition>
   <field type="NX_INT" name="data">
     <dimensions rank="2">

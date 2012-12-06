@@ -1350,6 +1350,7 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Item not selected", 
                                 "Please select one of the items")            
             cmd.type = None
+            return
         cmd.execute()
 
 
@@ -1358,15 +1359,16 @@ class MainWindow(QMainWindow):
     # \brief It removes the current item and copies it into the clipboard
     def cutItem(self):
         cmd = self.pool.getCommand('cutItem').clone()
-        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
+        if self.mdi.activeSubWindow() and isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd.type = "component"
-        elif isinstance(self.mdi.activeSubWindow().widget(),CommonDataSourceDlg):
+        elif self.mdi.activeSubWindow() and isinstance(self.mdi.activeSubWindow().widget(),CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self, "Item not selected", 
                                 "Please select one of the items")            
             cmd.type = None
 
+            return
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
@@ -1378,14 +1380,15 @@ class MainWindow(QMainWindow):
     # \brief It pastes the item from the clipboard
     def pasteItem(self):
         cmd = self.pool.getCommand('pasteItem').clone()
-        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
+        if self.mdi.activeSubWindow() and isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd.type = "component"
-        elif isinstance(self.mdi.activeSubWindow().widget(),CommonDataSourceDlg):
+        elif self.mdi.activeSubWindow() and isinstance(self.mdi.activeSubWindow().widget(),CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self, "Item not selected", 
                                 "Please select one of the items")            
             cmd.type = None
+            return
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )

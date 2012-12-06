@@ -1340,7 +1340,7 @@ class DataSourceCut(Command):
                 self._ds.instance.clear()
                 self._ds.instance.createNodes()
                 self._ds.instance.updateForm()
-                self._ds.instance.show()
+                self._ds.instance.dialog.show()
             else:
                 self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._newstate)
                 self._ds.instance.updateForm()

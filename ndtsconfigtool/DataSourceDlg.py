@@ -676,7 +676,7 @@ class CommonDataSource(object):
         column = index.column()
         parent = index.parent()
 
-        if self.node  and self.root and self.node.isElement():
+        if self.root :
 
             self.updateNode(index)
             if index.isValid():
@@ -892,7 +892,6 @@ class DataSource(CommonDataSource):
                 if ds:
                     self.setFromNode(ds)
                 self.savedXML = self.document.toString(0)
-                print "s1", self.savedXML
             try:    
                 self.createGUI()
             except Exception, e:
@@ -924,7 +923,6 @@ class DataSource(CommonDataSource):
         if ds:
             self.setFromNode(ds)
             self.savedXML = self.document.toString(0)
-            print "s2", self.savedXML
         try:    
             self.createGUI()
         except Exception, e:
@@ -945,10 +943,10 @@ class DataSource(CommonDataSource):
                     if not fh.open(QIODevice.WriteOnly):
                         raise IOError, unicode(fh.errorString())
                     stream = QTextStream(fh)
+                    self.createNodes()
                     stream <<self.document.toString(2)
             #                print self.document.toString(2)
                     self.savedXML = self.document.toString(0)
-                    print "s3", self.savedXML
                 except (IOError, OSError, ValueError), e:
                     error = "Failed to save: %s" % e
                     print error

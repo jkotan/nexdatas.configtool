@@ -9,7 +9,7 @@
             <record name="exp_c01"/>
           </datasource>
         </field>
-        <field units="s" type="NX_FLOAT" name="counter2">
+        <field units="saa" type="NX_FLOAT" name="counter2">
           <strategy mode="STEP"/>
           <datasource type="CLIENT">
             <record name="exp_c02"/>

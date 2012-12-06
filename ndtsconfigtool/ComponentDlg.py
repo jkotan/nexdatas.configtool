@@ -317,6 +317,7 @@ class Component(object):
             return
         if not hasattr(self.dialog.widget,'apply'):
             return
+        print "ROOT", self.document
         self.dialog.widget.apply()
 
         self.view.resizeColumnToContents(0)

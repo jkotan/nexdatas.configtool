@@ -46,8 +46,15 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## database parameters
         self.dbParam = {}
 
+        if self.datasource:
+            if hasattr(self.datasource,"root"):
+                print "DS ROOT1", self.datasource.root
+            else:
+                print "DS", type(self.datasource)
 
-
+        else:
+            print "NONE"
+        print "DDS ROOT1", datasource.root
     ## connects the dialog actions 
     def connectWidgets(self):
         
@@ -490,12 +497,15 @@ class CommonDataSource(object):
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
-
+        print "cgROOT1", self.root
         self.dialog = CommonDataSourceDlg(self, self.parent)
+        print "cgROOT1w", self.root
         self.dialog.setupUi(self.dialog)
 
 
+        print "cgROOT1a", self.root
         self.updateForm()
+        print "cgROOT1b", self.root
         self.dialog.resize(460, 440)
 
         if hasattr(self, "reset"):
@@ -513,11 +523,13 @@ class CommonDataSource(object):
             
             
 
+        print "cgROOT2", self.root
             
 
     ## sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
+        print "sfNROOT1", self.root
         if node:
             ## defined in NodeDlg class
             self.node = node
@@ -609,6 +621,7 @@ class CommonDataSource(object):
     ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
+        print "applying"
         self._applied = False
         class CharacterError(Exception): pass
         sourceType = unicode(self.dialog.typeComboBox.currentText())
@@ -675,9 +688,10 @@ class CommonDataSource(object):
         row = index.row()
         column = index.column()
         parent = index.parent()
+        print "applying2", self.dataSourceName
+        print "ROOT1", self.root
 
         if self.root :
-
             self.updateNode(index)
             if index.isValid():
                 index = self.view.model().index(row, column, parent)
@@ -691,10 +705,10 @@ class CommonDataSource(object):
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
                 self.view.expand(index)    
 
-#        print "TREE", self._tree
+        print "TREE", self._tree
         if not self._tree:
             self.createNodes()
-#            print "CREATED"
+            print "CREATED"
                 
         self._applied = True
 

@@ -46,15 +46,6 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## database parameters
         self.dbParam = {}
 
-        if self.datasource:
-            if hasattr(self.datasource,"root"):
-                print "DS ROOT1", self.datasource.root
-            else:
-                print "DS", type(self.datasource)
-
-        else:
-            print "NONE"
-        print "DDS ROOT1", datasource.root
     ## connects the dialog actions 
     def connectWidgets(self):
         
@@ -497,8 +488,14 @@ class CommonDataSource(object):
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
+        import gc
+        gc.collect()
         print "cgROOT1", self.root
-        self.dialog = CommonDataSourceDlg(self, self.parent)
+        dialog2 = CommonDataSourceDlg(self, self.parent)
+        print "cgROOT1v", self.root
+        root= self.root
+        self.dialog = dialog2
+        self.root = root
         print "cgROOT1w", self.root
         self.dialog.setupUi(self.dialog)
 

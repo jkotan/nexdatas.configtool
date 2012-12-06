@@ -697,17 +697,13 @@ class ComponentOpen(Command):
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
                                                     self.receiver.componentSave)      
-                
 
             if path:   
                 self._cp.name = self._cpEdit.name  
                 self._cp.instance = self._cpEdit
             
                 self.receiver.componentList.addComponent(self._cp,False)
-            #               print  "ID", self._cp.id
- #               print "STAT", self._cp.id in self.receiver.componentList.components
-                self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)                  
-
+                self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)
 
                 subwindow = self.receiver.subWindow(
                     self._cp.instance, self.receiver.mdi.subWindowList())
@@ -715,21 +711,14 @@ class ComponentOpen(Command):
                     self.receiver.mdi.setActiveSubWindow(subwindow) 
                     self._cp.instance.dialog.savePushButton.setFocus()
                 else:    
- #               print "create"
                     self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
                     self._subwindow.resize(640,480)
                     self._cpEdit.dialog.savePushButton.setFocus()
                     self._cpEdit.dialog.show()
-                #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                     self._cp.instance = self._cpEdit 
-
-
-
-#                self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
-#                self._subwindow.resize(640,480)
-#            self._component.setAttribute(Qt.WA_DeleteOnClose)
                 self._cpEdit.dialog.show()
                 print "EXEC componentOpen"
+
 
     ## unexecutes the command
     # \brief It removes the loaded component from the component list
@@ -892,7 +881,27 @@ class ComponentRemove(Command):
         if self._cp is not None:
 
             self.receiver.componentList.addComponent(self._cp, False)
+            self._cp.instance.createGUI()
+            self._cp.instance.addContextMenu(self.receiver.contextMenuActions)
+
+            subwindow = self.receiver.subWindow(
+                self._cp.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self._cp.instance.dialog.savePushButton.setFocus()
+            else:    
+                self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
+                self._subwindow.resize(640,480)
+                self._cp.instance.dialog.savePushButton.setFocus()
+                self._cp.instance.dialog.show()
+                    
+            self._cp.instance.dialog.show()
+
+
+
         print "UNDO componentRemove"
+
+
 
 
     ## clones the command
@@ -2133,14 +2142,16 @@ class DataSourceRemove(Command):
             else:
                 self.receiver.sourceList.removeDataSource(self._ds, True)
             
-        ## TODO check     
-        if hasattr(self._ds,"instance") and self._ds.instance in self.receiver.mdi.subWindowList():
-            self._wList = True
-            self.receiver.mdi.setActiveSubWindow(self._ds.instance)
-            self.receiver.mdi.closeActiveSubWindow()
-            
-            
 
+        if hasattr(self._ds,"instance"):
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self._wList = True
+                self.receiver.mdi.setActiveSubWindow(subwindow)
+                self.receiver.mdi.closeActiveSubWindow()
+            
+            
         print "EXEC dsourceRemove"
 
     ## unexecutes the command
@@ -2149,6 +2160,21 @@ class DataSourceRemove(Command):
         if self._ds is not None:
 
             self.receiver.sourceList.addDataSource(self._ds, False)
+
+            self._ds.instance.createGUI()
+
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self._ds.instance.dialog.savePushButton.setFocus()
+            else:    
+                self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
+                self._subwindow.resize(640,480)
+                self._ds.instance.dialog.savePushButton.setFocus()
+                self._ds.instance.dialog.show()
+                    
+            self._ds.instance.dialog.show()
         print "UNDO dsourceRemove"
 
 

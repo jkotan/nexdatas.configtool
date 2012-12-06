@@ -206,7 +206,7 @@ class ComponentList(QWidget, Ui_ComponentList):
                     else:
                         self.components[cp].instance.dialog.setWindowTitle("Component: %s" %name)
                 except:
-                    print "C++", self.components[cp].name
+#                    print "C++", self.components[cp].name
                     # C++ dialog was deleted
                     self.components[cp].instance.dialog =  None
         if selected is not None:

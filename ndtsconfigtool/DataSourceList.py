@@ -257,9 +257,8 @@ class DataSourceList(QWidget, Ui_DataSourceList):
                     else:
                         self.datasources[ds].instance.dialog.setWindowTitle("DataSource: %s" %name)
                 except:
-                    print "C++", self.datasources[ds].name
-                    # C++ dialog was deleted
-                    self.datasources[ds].name = None
+#                    print "C++", self.datasources[ds].name
+                    self.datasources[ds].instance.dialog = None
 
         if selected is not None:
             selected.setSelected(True)

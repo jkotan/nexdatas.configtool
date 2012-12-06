@@ -1249,7 +1249,7 @@ class DataSourceCopy(Command):
 
 
             subwindow = self.receiver.subWindow(
-                self._dsEdit, self.receiver.mdi.subWindowList())
+                self._ds.instance, self.receiver.mdi.subWindowList())
             if subwindow:
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
@@ -1281,7 +1281,7 @@ class DataSourceCopy(Command):
 
 
             subwindow = self.receiver.subWindow(
-                self._dsEdit, self.receiver.mdi.subWindowList())
+                self._ds.instance, self.receiver.mdi.subWindowList())
             if subwindow:
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 

@@ -1342,9 +1342,9 @@ class MainWindow(QMainWindow):
     # \brief It copies the current item into the clipboard
     def copyItem(self):
         cmd = self.pool.getCommand('copyItem').clone()
-        if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
+        if self.mdi.activeSubWindow() and isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd.type = "component"
-        elif isinstance(self.mdi.activeSubWindow().widget(),CommonDataSourceDlg):
+        elif self.mdi.activeSubWindow() and isinstance(self.mdi.activeSubWindow().widget(),CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self, "Item not selected", 

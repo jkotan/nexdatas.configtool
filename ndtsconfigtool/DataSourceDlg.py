@@ -491,11 +491,11 @@ class CommonDataSource(object):
         import gc
         gc.collect()
         print "cgROOT1", self.root
-        dialog2 = CommonDataSourceDlg(self, self.parent)
-        print "cgROOT1v", self.root
-        root= self.root
-        self.dialog = dialog2
+        root = self.root
+        dialog = CommonDataSourceDlg(self, self.parent)
         self.root = root
+        self.dialog.node = node
+        self.dialog.view = view
         print "cgROOT1w", self.root
         self.dialog.setupUi(self.dialog)
 

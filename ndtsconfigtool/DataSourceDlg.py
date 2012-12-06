@@ -805,9 +805,6 @@ class DataSource(CommonDataSource):
     def __init__(self, parent=None):
         super(DataSource, self).__init__(parent)
 
-        ## datasource id
-        self.ids = None
-
         ## datasource directory
         self.directory = ""
 
@@ -819,6 +816,9 @@ class DataSource(CommonDataSource):
         ## saved XML
         self.savedXML = None
         
+        ## datasource id
+        self.ids = None
+
 
     ## checks if not saved
     # \returns True if it is not saved     

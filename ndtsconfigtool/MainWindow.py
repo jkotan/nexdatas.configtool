@@ -33,7 +33,7 @@ from qrc import qrc_resources
 from CommandPool import (CommandPool,CommandStack)
 from DataSourceList import DataSourceList
 from ComponentList import ComponentList
-from DataSourceDlg import DataSourceDlg
+from DataSourceDlg import CommonDataSourceDlg
 from ComponentDlg import ComponentDlg
 
 from HelpForm import HelpForm
@@ -1344,7 +1344,7 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('copyItem').clone()
         if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd.type = "component"
-        elif isinstance(self.mdi.activeSubWindow().widget(),DataSourceDlg):
+        elif isinstance(self.mdi.activeSubWindow().widget(),CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self, "Item not selected", 
@@ -1360,7 +1360,7 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('cutItem').clone()
         if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd.type = "component"
-        elif isinstance(self.mdi.activeSubWindow().widget(),DataSourceDlg):
+        elif isinstance(self.mdi.activeSubWindow().widget(),CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self, "Item not selected", 
@@ -1380,7 +1380,7 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('pasteItem').clone()
         if isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             cmd.type = "component"
-        elif isinstance(self.mdi.activeSubWindow().widget(),DataSourceDlg):
+        elif isinstance(self.mdi.activeSubWindow().widget(),CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self, "Item not selected", 
@@ -1738,8 +1738,8 @@ class MainWindow(QMainWindow):
     def mdiWindowActivated(self, subwindow):
         widget = subwindow.widget() if hasattr(subwindow, "widget") else None
         self.pooling = False
-        if isinstance(widget, DataSourceDlg):
-            if widget.ids is not None:
+        if isinstance(widget, CommonDataSourceDlg):
+            if widget.datasource.ids is not None:
                 if hasattr(self.sourceList.currentListDataSource(),"id"):
                     if self.sourceList.currentListDataSource().id != widget.datasource.ids: 
                         self.sourceList.populateDataSources(widget.datasource.ids)

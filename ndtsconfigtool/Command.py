@@ -736,9 +736,6 @@ class ComponentOpen(Command):
     def unexecute(self):
         if hasattr(self._cp, "instance"):
             if self._fpath:
-#                self._cp.instance.setAttribute(Qt.WA_DeleteOnClose)
-
-
                 
 
                 if hasattr(self._cp,'instance'):
@@ -782,7 +779,7 @@ class DataSourceOpen(Command):
     def execute(self):
         if hasattr(self.receiver,'mdi'):
             self._ds = LabeledObject("", None)
-            self._dsEdit = DataSourceDlg()
+            self._dsEdit = DataSource()
             self._dsEdit.ids = self._ds.id
             self._dsEdit.directory = self.receiver.sourceList.directory
             if self._fpath:
@@ -799,19 +796,19 @@ class DataSourceOpen(Command):
                 self.receiver.sourceList.addDataSource(self._ds,False)
             #               print  "ID", self._cp.id
  #               print "STAT", self._cp.id in self.receiver.componentList.components
-                self._dsEdit.setWindowTitle("DataSource: %s" % self._ds.name)                  
+                self._dsEdit.dialog.setWindowTitle("DataSource: %s" % self._ds.name)                  
 
                 subwindow = self.receiver.subWindow(
                     self._ds.instance, self.receiver.mdi.subWindowList())
                 if subwindow:
                     self.receiver.mdi.setActiveSubWindow(subwindow) 
-                    self._ds.instance.savePushButton.setFocus()
+                    self._ds.instance.dialog.savePushButton.setFocus()
                 else:    
  #               print "create"
-                    self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit)
-                    self._subwindow.resize(640,480)
-                    self._dsEdit.savePushButton.setFocus()
-                    self._dsEdit.show()
+                    self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit.dialog)
+                    self._subwindow.resize(440,480)
+                    self._dsEdit.dialog.savePushButton.setFocus()
+                    self._dsEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                     self._ds.instance = self._dsEdit 
 
@@ -821,7 +818,7 @@ class DataSourceOpen(Command):
 #                self._subwindow.resize(640,480)
                     
 #            self._component.setAttribute(Qt.WA_DeleteOnClose)
-                self._dsEdit.show()
+                self._dsEdit.dialog.show()
                 print "EXEC dsourceOpen"
 
 
@@ -830,11 +827,9 @@ class DataSourceOpen(Command):
     def unexecute(self):
         if hasattr(self._ds, "instance"):
             if self._fpath:
-                self._ds.instance.setAttribute(Qt.WA_DeleteOnClose)
-
 
                 if hasattr(self._ds,'instance'):
-                    subwindow = self.receiver.widgetSubWindow(
+                    subwindow = self.receiver.subWindow(
                         self._ds.instance, self.receiver.mdi.subWindowList())
                     if subwindow:
                         self.receiver.mdi.setActiveSubWindow(subwindow) 

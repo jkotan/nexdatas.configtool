@@ -690,6 +690,7 @@ class Component(object):
             self.dialog.widget = self._tagClasses[unicode(nNode)]()
             self.dialog.widget.root = self.document
             self.dialog.widget.setFromNode(node)
+            print "node", node
             self.dialog.widget.createGUI()
 #            print "type", type(self.dialog.widget)
             if hasattr(self.dialog.widget,"connectExternalActions"):

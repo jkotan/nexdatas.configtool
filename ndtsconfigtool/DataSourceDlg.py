@@ -49,6 +49,9 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## allowed subitems
         self.subItems = ["record", "doc", "device", "database", "query", "door"]
 
+        ## datasource id
+        self.ids = None
+
     ## connects the dialog actions 
     def connectWidgets(self):
         
@@ -378,7 +381,7 @@ class DataSourceMethods(object):
 #        view = self.dialog.view
 #        if not self.dialog:
 #            self.dialog = CommonDataSourceDlg(self, datasource.parent)
-#        self.datasource.root = root
+#        self.dialog.root = root
 #        self.dialog.node = node
 #        self.dialog.view = view
 #        print "cnode2",  node
@@ -574,11 +577,10 @@ class DataSourceMethods(object):
         column = index.column()
         parent = index.parent()
         print "applying2", self.datasource.dataSourceName
-        print "ROOT1", self.datasource.root
 
-        if self.datasource.root :
+        if self.dialog.root :
             print "update", self.datasource.dataSourceName
-            self.datasource.updateNode(index)
+            self.updateNode(index)
             if index.isValid():
                 index = self.datasource.view.model().index(row, column, parent)
                 self.datasource.view.setCurrentIndex(index)
@@ -610,10 +612,12 @@ class DataSourceMethods(object):
         if external:
             root = QDomDocument()
         else:
-            if not self.datasource.root or not self.dialog.node:
-                self.datasource.createHeader()
-            root = self.datasource.root 
-
+            print "nEX"
+            if not self.dialog.root or not self.dialog.node:
+                print "nEX2"
+                self.createHeader()
+            root = self.dialog.root 
+            print "root", root
         newDs = root.createElement(QString("datasource"))
         elem=newDs.toElement()
 #        attributeMap = self.datasource.newDs.attributes()
@@ -668,8 +672,8 @@ class DataSourceMethods(object):
             elem.appendChild(newDoc)
 
 
-        if external and hasattr(self.datasource.root,"importNode"):
-            rootDs = self.datasource.root.importNode(elem, True)
+        if external and hasattr(self.dialog.root,"importNode"):
+            rootDs = self.dialog.root.importNode(elem, True)
         else:
             rootDs = elem
         return rootDs
@@ -679,7 +683,7 @@ class DataSourceMethods(object):
     ## updates the Node
     # \brief It sets node from the self.dialog variables
     def updateNode(self, index=QModelIndex()):
-        newDs = self.datasource.createNodes(self.datasource._tree)
+        newDs = self.createNodes(self.datasource._tree)
         oldDs = self.dialog.node
 
         if hasattr(index,"parent"):
@@ -724,6 +728,68 @@ class DataSourceMethods(object):
             self.datasource._externalApply = externalApply
 
                     
+    ## creates the new empty header
+    # \brief It clean the DOM tree and put into it xml and definition nodes
+    def createHeader(self):
+        if hasattr(self.dialog,"view") and self.dialog.view:
+            self.dialog.view.setModel(None)
+        self.datasource.document = QDomDocument()
+        ## defined in NodeDlg class
+        self.dialog.root = self.datasource.document
+        processing = self.dialog.root.createProcessingInstruction("xml", "version='1.0'") 
+        self.dialog.root.appendChild(processing)
+
+        definition = self.dialog.root.createElement(QString("definition"))
+        self.dialog.root.appendChild(definition)
+        self.dialog.node = self.dialog.root.createElement(QString("datasource"))
+        definition.appendChild(self.dialog.node)            
+        return self.dialog.node
+            
+
+    ## copies the datasource to the clipboard
+    # \brief It copies the current datasource to the clipboard
+    def copyToClipboard(self):
+        dsNode = self.createNodes(True)
+        doc = QDomDocument()
+        child = doc.importNode(dsNode,True)
+        doc.appendChild(child)
+        text = unicode(doc.toString(0))
+        clipboard= QApplication.clipboard()
+        clipboard.setText(text)
+        
+
+    ## copies the datasource from the clipboard  to the current datasource dialog
+    # \return status True on success
+    def copyFromClipboard(self):
+        clipboard= QApplication.clipboard()
+        text=unicode(clipboard.text())
+        self.datasource.document = QDomDocument()
+        self.dialog.root = self.datasource.document
+        if not self.document.setContent(text):
+            raise ValueError, "could not parse XML"
+
+
+
+        processing = self.root.createProcessingInstruction("xml", "version='1.0'") 
+        self.root.appendChild(processing)
+
+        definition = self.root.createElement(QString("definition"))
+        self.root.appendChild(definition)
+
+
+        ds = self.dialog._getFirstElement(self.document, "datasource")           
+        if not ds:
+            return
+        # self.node = self.root.createElement(QString("datasource"))
+        self.root.removeChild(ds)            
+        
+        definition.appendChild(ds)            
+
+        self.setFromNode(ds)
+        return True
+
+
+
 
 
         
@@ -780,6 +846,8 @@ class CommonDataSource(object):
 
         self._applied = False
 
+        ## datasource id
+        self._ids = None
 
         
         ## if datasource in the component tree
@@ -890,8 +958,6 @@ class DataSource(CommonDataSource):
         ## saved XML
         self.savedXML = None
         
-        ## datasource id
-        self.ids = None
 
 
     ## clears the datasource content
@@ -975,6 +1041,7 @@ class DataSource(CommonDataSource):
                 self.savedXML = self.document.toString(0)
             try:    
                 self.createGUI()
+
             except Exception, e:
                 QMessageBox.warning(self.dialog, "dialog not created", 
                                     "Problems in creating a dialog %s :\n\n%s" %(self.name,unicode(e)))
@@ -1051,68 +1118,6 @@ class DataSource(CommonDataSource):
 
 
 
-    ## creates the new empty header
-    # \brief It clean the DOM tree and put into it xml and definition nodes
-    def createHeader(self):
-        if hasattr(self,"view") and self.view:
-            self.view.setModel(None)
-        self.document = QDomDocument()
-        ## defined in NodeDlg class
-        self.root = self.document
-        processing = self.root.createProcessingInstruction("xml", "version='1.0'") 
-        self.root.appendChild(processing)
-
-        definition = self.root.createElement(QString("definition"))
-        self.root.appendChild(definition)
-        self.node = self.root.createElement(QString("datasource"))
-        definition.appendChild(self.node)            
-        return self.node
-            
-
-    ## copies the datasource to the clipboard
-    # \brief It copies the current datasource to the clipboard
-    def copyToClipboard(self):
-        dsNode = self.createNodes(True)
-        doc = QDomDocument()
-        child = doc.importNode(dsNode,True)
-        doc.appendChild(child)
-        text = unicode(doc.toString(0))
-        clipboard= QApplication.clipboard()
-        clipboard.setText(text)
-        
-
-    ## copies the datasource from the clipboard  to the current datasource dialog
-    # \return status True on success
-    def copyFromClipboard(self):
-        clipboard= QApplication.clipboard()
-        text=unicode(clipboard.text())
-        self.document = QDomDocument()
-        self.root = self.document
-        if not self.document.setContent(text):
-            raise ValueError, "could not parse XML"
-
-
-
-        processing = self.root.createProcessingInstruction("xml", "version='1.0'") 
-        self.root.appendChild(processing)
-
-        definition = self.root.createElement(QString("definition"))
-        self.root.appendChild(definition)
-
-
-        ds = self.dialog._getFirstElement(self.document, "datasource")           
-        if not ds:
-            return
-        # self.node = self.root.createElement(QString("datasource"))
-        self.root.removeChild(ds)            
-        
-        definition.appendChild(ds)            
-
-        self.setFromNode(ds)
-        return True
-
-
-
 
 
 
@@ -1132,13 +1137,21 @@ class DataSource(CommonDataSource):
     root = property(_getroot, _setroot)            
 
 
+    ## gets the current root
+    # \returns the current root  
+    def _getids(self):
+        return self._ids
 
-    ## creates GUI
-    # \brief abstract class
-    def createGUI(self):
-        
-        if hasattr(self,"methods")  and self.methods:
-            return self.methods.createGUI()
+    ## sets the current root
+    # \param root value to be set 
+    def _setids(self, root):
+        if self.dialog and hasattr(self.dialog,"ids"):
+            self.dialog.ids = ids
+        self._ids    
+    ## attribute value       
+    ids = property(_getroot, _setroot)            
+
+
 
 
     ## shows dialog
@@ -1147,6 +1160,62 @@ class DataSource(CommonDataSource):
         if hasattr(self,"datasource")  and self.dialog:
             if self.dialog:
                 return self.dialog.show()
+
+
+
+    ## updates the form
+    # \brief abstract class
+    def updateForm(self):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.updateForm()
+
+
+    ## updates the node
+    # \brief abstract class
+    def updateNode(self, index=QModelIndex()):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.updateNode(index)
+
+        
+
+    ## creates GUI
+    # \brief abstract class
+    def createGUI(self):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.createGUI()
+
+        
+    ## sets the form from the DOM node
+    # \param node DOM node
+    def setFromNode(self, node=None):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.setFromNode(node)
+        
+
+    ## accepts input text strings
+    # \brief It copies the parameters and accept the dialog
+    def apply(self):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.apply()
+
+
+     ## sets the tree mode used in ComponentDlg without save/close buttons
+    # \param enable logical variable which dis-/enables mode 
+    def treeMode(self, enable = True):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.treeMode(enable)
+
+    ## connects external actions
+    # \brief It connects the save action and stores the apply action
+    def connectExternalActions(self, externalApply=None, externalSave=None):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.connectExternalActions(externalApply, externalSave)
+
+    ## reconnects save actions
+    # \brief It reconnects the save action 
+    def reconnectSaveAction(self):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.reconnectSaveAction()
 
 
 ## dialog defining separate datasource

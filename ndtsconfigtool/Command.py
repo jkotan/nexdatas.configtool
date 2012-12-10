@@ -1458,7 +1458,16 @@ class DataSourcePaste(Command):
                 self._ds.instance.updateForm()
 #                self._ds.instance.updateNode()
 
+            self._newstate = self._ds.instance.getState() 
 
+            self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._oldstate)
+            self._ds.instance.updateNode()
+            print "OLD",self._oldstate
+            print "NEW",self.receiver.sourceList.datasources[self._ds.id].instance.getState()
+            print "NEW2",self._newstate
+            print "ST", self._ds.instance.isDirty()
+
+            
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.mdi.subWindowList())
             if subwindow:
@@ -1478,7 +1487,6 @@ class DataSourcePaste(Command):
                 self._ds.instance.dialog.show()
                                 
 
-            self._newstate = self._ds.instance.getState() 
             
             if hasattr(self._ds ,"id"):
                 self.receiver.sourceList.populateDataSources(self._ds.id)

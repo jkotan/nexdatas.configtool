@@ -322,7 +322,6 @@ class Component(object):
             return
         if not hasattr(self.dialog.widget,'apply'):
             return
-        print "ROOT", self.document
         self.dialog.widget.apply()
 
         self.view.resizeColumnToContents(0)
@@ -536,7 +535,6 @@ class Component(object):
         name = ""
         if attributeMap.contains("name"):
             name = attributeMap.namedItem("name").nodeValue()
-        print "Removing" , node.nodeName(), name
 
         
         clipboard = QApplication.clipboard()
@@ -576,7 +574,6 @@ class Component(object):
         name = ""
         if attributeMap.contains("name"):
             name = attributeMap.namedItem("name").nodeValue()
-        print "Copying" , node.nodeName(), name
 
         
         clipboard = QApplication.clipboard()
@@ -678,7 +675,6 @@ class Component(object):
         if attributeMap.contains("name"):
             name = attributeMap.namedItem("name").nodeValue()
 
-        print "Clicked:", nNode, ": "+ unicode(name) if name else "" 
 
         
         if self.dialog.widget:
@@ -695,7 +691,6 @@ class Component(object):
             self.dialog.widget = self._tagClasses[unicode(nNode)]()
             self.dialog.widget.root = self.document
             self.dialog.widget.setFromNode(node)
-            print "node", node
             self.dialog.widget.createGUI()
 #            print "type", type(self.dialog.widget)
             if hasattr(self.dialog.widget,"connectExternalActions"):

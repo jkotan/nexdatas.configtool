@@ -756,23 +756,23 @@ class DataSourceMethods(object):
         text=unicode(clipboard.text())
         self.datasource.document = QDomDocument()
         self.dialog.root = self.datasource.document
-        if not self.document.setContent(text):
+        if not self.datasource.document.setContent(text):
             raise ValueError, "could not parse XML"
 
 
 
-        processing = self.root.createProcessingInstruction("xml", "version='1.0'") 
-        self.root.appendChild(processing)
+        processing = self.dialog.root.createProcessingInstruction("xml", "version='1.0'") 
+        self.dialog.root.appendChild(processing)
 
-        definition = self.root.createElement(QString("definition"))
-        self.root.appendChild(definition)
+        definition = self.dialog.root.createElement(QString("definition"))
+        self.dialog.root.appendChild(definition)
 
 
-        ds = self.dialog._getFirstElement(self.document, "datasource")           
+        ds = self.dialog._getFirstElement(self.datasource.document, "datasource")           
         if not ds:
             return
-        # self.node = self.root.createElement(QString("datasource"))
-        self.root.removeChild(ds)            
+        # self.node = self.dialog.root.createElement(QString("datasource"))
+        self.dialog.root.removeChild(ds)            
         
         definition.appendChild(ds)            
 
@@ -972,10 +972,10 @@ class DataSource(CommonDataSource):
     # \returns True if it is not saved     
     def isDirty(self):
         string = self.get()
-#        if string != self.savedXML:
-#            print "name:", self.name
-#            print "string", string
-#            print "saved string", self.savedXML 
+        if string != self.savedXML:
+            print "name:", self.name
+            print "string", string
+            print "saved string", self.savedXML 
         return False if string == self.savedXML else True
 
 
@@ -1212,6 +1212,21 @@ class DataSource(CommonDataSource):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.reconnectSaveAction()
 
+        
+
+
+    ## copies the datasource to the clipboard
+    # \brief It copies the current datasource to the clipboard
+    def copyToClipboard(self):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.copyToClipboard()
+        
+
+    ## copies the datasource from the clipboard  to the current datasource dialog
+    # \return status True on success
+    def copyFromClipboard(self):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.copyFromClipboard()
 
 ## dialog defining separate datasource
 class DataSourceDlg(CommonDataSourceDlg):

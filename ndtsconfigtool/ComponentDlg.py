@@ -22,7 +22,7 @@
 from PyQt4.QtCore import (SIGNAL, SLOT, QModelIndex, QString, Qt, QFileInfo, QFile, QIODevice, 
                           QTextStream)
 from PyQt4.QtGui import (QDialog, QWidget, QGridLayout, QApplication, QMenu, QFileDialog,
-                         QMessageBox )
+                         QMessageBox, QMdiSubWindow )
 from PyQt4.QtXml import (QDomDocument, QDomNode, QXmlDefaultHandler,
                          QXmlInputSource, QXmlSimpleReader)
 
@@ -46,7 +46,8 @@ from ComponentModel import ComponentModel
 
 
 ## dialog defining a tag link 
-class ComponentDlg(QDialog, Ui_ComponentDlg):
+#class ComponentDlg(QMdiSubWindow, Ui_ComponentDlg):
+class ComponentDlg(QWidget, Ui_ComponentDlg):
     
     ## constructor
     # \param component component instance
@@ -56,6 +57,11 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         ## component instance
         self.component = component 
         
+
+    def closeEvent(self, event):
+        super(ComponentDlg,self).closeEvent(event)
+        print "closing subwindow"
+        self.component.dialog = None
 
 ## Component  defining a tag link 
 class Component(object):
@@ -1237,6 +1243,8 @@ class Component(object):
                                         "SVG files (*.svg);;User Interface files (*.ui)"))
         return self._componentFile
         
+
+
 
 ## test function
 def test():

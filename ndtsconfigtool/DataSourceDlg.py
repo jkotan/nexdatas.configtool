@@ -40,8 +40,8 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     def __init__(self, datasource, parent=None):
         super(CommonDataSourceDlg, self).__init__(parent)
 
-#        ##  datasource instance
-#        self.datasource = datasource
+        ##  datasource instance
+        self.datasource = datasource
 
         ## database parameters
         self.dbParam = {}
@@ -49,8 +49,6 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## allowed subitems
         self.subItems = ["record", "doc", "device", "database", "query", "door"]
 
-        ## datasource id
-        self.ids = None
 
     ## connects the dialog actions 
     def connectWidgets(self):
@@ -240,6 +238,12 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             selected.setSelected(True)
             self.dParameterTableWidget.setCurrentItem(selected)
             self.dParameterTableWidget.editItem(selected)
+
+
+    def closeEvent(self, event):
+        super(CommonDataSourceDlg,self).closeEvent(event)
+        print "DS closing subwindow"
+        self.datasource.dialog = None
 
 
 class ParameterError(Exception): pass
@@ -847,7 +851,7 @@ class CommonDataSource(object):
         self._applied = False
 
         ## datasource id
-        self._ids = None
+        self.ids = None
 
         
         ## if datasource in the component tree
@@ -943,7 +947,7 @@ class DataSource(CommonDataSource):
         super(DataSource, self).__init__()
 
 
-        self.dialog = CommonDataSourceDlg(parent)
+        self.dialog = CommonDataSourceDlg(self, parent)
         # datasource methods
         self.methods = DataSourceMethods(self.dialog, self)
 
@@ -1137,19 +1141,6 @@ class DataSource(CommonDataSource):
     root = property(_getroot, _setroot)            
 
 
-    ## gets the current root
-    # \returns the current root  
-    def _getids(self):
-        return self._ids
-
-    ## sets the current root
-    # \param root value to be set 
-    def _setids(self, root):
-        if self.dialog and hasattr(self.dialog,"ids"):
-            self.dialog.ids = ids
-        self._ids    
-    ## attribute value       
-    ids = property(_getroot, _setroot)            
 
 
 
@@ -1224,7 +1215,7 @@ class DataSourceDlg(CommonDataSourceDlg):
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
-        super(DataSourceDlg, self).__init__(parent)
+        super(DataSourceDlg, self).__init__(None,parent)
 
         # datasource data
         self.datasource = CommonDataSource()

@@ -909,7 +909,7 @@ class Component(object):
         child = self.dialog.widget.node.firstChild()
         while not child.isNull():
             if child.nodeName() == 'datasource':
-                QMessageBox.warning(self, "DataSource exists", 
+                QMessageBox.warning(self.dialog, "DataSource exists", 
                                    "To add a new datasource please remove the old one")
                 return
             child = child.nextSibling()    
@@ -977,7 +977,7 @@ class Component(object):
         child = self.dialog.widget.node.firstChild()
         while not child.isNull():
             if child.nodeName() == 'datasource':
-                QMessageBox.warning(self, "DataSource exists", 
+                QMessageBox.warning(self.dialog, "DataSource exists", 
                                     "To add a new datasource please remove the old one")
                 return
             child = child.nextSibling()    

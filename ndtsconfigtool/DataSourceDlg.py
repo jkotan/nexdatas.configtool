@@ -991,7 +991,7 @@ class DataSource(CommonDataSource):
     # \param directory directory of the datasources   
     def setName(self, name, directory):
         self.name = unicode(name)
-        self.dialog.nameLineEdit.setText(self.name)
+#        self.dialog.nameLineEdit.setText(self.name)
         if directory:
             self.directory = unicode(directory)
 
@@ -1227,6 +1227,13 @@ class DataSource(CommonDataSource):
     def copyFromClipboard(self):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.copyFromClipboard()
+
+
+    ## creates the new empty header
+    # \brief It clean the DOM tree and put into it xml and definition nodes
+    def createHeader(self):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.createHeader()
 
 ## dialog defining separate datasource
 class DataSourceDlg(CommonDataSourceDlg):

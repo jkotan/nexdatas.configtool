@@ -1554,6 +1554,23 @@ class DataSourceApply(Command):
         if self._ds is None:
             QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")            
+        if self._ds.instance is None:
+            #                self._dsEdit = FieldWg()  
+            self._ds.instance  = DataSource()
+            
+            self._ds.instance.ids = self._ds.id
+            self._ds.instance.directory = self.receiver.sourceList.directory
+            self._ds.instance.name = self.receiver.sourceList.datasources[self._ds.id].name
+            self._ds.instance.createDialog()
+            self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+            
+            if hasattr(self._ds.instance,"connectExternalActions"):     
+                self._ds.instance.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)
+            self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
+            self._subwindow.resize(440,480)
+            self._ds.instance.dialog.show()
+
+    
         if self._ds is not None and self._ds.instance is not None:
             if self._newstate is None:
                 if self._oldstate is None:
@@ -1605,17 +1622,18 @@ class DataSourceApply(Command):
         if self._ds is not None and hasattr(self._ds,'instance') and  self._ds.instance is not None:
         
             self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._oldstate)
-            self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
 
 
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.mdi.subWindowList())
             if subwindow:
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
                 self._ds.instance.reconnectSaveAction()
             else:    
-                self._ds.instance.createGUI()
+                self._ds.instance.createDialog()
 
+                self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
                 if self._ds.instance.isDirty():
                     self._ds.instance.dialog.setWindowTitle("Component: %s*" % self._ds.name)
                 else:
@@ -2145,11 +2163,12 @@ class DataSourceEdit(Command):
             if self._ds.instance is None:
                 #                self._dsEdit = FieldWg()  
                 self._dsEdit = DataSource()
+                
                 self._dsEdit.ids = self._ds.id
                 self._dsEdit.directory = self.receiver.sourceList.directory
                 self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
-                self._dsEdit.createHeader()
-                self._dsEdit.setWindowTitle("DataSource: %s*" % self._ds.name)
+                self._dsEdit.createDialog()
+                self._dsEdit.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
                 self._ds.instance = self._dsEdit 
             else:
                 self._dsEdit = self._ds.instance 

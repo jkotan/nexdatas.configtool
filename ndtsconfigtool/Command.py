@@ -1821,11 +1821,12 @@ class DataSourceChangeDirectory(Command):
 
         if not path:
             return
-        dialogs = self.receiver.mdi.subWindowList()
-        if dialogs:
-            for dialog in dialogs:
-                if isinstance(dialog,DataSourceDlg):
-                    self.receiver.mdi.setActiveSubWindow(dialog)
+
+        subwindows = self.receiver.mdi.subWindowList()
+        if subwindows:
+            for subwindow in subwindows:
+                if isinstance(subwindow.widget(), CommonDataSourceDlg):
+                    self.receiver.mdi.setActiveSubWindow(subwindow)
                     self.receiver.mdi.closeActiveSubWindow()
 
 

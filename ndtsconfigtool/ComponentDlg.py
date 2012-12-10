@@ -1049,15 +1049,19 @@ class Component(object):
                 self.view.setModel(newModel)
                 self.view.reset()
                 self._hideFrame()
-            
+                print "show"
                 self._mergerdlg.show()
 
-
+                
+            print "start"
             self._merger.start()
 
 
+            cnt = 0
             while self._merger and not self._merger.isFinished():
                 time.sleep(0.01)
+                cnt += 1
+                print "loop", cnt
                 
             if dialog:
                 self._closeMergerDlg()

@@ -67,11 +67,8 @@ class Component(object):
     
     ## constructor
     # \param parent patent instance
-    def __init__(self, parent=None):
+    def __init__(self):
 
-
-        ## component dialog parent
-        self.parent = parent
 
         ## directory from which components are loaded by default
         self.directory = ""
@@ -304,8 +301,8 @@ class Component(object):
         self.dialog.splitter.setStretchFactor(0,1)
         self.dialog.splitter.setStretchFactor(1,1)
         
-        model = ComponentModel(self.document,self._allAttributes,self.parent)
-#        model = ComponentModel(QDomDocument(),self._allAttributes,self.parent)
+        model = ComponentModel(self.document,self._allAttributes,self.dialog)
+#        model = ComponentModel(QDomDocument(),self._allAttributes,self.dialog)
         self.view.setModel(model)
         
         self.dialog.widget = QWidget()
@@ -588,20 +585,17 @@ class Component(object):
     def createGUI(self):
 
 
-        self.dialog = ComponentDlg(self, self.parent)
+        self.dialog = ComponentDlg(self, None)
         self.dialog.setupUi(self.dialog)
         self.view = self.dialog.view
 
 #        self.createGUI()
 
 
-        self._mergerdlg = MergerDlg(self.parent)
-        self._mergerdlg.createGUI()
         
 
         self.updateForm()
 
-        self.dialog.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
 
 #        self.dialog.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
         self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self._close)
@@ -643,7 +637,7 @@ class Component(object):
              model = self.view.model()   
              model.setAttributeView(self._allAttributes)
 #             self.view.reset()
-             newModel = ComponentModel(self.document, self._allAttributes ,self.parent)
+             newModel = ComponentModel(self.document, self._allAttributes ,self.dialog)
              self.view.setModel(newModel)
              self._hideFrame()
              if cNode:
@@ -834,7 +828,7 @@ class Component(object):
             else:
                 j += 1
 
-        newModel = ComponentModel(self.document,self._allAttributes, self.parent)
+        newModel = ComponentModel(self.document,self._allAttributes, self.dialog)
         self.view.setModel(newModel)
         
 
@@ -1025,6 +1019,13 @@ class Component(object):
     def merge(self):
         document = None
         dialog = False
+
+        self._mergerdlg = MergerDlg(self.dialog)
+        self._mergerdlg.createGUI()
+        self.dialog.disconnect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
+        self.dialog.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
+
+
         try:
             if self.view and self.view.model():
                 dialog = True
@@ -1044,7 +1045,7 @@ class Component(object):
             document = self.document
             self.document = QDomDocument()
             if dialog:
-                newModel = ComponentModel(self.document, self._allAttributes, self.parent)
+                newModel = ComponentModel(self.document, self._allAttributes, self.dialog)
                 self.view.setModel(newModel)
                 self.view.reset()
                 self._hideFrame()
@@ -1066,7 +1067,7 @@ class Component(object):
 
             self._merged = True
             if dialog:
-                newModel = ComponentModel(document, self._allAttributes ,self.parent)
+                newModel = ComponentModel(document, self._allAttributes ,self.dialog)
             self.document = document
             if dialog:
                 self.view.setModel(newModel)
@@ -1082,7 +1083,7 @@ class Component(object):
             self._merger = None
             self._merged = False
             if dialog:
-                newModel = ComponentModel(document, self._allAttributes, self.parent)
+                newModel = ComponentModel(document, self._allAttributes, self.dialog)
             self.document = document
             if dialog:
                 self.view.setModel(newModel)
@@ -1096,7 +1097,7 @@ class Component(object):
             print "Exception: %s" % unicode(e)
             self._merged = False
             if dialog:
-                newModel = ComponentModel(document, self._allAttributes, self.parent)
+                newModel = ComponentModel(document, self._allAttributes, self.dialog)
                 self.document = document
                 self.view.setModel(newModel)
                 self._hideFrame()
@@ -1129,7 +1130,7 @@ class Component(object):
         
         definition = self.document.createElement(QString("definition"))
         self.document.appendChild(definition)
-        newModel = ComponentModel(self.document, self._allAttributes, self.parent)
+        newModel = ComponentModel(self.document, self._allAttributes, self.dialog)
         self.view.setModel(newModel)
         self._hideFrame()
 

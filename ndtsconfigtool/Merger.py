@@ -42,7 +42,6 @@ class MergerDlg(QDialog):
     # \param parent dialog
     def __init__(self,  parent=None):
         super(MergerDlg, self).__init__(parent)
-        
 
     ## creates GUI
     # \brief It creates dialog with a merging label 

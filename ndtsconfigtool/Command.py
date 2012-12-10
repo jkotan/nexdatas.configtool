@@ -1868,11 +1868,11 @@ class ComponentReloadList(Command):
             return
 
         
-        dialogs = self.receiver.mdi.subWindowList()
-        if dialogs:
-            for dialog in dialogs:
-                if isinstance(dialog,ComponentDlg):
-                    self.receiver.mdi.setActiveSubWindow(dialog)
+        subwindows = self.receiver.mdi.subWindowList()
+        if subwindows:
+            for subwindow in subwindows:
+                if isinstance(subwindow.widget(),ComponentDlg):
+                    self.receiver.mdi.setActiveSubWindow(subwindow)
                     self.receiver.mdi.closeActiveSubWindow()
 
         self.receiver.componentList.components = {} 
@@ -1970,8 +1970,7 @@ class DataSourceReloadList(Command):
         subwindows = self.receiver.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
-                dialog = subwindow.widget()
-                if isinstance(dialog, CommonDataSourceDlg):
+                if isinstance(subwindow.widget(), CommonDataSourceDlg):
                     self.receiver.mdi.setActiveSubWindow(subwindow)
                     self.receiver.mdi.closeActiveSubWindow()
                     

@@ -507,9 +507,6 @@ class DataSourceMethods(object):
     ## accepts input text strings
     # \brief It copies the parameters and accept the self.dialog
     def apply(self):
-        print "applying"
-        print "ap node", self.dialog.node 
-        print "ap pnode", self.dialog.node.parentNode(), self.dialog.node.parentNode().nodeName()
 
         self.datasource._applied = False
         class CharacterError(Exception): pass
@@ -568,15 +565,8 @@ class DataSourceMethods(object):
 
         index = QModelIndex()
         if hasattr(self.dialog,"view") and self.dialog.view and self.dialog.view.model():
-            print "ww2"
             if hasattr(self.dialog.view,"currentIndex"):
-                print "ww3"
                 index = self.dialog.view.currentIndex()
-                row = index.row()
-                column = index.column()
-                parent = index.parent()
-                print "rcp", row, column, parent
-                print "rcpin", parent.internalPointer() 
 
 
                 finalIndex = self.dialog.view.model().createIndex(index.row(),2,index.parent().internalPointer())
@@ -586,8 +576,8 @@ class DataSourceMethods(object):
         row = index.row()
         column = index.column()
         parent = index.parent()
-        print "rcp2", row, column, parent
-        print "rcpin2", parent.internalPointer() 
+#        print "rcp2", row, column, parent
+#        print "rcpin2", parent.internalPointer() 
         
         if self.dialog.root :
             self.updateNode(index)

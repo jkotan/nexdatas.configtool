@@ -60,7 +60,6 @@ class ComponentDlg(QWidget, Ui_ComponentDlg):
 
     def closeEvent(self, event):
         super(ComponentDlg,self).closeEvent(event)
-        print "closing subwindow"
         self.component.dialog = None
 
 ## Component  defining a tag link 

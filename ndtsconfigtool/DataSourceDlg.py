@@ -242,7 +242,6 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
 
     def closeEvent(self, event):
         super(CommonDataSourceDlg,self).closeEvent(event)
-        print "DS closing subwindow"
         self.datasource.dialog = None
 
 
@@ -283,9 +282,7 @@ class DataSourceMethods(object):
                                 QMessageBox.Yes | QMessageBox.No,
                                 QMessageBox.Yes ) == QMessageBox.No :
             return
-        print "update"
         self.updateForm()
-        print "reject"
         self.dialog.reject()
 
 
@@ -510,9 +507,9 @@ class DataSourceMethods(object):
     ## accepts input text strings
     # \brief It copies the parameters and accept the self.dialog
     def apply(self):
-        print "applying"
-        print "ap node", self.dialog.node 
-        print "ap pnode", self.dialog.node.parentNode(), self.dialog.node.parentNode().nodeName()
+#        print "applying"
+#        print "ap node", self.dialog.node 
+#        print "ap pnode", self.dialog.node.parentNode(), self.dialog.node.parentNode().nodeName()
 
         self.datasource._applied = False
         class CharacterError(Exception): pass
@@ -580,10 +577,8 @@ class DataSourceMethods(object):
         row = index.row()
         column = index.column()
         parent = index.parent()
-        print "applying2", self.datasource.dataSourceName
 
         if self.dialog.root :
-            print "update", self.datasource.dataSourceName
             self.updateNode(index)
             if index.isValid():
                 index = self.datasource.view.model().index(row, column, parent)
@@ -597,14 +592,11 @@ class DataSourceMethods(object):
                 self.datasource.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
                 self.datasource.view.expand(index)    
 
-        print "TREE", self.datasource._tree
         if not self.datasource._tree:
-            self.datasource.createNodes()
-            print "CREATED"
+            self.createNodes()
                 
         self.datasource._applied = True
 
-        print "applying3", self.datasource.dataSourceName
         return True    
 
 
@@ -616,12 +608,9 @@ class DataSourceMethods(object):
         if external:
             root = QDomDocument()
         else:
-            print "nEX"
             if not self.dialog.root or not self.dialog.node:
-                print "nEX2"
                 self.createHeader()
             root = self.dialog.root 
-            print "root", root
         newDs = root.createElement(QString("datasource"))
         elem=newDs.toElement()
 #        attributeMap = self.datasource.newDs.attributes()
@@ -695,10 +684,8 @@ class DataSourceMethods(object):
         else:
             parent = QModelIndex()
 
-        print "old node replace", oldDs, self.dialog.node.nodeName()
         self.dialog.node = self.dialog.node.parentNode()   
         if self.datasource._tree:
-            print "parent replace", self.dialog.node, self.dialog.node.nodeName() 
             self.dialog._replaceNode(oldDs, newDs, parent)
         else:
             self.dialog.node.replaceChild(newDs, oldDs)
@@ -947,6 +934,9 @@ class DataSource(CommonDataSource):
         super(DataSource, self).__init__()
 
 
+        ## dialog parent
+        self.parent = parent
+
         self.dialog = CommonDataSourceDlg(self, parent)
         # datasource methods
         self.methods = DataSourceMethods(self.dialog, self)
@@ -963,6 +953,13 @@ class DataSource(CommonDataSource):
         self.savedXML = None
         
 
+
+    def createDialog(self):
+        self.dialog = CommonDataSourceDlg(self, self.parent)
+        self.methods.dialog = self.dialog        
+        self.createGUI()
+        self.updateNode()
+        self.updateForm()
 
     ## clears the datasource content
     # \brief It sets the datasource variables to default values
@@ -1181,6 +1178,13 @@ class DataSource(CommonDataSource):
     def setFromNode(self, node=None):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.setFromNode(node)
+
+    ## creates datasource node
+    # \param external True if it should be create on a local DOM root, i.e. in component tree
+    # \returns created DOM node   
+    def createNodes(self, external = False):        
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.createNodes(external)
         
 
     ## accepts input text strings

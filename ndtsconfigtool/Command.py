@@ -1465,7 +1465,7 @@ class DataSourcePaste(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
-                self._ds.instance.createGUI()
+                self._ds.instance.createDialog()
 
                 if self._ds.instance.isDirty():
                     self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
@@ -2144,12 +2144,8 @@ class DataSourceEdit(Command):
                 self._dsEdit.ids = self._ds.id
                 self._dsEdit.directory = self.receiver.sourceList.directory
                 self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
-                print "c1"
-#                self._dsEdit.createGUI()
-                print "c2"
                 self._dsEdit.createHeader()
                 self._dsEdit.setWindowTitle("DataSource: %s*" % self._ds.name)
-                print "c3"
                 self._ds.instance = self._dsEdit 
             else:
                 self._dsEdit = self._ds.instance 
@@ -2163,9 +2159,8 @@ class DataSourceEdit(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
-                print "w1"
-#                self._ds.instance.createGUI()
-                print "w2"
+                if self._ds.instance.dialog is None:
+                    self._ds.instance.createDialog()
 
                 if self._ds.instance.isDirty():
                     self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)

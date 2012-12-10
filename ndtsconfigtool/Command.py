@@ -1462,10 +1462,6 @@ class DataSourcePaste(Command):
 
             self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._oldstate)
             self._ds.instance.updateNode()
-            print "OLD",self._oldstate
-            print "NEW",self.receiver.sourceList.datasources[self._ds.id].instance.getState()
-            print "NEW2",self._newstate
-            print "ST", self._ds.instance.isDirty()
 
             
             subwindow = self.receiver.subWindow(

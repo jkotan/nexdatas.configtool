@@ -972,10 +972,10 @@ class DataSource(CommonDataSource):
     # \returns True if it is not saved     
     def isDirty(self):
         string = self.get()
-        if string != self.savedXML:
-            print "name:", self.name
-            print "string", string
-            print "saved string", self.savedXML 
+#        if string != self.savedXML:
+#            print "name:", self.name
+#            print "string", string
+#            print "saved string", self.savedXML 
         return False if string == self.savedXML else True
 
 

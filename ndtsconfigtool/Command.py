@@ -2595,7 +2595,7 @@ class ComponentClear(ComponentItemCommand):
                         self.receiver.mdi.setActiveSubWindow(self._cp.instance)
                     self._cp.instance.createHeader()            
                 
-                    newModel = ComponentModel(self._cp.instance.document, self._cp.instance._allAttributes, self._cp.instance)
+                    newModel = ComponentModel(self._cp.instance.document, self._cp.instance._allAttributes)
                     self._cp.instance.view.setModel(newModel)
 
                     if hasattr(self._cp.instance,"connectExternalActions"):     

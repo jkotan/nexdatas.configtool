@@ -2262,7 +2262,7 @@ class DataSourceRemove(Command):
 
             self.receiver.sourceList.addDataSource(self._ds, False)
 
-            self._ds.instance.createGUI()
+#            self._ds.instance.createGUI()
 
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.mdi.subWindowList())
@@ -2270,6 +2270,7 @@ class DataSourceRemove(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.dialog.savePushButton.setFocus()
             else:    
+                self._ds.instance.createDialog()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
                 self._subwindow.resize(640,480)
                 self._ds.instance.dialog.savePushButton.setFocus()

@@ -551,9 +551,13 @@ class Component(object):
         if index.parent().isValid():
             self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
                             index.parent(),index.parent())
-            self.tagClicked(index.parent())
+            
+            index = self.view.currentIndex()
+            self.tagClicked(index)
+            print "click 1"
         else:
             self.tagClicked(QModelIndex())
+            print "click 2"
             
         return True    
 

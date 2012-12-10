@@ -3,8 +3,9 @@
   <group type="NXentry" name="entry2">
     <group type="NXinstrument" name="instrument">
       <group type="NXsource" name="source">
-        <field units="m" type="NX_FLOAT" name="distance">
-          100.
+        <field units="m" type="NX_FLOAT" name="distance">100.<datasource type="CLIENT" name="sdf">
+            <record name="sdf"/>
+          </datasource>
         </field>
         <field type="NX_CHAR" name="db_devices">
           <dimensions rank="2">

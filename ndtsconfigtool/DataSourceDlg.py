@@ -507,9 +507,9 @@ class DataSourceMethods(object):
     ## accepts input text strings
     # \brief It copies the parameters and accept the self.dialog
     def apply(self):
-#        print "applying"
-#        print "ap node", self.dialog.node 
-#        print "ap pnode", self.dialog.node.parentNode(), self.dialog.node.parentNode().nodeName()
+        print "applying"
+        print "ap node", self.dialog.node 
+        print "ap pnode", self.dialog.node.parentNode(), self.dialog.node.parentNode().nodeName()
 
         self.datasource._applied = False
         class CharacterError(Exception): pass
@@ -567,30 +567,41 @@ class DataSourceMethods(object):
         self.datasource.doc = unicode(self.dialog.docTextEdit.toPlainText()).strip()
 
         index = QModelIndex()
-        if hasattr(self,"view") and self.datasource.view and self.datasource.view.model():
-            if hasattr(self.datasource.view,"currentIndex"):
-                index = self.datasource.view.currentIndex()
-                finalIndex = self.datasource.view.model().createIndex(index.row(),2,index.parent().internalPointer())
-                self.datasource.view.expand(index)    
+        if hasattr(self.dialog,"view") and self.dialog.view and self.dialog.view.model():
+            print "ww2"
+            if hasattr(self.dialog.view,"currentIndex"):
+                print "ww3"
+                index = self.dialog.view.currentIndex()
+                row = index.row()
+                column = index.column()
+                parent = index.parent()
+                print "rcp", row, column, parent
+                print "rcpin", parent.internalPointer() 
+
+
+                finalIndex = self.dialog.view.model().createIndex(index.row(),2,index.parent().internalPointer())
+                self.dialog.view.expand(index)    
 
 
         row = index.row()
         column = index.column()
         parent = index.parent()
-
+        print "rcp2", row, column, parent
+        print "rcpin2", parent.internalPointer() 
+        
         if self.dialog.root :
             self.updateNode(index)
             if index.isValid():
-                index = self.datasource.view.model().index(row, column, parent)
-                self.datasource.view.setCurrentIndex(index)
-                self.datasource.view.expand(index)
+                index = self.dialog.view.model().index(row, column, parent)
+                self.dialog.view.setCurrentIndex(index)
+                self.dialog.view.expand(index)
         
-            if hasattr(self,"view")  and self.datasource.view and self.datasource.view.model():
-                self.datasource.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
+            if hasattr(self.dialog,"view")  and self.dialog.view and self.dialog.view.model():
+                self.dialog.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
                 if  index.column() != 0:
-                    index = self.datasource.view.model().index(index.row(), 0, index.parent())
-                self.datasource.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
-                self.datasource.view.expand(index)    
+                    index = self.dialog.view.model().index(index.row(), 0, index.parent())
+                self.dialog.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+                self.dialog.view.expand(index)    
 
         if not self.datasource._tree:
             self.createNodes()
@@ -667,6 +678,7 @@ class DataSourceMethods(object):
 
         if external and hasattr(self.dialog.root,"importNode"):
             rootDs = self.dialog.root.importNode(elem, True)
+            print "import"
         else:
             rootDs = elem
         return rootDs
@@ -676,8 +688,14 @@ class DataSourceMethods(object):
     ## updates the Node
     # \brief It sets node from the self.dialog variables
     def updateNode(self, index=QModelIndex()):
+        print "tree", self.datasource._tree
+        print "index", index.internalPointer()
         newDs = self.createNodes(self.datasource._tree)
         oldDs = self.dialog.node
+
+        elem = oldDs.toElement()
+        
+        print
 
         if hasattr(index,"parent"):
             parent = index.parent()
@@ -1119,6 +1137,20 @@ class DataSource(CommonDataSource):
 
 
 
+    ## gets the current view
+    # \returns the current view  
+    def _getview(self):
+        if self.dialog and hasattr(self.dialog,"view"):
+            return self.dialog.view
+
+    ## sets the current view
+    # \param view value to be set 
+    def _setview(self, view):
+        if self.dialog and hasattr(self.dialog,"view"):
+            self.dialog.view = view
+
+    ## attribute value       
+    view = property(_getview, _setview)            
 
 
 

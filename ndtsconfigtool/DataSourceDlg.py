@@ -576,8 +576,6 @@ class DataSourceMethods(object):
         row = index.row()
         column = index.column()
         parent = index.parent()
-#        print "rcp2", row, column, parent
-#        print "rcpin2", parent.internalPointer() 
         
         if self.dialog.root :
             self.updateNode(index)

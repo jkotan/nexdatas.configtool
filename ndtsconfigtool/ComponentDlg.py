@@ -517,7 +517,7 @@ class Component(object):
         self.view.expand(index)
         if status:
             return child
-
+        
 
     ## removes the currenct component tree item if possible
     # \returns True on success

@@ -383,17 +383,21 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
     # \param node DOM node to remove
     # \param parent parent DOM node        
     def appendNode(self, node, parent):
-        if node.nodeName() == 'datasource' :
+        singles = {"datasource":"DataSource", "strategy":"Strategy"}
+        if unicode(node.nodeName()) in singles:
             if not self.node:
                 return
             child = self.node.firstChild()
             while not child.isNull():
-                if child.nodeName() == 'datasource':
-                    QMessageBox.warning(self, "DataSource exists", 
-                                        "To add a new datasource please remove the old one")
-
+                if child.nodeName() == unicode(node.nodeName()):
+                    QMessageBox.warning(
+                        self, "%s exists" % singles[str(node.nodeName())], 
+                        "To add a new %s please remove the old one" % node.nodeName())
                     return False
                 child = child.nextSibling()    
+
+
+
         return NodeDlg.appendNode(self, node, parent)       
         
 

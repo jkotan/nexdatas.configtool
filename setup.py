@@ -96,13 +96,13 @@ class toolClean(clean):
 
 
         cfiles = [ "%s/ui/%s" % (TOOL,cfile)  for cfile 
-                  in os.listdir("%s/ui" % TOOL) if cfile.endswith('.pyc') or cfile.endswith('.py')]
+                  in os.listdir("%s/ui" % TOOL) if cfile.endswith('.pyc') or (cfile.endswith('.py') and cfile.endswith('__init_.py'))]
         for fl in cfiles:
             os.remove(str(fl))
 
 
         cfiles = [ "%s/qrc/%s" % (TOOL,cfile)  for cfile 
-                  in os.listdir("%s/qrc" % TOOL) if cfile.endswith('.pyc') or cfile.endswith('.py')]
+                  in os.listdir("%s/qrc" % TOOL) if cfile.endswith('.pyc') or (cfile.endswith('.py') and cfile.endswith('__init_.py'))]
         for fl in cfiles:
             os.remove(str(fl))
         clean.run(self)

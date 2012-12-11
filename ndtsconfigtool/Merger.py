@@ -22,7 +22,7 @@
 from PyQt4.QtXml import QDomNode
 
 
-from PyQt4.QtCore import QString, QThread
+from PyQt4.QtCore import QString, QThread, SIGNAL
 from PyQt4.QtGui import QDialog, QWidget, QLabel, QHBoxLayout
 
 ## merging error for wrong node structure
@@ -316,6 +316,9 @@ class Merger(QThread):
                     raise Exception("Merging Interrupted")
             except Exception, e:
                 self.exception = e
+
+        self.emit(SIGNAL("finished"))
+
 #       self.terminate()
 # communicate via signal , and QMutex
 # disconnect signal before connecting 

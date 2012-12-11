@@ -1004,7 +1004,7 @@ class Component(object):
 
         self._mergerdlg = MergerDlg(self.dialog)
         self._mergerdlg.createGUI()
-        self.dialog.disconnect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
+#        self.dialog.disconnect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
         self.dialog.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
 
         try:
@@ -1018,6 +1018,7 @@ class Component(object):
             return
         try:
             self._merger = Merger(self.document)
+            self.dialog.connect(self._merger, SIGNAL("finished"), self._closeMergerDlg)
                     
             cNode = self._getCurrentNode()
             if cNode:
@@ -1030,24 +1031,18 @@ class Component(object):
                 self.view.setModel(newModel)
                 self.view.reset()
                 self._hideFrame()
-                print "show"
-                self._mergerdlg.show()
 
-                
-            print "start"
             self._merger.start()
 
+            self._mergerdlg.exec_()
 
-            cnt = 0
-            while self._merger and not self._merger.isFinished():
-                time.sleep(0.01)
-                cnt += 1
-                print "loop", cnt
+            if self._merger:
+                self._merger.wait()
                 
-            if dialog:
-                self._closeMergerDlg()
+            self._closeMergerDlg()
 
-            if self._merger.exception:
+ 
+            if self._merger and self._merger.exception:
                 raise self._merger.exception
 
             self._merged = True

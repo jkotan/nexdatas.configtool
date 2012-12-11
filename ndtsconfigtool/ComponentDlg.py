@@ -657,13 +657,6 @@ class Component(object):
             print "Not valid index item"
             return
 
-#        if item is None:
-#            raise Exception, "Unreachable item None"
-#        if not item:
-#            raise Exception, "Unreachable item"
-#        if not hasattr(item,'node'):
-#            raise Exception, "Unreachable: item without node"
-
         node = item.node
         attributeMap = node.attributes()
         nNode = node.nodeName()
@@ -688,29 +681,18 @@ class Component(object):
             self.dialog.widget.root = self.document
             self.dialog.widget.setFromNode(node)
             self.dialog.widget.createGUI()
-#            print "type", type(self.dialog.widget)
             if hasattr(self.dialog.widget,"connectExternalActions"):
                 self.dialog.widget.connectExternalActions(self._externalApply)
             if hasattr(self.dialog.widget,"treeMode"):
                 self.dialog.widget.treeMode()
             self.dialog.widget.view = self.view
             self.dialog.view = self.view
-            if hasattr(self.dialog.widget,"widget"):
-                widget = self.dialog.widget.widget 
-            else:
-                widget = self.dialog.widget            
-            
-            self._frameLayout.addWidget(widget)
+            self._frameLayout.addWidget(self.dialog.widget)
             widget.show()
-#            self._frameLayout.update()
             self.dialog.frame.show()
         else:
             if self.dialog.widget :
-                if hasattr(self.dialog.widget,"widget"):
-                    self.dialog.widget.widget.hide() 
-                else:
-                    self.dialog.widget.hide() 
-
+                self.dialog.widget.hide() 
             self.dialog.widget = None
 
 

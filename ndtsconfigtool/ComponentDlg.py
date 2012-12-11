@@ -688,7 +688,7 @@ class Component(object):
             self.dialog.widget.view = self.view
             self.dialog.view = self.view
             self._frameLayout.addWidget(self.dialog.widget)
-            widget.show()
+            self.dialog.widget.show()
             self.dialog.frame.show()
         else:
             if self.dialog.widget :
@@ -1006,7 +1006,6 @@ class Component(object):
         self._mergerdlg.createGUI()
         self.dialog.disconnect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
         self.dialog.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
-
 
         try:
             if self.view and self.view.model():

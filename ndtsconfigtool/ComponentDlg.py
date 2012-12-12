@@ -1006,6 +1006,7 @@ class Component(object):
         self._mergerdlg.createGUI()
 #        self.dialog.disconnect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
         self.dialog.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
+        self.dialog.connect(self._mergerdlg.interruptButton, SIGNAL("clicked()"), self._interruptMerger)
 
         try:
             if self.view and self.view.model():

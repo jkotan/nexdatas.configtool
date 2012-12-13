@@ -196,7 +196,8 @@ class Component(object):
     ## provides the current component tree item
     # \returns DOM node instance
     def _getCurrentNode(self):
-        if self.view:
+        index = QModelIndex()
+        if self.view and self.dialog:
             index = self.view.currentIndex()
         if not index.isValid():
             return
@@ -209,10 +210,12 @@ class Component(object):
     ## provides the current view index
     # \returns the current view index
     def currentIndex(self):
-        try:
-            index = self.view.currentIndex()
-        except:
-            index = QModelIndex()
+        index = QModelIndex()
+        if self.view and self.dialog:
+            try:
+                index = self.view.currentIndex()
+            except:
+                pass
         return index
         
 
@@ -254,7 +257,7 @@ class Component(object):
     # \param path path represented as a list with elements: (row number, node name)
     # \returns component item index        
     def _getIndex(self, path):
-        if not path:
+        if not path or self.view or not self.dialog:
             return QModelIndex()
         index = self.view.model().rootIndex
         self.view.expand(index)
@@ -316,7 +319,7 @@ class Component(object):
     ## applies component item
     # \brief it checks if item widget exists and calls apply of the item widget
     def applyItem(self):
-        if not self.view or not self.view.model() or not self.dialog.widget:
+        if not self.view or not self.view.model() or not self.dialog or not self.dialog.widget:
             return
         if not hasattr(self.dialog.widget,'apply'):
             return
@@ -336,14 +339,14 @@ class Component(object):
     # \param parent parent node index
     # \returns the new row number if changed otherwise None                 
     def _moveNodeUp(self, node, parent):
-        if self.view is not None and self.view.model() is not None: 
+        if self.view is not None  and self.dialog is not None and self.view.model() is not None: 
             if not parent.isValid():
                 parentItem = self.rootItem
             else:
                 parentItem = parent.internalPointer()
             pnode = parentItem.node
             row = self._getNodeRow(node, pnode)
-        if self.view is not None and self.view.model() is not None: 
+        if self.view is not None and self.dialog is not None and self.view.model() is not None: 
             if row is not None and row != 0:
                 self.view.model().removeItem(row, node, parent)
                 self.view.model().insertItem(row-1, node, parent)
@@ -355,7 +358,7 @@ class Component(object):
     # \param parent parent node index
     # \returns the new row number if changed otherwise None                 
     def _moveNodeDown(self, node, parent):
-        if self.view is not None and self.view.model() is not None: 
+        if self.view is not None and self.dialog is not None and self.view.model() is not None: 
             if not parent.isValid():
                 parentItem = self.rootItem
             else:
@@ -376,7 +379,7 @@ class Component(object):
     ## moves component item up
     # \returns the new row number if item move othewise None
     def moveUpItem(self):
-        if not self.view or not self.view.model():
+        if not self.view or not self.dialog or not self.view.model():
             return       
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -399,7 +402,7 @@ class Component(object):
     ## moves component item up
     # \returns the new row number if item move othewise None
     def moveDownItem(self):
-        if not self.view or not self.view.model():
+        if not self.view or not self.dialog or not self.view.model():
             return       
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -449,7 +452,7 @@ class Component(object):
     def pasteItem(self):
         print "pasting item"
         
-        if not self.view or not self.view.model() or not self.dialog.widget \
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget \
                 or not hasattr(self.dialog.widget,"subItems") :
             ## Message
             return
@@ -497,7 +500,7 @@ class Component(object):
     def addItem(self, name):
         if not name in self._tagClasses.keys():
             return
-        if not self.view or not self.view.model() or not self.dialog.widget:
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget:
             return
         if not hasattr(self.dialog.widget,'subItems') or  name not in self.dialog.widget.subItems:
             return
@@ -520,7 +523,7 @@ class Component(object):
     ## removes the currenct component tree item if possible
     # \returns True on success
     def removeSelectedItem(self):
-        if not self.view or not self.view.model() or not self.dialog.widget:
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -561,7 +564,7 @@ class Component(object):
     ## copies the currenct component tree item if possible
     # \returns True on success
     def copySelectedItem(self):
-        if not self.view or not self.view.model() or not self.dialog.widget:
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -649,7 +652,7 @@ class Component(object):
     # \brief It is executed  when component tree item is selected
     # \param index of component tree item
     def tagClicked(self, index):
-        if not index.isValid():
+        if not index.isValid() or not self.dialog:
             print "Not valid index"
             return
         self._currentTag = index
@@ -700,6 +703,8 @@ class Component(object):
     ## opens context Menu        
     # \param position in the component tree
     def _openMenu(self, position):
+        if not self.dialog:
+            return
         index = self.view.indexAt(position)
         if index.isValid():
             self.tagClicked(index)
@@ -810,16 +815,16 @@ class Component(object):
                 self.document.removeChild(ch)
             else:
                 j += 1
-
-        newModel = ComponentModel(self.document,self._allAttributes, self.dialog)
-        self.view.setModel(newModel)
+        if self.dialog:
+            newModel = ComponentModel(self.document,self._allAttributes, self.dialog)
+            self.view.setModel(newModel)
         
 
     ## loads the component item from the xml file 
     # \param filePath xml file name with full path    
     def loadComponentItem(self,filePath = None):
         
-        if not self.view or not self.view.model() or not self.dialog.widget \
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget \
                 or not hasattr(self.dialog.widget, "subItems") or "component" not in  self.dialog.widget.subItems:
             return
         index = self.view.currentIndex()
@@ -878,7 +883,7 @@ class Component(object):
     def loadDataSourceItem(self,filePath = None):
         print "Loading DataSource"
         
-        if not self.view or not self.view.model() or not self.dialog.widget \
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget \
                                 or not hasattr(self.dialog.widget, "subItems") \
                                 or "datasource" not in  self.dialog.widget.subItems:
             return
@@ -947,7 +952,7 @@ class Component(object):
         if dsNode.nodeName() != 'datasource':
             return
         
-        if not self.view or not self.view.model() or not self.dialog.widget \
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget \
                 or not hasattr(self.dialog.widget,"subItems") or "datasource" not in  self.dialog.widget.subItems:
             return
 
@@ -1010,7 +1015,7 @@ class Component(object):
         self.dialog.connect(self._mergerdlg.interruptButton, SIGNAL("clicked()"), self._interruptMerger)
 
         try:
-            if self.view and self.view.model():
+            if self.view and self.dialog and self.view.model():
                 dialog = True
         except:
             pass
@@ -1112,8 +1117,9 @@ class Component(object):
         
         definition = self.document.createElement(QString("definition"))
         self.document.appendChild(definition)
-        newModel = ComponentModel(self.document, self._allAttributes, self.dialog)
-        self.view.setModel(newModel)
+        if self.dialog:
+            newModel = ComponentModel(self.document, self._allAttributes, self.dialog)
+            self.view.setModel(newModel)
         self._hideFrame()
 
 

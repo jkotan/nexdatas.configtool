@@ -1098,15 +1098,16 @@ class Component(object):
     ## hides the component item frame
     # \brief It puts an empty widget into the widget frame
     def _hideFrame(self):
-        if self.dialog.widget:
-            if hasattr(self.dialog.widget,"widget"):
-                self.dialog.widget.widget.setVisible(False)
-            else:
-                self.dialog.widget.setVisible(False)
-        self.dialog.widget = QWidget()
-        self._frameLayout.addWidget(self.dialog.widget)
-        self.dialog.widget.show()
-        self.dialog.frame.show()
+        if self.dialog :
+            if self.dialog.widget:
+                if hasattr(self.dialog.widget,"widget"):
+                    self.dialog.widget.widget.setVisible(False)
+                else:
+                    self.dialog.widget.setVisible(False)
+            self.dialog.widget = QWidget()
+            self._frameLayout.addWidget(self.dialog.widget)
+            self.dialog.widget.show()
+            self.dialog.frame.show()
 
         
     ## creates the new empty header

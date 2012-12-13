@@ -890,12 +890,21 @@ class ComponentRemove(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self._cp.instance.dialog.savePushButton.setFocus()
             else:    
+                if not self._cp.instance.dialog:
+                    self._cp.instance.createGUI()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
                 self._subwindow.resize(640,480)
                 self._cp.instance.dialog.savePushButton.setFocus()
                 self._cp.instance.dialog.show()
-                    
+
             self._cp.instance.dialog.show()
+
+        if hasattr(self._cp,"id"):
+            self.receiver.componentList.populateComponents(self._cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
+
+                    
 
 
 
@@ -2543,6 +2552,8 @@ class ComponentItemCommand(Command):
             if subwindow:
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
             else:    
+                if not self._cp.instance.dialog:
+                    self._cp.instance.createGUI()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
                 self._subwindow.resize(640,480)
 

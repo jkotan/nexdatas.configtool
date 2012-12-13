@@ -196,7 +196,8 @@ class Component(object):
     ## provides the current component tree item
     # \returns DOM node instance
     def _getCurrentNode(self):
-        index = self.view.currentIndex()
+        if self.view:
+            index = self.view.currentIndex()
         if not index.isValid():
             return
         item = index.internalPointer()
@@ -632,7 +633,7 @@ class Component(object):
         if status == self._allAttributes:
             return
         self._allAttributes = status
-        if hasattr(self,"view"):
+        if hasattr(self,"view") and self.dialog:
              cNode = self._getCurrentNode()
              model = self.view.model()   
              model.setAttributeView(self._allAttributes)

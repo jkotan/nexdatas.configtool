@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>294</width>
-    <height>423</height>
+    <width>334</width>
+    <height>434</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -131,6 +131,59 @@
       </layout>
      </item>
      <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QCheckBox" name="compressionCheckBox">
+         <property name="text">
+          <string>Com&amp;pression   </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="rateLabel">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="text">
+          <string>&amp;Rate:</string>
+         </property>
+         <property name="buddy">
+          <cstring>rateSpinBox</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="rateSpinBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="maximum">
+          <number>9</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="shuffleCheckBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>S&amp;huffle</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
       <widget class="QFrame" name="postFrame">
        <property name="enabled">
         <bool>true</bool>
@@ -223,13 +276,16 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>modeComboBox</tabstop>
+  <tabstop>compressionCheckBox</tabstop>
+  <tabstop>rateSpinBox</tabstop>
+  <tabstop>shuffleCheckBox</tabstop>
   <tabstop>postLineEdit</tabstop>
   <tabstop>triggerLineEdit</tabstop>
   <tabstop>growsSpinBox</tabstop>
   <tabstop>docTextEdit</tabstop>
   <tabstop>applyPushButton</tabstop>
   <tabstop>resetPushButton</tabstop>
+  <tabstop>modeComboBox</tabstop>
  </tabstops>
  <resources/>
  <connections/>

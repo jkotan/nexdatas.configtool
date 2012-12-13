@@ -1,4 +1,8 @@
 <?xml version='1.0'?>
 <definition type="asdadsds" name="asdadsvcbc">
-  <group type="zcx" name="zxc"/>
+  <group type="zcx" name="zxc">
+    <field units="sdf" name="sdf">
+      <strategy trigger="sdf" rate="4" mode="STEP" compression="true" shuffle="true"/>
+    </field>
+  </group>
 </definition>

@@ -1240,7 +1240,7 @@ def test():
     app = QApplication(sys.argv)
     component = Component()
     component.createGUI()
-    component.dialog.resize(640, 480)
+    component.dialog.resize(640, 520)
     component.createHeader()
     component.dialog.show()        
     component.dialog.setWindowTitle("Component: %s" % component.name)

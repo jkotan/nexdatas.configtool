@@ -1,7 +1,44 @@
-
 ==========================
 NDTS Component Designer
 ==========================
+
+Authors: Jan Kotanski, Eugen Wintersberger, Halil Pasic
+
+Component Designer is a GUI configuration tool dedicated to create components 
+as well as datasources which constitute the XML configuration strings of 
+Nexus Data Writer (NDTS). The created XML elements can be saved 
+in the extended Nexus XML format in Configuration Tango Server or in disk files.
+
+
+=================================
+Installation from sources
+=================================
+
+
+Install the dependencies:
+
+    PyQt4, PyTango (optional) 
+
+PyTango? is only needed if one wants to use Configuration Server
+
+Download the latest NDTS Configuration Tool version from
+
+    NDTS Component Designer 
+
+and extract the sources.
+
+One can also download the lastest version directly from the git repository by
+
+git clone https://code.google.com/p/nexdatas.configtool/
+
+Next, run the installation script
+
+$ python setup.py install
+
+
+=================================
+General overview
+=================================
 
 
 The NDTS Component Designer program allows to creates components as well as datasources which constitute the XML configuration strings of Nexus Data Writer (NDTS). The created XML elements can be saved in the extended Nexus XML format in Configuration Tango Server or in disk files.
@@ -23,8 +60,6 @@ The Help menu offers information about the current Component Designer version as
 Collection Dock Window contains lists of the currently open components and datasources. Selecting one of the components or datasources from the lists causes opening either Component Window or DataSource Window. 
 
 All the most commonly used menu options are also available on Toolbar. 
-
-
 
 
 ==============

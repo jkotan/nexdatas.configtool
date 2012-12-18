@@ -168,7 +168,7 @@ class ComponentList(QWidget, Ui_ComponentList):
 
     ## fills in the component table      
     # \param selectedComponent selected component    
-    # \param dialog flag if the component dialog is in mdi
+    # \param edit flag if the component should be edited
     def populateComponents(self, selectedComponent = None, edit = False):
 #        print "populate"
         selected = None

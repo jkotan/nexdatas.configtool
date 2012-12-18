@@ -240,11 +240,14 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             self.dParameterTableWidget.editItem(selected)
 
 
+    ## closes the window and cleans the dialog label
+    # \param event closing event
     def closeEvent(self, event):
         super(CommonDataSourceDlg,self).closeEvent(event)
         self.datasource.dialog = None
 
 
+## error of passed parameter
 class ParameterError(Exception): pass
 
 
@@ -253,7 +256,8 @@ class ParameterError(Exception): pass
 class DataSourceMethods(object):
 
     ## constructor
-    # \param parent patent instance
+    # \param dialog datasource dialog 
+    # \param datasource data 
     def __init__(self, dialog, datasource):
 
         ## datasource dialog
@@ -712,8 +716,9 @@ class DataSourceMethods(object):
                          self.datasource._externalApply)
 
 
-    ## connects external actions
-    # \brief It connects the save action and stores the apply action
+    ## connects the save action and stores the apply action
+    # \param externalApply apply action
+    # \param externalSave save action
     def connectExternalActions(self, externalApply=None, externalSave=None):
         if externalSave and self.datasource._externalSave is None:
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
@@ -795,7 +800,6 @@ class DataSourceMethods(object):
 class CommonDataSource(object):
     
     ## constructor
-    # \param parent patent instance
     def __init__(self):
         
 
@@ -943,8 +947,10 @@ class DataSource(CommonDataSource):
         ## dialog parent
         self.parent = parent
 
+        ## datasource dialog
         self.dialog = CommonDataSourceDlg(self, parent)
-        # datasource methods
+
+        ## datasource methods
         self.methods = DataSourceMethods(self.dialog, self)
 
         ## datasource directory
@@ -959,7 +965,9 @@ class DataSource(CommonDataSource):
         self.savedXML = None
         
 
-
+        
+    ## creates dialog
+    # \brief It creates dialog, its GUI , updates Nodes and Form
     def createDialog(self):
         self.dialog = CommonDataSourceDlg(self, self.parent)
         self.methods.dialog = self.dialog        
@@ -967,12 +975,14 @@ class DataSource(CommonDataSource):
         self.updateNode()
         self.updateForm()
 
+
     ## clears the datasource content
     # \brief It sets the datasource variables to default values
     def clear(self):
         CommonDataSource.clear(self)
         if self.dialog:
             self.dialog.dbParam = {}
+
 
     ## checks if not saved
     # \returns True if it is not saved     
@@ -1163,7 +1173,7 @@ class DataSource(CommonDataSource):
 
 
     ## shows dialog
-    # \bief It adapts the dialog method
+    # \brief It adapts the dialog method
     def show(self):
         if hasattr(self,"datasource")  and self.dialog:
             if self.dialog:
@@ -1214,14 +1224,15 @@ class DataSource(CommonDataSource):
             return self.methods.apply()
 
 
-     ## sets the tree mode used in ComponentDlg without save/close buttons
+    ## sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode 
     def treeMode(self, enable = True):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.treeMode(enable)
 
-    ## connects external actions
-    # \brief It connects the save action and stores the apply action
+    ## connects the save action and stores the apply action
+    # \param externalApply apply action
+    # \param externalSave save action
     def connectExternalActions(self, externalApply=None, externalSave=None):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.connectExternalActions(externalApply, externalSave)
@@ -1263,16 +1274,11 @@ class DataSourceDlg(CommonDataSourceDlg):
     def __init__(self, parent=None):
         super(DataSourceDlg, self).__init__(None,parent)
 
-        # datasource data
+        ## datasource data
         self.datasource = CommonDataSource()
-        # datasource methods
+        ## datasource methods
         self.methods = DataSourceMethods(self, self.datasource)
         
-
-
-        
-
-
             
     ## updates the form
     # \brief abstract class
@@ -1309,14 +1315,15 @@ class DataSourceDlg(CommonDataSourceDlg):
             return self.methods.apply()
 
 
-     ## sets the tree mode used in ComponentDlg without save/close buttons
+    ## sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode 
     def treeMode(self, enable = True):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.treeMode(enable)
 
-    ## connects external actions
-    # \brief It connects the save action and stores the apply action
+    ## connects the save action and stores the apply action
+    # \param externalApply apply action
+    # \param externalSave save action 
     def connectExternalActions(self, externalApply=None, externalSave=None):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.connectExternalActions(externalApply, externalSave)
@@ -1330,6 +1337,7 @@ if __name__ == "__main__":
     ## data source form
     w = QWidget()
     w.show()
+    ## the first datasource form
     form = DataSource(w)
 
     form.dataSourceType = 'CLIENT'
@@ -1351,6 +1359,7 @@ if __name__ == "__main__":
 
     form.createGUI()
 
+    ## the second datasource form
     form2 = DataSourceDlg(w)
     form2.createGUI()
     form2.treeMode(True)

@@ -57,7 +57,8 @@ class ComponentDlg(QWidget, Ui_ComponentDlg):
         ## component instance
         self.component = component 
         
-
+    ## closes the window and cleans the dialog label
+    # \param event closing event
     def closeEvent(self, event):
         super(ComponentDlg,self).closeEvent(event)
         self.component.dialog = None
@@ -66,7 +67,7 @@ class ComponentDlg(QWidget, Ui_ComponentDlg):
 class Component(object):
     
     ## constructor
-    # \param parent patent instance
+    # \brief Sets variables
     def __init__(self):
 
 
@@ -610,8 +611,9 @@ class Component(object):
 
 
 
-    ## connects external actions
-    # \brief It connects the save action and stores the apply action
+    ## connects the save action and stores the apply action
+    # \param externalApply apply action
+    # \param externalSave save action
     def connectExternalActions(self, externalApply=None , externalSave=None ):
         if externalSave and self._externalSave is None:
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 

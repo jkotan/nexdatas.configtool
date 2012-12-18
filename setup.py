@@ -57,7 +57,7 @@ class toolBuild(build):
             print "Warning: Cannot build %s/ui_%s.py"  % (path, ufile)
 
     ## runner
-    # \brief It is run during building
+    # \brief It is running during building
     def run(self):
         try:
             ufiles = [(  ufile[:-3], "%s/ui" % TOOL ) for ufile 
@@ -80,6 +80,32 @@ class toolBuild(build):
 
         build.run(self)
 
+
+
+## cleaner for python
+class toolClean(clean):
+
+
+    ## runner
+    # \brief It is running during cleaning
+    def run(self):
+        cfiles = [ "%s/%s" % (TOOL,cfile)  for cfile 
+                  in os.listdir("%s" % TOOL) if cfile.endswith('.pyc') ]
+        for fl in cfiles:
+            os.remove(str(fl))
+
+
+        cfiles = [ "%s/ui/%s" % (TOOL,cfile)  for cfile 
+                  in os.listdir("%s/ui" % TOOL) if cfile.endswith('.pyc') or (cfile.endswith('.py') and cfile.endswith('__init_.py'))]
+        for fl in cfiles:
+            os.remove(str(fl))
+
+
+        cfiles = [ "%s/qrc/%s" % (TOOL,cfile)  for cfile 
+                  in os.listdir("%s/qrc" % TOOL) if cfile.endswith('.pyc') or (cfile.endswith('.py') and cfile.endswith('__init_.py'))]
+        for fl in cfiles:
+            os.remove(str(fl))
+        clean.run(self)
 
 #datas = [('components', [ cp for cp in os.listdir("components") if cp.endswith('.xml')]), 
 #         ('datasources', [ ds for ds in os.listdir("datasources") if ds.endswith('.ds.xml')])]
@@ -104,7 +130,7 @@ SETUPDATA=dict(
     scripts = ['ComponentDesigner.pyw'],
 #    package_data={'ndts': ['TDS']},
     long_description= read('README'),
-    cmdclass = {"build" : toolBuild}
+    cmdclass = {"build" : toolBuild, "clean" : toolClean}
 )
 
 ## the main function

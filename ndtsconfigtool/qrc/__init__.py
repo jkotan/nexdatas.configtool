@@ -18,3 +18,4 @@
 ## \package ndtsconfigtool nexdatas
 ## \file ndtsconfigtool/qrc/__init__.py
 # package constructor
+

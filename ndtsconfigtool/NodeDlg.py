@@ -31,6 +31,7 @@ class NodeDlg(QDialog):
     def __init__(self, parent=None):
         super(NodeDlg, self).__init__(parent)
 
+#        print "parent :", parent
         ## DOM node    
         self.node = None
         ## DOM root
@@ -59,12 +60,14 @@ class NodeDlg(QDialog):
     ## resets the dialog
     # \brief It sets forms and dialog from DOM    
     def reset(self):
-        index = self.view.currentIndex()
+        if self.view and hasattr(self.view,"currentIndex"):
+            index = self.view.currentIndex()
         self.setFromNode()
         self.updateForm()
-        if  index.column() != 0:
-            index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        if self.view:
+            if  index.column() != 0:
+                index = self.view.model().index(index.row(), 0, index.parent())
+            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
 
     ## provides the first element in the tree with the given name
@@ -105,7 +108,6 @@ class NodeDlg(QDialog):
                 row += 1
             if row < children.count():
                 return row
-
 
     ## provides row number of the given node
     # \param child child item
@@ -165,21 +167,34 @@ class NodeDlg(QDialog):
             if row is not None:
                 self.view.model().removeItem(row, node, parent)
 
-
+                
     ## replaces node
     # \param oldNode old DOM node 
     # \param newNode new DOM node 
     # \param parent parent node index
     def _replaceNode(self, oldNode, newNode, parent):
+        print "replace1"
         if self.view is not None and self.view.model() is not None: 
             row = self.getNodeRow(oldNode)
+            print "row", row
         if self.view is not None and self.view.model() is not None: 
+            print "view"
             if row is not None:
+                print "view row"
                 self.view.model().removeItem(row, oldNode, parent)
                 if row  < self.node.childNodes().count():
+                    print "view insert"
                     self.view.model().insertItem(row, newNode, parent)
                 else:
+                    print "view append"
                     self.view.model().appendItem(newNode, parent)
+            row = self.getNodeRow(newNode)
+            print "row2", row
+            if parent.internalPointer():
+                row = self.getNodeRow(newNode,parent.internalPointer().node)
+            print "row2a", row
+            row = self.getNodeRow(oldNode)
+            print "row3", row
 
     ## appends node
     # \param node DOM node to remove

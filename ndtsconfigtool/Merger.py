@@ -22,8 +22,8 @@
 from PyQt4.QtXml import QDomNode
 
 
-from PyQt4.QtCore import QString, QThread
-from PyQt4.QtGui import QDialog, QWidget, QLabel, QHBoxLayout
+from PyQt4.QtCore import QString, QThread, SIGNAL
+from PyQt4.QtGui import QDialog, QWidget, QLabel, QVBoxLayout, QPushButton
 
 ## merging error for wrong node structure
 class IncompatibleNodeError(Exception): 
@@ -42,14 +42,15 @@ class MergerDlg(QDialog):
     # \param parent dialog
     def __init__(self,  parent=None):
         super(MergerDlg, self).__init__(parent)
-        
 
     ## creates GUI
     # \brief It creates dialog with a merging label 
     def createGUI(self):
         label = QLabel(" Please be patient: Component merging...")
-        layout = QHBoxLayout()
+        self.interruptButton = QPushButton("&Interrupt Merging")
+        layout = QVBoxLayout()
         layout.addWidget(label)
+        layout.addWidget(self.interruptButton)
         self.setLayout(layout)
         self.setWindowTitle("Merging")
 
@@ -82,7 +83,7 @@ class Merger(QThread):
             "link":["doc"]
             }
 
-
+        ## required attributes
         self._requiredAttr ={
             "attribute":["name"],
             "definition":[],
@@ -317,6 +318,9 @@ class Merger(QThread):
                     raise Exception("Merging Interrupted")
             except Exception, e:
                 self.exception = e
+
+        self.emit(SIGNAL("finished"))
+
 #       self.terminate()
 # communicate via signal , and QMutex
 # disconnect signal before connecting 

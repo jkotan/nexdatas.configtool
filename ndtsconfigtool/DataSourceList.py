@@ -23,7 +23,7 @@ import re
 from PyQt4.QtCore import (SIGNAL, Qt, QString, QVariant)
 from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
 from ui.ui_datasourcelist import  Ui_DataSourceList
-from DataSourceDlg import DataSourceDlg
+from DataSourceDlg import DataSource
 import os 
 
 
@@ -100,18 +100,20 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             else:
                 name = fname
                 
-            dlg = DataSourceDlg()
+            dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
+#            dlg.createGUI()
             dlg.load()    
 
+            
             if hasattr(dlg,"connectExternalActions"):     
                 dlg.connectExternalActions(externalApply, externalSave)    
             
             ds = LabeledObject(name, dlg)
             self.datasources[id(ds)] =  ds
-            if ds.widget is not None:
-                ds.widget.ids = ds.id
+            if ds.instance is not None:
+                ds.instance.ids = ds.id
             print name
 
 
@@ -120,6 +122,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
     # \param datasources dictionary with the datasources, i.e. name:xml
     # \param externalSave save action
     # \param externalApply apply action
+    # \param new logical variableset to True if datasource is not saved
     def setList(self, datasources, externalSave = None, externalApply = None , new = False):
         try:
             dirList=os.listdir(self.directory)
@@ -134,10 +137,12 @@ class DataSourceList(QWidget, Ui_DataSourceList):
 
             name =  "".join(x.replace('/','_').replace('\\','_').replace(':','_') \
                                 for x in dsname if (x.isalnum() or x in ["/","\\",":","_"]))
-            dlg = DataSourceDlg()
+            dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
             dlg.set(datasources[dsname])    
+
+            dlg.dataSourceName = dsname
 
             if hasattr(dlg,"connectExternalActions"):     
                 dlg.connectExternalActions(externalApply, externalSave)    
@@ -147,8 +152,8 @@ class DataSourceList(QWidget, Ui_DataSourceList):
                 ds.savedName = ""
 
             self.datasources[id(ds)] =  ds
-            if ds.widget is not None:
-                ds.widget.ids = ds.id
+            if ds.instance is not None:
+                ds.instance.ids = ds.id
             print name
 
     ## adds an datasource    
@@ -229,9 +234,9 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             if hasattr(self.datasources[ds],"isDirty") \
                     and self.datasources[ds].isDirty():
                 dirty = True
-            if self.datasources[ds].widget is not None:
-                if hasattr(self.datasources[ds].widget,"isDirty") \
-                        and self.datasources[ds].widget.isDirty():
+            if self.datasources[ds].instance is not None:
+                if hasattr(self.datasources[ds].instance,"isDirty") \
+                        and self.datasources[ds].instance.isDirty():
                     dirty = True
             if dirty:
                 item.setForeground(Qt.red) 
@@ -242,11 +247,17 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             self.sourceListWidget.addItem(item)
             if selectedDataSource is not None and selectedDataSource == self.datasources[ds].id:
                 selected = item
-            if self.datasources[ds].widget is not None:
-                if  dirty:
-                    self.datasources[ds].widget.setWindowTitle("DataSource: %s*" %name)
-                else:
-                    self.datasources[ds].widget.setWindowTitle("DataSource: %s" %name)
+
+
+            if self.datasources[ds].instance is not None and self.datasources[ds].instance.dialog is not None:
+                try:
+                    if  dirty:
+                        self.datasources[ds].instance.dialog.setWindowTitle("DataSource: %s*" %name)
+                    else:
+                        self.datasources[ds].instance.dialog.setWindowTitle("DataSource: %s" %name)
+                except:
+#                    print "C++", self.datasources[ds].name
+                    self.datasources[ds].instance.dialog = None
 
         if selected is not None:
             selected.setSelected(True)

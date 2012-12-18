@@ -1,9 +1,8 @@
-<?xml version="1.0"?>
-<definition>
-  <field name="test">
-    <datasource type="TANGO">
-      <record name="video_last_image"/>
-      <device port="10000" encoding="LIMA_VIDEO_IMAGE" hostname="haso228y.desy.de" member="attribute" name="test/limaccds/01"/>
-    </datasource>
-  </field>
+<?xml version='1.0'?>
+<definition type="asdadsds" name="asdadsvcbc">
+  <group type="zcx" name="zxc">
+    <field units="sdf" name="sdf">
+      <strategy trigger="sdf" rate="4" mode="STEP" compression="true" shuffle="true"/>
+    </field>
+  </group>
 </definition>

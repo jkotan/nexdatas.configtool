@@ -1,6 +1,6 @@
-<?xml version='1.0'?>
+<?xml version="1.0"?>
 <definition>
-  <datasource type="TANGO">
+  <datasource type="TANGO" name="pco.edge.01">
     <record name="Image"/>
     <device port="10000" encoding="LIMA_VIDEO_IMAGE" hostname="haspp0xtdot01" member="attribute" name="x/x/pco.edge.01"/>
   </datasource>

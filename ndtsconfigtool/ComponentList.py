@@ -26,6 +26,7 @@ from ui.ui_componentlist import Ui_ComponentList
 import os
 
 from ComponentDlg import ComponentDlg
+from ComponentDlg import Component
 from LabeledObject import LabeledObject
 
 
@@ -71,8 +72,8 @@ class ComponentList(QWidget, Ui_ComponentList):
             return self._allAttributes
         self._allAttributes = True if status else False
         for k in self.components.keys():
-            if hasattr(self.components[k], "widget") and self.components[k].widget:
-                 self.components[k].widget.viewAttributes(self._allAttributes)
+            if hasattr(self.components[k], "instance") and self.components[k].instance:
+                 self.components[k].instance.viewAttributes(self._allAttributes)
             
 
     ## opens context Menu        
@@ -167,7 +168,7 @@ class ComponentList(QWidget, Ui_ComponentList):
 
     ## fills in the component table      
     # \param selectedComponent selected component    
-    # \param edit flag if edit the selected item
+    # \param dialog flag if the component dialog is in mdi
     def populateComponents(self, selectedComponent = None, edit = False):
 #        print "populate"
         selected = None
@@ -185,9 +186,9 @@ class ComponentList(QWidget, Ui_ComponentList):
             if hasattr(self.components[cp],"isDirty") \
                     and self.components[cp].isDirty():
                 dirty = True
-            if self.components[cp].widget is not None:
-                if hasattr(self.components[cp].widget,"isDirty") \
-                        and self.components[cp].widget.isDirty():
+            if self.components[cp].instance is not None:
+                if hasattr(self.components[cp].instance,"isDirty") \
+                        and self.components[cp].instance.isDirty():
                     dirty = True
             if dirty:
                 item.setForeground(Qt.red) 
@@ -198,12 +199,16 @@ class ComponentList(QWidget, Ui_ComponentList):
             if selectedComponent is not None and selectedComponent == self.components[cp].id:
                 selected = item
                                
-            if self.components[cp].widget is not None:
-                if dirty:
-                    self.components[cp].widget.setWindowTitle("Component: %s*" %name)
-                else:
-                    self.components[cp].widget.setWindowTitle("Component: %s" %name)
-
+            if self.components[cp].instance is not None and self.components[cp].instance.dialog is not None:
+                try:
+                    if dirty:
+                        self.components[cp].instance.dialog.setWindowTitle("Component: %s*" %name)
+                    else:
+                        self.components[cp].instance.dialog.setWindowTitle("Component: %s" %name)
+                except:
+#                    print "C++", self.components[cp].name
+                    # C++ dialog was deleted
+                    self.components[cp].instance.dialog =  None
         if selected is not None:
             selected.setSelected(True)
             self.componentListWidget.setCurrentItem(selected)
@@ -232,7 +237,7 @@ class ComponentList(QWidget, Ui_ComponentList):
             else:
                 name = fname
                 
-            dlg = ComponentDlg()
+            dlg = Component()
             dlg.directory = self.directory
             dlg.name = name
             dlg.createGUI()
@@ -244,8 +249,8 @@ class ComponentList(QWidget, Ui_ComponentList):
 
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp
-            if cp.widget is not None:
-                cp.widget.idc = cp.id
+            if cp.instance is not None:
+                cp.instance.idc = cp.id
             print name
             
 
@@ -267,7 +272,7 @@ class ComponentList(QWidget, Ui_ComponentList):
             
         for name in components.keys():
                 
-            dlg = ComponentDlg()
+            dlg = Component()
             dlg.directory = self.directory
             dlg.name = name
             dlg.createGUI()
@@ -279,8 +284,8 @@ class ComponentList(QWidget, Ui_ComponentList):
 
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp
-            if cp.widget is not None:
-                cp.widget.idc = cp.id
+            if cp.instance is not None:
+                cp.instance.idc = cp.id
             print name
             
 

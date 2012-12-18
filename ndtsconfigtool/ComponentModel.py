@@ -48,6 +48,7 @@ class ComponentModel(QAbstractItemModel):
         ## index of the root item
         self.rootIndex = self.createIndex(0, 0, self.rootItem)
 
+
     ## switches between all attributes in the try or only type attribute
     # \param allAttributes all attributes are shown if True
     def setAttributeView(self, allAttributes):

@@ -43,6 +43,12 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
         self.postrun = u''
         ## attribute doc
         self.doc = u''
+        ## compression flag
+        self.compression = False
+        ## compression rate
+        self.rate = 5
+        ## compression shuffle
+        self.shuffle = True
 
 
 
@@ -63,6 +69,11 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
                 
         if self.trigger is not None :
             self.triggerLineEdit.setText(self.trigger) 
+
+        self.compressionCheckBox.setChecked(self.compression) 
+        self.shuffleCheckBox.setChecked(self.shuffle) 
+        self.rateSpinBox.setValue(self.rate)
+
         if self.grows is not None :
             try:
                 grows = int(self.grows)
@@ -88,7 +99,9 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
 #        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.modeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
+        self.connect(self.compressionCheckBox, SIGNAL("stateChanged(int)"), self.setCompression)
 
+        self.setCompression(self.compressionCheckBox.isChecked())
 
 
     ## provides the state of the strategy dialog        
@@ -98,6 +111,9 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
                  self.trigger,
                  self.grows,
                  self.postrun,
+                 self.compression,
+                 self.rate,
+                 self.shuffle,
                  self.doc
                  )
 #        print  "GET", unicode(state)
@@ -112,6 +128,9 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
          self.trigger,
          self.grows,
          self.postrun,
+         self.compression,
+         self.rate,
+         self.shuffle,
          self.doc
          ) = state
 #        print "SET",  unicode(state)
@@ -133,6 +152,15 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
             self.triggerFrame.hide()            
 
 
+    ## shows and hides compression widgets according to compressionCheckBox
+    # \param state value from compressionCheckBox
+    def setCompression(self, state):
+        enable = bool(state)
+        self.rateLabel.setEnabled(enable)
+        self.rateSpinBox.setEnabled(enable)
+        self.shuffleCheckBox.setEnabled(enable)
+                
+
 
 
     ## sets the form from the DOM node
@@ -146,6 +174,23 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
         self.trigger = attributeMap.namedItem("trigger").nodeValue() if attributeMap.contains("trigger") else ""
         self.grows = attributeMap.namedItem("grows").nodeValue() if attributeMap.contains("grows") else ""
         self.mode = attributeMap.namedItem("mode").nodeValue() if attributeMap.contains("mode") else ""
+
+        if attributeMap.contains("compression"):
+            self.compression = \
+                False if str(attributeMap.namedItem("compression").nodeValue()).upper() == "FALSE"  else True
+
+            if attributeMap.contains("shuffle"):
+                self.shuffle = \
+                    False if str(attributeMap.namedItem("shuffle").nodeValue()).upper() == "FALSE"  else True
+
+            if attributeMap.contains("rate"):
+                rate = int(attributeMap.namedItem("rate").nodeValue())
+                if rate < 0:
+                    rate = 0
+                elif rate > 9:
+                    rate = 9
+                self.rate = rate    
+
 
         text = self._getText(node)    
         self.postrun = unicode(text).strip() if text else ""
@@ -174,6 +219,14 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
                 self.grows= str(grows)
         if self.mode ==  'POSTRUN':
             self.postrun = unicode(self.postLineEdit.text())
+
+
+        self.compression = self.compressionCheckBox.isChecked()
+        self.shuffle = self.shuffleCheckBox.isChecked()
+        self.rate = self.rateSpinBox.value()
+            
+
+        print "cP", self.compression
 
         self.doc = unicode(self.docTextEdit.toPlainText())
 
@@ -207,6 +260,12 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
                 elem.setAttribute(QString("trigger"), QString(self.trigger))
             if self.grows:
                 elem.setAttribute(QString("grows"), QString(self.grows))
+        if self.compression:
+            elem.setAttribute(QString("compression"), QString("true"))
+            elem.setAttribute(QString("shuffle"), QString("true") if self.shuffle else "false" )
+            elem.setAttribute(QString("rate"), QString(str(self.rate)))
+        else:
+            elem.setAttribute(QString("compression"), QString("false"))
 
         self._replaceText(self.node, index, unicode(self.postrun))
 

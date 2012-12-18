@@ -1,12 +1,12 @@
-<<<<<<< HEAD
-2012-11-20 Jan Kotanski <jankotan@gmail.com>
-=======
 2012-12-18 Jan Kotanski <jankotan@gmail.com>
 	* switching QWorkspace widget to QMdiArea
+	* spliting DataSourceDlg and ComponentDlg
+	* adding interrupt merging button
+	* adding compression to strategy widget
+	* adding clean to setup.py
 	* tagged as v1.1.0 (from v1.0.1)
 
 2012-11-29 Jan Kotanski <jankotan@gmail.com>
->>>>>>> develop
 	* adding datasources for attributes
 	* adding selection of the growing dimension in strategy STEP mode
 	* fixing BadWindow error

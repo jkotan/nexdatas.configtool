@@ -258,7 +258,7 @@ class Component(object):
     # \param path path represented as a list with elements: (row number, node name)
     # \returns component item index        
     def _getIndex(self, path):
-        if not path or self.view or not self.dialog:
+        if not path or not self.view or not self.dialog:
             return QModelIndex()
         index = self.view.model().rootIndex
         self.view.expand(index)

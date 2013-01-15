@@ -47,7 +47,7 @@ from ComponentModel import ComponentModel
 
 ## dialog defining a tag link 
 #class ComponentDlg(QMdiSubWindow, Ui_ComponentDlg):
-class ComponentDlg(QWidget, Ui_ComponentDlg):
+class ComponentDlg(QDialog, Ui_ComponentDlg):
     
     ## constructor
     # \param component component instance

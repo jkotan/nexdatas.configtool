@@ -1974,26 +1974,15 @@ class MainWindow(QMainWindow):
         if subwindow and isinstance(subwindow.widget(),CommonDataSourceDlg) and subwindow.widget().datasource:
             
             ds = subwindow.widget().datasource
-            que = False
-            if (hasattr(ds,"isDirty") and ds.isDirty()) or \
-                    (hasattr(ds,"instance") and hasattr(ds.instance,"isDirty") and ds.instance.isDirty()):
-                status= QMessageBox.question(self, "DataSource - Save",
-                                             "Do you want to save the datasource: %s".encode() \
-                                                 %  (ds.name),
-                                             QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
-                                             QMessageBox.Save)
 
-                print "STATUS", status
-                if status == QMessageBox.Save:
-                    try:
-                        if not ds.instance.save():
-                            return
-                            
-                    except IOError, e:
-                        failures.append(unicode(e))
-                        
-                elif status == QMessageBox.Cancel:
-                    return
+            if QMessageBox.question(self, "Close datasource",
+                                    "Would you like to close the datasource?", 
+                                    QMessageBox.Yes | QMessageBox.No,
+                                    QMessageBox.Yes ) == QMessageBox.No :
+                return
+            ds.updateForm()
+            if ds.dialog:
+                ds.dialog.reject()
 
             self.mdi.setActiveSubWindow(subwindow)
             self.mdi.closeActiveSubWindow()
@@ -2005,25 +1994,15 @@ class MainWindow(QMainWindow):
         if subwindow and isinstance(subwindow.widget(),ComponentDlg) and subwindow.widget().component:
             cp = subwindow.widget().component
 
-            if (hasattr(cp,"isDirty") and cp.isDirty()) or \
-                    (hasattr(cp,"instance") and hasattr(cp.instance,"isDirty") and cp.instance.isDirty()):
-                status= QMessageBox.question(self, "Component - Save",
-                                             "Do you want to save the component: %s".encode() \
-                                                 %  (cp.name),
-                                             QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
-                                             QMessageBox.Save)
-                
-                if status == QMessageBox.Save:
-                    try:
-                        cp.instance.merge()
-                        if not cp.instance.save():
-                            return
-                            
-                    except IOError, e:
-                        failures.append(unicode(e))
-                        
-                elif status == QMessageBox.Cancel:
-                    return
+            if QMessageBox.question(self, "Close component",
+                                    "Would you like to close the component ?", 
+                                    QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                return
+
+            if cp.dialog:
+                cp.dialog.reject()
+
+
             self.mdi.setActiveSubWindow(subwindow)
             self.mdi.closeActiveSubWindow()
         

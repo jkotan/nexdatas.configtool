@@ -1,0 +1,4 @@
+build
+*.pyc
+ui_*.py
+qrc_resources.py

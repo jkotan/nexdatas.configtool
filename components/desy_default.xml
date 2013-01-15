@@ -1,8 +1,45 @@
 <?xml version='1.0'?>
 <definition>
   <group type="NXentry">
-    <group type="NXinstrument" name="instrument"/>
-    <group type="NXsample" name="sample"/>
+    <group type="NXinstrument" name="instrument">
+      <group type="NXsource" name="source">
+        <doc>generic description of the PETRA III storage ring</doc>
+        <field type="NX_CHAR" name="name">PETRAIII</field>
+        <field type="NX_CHAR" name="type">Synchrotron X-ray Source</field>
+        <field type="NX_CHAR" name="probe">x-ray</field>
+      </group>
+      <group type="NXinsertion_device" name="insertion_device"/>
+      <field short_name="P08" type="NX_CHAR" name="name">High Resolution Diffraction Beamline</field>
+    </group>
+    <group type="NXsample" name="sample">
+      <field type="NX_CHAR" name="name">
+        <datasource type="CLIENT" name="sample_name">
+          <record name="sample_name"/>
+          <doc>Data source providing the name of the sample.</doc>
+        </datasource>
+      </field>
+    </group>
     <group type="NXdata" name="data"/>
+    <field type="NX_CHAR" name="experiment_identifier">
+      <doc>Beamtime ID. From this ID everything else can be derived from the DESY databases including the Proposal as well as the scientists performing the experiment, the local contact, and so on.</doc>
+      <datasource type="DB" name="beamtime_id">
+        <database dbtype="ORACLE"></database>
+        <query format="SCALAR">SELECT BTID FROM BLABLA</query>
+      </datasource>
+    </field>
+    <field type="NX_DATE_TIME" name="start_time">
+      <doc>time stamp when the experiment has started.</doc>
+      <datasource type="CLIENT" name="start_time">
+        <record name="start_time"/>
+        <doc>The start time is provided by the control client.</doc>
+      </datasource>
+    </field>
+    <field type="NX_DATE_TIME" name="end_time">
+      <doc>end time - timestamp when the experiment stopped.</doc>
+      <datasource type="CLIENT" name="end_time">
+        <record name="end_time"/>
+        <doc>The end time is provided by the client after the experiment is finished.</doc>
+      </datasource>
+    </field>
   </group>
 </definition>

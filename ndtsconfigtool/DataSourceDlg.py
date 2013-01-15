@@ -402,7 +402,7 @@ class DataSourceMethods(object):
             self.dialog.connect(self.dialog.resetPushButton, SIGNAL("clicked()"), self.reset)
         else:
             self.dialog.connect(self.dialog.resetPushButton, SIGNAL("clicked()"), self.dialog.reset)
-        self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self.close)
+#        self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self.close)
 
         self.dialog.connectWidgets()
         self.dialog.setFrames(self.datasource.dataSourceType)
@@ -709,6 +709,11 @@ class DataSourceMethods(object):
                          self.datasource._externalSave)
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
                          self.datasource._externalSave)
+        if self.datasource._externalClose:
+            self.dialog.disconnect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+                         self.datasource._externalClose)
+            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+                         self.datasource._externalClose)
         if self.datasource._externalApply:
             self.dialog.disconnect(self.dialog.applyPushButton, SIGNAL("clicked()"), 
                          self.datasource._externalApply)
@@ -719,11 +724,15 @@ class DataSourceMethods(object):
     ## connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action
-    def connectExternalActions(self, externalApply=None, externalSave=None):
+    def connectExternalActions(self, externalApply=None, externalSave=None, externalClose = None ):
         if externalSave and self.datasource._externalSave is None:
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
             self.datasource._externalSave = externalSave
+        if externalClose and self.datasource._externalClose is None:
+            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+                         externalClose)
+            self.datasource._externalClose = externalClose
         if externalApply and self.datasource._externalApply is None:
             self.dialog.connect(self.dialog.applyPushButton, SIGNAL("clicked()"), 
                      externalApply)
@@ -843,6 +852,7 @@ class CommonDataSource(object):
         self.dbParameters = {}
 
         self._externalSave = None
+        self._externalClose = None
         self._externalApply = None
 
         self._applied = False
@@ -1233,9 +1243,9 @@ class DataSource(CommonDataSource):
     ## connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action
-    def connectExternalActions(self, externalApply=None, externalSave=None):
+    def connectExternalActions(self, externalApply=None, externalSave=None, externalClose=None ):
         if hasattr(self,"methods")  and self.methods:
-            return self.methods.connectExternalActions(externalApply, externalSave)
+            return self.methods.connectExternalActions(externalApply, externalSave, externalClose)
 
     ## reconnects save actions
     # \brief It reconnects the save action 
@@ -1324,9 +1334,9 @@ class DataSourceDlg(CommonDataSourceDlg):
     ## connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action 
-    def connectExternalActions(self, externalApply=None, externalSave=None):
+    def connectExternalActions(self, externalApply=None, externalSave=None, externalClose=None):
         if hasattr(self,"methods")  and self.methods:
-            return self.methods.connectExternalActions(externalApply, externalSave)
+            return self.methods.connectExternalActions(externalApply, externalSave, externalClose)
 
 
 if __name__ == "__main__":

@@ -1,16 +1,6 @@
 <?xml version='1.0'?>
 <definition>
   <group type="NXentry">
-    <group type="NXinstrument" name="instrument">
-      <group type="NXsource" name="source">
-        <doc>generic description of the PETRA III storage ring</doc>
-        <field type="NX_CHAR" name="name">PETRAIII</field>
-        <field type="NX_CHAR" name="type">Synchrotron X-ray Source</field>
-        <field type="NX_CHAR" name="probe">x-ray</field>
-      </group>
-      <group type="NXinsertion_device" name="insertion_device"/>
-      <field short_name="P08" type="NX_CHAR" name="name">High Resolution Diffraction Beamline</field>
-    </group>
     <group type="NXsample" name="sample">
       <field type="NX_CHAR" name="name">
         <datasource type="CLIENT" name="sample_name">
@@ -36,5 +26,16 @@
         <doc>The end time is provided by the client after the experiment is finished.</doc>
       </datasource>
     </field>
+    <group type="NXinstrument" name="instrument">
+      <group type="NXsource" name="source">
+        <doc>generic description of the PETRA III storage ring</doc>
+        <field type="NX_CHAR" name="name">PETRAIII</field>
+        <field type="NX_CHAR" name="type">Synchrotron X-ray Source</field>
+        <field type="NX_CHAR" name="probe">x-ray</field>
+      </group>
+      <group type="NXinsertion_device" name="insertion_device"/>
+      <field short_name="P08" type="NX_CHAR" name="name">High Resolution Diffraction Beamline</field>
+    </group>
+    <group type="NXmonitor" name="monitor"/>
   </group>
 </definition>

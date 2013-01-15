@@ -1,0 +1,8 @@
+<?xml version='1.0'?>
+<definition>
+  <group type="NXentry">
+    <group type="NXinstrument" name="instrument"/>
+    <group type="NXsample" name="sample"/>
+    <group type="NXdata" name="data"/>
+  </group>
+</definition>

@@ -47,6 +47,7 @@ class MergerDlg(QDialog):
     # \brief It creates dialog with a merging label 
     def createGUI(self):
         label = QLabel(" Please be patient: Component merging...")
+        ## button to interrupt merging
         self.interruptButton = QPushButton("&Interrupt Merging")
         layout = QVBoxLayout()
         layout.addWidget(label)

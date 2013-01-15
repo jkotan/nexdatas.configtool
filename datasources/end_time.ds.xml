@@ -1,0 +1,4 @@
+<datasource type="CLIENT" name="end_time">
+  <record name="end_time"/>
+  <doc>The end time is provided by the client after the experiment is finished.</doc>
+</datasource>

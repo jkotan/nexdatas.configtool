@@ -1,0 +1,4 @@
+<datasource type="CLIENT" name="start_time">
+  <record name="start_time"/>
+  <doc>The start time is provided by the control client.</doc>
+</datasource>

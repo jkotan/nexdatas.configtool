@@ -21,12 +21,7 @@
     </group>
     <group type="NXdata" name="data"/>
     <field type="NX_CHAR" name="experiment_identifier">
-      <doc>Beamtime ID. From this ID everything else can be derived from the DESY databases including the Proposal as well as the scientists performing the experiment, the local contact, and so on.</doc>
-      <datasource type="DB" name="beamtime_id">
-        <database dbtype="ORACLE"></database>
-        <query format="SCALAR">SELECT BTID FROM BLABLA</query>
-      </datasource>
-    </field>
+      <doc>Beamtime ID. From this ID everything else can be derived from the DESY databases including the Proposal as well as the scientists performing the experiment, the local contact, and so on.</doc>ID01</field>
     <field type="NX_DATE_TIME" name="start_time">
       <doc>time stamp when the experiment has started.</doc>
       <datasource type="CLIENT" name="start_time">

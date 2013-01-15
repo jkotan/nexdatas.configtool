@@ -1,4 +1,12 @@
+# build directory
 build
+# Text editor files 
+*~
+\#*\#
+# Compiled Python files
 *.pyc
+# Compiled C files
+*.o
+# Automatically created Python files
 ui_*.py
-qrc_resources.py
+qrc_*.py

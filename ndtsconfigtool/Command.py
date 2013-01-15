@@ -203,7 +203,9 @@ class ServerStoreComponent(Command):
                 
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
-                                                    self.receiver.componentSave)
+                                                    self.receiver.componentSave,
+                                                    self.receiver.componentClose
+                                                    )
 
 
                 
@@ -696,7 +698,8 @@ class ComponentOpen(Command):
 
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
-                                                    self.receiver.componentSave)      
+                                                    self.receiver.componentSave,
+                                                    self.receiver.componentClose)      
 
             if path:   
                 self._cp.name = self._cpEdit.name  
@@ -777,7 +780,9 @@ class DataSourceOpen(Command):
                 path = self._dsEdit.load()
                 self._fpath = path
             if hasattr(self._dsEdit,"connectExternalActions"):     
-                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)    
+                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, 
+                                                    self.receiver.dsourceSave,
+                                                    self.receiver.dsourceClose)     
             if path:   
                 self._ds.name = self._dsEdit.name  
                 self._ds.instance = self._dsEdit
@@ -956,7 +961,8 @@ class ComponentEdit(Command):
 
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
-                                                    self.receiver.componentSave)
+                                                    self.receiver.componentSave,
+                                                    self.receiver.componentClose)
 
             subwindow = self.receiver.subWindow(
                 self._cpEdit, self.receiver.mdi.subWindowList())
@@ -1032,7 +1038,9 @@ class ComponentSave(Command):
                 
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
-                                                    self.receiver.componentSave)
+                                                    self.receiver.componentSave,
+                                                    self.receiver.componentClose
+                                                    )
 
 
 
@@ -1574,7 +1582,9 @@ class DataSourceApply(Command):
             self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
             
             if hasattr(self._ds.instance,"connectExternalActions"):     
-                self._ds.instance.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)
+                self._ds.instance.connectExternalActions(self.receiver.dsourceApply, 
+                                                         self.receiver.dsourceSave,
+                                                         self.receiver.dsourceClose)
             self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
             self._subwindow.resize(440,480)
             self._ds.instance.dialog.show()
@@ -2183,7 +2193,10 @@ class DataSourceEdit(Command):
                 self._dsEdit = self._ds.instance 
                 
             if hasattr(self._dsEdit,"connectExternalActions"):     
-                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)
+                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, 
+                                                    self.receiver.dsourceSave,
+                                                    self.receiver.dsourceClose
+                                                    )
 
             subwindow = self.receiver.subWindow(
                 self._dsEdit, self.receiver.mdi.subWindowList())
@@ -2611,7 +2624,9 @@ class ComponentClear(ComponentItemCommand):
 
                     if hasattr(self._cp.instance,"connectExternalActions"):     
                         self._cp.instance.connectExternalActions(self.receiver.componentApplyItem, 
-                                                               self.receiver.componentSave)
+                                                                 self.receiver.componentSave,
+                                                                 self.receiver.componentClose
+                                                                 )
         self.postExecute()
             
 
@@ -3174,7 +3189,10 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
 
 
                 if hasattr(dsEdit,"connectExternalActions"):     
-                    dsEdit.connectExternalActions(self.receiver.dsourceApply,self.receiver.dsourceSave)
+                    dsEdit.connectExternalActions(self.receiver.dsourceApply,
+                                                  self.receiver.dsourceSave,
+                                                  self.receiver.dsourceClose
+                                                  )
                 
                 if not hasattr(ds.instance,"createNodes"):
                     self._cp = None

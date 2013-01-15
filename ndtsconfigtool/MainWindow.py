@@ -870,7 +870,7 @@ class MainWindow(QMainWindow):
                                              QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
                                              QMessageBox.Save)
 
-                if status == QMessageBox.Yes:
+                if status == QMessageBox.Save:
                     try:
                         cp.instance.merge()
                         if not cp.instance.save():
@@ -896,7 +896,7 @@ class MainWindow(QMainWindow):
                                              QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
                                              QMessageBox.Save)
 
-                if status == QMessageBox.Yes:
+                if status == QMessageBox.Save:
                     try:
                         if not ds.instance.save():
                             event.ignore()
@@ -960,11 +960,10 @@ class MainWindow(QMainWindow):
         
 
 
-
     ## loads the datasource list
     # \brief It loads the datasource list from the default directory
     def loadDataSources(self):
-        self.sourceList.loadList(self.dsourceCollect, self.dsourceApply)
+        self.sourceList.loadList(self.dsourceCollect, self.dsourceApply, self.dsourceClose)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 
@@ -975,11 +974,12 @@ class MainWindow(QMainWindow):
     # \param datasources dictionary with datasources, i.e. name:xml
     # \param new logical variable set to True if objects are not saved    
     def setDataSources(self, datasources, new = False):
-        self.sourceList.setList(datasources, self.dsourceCollect, self.dsourceApply, new)
+        self.sourceList.setList(datasources, self.dsourceCollect, self.dsourceApply, self.dsourceClose, new)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 
         self.sourceList.populateDataSources(ids)
+        
         
 
 
@@ -990,7 +990,8 @@ class MainWindow(QMainWindow):
             components, 
             self.contextMenuActions,
             self.componentCollect,
-            self.componentApplyItem
+            self.componentApplyItem,
+            self.dsourceClose
             )
         idc =  self.componentList.components.itervalues().next().id \
             if len(self.componentList.components) else None
@@ -1006,7 +1007,8 @@ class MainWindow(QMainWindow):
         self.componentList.loadList(
             self.contextMenuActions,
             self.componentCollect,
-            self.componentApplyItem
+            self.componentApplyItem,
+            self.dsourceClose
             )
         idc =  self.componentList.components.itervalues().next().id \
             if len(self.componentList.components) else None
@@ -1965,6 +1967,65 @@ class MainWindow(QMainWindow):
                 break
         return swin
         
+
+    def dsourceClose(self):
+        print "datasource close"
+        subwindow = self.mdi.activeSubWindow()
+        if subwindow and isinstance(subwindow.widget(),CommonDataSourceDlg) and subwindow.widget().datasource:
+            
+            ds = subwindow.widget().datasource
+            que = False
+            if (hasattr(ds,"isDirty") and ds.isDirty()) or \
+                    (hasattr(ds,"instance") and hasattr(ds.instance,"isDirty") and ds.instance.isDirty()):
+                status= QMessageBox.question(self, "DataSource - Save",
+                                             "Do you want to save the datasource: %s".encode() \
+                                                 %  (ds.name),
+                                             QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
+                                             QMessageBox.Save)
+
+                print "STATUS", status
+                if status == QMessageBox.Save:
+                    try:
+                        if not ds.instance.save():
+                            return
+                            
+                    except IOError, e:
+                        failures.append(unicode(e))
+                        
+                elif status == QMessageBox.Cancel:
+                    return
+
+            self.mdi.setActiveSubWindow(subwindow)
+            self.mdi.closeActiveSubWindow()
+
+
+    def componentClose(self):
+        print "component close"
+        subwindow = self.mdi.activeSubWindow()
+        if subwindow and isinstance(subwindow.widget(),ComponentDlg) and subwindow.widget().component:
+            cp = subwindow.widget().component
+
+            if (hasattr(cp,"isDirty") and cp.isDirty()) or \
+                    (hasattr(cp,"instance") and hasattr(cp.instance,"isDirty") and cp.instance.isDirty()):
+                status= QMessageBox.question(self, "Component - Save",
+                                             "Do you want to save the component: %s".encode() \
+                                                 %  (cp.name),
+                                             QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
+                                             QMessageBox.Save)
+                
+                if status == QMessageBox.Save:
+                    try:
+                        cp.instance.merge()
+                        if not cp.instance.save():
+                            return
+                            
+                    except IOError, e:
+                        failures.append(unicode(e))
+                        
+                elif status == QMessageBox.Cancel:
+                    return
+            self.mdi.setActiveSubWindow(subwindow)
+            self.mdi.closeActiveSubWindow()
         
     ## updates the window menu
     # \brief It updates the window menu with the open windows

@@ -106,6 +106,8 @@ class Component(object):
         self._externalSave = None
         ## apply action
         self._externalApply = None
+        ## close action
+        self._externalClose = None
 
         ## item class shown in the frame
         self._tagClasses = {"field":FieldDlg, 
@@ -588,8 +590,6 @@ class Component(object):
     ## creates GUI
     # It calls setupUi and creates required action connections
     def createGUI(self):
-
-
         self.dialog = ComponentDlg(self, None)
         self.dialog.setupUi(self.dialog)
         self.view = self.dialog.view
@@ -603,7 +603,7 @@ class Component(object):
 
 
 #        self.dialog.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
-        self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self._close)
+#        self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self._close)
         self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
@@ -614,13 +614,18 @@ class Component(object):
     ## connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action
-    def connectExternalActions(self, externalApply=None , externalSave=None ):
+    def connectExternalActions(self, externalApply=None , externalSave=None, externalClose = None  ):
         if externalSave and self._externalSave is None:
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
             self._externalSave = externalSave
+        if externalClose and self._externalClose is None:
+            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+                         externalClose)
+            self._externalClose = externalClose
         if externalApply and self._externalApply is None:
             self._externalApply = externalApply
+
 
     ## reconnects save actions
     # \brief It reconnects the save action 
@@ -630,6 +635,10 @@ class Component(object):
                          self._externalSave)
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
                          self._externalSave)
+            self.dialog.disconnect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+                         self._externalClose)
+            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+                         self._externalClose)
 
 
     ## switches between all attributes in the try or only type attribute

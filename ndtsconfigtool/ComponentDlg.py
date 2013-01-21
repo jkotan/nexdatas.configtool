@@ -929,9 +929,9 @@ class Component(object):
                     if not root.setContent(fh):
                         raise ValueError, "could not parse XML"
                     definition = root.firstChildElement(QString("definition"))           
-                    if definition and definition.nodeName =="definition":
+                    if definition and definition.nodeName() =="definition":
                         ds  = definition.firstChildElement(QString("datasource"))
-                        if ds and ds.nodeName =="datasource":
+                        if ds and ds.nodeName() =="datasource":
 
 
                             if  index.column() != 0:

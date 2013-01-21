@@ -114,8 +114,8 @@
       </field>
     </group>
     <group type="NXdata" name="data">
-      <link target="entry/instrument/sample/data" name="data"/>
-      <link target="entry/sample/rotation_angle" name="rotation_angle"/>
+      <link target="NXentry/NXinstrument/NXsample/data" name="data"/>
+      <link target="NXentry/NXsample/rotation_angle" name="rotation_angle"/>
     </group>
   </group>
 </definition>

@@ -140,10 +140,10 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         
         if self.dimensions:
             label = self.dimensions.__str__()
-            self.dimLabel.setText("%s" % label)
+            self.dimLabel.setText("%s" % label.replace('None','*'))
         elif self.rank > 0:
             label = [None for r in range(self.rank)].__str__()
-            self.dimLabel.setText("%s" % label)
+            self.dimLabel.setText("%s" % label.replace('None','*'))
             
 
         self._dimensions =[]
@@ -293,7 +293,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
             else:    
                 self._dimensions = []
             label = self._dimensions.__str__()
-            self.dimLabel.setText("%s" % label)
+            self.dimLabel.setText("%s" % label.replace('None','*'))
                 
                 
 

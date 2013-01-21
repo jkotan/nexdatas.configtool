@@ -893,12 +893,12 @@ class Component(object):
     # \param filePath xml file name with full path    
     def loadDataSourceItem(self,filePath = None):
         print "Loading DataSource"
+
         
         if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget \
                                 or not hasattr(self.dialog.widget, "subItems") \
                                 or "datasource" not in  self.dialog.widget.subItems:
             return
-
         child = self.dialog.widget.node.firstChild()
         while not child.isNull():
             if child.nodeName() == 'datasource':
@@ -907,7 +907,6 @@ class Component(object):
                 return
             child = child.nextSibling()    
                 
-
 
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -930,9 +929,9 @@ class Component(object):
                     if not root.setContent(fh):
                         raise ValueError, "could not parse XML"
                     definition = root.firstChildElement(QString("definition"))           
-                    if definition:
+                    if definition and definition.nodeName =="definition":
                         ds  = definition.firstChildElement(QString("datasource"))
-                        if ds:
+                        if ds and ds.nodeName =="datasource":
 
 
                             if  index.column() != 0:
@@ -940,7 +939,14 @@ class Component(object):
                             self.dialog.widget.node = node
                             ds2 = self.document.importNode(ds, True)
                             self.dialog.widget.appendNode(ds2, index)
+                        else:
+                            QMessageBox.warning(self.dialog, "Corrupted DataSource ", 
+                                                "Missing <datasource> tag")
 
+                    else:
+                            QMessageBox.warning(self.dialog, "Corrupted DataSource ", 
+                                                "Missing <definition> tag")
+                        
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
                 self.view.expand(index)
                 self._dsPath = dsFile

@@ -434,47 +434,63 @@ class DataSourceMethods(object):
             self.datasource.dataSourceType = unicode(value)
 
             record = self.dialog.node.firstChildElement(QString("record"))           
-            attributeMap = record.attributes()
-            self.datasource.clientRecordName = unicode(attributeMap.namedItem("name").nodeValue() \
+            if record.nodeName() != "record":
+                QMessageBox.warning(self.dialog, "Internal error", 
+                                    "Missing <record> tag")
+            else:
+                attributeMap = record.attributes()
+                self.datasource.clientRecordName = unicode(attributeMap.namedItem("name").nodeValue() \
                                                 if attributeMap.contains("name") else "")
-
+                
 
 
         elif value == 'TANGO':
             self.datasource.dataSourceType = unicode(value)
 
             record = self.dialog.node.firstChildElement(QString("record"))
-            attributeMap = record.attributes()
-            self.datasource.tangoMemberName = unicode(attributeMap.namedItem("name").nodeValue() \
-                                               if attributeMap.contains("name") else "")
+            if record.nodeName() != "record":
+                QMessageBox.warning(self.dialog, "Internal error", 
+                                    "Missing <record> tag")
+            else:
+                attributeMap = record.attributes()
+                self.datasource.tangoMemberName = unicode(attributeMap.namedItem("name").nodeValue() \
+                                                              if attributeMap.contains("name") else "")
 
             device = self.dialog.node.firstChildElement(QString("device"))
-            attributeMap = device.attributes()
-            self.datasource.tangoDeviceName = unicode(attributeMap.namedItem("name").nodeValue() \
-                                               if attributeMap.contains("name") else "")
-            self.datasource.tangoMemberType = unicode(attributeMap.namedItem("member").nodeValue() \
-                                               if attributeMap.contains("member") else "attribute")
-            self.datasource.tangoHost = unicode(attributeMap.namedItem("hostname").nodeValue() \
-                                         if attributeMap.contains("hostname") else "")
-            self.datasource.tangoPort = unicode(attributeMap.namedItem("port").nodeValue() \
-                                         if attributeMap.contains("port") else "")
-            self.datasource.tangoEncoding = unicode(attributeMap.namedItem("encoding").nodeValue() \
-                                         if attributeMap.contains("encoding") else "")
+            if device.nodeName() != "device":
+                QMessageBox.warning(self.dialog, "Internal error", 
+                                    "Missing <device> tag")
+            else:
+                attributeMap = device.attributes()
+                self.datasource.tangoDeviceName = unicode(attributeMap.namedItem("name").nodeValue() \
+                                                              if attributeMap.contains("name") else "")
+                self.datasource.tangoMemberType = unicode(attributeMap.namedItem("member").nodeValue() \
+                                                              if attributeMap.contains("member") else "attribute")
+                self.datasource.tangoHost = unicode(attributeMap.namedItem("hostname").nodeValue() \
+                                                        if attributeMap.contains("hostname") else "")
+                self.datasource.tangoPort = unicode(attributeMap.namedItem("port").nodeValue() \
+                                                        if attributeMap.contains("port") else "")
+                self.datasource.tangoEncoding = unicode(attributeMap.namedItem("encoding").nodeValue() \
+                                                            if attributeMap.contains("encoding") else "")
 
                                     
         elif value == 'DB':
             self.datasource.dataSourceType = unicode(value)
             
             database = self.dialog.node.firstChildElement(QString("database"))           
-            attributeMap = database.attributes()
+            if database.nodeName() != "database":
+                QMessageBox.warning(self.dialog, "Internal error", 
+                                    "Missing <database> tag")
+            else:
+                attributeMap = database.attributes()
 
-            for i in range(attributeMap.count()):
-                name = unicode(attributeMap.item(i).nodeName())
-                if name == 'dbtype':
-                    self.datasource.dbType = unicode(attributeMap.item(i).nodeValue())
-                elif name in self.dbmap:
-                    self.datasource.dbParameters[self.dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
-                    self.dialog.dbParam[self.dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
+                for i in range(attributeMap.count()):
+                    name = unicode(attributeMap.item(i).nodeName())
+                    if name == 'dbtype':
+                        self.datasource.dbType = unicode(attributeMap.item(i).nodeValue())
+                    elif name in self.dbmap:
+                        self.datasource.dbParameters[self.dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
+                        self.dialog.dbParam[self.dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
 
                     
             if not self.datasource.dbType:
@@ -486,10 +502,14 @@ class DataSourceMethods(object):
 
 
             query = self.dialog.node.firstChildElement(QString("query"))
-            attributeMap = query.attributes()
+            if query.nodeName() != "query":
+                QMessageBox.warning(self.dialog, "Internal error", 
+                                    "Missing <query> tag")
+            else:
+                attributeMap = query.attributes()
 
-            self.datasource.dbDataFormat = unicode(attributeMap.namedItem("format").nodeValue() \
-                                            if attributeMap.contains("format") else "SCALAR")
+                self.datasource.dbDataFormat = unicode(attributeMap.namedItem("format").nodeValue() \
+                                                           if attributeMap.contains("format") else "SCALAR")
 
 
             text = unicode(self.dialog._getText(query))

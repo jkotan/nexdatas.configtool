@@ -862,6 +862,10 @@ class Component(object):
                     if not root.setContent(fh):
                         raise ValueError, "could not parse XML"
                     definition = root.firstChildElement(QString("definition"))           
+                    if definition.nodeName() != "definition":
+                        QMessageBox.warning(self.dialog, "Corrupted SubComponent", 
+                                            "Component %s without <definition> tag" % itemFile)
+                        return
                     child = definition.firstChild()
                     self.dialog.widget.node = node
 
@@ -886,6 +890,29 @@ class Component(object):
                     fh.close()
 
         return True    
+
+
+    ## provides the first element in the tree with the given name
+    # \param node DOM node
+    # \param name child name
+    # \returns DOM child node
+    def _getFirstElement(self, node, name):
+        if node:
+
+            child = node.firstChild()
+            if child:
+                while not child.isNull():
+                    if child and  child.nodeName() == name:
+                        return child
+                    child = child.nextSibling()
+            
+            child = node.firstChild()
+            if child:
+                while not child.isNull():
+                    elem = self._getFirstElement(child, name)
+                    if elem:
+                        return elem
+                    child = child.nextSibling()
 
 
 
@@ -928,24 +955,25 @@ class Component(object):
                     root = QDomDocument()
                     if not root.setContent(fh):
                         raise ValueError, "could not parse XML"
-                    definition = root.firstChildElement(QString("definition"))           
-                    if definition and definition.nodeName() =="definition":
-                        ds  = definition.firstChildElement(QString("datasource"))
-                        if ds and ds.nodeName() =="datasource":
+                    ds = self._getFirstElement(root, "datasource")
+#                    definition = root.firstChildElement(QString("definition"))           
+#                    if definition and definition.nodeName() =="definition":
+#                        ds  = definition.firstChildElement(QString("datasource"))
+#                        if ds and ds.nodeName() =="datasource":
 
-
-                            if  index.column() != 0:
-                                index = self.view.model().index(index.row(), 0, index.parent())
-                            self.dialog.widget.node = node
-                            ds2 = self.document.importNode(ds, True)
-                            self.dialog.widget.appendNode(ds2, index)
-                        else:
-                            QMessageBox.warning(self.dialog, "Corrupted DataSource ", 
-                                                "Missing <datasource> tag")
-
+                    if ds:
+                        if  index.column() != 0:
+                            index = self.view.model().index(index.row(), 0, index.parent())
+                        self.dialog.widget.node = node
+                        ds2 = self.document.importNode(ds, True)
+                        self.dialog.widget.appendNode(ds2, index)
                     else:
                             QMessageBox.warning(self.dialog, "Corrupted DataSource ", 
-                                                "Missing <definition> tag")
+                                                "Missing <datasource> tag in %s" % dsFile)
+
+#                    else:
+#                            QMessageBox.warning(self.dialog, "Corrupted DataSource ", 
+#                                                "Missing <definition> tag in %s" % dsFile)
                         
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
                 self.view.expand(index)

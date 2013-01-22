@@ -1,3 +1,6 @@
-<datasource type="CLIENT" name="monitor_counter">
-  <record name="monitor_counter"/>
-</datasource>
+<?xml version='1.0'?>
+<definition>
+  <datasource type="CLIENT" name="monitor_counter">
+    <record name="monitor_counter"/>
+  </datasource>
+</definition>

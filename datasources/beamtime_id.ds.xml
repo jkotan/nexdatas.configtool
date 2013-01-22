@@ -1,4 +1,7 @@
-<datasource type="DB" name="beamtime_id">
-  <database dbtype="ORACLE"></database>
-  <query format="SCALAR">SELECT BTID FROM BLABLA</query>
-</datasource>
+<?xml version='1.0'?>
+<definition>
+  <datasource type="DB" name="beamtime_id">
+    <database dbtype="ORACLE"></database>
+    <query format="SCALAR">SELECT BTID FROM BLABLA</query>
+  </datasource>
+</definition>

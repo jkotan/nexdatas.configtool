@@ -1,3 +1,6 @@
-<datasource type="CLIENT" name="sample_y_translation">
-  <record name="sample_y_translation"/>
-</datasource>
+<?xml version='1.0'?>
+<definition>
+  <datasource type="CLIENT" name="sample_y_translation">
+    <record name="sample_y_translation"/>
+  </datasource>
+</definition>

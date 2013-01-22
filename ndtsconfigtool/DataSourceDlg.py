@@ -796,7 +796,7 @@ class DataSourceMethods(object):
         text=unicode(clipboard.text())
         self.datasource.document = QDomDocument()
         self.dialog.root = self.datasource.document
-        if not self.datasource.document.setContent(text):
+        if not self.datasource.document.setContent(self.datasource.repair(text)):
             raise ValueError, "could not parse XML"
 
 
@@ -1079,7 +1079,8 @@ class DataSource(CommonDataSource):
             if  fh.open(QIODevice.ReadOnly):
                 self.document = QDomDocument()
                 self.root = self.document
-                if not self.document.setContent(fh):
+                if not self.document.setContent(self.repair(fh)):
+#                if not self.document.setContent(fh):
                     raise ValueError, "could not parse XML"
 
                 ds = self.dialog._getFirstElement(self.document, "datasource")
@@ -1104,6 +1105,33 @@ class DataSource(CommonDataSource):
                 fh.close()
                 return filename
 
+    ## repairs xml datasources 
+    # \param xml xml string
+    # \returns repaired xml        
+    def repair(self, xml):
+        olddoc = QDomDocument()
+        if not olddoc.setContent(xml):
+            raise ValueError, "could not parse XML"
+
+        definition = olddoc.firstChildElement(QString("definition"))           
+        if definition and definition.nodeName() =="definition":
+            ds  = definition.firstChildElement(QString("datasource"))
+            if ds and ds.nodeName() =="datasource":
+                return xml
+        
+        ds = self.dialog._getFirstElement(olddoc, "datasource")           
+        
+        newdoc = QDomDocument()
+        processing = newdoc.createProcessingInstruction("xml", "version='1.0'") 
+        newdoc.appendChild(processing)
+
+        definition = newdoc.createElement(QString("definition"))
+        newdoc.appendChild(definition)
+
+        newds = newdoc.importNode(ds,True)
+        definition.appendChild(newds)            
+            
+        return newdoc.toString(0)
 
             
     ## sets datasources from xml string
@@ -1111,7 +1139,7 @@ class DataSource(CommonDataSource):
     def set(self, xml):
         self.document = QDomDocument()
         self.root = self.document
-        if not self.document.setContent(xml):
+        if not self.document.setContent(self.repair(xml)):
             raise ValueError, "could not parse XML"
 
         ds = self.dialog._getFirstElement(self.document, "datasource")           

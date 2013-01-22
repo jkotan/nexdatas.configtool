@@ -956,10 +956,6 @@ class Component(object):
                     if not root.setContent(fh):
                         raise ValueError, "could not parse XML"
                     ds = self._getFirstElement(root, "datasource")
-#                    definition = root.firstChildElement(QString("definition"))           
-#                    if definition and definition.nodeName() =="definition":
-#                        ds  = definition.firstChildElement(QString("datasource"))
-#                        if ds and ds.nodeName() =="datasource":
 
                     if ds:
                         if  index.column() != 0:
@@ -971,9 +967,6 @@ class Component(object):
                             QMessageBox.warning(self.dialog, "Corrupted DataSource ", 
                                                 "Missing <datasource> tag in %s" % dsFile)
 
-#                    else:
-#                            QMessageBox.warning(self.dialog, "Corrupted DataSource ", 
-#                                                "Missing <definition> tag in %s" % dsFile)
                         
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
                 self.view.expand(index)

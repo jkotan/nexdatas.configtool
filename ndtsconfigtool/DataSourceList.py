@@ -143,7 +143,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             dlg.directory = self.directory
             dlg.name = name
             
-            dlg.set(datasources[dsname])    
+            dlg.set(datasources[dsname]No)    
 
             dlg.dataSourceName = dsname
 

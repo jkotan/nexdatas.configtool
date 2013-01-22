@@ -984,12 +984,12 @@ class MainWindow(QMainWindow):
     # \param datasources dictionary with datasources, i.e. name:xml
     # \param new logical variable set to True if objects are not saved    
     def setDataSources(self, datasources, new = False):
-        self.sourceList.setList(datasources, self.dsourceCollect, self.dsourceApply, self.dsourceClose, new)
+        last = self.sourceList.setList(datasources, self.dsourceCollect, self.dsourceApply, self.dsourceClose, new)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 
         self.sourceList.populateDataSources(ids)
-        
+        return last
         
 
 
@@ -1554,8 +1554,8 @@ class MainWindow(QMainWindow):
         cmd.execute()
         cmd = self.pool.getCommand('componentTakeDataSource').clone()
         cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )   
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 

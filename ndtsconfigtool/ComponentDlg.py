@@ -1217,7 +1217,6 @@ class Component(object):
         node = sel.node
         xml  = self._nodeToString(node)
 
-        print "XML", xml
         attr = node.attributes()
         if attr.contains("name"):
             name = unicode(attr.namedItem("name").nodeValue())

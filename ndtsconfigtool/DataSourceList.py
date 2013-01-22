@@ -134,7 +134,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             except:
                 return
             
-
+        ids = None    
         for dsname in datasources.keys():
 
             name =  "".join(x.replace('/','_').replace('\\','_').replace(':','_') \
@@ -154,10 +154,12 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             if new:
                 ds.savedName = ""
 
-            self.datasources[id(ds)] =  ds
+            ids = id(ds)
+            self.datasources[ids] =  ds
             if ds.instance is not None:
                 ds.instance.ids = ds.id
             print name
+        return ids    
 
     ## adds an datasource    
     #  \brief It runs the DataSource Dialog and fetches datasource name and value    

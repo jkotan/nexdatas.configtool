@@ -1998,7 +1998,10 @@ class ComponentTakeDataSource(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._cp = None
-       
+        self._ids = None
+        self._ds = None
+        self._lids = None
+
 
     ## executes the command
     # \brief It reloads the datasources from the current datasource directory into the datasource list
@@ -2009,28 +2012,38 @@ class ComponentTakeDataSource(Command):
 #                                QMessageBox.Yes  ) == QMessageBox.No:
 #            return
 
-        if self._cp is None:
-            self._cp = self.receiver.componentList.currentListComponent()
-        if self._cp is not None:
-            if self._cp.instance is not None:
+        if not self._lids:
+            self._lids =  self.receiver.sourceList.datasources.itervalues().next().id \
+                if len(self.receiver.sourceList.datasources) else None
+        if self._ids and self._ds:
+            self.receiver.sourceList.datasources[self._ids] = self._ds
+            self.receiver.sourceList.populateDataSources(self._ids)
+        else:    
+            if self._cp is None:
+                self._cp = self.receiver.componentList.currentListComponent()
+            if self._cp is not None:
+                if self._cp.instance is not None:
 
-                datasource = self._cp.instance.getCurrentDataSource()
-                dialogs = self.receiver.mdi.subWindowList()
-                if dialogs:
-                    for dialog in dialogs:
-                        if isinstance(dialog, DataSourceDlg):
-                            self.receiver.mdi.setActiveSubWindow(dialog)
-                            self.receiver.mdi.closeActiveSubWindow()
+                    datasource = self._cp.instance.getCurrentDataSource()
+                    dialogs = self.receiver.mdi.subWindowList()
+                    if dialogs:
+                        for dialog in dialogs:
+                            if isinstance(dialog, DataSourceDlg):
+                                self.receiver.mdi.setActiveSubWindow(dialog)
+                                self.receiver.mdi.closeActiveSubWindow()
         
-                self.receiver.setDataSources(datasource, new = True)
-
+                    self._ids = self.receiver.setDataSources(datasource, new = True)
+                    self._ds = self.receiver.sourceList.datasources[self._ids]
+                    self.receiver.sourceList.populateDataSources(self._ids)
         print "EXEC componentTakeDataSource"
 
     ## unexecutes the command
     # \brief It does nothing
     def unexecute(self):
         print "UNDO componentTakeDataSource"
-
+        
+        self.receiver.sourceList.datasources.pop(self._ids)
+        self.receiver.sourceList.populateDataSources(self._lids)
 
     ## clones the command
     # \returns clone of the current instance

@@ -700,8 +700,8 @@ class DataSourceMethods(object):
     ## updates the Node
     # \brief It sets node from the self.dialog variables
     def updateNode(self, index=QModelIndex()):
-        print "tree", self.datasource._tree
-        print "index", index.internalPointer()
+#        print "tree", self.datasource._tree
+#        print "index", index.internalPointer()
         newDs = self.createNodes(self.datasource._tree)
         oldDs = self.dialog.node
 
@@ -1167,7 +1167,8 @@ class DataSource(CommonDataSource):
                         raise IOError, unicode(fh.errorString())
                     stream = QTextStream(fh)
                     self.createNodes()
-                    stream <<self.document.toString(2)
+                    self.document.setContent(self.repair(self.document.toString(0)))
+                    stream << self.document.toString(2)
             #                print self.document.toString(2)
                     self.savedXML = self.document.toString(0)
                 except (IOError, OSError, ValueError), e:

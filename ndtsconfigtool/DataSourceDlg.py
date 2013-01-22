@@ -299,6 +299,7 @@ class DataSourceMethods(object):
     ## updates the datasource self.dialog
     # \brief It sets the form local variables
     def updateForm(self):    
+
         if not self.dialog or not self.datasource:
             raise ParameterError, "updateForm parameters not defined"
         if self.datasource.doc is not None:

@@ -3,6 +3,9 @@
   <group type="zcx" name="zxc">
     <field units="sdf" name="sdf">
       <strategy trigger="sdf" rate="4" mode="STEP" compression="true" shuffle="true"/>
+      <datasource type="CLIENT" name="aaaaaaaaaa">
+        <record name="aaaaaaaaaaaaaa"/>
+      </datasource>
     </field>
   </group>
 </definition>

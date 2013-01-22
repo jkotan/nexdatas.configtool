@@ -1574,10 +1574,10 @@ class DataSourceApply(Command):
         if self._ds.instance is None:
             #                self._dsEdit = FieldWg()  
             self._ds.instance  = DataSource()
-            
             self._ds.instance.ids = self._ds.id
             self._ds.instance.directory = self.receiver.sourceList.directory
             self._ds.instance.name = self.receiver.sourceList.datasources[self._ds.id].name
+        if not self._ds.instance.dialog:
             self._ds.instance.createDialog()
             self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
             
@@ -1663,8 +1663,6 @@ class DataSourceApply(Command):
                 self._subwindow.resize(440,480)
                 self._ds.instance.dialog.show()
     
-
-
 
             if hasattr(self._ds ,"id"):
                 self.receiver.sourceList.populateDataSources(self._ds.id)
@@ -2002,7 +2000,6 @@ class ComponentTakeDataSource(Command):
         self._ds = None
         self._lids = None
 
-
     ## executes the command
     # \brief It reloads the datasources from the current datasource directory into the datasource list
     def execute(self):
@@ -2015,9 +2012,11 @@ class ComponentTakeDataSource(Command):
         if not self._lids:
             self._lids =  self.receiver.sourceList.datasources.itervalues().next().id \
                 if len(self.receiver.sourceList.datasources) else None
-        if self._ids and self._ds:
-            self.receiver.sourceList.datasources[self._ids] = self._ds
+        if self._ids and self._ds:       
+            self.receiver.sourceList.addDataSource(self._ds)
+#            self.receiver.sourceList.datasources[self._ids] = self._ds
             self.receiver.sourceList.populateDataSources(self._ids)
+          
         else:    
             if self._cp is None:
                 self._cp = self.receiver.componentList.currentListComponent()
@@ -2042,7 +2041,15 @@ class ComponentTakeDataSource(Command):
     def unexecute(self):
         print "UNDO componentTakeDataSource"
         
-        self.receiver.sourceList.datasources.pop(self._ids)
+
+        self.receiver.sourceList.removeDataSource(self._ds, False)
+        if hasattr(self._ds,'instance'):
+            subwindow = self.receiver.subWindow(self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.mdi.closeActiveSubWindow() 
+
+
         self.receiver.sourceList.populateDataSources(self._lids)
 
     ## clones the command
@@ -2254,6 +2261,9 @@ class DataSourceEdit(Command):
                 self._dsEdit.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
                 self._ds.instance = self._dsEdit 
             else:
+                if not self._ds.instance.dialog:
+                    self._dsEdit.createDialog()
+                    self._dsEdit.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
                 self._dsEdit = self._ds.instance 
                 
             if hasattr(self._dsEdit,"connectExternalActions"):     

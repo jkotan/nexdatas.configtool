@@ -1949,11 +1949,11 @@ class ComponentTakeDataSources(Command):
     ## executes the command
     # \brief It reloads the datasources from the current datasource directory into the datasource list
     def execute(self):
-        if QMessageBox.question(self.receiver, "DataSource - Take Data Sources",
-                                "Unsaved datasources may be overwritten. Would you like to proceed ?".encode(),
-                                QMessageBox.No | QMessageBox.Yes,
-                                QMessageBox.Yes  ) == QMessageBox.No:
-            return
+#        if QMessageBox.question(self.receiver, "DataSource - Take Data Sources",
+#                                "Unsaved datasources may be overwritten. Would you like to proceed ?".encode(),
+#                                QMessageBox.No | QMessageBox.Yes,
+#                                QMessageBox.Yes  ) == QMessageBox.No:
+#            return
 
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
@@ -1985,6 +1985,57 @@ class ComponentTakeDataSources(Command):
     # \returns clone of the current instance
     def clone(self):
         return ComponentTakeDataSources(self.receiver, self.slot) 
+
+
+
+
+## Command which takes the datasources from the current component
+class ComponentTakeDataSource(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._cp = None
+       
+
+    ## executes the command
+    # \brief It reloads the datasources from the current datasource directory into the datasource list
+    def execute(self):
+#        if QMessageBox.question(self.receiver, "DataSource - Take Data Sources",
+#                                "Unsaved datasources may be overwritten. Would you like to proceed ?".encode(),
+#                                QMessageBox.No | QMessageBox.Yes,
+#                                QMessageBox.Yes  ) == QMessageBox.No:
+#            return
+
+        if self._cp is None:
+            self._cp = self.receiver.componentList.currentListComponent()
+        if self._cp is not None:
+            if self._cp.instance is not None:
+
+                datasource = self._cp.instance.getCurrentDataSource()
+                dialogs = self.receiver.mdi.subWindowList()
+                if dialogs:
+                    for dialog in dialogs:
+                        if isinstance(dialog, DataSourceDlg):
+                            self.receiver.mdi.setActiveSubWindow(dialog)
+                            self.receiver.mdi.closeActiveSubWindow()
+        
+                self.receiver.setDataSources(datasource, new = True)
+
+        print "EXEC componentTakeDataSource"
+
+    ## unexecutes the command
+    # \brief It does nothing
+    def unexecute(self):
+        print "UNDO componentTakeDataSource"
+
+
+    ## clones the command
+    # \returns clone of the current instance
+    def clone(self):
+        return ComponentTakeDataSource(self.receiver, self.slot) 
 
 
 

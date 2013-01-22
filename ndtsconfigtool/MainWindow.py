@@ -93,6 +93,7 @@ from Command import (
      ComponentLoadDataSourceItem,
      ComponentAddDataSourceItem,
      ComponentTakeDataSources,
+     ComponentTakeDataSource,
      ComponentApplyItem,
      ComponentMoveUpItem,
      ComponentMoveDownItem
@@ -452,10 +453,17 @@ class MainWindow(QMainWindow):
             "componentadditem", "Add the data source from the list")
 
 
+        componentTakeDataSourceAction = self.pool.createCommand(
+            "Take DataSource Item " , "componentTakeDataSource", 
+            commandArgs, ComponentTakeDataSource,
+            "Ctrl+G",
+            "componenttakedatasource", "Take the currnet data sources from the component")
+
+
         componentTakeDataSourcesAction = self.pool.createCommand(
             "Take DataSources " , "componentTakeDataSources", 
             commandArgs, ComponentTakeDataSources,
-            "Ctrl+G",
+            "",
             "componenttakedatasource", "Take data sources from the component")
 
 
@@ -676,6 +684,7 @@ class MainWindow(QMainWindow):
                 dsourcePasteAction,
                 None,
                 componentEditAction, 
+                componentTakeDataSourceAction,
                 componentTakeDataSourcesAction,
                 None,
                 dsourceEditAction, 
@@ -720,6 +729,7 @@ class MainWindow(QMainWindow):
             componentRemoveItemAction, 
             componentCopyItemAction,
             componentPasteItemAction,
+            componentTakeDataSourceAction,
             None,
             componentMoveUpItemAction,
             componentMoveDownItemAction,
@@ -1531,6 +1541,19 @@ class MainWindow(QMainWindow):
 #        self.cmdStack.append(cmd)
 #        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
 #        self.pool.setDisabled("redo", True, "Can't Redo")      
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+
+    ## take datasources 
+    # \brief It takes datasources from the current component
+    def componentTakeDataSource(self):
+        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
+        cmd = self.pool.getCommand('componentTakeDataSource').clone()
+        cmd.execute()
         self.cmdStack.clear()
         self.pool.setDisabled("undo", True, "Can't Undo")   
         self.pool.setDisabled("redo", True, "Can't Redo")      

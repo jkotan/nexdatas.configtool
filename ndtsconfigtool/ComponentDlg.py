@@ -1200,6 +1200,33 @@ class Component(object):
         return ds
 
 
+    ## fetches the datasources from the component
+    # \returns dictionary with datasources                
+    def getCurrentDataSource(self):
+        ds = {}
+
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget:
+            return ds
+        index = self.view.currentIndex()
+        sel = index.internalPointer()
+        if not sel:
+            return ds
+        if sel.node.nodeName() != "datasource":
+            return ds
+                        
+        node = sel.node
+        xml  = self._nodeToString(node)
+
+        print "XML", xml
+        attr = node.attributes()
+        if attr.contains("name"):
+            name = unicode(attr.namedItem("name").nodeValue())
+        else:
+            name = "__datasource__"
+        ds[name] = self._nodeToString(node)
+        return ds
+
+
     ## provides the component in xml string
     # \param indent number of added spaces during pretty printing
     # \returns xml string    

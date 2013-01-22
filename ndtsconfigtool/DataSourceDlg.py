@@ -1079,8 +1079,8 @@ class DataSource(CommonDataSource):
             if  fh.open(QIODevice.ReadOnly):
                 self.document = QDomDocument()
                 self.root = self.document
-                if not self.document.setContent(self.repair(fh)):
-#                if not self.document.setContent(fh):
+#                if not self.document.setContent(self.repair(fh)):
+                if not self.document.setContent(fh):
                     raise ValueError, "could not parse XML"
 
                 ds = self.dialog._getFirstElement(self.document, "datasource")

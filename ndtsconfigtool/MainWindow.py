@@ -2001,6 +2001,8 @@ class MainWindow(QMainWindow):
         return swin
         
 
+    ## closes the current window
+    # \brief Is closes the current datasource window
     def dsourceClose(self):
         print "datasource close"
         subwindow = self.mdi.activeSubWindow()
@@ -2021,6 +2023,8 @@ class MainWindow(QMainWindow):
             self.mdi.closeActiveSubWindow()
 
 
+    ## closes the current window
+    # \brief Is closes the current component window
     def componentClose(self):
         print "component close"
         subwindow = self.mdi.activeSubWindow()

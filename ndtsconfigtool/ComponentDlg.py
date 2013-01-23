@@ -614,6 +614,7 @@ class Component(object):
     ## connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action
+    # \param externalClose close action
     def connectExternalActions(self, externalApply=None , externalSave=None, externalClose = None  ):
         if externalSave and self._externalSave is None:
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 

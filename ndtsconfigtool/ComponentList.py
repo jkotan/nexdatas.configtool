@@ -221,6 +221,7 @@ class ComponentList(QWidget, Ui_ComponentList):
     # \param itemActions actions of the context menu
     # \param externalSave save action
     # \param externalApply apply action
+    # \param externalClose close action
     def loadList(self, itemActions, externalSave = None, externalApply = None, externalClose = None ):
         try:
             dirList=[l for l in os.listdir(self.directory) if l.endswith(".xml")]
@@ -260,6 +261,7 @@ class ComponentList(QWidget, Ui_ComponentList):
     # \param itemActions actions of the tree context menu
     # \param externalSave save action
     # \param externalApply apply action
+    # \param externalClose close action
     def setList(self, components,  itemActions, externalSave = None, externalApply = None, externalClose = None ):
         try:
             dirList=os.listdir(self.directory)

@@ -745,6 +745,7 @@ class DataSourceMethods(object):
     ## connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action
+    # \param externalClose close action
     def connectExternalActions(self, externalApply=None, externalSave=None, externalClose = None ):
         if externalSave and self.datasource._externalSave is None:
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
@@ -1137,6 +1138,7 @@ class DataSource(CommonDataSource):
             
     ## sets datasources from xml string
     # \param xml xml string
+    # \param new True if datasource is not saved
     def set(self, xml,new = False):
         self.document = QDomDocument()
         self.root = self.document
@@ -1296,6 +1298,7 @@ class DataSource(CommonDataSource):
     ## connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action
+    # \param externalClose close action
     def connectExternalActions(self, externalApply=None, externalSave=None, externalClose=None ):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.connectExternalActions(externalApply, externalSave, externalClose)
@@ -1387,6 +1390,7 @@ class DataSourceDlg(CommonDataSourceDlg):
     ## connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action 
+    # \param externalClose close action 
     def connectExternalActions(self, externalApply=None, externalSave=None, externalClose=None):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.connectExternalActions(externalApply, externalSave, externalClose)

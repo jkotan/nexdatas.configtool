@@ -203,7 +203,9 @@ class ServerStoreComponent(Command):
                 
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
-                                                    self.receiver.componentSave)
+                                                    self.receiver.componentSave,
+                                                    self.receiver.componentClose
+                                                    )
 
 
                 
@@ -696,7 +698,8 @@ class ComponentOpen(Command):
 
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
-                                                    self.receiver.componentSave)      
+                                                    self.receiver.componentSave,
+                                                    self.receiver.componentClose)      
 
             if path:   
                 self._cp.name = self._cpEdit.name  
@@ -777,7 +780,9 @@ class DataSourceOpen(Command):
                 path = self._dsEdit.load()
                 self._fpath = path
             if hasattr(self._dsEdit,"connectExternalActions"):     
-                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)    
+                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, 
+                                                    self.receiver.dsourceSave,
+                                                    self.receiver.dsourceClose)     
             if path:   
                 self._ds.name = self._dsEdit.name  
                 self._ds.instance = self._dsEdit
@@ -956,7 +961,8 @@ class ComponentEdit(Command):
 
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
-                                                    self.receiver.componentSave)
+                                                    self.receiver.componentSave,
+                                                    self.receiver.componentClose)
 
             subwindow = self.receiver.subWindow(
                 self._cpEdit, self.receiver.mdi.subWindowList())
@@ -1032,7 +1038,9 @@ class ComponentSave(Command):
                 
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
-                                                    self.receiver.componentSave)
+                                                    self.receiver.componentSave,
+                                                    self.receiver.componentClose
+                                                    )
 
 
 
@@ -1566,15 +1574,17 @@ class DataSourceApply(Command):
         if self._ds.instance is None:
             #                self._dsEdit = FieldWg()  
             self._ds.instance  = DataSource()
-            
             self._ds.instance.ids = self._ds.id
             self._ds.instance.directory = self.receiver.sourceList.directory
             self._ds.instance.name = self.receiver.sourceList.datasources[self._ds.id].name
+        if not self._ds.instance.dialog:
             self._ds.instance.createDialog()
             self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
             
             if hasattr(self._ds.instance,"connectExternalActions"):     
-                self._ds.instance.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)
+                self._ds.instance.connectExternalActions(self.receiver.dsourceApply, 
+                                                         self.receiver.dsourceSave,
+                                                         self.receiver.dsourceClose)
             self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
             self._subwindow.resize(440,480)
             self._ds.instance.dialog.show()
@@ -1653,8 +1663,6 @@ class DataSourceApply(Command):
                 self._subwindow.resize(440,480)
                 self._ds.instance.dialog.show()
     
-
-
 
             if hasattr(self._ds ,"id"):
                 self.receiver.sourceList.populateDataSources(self._ds.id)
@@ -1939,11 +1947,11 @@ class ComponentTakeDataSources(Command):
     ## executes the command
     # \brief It reloads the datasources from the current datasource directory into the datasource list
     def execute(self):
-        if QMessageBox.question(self.receiver, "DataSource - Take Data Sources",
-                                "Unsaved datasources may be overwritten. Would you like to proceed ?".encode(),
-                                QMessageBox.No | QMessageBox.Yes,
-                                QMessageBox.Yes  ) == QMessageBox.No:
-            return
+#        if QMessageBox.question(self.receiver, "DataSource - Take Data Sources",
+#                                "Unsaved datasources may be overwritten. Would you like to proceed ?".encode(),
+#                                QMessageBox.No | QMessageBox.Yes,
+#                                QMessageBox.Yes  ) == QMessageBox.No:
+#            return
 
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
@@ -1975,6 +1983,79 @@ class ComponentTakeDataSources(Command):
     # \returns clone of the current instance
     def clone(self):
         return ComponentTakeDataSources(self.receiver, self.slot) 
+
+
+
+
+## Command which takes the datasources from the current component
+class ComponentTakeDataSource(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        self._cp = None
+        self._ids = None
+        self._ds = None
+        self._lids = None
+
+    ## executes the command
+    # \brief It reloads the datasources from the current datasource directory into the datasource list
+    def execute(self):
+#        if QMessageBox.question(self.receiver, "DataSource - Take Data Sources",
+#                                "Unsaved datasources may be overwritten. Would you like to proceed ?".encode(),
+#                                QMessageBox.No | QMessageBox.Yes,
+#                                QMessageBox.Yes  ) == QMessageBox.No:
+#            return
+
+        if not self._lids:
+            self._lids =  self.receiver.sourceList.datasources.itervalues().next().id \
+                if len(self.receiver.sourceList.datasources) else None
+        if self._ids and self._ds:       
+            self.receiver.sourceList.addDataSource(self._ds)
+#            self.receiver.sourceList.datasources[self._ids] = self._ds
+            self.receiver.sourceList.populateDataSources(self._ids)
+          
+        else:    
+            if self._cp is None:
+                self._cp = self.receiver.componentList.currentListComponent()
+            if self._cp is not None:
+                if self._cp.instance is not None:
+
+                    datasource = self._cp.instance.getCurrentDataSource()
+                    dialogs = self.receiver.mdi.subWindowList()
+                    if dialogs:
+                        for dialog in dialogs:
+                            if isinstance(dialog, DataSourceDlg):
+                                self.receiver.mdi.setActiveSubWindow(dialog)
+                                self.receiver.mdi.closeActiveSubWindow()
+        
+                    self._ids = self.receiver.setDataSources(datasource, new = True)
+                    self._ds = self.receiver.sourceList.datasources[self._ids]
+                    self.receiver.sourceList.populateDataSources(self._ids)
+        print "EXEC componentTakeDataSource"
+
+    ## unexecutes the command
+    # \brief It does nothing
+    def unexecute(self):
+        print "UNDO componentTakeDataSource"
+        
+
+        self.receiver.sourceList.removeDataSource(self._ds, False)
+        if hasattr(self._ds,'instance'):
+            subwindow = self.receiver.subWindow(self._ds.instance, self.receiver.mdi.subWindowList())
+            if subwindow:
+                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.mdi.closeActiveSubWindow() 
+
+
+        self.receiver.sourceList.populateDataSources(self._lids)
+
+    ## clones the command
+    # \returns clone of the current instance
+    def clone(self):
+        return ComponentTakeDataSource(self.receiver, self.slot) 
 
 
 
@@ -2180,10 +2261,16 @@ class DataSourceEdit(Command):
                 self._dsEdit.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
                 self._ds.instance = self._dsEdit 
             else:
+                if not self._ds.instance.dialog:
+                    self._ds.instance.createDialog()
+                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
                 self._dsEdit = self._ds.instance 
                 
             if hasattr(self._dsEdit,"connectExternalActions"):     
-                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, self.receiver.dsourceSave)
+                self._dsEdit.connectExternalActions(self.receiver.dsourceApply, 
+                                                    self.receiver.dsourceSave,
+                                                    self.receiver.dsourceClose
+                                                    )
 
             subwindow = self.receiver.subWindow(
                 self._dsEdit, self.receiver.mdi.subWindowList())
@@ -2611,7 +2698,9 @@ class ComponentClear(ComponentItemCommand):
 
                     if hasattr(self._cp.instance,"connectExternalActions"):     
                         self._cp.instance.connectExternalActions(self.receiver.componentApplyItem, 
-                                                               self.receiver.componentSave)
+                                                                 self.receiver.componentSave,
+                                                                 self.receiver.componentClose
+                                                                 )
         self.postExecute()
             
 
@@ -3174,7 +3263,10 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
 
 
                 if hasattr(dsEdit,"connectExternalActions"):     
-                    dsEdit.connectExternalActions(self.receiver.dsourceApply,self.receiver.dsourceSave)
+                    dsEdit.connectExternalActions(self.receiver.dsourceApply,
+                                                  self.receiver.dsourceSave,
+                                                  self.receiver.dsourceClose
+                                                  )
                 
                 if not hasattr(ds.instance,"createNodes"):
                     self._cp = None

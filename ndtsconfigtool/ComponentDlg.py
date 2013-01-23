@@ -47,7 +47,7 @@ from ComponentModel import ComponentModel
 
 ## dialog defining a tag link 
 #class ComponentDlg(QMdiSubWindow, Ui_ComponentDlg):
-class ComponentDlg(QWidget, Ui_ComponentDlg):
+class ComponentDlg(QDialog, Ui_ComponentDlg):
     
     ## constructor
     # \param component component instance
@@ -57,7 +57,8 @@ class ComponentDlg(QWidget, Ui_ComponentDlg):
         ## component instance
         self.component = component 
         
-
+    ## closes the window and cleans the dialog label
+    # \param event closing event
     def closeEvent(self, event):
         super(ComponentDlg,self).closeEvent(event)
         self.component.dialog = None
@@ -66,7 +67,7 @@ class ComponentDlg(QWidget, Ui_ComponentDlg):
 class Component(object):
     
     ## constructor
-    # \param parent patent instance
+    # \brief Sets variables
     def __init__(self):
 
 
@@ -105,6 +106,8 @@ class Component(object):
         self._externalSave = None
         ## apply action
         self._externalApply = None
+        ## close action
+        self._externalClose = None
 
         ## item class shown in the frame
         self._tagClasses = {"field":FieldDlg, 
@@ -257,7 +260,7 @@ class Component(object):
     # \param path path represented as a list with elements: (row number, node name)
     # \returns component item index        
     def _getIndex(self, path):
-        if not path or self.view or not self.dialog:
+        if not path or not self.view or not self.dialog:
             return QModelIndex()
         index = self.view.model().rootIndex
         self.view.expand(index)
@@ -587,8 +590,6 @@ class Component(object):
     ## creates GUI
     # It calls setupUi and creates required action connections
     def createGUI(self):
-
-
         self.dialog = ComponentDlg(self, None)
         self.dialog.setupUi(self.dialog)
         self.view = self.dialog.view
@@ -602,7 +603,7 @@ class Component(object):
 
 
 #        self.dialog.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
-        self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self._close)
+#        self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self._close)
         self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
@@ -610,15 +611,22 @@ class Component(object):
 
 
 
-    ## connects external actions
-    # \brief It connects the save action and stores the apply action
-    def connectExternalActions(self, externalApply=None , externalSave=None ):
+    ## connects the save action and stores the apply action
+    # \param externalApply apply action
+    # \param externalSave save action
+    # \param externalClose close action
+    def connectExternalActions(self, externalApply=None , externalSave=None, externalClose = None  ):
         if externalSave and self._externalSave is None:
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
             self._externalSave = externalSave
+        if externalClose and self._externalClose is None:
+            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+                         externalClose)
+            self._externalClose = externalClose
         if externalApply and self._externalApply is None:
             self._externalApply = externalApply
+
 
     ## reconnects save actions
     # \brief It reconnects the save action 
@@ -628,6 +636,10 @@ class Component(object):
                          self._externalSave)
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
                          self._externalSave)
+            self.dialog.disconnect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+                         self._externalClose)
+            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+                         self._externalClose)
 
 
     ## switches between all attributes in the try or only type attribute
@@ -851,6 +863,10 @@ class Component(object):
                     if not root.setContent(fh):
                         raise ValueError, "could not parse XML"
                     definition = root.firstChildElement(QString("definition"))           
+                    if definition.nodeName() != "definition":
+                        QMessageBox.warning(self.dialog, "Corrupted SubComponent", 
+                                            "Component %s without <definition> tag" % itemFile)
+                        return
                     child = definition.firstChild()
                     self.dialog.widget.node = node
 
@@ -877,17 +893,40 @@ class Component(object):
         return True    
 
 
+    ## provides the first element in the tree with the given name
+    # \param node DOM node
+    # \param name child name
+    # \returns DOM child node
+    def _getFirstElement(self, node, name):
+        if node:
+
+            child = node.firstChild()
+            if child:
+                while not child.isNull():
+                    if child and  child.nodeName() == name:
+                        return child
+                    child = child.nextSibling()
+            
+            child = node.firstChild()
+            if child:
+                while not child.isNull():
+                    elem = self._getFirstElement(child, name)
+                    if elem:
+                        return elem
+                    child = child.nextSibling()
+
+
 
     ## loads the datasource item from the xml file 
     # \param filePath xml file name with full path    
     def loadDataSourceItem(self,filePath = None):
         print "Loading DataSource"
+
         
         if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget \
                                 or not hasattr(self.dialog.widget, "subItems") \
                                 or "datasource" not in  self.dialog.widget.subItems:
             return
-
         child = self.dialog.widget.node.firstChild()
         while not child.isNull():
             if child.nodeName() == 'datasource':
@@ -896,7 +935,6 @@ class Component(object):
                 return
             child = child.nextSibling()    
                 
-
 
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -918,18 +956,19 @@ class Component(object):
                     root = QDomDocument()
                     if not root.setContent(fh):
                         raise ValueError, "could not parse XML"
-                    definition = root.firstChildElement(QString("definition"))           
-                    if definition:
-                        ds  = definition.firstChildElement(QString("datasource"))
-                        if ds:
+                    ds = self._getFirstElement(root, "datasource")
 
+                    if ds:
+                        if  index.column() != 0:
+                            index = self.view.model().index(index.row(), 0, index.parent())
+                        self.dialog.widget.node = node
+                        ds2 = self.document.importNode(ds, True)
+                        self.dialog.widget.appendNode(ds2, index)
+                    else:
+                            QMessageBox.warning(self.dialog, "Corrupted DataSource ", 
+                                                "Missing <datasource> tag in %s" % dsFile)
 
-                            if  index.column() != 0:
-                                index = self.view.model().index(index.row(), 0, index.parent())
-                            self.dialog.widget.node = node
-                            ds2 = self.document.importNode(ds, True)
-                            self.dialog.widget.appendNode(ds2, index)
-
+                        
                 self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
                 self.view.expand(index)
                 self._dsPath = dsFile
@@ -1159,6 +1198,32 @@ class Component(object):
         if hasattr(self.document,"toString"):
             self._tagCnt = 0
             ds.update(self._getTags(self.document, "datasource"))
+        return ds
+
+
+    ## fetches the datasources from the component
+    # \returns dictionary with datasources                
+    def getCurrentDataSource(self):
+        ds = {}
+
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget:
+            return ds
+        index = self.view.currentIndex()
+        sel = index.internalPointer()
+        if not sel:
+            return ds
+        if sel.node.nodeName() != "datasource":
+            return ds
+                        
+        node = sel.node
+        xml  = self._nodeToString(node)
+
+        attr = node.attributes()
+        if attr.contains("name"):
+            name = unicode(attr.namedItem("name").nodeValue())
+        else:
+            name = "__datasource__"
+        ds[name] = self._nodeToString(node)
         return ds
 
 

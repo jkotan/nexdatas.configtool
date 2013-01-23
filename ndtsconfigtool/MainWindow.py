@@ -93,6 +93,7 @@ from Command import (
      ComponentLoadDataSourceItem,
      ComponentAddDataSourceItem,
      ComponentTakeDataSources,
+     ComponentTakeDataSource,
      ComponentApplyItem,
      ComponentMoveUpItem,
      ComponentMoveDownItem
@@ -352,20 +353,24 @@ class MainWindow(QMainWindow):
         dsourceCutAction = self.pool.createCommand(
             "Cut DataSource", "dsourceCut", 
             commandArgs, DataSourceCut,
-            "", "cut", "Cut the data source")
+            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Delete),
+#            "", 
+            "cut", "Cut the data source")
 
 
         dsourcePasteAction = self.pool.createCommand(
             "Paste DataSource", "dsourcePaste", 
             commandArgs, DataSourcePaste,
-            "", "paste", "Paste the data source")
+            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Insert),
+#            "", 
+            "paste", "Paste the data source")
         
 
         componentRemoveItemAction = self.pool.createCommand(
             "Cut Component Item", "componentRemoveItem", commandArgs, ComponentRemoveItem,
 #            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
 #            "Ctrl+X",
-            "" ,
+            QKeySequence(Qt.CTRL + Qt.Key_Delete),
             "cut", "Remove the component item")
 
 
@@ -381,7 +386,7 @@ class MainWindow(QMainWindow):
             "Paste Component Item", "componentPasteItem", commandArgs, ComponentPasteItem,
 #            QKeySequence(Qt.CTRL +  Qt.SHIFT  + Qt.Key_V),
 #            "Ctrl+V", 
-            "" ,
+            QKeySequence(Qt.CTRL + Qt.Key_Insert),
             "paste", "Paste the component item")
 
 
@@ -452,10 +457,17 @@ class MainWindow(QMainWindow):
             "componentadditem", "Add the data source from the list")
 
 
+        componentTakeDataSourceAction = self.pool.createCommand(
+            "Take DataSource Item " , "componentTakeDataSource", 
+            commandArgs, ComponentTakeDataSource,
+            "Ctrl+G",
+            "componenttakedatasource", "Take the currnet data sources from the component")
+
+
         componentTakeDataSourcesAction = self.pool.createCommand(
             "Take DataSources " , "componentTakeDataSources", 
             commandArgs, ComponentTakeDataSources,
-            "Ctrl+G",
+            "",
             "componenttakedatasource", "Take data sources from the component")
 
 
@@ -676,6 +688,7 @@ class MainWindow(QMainWindow):
                 dsourcePasteAction,
                 None,
                 componentEditAction, 
+                componentTakeDataSourceAction,
                 componentTakeDataSourcesAction,
                 None,
                 dsourceEditAction, 
@@ -720,6 +733,7 @@ class MainWindow(QMainWindow):
             componentRemoveItemAction, 
             componentCopyItemAction,
             componentPasteItemAction,
+            componentTakeDataSourceAction,
             None,
             componentMoveUpItemAction,
             componentMoveDownItemAction,
@@ -870,7 +884,7 @@ class MainWindow(QMainWindow):
                                              QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
                                              QMessageBox.Save)
 
-                if status == QMessageBox.Yes:
+                if status == QMessageBox.Save:
                     try:
                         cp.instance.merge()
                         if not cp.instance.save():
@@ -896,7 +910,7 @@ class MainWindow(QMainWindow):
                                              QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
                                              QMessageBox.Save)
 
-                if status == QMessageBox.Yes:
+                if status == QMessageBox.Save:
                     try:
                         if not ds.instance.save():
                             event.ignore()
@@ -960,11 +974,10 @@ class MainWindow(QMainWindow):
         
 
 
-
     ## loads the datasource list
     # \brief It loads the datasource list from the default directory
     def loadDataSources(self):
-        self.sourceList.loadList(self.dsourceCollect, self.dsourceApply)
+        self.sourceList.loadList(self.dsourceCollect, self.dsourceApply, self.dsourceClose)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 
@@ -975,11 +988,12 @@ class MainWindow(QMainWindow):
     # \param datasources dictionary with datasources, i.e. name:xml
     # \param new logical variable set to True if objects are not saved    
     def setDataSources(self, datasources, new = False):
-        self.sourceList.setList(datasources, self.dsourceCollect, self.dsourceApply, new)
+        last = self.sourceList.setList(datasources, self.dsourceCollect, self.dsourceApply, self.dsourceClose, new)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 
         self.sourceList.populateDataSources(ids)
+        return last
         
 
 
@@ -990,7 +1004,8 @@ class MainWindow(QMainWindow):
             components, 
             self.contextMenuActions,
             self.componentCollect,
-            self.componentApplyItem
+            self.componentApplyItem,
+            self.dsourceClose
             )
         idc =  self.componentList.components.itervalues().next().id \
             if len(self.componentList.components) else None
@@ -1006,7 +1021,8 @@ class MainWindow(QMainWindow):
         self.componentList.loadList(
             self.contextMenuActions,
             self.componentCollect,
-            self.componentApplyItem
+            self.componentApplyItem,
+            self.dsourceClose
             )
         idc =  self.componentList.components.itervalues().next().id \
             if len(self.componentList.components) else None
@@ -1534,6 +1550,25 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+
+    ## take datasources 
+    # \brief It takes datasources from the current component
+    def componentTakeDataSource(self):
+        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
+        cmd = self.pool.getCommand('componentTakeDataSource').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+#        cmd = self.pool.getCommand('dsourceEdit').clone()
+#        cmd.execute()
+
+#        cmd = self.pool.getCommand('dsourceApply').clone()
+#        cmd.execute()
+#        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
     ## add datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentAddDataSourceItem(self):
@@ -1965,6 +2000,48 @@ class MainWindow(QMainWindow):
                 break
         return swin
         
+
+    ## closes the current window
+    # \brief Is closes the current datasource window
+    def dsourceClose(self):
+        print "datasource close"
+        subwindow = self.mdi.activeSubWindow()
+        if subwindow and isinstance(subwindow.widget(),CommonDataSourceDlg) and subwindow.widget().datasource:
+            
+            ds = subwindow.widget().datasource
+
+            if QMessageBox.question(self, "Close datasource",
+                                    "Would you like to close the datasource?", 
+                                    QMessageBox.Yes | QMessageBox.No,
+                                    QMessageBox.Yes ) == QMessageBox.No :
+                return
+            ds.updateForm()
+            if ds.dialog:
+                ds.dialog.reject()
+
+            self.mdi.setActiveSubWindow(subwindow)
+            self.mdi.closeActiveSubWindow()
+
+
+    ## closes the current window
+    # \brief Is closes the current component window
+    def componentClose(self):
+        print "component close"
+        subwindow = self.mdi.activeSubWindow()
+        if subwindow and isinstance(subwindow.widget(),ComponentDlg) and subwindow.widget().component:
+            cp = subwindow.widget().component
+
+            if QMessageBox.question(self, "Close component",
+                                    "Would you like to close the component ?", 
+                                    QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+                return
+
+            if cp.dialog:
+                cp.dialog.reject()
+
+
+            self.mdi.setActiveSubWindow(subwindow)
+            self.mdi.closeActiveSubWindow()
         
     ## updates the window menu
     # \brief It updates the window menu with the open windows

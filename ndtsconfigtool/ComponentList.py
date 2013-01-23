@@ -168,7 +168,7 @@ class ComponentList(QWidget, Ui_ComponentList):
 
     ## fills in the component table      
     # \param selectedComponent selected component    
-    # \param dialog flag if the component dialog is in mdi
+    # \param edit flag if the component should be edited
     def populateComponents(self, selectedComponent = None, edit = False):
 #        print "populate"
         selected = None
@@ -221,7 +221,8 @@ class ComponentList(QWidget, Ui_ComponentList):
     # \param itemActions actions of the context menu
     # \param externalSave save action
     # \param externalApply apply action
-    def loadList(self, itemActions, externalSave = None, externalApply = None ):
+    # \param externalClose close action
+    def loadList(self, itemActions, externalSave = None, externalApply = None, externalClose = None ):
         try:
             dirList=[l for l in os.listdir(self.directory) if l.endswith(".xml")]
         except:
@@ -245,7 +246,7 @@ class ComponentList(QWidget, Ui_ComponentList):
 
             dlg.load()    
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(externalApply, externalSave)    
+                dlg.connectExternalActions(externalApply, externalSave, externalClose = None)    
 
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp
@@ -260,7 +261,8 @@ class ComponentList(QWidget, Ui_ComponentList):
     # \param itemActions actions of the tree context menu
     # \param externalSave save action
     # \param externalApply apply action
-    def setList(self, components,  itemActions, externalSave = None, externalApply = None ):
+    # \param externalClose close action
+    def setList(self, components,  itemActions, externalSave = None, externalApply = None, externalClose = None ):
         try:
             dirList=os.listdir(self.directory)
         except:
@@ -280,7 +282,7 @@ class ComponentList(QWidget, Ui_ComponentList):
 
             dlg.set(components[name])    
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(externalApply, externalSave)    
+                dlg.connectExternalActions(externalApply, externalSave, externalClose = None)    
 
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp

@@ -173,28 +173,19 @@ class NodeDlg(QDialog):
     # \param newNode new DOM node 
     # \param parent parent node index
     def _replaceNode(self, oldNode, newNode, parent):
-        print "replace1"
         if self.view is not None and self.view.model() is not None: 
             row = self.getNodeRow(oldNode)
-            print "row", row
         if self.view is not None and self.view.model() is not None: 
-            print "view"
             if row is not None:
-                print "view row"
                 self.view.model().removeItem(row, oldNode, parent)
                 if row  < self.node.childNodes().count():
-                    print "view insert"
                     self.view.model().insertItem(row, newNode, parent)
                 else:
-                    print "view append"
                     self.view.model().appendItem(newNode, parent)
             row = self.getNodeRow(newNode)
-            print "row2", row
             if parent.internalPointer():
                 row = self.getNodeRow(newNode,parent.internalPointer().node)
-            print "row2a", row
             row = self.getNodeRow(oldNode)
-            print "row3", row
 
     ## appends node
     # \param node DOM node to remove

@@ -1,0 +1,6 @@
+<?xml version='1.0'?>
+<definition>
+  <datasource type="CLIENT" name="sample_x_translation">
+    <record name="sample_x_translation"/>
+  </datasource>
+</definition>

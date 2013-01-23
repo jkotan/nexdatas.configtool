@@ -82,7 +82,8 @@ class DataSourceList(QWidget, Ui_DataSourceList):
     ## loads the datasource list from the given dictionary
     # \param externalSave save action
     # \param externalApply apply action
-    def loadList(self, externalSave = None, externalApply = None ):
+    # \param externalClose close action
+    def loadList(self, externalSave = None, externalApply = None , externalClose = None ):
         try:
             dirList=[l for l in  os.listdir(self.directory) if l.endswith(".ds.xml")]
         except:
@@ -108,7 +109,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
 
             
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(externalApply, externalSave)    
+                dlg.connectExternalActions(externalApply, externalSave, externalClose)    
             
             ds = LabeledObject(name, dlg)
             self.datasources[id(ds)] =  ds
@@ -122,8 +123,9 @@ class DataSourceList(QWidget, Ui_DataSourceList):
     # \param datasources dictionary with the datasources, i.e. name:xml
     # \param externalSave save action
     # \param externalApply apply action
+    # \param externalClose close action
     # \param new logical variableset to True if datasource is not saved
-    def setList(self, datasources, externalSave = None, externalApply = None , new = False):
+    def setList(self, datasources, externalSave = None, externalApply = None, externalClose = None, new = False):
         try:
             dirList=os.listdir(self.directory)
         except:
@@ -132,7 +134,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             except:
                 return
             
-
+        ids = None    
         for dsname in datasources.keys():
 
             name =  "".join(x.replace('/','_').replace('\\','_').replace(':','_') \
@@ -140,21 +142,24 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
-            dlg.set(datasources[dsname])    
+            
+            dlg.set(datasources[dsname], new)    
 
             dlg.dataSourceName = dsname
 
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(externalApply, externalSave)    
+                dlg.connectExternalActions(externalApply, externalSave, externalClose)    
             
             ds = LabeledObject(name, dlg)
             if new:
                 ds.savedName = ""
 
-            self.datasources[id(ds)] =  ds
+            ids = id(ds)
+            self.datasources[ids] =  ds
             if ds.instance is not None:
                 ds.instance.ids = ds.id
             print name
+        return ids    
 
     ## adds an datasource    
     #  \brief It runs the DataSource Dialog and fetches datasource name and value    

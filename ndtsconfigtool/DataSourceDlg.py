@@ -240,11 +240,14 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
             self.dParameterTableWidget.editItem(selected)
 
 
+    ## closes the window and cleans the dialog label
+    # \param event closing event
     def closeEvent(self, event):
         super(CommonDataSourceDlg,self).closeEvent(event)
         self.datasource.dialog = None
 
 
+## error of passed parameter
 class ParameterError(Exception): pass
 
 
@@ -253,7 +256,8 @@ class ParameterError(Exception): pass
 class DataSourceMethods(object):
 
     ## constructor
-    # \param parent patent instance
+    # \param dialog datasource dialog 
+    # \param datasource data 
     def __init__(self, dialog, datasource):
 
         ## datasource dialog
@@ -295,6 +299,7 @@ class DataSourceMethods(object):
     ## updates the datasource self.dialog
     # \brief It sets the form local variables
     def updateForm(self):    
+
         if not self.dialog or not self.datasource:
             raise ParameterError, "updateForm parameters not defined"
         if self.datasource.doc is not None:
@@ -398,7 +403,7 @@ class DataSourceMethods(object):
             self.dialog.connect(self.dialog.resetPushButton, SIGNAL("clicked()"), self.reset)
         else:
             self.dialog.connect(self.dialog.resetPushButton, SIGNAL("clicked()"), self.dialog.reset)
-        self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self.close)
+#        self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self.close)
 
         self.dialog.connectWidgets()
         self.dialog.setFrames(self.datasource.dataSourceType)
@@ -430,47 +435,63 @@ class DataSourceMethods(object):
             self.datasource.dataSourceType = unicode(value)
 
             record = self.dialog.node.firstChildElement(QString("record"))           
-            attributeMap = record.attributes()
-            self.datasource.clientRecordName = unicode(attributeMap.namedItem("name").nodeValue() \
+            if record.nodeName() != "record":
+                QMessageBox.warning(self.dialog, "Internal error", 
+                                    "Missing <record> tag")
+            else:
+                attributeMap = record.attributes()
+                self.datasource.clientRecordName = unicode(attributeMap.namedItem("name").nodeValue() \
                                                 if attributeMap.contains("name") else "")
-
+                
 
 
         elif value == 'TANGO':
             self.datasource.dataSourceType = unicode(value)
 
             record = self.dialog.node.firstChildElement(QString("record"))
-            attributeMap = record.attributes()
-            self.datasource.tangoMemberName = unicode(attributeMap.namedItem("name").nodeValue() \
-                                               if attributeMap.contains("name") else "")
+            if record.nodeName() != "record":
+                QMessageBox.warning(self.dialog, "Internal error", 
+                                    "Missing <record> tag")
+            else:
+                attributeMap = record.attributes()
+                self.datasource.tangoMemberName = unicode(attributeMap.namedItem("name").nodeValue() \
+                                                              if attributeMap.contains("name") else "")
 
             device = self.dialog.node.firstChildElement(QString("device"))
-            attributeMap = device.attributes()
-            self.datasource.tangoDeviceName = unicode(attributeMap.namedItem("name").nodeValue() \
-                                               if attributeMap.contains("name") else "")
-            self.datasource.tangoMemberType = unicode(attributeMap.namedItem("member").nodeValue() \
-                                               if attributeMap.contains("member") else "attribute")
-            self.datasource.tangoHost = unicode(attributeMap.namedItem("hostname").nodeValue() \
-                                         if attributeMap.contains("hostname") else "")
-            self.datasource.tangoPort = unicode(attributeMap.namedItem("port").nodeValue() \
-                                         if attributeMap.contains("port") else "")
-            self.datasource.tangoEncoding = unicode(attributeMap.namedItem("encoding").nodeValue() \
-                                         if attributeMap.contains("encoding") else "")
+            if device.nodeName() != "device":
+                QMessageBox.warning(self.dialog, "Internal error", 
+                                    "Missing <device> tag")
+            else:
+                attributeMap = device.attributes()
+                self.datasource.tangoDeviceName = unicode(attributeMap.namedItem("name").nodeValue() \
+                                                              if attributeMap.contains("name") else "")
+                self.datasource.tangoMemberType = unicode(attributeMap.namedItem("member").nodeValue() \
+                                                              if attributeMap.contains("member") else "attribute")
+                self.datasource.tangoHost = unicode(attributeMap.namedItem("hostname").nodeValue() \
+                                                        if attributeMap.contains("hostname") else "")
+                self.datasource.tangoPort = unicode(attributeMap.namedItem("port").nodeValue() \
+                                                        if attributeMap.contains("port") else "")
+                self.datasource.tangoEncoding = unicode(attributeMap.namedItem("encoding").nodeValue() \
+                                                            if attributeMap.contains("encoding") else "")
 
                                     
         elif value == 'DB':
             self.datasource.dataSourceType = unicode(value)
             
             database = self.dialog.node.firstChildElement(QString("database"))           
-            attributeMap = database.attributes()
+            if database.nodeName() != "database":
+                QMessageBox.warning(self.dialog, "Internal error", 
+                                    "Missing <database> tag")
+            else:
+                attributeMap = database.attributes()
 
-            for i in range(attributeMap.count()):
-                name = unicode(attributeMap.item(i).nodeName())
-                if name == 'dbtype':
-                    self.datasource.dbType = unicode(attributeMap.item(i).nodeValue())
-                elif name in self.dbmap:
-                    self.datasource.dbParameters[self.dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
-                    self.dialog.dbParam[self.dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
+                for i in range(attributeMap.count()):
+                    name = unicode(attributeMap.item(i).nodeName())
+                    if name == 'dbtype':
+                        self.datasource.dbType = unicode(attributeMap.item(i).nodeValue())
+                    elif name in self.dbmap:
+                        self.datasource.dbParameters[self.dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
+                        self.dialog.dbParam[self.dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
 
                     
             if not self.datasource.dbType:
@@ -482,10 +503,14 @@ class DataSourceMethods(object):
 
 
             query = self.dialog.node.firstChildElement(QString("query"))
-            attributeMap = query.attributes()
+            if query.nodeName() != "query":
+                QMessageBox.warning(self.dialog, "Internal error", 
+                                    "Missing <query> tag")
+            else:
+                attributeMap = query.attributes()
 
-            self.datasource.dbDataFormat = unicode(attributeMap.namedItem("format").nodeValue() \
-                                            if attributeMap.contains("format") else "SCALAR")
+                self.datasource.dbDataFormat = unicode(attributeMap.namedItem("format").nodeValue() \
+                                                           if attributeMap.contains("format") else "SCALAR")
 
 
             text = unicode(self.dialog._getText(query))
@@ -676,8 +701,8 @@ class DataSourceMethods(object):
     ## updates the Node
     # \brief It sets node from the self.dialog variables
     def updateNode(self, index=QModelIndex()):
-        print "tree", self.datasource._tree
-        print "index", index.internalPointer()
+#        print "tree", self.datasource._tree
+#        print "index", index.internalPointer()
         newDs = self.createNodes(self.datasource._tree)
         oldDs = self.dialog.node
 
@@ -705,6 +730,11 @@ class DataSourceMethods(object):
                          self.datasource._externalSave)
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
                          self.datasource._externalSave)
+        if self.datasource._externalClose:
+            self.dialog.disconnect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+                         self.datasource._externalClose)
+            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+                         self.datasource._externalClose)
         if self.datasource._externalApply:
             self.dialog.disconnect(self.dialog.applyPushButton, SIGNAL("clicked()"), 
                          self.datasource._externalApply)
@@ -712,13 +742,19 @@ class DataSourceMethods(object):
                          self.datasource._externalApply)
 
 
-    ## connects external actions
-    # \brief It connects the save action and stores the apply action
-    def connectExternalActions(self, externalApply=None, externalSave=None):
+    ## connects the save action and stores the apply action
+    # \param externalApply apply action
+    # \param externalSave save action
+    # \param externalClose close action
+    def connectExternalActions(self, externalApply=None, externalSave=None, externalClose = None ):
         if externalSave and self.datasource._externalSave is None:
             self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
             self.datasource._externalSave = externalSave
+        if externalClose and self.datasource._externalClose is None:
+            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+                         externalClose)
+            self.datasource._externalClose = externalClose
         if externalApply and self.datasource._externalApply is None:
             self.dialog.connect(self.dialog.applyPushButton, SIGNAL("clicked()"), 
                      externalApply)
@@ -762,7 +798,7 @@ class DataSourceMethods(object):
         text=unicode(clipboard.text())
         self.datasource.document = QDomDocument()
         self.dialog.root = self.datasource.document
-        if not self.datasource.document.setContent(text):
+        if not self.datasource.document.setContent(self.datasource.repair(text)):
             raise ValueError, "could not parse XML"
 
 
@@ -795,7 +831,6 @@ class DataSourceMethods(object):
 class CommonDataSource(object):
     
     ## constructor
-    # \param parent patent instance
     def __init__(self):
         
 
@@ -839,6 +874,7 @@ class CommonDataSource(object):
         self.dbParameters = {}
 
         self._externalSave = None
+        self._externalClose = None
         self._externalApply = None
 
         self._applied = False
@@ -943,8 +979,10 @@ class DataSource(CommonDataSource):
         ## dialog parent
         self.parent = parent
 
+        ## datasource dialog
         self.dialog = CommonDataSourceDlg(self, parent)
-        # datasource methods
+
+        ## datasource methods
         self.methods = DataSourceMethods(self.dialog, self)
 
         ## datasource directory
@@ -959,7 +997,9 @@ class DataSource(CommonDataSource):
         self.savedXML = None
         
 
-
+        
+    ## creates dialog
+    # \brief It creates dialog, its GUI , updates Nodes and Form
     def createDialog(self):
         self.dialog = CommonDataSourceDlg(self, self.parent)
         self.methods.dialog = self.dialog        
@@ -967,12 +1007,14 @@ class DataSource(CommonDataSource):
         self.updateNode()
         self.updateForm()
 
+
     ## clears the datasource content
     # \brief It sets the datasource variables to default values
     def clear(self):
         CommonDataSource.clear(self)
         if self.dialog:
             self.dialog.dbParam = {}
+
 
     ## checks if not saved
     # \returns True if it is not saved     
@@ -1039,6 +1081,7 @@ class DataSource(CommonDataSource):
             if  fh.open(QIODevice.ReadOnly):
                 self.document = QDomDocument()
                 self.root = self.document
+#                if not self.document.setContent(self.repair(fh)):
                 if not self.document.setContent(fh):
                     raise ValueError, "could not parse XML"
 
@@ -1064,20 +1107,51 @@ class DataSource(CommonDataSource):
                 fh.close()
                 return filename
 
+    ## repairs xml datasources 
+    # \param xml xml string
+    # \returns repaired xml        
+    def repair(self, xml):
+        olddoc = QDomDocument()
+        if not olddoc.setContent(xml):
+            raise ValueError, "could not parse XML"
+
+        definition = olddoc.firstChildElement(QString("definition"))           
+        if definition and definition.nodeName() =="definition":
+            ds  = definition.firstChildElement(QString("datasource"))
+            if ds and ds.nodeName() =="datasource":
+                return xml
+        
+        ds = self.dialog._getFirstElement(olddoc, "datasource")           
+        
+        newdoc = QDomDocument()
+        processing = newdoc.createProcessingInstruction("xml", "version='1.0'") 
+        newdoc.appendChild(processing)
+
+        definition = newdoc.createElement(QString("definition"))
+        newdoc.appendChild(definition)
+
+        newds = newdoc.importNode(ds,True)
+        definition.appendChild(newds)            
+            
+        return newdoc.toString(0)
 
             
     ## sets datasources from xml string
     # \param xml xml string
-    def set(self, xml):
+    # \param new True if datasource is not saved
+    def set(self, xml,new = False):
         self.document = QDomDocument()
         self.root = self.document
-        if not self.document.setContent(xml):
+        if not self.document.setContent(self.repair(xml)):
             raise ValueError, "could not parse XML"
 
         ds = self.dialog._getFirstElement(self.document, "datasource")           
         if ds:
             self.setFromNode(ds)
-            self.savedXML = self.document.toString(0)
+            if new:
+                self.savedXML = ""
+            else:
+                self.savedXML = self.document.toString(0)
         try:    
             self.createGUI()
         except Exception, e:
@@ -1099,7 +1173,8 @@ class DataSource(CommonDataSource):
                         raise IOError, unicode(fh.errorString())
                     stream = QTextStream(fh)
                     self.createNodes()
-                    stream <<self.document.toString(2)
+                    self.document.setContent(self.repair(self.document.toString(0)))
+                    stream << self.document.toString(2)
             #                print self.document.toString(2)
                     self.savedXML = self.document.toString(0)
                 except (IOError, OSError, ValueError), e:
@@ -1163,7 +1238,7 @@ class DataSource(CommonDataSource):
 
 
     ## shows dialog
-    # \bief It adapts the dialog method
+    # \brief It adapts the dialog method
     def show(self):
         if hasattr(self,"datasource")  and self.dialog:
             if self.dialog:
@@ -1214,17 +1289,19 @@ class DataSource(CommonDataSource):
             return self.methods.apply()
 
 
-     ## sets the tree mode used in ComponentDlg without save/close buttons
+    ## sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode 
     def treeMode(self, enable = True):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.treeMode(enable)
 
-    ## connects external actions
-    # \brief It connects the save action and stores the apply action
-    def connectExternalActions(self, externalApply=None, externalSave=None):
+    ## connects the save action and stores the apply action
+    # \param externalApply apply action
+    # \param externalSave save action
+    # \param externalClose close action
+    def connectExternalActions(self, externalApply=None, externalSave=None, externalClose=None ):
         if hasattr(self,"methods")  and self.methods:
-            return self.methods.connectExternalActions(externalApply, externalSave)
+            return self.methods.connectExternalActions(externalApply, externalSave, externalClose)
 
     ## reconnects save actions
     # \brief It reconnects the save action 
@@ -1263,16 +1340,11 @@ class DataSourceDlg(CommonDataSourceDlg):
     def __init__(self, parent=None):
         super(DataSourceDlg, self).__init__(None,parent)
 
-        # datasource data
+        ## datasource data
         self.datasource = CommonDataSource()
-        # datasource methods
+        ## datasource methods
         self.methods = DataSourceMethods(self, self.datasource)
         
-
-
-        
-
-
             
     ## updates the form
     # \brief abstract class
@@ -1309,17 +1381,19 @@ class DataSourceDlg(CommonDataSourceDlg):
             return self.methods.apply()
 
 
-     ## sets the tree mode used in ComponentDlg without save/close buttons
+    ## sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode 
     def treeMode(self, enable = True):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.treeMode(enable)
 
-    ## connects external actions
-    # \brief It connects the save action and stores the apply action
-    def connectExternalActions(self, externalApply=None, externalSave=None):
+    ## connects the save action and stores the apply action
+    # \param externalApply apply action
+    # \param externalSave save action 
+    # \param externalClose close action 
+    def connectExternalActions(self, externalApply=None, externalSave=None, externalClose=None):
         if hasattr(self,"methods")  and self.methods:
-            return self.methods.connectExternalActions(externalApply, externalSave)
+            return self.methods.connectExternalActions(externalApply, externalSave, externalClose)
 
 
 if __name__ == "__main__":
@@ -1330,6 +1404,7 @@ if __name__ == "__main__":
     ## data source form
     w = QWidget()
     w.show()
+    ## the first datasource form
     form = DataSource(w)
 
     form.dataSourceType = 'CLIENT'
@@ -1351,6 +1426,7 @@ if __name__ == "__main__":
 
     form.createGUI()
 
+    ## the second datasource form
     form2 = DataSourceDlg(w)
     form2.createGUI()
     form2.treeMode(True)

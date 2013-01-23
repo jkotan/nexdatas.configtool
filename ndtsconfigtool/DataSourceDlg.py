@@ -1137,7 +1137,7 @@ class DataSource(CommonDataSource):
             
     ## sets datasources from xml string
     # \param xml xml string
-    def set(self, xml):
+    def set(self, xml,new = False):
         self.document = QDomDocument()
         self.root = self.document
         if not self.document.setContent(self.repair(xml)):
@@ -1146,7 +1146,10 @@ class DataSource(CommonDataSource):
         ds = self.dialog._getFirstElement(self.document, "datasource")           
         if ds:
             self.setFromNode(ds)
-            self.savedXML = self.document.toString(0)
+            if new:
+                self.savedXML = ""
+            else:
+                self.savedXML = self.document.toString(0)
         try:    
             self.createGUI()
         except Exception, e:

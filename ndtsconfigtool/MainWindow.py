@@ -1555,12 +1555,12 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('componentTakeDataSource').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
-        cmd = self.pool.getCommand('dsourceEdit').clone()
-        cmd.execute()
+#        cmd = self.pool.getCommand('dsourceEdit').clone()
+#        cmd.execute()
 
-        cmd = self.pool.getCommand('dsourceApply').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
+#        cmd = self.pool.getCommand('dsourceApply').clone()
+#        cmd.execute()
+#        self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 

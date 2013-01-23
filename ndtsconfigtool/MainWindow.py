@@ -353,20 +353,24 @@ class MainWindow(QMainWindow):
         dsourceCutAction = self.pool.createCommand(
             "Cut DataSource", "dsourceCut", 
             commandArgs, DataSourceCut,
-            "", "cut", "Cut the data source")
+            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Delete),
+#            "", 
+            "cut", "Cut the data source")
 
 
         dsourcePasteAction = self.pool.createCommand(
             "Paste DataSource", "dsourcePaste", 
             commandArgs, DataSourcePaste,
-            "", "paste", "Paste the data source")
+            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Insert),
+#            "", 
+            "paste", "Paste the data source")
         
 
         componentRemoveItemAction = self.pool.createCommand(
             "Cut Component Item", "componentRemoveItem", commandArgs, ComponentRemoveItem,
 #            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
 #            "Ctrl+X",
-            "" ,
+            QKeySequence(Qt.CTRL + Qt.Key_Delete),
             "cut", "Remove the component item")
 
 
@@ -382,7 +386,7 @@ class MainWindow(QMainWindow):
             "Paste Component Item", "componentPasteItem", commandArgs, ComponentPasteItem,
 #            QKeySequence(Qt.CTRL +  Qt.SHIFT  + Qt.Key_V),
 #            "Ctrl+V", 
-            "" ,
+            QKeySequence(Qt.CTRL + Qt.Key_Insert),
             "paste", "Paste the component item")
 
 

@@ -1945,7 +1945,7 @@ class MainWindow(QMainWindow):
     def helpAbout(self):
         QMessageBox.about(self, "About Component Designer",
                 """<b>Component Designer</b> v %s
-                <p>Copyright &copy; 2012 GNU GENERAL PUBLIC LICENSE
+                <p>Copyright &copy; 2012 DESY, GNU GENERAL PUBLIC LICENSE
                 <p>This application can be used to create
                 XML configuration file for the Nexus Data Writer.
                 <p>Python %s - Qt %s - PyQt %s on %s""" % (

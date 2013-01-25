@@ -326,6 +326,8 @@ class Component(object):
             return
         if not hasattr(self.dialog.widget,'apply'):
             return
+#        import gc
+#        gc.collect()
         self.dialog.widget.apply()
 
         self.view.resizeColumnToContents(0)
@@ -526,8 +528,10 @@ class Component(object):
     ## removes the currenct component tree item if possible
     # \returns True on success
     def removeSelectedItem(self):
-        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget:
+        
+        if not self.view or not self.view.model() :
             return
+        dialog = True if self.dialog and self.dialog.widget else False
         index = self.view.currentIndex()
         sel = index.internalPointer()
         if not sel or not index.isValid():
@@ -544,11 +548,15 @@ class Component(object):
         clipboard = QApplication.clipboard()
         clipboard.setText(self._nodeToString(node))
         
-        if hasattr(self.dialog.widget,"node"):
+        
+        if hasattr(self.dialog.widget,"node") and dialog:
             self.dialog.widget.node = node.parentNode()
 
-        self.dialog.widget.removeNode(node, index.parent())
-                
+        if dialog:    
+            self.dialog.widget.removeNode(node, index.parent())
+        else:
+            self.removeNode(node, index.parent())
+
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
@@ -562,6 +570,35 @@ class Component(object):
             self.tagClicked(QModelIndex())
             
         return True    
+
+    ## removes node
+    # \param node DOM node to remove
+    # \param parent parent node index        
+    def removeNode(self, node, parent):
+        if self.view is not None and self.view.model() is not None: 
+            row = self.getNodeRow(node, node.parentNode())
+            if row is not None:
+                self.view.model().removeItem(row, node, parent)
+
+
+    ## provides row number of the given node
+    # \param child child item
+    # \param node parent node        
+    # \returns row number
+    def getNodeRow(self, child, node = None):
+        row = 0
+        lnode =  node if node is not None else self.node
+        if lnode:
+            children = lnode.childNodes()
+            for i in range(children.count()):
+                ch = children.item(i)
+                if child == ch:
+                    break
+                row += 1
+            if row < children.count():
+                return row
+
+
 
 
     ## copies the currenct component tree item if possible
@@ -603,7 +640,7 @@ class Component(object):
 
 
 #        self.dialog.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
-#        self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self._close)
+#        self.dialog.connect(self.diaslog.closePushButton, SIGNAL("clicked()"), self._close)
         self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
@@ -1044,6 +1081,8 @@ class Component(object):
     ## merges the component tree
     # \returns True on success
     def merge(self):
+#        import gc
+#        gc.collect()
         document = None
         dialog = False
 
@@ -1242,6 +1281,9 @@ class Component(object):
     ## saves the component
     # \brief It saves the component in the xml file 
     def save(self):
+#        import gc
+#        gc.collect()
+
         if not self._merged:
             QMessageBox.warning(self.dialog, "Saving problem",
                                 "Document not merged" )

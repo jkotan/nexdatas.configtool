@@ -2,6 +2,7 @@
 	* adding additional hot-keys for Cutting and Pasting items
 	* adding dimensions to attributes
 	* adding take the current datasource action
+	* adding saving Yes/NoToAll during closing
 	* fixing seg fault during loading datasources
 	* tagged as v1.1.1
 

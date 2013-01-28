@@ -552,7 +552,7 @@ class Component(object):
         if hasattr(self.dialog.widget,"node") and dialog:
             self.dialog.widget.node = node.parentNode()
 
-        if dialog:    
+        if dialog and hasattr(self.dialog,"widget") and hasattr(self.dialog.widget,"removeNode"):    
             self.dialog.widget.removeNode(node, index.parent())
         else:
             self.removeNode(node, index.parent())

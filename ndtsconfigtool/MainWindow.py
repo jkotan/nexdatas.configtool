@@ -889,10 +889,15 @@ class MainWindow(QMainWindow):
                     
                 if status == QMessageBox.Yes or status == QMessageBox.YesToAll :
                     try:
+                        cid = self.componentList.currentListComponent()
+                        self.componentList.populateComponents(cp.id)
+                        self.componentEdit()
                         cp.instance.merge()
                         if not cp.instance.save():
+                            self.componentList.populateComponents(cid)
                             event.ignore()
                             return
+                        self.componentList.populateComponents(cid)
                         
                     except IOError, e:
                         failures.append(unicode(e))
@@ -918,10 +923,17 @@ class MainWindow(QMainWindow):
                 
                 if status == QMessageBox.Yes or status == QMessageBox.YesToAll:
                     try:
+                        sid = self.sourceList.currentListDataSource()
+                        self.sourceList.populateDataSources(ds.id)
+                        self.dsourceEdit()
                         if not ds.instance.save():
+                            self.sourceList.populateDataSources(sid)
                             event.ignore()
                             return
-                        
+                        self.sourceList.populateDataSources(sid)
+
+
+
                     except IOError, e:
                         failures.append(unicode(e))
                         

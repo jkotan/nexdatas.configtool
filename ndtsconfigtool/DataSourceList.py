@@ -158,6 +158,8 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             self.datasources[ids] =  ds
             if ds.instance is not None:
                 ds.instance.ids = ds.id
+                if new:
+                    ds.instance.applied =  True
             print name
         return ids    
 

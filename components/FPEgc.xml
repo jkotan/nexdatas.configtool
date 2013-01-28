@@ -6,6 +6,7 @@
       <datasource type="CLIENT" name="aaaaaaaaaa">
         <record name="aaaaaaaaaaaaaa"/>
       </datasource>
+      <doc>xdssd</doc>
     </field>
   </group>
 </definition>

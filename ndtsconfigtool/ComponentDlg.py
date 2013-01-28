@@ -1283,7 +1283,6 @@ class Component(object):
     def save(self):
 #        import gc
 #        gc.collect()
-
         if not self._merged:
             QMessageBox.warning(self.dialog, "Saving problem",
                                 "Document not merged" )

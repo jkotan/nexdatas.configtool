@@ -873,24 +873,27 @@ class MainWindow(QMainWindow):
     # \param event Qt event   
     def closeEvent(self, event):
         failures = []
+        status = None
         for k in self.componentList.components.keys():
             cp = self.componentList.components[k]
             que = False
             if (hasattr(cp,"isDirty") and cp.isDirty()) or \
                     (hasattr(cp,"instance") and hasattr(cp.instance,"isDirty") and cp.instance.isDirty()):
-                status= QMessageBox.question(self, "Component - Save",
-                                             "Do you want to save the component: %s".encode() \
-                                                 %  (cp.name),
-                                             QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
-                                             QMessageBox.Save)
-
-                if status == QMessageBox.Save:
+                if status != QMessageBox.YesToAll and status != QMessageBox.NoToAll :
+                    status= QMessageBox.question(self, "Component - Save",
+                                                 "Do you want to save the component: %s".encode() \
+                                                     %  (cp.name),
+                                                 QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel \
+                                                     | QMessageBox.YesToAll| QMessageBox.NoToAll,
+                                                 QMessageBox.Yes)
+                    
+                if status == QMessageBox.Yes or status == QMessageBox.YesToAll :
                     try:
                         cp.instance.merge()
                         if not cp.instance.save():
                             event.ignore()
                             return
-                            
+                        
                     except IOError, e:
                         failures.append(unicode(e))
                         
@@ -899,23 +902,26 @@ class MainWindow(QMainWindow):
                     return
 
 
+        status = None
         for k in self.sourceList.datasources.keys():
             ds = self.sourceList.datasources[k]
             que = False
             if (hasattr(ds,"isDirty") and ds.isDirty()) or \
                     (hasattr(ds,"instance") and hasattr(ds.instance,"isDirty") and ds.instance.isDirty()):
-                status= QMessageBox.question(self, "DataSource - Save",
-                                             "Do you want to save the datasource: %s".encode() \
-                                                 %  (ds.name),
-                                             QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
-                                             QMessageBox.Save)
-
-                if status == QMessageBox.Save:
+                if status != QMessageBox.YesToAll and status != QMessageBox.NoToAll:
+                    status= QMessageBox.question(self, "DataSource - Save",
+                                                 "Do you want to save the datasource: %s".encode() \
+                                                     %  (ds.name),
+                                                 QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel \
+                                                     | QMessageBox.YesToAll |  QMessageBox.NoToAll,
+                                                 QMessageBox.Yes)
+                
+                if status == QMessageBox.Yes or status == QMessageBox.YesToAll:
                     try:
                         if not ds.instance.save():
                             event.ignore()
                             return
-                            
+                        
                     except IOError, e:
                         failures.append(unicode(e))
                         

@@ -533,7 +533,7 @@ class DataSourceMethods(object):
     # \brief It copies the parameters and accept the self.dialog
     def apply(self):
 
-        self.datasource._applied = False
+        self.datasource.applied = False
         class CharacterError(Exception): pass
         sourceType = unicode(self.dialog.typeComboBox.currentText())
         self.datasource.dataSourceName = unicode(self.dialog.nameLineEdit.text())
@@ -619,7 +619,7 @@ class DataSourceMethods(object):
         if not self.datasource._tree:
             self.createNodes()
                 
-        self.datasource._applied = True
+        self.datasource.applied = True
 
         return True    
 
@@ -877,7 +877,7 @@ class CommonDataSource(object):
         self._externalClose = None
         self._externalApply = None
 
-        self._applied = False
+        self.applied = False
 
         ## datasource id
         self.ids = None
@@ -1163,7 +1163,7 @@ class DataSource(CommonDataSource):
     # \brief It copies the parameters and saves the dialog
     def save(self):
         error = None
-        if self._applied:
+        if self.applied:
             filename = self.directory + "/" + self.name + ".ds.xml"
             print "saving in %s"% (filename)
             if filename:

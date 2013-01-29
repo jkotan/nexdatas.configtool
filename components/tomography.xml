@@ -3,14 +3,14 @@
   <group type="NXentry" name="entry">
     <field type="NX_CHAR" name="definition">NXtomo</field>
     <field type="NX_DATE_TIME" name="end_time">
-      <strategy mode="FINAL" compression="false"/>
+      <strategy mode="FINAL"/>
       <datasource type="CLIENT" name="end_time">
         <record name="end_time"/>
         <doc>The end time is provided by the client after the experiment is finished.</doc>
       </datasource>
     </field>
     <field type="NX_DATE_TIME" name="start_time">
-      <strategy mode="INIT" compression="false"/>
+      <strategy mode="INIT"/>
       <datasource type="CLIENT" name="start_time">
         <record name="start_time"/>
         <doc>The start time is provided by the control client.</doc>
@@ -20,7 +20,7 @@
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="bright_field">
         <field type="NX_INT" name="data">
-          <strategy trigger="bright_frame_trigger" mode="STEP" compression="false"/>
+          <strategy trigger="bright_frame_trigger" mode="STEP"/>
           <dimensions rank="2">
             <dim value="1024" index="1"/>
             <dim value="2048" index="2"/>
@@ -30,7 +30,7 @@
           </datasource>
         </field>
         <field type="NX_INT" name="sequence_number">
-          <strategy trigger="bright_frame_trigger" mode="STEP" compression="false"/>
+          <strategy trigger="bright_frame_trigger" mode="STEP"/>
         </field>
       </group>
       <group type="NXdetector" name="dark_field">
@@ -39,13 +39,13 @@
             <dim value="1024" index="1"/>
             <dim value="2048" index="2"/>
           </dimensions>
-          <strategy trigger="dark_frame_trigger" mode="STEP" compression="false"/>
+          <strategy trigger="dark_frame_trigger" mode="STEP"/>
           <datasource type="CLIENT" name="detector">
             <record name="detector"/>
           </datasource>
         </field>
         <field type="NX_INT" name="sequence_number">
-          <strategy trigger="dark_frame_trigger" mode="STEP" compression="false"/>
+          <strategy trigger="dark_frame_trigger" mode="STEP"/>
         </field>
       </group>
       <group type="NXdetector" name="sample">
@@ -55,13 +55,13 @@
             <dim value="1024" index="1"/>
             <dim value="2048" index="2"/>
           </dimensions>
-          <strategy trigger="sample_frame_trigger" mode="STEP" compression="false"/>
+          <strategy trigger="sample_frame_trigger" mode="STEP"/>
           <datasource type="CLIENT" name="detector">
             <record name="detector"/>
           </datasource>
         </field>
         <field type="NX_INT" name="sequence_number">
-          <strategy trigger="sample_frame_trigger" mode="STEP" compression="false"/>
+          <strategy trigger="sample_frame_trigger" mode="STEP"/>
         </field>
         <field units="um" type="NX_FLOAT" name="x_pixel_size">1</field>
         <field units="um" type="NX_FLOAT" name="y_pixel_size">1.5</field>
@@ -74,7 +74,7 @@
     </group>
     <group type="NXmonitor" name="control">
       <field type="NX_FLOAT" name="data">
-        <strategy trigger="monitor_trigger" mode="STEP" compression="false"/>
+        <strategy trigger="monitor_trigger" mode="STEP"/>
         <datasource type="CLIENT" name="monitor_counter">
           <record name="monitor_counter"/>
         </datasource>
@@ -82,32 +82,32 @@
     </group>
     <group type="NXsample" name="sample">
       <field type="NX_CHAR" name="name">
-        <strategy mode="INIT" compression="false"/>
+        <strategy mode="INIT"/>
         <datasource type="CLIENT" name="sample_name">
           <record name="sample_name"/>
           <doc>Data source providing the name of the sample.</doc>
         </datasource>
       </field>
       <field units="degree" type="NX_FLOAT" name="rotation_angle">
-        <strategy trigger="sample_frame_trigger" mode="STEP" compression="false"/>
+        <strategy trigger="sample_frame_trigger" mode="STEP"/>
         <datasource type="CLIENT" name="sample_rotation">
           <record name="sample_rotation"/>
         </datasource>
       </field>
       <field units="mm" type="NX_FLOAT" name="x_translation">
-        <strategy trigger="sample_frame_trigger" mode="STEP" compression="false"/>
+        <strategy trigger="sample_frame_trigger" mode="STEP"/>
         <datasource type="CLIENT" name="sample_x_translation">
           <record name="sample_x_translation"/>
         </datasource>
       </field>
       <field units="mm" type="NX_FLOAT" name="y_translation">
-        <strategy trigger="sample_frame_trigger" mode="STEP" compression="false"/>
+        <strategy trigger="sample_frame_trigger" mode="STEP"/>
         <datasource type="CLIENT" name="sample_y_translation">
           <record name="sample_y_translation"/>
         </datasource>
       </field>
       <field units="mm" type="NX_FLOAT" name="z_translation">
-        <strategy trigger="sample_frame_trigger" mode="STEP" compression="false"/>
+        <strategy trigger="sample_frame_trigger" mode="STEP"/>
         <datasource type="CLIENT" name="sample_z_translation">
           <record name="sample_z_translation"/>
         </datasource>

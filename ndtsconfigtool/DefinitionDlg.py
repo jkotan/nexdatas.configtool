@@ -269,7 +269,7 @@ class DefinitionDlg(NodeDlg, Ui_DefinitionDlg):
             
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
-            attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
+            attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         if self.name:    
             elem.setAttribute(QString("name"), QString(self.name))
         if self.nexusType:

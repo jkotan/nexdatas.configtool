@@ -18,15 +18,15 @@
     <field type="NX_CHAR" name="experiment_identifier">
       <doc>Beamtime ID. From this ID everything else can be derived from the DESY databases including the Proposal as well as the scientists performing the experiment, the local contact, and so on.
 
-The beamtime ID at DESY is an 8 digit number.R</doc>12345678<strategy mode="INIT" compression="false"/>
-    </field>
+The beamtime ID at DESY is an 8 digit number.R</doc>
+      <strategy mode="INIT"/>12345678</field>
     <field type="NX_DATE_TIME" name="start_time">
       <doc>time stamp when the experiment has started.</doc>
       <datasource type="CLIENT" name="start_time">
         <record name="start_time"/>
         <doc>The start time is provided by the control client.</doc>
       </datasource>
-      <strategy mode="INIT" compression="false"/>
+      <strategy mode="INIT"/>
     </field>
     <field type="NX_DATE_TIME" name="end_time">
       <doc>end time - timestamp when the experiment stopped.</doc>
@@ -34,7 +34,7 @@ The beamtime ID at DESY is an 8 digit number.R</doc>12345678<strategy mode="INIT
         <record name="end_time"/>
         <doc>The end time is provided by the client after the experiment is finished.</doc>
       </datasource>
-      <strategy mode="FINAL" compression="false"/>
+      <strategy mode="FINAL"/>
     </field>
     <group type="NXinstrument" name="instrument">
       <group type="NXsource" name="source">

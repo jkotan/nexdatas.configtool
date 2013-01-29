@@ -315,7 +315,7 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
 
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
-            attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
+            attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         elem.setAttribute(QString("name"), QString(self.name))
         if self.nexusType:
             elem.setAttribute(QString("type"), QString(self.nexusType))

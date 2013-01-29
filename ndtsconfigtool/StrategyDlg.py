@@ -252,7 +252,7 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
 
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
-            attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
+            attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         elem.setAttribute(QString("mode"), QString(self.mode))
 
         if self.mode == 'STEP':
@@ -264,8 +264,6 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
             elem.setAttribute(QString("compression"), QString("true"))
             elem.setAttribute(QString("shuffle"), QString("true") if self.shuffle else "false" )
             elem.setAttribute(QString("rate"), QString(str(self.rate)))
-#        else:
-#            elem.setAttribute(QString("compression"), QString("false"))
 
         self._replaceText(self.node, index, unicode(self.postrun))
 

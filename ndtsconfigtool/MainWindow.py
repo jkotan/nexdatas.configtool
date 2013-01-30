@@ -606,6 +606,8 @@ class MainWindow(QMainWindow):
             "&Tile", self.mdi.tileSubWindows, tip = "Tile the windows")
         self.windows["RestoreAction"] = self._createAction(
             "&Restore All", self.windowRestoreAll, tip = "Restore the windows")
+        self.windows["CloseAllAction"] = self._createAction(
+            "&Close All", self.mdi.closeAllSubWindows, tip = "Close the windows")
         self.windows["MinimizeAction"] = self._createAction(
             "&Iconize All", self.windowMinimizeAll, tip = "Minimize the windows")
 #A        self.windows["ArrangeIconsAction"] = self._createAction(
@@ -2076,6 +2078,7 @@ class MainWindow(QMainWindow):
 #A                                                self.windows["ArrangeIconsAction"], 
                                                 None,
                                                 self.windows["CloseAction"],
+                                                self.windows["CloseAllAction"],
                                                 None,
                                                 self.windows["ComponentListAction"], 
                                                 self.windows["DataSourceListAction"]

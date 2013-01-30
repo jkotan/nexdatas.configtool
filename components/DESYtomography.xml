@@ -104,10 +104,6 @@
       <field type="NX_CHAR" name="type">sample<doc>Lookup the Nexus base class definition to find all possible types of samples. Maybe this is insufficient.</doc>
       </field>
     </group>
-    <group type="NXdata" name="data">
-      <link target="NXentry/NXinstrument/NXsample/data" name="data"/>
-      <link target="NXentry/NXsample/rotation_angle" name="rotation_angle"/>
-    </group>
     <field type="NX_DATE_TIME" name="start_time">
       <doc>time stamp when the experiment has started.</doc>
       <datasource type="CLIENT" name="start_time">
@@ -141,6 +137,10 @@ The beamtime ID at DESY is an 8 digit number.R</doc>
     </field>
     <field version="1.0.0" type="NX_CHAR" name="program_name">Nexus data server<doc>Program that created the file.</doc>
     </field>
+    <group type="NXdata" name="data">
+      <link target="NXentry/NXinstrument/NXsample/data" name="data"/>
+      <link target="NXentry/NXsample/rotation_angle" name="rotation_angle"/>
+    </group>
   </group>
   <doc>Has to be merged into the desy default component to get a full Nexus tree for tomography.</doc>
 </definition>

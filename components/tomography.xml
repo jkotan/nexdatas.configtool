@@ -1,22 +1,6 @@
 <?xml version='1.0'?>
 <definition>
   <group type="NXentry" name="entry">
-    <field type="NX_CHAR" name="definition">NXtomo</field>
-    <field type="NX_DATE_TIME" name="end_time">
-      <strategy mode="FINAL"/>
-      <datasource type="CLIENT" name="end_time">
-        <record name="end_time"/>
-        <doc>The end time is provided by the client after the experiment is finished.</doc>
-      </datasource>
-    </field>
-    <field type="NX_DATE_TIME" name="start_time">
-      <strategy mode="INIT"/>
-      <datasource type="CLIENT" name="start_time">
-        <record name="start_time"/>
-        <doc>The start time is provided by the control client.</doc>
-      </datasource>
-    </field>
-    <field type="NX_CHAR" name="title">Tomography example</field>
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="bright_field">
         <field type="NX_INT" name="data">
@@ -66,11 +50,6 @@
         <field units="um" type="NX_FLOAT" name="x_pixel_size">1</field>
         <field units="um" type="NX_FLOAT" name="y_pixel_size">1.5</field>
       </group>
-      <group type="NXsource" name="source">
-        <field type="NX_CHAR" name="name">Deutsches Elektronen Synchrotron</field>
-        <field type="NX_CHAR" name="probe">x-ray</field>
-        <field type="NX_CHAR" name="type">Synchrotron X-ray Source</field>
-      </group>
     </group>
     <group type="NXmonitor" name="control">
       <field type="NX_FLOAT" name="data">
@@ -81,13 +60,6 @@
       </field>
     </group>
     <group type="NXsample" name="sample">
-      <field type="NX_CHAR" name="name">
-        <strategy mode="INIT"/>
-        <datasource type="CLIENT" name="sample_name">
-          <record name="sample_name"/>
-          <doc>Data source providing the name of the sample.</doc>
-        </datasource>
-      </field>
       <field units="degree" type="NX_FLOAT" name="rotation_angle">
         <strategy trigger="sample_frame_trigger" mode="STEP"/>
         <datasource type="CLIENT" name="sample_rotation">

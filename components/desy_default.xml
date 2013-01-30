@@ -46,7 +46,7 @@ The beamtime ID at DESY is an 8 digit number.R</doc>
       <group type="NXinsertion_device" name="insertion_device"/>
       <field short_name="P08" type="NX_CHAR" name="name">High Resolution Diffraction Beamline</field>
     </group>
-    <group type="NXmonitor" name="monitor"/>
+    <group type="NXmonitor" name="control"/>
     <group type="NXuser" name="user">
       <field type="NX_CHAR" name="name">
         <doc>The person who applied for the beamtime.</doc>Eugen Wintersberger</field>

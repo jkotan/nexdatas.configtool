@@ -59,6 +59,5 @@ The beamtime ID at DESY is an 8 digit number.R</doc>
     </field>
     <field version="1.0.0" type="NX_CHAR" name="program_name">Nexus data server<doc>Program that created the file.</doc>
     </field>
-    <field type="NX_CHAR" name="definition">none</field>
   </group>
 </definition>

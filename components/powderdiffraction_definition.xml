@@ -31,5 +31,6 @@
         <strategy mode="STEP"/>
       </field>
     </group>
+    <field type="NX_CHAR" name="definition">NXmonopd</field>
   </group>
 </definition>

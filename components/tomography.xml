@@ -90,4 +90,5 @@
       <link target="NXentry/NXsample/rotation_angle" name="rotation_angle"/>
     </group>
   </group>
+  <doc>Has to be merged into the desy default component to get a full Nexus tree for tomography.</doc>
 </definition>

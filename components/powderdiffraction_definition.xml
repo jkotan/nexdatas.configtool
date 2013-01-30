@@ -1,0 +1,35 @@
+<?xml version='1.0'?>
+<definition>
+  <doc>has to be merged with DESY default to get full poweder diffraction definition.</doc>
+  <group type="NXentry" name="entry">
+    <group type="NXdata" name="data">
+      <link target="/entry/instrument/detector/data" name="data"/>
+      <link target="/entry/instrument/detector/polar_angle" name="polar_angle"/>
+    </group>
+    <group type="NXinstrument" name="instrument">
+      <group type="NXcrystal" name="crystal">
+        <field units="nm" type="NX_FLOAT" name="wavelength">
+          <strategy mode="STEP"/>
+        </field>
+      </group>
+      <group type="NXdetector" name="detector">
+        <field type="NX_INT" name="data">
+          <strategy mode="STEP"/>
+        </field>
+        <field units="degree" type="NX_FLOAT" name="polar_angle">
+          <strategy mode="STEP"/>
+        </field>
+      </group>
+    </group>
+    <group type="NXmonitor" name="control">
+      <field type="NX_FLOAT" name="integral"/>
+      <field type="NX_CHAR" name="mode"/>
+      <field type="NX_FLOAT" name="preset"/>
+    </group>
+    <group type="NXsample" name="sample">
+      <field units="degree" type="NX_FLOAT" name="rotation_angle">
+        <strategy mode="STEP"/>
+      </field>
+    </group>
+  </group>
+</definition>

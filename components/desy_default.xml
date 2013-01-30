@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <definition>
-  <group type="NXentry">
+  <group type="NXentry" name="entry">
     <group type="NXsample" name="sample">
       <field type="NX_CHAR" name="name">
         <datasource type="CLIENT" name="sample_name">

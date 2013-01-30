@@ -1,0 +1,108 @@
+<?xml version='1.0'?>
+<definition>
+  <doc>has to be merged with DESY default to get full poweder diffraction definition.</doc>
+  <group type="NXentry" name="entry">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXcrystal" name="crystal">
+        <field units="nm" type="NX_FLOAT" name="wavelength">
+          <strategy mode="STEP"/>
+          <datasource type="TANGO" name="exp_c03">
+            <record name="Counts"/>
+            <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.03"/>
+          </datasource>
+        </field>
+      </group>
+      <group type="NXdetector" name="detector">
+        <field type="NX_INT" name="data">
+          <strategy mode="STEP"/>
+          <datasource type="TANGO" name="exp_c01">
+            <record name="Counts"/>
+            <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.01"/>
+          </datasource>
+        </field>
+        <field units="degree" type="NX_FLOAT" name="polar_angle">
+          <strategy mode="STEP"/>
+          <datasource type="TANGO" name="exp_c02">
+            <record name="Counts"/>
+            <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.02"/>
+          </datasource>
+        </field>
+      </group>
+      <field short_name="P08" type="NX_CHAR" name="name">High Resolution Diffraction Beamline</field>
+      <group type="NXsource" name="source">
+        <doc>generic description of the PETRA III storage ring</doc>
+        <field type="NX_CHAR" name="name">PETRAIII</field>
+        <field type="NX_CHAR" name="type">Synchrotron X-ray Source</field>
+        <field type="NX_CHAR" name="probe">x-ray</field>
+      </group>
+      <group type="NXinsertion_device" name="insertion_device"/>
+    </group>
+    <group type="NXmonitor" name="control">
+      <field type="NX_FLOAT" name="integral">
+        <strategy mode="FINAL"/>
+        <datasource type="CLIENT" name="counts">
+          <record name="counts"/>
+        </datasource>
+      </field>
+      <field type="NX_CHAR" name="mode">monitor</field>
+      <field type="NX_FLOAT" name="preset">0</field>
+    </group>
+    <group type="NXsample" name="sample">
+      <field units="degree" type="NX_FLOAT" name="rotation_angle">
+        <strategy mode="STEP"/>
+        <datasource type="TANGO" name="exp_c05">
+          <record name="Counts"/>
+          <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.05"/>
+        </datasource>
+      </field>
+      <field type="NX_CHAR" name="name">
+        <datasource type="CLIENT" name="sample_name">
+          <record name="sample_name"/>
+          <doc>Data source providing the name of the sample.</doc>
+        </datasource>
+        <strategy mode="INIT" compression="false"/>
+      </field>
+      <field type="NX_CHAR" name="chemical_formula">
+        <doc>A simple string describing the chemical composition of the sample.</doc>Si/SiGe/Si</field>
+      <field type="NX_CHAR" name="type">sample<doc>Lookup the Nexus base class definition to find all possible types of samples. Maybe this is insufficient.</doc>
+      </field>
+    </group>
+    <field type="NX_DATE_TIME" name="start_time">
+      <doc>time stamp when the experiment has started.</doc>
+      <datasource type="CLIENT" name="start_time">
+        <record name="start_time"/>
+        <doc>The start time is provided by the control client.</doc>
+      </datasource>
+      <strategy mode="INIT"/>
+    </field>
+    <field type="NX_DATE_TIME" name="end_time">
+      <doc>end time - timestamp when the experiment stopped.</doc>
+      <datasource type="CLIENT" name="end_time">
+        <record name="end_time"/>
+        <doc>The end time is provided by the client after the experiment is finished.</doc>
+      </datasource>
+      <strategy mode="FINAL"/>
+    </field>
+    <field type="NX_CHAR" name="title">
+      <doc>more detailed description on the experiment.</doc>default experiment</field>
+    <field type="NX_CHAR" name="experiment_identifier">
+      <doc>Beamtime ID. From this ID everything else can be derived from the DESY databases including the Proposal as well as the scientists performing the experiment, the local contact, and so on.
+
+The beamtime ID at DESY is an 8 digit number.R</doc>
+      <strategy mode="INIT"/>12345678</field>
+    <group type="NXuser" name="user">
+      <field type="NX_CHAR" name="name">
+        <doc>The person who applied for the beamtime.</doc>Eugen Wintersberger</field>
+      <field type="NX_CHAR" name="affiliation">Deutsches Elektronensynchrotron</field>
+      <field name="address">Notkestrasse 85, 22607 Hamburg, Germany</field>
+    </group>
+    <field type="NX_CHAR" name="run_cycle">2013-1<doc>Run cycle of the facility - can do something at DESY but is actually not existing as far as I know.</doc>
+    </field>
+    <field version="1.0.0" type="NX_CHAR" name="program_name">Nexus data server<doc>Program that created the file.</doc>
+    </field>
+    <group type="NXdata" name="data">
+      <link target="NXentry/NXinstrument/NXdetector/data" name="data"/>
+      <link target="NXentry/NXinstrument/NXdetector/polar_angle" name="polar_angle"/>
+    </group>
+  </group>
+</definition>

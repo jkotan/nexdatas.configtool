@@ -1,0 +1,120 @@
+<?xml version='1.0'?>
+<definition>
+  <group type="NXentry" name="entry">
+    <field type="NX_CHAR" name="definition">NXtomo</field>
+    <field type="NX_DATE_TIME" name="end_time">
+      <strategy mode="FINAL"/>
+      <datasource type="CLIENT" name="end_time">
+        <record name="end_time"/>
+        <doc>The end time is provided by the client after the experiment is finished.</doc>
+      </datasource>
+    </field>
+    <field type="NX_DATE_TIME" name="start_time">
+      <strategy mode="INIT"/>
+      <datasource type="CLIENT" name="start_time">
+        <record name="start_time"/>
+        <doc>The start time is provided by the control client.</doc>
+      </datasource>
+    </field>
+    <field type="NX_CHAR" name="title">Tomography example</field>
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="bright_field">
+        <field type="NX_INT" name="data">
+          <strategy mode="POSTRUN">http://haso.desy.de/tomography/12345/bright_field.h5</strategy>
+          <dimensions rank="3"/>
+        </field>
+        <field type="NX_INT" name="sequence_number">
+          <strategy trigger="bright_frame_trigger" mode="STEP"/>
+          <datasource type="TANGO" name="exp_c01">
+            <record name="Counts"/>
+            <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.01"/>
+          </datasource>
+        </field>
+      </group>
+      <group type="NXdetector" name="dark_field">
+        <field type="NX_INT" name="data">
+          <dimensions rank="3"/>
+          <strategy mode="POSTRUN">http://haso.desy.de/tomography/12345/dark_field.h5</strategy>
+        </field>
+        <field type="NX_INT" name="sequence_number">
+          <strategy trigger="dark_frame_trigger" mode="STEP"/>
+          <datasource type="TANGO" name="exp_c02">
+            <record name="Counts"/>
+            <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.02"/>
+          </datasource>
+        </field>
+      </group>
+      <group type="NXdetector" name="sample">
+        <doc>detector after sample</doc>
+        <field type="NX_INT" name="data">
+          <dimensions rank="3"/>
+          <strategy mode="POSTRUN">http://haso.desy.de/tomography/12345/sample_frame.h5</strategy>
+        </field>
+        <field type="NX_INT" name="sequence_number">
+          <strategy trigger="sample_frame_trigger" mode="STEP"/>
+          <datasource type="TANGO" name="exp_c03">
+            <record name="Counts"/>
+            <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.03"/>
+          </datasource>
+        </field>
+        <field units="um" type="NX_FLOAT" name="x_pixel_size">1</field>
+        <field units="um" type="NX_FLOAT" name="y_pixel_size">1.5</field>
+      </group>
+      <group type="NXsource" name="source">
+        <field type="NX_CHAR" name="name">Deutsches Elektronen Synchrotron</field>
+        <field type="NX_CHAR" name="probe">x-ray</field>
+        <field type="NX_CHAR" name="type">Synchrotron X-ray Source</field>
+      </group>
+    </group>
+    <group type="NXmonitor" name="control">
+      <field type="NX_FLOAT" name="data">
+        <strategy mode="STEP"/>
+        <datasource type="TANGO" name="exp_c04">
+          <record name="Counts"/>
+          <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.04"/>
+        </datasource>
+      </field>
+    </group>
+    <group type="NXsample" name="sample">
+      <field type="NX_CHAR" name="name">
+        <strategy mode="INIT"/>
+        <datasource type="CLIENT" name="sample_name">
+          <record name="sample_name"/>
+          <doc>Data source providing the name of the sample.</doc>
+        </datasource>
+      </field>
+      <field units="degree" type="NX_FLOAT" name="rotation_angle">
+        <strategy trigger="sample_frame_trigger" mode="STEP"/>
+        <datasource type="TANGO" name="exp_c05">
+          <record name="Counts"/>
+          <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.05"/>
+        </datasource>
+      </field>
+      <field units="mm" type="NX_FLOAT" name="x_translation">
+        <strategy trigger="sample_frame_trigger" mode="STEP"/>
+        <datasource type="TANGO" name="exp_c06">
+          <record name="Counts"/>
+          <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.06"/>
+        </datasource>
+      </field>
+      <field units="mm" type="NX_FLOAT" name="y_translation">
+        <strategy trigger="sample_frame_trigger" mode="STEP"/>
+        <datasource type="TANGO" name="exp_c07">
+          <record name="Counts"/>
+          <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.07"/>
+        </datasource>
+      </field>
+      <field units="mm" type="NX_FLOAT" name="z_translation">
+        <strategy trigger="sample_frame_trigger" mode="STEP"/>
+        <datasource type="TANGO" name="exp_c08">
+          <record name="Counts"/>
+          <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.08"/>
+        </datasource>
+      </field>
+    </group>
+    <group type="NXdata" name="data">
+      <link target="NXentry/NXinstrument/NXsample/data" name="data"/>
+      <link target="NXentry/NXsample/rotation_angle" name="rotation_angle"/>
+    </group>
+  </group>
+</definition>

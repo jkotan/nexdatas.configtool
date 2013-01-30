@@ -68,7 +68,7 @@
     </group>
     <group type="NXmonitor" name="control">
       <field type="NX_FLOAT" name="data">
-        <strategy trigger="monitor_trigger" mode="STEP"/>
+        <strategy mode="STEP"/>
         <datasource type="TANGO" name="exp_c04">
           <record name="Counts"/>
           <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.04"/>

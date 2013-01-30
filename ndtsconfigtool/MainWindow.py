@@ -1590,6 +1590,8 @@ class MainWindow(QMainWindow):
     ## add datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentAddDataSourceItem(self):
+        cmd = self.pool.getCommand('dsourceEdit').clone()
+        cmd.execute()
         cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
         cmd.execute()
         self.cmdStack.append(cmd)

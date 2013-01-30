@@ -1,25 +1,6 @@
 <?xml version='1.0'?>
 <definition>
   <group type="NXentry" name="entry">
-    <group type="NXsample" name="sample">
-      <field type="NX_CHAR" name="name">
-        <datasource type="CLIENT" name="sample_name">
-          <record name="sample_name"/>
-          <doc>Data source providing the name of the sample.</doc>
-        </datasource>
-        <strategy mode="INIT" compression="false"/>
-      </field>
-      <field type="NX_CHAR" name="chemical_formula">
-        <doc>A simple string describing the chemical composition of the sample.</doc>Si/SiGe/Si</field>
-      <field type="NX_CHAR" name="type">sample<doc>Lookup the Nexus base class definition to find all possible types of samples. Maybe this is insufficient.</doc>
-      </field>
-    </group>
-    <group type="NXdata" name="data"/>
-    <field type="NX_CHAR" name="experiment_identifier">
-      <doc>Beamtime ID. From this ID everything else can be derived from the DESY databases including the Proposal as well as the scientists performing the experiment, the local contact, and so on.
-
-The beamtime ID at DESY is an 8 digit number.R</doc>
-      <strategy mode="INIT"/>12345678</field>
     <field type="NX_DATE_TIME" name="start_time">
       <doc>time stamp when the experiment has started.</doc>
       <datasource type="CLIENT" name="start_time">
@@ -36,7 +17,28 @@ The beamtime ID at DESY is an 8 digit number.R</doc>
       </datasource>
       <strategy mode="FINAL"/>
     </field>
+    <field type="NX_CHAR" name="title">
+      <doc>more detailed description on the experiment.</doc>default experiment</field>
+    <field type="NX_CHAR" name="experiment_identifier">
+      <doc>Beamtime ID. From this ID everything else can be derived from the DESY databases including the Proposal as well as the scientists performing the experiment, the local contact, and so on.
+
+The beamtime ID at DESY is an 8 digit number.R</doc>
+      <strategy mode="INIT"/>12345678</field>
+    <group type="NXsample" name="sample">
+      <field type="NX_CHAR" name="name">
+        <datasource type="CLIENT" name="sample_name">
+          <record name="sample_name"/>
+          <doc>Data source providing the name of the sample.</doc>
+        </datasource>
+        <strategy mode="INIT" compression="false"/>
+      </field>
+      <field type="NX_CHAR" name="chemical_formula">
+        <doc>A simple string describing the chemical composition of the sample.</doc>Si/SiGe/Si</field>
+      <field type="NX_CHAR" name="type">sample<doc>Lookup the Nexus base class definition to find all possible types of samples. Maybe this is insufficient.</doc>
+      </field>
+    </group>
     <group type="NXinstrument" name="instrument">
+      <field short_name="P08" type="NX_CHAR" name="name">High Resolution Diffraction Beamline</field>
       <group type="NXsource" name="source">
         <doc>generic description of the PETRA III storage ring</doc>
         <field type="NX_CHAR" name="name">PETRAIII</field>
@@ -44,7 +46,6 @@ The beamtime ID at DESY is an 8 digit number.R</doc>
         <field type="NX_CHAR" name="probe">x-ray</field>
       </group>
       <group type="NXinsertion_device" name="insertion_device"/>
-      <field short_name="P08" type="NX_CHAR" name="name">High Resolution Diffraction Beamline</field>
     </group>
     <group type="NXmonitor" name="control"/>
     <group type="NXuser" name="user">
@@ -53,12 +54,10 @@ The beamtime ID at DESY is an 8 digit number.R</doc>
       <field type="NX_CHAR" name="affiliation">Deutsches Elektronensynchrotron</field>
       <field name="address">Notkestrasse 85, 22607 Hamburg, Germany</field>
     </group>
-    <field type="NX_CHAR" name="title">
-      <doc>more detailed description on the experiment.</doc>default experiment</field>
     <field type="NX_CHAR" name="run_cycle">2013-1<doc>Run cycle of the facility - can do something at DESY but is actually not existing as far as I know.</doc>
     </field>
     <field version="1.0.0" type="NX_CHAR" name="program_name">Nexus data server<doc>Program that created the file.</doc>
     </field>
-    <field type="NX_CHAR" name="definition">none</field>
+    <group type="NXdata" name="data"/>
   </group>
 </definition>

@@ -84,6 +84,9 @@ class Merger(QThread):
             "link":["doc"]
             }
 
+        ## with unique text
+        self.uniqueText = ['field']
+
         ## required attributes
         self._requiredAttr ={
             "attribute":["name"],
@@ -175,13 +178,12 @@ class Merger(QThread):
                     
             
 
-        if not status  and tagName in self._singles: 
+        if not status  and (tagName in self._singles or name1): 
             raise IncompatibleNodeError("Incompatible element attributes  %s: " % unicode(tags),
                                         [elem1, elem2])
                 
 
-
-        if tagName == 'field':
+        if tagName in self.uniqueText:
             text1=unicode(self._getText(elem1)).strip()
             text2=unicode(self._getText(elem2)).strip()         
             ## TODO white spaces?

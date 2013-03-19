@@ -164,6 +164,9 @@ class Merger(QThread):
 #        print "with names" ,name1,name2        
 
         if name1 != name2 :
+            if tagName in self._singles or name1: 
+                raise IncompatibleNodeError("Incompatible element attributes  %s: " % unicode(tags),
+                                            [elem1, elem2])
             return False
 
         for i1 in range(attr1.count()):

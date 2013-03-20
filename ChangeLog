@@ -1,5 +1,5 @@
 2013-XX-XX Jan Kotanski <jankotan@gmail.com>
-	* rasing error for incompatibly elements with the same name
+	* improving merging algorithm
 
 2013-01-23 Jan Kotanski <jankotan@gmail.com>
 	* adding additional hot-keys for Cutting and Pasting items

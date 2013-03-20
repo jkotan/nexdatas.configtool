@@ -190,7 +190,7 @@ class Merger(QThread):
             text1=unicode(self._getText(elem1)).strip()
             text2=unicode(self._getText(elem2)).strip()         
             ## TODO white spaces?
-            if text1 != text2:
+            if text1 != text2 and text1 and text2:
                 raise IncompatibleNodeError(
                     "Incompatible \n%s element value\n%s \n%s "  \
                         % (unicode(self._getAncestors(elem1)), text1, text2),

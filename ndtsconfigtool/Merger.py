@@ -165,7 +165,6 @@ class Merger(QThread):
 
         if name1 != name2 :
             if tagName in self._singles: 
-                print "WW"
                 raise IncompatibleNodeError("Incompatible element attributes  %s: " % unicode(tags),
                                             [elem1, elem2])
             return False
@@ -183,7 +182,6 @@ class Merger(QThread):
             
 
         if not status  and (tagName in self._singles or name1): 
-            print "WW2"
             raise IncompatibleNodeError("Incompatible element attributes  %s: " % unicode(tags),
                                         [elem1, elem2])
                 

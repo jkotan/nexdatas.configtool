@@ -880,6 +880,7 @@ class CommonDataSource(object):
         self._externalClose = None
         self._externalApply = None
 
+        ## applied flag
         self.applied = False
 
         ## datasource id

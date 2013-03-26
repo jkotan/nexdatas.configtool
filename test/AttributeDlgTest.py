@@ -25,11 +25,13 @@ import sys
 import subprocess
 import random
 import struct
+import binascii
+import time
 
 from PyQt4.QtTest import QTest
-from PyQt4.QtGui import QApplication
+from PyQt4.QtGui import (QApplication, QMessageBox)
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt
+from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
 
 from ndtsconfigtool.AttributeDlg import AttributeDlg
 
@@ -56,13 +58,23 @@ class AttributeDlgTest(unittest.TestCase):
         self._bfloat = "float64" if IS64BIT else "float32"
         ##  Qt-application
         self.app = None
+        ## MessageBox text
+        self.text = None
+
+        try:
+            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            self.__seed  = long(time.time() * 256) 
+         
+        self.__rnd = random.Random(self.__seed)
+
 
     ## test starter
     # \brief Common set up
     def setUp(self):
-        self.app = QApplication(sys.argv)
-
         print "\nsetting up..."        
+        print "SEED =", self.__seed 
+
 
     ## test closer
     # \brief Common tear down
@@ -74,11 +86,10 @@ class AttributeDlgTest(unittest.TestCase):
     def test_constructor_accept(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        self.app = QApplication(sys.argv)
         form = AttributeDlg()
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
-#        form.show()
-#        self.app.exec_() 
         self.assertTrue(form.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.valueLineEdit.text().isEmpty())
         self.assertTrue(not form.buttonBox.button(form.buttonBox.Ok).isEnabled())
@@ -102,17 +113,17 @@ class AttributeDlgTest(unittest.TestCase):
 
         self.assertEqual(form.name, name)
         self.assertEqual(form.value, value)
+        self.app = None
 
     ## constructor test
     # \brief It tests default settings
     def test_constructor_reject(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        self.app = QApplication(sys.argv)
         form = AttributeDlg()
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
-#        form.show()
-#        self.app.exec_() 
         
         name = "myname"
         value = "myentry"
@@ -125,13 +136,107 @@ class AttributeDlgTest(unittest.TestCase):
 
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
+        self.app = None
 
 
-#        if form.result():
-#            if form.name:
-#                print "Attribute: %s = \'%s\'" % ( form.name, form.value )
     
+    def checkMessageBox(self):
+        self.assertEqual(QApplication.activeWindow(),None)
+        mb = QApplication.activeModalWidget()
+        self.assertTrue(isinstance(mb, QMessageBox))
+#        print mb.text()
+        self.text = mb.text()
+        mb.close()
 
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_constructor_accept_dash(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        self.app = QApplication(sys.argv)
+        form = AttributeDlg()
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.value, '')
+        self.assertTrue(form.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.valueLineEdit.text().isEmpty())
+        self.assertTrue(not form.buttonBox.button(form.buttonBox.Ok).isEnabled())
+        self.assertTrue(form.buttonBox.button(form.buttonBox.Cancel).isEnabled())
+
+
+        name = "-myname"
+        value = "myentry"
+        QTest.keyClicks(form.nameLineEdit, name)
+        QTest.keyClicks(form.valueLineEdit, value)
+        self.assertEqual(form.nameLineEdit.text(), name)
+        self.assertEqual(form.valueLineEdit.text(), value)
+
+        self.assertTrue(not form.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(not form.valueLineEdit.text().isEmpty())
+        self.assertTrue(form.buttonBox.button(form.buttonBox.Ok).isEnabled())
+        self.assertTrue(form.buttonBox.button(form.buttonBox.Cancel).isEnabled())
+
+        QTimer.singleShot(0, self.checkMessageBox)
+        okWidget = form.buttonBox.button(form.buttonBox.Ok)
+        QTest.mouseClick(okWidget, Qt.LeftButton)
+
+
+        self.assertEqual(self.text, "The first character of Name is '-'")
+
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.value, '')
+
+        self.app = None
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_constructor_accept_chars(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        
+        chars = '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~'
+        
+
+        for ch in chars:
+        
+            self.app = QApplication(sys.argv)
+            form = AttributeDlg()
+            self.assertEqual(form.name, '')
+            self.assertEqual(form.value, '')
+            self.assertTrue(form.nameLineEdit.text().isEmpty()) 
+            self.assertTrue(form.valueLineEdit.text().isEmpty())
+            self.assertTrue(not form.buttonBox.button(form.buttonBox.Ok).isEnabled())
+            self.assertTrue(form.buttonBox.button(form.buttonBox.Cancel).isEnabled())
+            
+            name = "myname"
+            value = "myentry"
+
+            pos = self.__rnd.randint(0, len(name)-1) 
+            name = name[:pos] + ch + name[pos:]
+            
+            QTest.keyClicks(form.nameLineEdit, name)
+            QTest.keyClicks(form.valueLineEdit, value)
+            self.assertEqual(form.nameLineEdit.text(), name)
+            self.assertEqual(form.valueLineEdit.text(), value)
+            
+            self.assertTrue(not form.nameLineEdit.text().isEmpty()) 
+            self.assertTrue(not form.valueLineEdit.text().isEmpty())
+            self.assertTrue(form.buttonBox.button(form.buttonBox.Ok).isEnabled())
+            self.assertTrue(form.buttonBox.button(form.buttonBox.Cancel).isEnabled())
+            
+            QTimer.singleShot(0, self.checkMessageBox)
+            okWidget = form.buttonBox.button(form.buttonBox.Ok)
+            QTest.mouseClick(okWidget, Qt.LeftButton)
+            
+
+            self.assertEqual(self.text, 'Name contains one of forbidden characters')
+            
+            self.assertEqual(form.name, '')
+            self.assertEqual(form.value, '')
+            
+            self.app = None
 
 
 if __name__ == '__main__':

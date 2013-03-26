@@ -71,7 +71,41 @@ class AttributeDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_constructor(self):
+    def test_constructor_accept(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = AttributeDlg()
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.value, '')
+#        form.show()
+#        self.app.exec_() 
+        self.assertTrue(form.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.valueLineEdit.text().isEmpty())
+        self.assertTrue(not form.buttonBox.button(form.buttonBox.Ok).isEnabled())
+        self.assertTrue(form.buttonBox.button(form.buttonBox.Cancel).isEnabled())
+
+        name = "myname"
+        value = "myentry"
+        QTest.keyClicks(form.nameLineEdit, name)
+        self.assertEqual(form.nameLineEdit.text(),name)
+        QTest.keyClicks(form.valueLineEdit, value)
+        self.assertEqual(form.valueLineEdit.text(),value)
+
+        self.assertTrue(not form.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(not form.valueLineEdit.text().isEmpty())
+        self.assertTrue(form.buttonBox.button(form.buttonBox.Ok).isEnabled())
+        self.assertTrue(form.buttonBox.button(form.buttonBox.Cancel).isEnabled())
+
+
+        okWidget = form.buttonBox.button(form.buttonBox.Ok)
+        QTest.mouseClick(okWidget, Qt.LeftButton)
+
+        self.assertEqual(form.name, name)
+        self.assertEqual(form.value, value)
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_constructor_reject(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         form = AttributeDlg()
@@ -86,15 +120,16 @@ class AttributeDlgTest(unittest.TestCase):
         self.assertEqual(form.nameLineEdit.text(),name)
         QTest.keyClicks(form.valueLineEdit, value)
         self.assertEqual(form.valueLineEdit.text(),value)
-        okWidget = form.buttonBox.button(form.buttonBox.Ok)
-        QTest.mouseClick(okWidget, Qt.LeftButton)
+        clWidget = form.buttonBox.button(form.buttonBox.Cancel)
+        QTest.mouseClick(clWidget, Qt.LeftButton)
 
-        self.assertEqual(form.name, name)
-        self.assertEqual(form.value, value)
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.value, '')
 
-        if form.result():
-            if form.name:
-                print "Attribute: %s = \'%s\'" % ( form.name, form.value )
+
+#        if form.result():
+#            if form.name:
+#                print "Attribute: %s = \'%s\'" % ( form.name, form.value )
     
 
 

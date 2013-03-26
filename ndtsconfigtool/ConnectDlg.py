@@ -45,12 +45,12 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
     def createGUI(self):
         self.setupUi(self)
         self.updateForm()
-        self._updateUi()
+        self.__updateUi()
 
 
         self.connect(self.connectPushButton, SIGNAL("clicked()"), self.accept)
         self.connect(self.cancelPushButton, SIGNAL("clicked()"), self.reject)
-        self.connect(self.deviceLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        self.connect(self.deviceLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
 
         
 
@@ -67,7 +67,7 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
 
     ## updates connect user interface
     # \brief It sets enable or disable the OK button
-    def _updateUi(self):
+    def __updateUi(self):
         enable = not self.deviceLineEdit.text().isEmpty()
         self.connectPushButton.setEnabled(enable)
 

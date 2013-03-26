@@ -38,14 +38,14 @@ class AttributeDlg(QDialog, Ui_AttributeDlg):
         ## attribute value
         self.value = u''
         self.setupUi(self)
-        self._updateUi()
+        self.__updateUi()
 
-        self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
 
 
     ## updates attribute user interface
     # \brief It sets enable or disable the OK button
-    def _updateUi(self):
+    def __updateUi(self):
         enable = not self.nameLineEdit.text().isEmpty()
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
 

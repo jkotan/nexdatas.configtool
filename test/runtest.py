@@ -24,6 +24,7 @@ import os
 import unittest
 
 import AttributeDlgTest
+import ConnectDlgTest
 
 try:
     import PyTango
@@ -78,6 +79,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(AttributeDlgTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ConnectDlgTest) )
 
 
     if "MYSQL" in DB_AVAILABLE:

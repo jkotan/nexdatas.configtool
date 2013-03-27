@@ -76,7 +76,7 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
     # \brief It copies the connect name and value from lineEdit widgets and accept the dialog
     def accept(self):
         class CharacterError(Exception): pass
-        device = unicode(self.deviceLineEdit.text())
+        device = unicode(self.deviceLineEdit.text()).strip()
         if not device: 
             QMessageBox.warning(self, "Empty device name", 
                                 "Please define the device name")
@@ -84,7 +84,7 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
             return
         
         self.device = device
-        self.host = unicode(self.hostLineEdit.text())
+        self.host = unicode(self.hostLineEdit.text()).strip()
         
         self.port = None
         try:

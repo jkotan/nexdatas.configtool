@@ -45,6 +45,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 ## test fixture
 class AttributeDlgTest(unittest.TestCase):
+    ##  Qt-application
     app = None
 
     ## constructor
@@ -57,10 +58,11 @@ class AttributeDlgTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
-        ##  Qt-application
-        self.app = None
         ## MessageBox text
         self.text = None
+        ## MessageBox title
+        self.title = None
+
 
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
@@ -117,6 +119,9 @@ class AttributeDlgTest(unittest.TestCase):
         self.assertEqual(form.name, name)
         self.assertEqual(form.value, value)
 
+        self.assertEqual(form.result(),1)
+
+
     ## constructor test
     # \brief It tests default settings
     def test_constructor_reject(self):
@@ -139,6 +144,7 @@ class AttributeDlgTest(unittest.TestCase):
         self.assertEqual(form.value, '')
 
 
+        self.assertEqual(form.result(),0)
     
     def checkMessageBox(self):
         self.assertEqual(QApplication.activeWindow(),None)
@@ -146,6 +152,7 @@ class AttributeDlgTest(unittest.TestCase):
         self.assertTrue(isinstance(mb, QMessageBox))
 #        print mb.text()
         self.text = mb.text()
+        self.title = mb.windowTitle()
         mb.close()
 
 
@@ -180,12 +187,14 @@ class AttributeDlgTest(unittest.TestCase):
         QTest.mouseClick(okWidget, Qt.LeftButton)
 
 
+        self.assertEqual(self.title, 'Character Error') 
         self.assertEqual(self.text, "The first character of Name is '-'")
 
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
 
 
+        self.assertEqual(form.result(),0)
 
 
     ## constructor test
@@ -228,11 +237,13 @@ class AttributeDlgTest(unittest.TestCase):
             QTest.mouseClick(okWidget, Qt.LeftButton)
             
 
+            self.assertEqual(self.title, 'Character Error') 
             self.assertEqual(self.text, 'Name contains one of forbidden characters')
             
             self.assertEqual(form.name, '')
             self.assertEqual(form.value, '')
             
+            self.assertEqual(form.result(),0)
 
 
 if __name__ == '__main__':

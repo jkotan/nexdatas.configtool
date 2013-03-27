@@ -45,6 +45,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 ## test fixture
 class AttributeDlgTest(unittest.TestCase):
+    app = None
 
     ## constructor
     # \param methodName name of the test method
@@ -74,6 +75,9 @@ class AttributeDlgTest(unittest.TestCase):
     def setUp(self):
         print "\nsetting up..."        
         print "SEED =", self.__seed 
+        
+        if not AttributeDlgTest.app:
+            AttributeDlgTest.app = QApplication([])
 
 
     ## test closer
@@ -86,7 +90,6 @@ class AttributeDlgTest(unittest.TestCase):
     def test_constructor_accept(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        app = QApplication(sys.argv)
         form = AttributeDlg()
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
@@ -113,14 +116,12 @@ class AttributeDlgTest(unittest.TestCase):
 
         self.assertEqual(form.name, name)
         self.assertEqual(form.value, value)
-        app = None
 
     ## constructor test
     # \brief It tests default settings
     def test_constructor_reject(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        app = QApplication(sys.argv)
         form = AttributeDlg()
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
@@ -136,7 +137,6 @@ class AttributeDlgTest(unittest.TestCase):
 
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
-        app = None
 
 
     
@@ -154,7 +154,6 @@ class AttributeDlgTest(unittest.TestCase):
     def test_constructor_accept_dash(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        app = QApplication(sys.argv)
         form = AttributeDlg()
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
@@ -186,7 +185,6 @@ class AttributeDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
 
-        app = None
 
 
 
@@ -201,7 +199,6 @@ class AttributeDlgTest(unittest.TestCase):
 
         for ch in chars:
         
-            app = QApplication(sys.argv)
             form = AttributeDlg()
             self.assertEqual(form.name, '')
             self.assertEqual(form.value, '')
@@ -236,7 +233,6 @@ class AttributeDlgTest(unittest.TestCase):
             self.assertEqual(form.name, '')
             self.assertEqual(form.value, '')
             
-            app = None
 
 
 if __name__ == '__main__':

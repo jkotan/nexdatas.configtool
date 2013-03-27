@@ -27,7 +27,7 @@ from ui.ui_dimensionsdlg import Ui_DimensionsDlg
 from NodeDlg import NodeDlg 
 
 ## dialog defining a dimensions tag
-class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
+class DimensionsDlg(NodeDlg):
     
     ## constructor
     # \param parent patent instance
@@ -40,6 +40,9 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
         self.doc = u''
         ## dimensions lengths
         self.lengths = []
+
+        ## user interface
+        self.ui = Ui_DimensionsDlg()
 
         ## allowed subitems
         self.subItems = ["dim", "doc"]
@@ -66,28 +69,28 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
         if not self.lengths:
             self.lengths = []
             
-        self.setupUi(self)
+        self.ui.setupUi(self)
 
         if self.doc :
-            self.docTextEdit.setText(self.doc)
+            self.ui.docTextEdit.setText(self.doc)
         
-        self.rankSpinBox.setValue(self.rank)    
+        self.ui.rankSpinBox.setValue(self.rank)    
 
-        self.connect(self.dimTableWidget, 
+        self.connect(self.ui.dimTableWidget, 
                      SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self._tableItemChanged)
 
-        self.dimTableWidget.setSortingEnabled(False)
+        self.ui.dimTableWidget.setSortingEnabled(False)
         self.populateLengths()
-        self.rankSpinBox.setFocus()
+        self.ui.rankSpinBox.setFocus()
 
-        self.connect(self.rankSpinBox, SIGNAL("valueChanged(int)"), self._valueChanged)
+        self.connect(self.ui.rankSpinBox, SIGNAL("valueChanged(int)"), self._valueChanged)
 
                 
     ## takes a name of the current dim
     # \returns name of the current dim            
     def _currentTableDim(self):
-        return self.dimTableWidget.currentRow()
+        return self.ui.dimTableWidget.currentRow()
 
 
     ## changes the current value of the dim        
@@ -98,7 +101,7 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
         
         if row not in range(len(self.lengths)):
             return
-        column = self.dimTableWidget.currentColumn()
+        column = self.ui.dimTableWidget.currentColumn()
         if column == 0:
             try:
                 if item.text():
@@ -117,7 +120,7 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
     ## calls updateUi when the name text is changing
     # \param text the edited text   
     def _valueChanged(self, text):
-        self.rank = int(self.rankSpinBox.value())
+        self.rank = int(self.ui.rankSpinBox.value())
         self.populateLengths(self.rank-1)
 
 
@@ -125,16 +128,16 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
     # \param selectedDim selected dim    
     def populateLengths(self, selectedDim = None):
         selected = None
-        self.dimTableWidget.clear()
-        self.dimTableWidget.setRowCount(self.rank)
+        self.ui.dimTableWidget.clear()
+        self.ui.dimTableWidget.setRowCount(self.rank)
         
         while self.rank > len(self.lengths):
             self.lengths.append(None)
         
         headers = ["Length"]
-        self.dimTableWidget.setColumnCount(len(headers))
-        self.dimTableWidget.setHorizontalHeaderLabels(headers)	
-        self.dimTableWidget.setVerticalHeaderLabels( [unicode(l+1) for l in range(self.rank)] )	
+        self.ui.dimTableWidget.setColumnCount(len(headers))
+        self.ui.dimTableWidget.setHorizontalHeaderLabels(headers)	
+        self.ui.dimTableWidget.setVerticalHeaderLabels( [unicode(l+1) for l in range(self.rank)] )	
         for row, ln in enumerate(self.lengths):
             if ln:
                 item = QTableWidgetItem(unicode(ln))
@@ -143,13 +146,13 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
             item.setData(Qt.UserRole, QVariant(long(row)))
             if selectedDim is not None and selectedDim == row:
                 selected = item
-            self.dimTableWidget.setItem(row, 0, item)
-        self.dimTableWidget.resizeColumnsToContents()
-        self.dimTableWidget.horizontalHeader().setStretchLastSection(True);
+            self.ui.dimTableWidget.setItem(row, 0, item)
+        self.ui.dimTableWidget.resizeColumnsToContents()
+        self.ui.dimTableWidget.horizontalHeader().setStretchLastSection(True);
         if selected is not None:
             selected.setSelected(True)
-            self.dimTableWidget.setCurrentItem(selected)
-            self.dimTableWidget.editItem(selected)
+            self.ui.dimTableWidget.setCurrentItem(selected)
+            self.ui.dimTableWidget.editItem(selected)
             
 
 
@@ -157,7 +160,7 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
     ## accepts input text strings
     # \brief It copies the dimensions name and type from lineEdit widgets and accept the dialog
     def accept(self):
-        self.doc = unicode(self.docTextEdit.toPlainText())
+        self.doc = unicode(self.ui.docTextEdit.toPlainText())
         while len(self.lengths) > self.rank:
             self.lengths.pop()
         QDialog.accept(self)
@@ -165,6 +168,7 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
 if __name__ == "__main__":
     import sys
 
+    from PyQt4.QtGui import QApplication
     ## Qt application
     app = QApplication(sys.argv)
     ## dimensions form

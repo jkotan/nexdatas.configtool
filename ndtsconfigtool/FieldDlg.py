@@ -144,6 +144,8 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         elif self.rank > 0:
             label = [None for r in range(self.rank)].__str__()
             self.dimLabel.setText("%s" % label.replace('None','*'))
+        else:
+            self.dimLabel.setText("[]")
             
 
         self._dimensions =[]

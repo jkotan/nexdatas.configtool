@@ -35,6 +35,7 @@ from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
 
 from ndtsconfigtool.AttributeDlg import AttributeDlg
 
+from ndtsconfigtool.ui.ui_attributedlg import Ui_AttributeDlg
 
 
 ## if 64-bit machione
@@ -96,25 +97,26 @@ class AttributeDlgTest(unittest.TestCase):
         form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
-        self.assertTrue(form.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.valueLineEdit.text().isEmpty())
-        self.assertTrue(not form.buttonBox.button(form.buttonBox.Ok).isEnabled())
-        self.assertTrue(form.buttonBox.button(form.buttonBox.Cancel).isEnabled())
+        self.assertTrue(isinstance(form.ui, Ui_AttributeDlg))
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.buttonBox.button(form.ui.buttonBox.Ok).isEnabled())
+        self.assertTrue(form.ui.buttonBox.button(form.ui.buttonBox.Cancel).isEnabled())
 
         name = "myname"
         value = "myentry"
-        QTest.keyClicks(form.nameLineEdit, name)
-        self.assertEqual(form.nameLineEdit.text(),name)
-        QTest.keyClicks(form.valueLineEdit, value)
-        self.assertEqual(form.valueLineEdit.text(),value)
+        QTest.keyClicks(form.ui.nameLineEdit, name)
+        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        QTest.keyClicks(form.ui.valueLineEdit, value)
+        self.assertEqual(form.ui.valueLineEdit.text(),value)
 
-        self.assertTrue(not form.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.valueLineEdit.text().isEmpty())
-        self.assertTrue(form.buttonBox.button(form.buttonBox.Ok).isEnabled())
-        self.assertTrue(form.buttonBox.button(form.buttonBox.Cancel).isEnabled())
+        self.assertTrue(not form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(not form.ui.valueLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.buttonBox.button(form.ui.buttonBox.Ok).isEnabled())
+        self.assertTrue(form.ui.buttonBox.button(form.ui.buttonBox.Cancel).isEnabled())
 
 
-        okWidget = form.buttonBox.button(form.buttonBox.Ok)
+        okWidget = form.ui.buttonBox.button(form.ui.buttonBox.Ok)
         QTest.mouseClick(okWidget, Qt.LeftButton)
 
         self.assertEqual(form.name, name)
@@ -135,11 +137,11 @@ class AttributeDlgTest(unittest.TestCase):
         
         name = "myname"
         value = "myentry"
-        QTest.keyClicks(form.nameLineEdit, name)
-        self.assertEqual(form.nameLineEdit.text(),name)
-        QTest.keyClicks(form.valueLineEdit, value)
-        self.assertEqual(form.valueLineEdit.text(),value)
-        clWidget = form.buttonBox.button(form.buttonBox.Cancel)
+        QTest.keyClicks(form.ui.nameLineEdit, name)
+        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        QTest.keyClicks(form.ui.valueLineEdit, value)
+        self.assertEqual(form.ui.valueLineEdit.text(),value)
+        clWidget = form.ui.buttonBox.button(form.ui.buttonBox.Cancel)
         QTest.mouseClick(clWidget, Qt.LeftButton)
 
         self.assertEqual(form.name, '')
@@ -167,26 +169,26 @@ class AttributeDlgTest(unittest.TestCase):
         form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
-        self.assertTrue(form.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.valueLineEdit.text().isEmpty())
-        self.assertTrue(not form.buttonBox.button(form.buttonBox.Ok).isEnabled())
-        self.assertTrue(form.buttonBox.button(form.buttonBox.Cancel).isEnabled())
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.buttonBox.button(form.ui.buttonBox.Ok).isEnabled())
+        self.assertTrue(form.ui.buttonBox.button(form.ui.buttonBox.Cancel).isEnabled())
 
 
         name = "-myname"
         value = "myentry"
-        QTest.keyClicks(form.nameLineEdit, name)
-        QTest.keyClicks(form.valueLineEdit, value)
-        self.assertEqual(form.nameLineEdit.text(), name)
-        self.assertEqual(form.valueLineEdit.text(), value)
+        QTest.keyClicks(form.ui.nameLineEdit, name)
+        QTest.keyClicks(form.ui.valueLineEdit, value)
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
+        self.assertEqual(form.ui.valueLineEdit.text(), value)
 
-        self.assertTrue(not form.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.valueLineEdit.text().isEmpty())
-        self.assertTrue(form.buttonBox.button(form.buttonBox.Ok).isEnabled())
-        self.assertTrue(form.buttonBox.button(form.buttonBox.Cancel).isEnabled())
+        self.assertTrue(not form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(not form.ui.valueLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.buttonBox.button(form.ui.buttonBox.Ok).isEnabled())
+        self.assertTrue(form.ui.buttonBox.button(form.ui.buttonBox.Cancel).isEnabled())
 
         QTimer.singleShot(0, self.checkMessageBox)
-        okWidget = form.buttonBox.button(form.buttonBox.Ok)
+        okWidget = form.ui.buttonBox.button(form.ui.buttonBox.Ok)
         QTest.mouseClick(okWidget, Qt.LeftButton)
 
 
@@ -215,10 +217,10 @@ class AttributeDlgTest(unittest.TestCase):
             form.show()
             self.assertEqual(form.name, '')
             self.assertEqual(form.value, '')
-            self.assertTrue(form.nameLineEdit.text().isEmpty()) 
-            self.assertTrue(form.valueLineEdit.text().isEmpty())
-            self.assertTrue(not form.buttonBox.button(form.buttonBox.Ok).isEnabled())
-            self.assertTrue(form.buttonBox.button(form.buttonBox.Cancel).isEnabled())
+            self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+            self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+            self.assertTrue(not form.ui.buttonBox.button(form.ui.buttonBox.Ok).isEnabled())
+            self.assertTrue(form.ui.buttonBox.button(form.ui.buttonBox.Cancel).isEnabled())
             
             name = "myname"
             value = "myentry"
@@ -226,18 +228,18 @@ class AttributeDlgTest(unittest.TestCase):
             pos = self.__rnd.randint(0, len(name)-1) 
             name = name[:pos] + ch + name[pos:]
             
-            QTest.keyClicks(form.nameLineEdit, name)
-            QTest.keyClicks(form.valueLineEdit, value)
-            self.assertEqual(form.nameLineEdit.text(), name)
-            self.assertEqual(form.valueLineEdit.text(), value)
+            QTest.keyClicks(form.ui.nameLineEdit, name)
+            QTest.keyClicks(form.ui.valueLineEdit, value)
+            self.assertEqual(form.ui.nameLineEdit.text(), name)
+            self.assertEqual(form.ui.valueLineEdit.text(), value)
             
-            self.assertTrue(not form.nameLineEdit.text().isEmpty()) 
-            self.assertTrue(not form.valueLineEdit.text().isEmpty())
-            self.assertTrue(form.buttonBox.button(form.buttonBox.Ok).isEnabled())
-            self.assertTrue(form.buttonBox.button(form.buttonBox.Cancel).isEnabled())
+            self.assertTrue(not form.ui.nameLineEdit.text().isEmpty()) 
+            self.assertTrue(not form.ui.valueLineEdit.text().isEmpty())
+            self.assertTrue(form.ui.buttonBox.button(form.ui.buttonBox.Ok).isEnabled())
+            self.assertTrue(form.ui.buttonBox.button(form.ui.buttonBox.Cancel).isEnabled())
             
             QTimer.singleShot(0, self.checkMessageBox)
-            okWidget = form.buttonBox.button(form.buttonBox.Ok)
+            okWidget = form.ui.buttonBox.button(form.ui.buttonBox.Ok)
             QTest.mouseClick(okWidget, Qt.LeftButton)
             
 

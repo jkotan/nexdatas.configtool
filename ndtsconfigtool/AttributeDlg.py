@@ -26,7 +26,7 @@ from ui.ui_attributedlg import Ui_AttributeDlg
 
 
 ## dialog defining a tag attribute 
-class AttributeDlg(QDialog, Ui_AttributeDlg):
+class AttributeDlg(QDialog):
 
     ## constructor
     # \param parent patent instance
@@ -37,24 +37,28 @@ class AttributeDlg(QDialog, Ui_AttributeDlg):
         self.name = u''
         ## attribute value
         self.value = u''
-        self.setupUi(self)
+
+        ## user interface
+        self.ui = Ui_AttributeDlg()
+        self.ui.setupUi(self)
+        
         self.__updateUi()
 
-        self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
+        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
 
 
     ## updates attribute user interface
     # \brief It sets enable or disable the OK button
     def __updateUi(self):
-        enable = not self.nameLineEdit.text().isEmpty()
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
+        enable = not self.ui.nameLineEdit.text().isEmpty()
+        self.ui.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
 
 
     ## accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
     def accept(self):
         class CharacterError(Exception): pass
-        name = unicode(self.nameLineEdit.text())
+        name = unicode(self.ui.nameLineEdit.text())
         
         try:
             if 1 in [c in name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
@@ -66,7 +70,7 @@ class AttributeDlg(QDialog, Ui_AttributeDlg):
             QMessageBox.warning(self, "Character Error", unicode(e))
             return
         self.name = name
-        self.value = unicode(self.valueLineEdit.text())
+        self.value = unicode(self.ui.valueLineEdit.text())
 
         QDialog.accept(self)
 

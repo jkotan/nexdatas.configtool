@@ -190,7 +190,7 @@ class AttributeDlgTest(unittest.TestCase):
         QTest.mouseClick(okWidget, Qt.LeftButton)
 
 
-        self.assertEqual(self.title, 'Character Error') 
+#        self.assertEqual(self.title, 'Character Error') 
         self.assertEqual(self.text, "The first character of Name is '-'")
 
         self.assertEqual(form.name, '')
@@ -241,7 +241,7 @@ class AttributeDlgTest(unittest.TestCase):
             QTest.mouseClick(okWidget, Qt.LeftButton)
             
 
-            self.assertEqual(self.title, 'Character Error') 
+#            self.assertEqual(self.title, 'Character Error') 
             self.assertEqual(self.text, 'Name contains one of forbidden characters')
             
             self.assertEqual(form.name, '')

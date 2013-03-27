@@ -93,6 +93,7 @@ class AttributeDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         form = AttributeDlg()
+        form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
         self.assertTrue(form.nameLineEdit.text().isEmpty()) 
@@ -127,7 +128,8 @@ class AttributeDlgTest(unittest.TestCase):
     def test_constructor_reject(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = AttributeDlg()
+        form = AttributeDlg() 
+        form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
         
@@ -162,6 +164,7 @@ class AttributeDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         form = AttributeDlg()
+        form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.value, '')
         self.assertTrue(form.nameLineEdit.text().isEmpty()) 
@@ -209,6 +212,7 @@ class AttributeDlgTest(unittest.TestCase):
         for ch in chars:
         
             form = AttributeDlg()
+            form.show()
             self.assertEqual(form.name, '')
             self.assertEqual(form.value, '')
             self.assertTrue(form.nameLineEdit.text().isEmpty()) 

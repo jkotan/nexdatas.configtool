@@ -80,7 +80,6 @@ class ConnectDlgTest(unittest.TestCase):
         if not ConnectDlgTest.app:
             ConnectDlgTest.app = QApplication([])
 
-
     ## test closer
     # \brief Common tear down
     def tearDown(self):
@@ -109,6 +108,7 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.host, '')
         self.assertEqual(form.port, None)
 
+        form.show()
         form.createGUI()
         self.assertTrue(form.deviceLineEdit.text().isEmpty()) 
         self.assertTrue(form.hostLineEdit.text().isEmpty())
@@ -160,6 +160,7 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.host, '')
         self.assertEqual(form.port, None)
 
+        form.show()
         form.createGUI()
         self.assertTrue(form.deviceLineEdit.text().isEmpty()) 
         self.assertTrue(form.hostLineEdit.text().isEmpty())
@@ -219,6 +220,7 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.host, '')
         self.assertEqual(form.port, None)
 
+        form.show()
         form.createGUI()
         self.assertTrue(form.deviceLineEdit.text().isEmpty()) 
         self.assertTrue(form.hostLineEdit.text().isEmpty())
@@ -270,6 +272,7 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.host, '')
         self.assertEqual(form.port, None)
 
+        form.show()
         form.createGUI()
         self.assertTrue(form.deviceLineEdit.text().isEmpty()) 
         self.assertTrue(form.hostLineEdit.text().isEmpty())
@@ -323,6 +326,7 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.host, '')
         self.assertEqual(form.port, None)
 
+        form.show()
         form.createGUI()
         self.assertTrue(form.deviceLineEdit.text().isEmpty()) 
         self.assertTrue(form.hostLineEdit.text().isEmpty())
@@ -374,6 +378,7 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.host, '')
         self.assertEqual(form.port, None)
 
+        form.show()
         form.createGUI()
         self.assertTrue(form.deviceLineEdit.text().isEmpty()) 
         self.assertTrue(form.hostLineEdit.text().isEmpty())
@@ -404,14 +409,16 @@ class ConnectDlgTest(unittest.TestCase):
         QTimer.singleShot(0, self.checkMessageBox)
         QTest.mouseClick(form.connectPushButton, Qt.LeftButton)
         self.assertEqual(self.text, 'Please define the port')
-        self.assertEqual(self.title, 'Empty port')
-        
+        self.assertEqual(self.title, 'Empty port')                
+
+#        print form.portLineEdit.hasFocus()
+#        self.assertTrue(form.portLineEdit.hasFocus())
 
         self.assertEqual(form.device, device.strip())
         self.assertEqual(form.host, host.strip())
         self.assertEqual(form.port, None)
 
-        
+
         self.assertEqual(form.result(),0)
         
 
@@ -436,6 +443,7 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.host, host)
         self.assertEqual(form.port, port)
 
+        form.show()
         form.createGUI()
         self.assertTrue(not form.deviceLineEdit.text().isEmpty()) 
         self.assertTrue(not form.hostLineEdit.text().isEmpty())
@@ -463,6 +471,7 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.host, host)
         self.assertEqual(form.port, int(port))
 
+        
         self.assertEqual(form.result(),1)
 
 if __name__ == '__main__':

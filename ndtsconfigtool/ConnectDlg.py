@@ -24,7 +24,6 @@ from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import (QDialog, QMessageBox)
 from ui.ui_connectdlg import Ui_ConnectDlg
 
-
 ## dialog defining a tag connect 
 class ConnectDlg(QDialog):
     
@@ -78,7 +77,6 @@ class ConnectDlg(QDialog):
     ## accepts input text strings
     # \brief It copies the connect name and value from lineEdit widgets and accept the dialog
     def accept(self):
-        class CharacterError(Exception): pass
         device = unicode(self.ui.deviceLineEdit.text()).strip()
         if not device: 
             QMessageBox.warning(self, "Empty device name", 

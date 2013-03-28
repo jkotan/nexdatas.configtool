@@ -25,6 +25,7 @@ from PyQt4.QtGui import (QMessageBox)
 from ui.ui_linkdlg import Ui_LinkDlg
 
 from NodeDlg import NodeDlg 
+from Errors import CharacterError
 
 ## dialog defining a tag link 
 class LinkDlg(NodeDlg):
@@ -138,7 +139,6 @@ class LinkDlg(NodeDlg):
     ## accepts input text strings
     # \brief It copies the link name and target from lineEdit widgets and accept the dialog
     def apply(self):
-        class CharacterError(Exception): pass
         name = unicode(self.ui.nameLineEdit.text())
         
         try:

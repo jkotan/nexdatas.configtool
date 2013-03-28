@@ -27,6 +27,7 @@ from ui.ui_richattributedlg import  Ui_RichAttributeDlg
 from NodeDlg import NodeDlg 
 from DimensionsDlg import DimensionsDlg
 
+from Errors import CharacterError
 
 ## dialog defining an attribute
 class RichAttributeDlg(NodeDlg):
@@ -271,7 +272,6 @@ class RichAttributeDlg(NodeDlg):
     ## accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
     def apply(self):
-        class CharacterError(Exception): pass
         name = unicode(self.ui.nameLineEdit.text())
 
         try:

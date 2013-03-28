@@ -24,10 +24,9 @@ from PyQt4.QtCore import (SIGNAL, Qt, QVariant)
 from PyQt4.QtGui import (QTableWidgetItem, QMessageBox, QDialog)
 from ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
-from NodeDlg import NodeDlg 
 
 ## dialog defining a dimensions tag
-class DimensionsDlg(NodeDlg):
+class DimensionsDlg(QDialog):
     
     ## constructor
     # \param parent patent instance
@@ -78,26 +77,26 @@ class DimensionsDlg(NodeDlg):
 
         self.connect(self.ui.dimTableWidget, 
                      SIGNAL("itemChanged(QTableWidgetItem*)"),
-                     self._tableItemChanged)
+                     self.__tableItemChanged)
 
         self.ui.dimTableWidget.setSortingEnabled(False)
         self.populateLengths()
         self.ui.rankSpinBox.setFocus()
 
-        self.connect(self.ui.rankSpinBox, SIGNAL("valueChanged(int)"), self._valueChanged)
+        self.connect(self.ui.rankSpinBox, SIGNAL("valueChanged(int)"), self.__valueChanged)
 
                 
     ## takes a name of the current dim
     # \returns name of the current dim            
-    def _currentTableDim(self):
+    def __currentTableDim(self):
         return self.ui.dimTableWidget.currentRow()
 
 
     ## changes the current value of the dim        
     # \brief It changes the current value of the dim 
     # and informs the user about wrong values
-    def _tableItemChanged(self, item):
-        row = self._currentTableDim()
+    def __tableItemChanged(self, item):
+        row = self.__currentTableDim()
         
         if row not in range(len(self.lengths)):
             return
@@ -119,7 +118,7 @@ class DimensionsDlg(NodeDlg):
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
-    def _valueChanged(self, text):
+    def __valueChanged(self, text):
         self.rank = int(self.ui.rankSpinBox.value())
         self.populateLengths(self.rank-1)
 

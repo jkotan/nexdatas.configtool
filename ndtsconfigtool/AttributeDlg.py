@@ -24,6 +24,7 @@ from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import (QDialog, QDialogButtonBox, QMessageBox)
 from ui.ui_attributedlg import Ui_AttributeDlg
 
+from Errors import CharacterError
 
 ## dialog defining a tag attribute 
 class AttributeDlg(QDialog):
@@ -57,7 +58,6 @@ class AttributeDlg(QDialog):
     ## accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
     def accept(self):
-        class CharacterError(Exception): pass
         name = unicode(self.ui.nameLineEdit.text())
         
         try:

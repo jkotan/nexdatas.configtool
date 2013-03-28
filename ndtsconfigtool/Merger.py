@@ -25,16 +25,8 @@ from PyQt4.QtXml import QDomNode
 from PyQt4.QtCore import QString, QThread, SIGNAL
 from PyQt4.QtGui import QDialog, QWidget, QLabel, QVBoxLayout, QPushButton
 
-## merging error for wrong node structure
-class IncompatibleNodeError(Exception): 
-    ## constructor
-    # \param value text of the error
-    # \param nodes list of error related nodes
-    def __init__(self, value, nodes = []):
-        ## text of the error
-        self.value = value
-        ## list of error related nodes
-        self.nodes = nodes
+from Errors import IncompatibleNodeError
+
         
 ## dialog of the merger
 class MergerDlg(QDialog):

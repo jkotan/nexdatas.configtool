@@ -30,6 +30,7 @@ import copy
 import gc
 
 
+from Errors import ParameterError
 
 ## dialog defining commmon datasource
 class CommonDataSourceDlg(NodeDlg):
@@ -259,8 +260,6 @@ class CommonDataSourceDlg(NodeDlg):
         if hasattr(self.datasource,"methods"):
             self.datasource.methods.dialog = None
 
-## error of passed parameter
-class ParameterError(Exception): pass
 
 
         
@@ -537,7 +536,6 @@ class DataSourceMethods(object):
     def apply(self):
 
         self.datasource.applied = False
-        class CharacterError(Exception): pass
         sourceType = unicode(self.dialog.ui.typeComboBox.currentText())
         self.datasource.dataSourceName = unicode(self.dialog.ui.nameLineEdit.text())
 

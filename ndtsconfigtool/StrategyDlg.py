@@ -206,7 +206,6 @@ class StrategyDlg(NodeDlg):
     ## accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
     def apply(self):
-        class CharacterError(Exception): pass
 
         self.trigger = ''
         self.grows = ''

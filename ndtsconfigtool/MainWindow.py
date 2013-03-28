@@ -253,11 +253,11 @@ class MainWindow(QMainWindow):
 
        
         self.pool.createTask("dsourceChanged",commandArgs, DataSourceListChanged,
-                             self.sourceList.sourceListWidget, 
+                             self.sourceList.ui.sourceListWidget, 
                              "itemChanged(QListWidgetItem*)")
         
         self.pool.createTask("componentChanged",commandArgs, ComponentListChanged,
-                             self.componentList.componentListWidget, 
+                             self.componentList.ui.componentListWidget, 
                              "itemChanged(QListWidgetItem*)")
 
 
@@ -265,11 +265,11 @@ class MainWindow(QMainWindow):
 
 
 
-        self.connect(self.sourceList.sourceListWidget, 
+        self.connect(self.sourceList.ui.sourceListWidget, 
                      SIGNAL("itemClicked(QListWidgetItem*)"), 
                      self.dsourceEdit)
 
-        self.connect(self.componentList.componentListWidget, 
+        self.connect(self.componentList.ui.componentListWidget, 
                      SIGNAL("itemClicked(QListWidgetItem*)"), 
                      self.componentEdit)
 
@@ -1939,13 +1939,13 @@ class MainWindow(QMainWindow):
     ## restores all windows
     # \brief It restores all windows in MDI
     def gotoComponentList(self):
-        self.componentList.componentListWidget.setFocus()
+        self.componentList.ui.componentListWidget.setFocus()
 
   
   ## restores all windows
     # \brief It restores all windows in MDI
     def gotoDataSourceList(self):
-        self.sourceList.sourceListWidget.setFocus()
+        self.sourceList.ui.sourceListWidget.setFocus()
 
 
     ## restores all windows

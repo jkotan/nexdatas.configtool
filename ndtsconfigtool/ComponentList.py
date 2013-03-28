@@ -175,7 +175,7 @@ class ComponentList(QWidget):
     def populateComponents(self, selectedComponent = None, edit = False):
 #        print "populate"
         selected = None
-        self.componentListWidget.ui.clear()
+        self.ui.componentListWidget.clear()
         
         slist = [(self.components[key].name, key) 
                  for key in self.components.keys()]

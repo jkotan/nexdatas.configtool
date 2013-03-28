@@ -57,12 +57,32 @@ class ComponentDlg(QDialog):
 
         ## user interface
         self.ui = Ui_ComponentDlg()
+
+    
+    ## provides row number of the given node
+    # \param child child item
+    # \returns row number
+    def getWidgetNodeRow(self, child):
+        if self.ui and self.ui.widget:
+            return self.ui.widget.getNodeRow(child)
+        else:
+            print "Widget does not exist"
+
+
+    ## sets focus on save button
+    # \brief It sets focus on save button
+    def setSaveFocus(self):
+        if self.ui :
+            self.ui.savePushButton.setFocus()
+
         
     ## closes the window and cleans the dialog label
     # \param event closing event
     def closeEvent(self, event):
         super(ComponentDlg,self).closeEvent(event)
         self.component.dialog = None
+
+
 
 ## Component  defining a tag link 
 class Component(object):
@@ -640,8 +660,8 @@ class Component(object):
         self.updateForm()
 
 
-#        self.dialog.connect(self.savePushButton, SIGNAL("clicked()"), self.save)
-#        self.dialog.connect(self.diaslog.closePushButton, SIGNAL("clicked()"), self._close)
+#        self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), self.save)
+#        self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), self._close)
         self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
@@ -719,7 +739,7 @@ class Component(object):
             name = attributeMap.namedItem("name").nodeValue()
 
         if not self.dialog.ui:
-            print "Dialog not exists"
+            print "Dialog does not exist"
             return
             
         

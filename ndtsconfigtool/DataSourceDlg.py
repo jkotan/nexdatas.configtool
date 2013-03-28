@@ -74,6 +74,13 @@ class CommonDataSourceDlg(NodeDlg):
 
 #        self.setFrames(self.datasource.dataSourceType)
 
+    ## sets focus on save button
+    # \brief It sets focus on save button
+    def setSaveFocus(self):
+        if self.ui :
+            self.ui.savePushButton.setFocus()
+
+
     ## shows and hides frames according to typeComboBox
     # \param text the edited text   
     def _typeComboBox(self, text):

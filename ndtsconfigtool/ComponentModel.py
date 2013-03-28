@@ -190,7 +190,7 @@ class ComponentModel(QAbstractItemModel):
         else:
             parentItem = parent.internalPointer()
             
-        if not hasattr(parentItem,"node"):
+        if not hasattr(parentItem,"node") or parentItem.node is None:
             return 0  
         return parentItem.node.childNodes().count()
 

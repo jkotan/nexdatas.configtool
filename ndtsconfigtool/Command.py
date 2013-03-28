@@ -886,6 +886,13 @@ class ComponentRemove(Command):
         if self._cp is not None:
 
             self.receiver.componentList.addComponent(self._cp, False)
+            if self._cp.instance is None:
+                self._cp.instance = Component()
+                self._cp.instance.idc = self._cp.id
+                self._cp.instance.directory = self.receiver.componentList.directory
+                self._cp.instance.name = self.receiver.componentList.components[self._cp.id].name
+
+
             self._cp.instance.createGUI()
             self._cp.instance.addContextMenu(self.receiver.contextMenuActions)
 
@@ -903,6 +910,13 @@ class ComponentRemove(Command):
                 self._cp.instance.dialog.show()
 
             self._cp.instance.dialog.show()
+
+            if hasattr(self._cp.instance,"connectExternalActions"):     
+                self._cp.instance.connectExternalActions(self.receiver.componentApplyItem,
+                                                         self.receiver.componentSave,
+                                                         self.receiver.componentClose)
+
+
 
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
@@ -959,10 +973,6 @@ class ComponentEdit(Command):
                 self._cpEdit = self._cp.instance 
                 
 
-            if hasattr(self._cpEdit,"connectExternalActions"):     
-                self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
-                                                    self.receiver.componentSave,
-                                                    self.receiver.componentClose)
 
             subwindow = self.receiver.subWindow(
                 self._cpEdit, self.receiver.mdi.subWindowList())
@@ -985,6 +995,10 @@ class ComponentEdit(Command):
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
             self._cp.instance = self._cpEdit 
 
+            if hasattr(self._cpEdit,"connectExternalActions"):     
+                self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
+                                                    self.receiver.componentSave,
+                                                    self.receiver.componentClose)
 
             
         print "EXEC componentEdit"
@@ -2581,17 +2595,26 @@ class ComponentItemCommand(Command):
     # \brief It stores the new states of the current component
     def postExecute(self):    
         if self._cp is not None:
+            if self._cp.instance is None:
+                self._cp.instance = Component()
+                self._cp.instance.idc = self._cp.id
+                self._cp.instance.directory = self.receiver.componentList.directory
+                self._cp.instance.name = self.receiver.componentList.components[self._cp.id].name
+
             if self._newstate is None and hasattr(self._cp.instance, "getState"):
                 self._newstate = self._cp.instance.getState() 
             else:
                 if hasattr(self.receiver.componentList.components[self._cp.id].instance,"setState"): 
                     self.receiver.componentList.components[self._cp.id].instance.setState(self._newstate)
-                
+
+
 
                 subwindow = self.receiver.subWindow(
                     self._cp.instance, self.receiver.mdi.subWindowList())
+
                 if subwindow:
                     self.receiver.mdi.setActiveSubWindow(subwindow) 
+                    self._cp.instance.reconnectSaveAction()
                 else:    
                     self._cp.instance.createGUI()
 
@@ -2607,6 +2630,11 @@ class ComponentItemCommand(Command):
 
                     if hasattr(self._cp.instance.dialog,"show"):
                         self._cp.instance.dialog.show()
+
+                if hasattr(self._cp.instance,"connectExternalActions"):     
+                    self._cp.instance.connectExternalActions(self.receiver.componentApplyItem,
+                                                             self.receiver.componentSave,
+                                                             self.receiver.componentClose)
 
 
         if hasattr(self._cp,"id"):
@@ -2639,6 +2667,11 @@ class ComponentItemCommand(Command):
             if subwindow:
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
             else:    
+                if self._cp.instance is None:
+                    self._cp.instance = Component()
+                    self._cp.instance.idc = self._cp.id
+                    self._cp.instance.directory = self.receiver.componentList.directory
+                    self._cp.instance.name = self.receiver.componentList.components[self._cp.id].name
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)

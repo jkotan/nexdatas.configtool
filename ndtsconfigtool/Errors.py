@@ -25,3 +25,15 @@ class CharacterError(Exception): pass
 
 ## error of passed parameter
 class ParameterError(Exception): pass
+
+
+## merging error for wrong node structure
+class IncompatibleNodeError(Exception): 
+    ## constructor
+    # \param value text of the error
+    # \param nodes list of error related nodes
+    def __init__(self, value, nodes = []):
+        ## text of the error
+        self.value = value
+        ## list of error related nodes
+        self.nodes = nodes

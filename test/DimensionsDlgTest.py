@@ -194,6 +194,65 @@ class DimensionsDlgTest(unittest.TestCase):
 
     ## create GUI test
     # \brief It tests default settings
+    def test_createGUI_rank_str_lengths_int(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        rank =  str(self.__rnd.randint(1, 6) )
+        lengths = [self.__rnd.randint(0, 100) for r in range(int(rank)) ]
+        form = DimensionsDlg()
+        form.rank = rank
+        form.lengths = lengths
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+
+        self.assertEqual(form.createGUI(), None)
+        form.show()
+
+        self.assertEqual(form.result(), 0)
+        
+        self.assertEqual(form.rank, int(rank))
+        self.assertEqual(form.lengths, lengths)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.ui.rankSpinBox.value(), int(rank))
+        self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), int(rank))
+        for r in range(int(rank)):
+            it = form.ui.dimTableWidget.item(r, 0) 
+            self.assertEqual(it.text(), str(lengths[r]))
+
+
+    ## create GUI test
+    # \brief It tests default settings
+    def test_createGUI_rank_neg_lengths_int(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        rank =  self.__rnd.randint(-6, -1) 
+        lengths = [self.__rnd.randint(0, 100) for r in range(rank) ]
+        form = DimensionsDlg()
+        form.rank = rank
+        form.lengths = lengths
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+
+        self.assertEqual(form.createGUI(), None)
+        form.show()
+
+        self.assertEqual(form.result(), 0)
+        
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.lengths, lengths)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.ui.rankSpinBox.value(),0)
+        self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(),0)
+
+
+    ## create GUI test
+    # \brief It tests default settings
     def test_createGUI_rank_lengths_int(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  

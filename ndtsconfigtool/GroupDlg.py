@@ -30,7 +30,7 @@ from NodeDlg import NodeDlg
 import copy
 
 ## dialog defining a group tag
-class GroupDlg(NodeDlg, Ui_GroupDlg):
+class GroupDlg(NodeDlg):
     
     ## constructor
     # \param parent patent instance
@@ -51,18 +51,19 @@ class GroupDlg(NodeDlg, Ui_GroupDlg):
         ## allowed subitems
         self.subItems = ["group", "field", "attribute", "link", "component", "doc"]
 
-
+        ## user interface
+        self.ui = Ui_GroupDlg()
 
     ## updates the group dialog
     # \brief It sets the form local variables
     def updateForm(self):
 
         if self.name is not None:
-            self.nameLineEdit.setText(self.name) 
+            self.ui.nameLineEdit.setText(self.name) 
         if self.nexusType is not None:
-            self.typeLineEdit.setText(self.nexusType) 
+            self.ui.typeLineEdit.setText(self.nexusType) 
         if self.doc is not None:
-            self.docTextEdit.setText(self.doc)
+            self.ui.docTextEdit.setText(self.doc)
 
         self._attributes.clear()
         for at in self.attributes.keys():
@@ -74,21 +75,21 @@ class GroupDlg(NodeDlg, Ui_GroupDlg):
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
-        self.setupUi(self)
+        self.ui.setupUi(self)
         
         self.updateForm()
 
         self._updateUi()
 
-#        self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+#        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), 
 #                     self.apply)
-        self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(self.attributeTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
+        self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.connect(self.ui.attributeTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self._tableItemChanged)
-        self.connect(self.addPushButton, SIGNAL("clicked()"), self._addAttribute)
-        self.connect(self.removePushButton, SIGNAL("clicked()"), self._removeAttribute)
+        self.connect(self.ui.addPushButton, SIGNAL("clicked()"), self._addAttribute)
+        self.connect(self.ui.removePushButton, SIGNAL("clicked()"), self._removeAttribute)
 
-        self.connect(self.typeLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        self.connect(self.ui.typeLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
 
 
     ## provides the state of the group dialog        
@@ -166,7 +167,7 @@ class GroupDlg(NodeDlg, Ui_GroupDlg):
     ## takes a name of the current attribute
     # \returns name of the current attribute            
     def _currentTableAttribute(self):
-        item = self.attributeTableWidget.item(self.attributeTableWidget.currentRow(), 0)
+        item = self.ui.attributeTableWidget.item(self.ui.attributeTableWidget.currentRow(), 0)
         if item is None:
             return None
         return item.data(Qt.UserRole).toString()
@@ -194,7 +195,7 @@ class GroupDlg(NodeDlg, Ui_GroupDlg):
         attr = self._currentTableAttribute()
         if unicode(attr)  not in self._attributes.keys():
             return
-        column = self.attributeTableWidget.currentColumn()
+        column = self.ui.attributeTableWidget.currentColumn()
         if column == 1:
             self._attributes[unicode(attr)] = unicode(item.text())
         if column == 0:
@@ -206,43 +207,43 @@ class GroupDlg(NodeDlg, Ui_GroupDlg):
     # \param selectedAttribute selected attribute    
     def populateAttributes(self, selectedAttribute = None):
         selected = None
-        self.attributeTableWidget.clear()
-        self.attributeTableWidget.setSortingEnabled(False)
-        self.attributeTableWidget.setRowCount(len(self._attributes))
+        self.ui.attributeTableWidget.clear()
+        self.ui.attributeTableWidget.setSortingEnabled(False)
+        self.ui.attributeTableWidget.setRowCount(len(self._attributes))
         headers = ["Name", "Value"]
-        self.attributeTableWidget.setColumnCount(len(headers))
-        self.attributeTableWidget.setHorizontalHeaderLabels(headers)	
+        self.ui.attributeTableWidget.setColumnCount(len(headers))
+        self.ui.attributeTableWidget.setHorizontalHeaderLabels(headers)	
         for row, name in enumerate(self._attributes):
             item = QTableWidgetItem(name)
             item.setData(Qt.UserRole, QVariant(name))
-            self.attributeTableWidget.setItem(row, 0, item)
+            self.ui.attributeTableWidget.setItem(row, 0, item)
             item2 =  QTableWidgetItem(self._attributes[name])
-            self.attributeTableWidget.setItem(row, 1, item2)
+            self.ui.attributeTableWidget.setItem(row, 1, item2)
             if selectedAttribute is not None and selectedAttribute == name:
                 selected = item2
-        self.attributeTableWidget.setSortingEnabled(True)
-        self.attributeTableWidget.resizeColumnsToContents()
-        self.attributeTableWidget.horizontalHeader().setStretchLastSection(True)
+        self.ui.attributeTableWidget.setSortingEnabled(True)
+        self.ui.attributeTableWidget.resizeColumnsToContents()
+        self.ui.attributeTableWidget.horizontalHeader().setStretchLastSection(True)
         if selected is not None:
             selected.setSelected(True)
-            self.attributeTableWidget.setCurrentItem(selected)
+            self.ui.attributeTableWidget.setCurrentItem(selected)
             
 
     ## updates group user interface
     # \brief It sets enable or disable the OK button
     def _updateUi(self):
-        enable = not self.typeLineEdit.text().isEmpty()
-        self.applyPushButton.setEnabled(enable)
+        enable = not self.ui.typeLineEdit.text().isEmpty()
+        self.ui.applyPushButton.setEnabled(enable)
 
 
 
     ## applys input text strings
     # \brief It copies the group name and type from lineEdit widgets and apply the dialog
     def apply(self):
-        self.name = unicode(self.nameLineEdit.text())
-        self.nexusType = unicode(self.typeLineEdit.text())
+        self.name = unicode(self.ui.nameLineEdit.text())
+        self.nexusType = unicode(self.ui.typeLineEdit.text())
 
-        self.doc = unicode(self.docTextEdit.toPlainText())
+        self.doc = unicode(self.ui.docTextEdit.toPlainText())
         
         index = self.view.currentIndex()
         finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())

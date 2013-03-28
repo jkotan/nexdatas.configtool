@@ -34,7 +34,7 @@ import copy
 from NodeDlg import NodeDlg 
 
 ## dialog defining a field tag
-class FieldDlg(NodeDlg, Ui_FieldDlg):
+class FieldDlg(NodeDlg):
     
     ## constructor
     # \param parent patent instance
@@ -67,7 +67,9 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
 
         ## allowed subitems
         self.subItems = ["attribute", "datasource", "doc", "dimensions", "enumeration", "strategy"]
-
+        
+        ## user interface
+        self.ui = Ui_FieldDlg()
 
     ## provides the state of the field dialog        
     # \returns state of the field in tuple
@@ -113,39 +115,39 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
     # \brief It sets the form local variables 
     def updateForm(self):
         if self.name is not None:
-            self.nameLineEdit.setText(self.name) 
+            self.ui.nameLineEdit.setText(self.name) 
         if self.nexusType is not None:
-            index = self.typeComboBox.findText(unicode(self.nexusType))
+            index = self.ui.typeComboBox.findText(unicode(self.nexusType))
             if  index > -1 :
-                self.typeComboBox.setCurrentIndex(index)
-                self.otherFrame.hide()
+                self.ui.typeComboBox.setCurrentIndex(index)
+                self.ui.otherFrame.hide()
             else:
-                index2 = self.typeComboBox.findText('other ...')
-                self.typeComboBox.setCurrentIndex(index2)
-                self.typeLineEdit.setText(self.nexusType) 
-                self.otherFrame.show()
+                index2 = self.ui.typeComboBox.findText('other ...')
+                self.ui.typeComboBox.setCurrentIndex(index2)
+                self.ui.typeLineEdit.setText(self.nexusType) 
+                self.ui.otherFrame.show()
         else:
-            index = self.typeComboBox.findText(unicode("None"))
-            self.typeComboBox.setCurrentIndex(index)
-            self.otherFrame.hide()
+            index = self.ui.typeComboBox.findText(unicode("None"))
+            self.ui.typeComboBox.setCurrentIndex(index)
+            self.ui.otherFrame.hide()
         if self.doc is not None:
-            self.docTextEdit.setText(self.doc)
+            self.ui.docTextEdit.setText(self.doc)
         if self.units is not None:    
-            self.unitsLineEdit.setText(self.units)
+            self.ui.unitsLineEdit.setText(self.units)
         if self.value is not None:    
-            self.valueLineEdit.setText(self.value)
+            self.ui.valueLineEdit.setText(self.value)
 
         if self.rank < len(self.dimensions) :
             self.rank = len(self.dimensions)
         
         if self.dimensions:
             label = self.dimensions.__str__()
-            self.dimLabel.setText("%s" % label.replace('None','*'))
+            self.ui.dimLabel.setText("%s" % label.replace('None','*'))
         elif self.rank > 0:
             label = [None for r in range(self.rank)].__str__()
-            self.dimLabel.setText("%s" % label.replace('None','*'))
+            self.ui.dimLabel.setText("%s" % label.replace('None','*'))
         else:    
-            self.dimLabel.setText("[]")
+            self.ui.dimLabel.setText("[]")
             
 
         self._dimensions =[]
@@ -162,22 +164,22 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
-        self.setupUi(self)
+        self.ui.setupUi(self)
 
         self.updateForm()
 
         self._updateUi()
 
-#       self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
-        self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(self.attributeTableWidget, 
+#       self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
+        self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.connect(self.ui.attributeTableWidget, 
                      SIGNAL("itemChanged(QTableWidgetItem*)"), self._tableItemChanged)
-        self.connect(self.addPushButton, SIGNAL("clicked()"), self._addAttribute)
-        self.connect(self.removePushButton, SIGNAL("clicked()"), self._removeAttribute)
-        self.connect(self.dimPushButton, SIGNAL("clicked()"), self._changeDimensions)
+        self.connect(self.ui.addPushButton, SIGNAL("clicked()"), self._addAttribute)
+        self.connect(self.ui.removePushButton, SIGNAL("clicked()"), self._removeAttribute)
+        self.connect(self.ui.dimPushButton, SIGNAL("clicked()"), self._changeDimensions)
 
-        self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
-        self.connect(self.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._currentIndexChanged)
+        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._currentIndexChanged)
 
         self.populateAttributes()
 
@@ -295,7 +297,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
             else:    
                 self._dimensions = []
             label = self._dimensions.__str__()
-            self.dimLabel.setText("%s" % label.replace('None','*'))
+            self.ui.dimLabel.setText("%s" % label.replace('None','*'))
                 
                 
 
@@ -303,7 +305,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
     ## takes a name of the current attribute
     # \returns name of the current attribute            
     def _currentTableAttribute(self):
-        item = self.attributeTableWidget.item(self.attributeTableWidget.currentRow(), 0)
+        item = self.ui.attributeTableWidget.item(self.ui.attributeTableWidget.currentRow(), 0)
         if item is None:
             return None
         return item.data(Qt.UserRole).toString()
@@ -330,7 +332,7 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
         attr = self._currentTableAttribute()
         if unicode(attr)  not in self._attributes.keys():
             return
-        column = self.attributeTableWidget.currentColumn()
+        column = self.ui.attributeTableWidget.currentColumn()
         if column == 1:
             self._attributes[unicode(attr)] = unicode(item.text())
         if column == 0:
@@ -341,44 +343,44 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
     # \param selectedAttribute selected attribute    
     def populateAttributes(self, selectedAttribute = None):
         selected = None
-        self.attributeTableWidget.clear()
-        self.attributeTableWidget.setSortingEnabled(False)
-        self.attributeTableWidget.setRowCount(len(self._attributes))
+        self.ui.attributeTableWidget.clear()
+        self.ui.attributeTableWidget.setSortingEnabled(False)
+        self.ui.attributeTableWidget.setRowCount(len(self._attributes))
         headers = ["Name", "Value"]
-        self.attributeTableWidget.setColumnCount(len(headers))
-        self.attributeTableWidget.setHorizontalHeaderLabels(headers)	
+        self.ui.attributeTableWidget.setColumnCount(len(headers))
+        self.ui.attributeTableWidget.setHorizontalHeaderLabels(headers)	
         for row, name in enumerate(self._attributes):
             item = QTableWidgetItem(name)
             item.setData(Qt.UserRole, QVariant(name))
-            self.attributeTableWidget.setItem(row, 0, item)
+            self.ui.attributeTableWidget.setItem(row, 0, item)
             item2 = QTableWidgetItem(self._attributes[name])
-            self.attributeTableWidget.setItem(row, 1, item2)
+            self.ui.attributeTableWidget.setItem(row, 1, item2)
             if selectedAttribute is not None and selectedAttribute == name:
                 selected = item2
-        self.attributeTableWidget.setSortingEnabled(True)
-        self.attributeTableWidget.resizeColumnsToContents()
-        self.attributeTableWidget.horizontalHeader().setStretchLastSection(True)
+        self.ui.attributeTableWidget.setSortingEnabled(True)
+        self.ui.attributeTableWidget.resizeColumnsToContents()
+        self.ui.attributeTableWidget.horizontalHeader().setStretchLastSection(True)
         if selected is not None:
             selected.setSelected(True)
-            self.attributeTableWidget.setCurrentItem(selected)
+            self.ui.attributeTableWidget.setCurrentItem(selected)
             
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
     def _currentIndexChanged(self, text):
         if text == 'other ...':
-            self.otherFrame.show()            
-            self.typeLineEdit.setFocus()
+            self.ui.otherFrame.show()            
+            self.ui.typeLineEdit.setFocus()
         else:
-            self.otherFrame.hide()
+            self.ui.otherFrame.hide()
 
 
 
     ## updates field user interface
     # \brief It sets enable or disable the OK button
     def _updateUi(self):
-        enable = not self.nameLineEdit.text().isEmpty()
-        self.applyPushButton.setEnabled(enable)
+        enable = not self.ui.nameLineEdit.text().isEmpty()
+        self.ui.applyPushButton.setEnabled(enable)
 
 
     ## appends node
@@ -406,20 +408,20 @@ class FieldDlg(NodeDlg, Ui_FieldDlg):
     ## applys input text strings
     # \brief It copies the field name and type from lineEdit widgets and apply the dialog
     def apply(self):
-        self.name = unicode(self.nameLineEdit.text())
-        self.units = unicode(self.unitsLineEdit.text())
-        self.value = unicode(self.valueLineEdit.text())
+        self.name = unicode(self.ui.nameLineEdit.text())
+        self.units = unicode(self.ui.unitsLineEdit.text())
+        self.value = unicode(self.ui.valueLineEdit.text())
 
 
-        self.nexusType = unicode(self.typeComboBox.currentText())
+        self.nexusType = unicode(self.ui.typeComboBox.currentText())
         if self.nexusType ==  'other ...':
-            self.nexusType =  unicode(self.typeLineEdit.text())
+            self.nexusType =  unicode(self.ui.typeLineEdit.text())
         elif self.nexusType ==  'None':    
             self.nexusType =  u'';
 
 
 
-        self.doc = unicode(self.docTextEdit.toPlainText())
+        self.doc = unicode(self.ui.docTextEdit.toPlainText())
 
         index = self.view.currentIndex()
         finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())

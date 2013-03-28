@@ -42,8 +42,8 @@ class NodeDlg(QDialog):
         ## allowed subitems
         self.subItems = []
 
-        ## widget with apply button
-        self.applyPushButton = None
+        ##  user interface 
+        self.ui = None
 
         ## external apply action
         self._externalApply = None
@@ -52,8 +52,8 @@ class NodeDlg(QDialog):
     ## connects the given apply action
     # \param externalApply apply action   
     def connectExternalActions(self,  externalApply=None):
-        if externalApply and self._externalApply is None and self.applyPushButton:
-            self.connect(self.applyPushButton, SIGNAL("clicked()"), 
+        if externalApply and self._externalApply is None and self.ui.applyPushButton and self.ui.applyPushButton:
+            self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), 
                          externalApply)
             self._externalApply = externalApply
         

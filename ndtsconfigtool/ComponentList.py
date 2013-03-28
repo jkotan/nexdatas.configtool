@@ -25,7 +25,6 @@ from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
 from ui.ui_componentlist import Ui_ComponentList
 import os
 
-from ComponentDlg import ComponentDlg
 from ComponentDlg import Component
 from LabeledObject import LabeledObject
 

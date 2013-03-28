@@ -42,12 +42,10 @@ import os
 import time 
 
 from ComponentModel import ComponentModel
-#from LabeledObject import LabeledObject
 
 
 ## dialog defining a tag link 
-#class ComponentDlg(QMdiSubWindow, Ui_ComponentDlg):
-class ComponentDlg(QDialog, Ui_ComponentDlg):
+class ComponentDlg(QDialog):
     
     ## constructor
     # \param component component instance
@@ -56,6 +54,9 @@ class ComponentDlg(QDialog, Ui_ComponentDlg):
         super(ComponentDlg, self).__init__(parent)
         ## component instance
         self.component = component 
+
+        ## user interface
+        self.ui = Ui_ComponentDlg()
         
     ## closes the window and cleans the dialog label
     # \param event closing event
@@ -305,30 +306,30 @@ class Component(object):
     ## updates the component dialog
     # \brief It creates model and frame item    
     def updateForm(self):
-        self.dialog.splitter.setStretchFactor(0,1)
-        self.dialog.splitter.setStretchFactor(1,1)
+        self.dialog.ui.splitter.setStretchFactor(0,1)
+        self.dialog.ui.splitter.setStretchFactor(1,1)
         
         model = ComponentModel(self.document,self._allAttributes,self.dialog)
 #        model = ComponentModel(QDomDocument(),self._allAttributes,self.dialog)
         self.view.setModel(model)
         
-        self.dialog.widget = QWidget()
+        self.dialog.ui.widget = QWidget()
         self._frameLayout = QGridLayout()
-        self._frameLayout.addWidget(self.dialog.widget)
-        self.dialog.frame.setLayout(self._frameLayout)
+        self._frameLayout.addWidget(self.dialog.ui.widget)
+        self.dialog.ui.frame.setLayout(self._frameLayout)
 
         
 
     ## applies component item
     # \brief it checks if item widget exists and calls apply of the item widget
     def applyItem(self):
-        if not self.view or not self.view.model() or not self.dialog or not self.dialog.widget:
+        if not self.view or not self.view.model() or not self.dialog or not self.dialog.ui.widget:
             return
-        if not hasattr(self.dialog.widget,'apply'):
+        if not hasattr(self.dialog.ui.widget,'apply'):
             return
 #        import gc
 #        gc.collect()
-        self.dialog.widget.apply()
+        self.dialog.ui.widget.apply()
 
         self.view.resizeColumnToContents(0)
         self.view.resizeColumnToContents(1)
@@ -457,8 +458,8 @@ class Component(object):
     def pasteItem(self):
         print "pasting item"
         
-        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget \
-                or not hasattr(self.dialog.widget,"subItems") :
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.ui.widget \
+                or not hasattr(self.dialog.ui.widget,"subItems") :
             ## Message
             return
 
@@ -472,7 +473,7 @@ class Component(object):
         name = unicode(clipNode.nodeName())
 
 #        print "NAME: ",clipNode.nodeName()
-        if name not in self.dialog.widget.subItems:
+        if name not in self.dialog.ui.widget.subItems:
             ## Message
             return        
 
@@ -487,10 +488,10 @@ class Component(object):
         node = sel.node
 
 
-        self.dialog.widget.node = node
+        self.dialog.ui.widget.node = node
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.dialog.widget.appendNode(clipNode, index)        
+        self.dialog.ui.widget.appendNode(clipNode, index)        
 
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         
@@ -505,20 +506,20 @@ class Component(object):
     def addItem(self, name):
         if not name in self._tagClasses.keys():
             return
-        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget:
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.ui.widget:
             return
-        if not hasattr(self.dialog.widget,'subItems') or  name not in self.dialog.widget.subItems:
+        if not hasattr(self.dialog.ui.widget,'subItems') or  name not in self.dialog.ui.widget.subItems:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
         if not sel or not index.isValid():
             return
         node = sel.node
-        self.dialog.widget.node = node
-        child = self.dialog.widget.root.createElement(QString(name))
+        self.dialog.ui.widget.node = node
+        child = self.dialog.ui.widget.root.createElement(QString(name))
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        status = self.dialog.widget.appendNode(child, index)
+        status = self.dialog.ui.widget.appendNode(child, index)
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         self.view.expand(index)
         if status:
@@ -531,7 +532,7 @@ class Component(object):
         
         if not self.view or not self.view.model() :
             return
-        dialog = True if self.dialog and self.dialog.widget else False
+        dialog = True if self.dialog and self.dialog.ui.widget else False
         index = self.view.currentIndex()
         sel = index.internalPointer()
         if not sel or not index.isValid():
@@ -549,11 +550,11 @@ class Component(object):
         clipboard.setText(self._nodeToString(node))
         
         
-        if hasattr(self.dialog.widget,"node") and dialog:
-            self.dialog.widget.node = node.parentNode()
+        if hasattr(self.dialog.ui.widget,"node") and dialog:
+            self.dialog.ui.widget.node = node.parentNode()
 
-        if dialog and hasattr(self.dialog,"widget") and hasattr(self.dialog.widget,"removeNode"):    
-            self.dialog.widget.removeNode(node, index.parent())
+        if dialog and hasattr(self.dialog,"widget") and hasattr(self.dialog.ui.widget,"removeNode"):    
+            self.dialog.ui.widget.removeNode(node, index.parent())
         else:
             self.removeNode(node, index.parent())
 
@@ -604,7 +605,7 @@ class Component(object):
     ## copies the currenct component tree item if possible
     # \returns True on success
     def copySelectedItem(self):
-        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget:
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.ui.widget:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -628,8 +629,8 @@ class Component(object):
     # It calls setupUi and creates required action connections
     def createGUI(self):
         self.dialog = ComponentDlg(self, None)
-        self.dialog.setupUi(self.dialog)
-        self.view = self.dialog.view
+        self.dialog.ui.setupUi(self.dialog)
+        self.view = self.dialog.ui.view
 
 #        self.createGUI()
 
@@ -654,11 +655,11 @@ class Component(object):
     # \param externalClose close action
     def connectExternalActions(self, externalApply=None , externalSave=None, externalClose = None  ):
         if externalSave and self._externalSave is None:
-            self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
+            self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
             self._externalSave = externalSave
         if externalClose and self._externalClose is None:
-            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+            self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
                          externalClose)
             self._externalClose = externalClose
         if externalApply and self._externalApply is None:
@@ -669,13 +670,13 @@ class Component(object):
     # \brief It reconnects the save action 
     def reconnectSaveAction(self):
         if self._externalSave:
-            self.dialog.disconnect(self.dialog.savePushButton, SIGNAL("clicked()"), 
+            self.dialog.disconnect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                          self._externalSave)
-            self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
+            self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                          self._externalSave)
-            self.dialog.disconnect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+            self.dialog.disconnect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
                          self._externalClose)
-            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+            self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
                          self._externalClose)
 
 
@@ -719,34 +720,34 @@ class Component(object):
 
 
         
-        if self.dialog.widget:
-            self.dialog.widget.setVisible(False)
+        if self.dialog.ui.widget:
+            self.dialog.ui.widget.setVisible(False)
         if unicode(nNode) in self._tagClasses.keys():
-            if self.dialog.widget :
-                if hasattr(self.dialog.widget,"widget"):
-                    self.dialog.widget.widget.hide() 
+            if self.dialog.ui.widget :
+                if hasattr(self.dialog.ui.widget,"widget"):
+                    self.dialog.ui.widget.widget.hide() 
                 else:
-                    self.dialog.widget.hide() 
+                    self.dialog.ui.widget.hide() 
 
-            self.dialog.frame.hide()
-            self._frameLayout.removeWidget(self.dialog.widget)
-            self.dialog.widget = self._tagClasses[unicode(nNode)]()
-            self.dialog.widget.root = self.document
-            self.dialog.widget.setFromNode(node)
-            self.dialog.widget.createGUI()
-            if hasattr(self.dialog.widget,"connectExternalActions"):
-                self.dialog.widget.connectExternalActions(self._externalApply)
-            if hasattr(self.dialog.widget,"treeMode"):
-                self.dialog.widget.treeMode()
-            self.dialog.widget.view = self.view
-            self.dialog.view = self.view
-            self._frameLayout.addWidget(self.dialog.widget)
-            self.dialog.widget.show()
-            self.dialog.frame.show()
+            self.dialog.ui.frame.hide()
+            self._frameLayout.removeWidget(self.dialog.ui.widget)
+            self.dialog.ui.widget = self._tagClasses[unicode(nNode)]()
+            self.dialog.ui.widget.root = self.document
+            self.dialog.ui.widget.setFromNode(node)
+            self.dialog.ui.widget.createGUI()
+            if hasattr(self.dialog.ui.widget,"connectExternalActions"):
+                self.dialog.ui.widget.connectExternalActions(self._externalApply)
+            if hasattr(self.dialog.ui.widget,"treeMode"):
+                self.dialog.ui.widget.treeMode()
+            self.dialog.ui.widget.view = self.view
+            self.dialog.ui.view = self.view
+            self._frameLayout.addWidget(self.dialog.ui.widget)
+            self.dialog.ui.widget.show()
+            self.dialog.ui.frame.show()
         else:
-            if self.dialog.widget :
-                self.dialog.widget.hide() 
-            self.dialog.widget = None
+            if self.dialog.ui.widget :
+                self.dialog.ui.widget.hide() 
+            self.dialog.ui.widget = None
 
 
     ## opens context Menu        
@@ -873,8 +874,8 @@ class Component(object):
     # \param filePath xml file name with full path    
     def loadComponentItem(self,filePath = None):
         
-        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget \
-                or not hasattr(self.dialog.widget, "subItems") or "component" not in  self.dialog.widget.subItems:
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.ui.widget \
+                or not hasattr(self.dialog.ui.widget, "subItems") or "component" not in  self.dialog.ui.widget.subItems:
             return
         index = self.view.currentIndex()
 #        print "L index", index.column()
@@ -905,13 +906,13 @@ class Component(object):
                                             "Component %s without <definition> tag" % itemFile)
                         return
                     child = definition.firstChild()
-                    self.dialog.widget.node = node
+                    self.dialog.ui.widget.node = node
 
                     if  index.column() != 0:
                         index = self.view.model().index(index.row(), 0, index.parent())
                     while not child.isNull():
                         child2 = self.document.importNode(child, True)
-                        self.dialog.widget.appendNode(child2, index)
+                        self.dialog.ui.widget.appendNode(child2, index)
 
                         child = child.nextSibling()
 
@@ -960,11 +961,11 @@ class Component(object):
         print "Loading DataSource"
 
         
-        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget \
-                                or not hasattr(self.dialog.widget, "subItems") \
-                                or "datasource" not in  self.dialog.widget.subItems:
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.ui.widget \
+                                or not hasattr(self.dialog.ui.widget, "subItems") \
+                                or "datasource" not in  self.dialog.ui.widget.subItems:
             return
-        child = self.dialog.widget.node.firstChild()
+        child = self.dialog.ui.widget.node.firstChild()
         while not child.isNull():
             if child.nodeName() == 'datasource':
                 QMessageBox.warning(self.dialog, "DataSource exists", 
@@ -998,9 +999,9 @@ class Component(object):
                     if ds:
                         if  index.column() != 0:
                             index = self.view.model().index(index.row(), 0, index.parent())
-                        self.dialog.widget.node = node
+                        self.dialog.ui.widget.node = node
                         ds2 = self.document.importNode(ds, True)
-                        self.dialog.widget.appendNode(ds2, index)
+                        self.dialog.ui.widget.appendNode(ds2, index)
                     else:
                             QMessageBox.warning(self.dialog, "Corrupted DataSource ", 
                                                 "Missing <datasource> tag in %s" % dsFile)
@@ -1028,11 +1029,11 @@ class Component(object):
         if dsNode.nodeName() != 'datasource':
             return
         
-        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget \
-                or not hasattr(self.dialog.widget,"subItems") or "datasource" not in  self.dialog.widget.subItems:
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.ui.widget \
+                or not hasattr(self.dialog.ui.widget,"subItems") or "datasource" not in  self.dialog.ui.widget.subItems:
             return
 
-        child = self.dialog.widget.node.firstChild()
+        child = self.dialog.ui.widget.node.firstChild()
         while not child.isNull():
             if child.nodeName() == 'datasource':
                 QMessageBox.warning(self.dialog, "DataSource exists", 
@@ -1053,11 +1054,11 @@ class Component(object):
         
 
 
-        self.dialog.widget.node = node
+        self.dialog.ui.widget.node = node
         dsNode2 = self.document.importNode(dsNode, True)
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.dialog.widget.appendNode(dsNode2, index)
+        self.dialog.ui.widget.appendNode(dsNode2, index)
         
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         self.view.expand(index)
@@ -1177,15 +1178,15 @@ class Component(object):
     # \brief It puts an empty widget into the widget frame
     def _hideFrame(self):
         if self.dialog :
-            if self.dialog.widget:
-                if hasattr(self.dialog.widget,"widget"):
-                    self.dialog.widget.widget.setVisible(False)
+            if self.dialog.ui.widget:
+                if hasattr(self.dialog.ui.widget,"widget"):
+                    self.dialog.ui.widget.widget.setVisible(False)
                 else:
-                    self.dialog.widget.setVisible(False)
-            self.dialog.widget = QWidget()
-            self._frameLayout.addWidget(self.dialog.widget)
-            self.dialog.widget.show()
-            self.dialog.frame.show()
+                    self.dialog.ui.widget.setVisible(False)
+            self.dialog.ui.widget = QWidget()
+            self._frameLayout.addWidget(self.dialog.ui.widget)
+            self.dialog.ui.widget.show()
+            self.dialog.ui.frame.show()
 
         
     ## creates the new empty header
@@ -1245,7 +1246,7 @@ class Component(object):
     def getCurrentDataSource(self):
         ds = {}
 
-        if not self.view or not self.dialog or not self.view.model() or not self.dialog.widget:
+        if not self.view or not self.dialog or not self.view.model() or not self.dialog.ui.widget:
             return ds
         index = self.view.currentIndex()
         sel = index.internalPointer()

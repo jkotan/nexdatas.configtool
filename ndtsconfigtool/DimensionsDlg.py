@@ -80,7 +80,7 @@ class DimensionsDlg(QDialog):
                      self.__tableItemChanged)
 
         self.ui.dimTableWidget.setSortingEnabled(False)
-        self.populateLengths()
+        self.__populateLengths()
         self.ui.rankSpinBox.setFocus()
 
         self.connect(self.ui.rankSpinBox, SIGNAL("valueChanged(int)"), self.__valueChanged)
@@ -113,19 +113,19 @@ class DimensionsDlg(QDialog):
             except:
                 QMessageBox.warning(self, "Value Error", "Wrong value of the edited length")
                 
-        self.populateLengths()
+        self.__populateLengths()
 
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
     def __valueChanged(self, text):
         self.rank = int(self.ui.rankSpinBox.value())
-        self.populateLengths(self.rank-1)
+        self.__populateLengths(self.rank-1)
 
 
     ## fills in the dim table      
     # \param selectedDim selected dim    
-    def populateLengths(self, selectedDim = None):
+    def __populateLengths(self, selectedDim = None):
         selected = None
         self.ui.dimTableWidget.clear()
         self.ui.dimTableWidget.setRowCount(self.rank)

@@ -27,11 +27,11 @@ import random
 import struct
 import binascii
 import time
-
 from PyQt4.QtTest import QTest
-from PyQt4.QtGui import (QApplication, QMessageBox)
+from PyQt4.QtGui import (QApplication, QMessageBox, QTableWidgetItem)
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
+
 
 from ndtsconfigtool.DimensionsDlg import DimensionsDlg
 from ndtsconfigtool.ui.ui_dimensionsdlg import Ui_DimensionsDlg
@@ -166,7 +166,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
-        lengths = [str(self.__rnd.randint(0, 100)) for r in range(rank) ]
+        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
@@ -197,13 +197,14 @@ class DimensionsDlgTest(unittest.TestCase):
     def test_createGUI_rank_str_lengths_int(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        rank =  str(self.__rnd.randint(1, 6) )
-        lengths = [self.__rnd.randint(0, 100) for r in range(int(rank)) ]
+        rank =  str(self.__rnd.randint(0, 6) )
+        lengths = [self.__rnd.randint(1, 6) for r in range(int(rank)) ]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.doc, '')
+        self.assertEqual(form.lengths, lengths)
         self.assertEqual(form.subItems, ["dim", "doc"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
@@ -218,6 +219,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.rankSpinBox.value(), int(rank))
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(), int(rank))
+
         for r in range(int(rank)):
             it = form.ui.dimTableWidget.item(r, 0) 
             self.assertEqual(it.text(), str(lengths[r]))
@@ -229,12 +231,13 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(-6, -1) 
-        lengths = [self.__rnd.randint(0, 100) for r in range(rank) ]
+        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.doc, '')
+        self.assertEqual(form.lengths, lengths)
         self.assertEqual(form.subItems, ["dim", "doc"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
@@ -253,16 +256,53 @@ class DimensionsDlgTest(unittest.TestCase):
 
     ## create GUI test
     # \brief It tests default settings
+    def test_createGUI_rank_lengths_int_doc(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        rank =  self.__rnd.randint(1, 6) 
+        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        doc = 'My Document'*self.__rnd.randint(1, 10) 
+        form = DimensionsDlg()
+        form.rank = rank
+        form.lengths = lengths
+        form.doc = doc
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.doc, doc)
+        self.assertEqual(form.lengths, lengths)
+        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+
+        self.assertEqual(form.createGUI(), None)
+        form.show()
+
+        self.assertEqual(form.result(), 0)
+        
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.lengths, lengths)
+        self.assertEqual(form.doc, doc)
+        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+        for r in range(rank):
+            it = form.ui.dimTableWidget.item(r, 0) 
+            self.assertEqual(it.text(), str(lengths[r]))
+
+
+
+    ## create GUI test
+    # \brief It tests default settings
     def test_createGUI_rank_lengths_int(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
-        lengths = [self.__rnd.randint(0, 100) for r in range(rank) ]
+        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.doc, '')
+        self.assertEqual(form.lengths, lengths)
         self.assertEqual(form.subItems, ["dim", "doc"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
@@ -280,6 +320,260 @@ class DimensionsDlgTest(unittest.TestCase):
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0) 
             self.assertEqual(it.text(), str(lengths[r]))
+
+
+
+    ## create GUI test
+    # \brief It tests default settings
+    def test_createGUI_rank_lengths_zero(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        rank =  self.__rnd.randint(1, 6) 
+        lengths = [0 for r in range(rank) ]
+        form = DimensionsDlg()
+        form.rank = rank
+        form.lengths = lengths
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.lengths, lengths)
+        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+
+        self.assertEqual(form.createGUI(), None)
+        form.show()
+
+        self.assertEqual(form.result(), 0)
+        
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.lengths, lengths)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        for r in range(rank):
+            it = form.ui.dimTableWidget.item(r, 0) 
+            self.assertEqual(it.text(), '')
+
+
+
+    ## create GUI test
+    # \brief It tests default settings
+    def test_createGUI_accept(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        rank =  self.__rnd.randint(1, 6) 
+        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        doc = 'My Document'*self.__rnd.randint(1, 10) 
+        form = DimensionsDlg()
+        form.rank = rank
+        form.lengths = lengths
+        form.doc = doc
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.doc, doc)
+        self.assertEqual(form.lengths, lengths)
+        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+
+        self.assertEqual(form.createGUI(), None)
+        form.show()
+
+        form.accept()
+        self.assertEqual(form.result(), 1)
+        
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.lengths, lengths)
+        self.assertEqual(form.doc, doc)
+        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        for r in range(rank):
+            it = form.ui.dimTableWidget.item(r, 0) 
+            self.assertEqual(it.text(), str(lengths[r]))
+
+
+
+
+
+    ## create GUI test
+    # \brief It tests default settings
+    def test_createGUI_rank_ui(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        rank =  self.__rnd.randint(1, 6) 
+        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        doc = 'My Document'*self.__rnd.randint(1, 10) 
+        form = DimensionsDlg()
+        self.assertEqual(form.rank, 0)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.lengths, [])
+        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+
+        self.assertEqual(form.createGUI(), None)
+        form.show()
+
+        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
+
+        form.accept()
+        self.assertEqual(form.result(), 1)
+        
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.lengths, [None]*rank)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        for r in range(rank):
+            it = form.ui.dimTableWidget.item(r, 0) 
+            self.assertEqual(it.text(), '')
+
+
+
+    ## create GUI test
+    # \brief It tests default settings
+    def test_createGUI_doc_ui(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        rank =  self.__rnd.randint(1, 6) 
+        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        doc = 'My Document'*self.__rnd.randint(1, 10) 
+        form = DimensionsDlg()
+        self.assertEqual(form.rank, 0)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.lengths, [])
+        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+
+        self.assertEqual(form.createGUI(), None)
+        form.show()
+
+        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+
+        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+
+        for r in range(rank):
+            it = form.ui.dimTableWidget.item(r, 0) 
+            self.assertEqual(it.text(), '')
+
+
+        QTest.keyClicks(form.ui.docTextEdit, str(doc))
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+
+        okWidget = form.ui.buttonBox.button(form.ui.buttonBox.Ok)
+        QTest.mouseClick(okWidget, Qt.LeftButton)
+
+
+        self.assertEqual(form.result(), 1)
+        
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.lengths, [None]*rank)
+        self.assertEqual(form.doc, doc)
+
+
+
+
+
+
+    ## create GUI test
+    # \brief It tests default settings
+    def test_createGUI_doc_ui_text(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        rank =  self.__rnd.randint(1, 6) 
+        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        doc = 'My Document'*self.__rnd.randint(1, 10) 
+        form = DimensionsDlg()
+        self.assertEqual(form.rank, 0)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.lengths, [])
+        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+
+        self.assertEqual(form.createGUI(), None)
+        form.show()
+
+        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+
+#        form.ui.docTextEdit.setText(str(doc))
+
+        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+
+        for r in range(rank):
+            it = form.ui.dimTableWidget.item(r, 0) 
+            self.assertEqual(it.text(), '')
+
+        QTest.keyClicks(form.ui.docTextEdit, str(doc))
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+
+        cancelWidget = form.ui.buttonBox.button(form.ui.buttonBox.Cancel)
+        QTest.mouseClick(cancelWidget, Qt.LeftButton)
+
+
+        self.assertEqual(form.result(), 0)
+        
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.lengths, [None]*rank)
+        self.assertEqual(form.doc, '')
+
+
+
+    ## create GUI test
+    # \brief It tests default settings
+    def test_createGUI_len_ui_text(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        rank =  self.__rnd.randint(1, 6) 
+        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        doc = 'My Document'*self.__rnd.randint(1, 10) 
+        form = DimensionsDlg()
+        self.assertEqual(form.rank, 0)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.lengths, [])
+        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+
+        self.assertEqual(form.createGUI(), None)
+        form.show()
+
+        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+
+#        form.ui.docTextEdit.setText(str(doc))
+
+        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+
+        for r in range(rank):
+            it = form.ui.dimTableWidget.item(r, 0) 
+            self.assertEqual(it.text(), '')
+
+        QTest.keyClicks(form.ui.docTextEdit, str(doc))
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+
+        for r in range(rank):
+            form.ui.dimTableWidget.setCurrentCell(r,0)
+#            QTest.keyClicks(form.ui.dimTableWidget, str(lengths[r]))
+            it = QTableWidgetItem(unicode(lengths[r]))
+            form.ui.dimTableWidget.setItem(r,0,it)
+  
+
+
+        cancelWidget = form.ui.buttonBox.button(form.ui.buttonBox.Cancel)
+        QTest.mouseClick(cancelWidget, Qt.LeftButton)
+
+
+        self.assertEqual(form.result(), 0)
+        
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.lengths, lengths)
+        self.assertEqual(form.doc, '')
+
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -26,7 +26,7 @@ from ui.ui_connectdlg import Ui_ConnectDlg
 
 
 ## dialog defining a tag connect 
-class ConnectDlg(QDialog, Ui_ConnectDlg):
+class ConnectDlg(QDialog):
     
     ## constructor
     # \param parent patent instance
@@ -39,18 +39,21 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
         self.host = u''
         ## port of the configuration server
         self.port = None
+        ## user interface
+        self.ui = Ui_ConnectDlg()
+
 
     ## creates GUI    
     # \brief It updates GUI and creates connection for required actions
     def createGUI(self):
-        self.setupUi(self)
+        self.ui.setupUi(self)
         self.updateForm()
         self.__updateUi()
 
 
-        self.connect(self.connectPushButton, SIGNAL("clicked()"), self.accept)
-        self.connect(self.cancelPushButton, SIGNAL("clicked()"), self.reject)
-        self.connect(self.deviceLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
+        self.connect(self.ui.connectPushButton, SIGNAL("clicked()"), self.accept)
+        self.connect(self.ui.cancelPushButton, SIGNAL("clicked()"), self.reject)
+        self.connect(self.ui.deviceLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
 
         
 
@@ -58,55 +61,55 @@ class ConnectDlg(QDialog, Ui_ConnectDlg):
     # \brief It sets initial values of the connection form
     def updateForm(self):
         if self.device is not None:
-            self.deviceLineEdit.setText(self.device)
+            self.ui.deviceLineEdit.setText(self.device)
         if self.host is not None:
-            self.hostLineEdit.setText(self.host)
+            self.ui.hostLineEdit.setText(self.host)
         if self.port is not None:
-            self.portLineEdit.setText(str(self.port))
+            self.ui.portLineEdit.setText(str(self.port))
 
 
     ## updates connect user interface
     # \brief It sets enable or disable the OK button
     def __updateUi(self):
-        enable = not self.deviceLineEdit.text().isEmpty()
-        self.connectPushButton.setEnabled(enable)
+        enable = not self.ui.deviceLineEdit.text().isEmpty()
+        self.ui.connectPushButton.setEnabled(enable)
 
 
     ## accepts input text strings
     # \brief It copies the connect name and value from lineEdit widgets and accept the dialog
     def accept(self):
         class CharacterError(Exception): pass
-        device = unicode(self.deviceLineEdit.text()).strip()
+        device = unicode(self.ui.deviceLineEdit.text()).strip()
         if not device: 
             QMessageBox.warning(self, "Empty device name", 
                                 "Please define the device name")
-            self.deviceLineEdit.setFocus()
+            self.ui.deviceLineEdit.setFocus()
             return
         
         self.device = device
-        self.host = unicode(self.hostLineEdit.text()).strip()
+        self.host = unicode(self.ui.hostLineEdit.text()).strip()
         
         self.port = None
         try:
-            port = str(self.portLineEdit.text())
+            port = str(self.ui.portLineEdit.text())
             if port:
                 self.port = int(port)
         except:
             QMessageBox.warning(self, "Wrong port number", 
                                 "Please define the port number")
-            self.portLineEdit.setFocus()
+            self.ui.portLineEdit.setFocus()
             return
             
         if self.port is not None and  not self.host:
             QMessageBox.warning(self, "Empty host name", 
                                 "Please define the host name")
-            self.hostLineEdit.setFocus()
+            self.ui.hostLineEdit.setFocus()
             return
 
         if self.port is None and self.host:
             QMessageBox.warning(self, "Empty port", 
                                 "Please define the port")
-            self.portLineEdit.setFocus()
+            self.ui.portLineEdit.setFocus()
             return
 
         QDialog.accept(self)

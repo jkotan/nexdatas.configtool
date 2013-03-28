@@ -27,7 +27,7 @@ from ui.ui_linkdlg import Ui_LinkDlg
 from NodeDlg import NodeDlg 
 
 ## dialog defining a tag link 
-class LinkDlg(NodeDlg, Ui_LinkDlg):
+class LinkDlg(NodeDlg):
     
     ## constructor
     # \param parent patent instance
@@ -44,18 +44,20 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
         ## allowed subitems
         self.subItems=[ "doc"]
 
+        ## user interface
+        self.ui = Ui_LinkDlg()
 
 
     ## updates the link dialog
     # \brief It sets the form local variables
     def updateForm(self):
         if self.name is not None:
-            self.nameLineEdit.setText(self.name) 
+            self.ui.nameLineEdit.setText(self.name) 
         if self.doc is not None:
-            self.docTextEdit.setText(self.doc)
+            self.ui.docTextEdit.setText(self.doc)
 
         if self.target is not None:    
-            self.targetLineEdit.setText(self.target)
+            self.ui.targetLineEdit.setText(self.target)
 
         if self.node:    
             doc = self.node.firstChildElement(QString("doc"))           
@@ -69,17 +71,17 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
 
-        self.setupUi(self)
-        self.targetToolButton.setEnabled(False)
+        self.ui.setupUi(self)
+        self.ui.targetToolButton.setEnabled(False)
 
         self.updateForm()
 
         self._updateUi()
 
 
-        #        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
-        self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        #        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
+        self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
 
 
     ## provides the state of the link dialog        
@@ -128,8 +130,8 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
     ## updates link user interface
     # \brief It sets enable or disable the OK button
     def _updateUi(self):
-        enable = not self.nameLineEdit.text().isEmpty()
-        self.applyPushButton.setEnabled(enable)
+        enable = not self.ui.nameLineEdit.text().isEmpty()
+        self.ui.applyPushButton.setEnabled(enable)
 
 
 
@@ -137,7 +139,7 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
     # \brief It copies the link name and target from lineEdit widgets and accept the dialog
     def apply(self):
         class CharacterError(Exception): pass
-        name = unicode(self.nameLineEdit.text())
+        name = unicode(self.ui.nameLineEdit.text())
         
         try:
             if 1 in [c in name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
@@ -149,9 +151,9 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
             QMessageBox.warning(self, "Character Error", unicode(e))
             return
         self.name = name
-        self.target = unicode(self.targetLineEdit.text())
+        self.target = unicode(self.ui.targetLineEdit.text())
 
-        self.doc = unicode(self.docTextEdit.toPlainText())
+        self.doc = unicode(self.ui.docTextEdit.toPlainText())
 
         index = self.view.currentIndex()
         finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())

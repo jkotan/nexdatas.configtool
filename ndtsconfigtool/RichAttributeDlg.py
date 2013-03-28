@@ -29,7 +29,7 @@ from DimensionsDlg import DimensionsDlg
 
 
 ## dialog defining an attribute
-class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
+class RichAttributeDlg(NodeDlg):
     
     ## constructor
     # \param parent patent instance
@@ -56,7 +56,10 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
 
 
         ## allowed subitems
-        self.subItems = ["enumeration", "doc", "datasource", "strategy"]
+        self.subItems = ["enumeration", "doc", "datasource", "strategy","dimensions"]
+
+        ## user interface
+        self.ui = Ui_RichAttributeDlg()
 
 
     ## provides the state of the richattribute dialog        
@@ -99,39 +102,39 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
     # \brief It sets the form local variables 
     def updateForm(self):
         if self.name is not None :
-            self.nameLineEdit.setText(self.name) 
+            self.ui.nameLineEdit.setText(self.name) 
         if self.nexusType is not None:
-            index = self.typeComboBox.findText(unicode(self.nexusType))
+            index = self.ui.typeComboBox.findText(unicode(self.nexusType))
             if  index > -1 :
-                self.typeComboBox.setCurrentIndex(index)
-                self.otherFrame.hide()
+                self.ui.typeComboBox.setCurrentIndex(index)
+                self.ui.otherFrame.hide()
             else:
-                index2 = self.typeComboBox.findText('other ...')
-                self.typeComboBox.setCurrentIndex(index2)
-                self.typeLineEdit.setText(self.nexusType) 
-                self.otherFrame.show()
+                index2 = self.ui.typeComboBox.findText('other ...')
+                self.ui.typeComboBox.setCurrentIndex(index2)
+                self.ui.typeLineEdit.setText(self.nexusType) 
+                self.ui.otherFrame.show()
         else:
-            index = self.typeComboBox.findText(unicode("None"))
-            self.typeComboBox.setCurrentIndex(index)
-            self.otherFrame.hide()
+            index = self.ui.typeComboBox.findText(unicode("None"))
+            self.ui.typeComboBox.setCurrentIndex(index)
+            self.ui.otherFrame.hide()
         
         if self.doc is not None:
-            self.docTextEdit.setText(self.doc)
+            self.ui.docTextEdit.setText(self.doc)
         if self.value is not None:    
-            self.valueLineEdit.setText(self.value)
+            self.ui.valueLineEdit.setText(self.value)
 
         if self.rank < len(self.dimensions) :
             self.rank = len(self.dimensions)
         
         if self.dimensions:
             label = self.dimensions.__str__()
-            self.dimLabel.setText("%s" % label.replace('None','*'))
+            self.ui.dimLabel.setText("%s" % label.replace('None','*'))
         elif self.rank > 0:
             label = [None for r in range(self.rank)].__str__()
-            self.dimLabel.setText("%s" % label.replace('None','*'))
+            self.ui.dimLabel.setText("%s" % label.replace('None','*'))
         else:
-            self.dimLabel.setText("[]")
-    
+            self.ui.dimLabel.setText("[]")
+
 
         self._dimensions =[]
         for dm in self.dimensions:
@@ -142,18 +145,18 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
-        self.setupUi(self)
+        self.ui.setupUi(self)
 
         self.updateForm()
 
         self._updateUi()
 
-#        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
-        self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
+#        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
+        self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
 
-        self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
-        self.connect(self.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._currentIndexChanged)
-        self.connect(self.dimPushButton, SIGNAL("clicked()"), self._changeDimensions)
+        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._currentIndexChanged)
+        self.connect(self.ui.dimPushButton, SIGNAL("clicked()"), self._changeDimensions)
 
 
 
@@ -244,7 +247,7 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
             else:    
                 self._dimensions = []
             label = self._dimensions.__str__()
-            self.dimLabel.setText("%s" % label.replace('None','*'))
+            self.ui.dimLabel.setText("%s" % label.replace('None','*'))
 
 
 
@@ -252,24 +255,24 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
     # \param text the edited text   
     def _currentIndexChanged(self, text):
         if text == 'other ...':
-            self.otherFrame.show()            
-            self.typeLineEdit.setFocus()
+            self.ui.otherFrame.show()            
+            self.ui.typeLineEdit.setFocus()
         else:
-            self.otherFrame.hide()
+            self.ui.otherFrame.hide()
 
 
     ## updates attribute user interface
     # \brief It sets enable or disable the OK button
     def _updateUi(self):
-        enable = not self.nameLineEdit.text().isEmpty()
-        self.applyPushButton.setEnabled(enable)
+        enable = not self.ui.nameLineEdit.text().isEmpty()
+        self.ui.applyPushButton.setEnabled(enable)
 
 
     ## accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
     def apply(self):
         class CharacterError(Exception): pass
-        name = unicode(self.nameLineEdit.text())
+        name = unicode(self.ui.nameLineEdit.text())
 
         try:
             if 1 in [c in name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
@@ -281,15 +284,15 @@ class RichAttributeDlg(NodeDlg, Ui_RichAttributeDlg):
             return
 
         self.name = name
-        self.value = unicode(self.valueLineEdit.text())
+        self.value = unicode(self.ui.valueLineEdit.text())
 
-        self.nexusType = unicode(self.typeComboBox.currentText())
+        self.nexusType = unicode(self.ui.typeComboBox.currentText())
         if self.nexusType ==  'other ...':
-            self.nexusType =  unicode(self.typeLineEdit.text())
+            self.nexusType =  unicode(self.ui.typeLineEdit.text())
         elif self.nexusType ==  'None':    
             self.nexusType =  u'';
 
-        self.doc = unicode(self.docTextEdit.toPlainText())
+        self.doc = unicode(self.ui.docTextEdit.toPlainText())
 
         index = self.view.currentIndex()
         finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())

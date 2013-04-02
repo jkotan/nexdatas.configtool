@@ -105,9 +105,9 @@ class DimensionsDlgTest(unittest.TestCase):
         aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
-        print mb.text()
-        print "AW", aw
-        print "mb", mb
+#        print mb.text()
+#        print "AW", aw
+#        print "mb", mb
         self.text = mb.text()
         self.title = mb.windowTitle()
         mb.accept()

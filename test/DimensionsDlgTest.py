@@ -624,7 +624,6 @@ class DimensionsDlgTest(unittest.TestCase):
         for r in range(rank):
             QTimer.singleShot(10, self.checkMessageBox)
             form.ui.dimTableWidget.setCurrentCell(r,0)
-#            QTest.keyClicks(form.ui.dimTableWidget, str(lengths[r]))
             it = QTableWidgetItem("blew")
             form.ui.dimTableWidget.setItem(r,0,it)
             self.assertEqual(self.text, 'Wrong value of the edited length')
@@ -678,7 +677,6 @@ class DimensionsDlgTest(unittest.TestCase):
 
         for r in range(rank):
             form.ui.dimTableWidget.setCurrentCell(r,0)
-#            QTest.keyClicks(form.ui.dimTableWidget, str(lengths[r]))
             it = QTableWidgetItem(unicode(lengths[r]))
             form.ui.dimTableWidget.setItem(r,0,it)
             

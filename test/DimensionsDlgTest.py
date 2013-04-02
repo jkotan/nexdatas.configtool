@@ -627,6 +627,7 @@ class DimensionsDlgTest(unittest.TestCase):
 #            QTest.keyClicks(form.ui.dimTableWidget, str(lengths[r]))
             it = QTableWidgetItem("blew")
             form.ui.dimTableWidget.setItem(r,0,it)
+            self.assertEqual(self.text, 'Wrong value of the edited length')
   
 
         okWidget = form.ui.buttonBox.button(form.ui.buttonBox.Ok)
@@ -687,7 +688,7 @@ class DimensionsDlgTest(unittest.TestCase):
 #            QTest.keyClicks(form.ui.dimTableWidget, str(lengths[r]))
             it = QTableWidgetItem("blew")
             form.ui.dimTableWidget.setItem(r,0,it)
-  
+            self.assertEqual(self.text, 'Wrong value of the edited length')
 
         okWidget = form.ui.buttonBox.button(form.ui.buttonBox.Ok)
         QTest.mouseClick(okWidget, Qt.LeftButton)

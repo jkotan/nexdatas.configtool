@@ -52,10 +52,10 @@ class NodeDlg(QDialog):
     ## connects the given apply action
     # \param externalApply apply action   
     def connectExternalActions(self,  externalApply=None):
-        if externalApply and self._externalApply is None and self.ui.applyPushButton and self.ui.applyPushButton:
-            self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), 
-                         externalApply)
+        if externalApply and self._externalApply is None and self.ui and self.ui.applyPushButton:
+            self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), externalApply)
             self._externalApply = externalApply
+
         
     ## resets the dialog
     # \brief It sets forms and dialog from DOM    

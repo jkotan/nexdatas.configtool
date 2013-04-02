@@ -1,0 +1,163 @@
+#!/usr/bin/env python
+#   This file is part of nexdatas - Tango Server for NeXus data writer
+#
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#
+#    nexdatas is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    nexdatas is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
+## \package test nexdatas
+## \file DefinitionDlgTest.py
+# unittests for field Tags running Tango Server
+#
+import unittest
+import os
+import sys
+import subprocess
+import random
+import struct
+import binascii
+import time
+
+from PyQt4.QtTest import QTest
+from PyQt4.QtGui import (QApplication, QMessageBox)
+from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
+
+from ndtsconfigtool.DefinitionDlg import DefinitionDlg
+
+from ndtsconfigtool.ui.ui_definitiondlg import Ui_DefinitionDlg
+
+
+## if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
+
+
+
+## test fixture
+class DefinitionDlgTest(unittest.TestCase):
+    ##  Qt-application
+    app = None
+
+    ## constructor
+    # \param methodName name of the test method
+    def __init__(self, methodName):
+        unittest.TestCase.__init__(self, methodName)
+
+
+
+        self._bint = "int64" if IS64BIT else "int32"
+        self._buint = "uint64" if IS64BIT else "uint32"
+        self._bfloat = "float64" if IS64BIT else "float32"
+        ## MessageBox text
+        self.text = None
+        ## MessageBox title
+        self.title = None
+
+
+        try:
+            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            self.__seed  = long(time.time() * 256) 
+         
+        self.__rnd = random.Random(self.__seed)
+
+
+    ## test starter
+    # \brief Common set up
+    def setUp(self):
+        print "\nsetting up..."        
+        print "SEED =", self.__seed 
+        
+        if not DefinitionDlgTest.app:
+            DefinitionDlgTest.app = QApplication([])
+
+
+    ## test closer
+    # \brief Common tear down
+    def tearDown(self):
+        print "tearing down ..."
+
+
+    def checkMessageBox(self):
+        self.assertEqual(QApplication.activeWindow(),None)
+        mb = QApplication.activeModalWidget()
+        self.assertTrue(isinstance(mb, QMessageBox))
+#        print mb.text()
+        self.text = mb.text()
+        self.title = mb.windowTitle()
+        mb.close()
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_constructor(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = DefinitionDlg()
+        form.show()
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_constructor_accept(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = DefinitionDlg()
+        form.show()
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+
+        form.createGUI()
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        
+        self.assertTrue(form.ui.applyPushButton.isEnabled())
+        self.assertTrue(form.ui.resetPushButton.isEnabled())
+
+        name = "myname"
+        nType = "NXEntry"
+        QTest.keyClicks(form.ui.nameLineEdit, name)
+        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        QTest.keyClicks(form.ui.typeLineEdit, nType)
+        self.assertEqual(form.ui.typeLineEdit.text(), nType)
+
+        self.assertTrue(not form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(not form.ui.typeLineEdit.text().isEmpty())
+
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+
+#        form.apply()
+#        self.assertEqual(form.name, name)
+#        self.assertEqual(form.nexusType, nType)
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+
+if __name__ == '__main__':
+    unittest.main()

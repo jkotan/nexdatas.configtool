@@ -175,7 +175,7 @@ if __name__ == "__main__":
     form.rank = 2
     form.lengths = [25,27]
 #    form.lengths = [None,3]
-    form.doc = "Two dimentional array"
+    form.doc = "Two dimensional array"
     form.createGUI()
     form.show()
     app.exec_()

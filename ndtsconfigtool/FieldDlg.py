@@ -286,14 +286,14 @@ class FieldDlg(NodeDlg):
     def _changeDimensions(self):
         dform  = DimensionsDlg( self)
         dform.rank = self.rank
-        dform.lengths = self._dimensions
+        dform.lengths = [ln for ln in self._dimensions]
         dform.doc = self.dimDoc
         dform.createGUI()
         if dform.exec_():
             self.rank = dform.rank
             self.dimDoc = dform.doc
             if self.rank:
-                self._dimensions = dform.lengths
+                self._dimensions = [ln for ln in dform.lengths]
             else:    
                 self._dimensions = []
             label = self._dimensions.__str__()

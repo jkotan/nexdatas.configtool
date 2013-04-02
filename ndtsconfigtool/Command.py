@@ -973,6 +973,11 @@ class ComponentEdit(Command):
                 self._cpEdit = self._cp.instance 
                 
 
+            if hasattr(self._cpEdit,"connectExternalActions"):     
+                self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
+                                                    self.receiver.componentSave,
+                                                    self.receiver.componentClose)
+
 
             subwindow = self.receiver.subWindow(
                 self._cpEdit, self.receiver.mdi.subWindowList())
@@ -994,11 +999,6 @@ class ComponentEdit(Command):
                 self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
             self._cp.instance = self._cpEdit 
-
-            if hasattr(self._cpEdit,"connectExternalActions"):     
-                self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
-                                                    self.receiver.componentSave,
-                                                    self.receiver.componentClose)
 
             
         print "EXEC componentEdit"

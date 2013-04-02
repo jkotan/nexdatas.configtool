@@ -101,6 +101,19 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.result(), 0)
 
 
+    def checkMessageBox(self):
+        aw = QApplication.activeWindow()
+        mb = QApplication.activeModalWidget()
+        self.assertTrue(isinstance(mb, QMessageBox))
+        print mb.text()
+        print "AW", aw
+        print "mb", mb
+        self.text = mb.text()
+        self.title = mb.windowTitle()
+        mb.accept()
+        mb.close()
+
+
     ## create GUI test
     # \brief It tests default settings
     def test_createGUI(self):
@@ -572,6 +585,59 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
         self.assertEqual(form.doc, '')
+
+
+
+    ## create GUI test
+    # \brief It tests default settings
+    def test_createGUI_len_ui_text_err(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        rank =  self.__rnd.randint(1, 6) 
+        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        doc = 'My Document'*self.__rnd.randint(1, 10) 
+        form = DimensionsDlg()
+        self.assertEqual(form.rank, 0)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.lengths, [])
+        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+
+        self.assertEqual(form.createGUI(), None)
+        form.show()
+
+        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+
+#        form.ui.docTextEdit.setText(str(doc))
+
+        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+
+        for r in range(rank):
+            it = form.ui.dimTableWidget.item(r, 0) 
+            self.assertEqual(it.text(), '')
+
+        QTest.keyClicks(form.ui.docTextEdit, str(doc))
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+
+        for r in range(rank):
+            QTimer.singleShot(10, self.checkMessageBox)
+            form.ui.dimTableWidget.setCurrentCell(r,0)
+#            QTest.keyClicks(form.ui.dimTableWidget, str(lengths[r]))
+            it = QTableWidgetItem("blew")
+            form.ui.dimTableWidget.setItem(r,0,it)
+  
+
+        okWidget = form.ui.buttonBox.button(form.ui.buttonBox.Ok)
+        QTest.mouseClick(okWidget, Qt.LeftButton)
+
+
+        self.assertEqual(form.result(), 1)
+        
+        self.assertEqual(form.rank, rank)
+        self.assertEqual(form.lengths, [None]*rank)
+        self.assertEqual(form.doc, doc)
 
 
 

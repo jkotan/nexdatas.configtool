@@ -562,7 +562,7 @@ class ComponentModelTest(unittest.TestCase):
             self.assertEqual(str(dt.toString()).strip(), 'Text  %s' % n)
 
 
-    def test_flag(self):
+    def test_flags(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
@@ -615,6 +615,7 @@ class ComponentModelTest(unittest.TestCase):
             ki = cm.index(n,3,di)
             self.assertEqual(cm.flags(ki), Qt.ItemIsEnabled)
 
+            ki = cm.index(n,0,di) 
             ti = cm.index(0,0,ki)
             self.assertEqual(cm.flags(ti), Qt.ItemFlags(QAbstractItemModel.flags(cm,ti) |
                                                         Qt.ItemIsEnabled | Qt.ItemIsSelectable ))
@@ -627,6 +628,122 @@ class ComponentModelTest(unittest.TestCase):
             ti = cm.index(0,3,ki)
             self.assertEqual(cm.flags(ti), Qt.ItemIsEnabled)
 
+
+
+
+    def test_index(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+        ri = cm.rootIndex
+        di = cm.index(0,0,ri)
+        self.assertTrue(isinstance(di, QModelIndex))
+        self.assertEqual(di.row(),0)
+        self.assertEqual(di.column(),0)
+        self.assertEqual(di.internalPointer().node, qdn)
+        self.assertEqual(di.internalPointer().parent.node, doc)
+
+        iv = cm.index(0,0)
+        self.assertTrue(isinstance(iv, QModelIndex))
+        self.assertEqual(iv.row(),0)
+        self.assertEqual(iv.column(),0)
+        self.assertEqual(iv, di)
+        self.assertEqual(iv.internalPointer(),di.internalPointer())
+        
+
+        iv = cm.index(0,0,QModelIndex())
+        self.assertTrue(isinstance(iv, QModelIndex))
+        self.assertEqual(iv.row(),0)
+        self.assertEqual(iv.column(),0)
+        self.assertEqual(iv, di)
+        self.assertEqual(iv.internalPointer(),di.internalPointer())
+        
+        
+        for n in range(nkids): 
+            allAttr = not allAttr
+            cm.setAttributeView(allAttr)            
+
+            ki = cm.index(n,0,di) 
+            self.assertTrue(isinstance(ki, QModelIndex))
+            self.assertEqual(ki.row(),n)
+            self.assertEqual(ki.column(),0)
+            self.assertEqual(ki.internalPointer().node, kds[n])
+            self.assertEqual(ki.internalPointer().parent.node, qdn)
+
+            ki = cm.index(n,1,di)
+            self.assertTrue(isinstance(ki, QModelIndex))
+            self.assertEqual(ki.row(),n)
+            self.assertEqual(ki.column(),1)
+            self.assertEqual(ki.internalPointer().node, kds[n])
+            self.assertEqual(ki.internalPointer().parent.node, qdn)
+
+            ki = cm.index(n,2,di)
+            self.assertTrue(isinstance(ki, QModelIndex))
+            self.assertEqual(ki.row(),n)
+            self.assertEqual(ki.column(),2)
+            self.assertEqual(ki.internalPointer().node, kds[n])
+            self.assertEqual(ki.internalPointer().parent.node, qdn)
+
+            ki = cm.index(n,3,di)
+            self.assertTrue(isinstance(ki, QModelIndex))
+            self.assertEqual(ki.row(),-1)
+            self.assertEqual(ki.column(),-1)
+            self.assertEqual(ki.internalPointer(), None)
+
+            ki = cm.index(n,0,di) 
+            ti = cm.index(0,0,ki)
+            self.assertTrue(isinstance(ti, QModelIndex))
+            self.assertEqual(ti.row(),0)
+            self.assertEqual(ti.column(),0)
+            self.assertEqual(ti.internalPointer().node, tkds[n])
+            self.assertEqual(ti.internalPointer().parent.node, kds[n])
+
+
+            ti = cm.index(0,1,ki)
+            self.assertTrue(isinstance(ti, QModelIndex))
+            self.assertEqual(ti.row(),0)
+            self.assertEqual(ti.column(),1)
+            self.assertEqual(ti.internalPointer().node, tkds[n])
+            self.assertEqual(ti.internalPointer().parent.node, kds[n])
+
+            ti = cm.index(0,2,ki)
+            self.assertTrue(isinstance(ti, QModelIndex))
+            self.assertEqual(ti.row(),0)
+            self.assertEqual(ti.column(),2)
+            self.assertEqual(ti.internalPointer().node, tkds[n])
+            self.assertEqual(ti.internalPointer().parent.node, kds[n])
+
+            ti = cm.index(0,3,ki)
+            self.assertTrue(isinstance(ti, QModelIndex))
+            self.assertEqual(ti.row(),-1)
+            self.assertEqual(ti.column(),-1)
+            self.assertEqual(ti.internalPointer(), None)
         
 
 if __name__ == '__main__':

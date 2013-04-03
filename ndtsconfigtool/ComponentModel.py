@@ -37,23 +37,40 @@ class ComponentModel(QAbstractItemModel):
     def __init__(self, document, allAttributes, parent=None):
         super(ComponentModel, self).__init__(parent)
         
-        ## DOM document
-        self._domDocument = document
-
         ## show all attribures or only the type attribute
         self.__allAttributes = allAttributes
         
         ## root item of the tree
-        self.rootItem = ComponentItem(self._domDocument)
+        self.__rootItem = ComponentItem(document)
         ## index of the root item
-        self.rootIndex = self.createIndex(0, 0, self.rootItem)
+        self.rootIndex = self.createIndex(0, 0, self.__rootItem)
 
+
+    ## provides access to the header data
+    # \param section integer index of the table column 
+    # \param orientation orientation of the header
+    # \param role access type of the header data
+    # \returns header data defined for the given index and formated according to the role    
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole :
+            if section == 0 :
+                return QVariant("Name")
+            elif section == 1:
+                if self.__allAttributes:
+                    return QVariant("Attributes")
+                else:
+                    return QVariant("Type")
+            elif section == 2:
+                return QVariant("Value")
+            else:
+                return QVariant()
+        
 
     ## switches between all attributes in the try or only type attribute
     # \param allAttributes all attributes are shown if True
     def setAttributeView(self, allAttributes):
         self.__allAttributes = allAttributes
-        
+
 
     ## provides read access to the model data
     # \param index of the model item         
@@ -99,7 +116,6 @@ class ComponentModel(QAbstractItemModel):
         
         
 
-
     ## provides flag of the model item    
     # \param index of the model item         
     # \returns flag defined for the given index and formated according to the role    
@@ -110,24 +126,6 @@ class ComponentModel(QAbstractItemModel):
                             Qt.ItemIsEnabled | Qt.ItemIsSelectable )
 
     
-    ## provides access to the header data
-    # \param section integer index of the table column 
-    # \param orientation orientation of the header
-    # \param role access type of the header data
-    # \returns header data defined for the given index and formated according to the role    
-    def headerData(self, section, orientation, role=Qt.DisplayRole):
-        if orientation == Qt.Horizontal and role == Qt.DisplayRole :
-            if section == 0 :
-                return QVariant("Name")
-            elif section == 1:
-                if self.__allAttributes:
-                    return QVariant("Attributes")
-                else:
-                    return QVariant("Type")
-            elif section == 2:
-                return QVariant("Value")
-            else:
-                return QVariant()
         
     ## provides access to the item index
     # \param row integer index counting DOM child item
@@ -140,7 +138,7 @@ class ComponentModel(QAbstractItemModel):
             
 
         if not parent.isValid():
-            parentItem = self.rootItem
+            parentItem = self.__rootItem
         else:
             parentItem = parent.internalPointer()
             
@@ -167,13 +165,13 @@ class ComponentModel(QAbstractItemModel):
         
         parentItem = childItem.parent
 
-        if parentItem is None or parentItem == self.rootItem:
+        if parentItem is None or parentItem == self.__rootItem:
             return QModelIndex()
 
         if parentItem is None:
             return QModelIndex()
 
-#        if parentItem == self.rootItem:
+#        if parentItem == self.__rootItem:
 #            self.rootIndex
 
         return  self.createIndex(parentItem.childNumber(), 0, parentItem)
@@ -186,7 +184,7 @@ class ComponentModel(QAbstractItemModel):
             return 0
         
         if not parent.isValid():
-            parentItem = self.rootItem
+            parentItem = self.__rootItem
         else:
             parentItem = parent.internalPointer()
             

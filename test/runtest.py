@@ -28,6 +28,7 @@ import ConnectDlgTest
 import DimensionsDlgTest
 import NodeDlgTest
 import ComponentItemTest
+import ComponentModelTest
 
 try:
     import PyTango
@@ -95,6 +96,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ComponentItemTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ComponentModelTest) )
 
 
     if "MYSQL" in DB_AVAILABLE:

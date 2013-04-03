@@ -41,7 +41,7 @@ class ComponentModel(QAbstractItemModel):
         self._domDocument = document
 
         ## show all attribures or only the type attribute
-        self._allAttributes = allAttributes
+        self.__allAttributes = allAttributes
         
         ## root item of the tree
         self.rootItem = ComponentItem(self._domDocument)
@@ -52,7 +52,7 @@ class ComponentModel(QAbstractItemModel):
     ## switches between all attributes in the try or only type attribute
     # \param allAttributes all attributes are shown if True
     def setAttributeView(self, allAttributes):
-        self._allAttributes = allAttributes
+        self.__allAttributes = allAttributes
         
 
     ## provides read access to the model data
@@ -82,7 +82,7 @@ class ComponentModel(QAbstractItemModel):
             else:
                 return node.nodeName() 
         elif index.column() == 1:
-            if self._allAttributes:
+            if self.__allAttributes:
                 attributes = QStringList()
                 for i in range(attributeMap.count()):
                     attribute = attributeMap.item(i)
@@ -120,7 +120,7 @@ class ComponentModel(QAbstractItemModel):
             if section == 0 :
                 return QVariant("Name")
             elif section == 1:
-                if self._allAttributes:
+                if self.__allAttributes:
                     return QVariant("Attributes")
                 else:
                     return QVariant("Type")

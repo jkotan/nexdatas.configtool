@@ -367,7 +367,8 @@ class Component(object):
     def _moveNodeUp(self, node, parent):
         if self.view is not None  and self.dialog is not None and self.view.model() is not None: 
             if not parent.isValid():
-                parentItem = self.rootItem
+#                parentItem = self.rootItem
+                return
             else:
                 parentItem = parent.internalPointer()
             pnode = parentItem.node
@@ -386,7 +387,8 @@ class Component(object):
     def _moveNodeDown(self, node, parent):
         if self.view is not None and self.dialog is not None and self.view.model() is not None: 
             if not parent.isValid():
-                parentItem = self.rootItem
+                return
+#                parentItem = self.rootItem
             else:
                 parentItem = parent.internalPointer()
             pnode = parentItem.node

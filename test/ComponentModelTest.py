@@ -744,6 +744,107 @@ class ComponentModelTest(unittest.TestCase):
             self.assertEqual(ti.row(),-1)
             self.assertEqual(ti.column(),-1)
             self.assertEqual(ti.internalPointer(), None)
+
+
+
+    def test_parent(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+
+        ri = cm.rootIndex
+        pri = cm.parent(ri)
+        self.assertTrue(isinstance(pri, QModelIndex))
+        self.assertEqual(pri.row(), -1)
+        self.assertEqual(pri.column(), -1)
+        self.assertEqual(pri.internalPointer(), None)
+
+        # avoids showing #document
+        di = cm.index(0,0,ri)
+        pdi = cm.parent(di)
+        self.assertTrue(isinstance(pdi, QModelIndex))
+        self.assertEqual(pdi.row(), -1)
+        self.assertEqual(pdi.column(), -1)
+        self.assertEqual(pdi.internalPointer(), None)
+
+        iv = cm.index(0,0)
+        piv = cm.parent(iv)
+        self.assertTrue(isinstance(piv, QModelIndex))
+        self.assertEqual(pdi.row(), -1)
+        self.assertEqual(pdi.column(), -1)
+        self.assertEqual(pdi.internalPointer(), None)
+        
+
+        
+        for n in range(nkids): 
+            allAttr = not allAttr
+            cm.setAttributeView(allAttr)            
+
+            ki = cm.index(n, 0, di) 
+            pki = cm.parent(ki)
+            self.assertEqual(pki, di)
+
+            ki = cm.index(n,1,di)
+            pki = cm.parent(ki)
+            self.assertEqual(pki, di)
+
+            ki = cm.index(n,2,di)
+            pki = cm.parent(ki)
+            self.assertEqual(pki, di)
+
+            ki = cm.index(n,3,di)
+            pki = cm.parent(ki)
+            self.assertTrue(isinstance(pki, QModelIndex))
+            self.assertEqual(pki.row(),-1)
+            self.assertEqual(pki.column(),-1)
+            self.assertEqual(pki.internalPointer(), None)
+
+            ki = cm.index(n,0,di) 
+            ti = cm.index(0,0,ki)
+            pti = cm.parent(ti)
+            self.assertEqual(pti, ki)
+
+
+            ti = cm.index(0,1,ki)
+            pti = cm.parent(ti)
+            self.assertEqual(pti, ki)
+
+            ti = cm.index(0,2,ki)
+            pti = cm.parent(ti)
+            self.assertEqual(pti, ki)
+
+            ti = cm.index(0,3,ki)
+            pti = cm.parent(ti)
+            self.assertTrue(isinstance(pti, QModelIndex))
+            self.assertEqual(pti.row(),-1)
+            self.assertEqual(pti.column(),-1)
+            self.assertEqual(pti.internalPointer(), None)
         
 
 if __name__ == '__main__':

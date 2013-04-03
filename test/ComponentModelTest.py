@@ -262,11 +262,304 @@ class ComponentModelTest(unittest.TestCase):
         self.assertTrue(isinstance(dt, QVariant))        
         self.assertEqual(dt.toString(), '')
 
+        for role in range(1,5):
+            dt = cm.data(cm.rootIndex,role)
+            self.assertTrue(isinstance(dt, QVariant))        
+            self.assertEqual(dt.toString(), '')
+
+
 
         dt = cm.data(cm.rootIndex)
-        print dt
         self.assertTrue(isinstance(dt, QVariant))         
         self.assertEqual(dt.toString(), '#document')
+
+        dt = cm.data(cm.rootIndex, Qt.DisplayRole)
+        self.assertTrue(isinstance(dt, QVariant))         
+        self.assertEqual(dt.toString(), '#document')
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_Data_name(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = False    
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+        self.assertEqual(cm.headerData(0, Qt.Vertical), None)
+        
+        ri = cm.rootIndex
+        di = cm.index(0,0,ri)
+        ci = cd.child(0)
+        for n in range(nkids):
+            kd = ci.child(n)
+
+
+            ki0 = cm.index(n,0,di)
+            dt = cm.data(ki0)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(dt.toString(), 'kid%s: myname%s' % (n,n))
+
+
+            ki1 = cm.index(n,1,di)
+            dt = cm.data(ki1)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), 'mytype%s' % n)
+
+
+            ki2 = cm.index(n,2,di)
+            dt = cm.data(ki2)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), '')
+ 
+
+            ki2 = cm.index(n,-1,di)
+            dt = cm.data(ki2)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), '')
+ 
+
+            ki2 = cm.index(n,3,di)
+            dt = cm.data(ki2)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), '')
+            
+
+
+
+
+
+    def test_Data_name_attr(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = False    
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+        self.assertEqual(cm.headerData(0, Qt.Vertical), None)
+        
+        ri = cm.rootIndex
+        di = cm.index(0,0,ri)
+        ci = cd.child(0)
+        for n in range(nkids):
+            kd = ci.child(n)
+
+            cm.setAttributeView(False)
+
+            ki0 = cm.index(n,0,di)
+            dt = cm.data(ki0)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(dt.toString(), 'kid%s: myname%s' % (n,n))
+
+
+            ki1 = cm.index(n,1,di)
+            dt = cm.data(ki1)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), 'mytype%s' % n)
+
+
+            ki2 = cm.index(n,2,di)
+            dt = cm.data(ki2)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), '')
+ 
+
+            ki2 = cm.index(n,-1,di)
+            dt = cm.data(ki2)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), '')
+ 
+
+            ki2 = cm.index(n,3,di)
+            dt = cm.data(ki2)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), '')
+            
+            cm.setAttributeView(True)
+
+
+            ki0 = cm.index(n,0,di)
+            dt = cm.data(ki0)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(dt.toString(), 'kid%s: myname%s' % (n,n))
+
+
+            ki1 = cm.index(n,1,di)
+            dt = cm.data(ki1)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), 'units="myunits%s" type="mytype%s" name="myname%s"' % (n,n,n))
+
+
+            ki2 = cm.index(n,2,di)
+            dt = cm.data(ki2)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), '')
+
+
+
+    def test_Data_name_attr_true(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+        self.assertEqual(cm.headerData(0, Qt.Vertical), None)
+        
+        ri = cm.rootIndex
+        di = cm.index(0,0,ri)
+        ci = cd.child(0)
+        for n in range(nkids):
+            kd = ci.child(n)
+
+
+            ki0 = cm.index(n,0,di)
+            dt = cm.data(ki0)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(dt.toString(), 'kid%s: myname%s' % (n,n))
+
+
+            ki1 = cm.index(n,1,di)
+            dt = cm.data(ki1)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), 'units="myunits%s" type="mytype%s" name="myname%s"' % (n,n,n))
+
+            ki2 = cm.index(n,2,di)
+            dt = cm.data(ki2)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), '')
+
+
+
+
+
+
+    def test_Data_name_text(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+        self.assertEqual(cm.headerData(0, Qt.Vertical), None)
+        
+        ri = cm.rootIndex
+        di = cm.index(0,0,ri)
+        ci = cd.child(0)
+        for n in range(nkids): 
+            allAttr = not allAttr
+            cm.setAttributeView(allAttr)            
+            ki = cm.index(n,0,di)
+
+            ti = cm.index(0,0,ki)
+            dt = cm.data(ti)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(dt.toString(), '#text')
+
+
+            ti = cm.index(0,1,ki)
+            dt = cm.data(ti)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), '')
+
+
+            ti = cm.index(0,2,ki)
+            dt = cm.data(ti)
+            self.assertTrue(isinstance(dt, QVariant))         
+            self.assertEqual(str(dt.toString()).strip(), 'Text  %s' % n)
 
 
 

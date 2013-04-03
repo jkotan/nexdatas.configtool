@@ -165,7 +165,7 @@ class NodeDlg(QDialog):
         if self.view is not None and self.view.model() is not None: 
             row = self.getNodeRow(node)
             if row is not None:
-                self.view.model().removeItem(row, node, parent)
+                self.view.model().removeItem(row, parent)
 
                 
     ## replaces node
@@ -177,7 +177,7 @@ class NodeDlg(QDialog):
             row = self.getNodeRow(oldNode)
         if self.view is not None and self.view.model() is not None: 
             if row is not None:
-                self.view.model().removeItem(row, oldNode, parent)
+                self.view.model().removeItem(row, parent)
                 if row  < self.node.childNodes().count():
                     self.view.model().insertItem(row, newNode, parent)
                 else:
@@ -204,7 +204,7 @@ class NodeDlg(QDialog):
         if self.view is not None and self.view.model() is not None: 
             row = self._getElementRow(element)
             if row is not None:
-                self.view.model().removeItem(row, element, parent)
+                self.view.model().removeItem(row, parent)
 
 
     ## replaces node element
@@ -216,7 +216,7 @@ class NodeDlg(QDialog):
             row = self._getElementRow(oldElement)
         if self.view is not None and self.view.model() is not None: 
             if row is not None:
-                self.view.model().removeItem(row, oldElement, parent)
+                self.view.model().removeItem(row, parent)
                 if row  < self.node.childNodes().count():
                     self.view.model().insertItem(row, newElement, parent)
                 else:

@@ -250,11 +250,12 @@ class ComponentModel(QAbstractItemModel):
     # \param node DOM node to remove
     # \param parent index of the parent item       
     # \returns True if parent exists
-    def removeItem(self, position, node,  parent = QModelIndex()):
+    def removeItem(self, position,  parent = QModelIndex()):
         item = parent.internalPointer()
         if not item:
             return False     
         self.beginRemoveRows(parent, position, position)
+        node = item.child(position).node
 
         status = item.removeChildren(position, 1)
         item.node.removeChild(node)

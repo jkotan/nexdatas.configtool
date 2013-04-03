@@ -372,7 +372,7 @@ class Component(object):
             pnode = parentItem.node
             row = self._getNodeRow(node, pnode)
             if row is not None and row != 0:
-                self.view.model().removeItem(row, node, parent)
+                self.view.model().removeItem(row, parent)
                 self.view.model().insertItem(row-1, node, parent)
                 return row-1
 
@@ -389,7 +389,7 @@ class Component(object):
             pnode = parentItem.node
             row = self._getNodeRow(node, pnode)
             if row is not None and row  < pnode.childNodes().count()-1:
-                self.view.model().removeItem(row, node, parent)
+                self.view.model().removeItem(row, parent)
                 if row  < pnode.childNodes().count()-1:
                     self.view.model().insertItem(row+1, node, parent)
                 else:
@@ -595,7 +595,7 @@ class Component(object):
         if self.view is not None and self.view.model() is not None: 
             row = self.getNodeRow(node, node.parentNode())
             if row is not None:
-                self.view.model().removeItem(row, node, parent)
+                self.view.model().removeItem(row, parent)
 
 
     ## provides row number of the given node

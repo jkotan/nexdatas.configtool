@@ -367,13 +367,10 @@ class Component(object):
     def _moveNodeUp(self, node, parent):
         if self.view is not None  and self.dialog is not None and self.view.model() is not None: 
             if not parent.isValid():
-#                parentItem = self.rootItem
                 return
-            else:
-                parentItem = parent.internalPointer()
+            parentItem = parent.internalPointer()
             pnode = parentItem.node
             row = self._getNodeRow(node, pnode)
-        if self.view is not None and self.dialog is not None and self.view.model() is not None: 
             if row is not None and row != 0:
                 self.view.model().removeItem(row, node, parent)
                 self.view.model().insertItem(row-1, node, parent)
@@ -388,12 +385,9 @@ class Component(object):
         if self.view is not None and self.dialog is not None and self.view.model() is not None: 
             if not parent.isValid():
                 return
-#                parentItem = self.rootItem
-            else:
-                parentItem = parent.internalPointer()
+            parentItem = parent.internalPointer()
             pnode = parentItem.node
             row = self._getNodeRow(node, pnode)
-        if self.view is not None and self.view.model() is not None: 
             if row is not None and row  < pnode.childNodes().count()-1:
                 self.view.model().removeItem(row, node, parent)
                 if row  < pnode.childNodes().count()-1:

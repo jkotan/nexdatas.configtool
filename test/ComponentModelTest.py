@@ -847,5 +847,82 @@ class ComponentModelTest(unittest.TestCase):
             self.assertEqual(pti.internalPointer(), None)
         
 
+
+    def test_rowCount(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+
+        ri = cm.rootIndex
+        self.assertEqual(cm.rowCount(ri), 1)
+
+        # avoids showing #document
+        di = cm.index(0,0,ri)
+        self.assertEqual(cm.rowCount(di), nkids)
+
+        iv = cm.index(0,0)
+        self.assertEqual(cm.rowCount(iv), nkids)
+        
+
+        
+        for n in range(nkids): 
+            allAttr = not allAttr
+            cm.setAttributeView(allAttr)            
+
+            ki = cm.index(n, 0, di) 
+            self.assertEqual(cm.rowCount(ki), 1)
+
+            ki = cm.index(n,1,di)
+            self.assertEqual(cm.rowCount(ki), 0)
+
+            ki = cm.index(n,2,di)
+            self.assertEqual(cm.rowCount(ki), 0)
+
+            # invalid index
+            ki = cm.index(n,3,di)
+            self.assertEqual(cm.rowCount(ki), 1)
+
+            ki = cm.index(n,0,di) 
+            ti = cm.index(0,0,ki)
+            self.assertEqual(cm.rowCount(ti), 0)
+
+
+            ti = cm.index(0,1,ki)
+            self.assertEqual(cm.rowCount(ti), 0)
+
+            ti = cm.index(0,2,ki)
+            self.assertEqual(cm.rowCount(ti), 0)
+
+            ti = cm.index(0,3,ki)
+            self.assertEqual(cm.rowCount(ti), 1)
+
+
+
 if __name__ == '__main__':
     unittest.main()

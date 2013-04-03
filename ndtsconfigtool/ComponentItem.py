@@ -30,7 +30,7 @@ class ComponentItem(object):
         self.node = node
         ## list with child items
         self.__childItems = []
-        ## the parent of the item
+        ## the parent ComponentItem of the item
         self.parent = parent
         
 

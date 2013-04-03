@@ -233,7 +233,7 @@ class ComponentModelTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_Data(self):
+    def test_data(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
@@ -280,7 +280,7 @@ class ComponentModelTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_Data_name(self):
+    def test_data_name(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
@@ -353,7 +353,7 @@ class ComponentModelTest(unittest.TestCase):
 
 
 
-    def test_Data_name_attr(self):
+    def test_data_name_attr(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
@@ -444,7 +444,7 @@ class ComponentModelTest(unittest.TestCase):
 
 
 
-    def test_Data_name_attr_true(self):
+    def test_data_name_attr_true(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
@@ -504,7 +504,7 @@ class ComponentModelTest(unittest.TestCase):
 
 
 
-    def test_Data_name_text(self):
+    def test_data_name_text(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
@@ -562,6 +562,72 @@ class ComponentModelTest(unittest.TestCase):
             self.assertEqual(str(dt.toString()).strip(), 'Text  %s' % n)
 
 
+    def test_flag(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+
+        self.assertEqual(cm.flags(QModelIndex()), Qt.ItemIsEnabled)
+        ri = cm.rootIndex
+        self.assertEqual(cm.flags(ri), Qt.ItemFlags(QAbstractItemModel.flags(cm,ri) |
+                            Qt.ItemIsEnabled | Qt.ItemIsSelectable ))
+        di = cm.index(0,0,ri)
+        self.assertEqual(cm.flags(di), Qt.ItemFlags(QAbstractItemModel.flags(cm,di) |
+                            Qt.ItemIsEnabled | Qt.ItemIsSelectable ))
+        for n in range(nkids): 
+            allAttr = not allAttr
+            cm.setAttributeView(allAttr)            
+            ki = cm.index(n,0,di)
+            self.assertEqual(cm.flags(ki), Qt.ItemFlags(QAbstractItemModel.flags(cm,ki) |
+                                                        Qt.ItemIsEnabled | Qt.ItemIsSelectable ))
+            ki = cm.index(n,1,di)
+            self.assertEqual(cm.flags(ki), Qt.ItemFlags(QAbstractItemModel.flags(cm,ki) |
+                                                        Qt.ItemIsEnabled | Qt.ItemIsSelectable ))
+            ki = cm.index(n,2,di)
+            self.assertEqual(cm.flags(ki), Qt.ItemFlags(QAbstractItemModel.flags(cm,ki) |
+                                                        Qt.ItemIsEnabled | Qt.ItemIsSelectable ))
+            ki = cm.index(n,3,di)
+            self.assertEqual(cm.flags(ki), Qt.ItemIsEnabled)
+
+            ti = cm.index(0,0,ki)
+            self.assertEqual(cm.flags(ti), Qt.ItemFlags(QAbstractItemModel.flags(cm,ti) |
+                                                        Qt.ItemIsEnabled | Qt.ItemIsSelectable ))
+            ti = cm.index(0,1,ki)
+            self.assertEqual(cm.flags(ti), Qt.ItemFlags(QAbstractItemModel.flags(cm,ti) |
+                                                        Qt.ItemIsEnabled | Qt.ItemIsSelectable ))
+            ti = cm.index(0,2,ki)
+            self.assertEqual(cm.flags(ti), Qt.ItemFlags(QAbstractItemModel.flags(cm,ti) |
+                                                        Qt.ItemIsEnabled | Qt.ItemIsSelectable ))
+            ti = cm.index(0,3,ki)
+            self.assertEqual(cm.flags(ti), Qt.ItemIsEnabled)
+
+        
 
 if __name__ == '__main__':
     unittest.main()

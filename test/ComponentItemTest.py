@@ -67,8 +67,8 @@ class ComponentItemTest(unittest.TestCase):
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             self.__seed  = long(time.time() * 256) 
-#        self.__seed = 105186230414225794971485160270620812570
-
+#        self.__seed =335783554629280825854815889576355181078
+#        self.__seed =56405821691954067238837069340540387163
 
         self.__rnd = random.Random(self.__seed)
 
@@ -528,7 +528,7 @@ class ComponentItemTest(unittest.TestCase):
 
         
         for k in range(nkids):
-            if k >= insd and k <= insd + nin:
+            if k >= insd and k < insd + nin:
                 mnin =  k - insd 
                 ks = ci.child(k) 
                 self.assertTrue(isinstance(ks, ComponentItem))
@@ -539,7 +539,7 @@ class ComponentItemTest(unittest.TestCase):
                 self.assertEqual(ks.node.nodeName(), "insertedkid%s" % mnin)
                 self.assertEqual(ks.parent, ci)
                 continue
-            kk = k if k < insd else k-1
+            kk = k if k < insd else k-nin
             ks = ci.child(k) 
             self.assertTrue(isinstance(ks, ComponentItem))
             self.assertTrue(isinstance(ks.parent, ComponentItem))

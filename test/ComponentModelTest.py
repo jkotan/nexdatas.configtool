@@ -230,5 +230,42 @@ class ComponentModelTest(unittest.TestCase):
         self.assertTrue(isinstance(hd, QVariant))        
         self.assertEqual(hd.toString(), 'Attributes')
 
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_Data(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            qdn.appendChild(kds[-1])
+
+            
+        allAttr = False    
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+        self.assertEqual(cm.headerData(0, Qt.Vertical), None)
+
+        hd = cm.headerData(0, Qt.Horizontal)
+        self.assertTrue(isinstance(hd, QVariant))        
+        self.assertEqual(hd.toString(), 'Name')
+        hd = cm.headerData(0, Qt.Horizontal,Qt.DisplayRole)
+        self.assertTrue(isinstance(hd, QVariant))        
+        self.assertEqual(hd.toString(), 'Name')
+
+
+
 if __name__ == '__main__':
     unittest.main()

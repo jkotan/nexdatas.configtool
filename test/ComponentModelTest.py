@@ -258,12 +258,15 @@ class ComponentModelTest(unittest.TestCase):
         self.assertEqual(cm.rootIndex.column(), 0)
         self.assertEqual(cm.headerData(0, Qt.Vertical), None)
 
-        hd = cm.headerData(0, Qt.Horizontal)
-        self.assertTrue(isinstance(hd, QVariant))        
-        self.assertEqual(hd.toString(), 'Name')
-        hd = cm.headerData(0, Qt.Horizontal,Qt.DisplayRole)
-        self.assertTrue(isinstance(hd, QVariant))        
-        self.assertEqual(hd.toString(), 'Name')
+        dt = cm.data(QModelIndex())
+        self.assertTrue(isinstance(dt, QVariant))        
+        self.assertEqual(dt.toString(), '')
+
+
+        dt = cm.data(cm.rootIndex)
+        print dt
+        self.assertTrue(isinstance(dt, QVariant))         
+        self.assertEqual(dt.toString(), '#document')
 
 
 

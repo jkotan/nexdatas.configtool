@@ -95,22 +95,22 @@ class ComponentModel(QAbstractItemModel):
                 name = attributeMap.namedItem("name").nodeValue()
 
             if name is not None:    
-                return node.nodeName() +": "+ name
+                return QVariant(node.nodeName() +": "+ name)
             else:
-                return node.nodeName() 
+                return QVariant(node.nodeName())
         elif index.column() == 1:
             if self.__allAttributes:
                 attributes = QStringList()
                 for i in range(attributeMap.count()):
                     attribute = attributeMap.item(i)
                     attributes.append(attribute.nodeName() + "=\"" +attribute.nodeValue() + "\"")
-                return attributes.join(" ") + "  "    
+                return QVariant(attributes.join(" ") + "  ")
             else:
-                return (attributeMap.namedItem("type").nodeValue() + "  ") \
-                    if attributeMap.contains("type") else QString("  ")
+                return QVariant((attributeMap.namedItem("type").nodeValue() + "  ") 
+                                if attributeMap.contains("type") else QString("  "))
                  
         elif index.column() == 2:
-            return node.nodeValue().split("\n").join(" ")
+            return QVariant(node.nodeValue().split("\n").join(" "))
         else:
             return QVariant()
         

@@ -58,7 +58,13 @@ class ComponentDlg(QDialog):
         ## user interface
         self.ui = Ui_ComponentDlg()
 
-    
+
+    def keyPressEvent(self, e):
+        
+        if e.key() == Qt.Key_Escape:
+            print "NO CLOSE"
+#            self.close()
+            
     ## provides row number of the given node
     # \param child child item
     # \returns row number

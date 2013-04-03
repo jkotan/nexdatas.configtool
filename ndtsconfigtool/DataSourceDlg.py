@@ -53,6 +53,14 @@ class CommonDataSourceDlg(NodeDlg):
         ## user interface
         self.ui = Ui_DataSourceDlg()
 
+    ## handling escape action
+    def keyPressEvent(self, e):
+        
+        if e.key() == Qt.Key_Escape:
+            print "NO CLOSE"
+#            self.close()
+
+
     ## connects the dialog actions 
     def connectWidgets(self):
         
@@ -1347,6 +1355,8 @@ class DataSourceDlg(CommonDataSourceDlg):
         ## datasource methods
         self.methods = DataSourceMethods(self, self.datasource)
         
+
+
             
     ## updates the form
     # \brief abstract class

@@ -247,7 +247,6 @@ class ComponentModel(QAbstractItemModel):
 
     ## removes the given rows from the model
     # \param position row integer index of the first removed row
-    # \param node DOM node to remove
     # \param parent index of the parent item       
     # \returns True if parent exists
     def removeItem(self, position,  parent = QModelIndex()):

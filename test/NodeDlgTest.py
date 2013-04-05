@@ -31,14 +31,92 @@ import time
 from PyQt4.QtTest import QTest
 from PyQt4.QtGui import (QApplication, QMessageBox, QPushButton)
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
+from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QModelIndex
+from PyQt4.QtXml import QDomNode, QDomDocument
+
 
 from ndtsconfigtool.NodeDlg import NodeDlg
+from ndtsconfigtool.ComponentModel import ComponentModel
+
 
 
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+class MyNodeDlg(NodeDlg):
+    def __init__(self, parent=None):
+        super(MyNodeDlg, self).__init__(parent)
+        self.stack = []
+
+    def updateForm(self):
+        self.stack.append("updateForm")
+
+    def updateNode(self, index=QModelIndex()):
+        self.stack.append("updateNode")
+        self.stack.append(index)
+
+
+    def createGUI(self):
+        self.stack.append("createGUI")
+    
+    def setFromNode(self, node=None):
+        self.stack.append("setFromNode")
+        self.stack.append(node)
+        
+
+class TestView(object):
+    def __init__(self):
+        try:
+            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            self.__seed  = long(time.time() * 256) 
+         
+        self.__rnd = random.Random(self.__seed)
+        print "VIEW SEED", self.__seed
+
+        self.sindex = None
+        self.eindex = None
+
+
+        self.doc = QDomDocument()
+        self.nname = "definition"
+        self.qdn = self.doc.createElement(self.nname)
+        self.doc.appendChild(self.qdn)
+        self.nkids =  self.__rnd.randint(1, 10) 
+        self.kds = []
+        self.tkds = []
+        for n in range(self.nkids):
+            self.kds.append(self.doc.createElement("kid%s" %  n))
+            self.kds[-1].setAttribute("name","myname%s" %  n)
+            self.kds[-1].setAttribute("type","mytype%s" %  n)
+            self.kds[-1].setAttribute("units","myunits%s" %  n)
+            self.qdn.appendChild(self.kds[-1]) 
+            self.tkds.append(self.doc.createTextNode("\nText\n %s\n" %  n))
+            self.kds[-1].appendChild(self.tkds[-1]) 
+
+#        print doc.toString()    
+            
+        self.allAttr = False    
+        self.testModel = ComponentModel(self.doc,self.allAttr)
+#        self.myindex = self.setIndex(0, 0, self.testModel.rootIndex)
+        self.myindex = QModelIndex()
+
+    def setIndex(self, row, column, parent):
+        self.myindex = self.testModel.index( row, column, parent)
+        print self.myindex.column()
+
+    def currentIndex(self):
+        return self.myindex
+
+    def model(self):
+        return self.testModel
+
+    def dataChanged(self, sindex, eindex):
+        self.sindex = sindex
+        self.eindex = eindex
+
+
 
 class Ui_NodeDlg(object):
     pass
@@ -207,6 +285,118 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.result(),0)
 
 
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_reset(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = NodeDlg()
+        form.ui = Ui_NodeDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, [])
+
+        vw = TestView()
+
+        ri = vw.model().rootIndex
+        di = vw.model().index(0,0,ri)
+        n = self.__rnd.randint(0, vw.nkids-1) 
+        ki = vw.model().index(n,0,di)
+
+        vw.myindex =  ki
+
+
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        form.view = vw
+        
+        form.reset()
+        self.assertEqual(vw.sindex,vw.currentIndex())
+        self.assertEqual(vw.eindex,vw.currentIndex())
+        self.assertEqual(vw.eindex,vw.sindex)
+
+        self.assertEqual(form.result(),0)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_reset_nozero(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = NodeDlg()
+        form.ui = Ui_NodeDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, [])
+
+        vw = TestView()    
+        ri = vw.model().rootIndex
+        di = vw.model().index(0,0,ri)
+        n = self.__rnd.randint(0, vw.nkids-1) 
+        cn = self.__rnd.randint(1, 2) 
+        ki = vw.model().index(n,cn,di)
+
+        vw.myindex =  ki 
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        form.view = vw
+        
+        form.reset()
+        self.assertEqual(vw.sindex.row(),vw.currentIndex().row())
+        self.assertEqual(vw.sindex.column(),0)
+        self.assertEqual(vw.sindex.parent(),vw.currentIndex().parent())
+        self.assertEqual(vw.eindex,vw.sindex)
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_reset_nozero_extended(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = MyNodeDlg()
+        form.ui = Ui_NodeDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, [])
+
+        vw = TestView()    
+        ri = vw.model().rootIndex
+        di = vw.model().index(0,0,ri)
+        n = self.__rnd.randint(0, vw.nkids-1) 
+        cn = self.__rnd.randint(1, 2) 
+        ki = vw.model().index(n,cn,di)
+
+        vw.myindex =  ki 
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        form.view = vw
+        
+        form.reset()
+        self.assertEqual(vw.sindex.row(),vw.currentIndex().row())
+        self.assertEqual(vw.sindex.column(),0)
+        self.assertEqual(vw.sindex.parent(),vw.currentIndex().parent())
+        self.assertEqual(vw.eindex,vw.sindex)
+
+        self.assertEqual(form.stack[0],"setFromNode")
+        self.assertEqual(form.stack[1],None)
+        self.assertEqual(form.stack[2],"updateForm")
+        self.assertEqual(form.result(),0)
 
 
 

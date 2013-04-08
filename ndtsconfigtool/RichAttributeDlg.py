@@ -325,7 +325,7 @@ class RichAttributeDlg(NodeDlg):
         if self.nexusType:
             elem.setAttribute(QString("type"), QString(self.nexusType))
 
-        self._replaceText(index, unicode(self.value))
+        self.replaceText(index, unicode(self.value))
 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :

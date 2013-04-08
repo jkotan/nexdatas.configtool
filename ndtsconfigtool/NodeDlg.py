@@ -84,8 +84,6 @@ class NodeDlg(QDialog):
         return self.dts.replaceText(self.node, index, self.root, self.view.model(), text)
     
 
-
-
     ## appends node
     # \param node DOM node to remove
     # \param parent parent node index
@@ -93,12 +91,12 @@ class NodeDlg(QDialog):
         if self.view is not None and self.view.model() is not None: 
             return self.dts.appendNode(node, parent, self.view.model())
         return False     
-   
+
 
     ## removes node element
     # \param element DOM node element to remove
     # \param parent parent node index      
-    def _removeElement(self, element, parent):
+    def removeElement(self, element, parent):
         if self.view is not None and self.view.model() is not None: 
             return self.dts.removeElement(element, parent, self.view.model())
 
@@ -108,7 +106,7 @@ class NodeDlg(QDialog):
     # \param oldElement old DOM node element 
     # \param newElement new DOM node element 
     # \param parent parent node index
-    def _replaceElement(self, oldElement, newElement, parent):
+    def replaceElement(self, oldElement, newElement, parent):
         if self.view is not None and self.view.model() is not None: 
             return self.dts.replaceElement(oldElement, newElement, parent, self.view.model())
             
@@ -117,9 +115,10 @@ class NodeDlg(QDialog):
     ## appends node element
     # \param newElement new DOM node element 
     # \param parent parent node index      
-    def _appendElement(self, newElement, parent):
+    def appendElement(self, newElement, parent):
         if self.view is not None and self.view.model() is not None: 
-            return self.dts.appendElement(newElement, parent, self.view.model())
+            return self.dts.appendNode(newElement, parent, self.view.model())
+        return False     
 
             
     ## updates the form

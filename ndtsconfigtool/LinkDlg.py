@@ -185,15 +185,15 @@ class LinkDlg(NodeDlg):
 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self._removeElement(doc, index)
+            self.removeElement(doc, index)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self._replaceElement(doc, newDoc, index)
+                self.replaceElement(doc, newDoc, index)
             else:
-                self._appendElement(newDoc, index)
+                self.appendElement(newDoc, index)
 
 
 

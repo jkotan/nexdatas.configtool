@@ -471,19 +471,19 @@ class FieldDlg(NodeDlg):
 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self._removeElement(doc, index)
+            self.removeElement(doc, index)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self._replaceElement(doc, newDoc, index)
+                self.replaceElement(doc, newDoc, index)
             else:
-                self._appendElement(newDoc, index)
+                self.appendElement(newDoc, index)
 
         dimens = self.node.firstChildElement(QString("dimensions"))           
         if not self.dimensions and dimens and dimens.nodeName() == "dimensions":
-            self._removeElement(dimens,index)
+            self.removeElement(dimens,index)
         elif self.dimensions:
             newDimens = self.root.createElement(QString("dimensions"))
             newDimens.setAttribute(QString("rank"), QString(unicode(self.rank)))
@@ -499,9 +499,9 @@ class FieldDlg(NodeDlg):
                     newDimens.appendChild(dim)
                 
             if dimens and dimens.nodeName() == "dimensions" :
-                self._replaceElement(dimens, newDimens, index)
+                self.replaceElement(dimens, newDimens, index)
             else:
-                self._appendElement(newDimens, index)
+                self.appendElement(newDimens, index)
 
 
 if __name__ == "__main__":

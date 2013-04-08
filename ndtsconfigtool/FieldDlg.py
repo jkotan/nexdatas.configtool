@@ -464,7 +464,7 @@ class FieldDlg(NodeDlg):
 
 
 
-        self._replaceText(self.node, index, unicode(self.value))
+        self._replaceText(index, unicode(self.value))
         
         for attr in self.attributes.keys():
             elem.setAttribute(QString(attr), QString(self.attributes[attr]))

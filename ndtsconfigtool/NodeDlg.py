@@ -77,12 +77,11 @@ class NodeDlg(QDialog):
         
 
     ## replaces node text for the given node
-    # \param node parent DOM node        
     # \param index of child text node
     # \param parent parent node index        
     # \param text string with text
-    def _replaceText(self, node, index, text = None):
-        return self.dts.replaceText(node, index, self.root, self.view.model(), text)
+    def _replaceText(self, index, text = None):
+        return self.dts.replaceText(self.node, index, self.root, self.view.model(), text)
     
 
 

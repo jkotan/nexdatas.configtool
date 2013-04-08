@@ -265,7 +265,7 @@ class StrategyDlg(NodeDlg):
             elem.setAttribute(QString("shuffle"), QString("true") if self.shuffle else "false" )
             elem.setAttribute(QString("rate"), QString(str(self.rate)))
 
-        self._replaceText(self.node, index, unicode(self.postrun))
+        self._replaceText(index, unicode(self.postrun))
 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :

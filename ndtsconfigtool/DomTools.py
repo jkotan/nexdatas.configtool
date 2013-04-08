@@ -137,10 +137,11 @@ class DomTools(object):
     # \param parent parent node index
     # \param model Component model            
     def replaceNode(self, oldNode, newNode, parent, model):
-        row = self.getNodeRow(oldNode, parent.internalPointer().node)
+        node = parent.internalPointer().node
+        row = self.getNodeRow(oldNode, node)
         if row is not None:
             model.removeItem(row, parent)
-            if row  < self.node.childNodes().count():
+            if row  < node.childNodes().count():
                 model.insertItem(row, newNode, parent)
             else:
                 model.appendItem(newNode, parent)

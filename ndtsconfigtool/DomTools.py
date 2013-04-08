@@ -146,7 +146,7 @@ class DomTools(object):
                 model.appendItem(newNode, parent)
 
     ## appends node
-    # \param node DOM node to remove
+    # \param node DOM node to append
     # \param parent parent node index
     # \param model Component model            
     def appendNode(self, node, parent, model):

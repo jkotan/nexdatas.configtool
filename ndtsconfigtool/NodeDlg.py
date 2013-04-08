@@ -84,15 +84,6 @@ class NodeDlg(QDialog):
         return self.dts.replaceText(self.node, index, self.root, self.view.model(), text)
     
 
-    ## appends node
-    # \param node DOM node to remove
-    # \param parent parent node index
-    def appendNode(self, node, parent):
-        if self.view is not None and self.view.model() is not None: 
-            return self.dts.appendNode(node, parent, self.view.model())
-        return False     
-
-
     ## removes node element
     # \param element DOM node element to remove
     # \param parent parent node index      

@@ -383,26 +383,26 @@ class FieldDlg(NodeDlg):
         self.ui.applyPushButton.setEnabled(enable)
 
 
-    ## appends node
-    # \param node DOM node to append
+    ## appends newElement
+    # \param newElement DOM node to append
     # \param parent parent DOM node        
-    def appendNode(self, node, parent):
+    def appendElement(self, newElement, parent):
         singles = {"datasource":"DataSource", "strategy":"Strategy"}
-        if unicode(node.nodeName()) in singles:
-            if not self.node:
+        if unicode(newElement.nodeName()) in singles:
+            if not self.newElement:
                 return
-            child = self.node.firstChild()
+            child = self.newElement.firstChild()
             while not child.isNull():
-                if child.nodeName() == unicode(node.nodeName()):
+                if child.nodeName() == unicode(newElement.nodeName()):
                     QMessageBox.warning(
-                        self, "%s exists" % singles[str(node.nodeName())], 
-                        "To add a new %s please remove the old one" % node.nodeName())
+                        self, "%s exists" % singles[str(newElement.nodeName())], 
+                        "To add a new %s please remove the old one" % newElement.nodeName())
                     return False
                 child = child.nextSibling()    
 
 
 
-        return NodeDlg.appendNode(self, node, parent)       
+        return NodeDlg.appendElement(self, newElement, parent)       
         
 
     ## applys input text strings

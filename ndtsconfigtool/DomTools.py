@@ -180,13 +180,6 @@ class DomTools(object):
                 model.appendItem(newElement, parent)
 
 
-    ## appends node element
-    # \param newElement new DOM node element 
-    # \param parent parent node index      
-    # \param model Component model            
-    def appendElement(self, newElement, parent, model):
-        model.appendItem(newElement, parent)
-
 
 if __name__ == "__main__":
     import sys

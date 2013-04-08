@@ -505,7 +505,7 @@ class Component(object):
         self.dialog.ui.widget.node = node
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.dialog.ui.widget.appendNode(clipNode, index)        
+        self.dialog.ui.widget.appendElement(clipNode, index)        
 
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         
@@ -533,7 +533,7 @@ class Component(object):
         child = self.dialog.ui.widget.root.createElement(QString(name))
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        status = self.dialog.ui.widget.appendNode(child, index)
+        status = self.dialog.ui.widget.appendElement(child, index)
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         self.view.expand(index)
         if status:
@@ -902,7 +902,7 @@ class Component(object):
                         index = self.view.model().index(index.row(), 0, index.parent())
                     while not child.isNull():
                         child2 = self.document.importNode(child, True)
-                        self.dialog.ui.widget.appendNode(child2, index)
+                        self.dialog.ui.widget.appendElement(child2, index)
 
                         child = child.nextSibling()
 
@@ -970,7 +970,7 @@ class Component(object):
                             index = self.view.model().index(index.row(), 0, index.parent())
                         self.dialog.ui.widget.node = node
                         ds2 = self.document.importNode(ds, True)
-                        self.dialog.ui.widget.appendNode(ds2, index)
+                        self.dialog.ui.widget.appendElement(ds2, index)
                     else:
                             QMessageBox.warning(self.dialog, "Corrupted DataSource ", 
                                                 "Missing <datasource> tag in %s" % dsFile)
@@ -1029,7 +1029,7 @@ class Component(object):
         dsNode2 = self.document.importNode(dsNode, True)
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.dialog.ui.widget.appendNode(dsNode2, index)
+        self.dialog.ui.widget.appendElement(dsNode2, index)
         
         self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
         self.view.expand(index)

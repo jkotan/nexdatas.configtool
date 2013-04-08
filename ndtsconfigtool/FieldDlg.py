@@ -389,9 +389,9 @@ class FieldDlg(NodeDlg):
     def appendElement(self, newElement, parent):
         singles = {"datasource":"DataSource", "strategy":"Strategy"}
         if unicode(newElement.nodeName()) in singles:
-            if not self.newElement:
+            if not self.node:
                 return
-            child = self.newElement.firstChild()
+            child = self.node.firstChild()
             while not child.isNull():
                 if child.nodeName() == unicode(newElement.nodeName()):
                     QMessageBox.warning(

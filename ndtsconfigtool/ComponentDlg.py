@@ -42,6 +42,8 @@ import os
 import time 
 
 from ComponentModel import ComponentModel
+from DomTools import DomTools
+
 
 
 ## dialog defining a tag link 
@@ -70,7 +72,7 @@ class ComponentDlg(QDialog):
     # \returns row number
     def getWidgetNodeRow(self, child):
         if self.ui and self.ui.widget:
-            return self.ui.widget.getNodeRow(child)
+            return self.component.__dts.getNodeRow(child, self.ui.widget.node)
         else:
             print "Widget does not exist"
 
@@ -170,6 +172,9 @@ class Component(object):
         ## tag counter
         self._tagCnt = 0
 
+        ## DOM tools
+        self.__dts = DomTools()
+
 
     ## checks if not saved
     # \returns True if it is not saved     
@@ -178,21 +183,6 @@ class Component(object):
         return False if string == self.savedXML else True
 
 
-    ## provides the row number of the given child item
-    # \param child DOM child node
-    # \param node DOM parent node
-    # \returns the row number of the given child item
-    def _getNodeRow(self, child, node):
-        row = 0
-        if node:
-            children = node.childNodes()
-            for i in range(children.count()):
-                ch = children.item(i)
-                if child == ch:
-                    break
-                row += 1
-            if row < children.count():
-                return row
     
 
     ## provides the path of component tree for a given node
@@ -210,7 +200,7 @@ class Component(object):
         parent = None
         for child in ancestors:   
             if parent: 
-                row = self._getNodeRow(child, parent)
+                row = self.__dts.getNodeRow(child, parent)
 
                 if row is None:
                     path = []
@@ -263,13 +253,13 @@ class Component(object):
         while pindex.isValid() and row is not None:
             child = index.internalPointer().node
             parent = pindex.internalPointer().node
-            row = self._getNodeRow(child, parent)
+            row = self.__dts.getNodeRow(child, parent)
             path.insert(0, (row, unicode(child.nodeName())))
             index = pindex
             pindex = pindex.parent()
         
         child = index.internalPointer().node
-        row = self._getNodeRow(child, self.document)
+        row = self.__dts.getNodeRow(child, self.document)
         path.insert(0, (row, unicode(child.nodeName())))
 
         return path
@@ -376,7 +366,7 @@ class Component(object):
                 return
             parentItem = parent.internalPointer()
             pnode = parentItem.node
-            row = self._getNodeRow(node, pnode)
+            row = self.__dts.getNodeRow(node, pnode)
             if row is not None and row != 0:
                 self.view.model().removeItem(row, parent)
                 self.view.model().insertItem(row-1, node, parent)
@@ -393,7 +383,7 @@ class Component(object):
                 return
             parentItem = parent.internalPointer()
             pnode = parentItem.node
-            row = self._getNodeRow(node, pnode)
+            row = self.__dts.getNodeRow(node, pnode)
             if row is not None and row  < pnode.childNodes().count()-1:
                 self.view.model().removeItem(row, parent)
                 if row  < pnode.childNodes().count()-1:
@@ -575,10 +565,8 @@ class Component(object):
         if hasattr(self.dialog.ui.widget,"node") and dialog:
             self.dialog.ui.widget.node = node.parentNode()
 
-        if dialog and hasattr(self.dialog,"widget") and hasattr(self.dialog.ui.widget,"removeNode"):    
-            self.dialog.ui.widget.removeNode(node, index.parent())
-        else:
-            self.removeNode(node, index.parent())
+        if self.view is not None and self.view.model() is not None: 
+            self.__dts.removeNode(node, index.parent(), self.view.model())
 
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
@@ -593,33 +581,6 @@ class Component(object):
             self.tagClicked(QModelIndex())
             
         return True    
-
-    ## removes node
-    # \param node DOM node to remove
-    # \param parent parent node index        
-    def removeNode(self, node, parent):
-        if self.view is not None and self.view.model() is not None: 
-            row = self.getNodeRow(node, node.parentNode())
-            if row is not None:
-                self.view.model().removeItem(row, parent)
-
-
-    ## provides row number of the given node
-    # \param child child item
-    # \param node parent node        
-    # \returns row number
-    def getNodeRow(self, child, node = None):
-        row = 0
-        lnode =  node if node is not None else self.node
-        if lnode:
-            children = lnode.childNodes()
-            for i in range(children.count()):
-                ch = children.item(i)
-                if child == ch:
-                    break
-                row += 1
-            if row < children.count():
-                return row
 
 
 
@@ -958,28 +919,6 @@ class Component(object):
         return True    
 
 
-    ## provides the first element in the tree with the given name
-    # \param node DOM node
-    # \param name child name
-    # \returns DOM child node
-    def _getFirstElement(self, node, name):
-        if node:
-
-            child = node.firstChild()
-            if child:
-                while not child.isNull():
-                    if child and  child.nodeName() == name:
-                        return child
-                    child = child.nextSibling()
-            
-            child = node.firstChild()
-            if child:
-                while not child.isNull():
-                    elem = self._getFirstElement(child, name)
-                    if elem:
-                        return elem
-                    child = child.nextSibling()
-
 
 
     ## loads the datasource item from the xml file 
@@ -1022,7 +961,7 @@ class Component(object):
                     root = QDomDocument()
                     if not root.setContent(fh):
                         raise ValueError, "could not parse XML"
-                    ds = self._getFirstElement(root, "datasource")
+                    ds = self.__dts.getFirstElement(root, "datasource")
 
                     if ds:
                         if  index.column() != 0:

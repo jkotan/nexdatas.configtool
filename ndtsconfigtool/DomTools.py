@@ -71,20 +71,22 @@ class DomTools(object):
             if row < children.count():
                 return row
 
+
     ## provides row number of the given node
     # \param child child item
     # \param node parent node        
     # \returns row number
     def getNodeRow(self, child, node):
         row = 0
-        children = node.childNodes()
-        for i in range(children.count()):
-            ch = children.item(i)
-            if child == ch:
-                break
-            row += 1
-        if row < children.count():
-            return row
+        if node:
+            children = node.childNodes()
+            for i in range(children.count()):
+                ch = children.item(i)
+                if child == ch:
+                    break
+                row += 1
+            if row < children.count():
+                return row
 
 
     ## provides node text for the given node
@@ -107,12 +109,12 @@ class DomTools(object):
     # \param index of child text node
     # \param root QDocument node
     # \param text string with text
-    def replaceText(self, node, index, root, text = None):
+    def replaceText(self, node, index, root, model, text = None):
         if node:
             child = node.firstChild()
             while not child.isNull():
                 if child.nodeType() == QDomNode.TextNode:
-                    self.removeNode(child, index)
+                    self.removeNode(child, index, model)
                 child = child.nextSibling()
             if text:
                 textNode = root.createTextNode(QString(text))
@@ -124,7 +126,7 @@ class DomTools(object):
     # \param parent parent node index  
     # \param model Component model            
     def removeNode(self, node, parent, model):
-        row = self.getNodeRow(node)
+        row = self.getNodeRow(node, parent.internalPointer().node)
         if row is not None:
             model.removeItem(row, parent)
 
@@ -135,7 +137,7 @@ class DomTools(object):
     # \param parent parent node index
     # \param model Component model            
     def replaceNode(self, oldNode, newNode, parent, model):
-        row = self.getNodeRow(oldNode)
+        row = self.getNodeRow(oldNode, parent.internalPointer().node)
         if row is not None:
             model.removeItem(row, parent)
             if row  < self.node.childNodes().count():
@@ -180,7 +182,8 @@ class DomTools(object):
     ## appends node element
     # \param newElement new DOM node element 
     # \param parent parent node index      
-    def appendElement(self, newElement, parent):
+    # \param model Component model            
+    def appendElement(self, newElement, parent, model):
         model.appendItem(newElement, parent)
 
 

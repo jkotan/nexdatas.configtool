@@ -29,7 +29,6 @@ from NodeDlg import NodeDlg
 import copy
 import gc
 
-
 from Errors import ParameterError
 
 ## dialog defining commmon datasource
@@ -726,7 +725,8 @@ class DataSourceMethods(object):
 
         self.dialog.node = self.dialog.node.parentNode()   
         if self.datasource._tree:
-            self.dialog._replaceNode(oldDs, newDs, parent)
+            if self.dialog.view is not None and self.dialog.view.model() is not None: 
+                self.dialog.dts.replaceNode(oldDs, newDs, parent, self.dialog.view.model())
         else:
             self.dialog.node.replaceChild(newDs, oldDs)
         self.dialog.node = newDs
@@ -819,7 +819,7 @@ class DataSourceMethods(object):
         self.dialog.root.appendChild(definition)
 
 
-        ds = self.dialog._getFirstElement(self.datasource.document, "datasource")           
+        ds = self.dialog.dts.getFirstElement(self.datasource.document, "datasource")           
         if not ds:
             return
         # self.node = self.dialog.root.createElement(QString("datasource"))
@@ -1095,7 +1095,7 @@ class DataSource(CommonDataSource):
                 if not self.document.setContent(fh):
                     raise ValueError, "could not parse XML"
 
-                ds = self.dialog._getFirstElement(self.document, "datasource")
+                ds = self.dialog.dts.getFirstElement(self.document, "datasource")
                 if ds:
                     self.setFromNode(ds)
                 self.savedXML = self.document.toString(0)
@@ -1131,7 +1131,7 @@ class DataSource(CommonDataSource):
             if ds and ds.nodeName() =="datasource":
                 return xml
         
-        ds = self.dialog._getFirstElement(olddoc, "datasource")           
+        ds = self.dialog.dts.getFirstElement(olddoc, "datasource")           
         
         newdoc = QDomDocument()
         processing = newdoc.createProcessingInstruction("xml", "version='1.0'") 
@@ -1155,7 +1155,7 @@ class DataSource(CommonDataSource):
         if not self.document.setContent(self.repair(xml)):
             raise ValueError, "could not parse XML"
 
-        ds = self.dialog._getFirstElement(self.document, "datasource")           
+        ds = self.dialog.dts.getFirstElement(self.document, "datasource")           
         if ds:
             self.setFromNode(ds)
             if new:

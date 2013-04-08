@@ -73,25 +73,8 @@ class NodeDlg(QDialog):
                 index = self.view.model().index(index.row(), 0, index.parent())
             self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
-
-    ## provides the first element in the tree with the given name
-    # \param node DOM node
-    # \param name child name
-    # \returns DOM child node
-    def _getFirstElement(self, node, name):
-        return self.dts.getFirstElement(node, name)
-                
                 
 
-
-    ## provides row number of the given node
-    # \param child child item
-    # \param node parent node        
-    # \returns row number
-    def getNodeRow(self, child, node = None):
-        lnode =  node if node is not None else self.node
-        if lnode:
-            return self.dts.getNodeRow(child, lnode)
 
 
     ## provides node text for the given node
@@ -104,27 +87,11 @@ class NodeDlg(QDialog):
     ## replaces node text for the given node
     # \param node parent DOM node        
     # \param index of child text node
+    # \param parent parent node index        
     # \param text string with text
     def _replaceText(self, node, index, text = None):
-        return self.dts.replaceText(node, index, self.root, text)
+        return self.dts.replaceText(node, index, self.root, self.view.model(), text)
     
-
-    ## removes node
-    # \param node DOM node to remove
-    # \param parent parent node index        
-    def removeNode(self, node, parent):
-        if self.view is not None and self.view.model() is not None: 
-            return self.dts.removeNode(node, parent, self.view.model())
-
-                
-    ## replaces node
-    # \param oldNode old DOM node 
-    # \param newNode new DOM node 
-    # \param parent parent node index
-    def _replaceNode(self, oldNode, newNode, parent):
-        if self.view is not None and self.view.model() is not None: 
-            return self.dts.replaceNode(oldNode, newNode, parent, self.view.model())
-
 
 
 

@@ -509,8 +509,89 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(dts.stack[4],text)
 
         self.assertEqual(form.result(),0)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_replaceText_noview(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = NodeDlg()
+        form.ui = Ui_NodeDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, [])
+
+        vw = TestView()
+
+        ri = vw.model().rootIndex
+        di = vw.model().index(0,0,ri)
+        n = self.__rnd.randint(0, vw.nkids-1) 
+        ki = vw.model().index(n,0,di)
+
+        vw.myindex =  ki
+
+
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+#        form.view = vw
+        form.view = None
+        
+        dts = TestTools()
+        form.dts = dts
+        form.node =vw.qdn
+
+        form.replaceText(di)
         
 
+        self.assertEqual(dts.stack, [] )
+        
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_replaceText_nomodel(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = NodeDlg()
+        form.ui = Ui_NodeDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, [])
+
+        vw = TestView()
+
+        ri = vw.model().rootIndex
+        di = vw.model().index(0,0,ri)
+        n = self.__rnd.randint(0, vw.nkids-1) 
+        ki = vw.model().index(n,0,di)
+
+        vw.myindex =  ki
+
+
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        vw.testModel = None
+        form.view = vw
+
+
+        dts = TestTools()
+        form.dts = dts
+        form.node =vw.qdn
+
+        form.replaceText(di)
+        
+
+        self.assertEqual(dts.stack, [] )
+        
 
 if __name__ == '__main__':
     unittest.main()

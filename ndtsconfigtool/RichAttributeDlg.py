@@ -174,7 +174,7 @@ class RichAttributeDlg(NodeDlg):
         self.nexusType = unicode(attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else "")
 
 
-        text = self._getText(node)    
+        text = self.dts.getText(node)    
         self.value = unicode(text).strip() if text else ""
 
 
@@ -227,7 +227,7 @@ class RichAttributeDlg(NodeDlg):
 
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self._getText(doc)    
+        text = self.dts.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 

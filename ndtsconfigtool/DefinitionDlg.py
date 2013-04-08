@@ -146,7 +146,7 @@ class DefinitionDlg(NodeDlg):
                 self._attributes[attrName] = unicode(attribute.nodeValue())
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self._getText(doc)    
+        text = self.dts.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
              
     ## adds an attribute    

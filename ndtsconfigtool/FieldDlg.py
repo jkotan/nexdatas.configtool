@@ -200,7 +200,7 @@ class FieldDlg(NodeDlg):
         self.units = unicode(attributeMap.namedItem("units").nodeValue() \
                                  if attributeMap.contains("units") else "")
 
-        text = self._getText(self.node)    
+        text = self.dts.getText(self.node)    
         self.value = unicode(text).strip() if text else ""
 
         self.attributes.clear()    
@@ -259,7 +259,7 @@ class FieldDlg(NodeDlg):
             self.rank = len(self._dimensions)
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self._getText(doc)    
+        text = self.dts.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 

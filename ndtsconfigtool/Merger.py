@@ -26,6 +26,8 @@ from PyQt4.QtCore import QString, QThread, SIGNAL
 from PyQt4.QtGui import QDialog, QWidget, QLabel, QVBoxLayout, QPushButton
 
 from Errors import IncompatibleNodeError
+from DomTools import DomTools
+
 
         
 ## dialog of the merger
@@ -103,17 +105,9 @@ class Merger(QThread):
         ## selected node
         self.selectedNode = None
 
-    ## fetches the text from all DOM child text nodes
-    # \param node the given DOM node
-    def _getText(self, node):
-        text = QString()
-        if node:
-            child = node.firstChild()
-            while not child.isNull():
-                if child.nodeType() == QDomNode.TextNode:
-                    text += child.toText().data()
-                child = child.nextSibling()
-        return text    
+        ## DOM tools
+        self.__dts = DomTools()
+
 
 
     ## fetches node ancestors int the tree
@@ -179,8 +173,8 @@ class Merger(QThread):
                 
 
         if tagName in self.uniqueText:
-            text1=unicode(self._getText(elem1)).strip()
-            text2=unicode(self._getText(elem2)).strip()         
+            text1=unicode(self.__dts.getText(elem1)).strip()
+            text2=unicode(self.__dts.getText(elem2)).strip()         
             ## TODO white spaces?
             if text1 != text2 and text1 and text2:
                 raise IncompatibleNodeError(

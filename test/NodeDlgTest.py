@@ -193,7 +193,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, [])
         self.assertEqual(form.ui, None)
-        self.assertEqual(form._externalApply, None)
+        self.assertEqual(form.externalApply, None)
 
 
         self.assertEqual(form.result(),0)
@@ -212,7 +212,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, [])
         self.assertEqual(form.ui, None)
-        self.assertEqual(form._externalApply, None)
+        self.assertEqual(form.externalApply, None)
 
 
         self.assertEqual(form.result(),0)
@@ -230,7 +230,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, [])
         self.assertEqual(form.ui, None)
-        self.assertEqual(form._externalApply, None)
+        self.assertEqual(form.externalApply, None)
 
 
         self.assertEqual(form.result(),0)
@@ -253,7 +253,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, [])
         self.assertTrue(isinstance(form.ui,Ui_NodeDlg))
-        self.assertEqual(form._externalApply, None)
+        self.assertEqual(form.externalApply, None)
 
 
         self.assertEqual(form.result(),0)
@@ -275,7 +275,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, [])
         self.assertTrue(isinstance(form.ui,Ui_NodeDlg))
-        self.assertEqual(form._externalApply, self.myAction)
+        self.assertEqual(form.externalApply, self.myAction)
         self.performed = False
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)

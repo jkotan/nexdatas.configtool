@@ -134,11 +134,11 @@ class Component(object):
         self._actions = None
 
         ## save action
-        self._externalSave = None
+        self.externalSave = None
         ## apply action
-        self._externalApply = None
+        self.externalApply = None
         ## close action
-        self._externalClose = None
+        self.externalClose = None
 
         ## item class shown in the frame
         self._tagClasses = {"field":FieldDlg, 
@@ -639,30 +639,30 @@ class Component(object):
     # \param externalSave save action
     # \param externalClose close action
     def connectExternalActions(self, externalApply=None , externalSave=None, externalClose = None  ):
-        if externalSave and self._externalSave is None:
+        if externalSave and self.externalSave is None:
             self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
-            self._externalSave = externalSave
-        if externalClose and self._externalClose is None:
+            self.externalSave = externalSave
+        if externalClose and self.externalClose is None:
             self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
                          externalClose)
-            self._externalClose = externalClose
-        if externalApply and self._externalApply is None:
-            self._externalApply = externalApply
+            self.externalClose = externalClose
+        if externalApply and self.externalApply is None:
+            self.externalApply = externalApply
 
 
     ## reconnects save actions
     # \brief It reconnects the save action 
     def reconnectSaveAction(self):
-        if self._externalSave:
+        if self.externalSave:
             self.dialog.disconnect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
-                         self._externalSave)
+                         self.externalSave)
             self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
-                         self._externalSave)
+                         self.externalSave)
             self.dialog.disconnect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
-                         self._externalClose)
+                         self.externalClose)
             self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
-                         self._externalClose)
+                         self.externalClose)
 
 
     ## switches between all attributes in the try or only type attribute
@@ -724,7 +724,7 @@ class Component(object):
             self.dialog.ui.widget.setFromNode(node)
             self.dialog.ui.widget.createGUI()
             if hasattr(self.dialog.ui.widget,"connectExternalActions"):
-                self.dialog.ui.widget.connectExternalActions(self._externalApply)
+                self.dialog.ui.widget.connectExternalActions(self.externalApply)
             if hasattr(self.dialog.ui.widget,"treeMode"):
                 self.dialog.ui.widget.treeMode()
             self.dialog.ui.widget.view = self.view

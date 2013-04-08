@@ -62,7 +62,7 @@ class LinkDlg(NodeDlg):
 
         if self.node:    
             doc = self.node.firstChildElement(QString("doc"))           
-            text = self._getText(doc)    
+            text = self.dts.getText(doc)    
         else:
             text = ""
         self.doc = unicode(text).strip() if text else ""
@@ -123,7 +123,7 @@ class LinkDlg(NodeDlg):
         self.target = unicode(attributeMap.namedItem("target").nodeValue() if attributeMap.contains("target") else "")
  
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self._getText(doc)    
+        text = self.dts.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 

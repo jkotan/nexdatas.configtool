@@ -48,7 +48,7 @@ class NodeDlg(QDialog):
         self.ui = None
 
         ## external apply action
-        self._externalApply = None
+        self.externalApply = None
 
         ## DOM tools
         self.dts = DomTools()
@@ -56,9 +56,9 @@ class NodeDlg(QDialog):
     ## connects the given apply action
     # \param externalApply apply action   
     def connectExternalActions(self,  externalApply=None):
-        if externalApply and self._externalApply is None and self.ui and self.ui.applyPushButton:
+        if externalApply and self.externalApply is None and self.ui and self.ui.applyPushButton:
             self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), externalApply)
-            self._externalApply = externalApply
+            self.externalApply = externalApply
 
         
     ## resets the dialog
@@ -74,14 +74,6 @@ class NodeDlg(QDialog):
             self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
 
                 
-
-
-
-    ## provides node text for the given node
-    # \param node DOM node        
-    # \returns string with node texts
-    def _getText(self, node):
-        return self.dts.getText(node)
         
 
     ## replaces node text for the given node

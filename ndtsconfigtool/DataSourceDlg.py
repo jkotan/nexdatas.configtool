@@ -391,9 +391,9 @@ class DataSourceMethods(object):
         if enable:
             self.dialog.ui.closeSaveFrame.hide()
 #            self.datasource.nameFrame.show()
-            self.datasource._tree = True
+            self.datasource.tree = True
         else:
-            self.datasource._tree = False
+            self.datasource.tree = False
             self.dialog.ui.closeSaveFrame.show()
 #            self.datasource.nameFrame.hide()
             
@@ -408,7 +408,7 @@ class DataSourceMethods(object):
         self.updateForm()
         self.dialog.resize(460, 440)
 
-        if not self.datasource._tree :
+        if not self.datasource.tree :
             self.dialog.connect(self.dialog.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         else:
             self.dialog.connect(self.dialog.ui.resetPushButton, SIGNAL("clicked()"), self.dialog.reset)
@@ -417,7 +417,7 @@ class DataSourceMethods(object):
         self.dialog.connectWidgets()
         self.dialog.setFrames(self.datasource.dataSourceType)
 
-#        self.datasource.treeMode(datasource._tree)
+#        self.datasource.treeMode(datasource.tree)
 
 
             
@@ -506,7 +506,7 @@ class DataSourceMethods(object):
             if not self.datasource.dbType:
                 self.datasource.dbType = 'MYSQL'
                     
-            text = unicode(self.dialog._getText(database))
+            text = unicode(self.dialog.dts.getText(database))
             self.datasource.dbParameters['Oracle DSN'] = unicode(text).strip() if text else ""
             self.dialog.dbParam['Oracle DSN'] = unicode(text).strip() if text else ""
 
@@ -522,12 +522,12 @@ class DataSourceMethods(object):
                                                            if attributeMap.contains("format") else "SCALAR")
 
 
-            text = unicode(self.dialog._getText(query))
+            text = unicode(self.dialog.dts.getText(query))
             self.datasource.dbQuery = unicode(text).strip() if text else ""
 
 
         doc = self.dialog.node.firstChildElement(QString("doc"))           
-        text = self.dialog._getText(doc)    
+        text = self.dialog.dts.getText(doc)    
         self.datasource.doc = unicode(text).strip() if text else ""
 
 
@@ -624,7 +624,7 @@ class DataSourceMethods(object):
                 self.dialog.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
                 self.dialog.view.expand(index)    
 
-        if not self.datasource._tree:
+        if not self.datasource.tree:
             self.createNodes()
                 
         self.datasource.applied = True
@@ -709,9 +709,9 @@ class DataSourceMethods(object):
     ## updates the Node
     # \brief It sets node from the self.dialog variables
     def updateNode(self, index=QModelIndex()):
-#        print "tree", self.datasource._tree
+#        print "tree", self.datasource.tree
 #        print "index", index.internalPointer()
-        newDs = self.createNodes(self.datasource._tree)
+        newDs = self.createNodes(self.datasource.tree)
         oldDs = self.dialog.node
 
         elem = oldDs.toElement()
@@ -724,7 +724,7 @@ class DataSourceMethods(object):
             parent = QModelIndex()
 
         self.dialog.node = self.dialog.node.parentNode()   
-        if self.datasource._tree:
+        if self.datasource.tree:
             if self.dialog.view is not None and self.dialog.view.model() is not None: 
                 self.dialog.dts.replaceNode(oldDs, newDs, parent, self.dialog.view.model())
         else:
@@ -734,21 +734,21 @@ class DataSourceMethods(object):
     ## reconnects save actions
     # \brief It reconnects the save action 
     def reconnectSaveAction(self):
-        if self.datasource._externalSave:
+        if self.datasource.externalSave:
             self.dialog.disconnect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
-                         self.datasource._externalSave)
+                         self.datasource.externalSave)
             self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
-                         self.datasource._externalSave)
-        if self.datasource._externalClose:
+                         self.datasource.externalSave)
+        if self.datasource.externalClose:
             self.dialog.disconnect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
-                         self.datasource._externalClose)
+                         self.datasource.externalClose)
             self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
-                         self.datasource._externalClose)
-        if self.datasource._externalApply:
+                         self.datasource.externalClose)
+        if self.datasource.externalApply:
             self.dialog.disconnect(self.dialog.ui.applyPushButton, SIGNAL("clicked()"), 
-                         self.datasource._externalApply)
+                         self.datasource.externalApply)
             self.dialog.connect(self.dialog.ui.applyPushButton, SIGNAL("clicked()"), 
-                         self.datasource._externalApply)
+                         self.datasource.externalApply)
 
 
     ## connects the save action and stores the apply action
@@ -756,18 +756,18 @@ class DataSourceMethods(object):
     # \param externalSave save action
     # \param externalClose close action
     def connectExternalActions(self, externalApply=None, externalSave=None, externalClose = None ):
-        if externalSave and self.datasource._externalSave is None:
+        if externalSave and self.datasource.externalSave is None:
             self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
-            self.datasource._externalSave = externalSave
-        if externalClose and self.datasource._externalClose is None:
+            self.datasource.externalSave = externalSave
+        if externalClose and self.datasource.externalClose is None:
             self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
                          externalClose)
-            self.datasource._externalClose = externalClose
-        if externalApply and self.datasource._externalApply is None:
+            self.datasource.externalClose = externalClose
+        if externalApply and self.datasource.externalApply is None:
             self.dialog.connect(self.dialog.ui.applyPushButton, SIGNAL("clicked()"), 
                      externalApply)
-            self.datasource._externalApply = externalApply
+            self.datasource.externalApply = externalApply
 
                     
     ## creates the new empty header
@@ -882,9 +882,9 @@ class CommonDataSource(object):
         ## database parameters
         self.dbParameters = {}
 
-        self._externalSave = None
-        self._externalClose = None
-        self._externalApply = None
+        self.externalSave = None
+        self.externalClose = None
+        self.externalApply = None
 
         ## applied flag
         self.applied = False
@@ -894,7 +894,7 @@ class CommonDataSource(object):
 
         
         ## if datasource in the component tree
-        self._tree = False
+        self.tree = False
         
 
 
@@ -970,7 +970,7 @@ class CommonDataSource(object):
 #         name
          self.dataSourceName
          ) = state
-#        if self._tree:
+#        if self.tree:
 #            self.name = name
 #        print "SET",  unicode(state)
         self.dbParameters = copy.copy(dbParameters)

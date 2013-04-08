@@ -107,10 +107,10 @@ class DomTools(object):
     ## replaces node text for the given node
     # \param node parent DOM node        
     # \param index of child text node
-    # \param root QDocument node
     # \param text string with text
-    def replaceText(self, node, index, root, model, text = None):
+    def replaceText(self, node, index, model, text = None):
         if node:
+            root = model.rootIndex().internalPointer()
             child = node.firstChild()
             while not child.isNull():
                 if child.nodeType() == QDomNode.TextNode:

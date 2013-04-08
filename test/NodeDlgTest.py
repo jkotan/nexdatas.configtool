@@ -67,6 +67,20 @@ class MyNodeDlg(NodeDlg):
         self.stack.append(node)
         
 
+class TestTools(object):
+    def __init__(self, parent=None):
+        self.stack = []
+
+    def replaceText(self, node, index,  model, text):
+        self.stack.append("replaceText")
+        self.stack.append(node)
+        self.stack.append(index)
+        self.stack.append(model)
+        self.stack.append(text)
+
+        
+    
+
 class TestView(object):
     def __init__(self):
         try:
@@ -106,7 +120,7 @@ class TestView(object):
 
     def setIndex(self, row, column, parent):
         self.myindex = self.testModel.index( row, column, parent)
-        print self.myindex.column()
+ #       print self.myindex.column()
 
     def currentIndex(self):
         return self.myindex
@@ -403,6 +417,64 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.result(),0)
 
 
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_replaceText_notext(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = NodeDlg()
+        form.ui = Ui_NodeDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, [])
+
+        vw = TestView()
+
+        ri = vw.model().rootIndex
+        di = vw.model().index(0,0,ri)
+        n = self.__rnd.randint(0, vw.nkids-1) 
+        ki = vw.model().index(n,0,di)
+
+        vw.myindex =  ki
+
+
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        form.view = vw
+        
+        dts = TestTools()
+        form.dts = dts
+        form.node =vw.qdn
+
+        form.replaceText(di)
+        
+
+        self.assertEqual(dts.stack[0],"replaceText")
+        self.assertEqual(dts.stack[1],vw.qdn)
+        self.assertEqual(dts.stack[2],di)
+        self.assertEqual(dts.stack[3],vw.model())
+        self.assertEqual(dts.stack[4],None)
+
+
+        dts.stack = []
+        
+        text = "My Supper Text"
+        form.replaceText(di,text)
+        
+
+        self.assertEqual(dts.stack[0],"replaceText")
+        self.assertEqual(dts.stack[1],vw.qdn)
+        self.assertEqual(dts.stack[2],di)
+        self.assertEqual(dts.stack[3],vw.model())
+        self.assertEqual(dts.stack[4],text)
+
+        self.assertEqual(form.result(),0)
+        
 
 
 if __name__ == '__main__':

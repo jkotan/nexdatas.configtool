@@ -1189,7 +1189,7 @@ class ComponentModelTest(unittest.TestCase):
             self.assertEqual(ks.child(0).node.nodeName(), "#text")
             self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
             self.assertEqual(ks.child(0).parent, ks)
-            print k,ks.childNumber()
+#            print k,ks.childNumber()
         k = nkids   
         ks = ci.child(k)
         self.assertTrue(isinstance(ks, ComponentItem))

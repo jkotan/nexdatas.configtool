@@ -81,7 +81,7 @@ class NodeDlg(QDialog):
     # \param parent parent node index        
     # \param text string with text
     def replaceText(self, index, text = None):
-        return self.dts.replaceText(self.node, index, self.root, self.view.model(), text)
+        return self.dts.replaceText(self.node, index, self.view.model(), text)
     
 
     ## removes node element

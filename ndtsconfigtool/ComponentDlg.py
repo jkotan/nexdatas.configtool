@@ -60,6 +60,8 @@ class ComponentDlg(QDialog):
         ## user interface
         self.ui = Ui_ComponentDlg()
 
+        ## DOM tools
+        self.__dts = DomTools()
 
     def keyPressEvent(self, e):
         
@@ -72,7 +74,7 @@ class ComponentDlg(QDialog):
     # \returns row number
     def getWidgetNodeRow(self, child):
         if self.ui and self.ui.widget:
-            return self.component.__dts.getNodeRow(child, self.ui.widget.node)
+            return self.__dts.getNodeRow(child, self.ui.widget.node)
         else:
             print "Widget does not exist"
 

@@ -100,7 +100,7 @@ class NodeDlg(QDialog):
     # \param parent parent node index
     def appendNode(self, node, parent):
         if self.view is not None and self.view.model() is not None: 
-            return self.dts.appendItem(node, parent, self.view.model())
+            return self.dts.appendNode(node, parent, self.view.model())
         return False     
    
 

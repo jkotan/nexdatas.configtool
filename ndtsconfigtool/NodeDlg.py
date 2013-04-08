@@ -97,7 +97,7 @@ class NodeDlg(QDialog):
     ## provides row number of the given element
     # \param element DOM element
     # \returns row number
-    def _getElementRow(self, element):
+    def __getElementRow(self, element):
         row = 0
         if self.node:
             children = self.node.childNodes()
@@ -182,10 +182,10 @@ class NodeDlg(QDialog):
                     self.view.model().insertItem(row, newNode, parent)
                 else:
                     self.view.model().appendItem(newNode, parent)
-            row = self.getNodeRow(newNode)
-            if parent.internalPointer():
-                row = self.getNodeRow(newNode,parent.internalPointer().node)
-            row = self.getNodeRow(oldNode)
+#            row = self.getNodeRow(newNode)
+#            if parent.internalPointer():
+#                row = self.getNodeRow(newNode,parent.internalPointer().node)
+#            row = self.getNodeRow(oldNode)
 
     ## appends node
     # \param node DOM node to remove
@@ -202,7 +202,7 @@ class NodeDlg(QDialog):
     # \param parent parent node index      
     def _removeElement(self, element, parent):
         if self.view is not None and self.view.model() is not None: 
-            row = self._getElementRow(element)
+            row = self.__getElementRow(element)
             if row is not None:
                 self.view.model().removeItem(row, parent)
 
@@ -213,7 +213,7 @@ class NodeDlg(QDialog):
     # \param parent parent node index
     def _replaceElement(self, oldElement, newElement, parent):
         if self.view is not None and self.view.model() is not None: 
-            row = self._getElementRow(oldElement)
+            row = self.__getElementRow(oldElement)
         if self.view is not None and self.view.model() is not None: 
             if row is not None:
                 self.view.model().removeItem(row, parent)

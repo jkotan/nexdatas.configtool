@@ -38,6 +38,8 @@ from PyQt4.QtXml import QDomNode, QDomDocument
 from ndtsconfigtool.NodeDlg import NodeDlg
 from ndtsconfigtool.ComponentModel import ComponentModel
 
+from ndtsconfigtool.DomTools import DomTools
+
 
 
 
@@ -194,6 +196,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.subItems, [])
         self.assertEqual(form.ui, None)
         self.assertEqual(form.externalApply, None)
+        self.assertTrue(isinstance(form.dts, DomTools))
 
 
         self.assertEqual(form.result(),0)
@@ -213,7 +216,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.subItems, [])
         self.assertEqual(form.ui, None)
         self.assertEqual(form.externalApply, None)
-
+        self.assertTrue(isinstance(form.dts, DomTools))
 
         self.assertEqual(form.result(),0)
 
@@ -254,6 +257,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.subItems, [])
         self.assertTrue(isinstance(form.ui,Ui_NodeDlg))
         self.assertEqual(form.externalApply, None)
+        self.assertTrue(isinstance(form.dts, DomTools))
 
 
         self.assertEqual(form.result(),0)

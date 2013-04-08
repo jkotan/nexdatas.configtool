@@ -71,14 +71,49 @@ class TestTools(object):
     def __init__(self, parent=None):
         self.stack = []
 
-    def replaceText(self, node, index,  model, text):
+    def replaceText(self, node, index, model, text):
         self.stack.append("replaceText")
         self.stack.append(node)
         self.stack.append(index)
         self.stack.append(model)
         self.stack.append(text)
 
-        
+
+    ## appends node
+    # \param node DOM node to append
+    # \param parent parent node index
+    # \param model Component model            
+    def appendNode(self, node, parent, model):
+        self.stack.append("appendNode")
+        self.stack.append(node)
+        self.stack.append(parent)
+        self.stack.append(model)
+   
+
+    ## removes node element
+    # \param element DOM node element to remove
+    # \param parent parent node index      
+    # \param model Component model            
+    def removeElement(self, element, parent, model):
+        self.stack.append("removeElement")
+        self.stack.append(element)
+        self.stack.append(parent)
+        self.stack.append(model)
+
+
+    ## replaces node element
+    # \param oldElement old DOM node element 
+    # \param newElement new DOM node element 
+    # \param parent parent node index
+    # \param model Component model            
+    def replaceElement(self, oldElement, newElement, parent, model):
+        self.stack.append("replaceElement")
+        self.stack.append(oldElement)
+        self.stack.append(newElement)
+        self.stack.append(parent)
+        self.stack.append(model)
+
+   
     
 
 class TestView(object):
@@ -421,7 +456,7 @@ class NodeDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_replaceText_notext(self):
+    def test_replaceText(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         form = NodeDlg()

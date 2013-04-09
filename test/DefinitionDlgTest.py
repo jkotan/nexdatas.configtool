@@ -34,6 +34,7 @@ from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
 
 from ndtsconfigtool.DefinitionDlg import DefinitionDlg
+from ndtsconfigtool.NodeDlg import NodeDlg
 
 from ndtsconfigtool.ui.ui_definitiondlg import Ui_DefinitionDlg
 
@@ -112,6 +113,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
         self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+        self.assertTrue(isinstance(form, NodeDlg))
 
 
     ## constructor test
@@ -251,6 +253,121 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.typeLineEdit.text(), nType)
         self.assertEqual(form.ui.nameLineEdit.text(),name)
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+
+
+
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+
+#        form.apply()
+#        self.assertEqual(form.name, name)
+#        self.assertEqual(form.nexusType, nType)
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_getState(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = DefinitionDlg()
+        form.show()
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+
+        form.createGUI()
+
+
+
+        name = "myname"
+        nType = "NXEntry"
+        doc = "My documentation: \n ble ble ble "
+        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
+
+        
+        self.assertEqual(form.getState(),('','','',{}))
+    
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+        form.name = name
+
+        self.assertEqual(form.getState(),(name,'','',{}))
+    
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+
+        form.name = ""
+        form.nexusType = nType
+
+        self.assertEqual(form.getState(),('',nType,'',{}))
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+
+
+
+
+        form.doc = doc
+        form.nexusType = ""
+
+        self.assertEqual(form.getState(),('', '', doc, {}))
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+
+
+        form.doc = ""
+        form.nexusType = ""
+        
+        form.attributes = attributes
+        state = form.getState()
+
+        self.assertEqual(state[0],'')
+        self.assertEqual(state[1],'')
+        self.assertEqual(state[2],'')
+        self.assertEqual(len(state),4)
+        self.assertEqual(len(state[3]),len(attributes))
+        for at in attributes:
+            self.assertEqual(attributes[at], state[3][at])
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+        form.name = name
+        form.doc = doc
+        form.nexusType = nType
+        form.attributes = attributes
+
+        state = form.getState()
+
+        self.assertEqual(state[0],name)
+        self.assertEqual(state[1],nType)
+        self.assertEqual(state[2],doc)
+        self.assertEqual(len(state),4)
+        self.assertEqual(len(state[3]),len(attributes))
+        for at in attributes:
+            self.assertEqual(attributes[at], state[3][at])
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
 
 
 

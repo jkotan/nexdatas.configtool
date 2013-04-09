@@ -118,10 +118,10 @@ class DefinitionDlg(NodeDlg):
         self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.ui.attributeTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self._tableItemChanged)
-        self.connect(self.ui.addPushButton, SIGNAL("clicked()"), self._addAttribute)
-        self.connect(self.ui.removePushButton, SIGNAL("clicked()"), self._removeAttribute)
+        self.connect(self.ui.addPushButton, SIGNAL("clicked()"), self.__addAttribute)
+        self.connect(self.ui.removePushButton, SIGNAL("clicked()"), self.__removeAttribute)
 
-        self.connect(self.ui.typeLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        self.connect(self.ui.typeLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
 
 
     ## sets the form from the DOM node
@@ -151,7 +151,7 @@ class DefinitionDlg(NodeDlg):
              
     ## adds an attribute    
     #  \brief It runs the Definition Dialog and fetches attribute name and value    
-    def _addAttribute(self):
+    def __addAttribute(self):
         aform  = AttributeDlg()
         if aform.exec_():
             name = aform.name
@@ -166,7 +166,7 @@ class DefinitionDlg(NodeDlg):
                 
     ## takes a name of the current attribute
     # \returns name of the current attribute            
-    def _currentTableAttribute(self):
+    def __currentTableAttribute(self):
         item = self.ui.attributeTableWidget.item(self.ui.attributeTableWidget.currentRow(), 0)
         if item is None:
             return None
@@ -175,8 +175,8 @@ class DefinitionDlg(NodeDlg):
 
     ## removes an attribute    
     #  \brief It removes the current attribute asking before about it
-    def _removeAttribute(self):
-        attr = self._currentTableAttribute()
+    def __removeAttribute(self):
+        attr = self.__currentTableAttribute()
         if attr is None:
             return
         if QMessageBox.question(self, "Attribute - Remove",

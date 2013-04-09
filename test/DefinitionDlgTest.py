@@ -258,6 +258,8 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
         for i in range(len(attributes)):
             it = form.ui.attributeTableWidget.item(i, 0) 
             k = str(it.text())
@@ -441,6 +443,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
 
         self.assertEqual(form.name,'') 
         self.assertEqual(form.nexusType, nType) 
@@ -540,6 +544,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.nameLineEdit.text(),name)
         self.assertEqual(form.ui.typeLineEdit.text(), '')
         self.assertEqual(form.ui.docTextEdit.toPlainText(), '')
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
 
 
         form = DefinitionDlg()
@@ -583,6 +589,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.nameLineEdit.text(),name)
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
         for i in range(len(attributes)):
             it = form.ui.attributeTableWidget.item(i, 0) 
             k = str(it.text())

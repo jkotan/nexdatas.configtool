@@ -218,6 +218,7 @@ class DomToolsTest(unittest.TestCase):
         nkids =  self.__rnd.randint(1, 10) 
         kds = []
         tkds = []
+
         for n in range(nkids):
             kds.append(doc.createElement("kid%s" %  n))
             kds[-1].setAttribute("name","myname%s" %  n)
@@ -906,112 +907,13 @@ class DomToolsTest(unittest.TestCase):
             self.assertEqual(ks.child(0).parent, ks)
 
 
-    def test_insertItem(self):
+
+
+    def test_appendNode(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
-        doc = QDomDocument()
-        nname = "definition"
-        qdn = doc.createElement(nname)
-        doc.appendChild(qdn)
-        nkids =  self.__rnd.randint(1, 10) 
-        kds = []
-        tkds = []
-        for n in range(nkids):
-            kds.append(doc.createElement("kid%s" %  n))
-            kds[-1].setAttribute("name","myname%s" %  n)
-            kds[-1].setAttribute("type","mytype%s" %  n)
-            kds[-1].setAttribute("units","myunits%s" %  n)
-            qdn.appendChild(kds[-1]) 
-            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
-            kds[-1].appendChild(tkds[-1]) 
-
-#        print doc.toString()    
-            
-        allAttr = True
-        cm = ComponentModel(doc,allAttr)
-        self.assertTrue(isinstance(cm, QAbstractItemModel))
-        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
-        cd = cm.rootIndex.internalPointer()
-        self.assertTrue(isinstance(cd, ComponentItem))
-        self.assertEqual(cm.rootIndex.row(), 0)
-        self.assertEqual(cm.rootIndex.column(), 0)
-
-        ri = cm.rootIndex
-        self.assertEqual(cm.columnCount(ri), 3)
-
-        # avoids showing #document
-        di = cm.index(0,0,ri)
-        self.assertEqual(cm.columnCount(di), 3)
-
-        iv = cm.index(0,0)
-        self.assertEqual(cm.columnCount(iv), 3)
-        
-        ci = di.internalPointer()
-        self.assertEqual(ci.node, qdn)
-        self.assertEqual(ci.childNumber(),0)
-        self.assertEqual(ci.node.nodeName(), nname)
-        for k in range(nkids):
-            ks = ci.child(k)
-            self.assertTrue(isinstance(ks, ComponentItem))
-            self.assertTrue(isinstance(ks.parent, ComponentItem))
-            self.assertEqual(ks.childNumber(),k)
-            self.assertEqual(ks.node, kds[k])
-            self.assertEqual(ks.parent.node, qdn)
-            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
-            self.assertEqual(ks.parent, ci)
-            self.assertTrue(isinstance(ks.child(0), ComponentItem))
-            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
-            self.assertEqual(ks.child(0).childNumber(),0)
-            self.assertEqual(ks.child(0).node, tkds[k])
-            self.assertEqual(ks.child(0).parent.node, ks.node)
-            self.assertEqual(ks.child(0).node.nodeName(), "#text")
-            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
-            self.assertEqual(ks.child(0).parent, ks)
-
-        insd =  self.__rnd.randint(0,nkids-1) 
-        inkd = doc.createElement("insertedkid")
-        self.assertTrue(not cm.insertItem(insd, inkd, QModelIndex()))
-
-
-        self.assertTrue(cm.insertItem(insd, inkd, di))
-
-
-        for k in range(nkids+1):
-            ks = ci.child(k)
-            if k == insd:
-                self.assertTrue(isinstance(ks, ComponentItem))
-                self.assertTrue(isinstance(ks.parent, ComponentItem))
-                self.assertEqual(ks.childNumber(),k)
-                self.assertEqual(ks.node, inkd)
-                self.assertEqual(ks.parent.node, qdn)
-                self.assertEqual(ks.node.nodeName(), "insertedkid")
-                self.assertEqual(ks.parent, ci)
-                continue
-            kk = k if k < insd else k-1
-            self.assertTrue(isinstance(ks, ComponentItem))
-            self.assertTrue(isinstance(ks.parent, ComponentItem))
-            self.assertEqual(ks.childNumber(),k)
-            self.assertEqual(ks.node, kds[kk])
-            self.assertEqual(ks.parent.node, qdn)
-            self.assertEqual(ks.node.nodeName(), "kid%s" %  kk)
-            self.assertEqual(ks.parent, ci)
-            self.assertTrue(isinstance(ks.child(0), ComponentItem))
-            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
-            self.assertEqual(ks.child(0).childNumber(),0)
-            self.assertEqual(ks.child(0).node, tkds[kk])
-            self.assertEqual(ks.child(0).parent.node, ks.node)
-            self.assertEqual(ks.child(0).node.nodeName(), "#text")
-            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % kk)
-            self.assertEqual(ks.child(0).parent, ks)
-
-
-
-
-
-    def test_appendItem(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        dts = DomTools()
 
         doc = QDomDocument()
         nname = "definition"
@@ -1073,10 +975,11 @@ class DomToolsTest(unittest.TestCase):
             self.assertEqual(ks.child(0).parent, ks)
 
         inkd = doc.createElement("insertedkid")
-        self.assertTrue(not cm.appendItem(inkd, QModelIndex()))
+        self.assertTrue(not dts.appendNode(inkd, QModelIndex(),cm))
 
 
-        self.assertTrue(cm.appendItem(inkd, di))
+        
+        self.assertTrue(dts.appendNode(inkd, di,cm))
 
 
         for k in range(nkids):
@@ -1108,12 +1011,11 @@ class DomToolsTest(unittest.TestCase):
         self.assertEqual(ks.parent, ci)
 
 
-
-
-
-    def test_removeItem(self):
+    def test_removeElement_noparent(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dts = DomTools()
 
         doc = QDomDocument()
         nname = "definition"
@@ -1176,11 +1078,191 @@ class DomToolsTest(unittest.TestCase):
 
         rmvd =  self.__rnd.randint(0,nkids-1) 
         rmkd = ci.child(rmvd)
-        self.assertTrue(not cm.removeItem(rmvd, QModelIndex()))
+
+        dts.removeElement(rmvd, QModelIndex(),cm)
 
 
-        self.assertTrue(cm.removeItem(rmvd, di))
+        for k in range(nkids):
+            ks = ci.child(k)
+            self.assertTrue(isinstance(ks, ComponentItem))
+            self.assertTrue(isinstance(ks.parent, ComponentItem))
+            self.assertEqual(ks.childNumber(),k)
+            self.assertEqual(ks.node, kds[k])
+            self.assertEqual(ks.parent.node, qdn)
+            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+            self.assertEqual(ks.parent, ci)
+            self.assertTrue(isinstance(ks.child(0), ComponentItem))
+            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+            self.assertEqual(ks.child(0).childNumber(),0)
+            self.assertEqual(ks.child(0).node, tkds[k])
+            self.assertEqual(ks.child(0).parent.node, ks.node)
+            self.assertEqual(ks.child(0).node.nodeName(), "#text")
+            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+            self.assertEqual(ks.child(0).parent, ks)
 
+
+
+    def test_removeElement_nonode(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dts = DomTools()
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+
+        ri = cm.rootIndex
+        self.assertEqual(cm.columnCount(ri), 3)
+
+        # avoids showing #document
+        di = cm.index(0,0,ri)
+        self.assertEqual(cm.columnCount(di), 3)
+
+        iv = cm.index(0,0)
+        self.assertEqual(cm.columnCount(iv), 3)
+        
+        ci = di.internalPointer()
+        self.assertEqual(ci.node, qdn)
+        self.assertEqual(ci.childNumber(),0)
+        self.assertEqual(ci.node.nodeName(), nname)
+        for k in range(nkids):
+            ks = ci.child(k)
+            self.assertTrue(isinstance(ks, ComponentItem))
+            self.assertTrue(isinstance(ks.parent, ComponentItem))
+            self.assertEqual(ks.childNumber(),k)
+            self.assertEqual(ks.node, kds[k])
+            self.assertEqual(ks.parent.node, qdn)
+            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+            self.assertEqual(ks.parent, ci)
+            self.assertTrue(isinstance(ks.child(0), ComponentItem))
+            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+            self.assertEqual(ks.child(0).childNumber(),0)
+            self.assertEqual(ks.child(0).node, tkds[k])
+            self.assertEqual(ks.child(0).parent.node, ks.node)
+            self.assertEqual(ks.child(0).node.nodeName(), "#text")
+            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+            self.assertEqual(ks.child(0).parent, ks)
+
+        rmvd =  self.__rnd.randint(0,nkids-1) 
+        rmkd = ci.child(rmvd)
+
+        dts.removeElement(qdn, di, cm)
+
+
+        for k in range(nkids):
+            ks = ci.child(k)
+            self.assertTrue(isinstance(ks, ComponentItem))
+            self.assertTrue(isinstance(ks.parent, ComponentItem))
+            self.assertEqual(ks.childNumber(),k)
+            self.assertEqual(ks.node, kds[k])
+            self.assertEqual(ks.parent.node, qdn)
+            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+            self.assertEqual(ks.parent, ci)
+            self.assertTrue(isinstance(ks.child(0), ComponentItem))
+            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+            self.assertEqual(ks.child(0).childNumber(),0)
+            self.assertEqual(ks.child(0).node, tkds[k])
+            self.assertEqual(ks.child(0).parent.node, ks.node)
+            self.assertEqual(ks.child(0).node.nodeName(), "#text")
+            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+            self.assertEqual(ks.child(0).parent, ks)
+
+
+    def test_removeElement(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dts = DomTools()
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+
+        ri = cm.rootIndex
+        self.assertEqual(cm.columnCount(ri), 3)
+
+        # avoids showing #document
+        di = cm.index(0,0,ri)
+        self.assertEqual(cm.columnCount(di), 3)
+
+        iv = cm.index(0,0)
+        self.assertEqual(cm.columnCount(iv), 3)
+        
+        ci = di.internalPointer()
+        self.assertEqual(ci.node, qdn)
+        self.assertEqual(ci.childNumber(),0)
+        self.assertEqual(ci.node.nodeName(), nname)
+        for k in range(nkids):
+            ks = ci.child(k)
+            self.assertTrue(isinstance(ks, ComponentItem))
+            self.assertTrue(isinstance(ks.parent, ComponentItem))
+            self.assertEqual(ks.childNumber(),k)
+            self.assertEqual(ks.node, kds[k])
+            self.assertEqual(ks.parent.node, qdn)
+            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+            self.assertEqual(ks.parent, ci)
+            self.assertTrue(isinstance(ks.child(0), ComponentItem))
+            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+            self.assertEqual(ks.child(0).childNumber(),0)
+            self.assertEqual(ks.child(0).node, tkds[k])
+            self.assertEqual(ks.child(0).parent.node, ks.node)
+            self.assertEqual(ks.child(0).node.nodeName(), "#text")
+            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+            self.assertEqual(ks.child(0).parent, ks)
+
+        rmvd =  self.__rnd.randint(0,nkids-1) 
+        rmkd = ci.child(rmvd)
+        rmkd2 = ci.child(rmvd)
+
+
+        dts.removeElement(rmkd.node, di, cm)
 
         for k in range(nkids):
             if k == rmvd:
@@ -1202,6 +1284,320 @@ class DomToolsTest(unittest.TestCase):
             self.assertEqual(ks.child(0).node.nodeName(), "#text")
             self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
             self.assertEqual(ks.child(0).parent, ks)
+
+
+
+
+
+
+
+
+
+
+
+    def test_replaceElement(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dts = DomTools()
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+
+        ri = cm.rootIndex
+        self.assertEqual(cm.columnCount(ri), 3)
+
+        # avoids showing #document
+        di = cm.index(0,0,ri)
+        self.assertEqual(cm.columnCount(di), 3)
+
+        iv = cm.index(0,0)
+        self.assertEqual(cm.columnCount(iv), 3)
+        
+        ci = di.internalPointer()
+        self.assertEqual(ci.node, qdn)
+        self.assertEqual(ci.childNumber(),0)
+        self.assertEqual(ci.node.nodeName(), nname)
+        for k in range(nkids):
+            ks = ci.child(k)
+            self.assertTrue(isinstance(ks, ComponentItem))
+            self.assertTrue(isinstance(ks.parent, ComponentItem))
+            self.assertEqual(ks.childNumber(),k)
+            self.assertEqual(ks.node, kds[k])
+            self.assertEqual(ks.parent.node, qdn)
+            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+            self.assertEqual(ks.parent, ci)
+            self.assertTrue(isinstance(ks.child(0), ComponentItem))
+            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+            self.assertEqual(ks.child(0).childNumber(),0)
+            self.assertEqual(ks.child(0).node, tkds[k])
+            self.assertEqual(ks.child(0).parent.node, ks.node)
+            self.assertEqual(ks.child(0).node.nodeName(), "#text")
+            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+            self.assertEqual(ks.child(0).parent, ks)
+
+        rpvd =  self.__rnd.randint(0,nkids-1) 
+        rpkd = ci.child(rpvd)
+        rpkd2 = ci.child(rpvd)
+
+        inkd = doc.createElement("insertedkid")
+
+
+
+        dts.replaceElement(rpkd.node, inkd, di, cm)
+
+        for k in range(nkids):
+            ks = ci.child(k)
+            if k == rpvd:
+                self.assertTrue(isinstance(ks, ComponentItem))
+                self.assertTrue(isinstance(ks.parent, ComponentItem))
+                self.assertEqual(ks.childNumber(),k)
+                self.assertEqual(ks.node, inkd)
+                self.assertEqual(ks.parent.node, qdn)
+                self.assertEqual(ks.node.nodeName(), "insertedkid")
+                self.assertEqual(ks.parent, ci)
+                continue
+            self.assertTrue(isinstance(ks, ComponentItem))
+            self.assertTrue(isinstance(ks.parent, ComponentItem))
+            self.assertEqual(ks.childNumber(),k)
+            self.assertEqual(ks.node, kds[k])
+            self.assertEqual(ks.parent.node, qdn)
+            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+            self.assertEqual(ks.parent, ci)
+            self.assertTrue(isinstance(ks.child(0), ComponentItem))
+            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+            self.assertEqual(ks.child(0).childNumber(),0)
+            self.assertEqual(ks.child(0).node, tkds[k])
+            self.assertEqual(ks.child(0).parent.node, ks.node)
+            self.assertEqual(ks.child(0).node.nodeName(), "#text")
+            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+            self.assertEqual(ks.child(0).parent, ks)
+
+
+
+
+
+
+
+    def test_replaceElement_noold(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dts = DomTools()
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+
+        ri = cm.rootIndex
+        self.assertEqual(cm.columnCount(ri), 3)
+
+        # avoids showing #document
+        di = cm.index(0,0,ri)
+        self.assertEqual(cm.columnCount(di), 3)
+
+        iv = cm.index(0,0)
+        self.assertEqual(cm.columnCount(iv), 3)
+        
+        ci = di.internalPointer()
+        self.assertEqual(ci.node, qdn)
+        self.assertEqual(ci.childNumber(),0)
+        self.assertEqual(ci.node.nodeName(), nname)
+        for k in range(nkids):
+            ks = ci.child(k)
+            self.assertTrue(isinstance(ks, ComponentItem))
+            self.assertTrue(isinstance(ks.parent, ComponentItem))
+            self.assertEqual(ks.childNumber(),k)
+            self.assertEqual(ks.node, kds[k])
+            self.assertEqual(ks.parent.node, qdn)
+            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+            self.assertEqual(ks.parent, ci)
+            self.assertTrue(isinstance(ks.child(0), ComponentItem))
+            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+            self.assertEqual(ks.child(0).childNumber(),0)
+            self.assertEqual(ks.child(0).node, tkds[k])
+            self.assertEqual(ks.child(0).parent.node, ks.node)
+            self.assertEqual(ks.child(0).node.nodeName(), "#text")
+            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+            self.assertEqual(ks.child(0).parent, ks)
+
+        rpvd =  self.__rnd.randint(0,nkids-1) 
+        rpkd = ci.child(rpvd)
+        rpkd2 = ci.child(rpvd)
+
+        inkd = doc.createElement("insertedkid")
+
+
+
+        dts.replaceElement(ci.node, inkd, di, cm)
+
+        for k in range(nkids):
+            ks = ci.child(k)
+            self.assertTrue(isinstance(ks, ComponentItem))
+            self.assertTrue(isinstance(ks.parent, ComponentItem))
+            self.assertEqual(ks.childNumber(),k)
+            self.assertEqual(ks.node, kds[k])
+            self.assertEqual(ks.parent.node, qdn)
+            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+            self.assertEqual(ks.parent, ci)
+            self.assertTrue(isinstance(ks.child(0), ComponentItem))
+            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+            self.assertEqual(ks.child(0).childNumber(),0)
+            self.assertEqual(ks.child(0).node, tkds[k])
+            self.assertEqual(ks.child(0).parent.node, ks.node)
+            self.assertEqual(ks.child(0).node.nodeName(), "#text")
+            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+            self.assertEqual(ks.child(0).parent, ks)
+
+
+
+
+
+
+
+
+
+    def test_replaceElement_noparent(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dts = DomTools()
+
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        tkds = []
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            kds[-1].setAttribute("name","myname%s" %  n)
+            kds[-1].setAttribute("type","mytype%s" %  n)
+            kds[-1].setAttribute("units","myunits%s" %  n)
+            qdn.appendChild(kds[-1]) 
+            tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
+            kds[-1].appendChild(tkds[-1]) 
+
+#        print doc.toString()    
+            
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        self.assertTrue(isinstance(cm, QAbstractItemModel))
+        self.assertTrue(isinstance(cm.rootIndex, QModelIndex))
+        cd = cm.rootIndex.internalPointer()
+        self.assertTrue(isinstance(cd, ComponentItem))
+        self.assertEqual(cm.rootIndex.row(), 0)
+        self.assertEqual(cm.rootIndex.column(), 0)
+
+        ri = cm.rootIndex
+        self.assertEqual(cm.columnCount(ri), 3)
+
+        # avoids showing #document
+        di = cm.index(0,0,ri)
+        self.assertEqual(cm.columnCount(di), 3)
+
+        iv = cm.index(0,0)
+        self.assertEqual(cm.columnCount(iv), 3)
+        
+        ci = di.internalPointer()
+        self.assertEqual(ci.node, qdn)
+        self.assertEqual(ci.childNumber(),0)
+        self.assertEqual(ci.node.nodeName(), nname)
+        for k in range(nkids):
+            ks = ci.child(k)
+            self.assertTrue(isinstance(ks, ComponentItem))
+            self.assertTrue(isinstance(ks.parent, ComponentItem))
+            self.assertEqual(ks.childNumber(),k)
+            self.assertEqual(ks.node, kds[k])
+            self.assertEqual(ks.parent.node, qdn)
+            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+            self.assertEqual(ks.parent, ci)
+            self.assertTrue(isinstance(ks.child(0), ComponentItem))
+            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+            self.assertEqual(ks.child(0).childNumber(),0)
+            self.assertEqual(ks.child(0).node, tkds[k])
+            self.assertEqual(ks.child(0).parent.node, ks.node)
+            self.assertEqual(ks.child(0).node.nodeName(), "#text")
+            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+            self.assertEqual(ks.child(0).parent, ks)
+
+        rpvd =  self.__rnd.randint(0,nkids-1) 
+        rpkd = ci.child(rpvd)
+
+        inkd = doc.createElement("insertedkid")
+
+
+
+        dts.replaceElement(rpkd.node, inkd, QModelIndex(), cm)
+
+        for k in range(nkids):
+            ks = ci.child(k)
+            self.assertTrue(isinstance(ks, ComponentItem))
+            self.assertTrue(isinstance(ks.parent, ComponentItem))
+            self.assertEqual(ks.childNumber(),k)
+            self.assertEqual(ks.node, kds[k])
+            self.assertEqual(ks.parent.node, qdn)
+            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+            self.assertEqual(ks.parent, ci)
+            self.assertTrue(isinstance(ks.child(0), ComponentItem))
+            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+            self.assertEqual(ks.child(0).childNumber(),0)
+            self.assertEqual(ks.child(0).node, tkds[k])
+            self.assertEqual(ks.child(0).parent.node, ks.node)
+            self.assertEqual(ks.child(0).node.nodeName(), "#text")
+            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+            self.assertEqual(ks.child(0).parent, ks)
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

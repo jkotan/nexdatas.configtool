@@ -126,6 +126,9 @@ class DomTools(object):
     # \param parent parent node index  
     # \param model Component model            
     def removeNode(self, node, parent, model):
+        if not parent or not hasattr(parent,"internalPointer") \
+                or not hasattr(parent.internalPointer(),"node"):
+            return
         row = self.getNodeRow(node, parent.internalPointer().node)
         if row is not None:
             model.removeItem(row, parent)

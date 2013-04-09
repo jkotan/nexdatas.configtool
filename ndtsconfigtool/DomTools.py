@@ -110,7 +110,7 @@ class DomTools(object):
     # \param text string with text
     def replaceText(self, node, index, model, text = None):
         if node:
-            root = model.rootIndex().internalPointer()
+            root = model.rootIndex.internalPointer()
             child = node.firstChild()
             while not child.isNull():
                 if child.nodeType() == QDomNode.TextNode:

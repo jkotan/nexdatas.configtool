@@ -112,7 +112,7 @@ class DefinitionDlg(NodeDlg):
         
         self.updateForm()
 
-        self._updateUi()
+        self.__updateUi()
 
 #        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
@@ -232,7 +232,7 @@ class DefinitionDlg(NodeDlg):
 
     ## updates definition user interface
     # \brief It sets enable or disable the OK button
-    def _updateUi(self):
+    def __updateUi(self):
         pass
 #        enable = not self.ui.typeLineEdit.text().isEmpty()
 #        self.ui.applyPushButton.setEnabled(enable)

@@ -492,6 +492,99 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_createGUI(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = DefinitionDlg()
+        form.show()
+        form.createGUI()
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+
+        name = "myname"
+        nType = "NXEntry"
+        doc = "My documentation: \n ble ble ble "
+        
+        form = DefinitionDlg()
+        form.show()
+        form.createGUI()
+ 
+        print "TEXT", form.ui.nameLineEdit.text()
+        self.assertEqual(form.ui.nameLineEdit.text(), '') 
+        self.assertEqual(form.ui.typeLineEdit.text(), '')
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), '')
+
+        form = DefinitionDlg()
+        form.show()
+        form.name = name
+
+
+        form.createGUI()
+    
+        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.typeLineEdit.text(), '')
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), '')
+
+
+        form = DefinitionDlg()
+        form.show()
+        form.nexusType = nType
+
+
+        form.createGUI()
+    
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertEqual(form.ui.typeLineEdit.text(), nType)
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+
+
+
+
+        form = DefinitionDlg()
+        form.show()
+        form.doc = doc
+
+        form.createGUI()
+    
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+
+
+
+
+        form = DefinitionDlg()
+        form.show()
+        form.name = name
+        form.doc = doc
+        form.nexusType = nType
+
+
+        form.createGUI()
+    
+        self.assertEqual(form.ui.typeLineEdit.text(), nType)
+        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+
+
+        form.ui.receivers(SIGNAL(valueChanged(QByteArray)))
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+
+#        form.apply()
+#        self.assertEqual(form.name, name)
+#        self.assertEqual(form.nexusType, nType)
+
+        self.assertEqual(form.result(),0)
+
+
+
 
 
 if __name__ == '__main__':

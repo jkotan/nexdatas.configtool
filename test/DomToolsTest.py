@@ -256,8 +256,15 @@ class DomToolsTest(unittest.TestCase):
 
 
         for k in range(nkids):
+            ki = cm.index(k,0,di)
             ks = ci.child(k)
-            dts.replaceText(ks.node, ks, cm)
+            text = "New %s" % k
+            dts.replaceText(ks.node, ki, cm, text)
+            tx = dts.getText(ks.node)
+            self.assertEqual(tx, text)
+            dts.replaceText(ks.node, ki, cm)
+            tx = dts.getText(ks.node)
+            self.assertEqual(tx, "")
 
 
 

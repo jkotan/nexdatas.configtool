@@ -158,6 +158,114 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_updateForm(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = DefinitionDlg()
+        form.show()
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+
+        form.createGUI()
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+
+        name = "myname"
+        nType = "NXEntry"
+        doc = "My documentation: \n ble ble ble "
+        
+        self.assertEqual(form.updateForm(),None)
+    
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+        form.name = name
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+        self.assertEqual(form.updateForm(),None)
+    
+        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+        form.ui.nameLineEdit.setText("")
+
+        form.name = ""
+        form.nexusType = nType
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+        self.assertEqual(form.updateForm(),None)
+    
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertEqual(form.ui.typeLineEdit.text(), nType)
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+
+
+
+        form.ui.typeLineEdit.setText("")
+
+        form.doc = doc
+        form.nexusType = ""
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+        self.assertEqual(form.updateForm(),None)
+    
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+
+
+
+        form.ui.docTextEdit.setText("")
+
+        form.name = name
+        form.doc = doc
+        form.nexusType = nType
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+        self.assertEqual(form.updateForm(),None)
+    
+        self.assertEqual(form.ui.typeLineEdit.text(), nType)
+        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+
+
+
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+
+#        form.apply()
+#        self.assertEqual(form.name, name)
+#        self.assertEqual(form.nexusType, nType)
+
+        self.assertEqual(form.result(),0)
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

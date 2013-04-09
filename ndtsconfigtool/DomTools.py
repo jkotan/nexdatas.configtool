@@ -140,6 +140,9 @@ class DomTools(object):
     # \param parent parent node index
     # \param model Component model            
     def replaceNode(self, oldNode, newNode, parent, model):
+        if not parent or not hasattr(parent,"internalPointer") \
+                or not hasattr(parent.internalPointer(),"node"):
+            return
         node = parent.internalPointer().node
         row = self.getNodeRow(oldNode, node)
         if row is not None:
@@ -163,6 +166,9 @@ class DomTools(object):
     # \param parent parent node index      
     # \param model Component model            
     def removeElement(self, element, parent, model):
+        if not parent or not hasattr(parent,"internalPointer") \
+                or not hasattr(parent.internalPointer(),"node"):
+            return
         row = self.__getElementRow(element, parent.internalPointer().node)
         if row is not None:
             model.removeItem(row, parent)
@@ -174,10 +180,14 @@ class DomTools(object):
     # \param parent parent node index
     # \param model Component model            
     def replaceElement(self, oldElement, newElement, parent, model):
-        row = self.__getElementRow(oldElement, parent.internalPointer().node)
+        if not parent or not hasattr(parent,"internalPointer") \
+                or not hasattr(parent.internalPointer(),"node"):
+            return
+        node = parent.internalPointer().node
+        row = self.__getElementRow(oldElement, node)
         if row is not None:
             model.removeItem(row, parent)
-            if row  < self.node.childNodes().count():
+            if row  < node.childNodes().count():
                 model.insertItem(row, newElement, parent)
             else:
                 model.appendItem(newElement, parent)

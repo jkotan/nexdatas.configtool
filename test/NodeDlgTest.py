@@ -593,5 +593,194 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(dts.stack, [] )
         
 
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_removeElement(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = NodeDlg()
+        form.ui = Ui_NodeDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, [])
+
+        vw = TestView()
+
+        ri = vw.model().rootIndex
+        di = vw.model().index(0,0,ri)
+        n = self.__rnd.randint(0, vw.nkids-1) 
+        ki = vw.model().index(n,0,di)
+
+        vw.myindex =  ki
+
+
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        form.view = vw
+        
+        dts = TestTools()
+        form.dts = dts
+        form.node =vw.qdn
+
+        form.removeElement(ki.internalPointer(),di)
+        
+
+        self.assertEqual(dts.stack[0],"removeElement")
+        self.assertEqual(dts.stack[1],ki.internalPointer())
+        self.assertEqual(dts.stack[2],di)
+        self.assertEqual(dts.stack[3],vw.model())
+
+        dts.stack = []
+
+        vw.testModel = None
+
+
+        form.removeElement(ki.internalPointer(),di)
+        self.assertEqual(dts.stack, [] )
+
+
+
+        dts.stack = []
+
+        form.view = None
+
+
+        form.removeElement(ki.internalPointer(),di)
+        self.assertEqual(dts.stack, [] )
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_replaceElement(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = NodeDlg()
+        form.ui = Ui_NodeDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, [])
+
+        vw = TestView()
+
+        ri = vw.model().rootIndex
+        di = vw.model().index(0,0,ri)
+        n = self.__rnd.randint(0, vw.nkids-1) 
+        ki = vw.model().index(n,0,di)
+        n2 = self.__rnd.randint(0, vw.nkids-1) 
+        ki2 = vw.model().index(n2,0,di)
+
+        vw.myindex =  ki
+
+
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        form.view = vw
+        
+        dts = TestTools()
+        form.dts = dts
+        form.node =vw.qdn
+
+        form.replaceElement(ki.internalPointer(),ki2.internalPointer(),di)
+        
+
+        self.assertEqual(dts.stack[0],"replaceElement")
+        self.assertEqual(dts.stack[1],ki.internalPointer())
+        self.assertEqual(dts.stack[2],ki2.internalPointer())
+        self.assertEqual(dts.stack[3],di)
+        self.assertEqual(dts.stack[4],vw.model())
+
+        dts.stack = []
+
+        vw.testModel = None
+
+        form.replaceElement(ki.internalPointer(),ki2.internalPointer(),di)
+        self.assertEqual(dts.stack, [] )
+
+
+
+        dts.stack = []
+
+        form.view = None
+
+        form.replaceElement(ki.internalPointer(),ki2.internalPointer(),di)
+        self.assertEqual(dts.stack, [] )
+
+        self.assertEqual(form.result(),0)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_appendElement(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = NodeDlg()
+        form.ui = Ui_NodeDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, [])
+
+        vw = TestView()
+
+        ri = vw.model().rootIndex
+        di = vw.model().index(0,0,ri)
+        n = self.__rnd.randint(0, vw.nkids-1) 
+        ki = vw.model().index(n,0,di)
+
+        vw.myindex =  ki
+
+
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        form.view = vw
+        
+        dts = TestTools()
+        form.dts = dts
+        form.node =vw.qdn
+
+        form.appendElement(ki.internalPointer(),di)
+        
+
+        self.assertEqual(dts.stack[0],"appendNode")
+        self.assertEqual(dts.stack[1],ki.internalPointer())
+        self.assertEqual(dts.stack[2],di)
+        self.assertEqual(dts.stack[3],vw.model())
+
+        dts.stack = []
+
+        vw.testModel = None
+
+        form.appendElement(ki.internalPointer(),di)
+        self.assertEqual(dts.stack, [] )
+
+
+
+        dts.stack = []
+
+        form.view = None
+
+        form.appendElement(ki.internalPointer(),di)
+        self.assertEqual(dts.stack, [] )
+
+        self.assertEqual(form.result(),0)
+
+
+
+
 if __name__ == '__main__':
     unittest.main()

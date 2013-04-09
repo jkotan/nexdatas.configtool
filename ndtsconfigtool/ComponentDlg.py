@@ -63,12 +63,15 @@ class ComponentDlg(QDialog):
         ## DOM tools
         self.__dts = DomTools()
 
-    def keyPressEvent(self, e):
-        
+
+    ## function called on key press
+    # \param event catched event
+    def keyPressEvent(self, event):
         if e.key() == Qt.Key_Escape:
             print "NO CLOSE"
 #            self.close()
             
+
     ## provides row number of the given node
     # \param child child item
     # \returns row number

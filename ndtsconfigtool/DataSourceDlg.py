@@ -882,8 +882,11 @@ class CommonDataSource(object):
         ## database parameters
         self.dbParameters = {}
 
+        ## external save method
         self.externalSave = None
+        ## external close method
         self.externalClose = None
+        ## external apply method
         self.externalApply = None
 
         ## applied flag

@@ -78,7 +78,6 @@ class NodeDlg(QDialog):
 
     ## replaces node text for the given node
     # \param index of child text node
-    # \param parent parent node index        
     # \param text string with text
     def replaceText(self, index, text = None):
         if self.view is not None and self.view.model() is not None: 

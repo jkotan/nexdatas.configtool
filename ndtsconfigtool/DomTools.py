@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndtsconfigtool nexdatas
-## \file DOMTools.py
+## \file DomTools.py
 # Abstract Node dialog class
 
 from PyQt4.QtGui import QDialog
@@ -107,6 +107,7 @@ class DomTools(object):
     ## replaces node text for the given node
     # \param node parent DOM node        
     # \param index of child text node
+    # \param model Component model            
     # \param text string with text
     def replaceText(self, node, index, model, text = None):
         if node:

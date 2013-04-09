@@ -26,6 +26,7 @@ import unittest
 import AttributeDlgTest
 import ConnectDlgTest
 import DimensionsDlgTest
+import DefinitionDlgTest
 import NodeDlgTest
 import ComponentItemTest
 import ComponentModelTest
@@ -103,6 +104,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(DomToolsTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DefinitionDlgTest) )
 
 
     if "MYSQL" in DB_AVAILABLE:

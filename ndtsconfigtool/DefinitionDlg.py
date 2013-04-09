@@ -117,7 +117,7 @@ class DefinitionDlg(NodeDlg):
 #        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.ui.attributeTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
-                     self._tableItemChanged)
+                     self.__tableItemChanged)
         self.connect(self.ui.addPushButton, SIGNAL("clicked()"), self.__addAttribute)
         self.connect(self.ui.removePushButton, SIGNAL("clicked()"), self.__removeAttribute)
 
@@ -191,8 +191,8 @@ class DefinitionDlg(NodeDlg):
 
     ## changes the current value of the attribute        
     # \brief It changes the current value of the attribute and informs the user that attribute names arenot editable
-    def _tableItemChanged(self, item):
-        attr = self._currentTableAttribute()
+    def __tableItemChanged(self, item):
+        attr = self.__currentTableAttribute()
         if unicode(attr)  not in self.__attributes.keys():
             return
         column = self.ui.attributeTableWidget.currentColumn()

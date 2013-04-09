@@ -184,6 +184,7 @@ class DefinitionDlgTest(unittest.TestCase):
         name = "myname"
         nType = "NXEntry"
         doc = "My documentation: \n ble ble ble "
+        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
         
         self.assertEqual(form.updateForm(),None)
     
@@ -243,6 +244,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.name = name
         form.doc = doc
         form.nexusType = nType
+        form.attributes = attributes
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
@@ -255,6 +257,15 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
 
+
+        for i in range(len(attributes)):
+            it = form.ui.attributeTableWidget.item(i, 0) 
+            k = str(it.text())
+            self.assertTrue(k in attributes.keys())
+            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            self.assertEqual(it2.text(), attributes[k])
+
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
@@ -509,12 +520,12 @@ class DefinitionDlgTest(unittest.TestCase):
         name = "myname"
         nType = "NXEntry"
         doc = "My documentation: \n ble ble ble "
+        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
         
         form = DefinitionDlg()
         form.show()
         form.createGUI()
  
-        print "TEXT", form.ui.nameLineEdit.text()
         self.assertEqual(form.ui.nameLineEdit.text(), '') 
         self.assertEqual(form.ui.typeLineEdit.text(), '')
         self.assertEqual(form.ui.docTextEdit.toPlainText(), '')
@@ -564,12 +575,21 @@ class DefinitionDlgTest(unittest.TestCase):
         form.name = name
         form.doc = doc
         form.nexusType = nType
-
+        form.attributes = attributes
 
         form.createGUI()
     
         self.assertEqual(form.ui.typeLineEdit.text(), nType)
         self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+
+        for i in range(len(attributes)):
+            it = form.ui.attributeTableWidget.item(i, 0) 
+            k = str(it.text())
+            self.assertTrue(k in attributes.keys())
+            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            self.assertEqual(it2.text(), attributes[k])
+
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
 

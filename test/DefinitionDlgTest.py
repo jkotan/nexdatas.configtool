@@ -573,7 +573,6 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
 
-        form.ui.receivers(SIGNAL(valueChanged(QByteArray)))
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 

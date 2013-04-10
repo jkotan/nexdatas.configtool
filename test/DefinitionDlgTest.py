@@ -1138,18 +1138,14 @@ class DefinitionDlgTest(unittest.TestCase):
         aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, AttributeDlg))
-#        print mb.text()
-        print "AW", aw
-        print "mb", mb
+
         QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
         self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
         QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
         self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
 
-#        self.text = mb.text()
-#        self.title = mb.windowTitle()
         mb.accept()
-        mb.close()
+#        mb.close()
 
 
 

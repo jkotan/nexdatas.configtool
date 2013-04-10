@@ -24,10 +24,9 @@ from PyQt4.QtCore import (SIGNAL, Qt, QVariant)
 from PyQt4.QtGui import (QTableWidgetItem, QMessageBox, QDialog)
 from ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
-from NodeDlg import NodeDlg 
 
 ## dialog defining a dimensions tag
-class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
+class DimensionsDlg(QDialog):
     
     ## constructor
     # \param parent patent instance
@@ -40,6 +39,9 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
         self.doc = u''
         ## dimensions lengths
         self.lengths = []
+
+        ## user interface
+        self.ui = Ui_DimensionsDlg()
 
         ## allowed subitems
         self.subItems = ["dim", "doc"]
@@ -66,39 +68,39 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
         if not self.lengths:
             self.lengths = []
             
-        self.setupUi(self)
+        self.ui.setupUi(self)
 
         if self.doc :
-            self.docTextEdit.setText(self.doc)
+            self.ui.docTextEdit.setText(self.doc)
         
-        self.rankSpinBox.setValue(self.rank)    
+        self.ui.rankSpinBox.setValue(self.rank)    
 
-        self.connect(self.dimTableWidget, 
+        self.connect(self.ui.dimTableWidget, 
                      SIGNAL("itemChanged(QTableWidgetItem*)"),
-                     self._tableItemChanged)
+                     self.__tableItemChanged)
 
-        self.dimTableWidget.setSortingEnabled(False)
-        self.populateLengths()
-        self.rankSpinBox.setFocus()
+        self.ui.dimTableWidget.setSortingEnabled(False)
+        self.__populateLengths()
+        self.ui.rankSpinBox.setFocus()
 
-        self.connect(self.rankSpinBox, SIGNAL("valueChanged(int)"), self._valueChanged)
+        self.connect(self.ui.rankSpinBox, SIGNAL("valueChanged(int)"), self.__valueChanged)
 
                 
     ## takes a name of the current dim
     # \returns name of the current dim            
-    def _currentTableDim(self):
-        return self.dimTableWidget.currentRow()
+    def __currentTableDim(self):
+        return self.ui.dimTableWidget.currentRow()
 
 
     ## changes the current value of the dim        
     # \brief It changes the current value of the dim 
     # and informs the user about wrong values
-    def _tableItemChanged(self, item):
-        row = self._currentTableDim()
+    def __tableItemChanged(self, item):
+        row = self.__currentTableDim()
         
         if row not in range(len(self.lengths)):
             return
-        column = self.dimTableWidget.currentColumn()
+        column = self.ui.dimTableWidget.currentColumn()
         if column == 0:
             try:
                 if item.text():
@@ -111,30 +113,30 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
             except:
                 QMessageBox.warning(self, "Value Error", "Wrong value of the edited length")
                 
-        self.populateLengths()
+        self.__populateLengths()
 
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
-    def _valueChanged(self, text):
-        self.rank = int(self.rankSpinBox.value())
-        self.populateLengths(self.rank-1)
+    def __valueChanged(self, text):
+        self.rank = int(self.ui.rankSpinBox.value())
+        self.__populateLengths(self.rank-1)
 
 
     ## fills in the dim table      
     # \param selectedDim selected dim    
-    def populateLengths(self, selectedDim = None):
+    def __populateLengths(self, selectedDim = None):
         selected = None
-        self.dimTableWidget.clear()
-        self.dimTableWidget.setRowCount(self.rank)
+        self.ui.dimTableWidget.clear()
+        self.ui.dimTableWidget.setRowCount(self.rank)
         
         while self.rank > len(self.lengths):
             self.lengths.append(None)
         
         headers = ["Length"]
-        self.dimTableWidget.setColumnCount(len(headers))
-        self.dimTableWidget.setHorizontalHeaderLabels(headers)	
-        self.dimTableWidget.setVerticalHeaderLabels( [unicode(l+1) for l in range(self.rank)] )	
+        self.ui.dimTableWidget.setColumnCount(len(headers))
+        self.ui.dimTableWidget.setHorizontalHeaderLabels(headers)	
+        self.ui.dimTableWidget.setVerticalHeaderLabels( [unicode(l+1) for l in range(self.rank)] )	
         for row, ln in enumerate(self.lengths):
             if ln:
                 item = QTableWidgetItem(unicode(ln))
@@ -143,13 +145,13 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
             item.setData(Qt.UserRole, QVariant(long(row)))
             if selectedDim is not None and selectedDim == row:
                 selected = item
-            self.dimTableWidget.setItem(row, 0, item)
-        self.dimTableWidget.resizeColumnsToContents()
-        self.dimTableWidget.horizontalHeader().setStretchLastSection(True);
+            self.ui.dimTableWidget.setItem(row, 0, item)
+        self.ui.dimTableWidget.resizeColumnsToContents()
+        self.ui.dimTableWidget.horizontalHeader().setStretchLastSection(True);
         if selected is not None:
             selected.setSelected(True)
-            self.dimTableWidget.setCurrentItem(selected)
-            self.dimTableWidget.editItem(selected)
+            self.ui.dimTableWidget.setCurrentItem(selected)
+            self.ui.dimTableWidget.editItem(selected)
             
 
 
@@ -157,7 +159,7 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
     ## accepts input text strings
     # \brief It copies the dimensions name and type from lineEdit widgets and accept the dialog
     def accept(self):
-        self.doc = unicode(self.docTextEdit.toPlainText())
+        self.doc = unicode(self.ui.docTextEdit.toPlainText())
         while len(self.lengths) > self.rank:
             self.lengths.pop()
         QDialog.accept(self)
@@ -165,6 +167,7 @@ class DimensionsDlg(NodeDlg, Ui_DimensionsDlg):
 if __name__ == "__main__":
     import sys
 
+    from PyQt4.QtGui import QApplication
     ## Qt application
     app = QApplication(sys.argv)
     ## dimensions form
@@ -172,7 +175,7 @@ if __name__ == "__main__":
     form.rank = 2
     form.lengths = [25,27]
 #    form.lengths = [None,3]
-    form.doc = "Two dimentional array"
+    form.doc = "Two dimensional array"
     form.createGUI()
     form.show()
     app.exec_()

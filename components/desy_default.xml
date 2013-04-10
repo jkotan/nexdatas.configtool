@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <definition>
-  <group type="NXentry" name="entry">
+  <group type="NXentry">
     <group type="NXsample" name="sample">
       <field type="NX_CHAR" name="name">
         <datasource type="CLIENT" name="sample_name">
@@ -9,24 +9,20 @@
         </datasource>
         <strategy mode="INIT" compression="false"/>
       </field>
-      <field type="NX_CHAR" name="chemical_formula">
-        <doc>A simple string describing the chemical composition of the sample.</doc>Si/SiGe/Si</field>
-      <field type="NX_CHAR" name="type">sample<doc>Lookup the Nexus base class definition to find all possible types of samples. Maybe this is insufficient.</doc>
-      </field>
     </group>
     <group type="NXdata" name="data"/>
     <field type="NX_CHAR" name="experiment_identifier">
       <doc>Beamtime ID. From this ID everything else can be derived from the DESY databases including the Proposal as well as the scientists performing the experiment, the local contact, and so on.
 
-The beamtime ID at DESY is an 8 digit number.R</doc>
-      <strategy mode="INIT"/>12345678</field>
+The beamtime ID at DESY is an 8 digit number.R</doc>12345678<strategy mode="INIT" compression="false"/>
+    </field>
     <field type="NX_DATE_TIME" name="start_time">
       <doc>time stamp when the experiment has started.</doc>
       <datasource type="CLIENT" name="start_time">
         <record name="start_time"/>
         <doc>The start time is provided by the control client.</doc>
       </datasource>
-      <strategy mode="INIT"/>
+      <strategy mode="INIT" compression="false"/>
     </field>
     <field type="NX_DATE_TIME" name="end_time">
       <doc>end time - timestamp when the experiment stopped.</doc>
@@ -34,7 +30,7 @@ The beamtime ID at DESY is an 8 digit number.R</doc>
         <record name="end_time"/>
         <doc>The end time is provided by the client after the experiment is finished.</doc>
       </datasource>
-      <strategy mode="FINAL"/>
+      <strategy mode="FINAL" compression="false"/>
     </field>
     <group type="NXinstrument" name="instrument">
       <group type="NXsource" name="source">
@@ -46,18 +42,6 @@ The beamtime ID at DESY is an 8 digit number.R</doc>
       <group type="NXinsertion_device" name="insertion_device"/>
       <field short_name="P08" type="NX_CHAR" name="name">High Resolution Diffraction Beamline</field>
     </group>
-    <group type="NXmonitor" name="control"/>
-    <group type="NXuser" name="user">
-      <field type="NX_CHAR" name="name">
-        <doc>The person who applied for the beamtime.</doc>Eugen Wintersberger</field>
-      <field type="NX_CHAR" name="affiliation">Deutsches Elektronensynchrotron</field>
-      <field name="address">Notkestrasse 85, 22607 Hamburg, Germany</field>
-    </group>
-    <field type="NX_CHAR" name="title">
-      <doc>more detailed description on the experiment.</doc>default experiment</field>
-    <field type="NX_CHAR" name="run_cycle">2013-1<doc>Run cycle of the facility - can do something at DESY but is actually not existing as far as I know.</doc>
-    </field>
-    <field version="1.0.0" type="NX_CHAR" name="program_name">Nexus data server<doc>Program that created the file.</doc>
-    </field>
+    <group type="NXmonitor" name="monitor"/>
   </group>
 </definition>

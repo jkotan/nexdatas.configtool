@@ -29,10 +29,10 @@ from NodeDlg import NodeDlg
 import copy
 import gc
 
-
+from Errors import ParameterError
 
 ## dialog defining commmon datasource
-class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
+class CommonDataSourceDlg(NodeDlg):
     
     ## constructor
     # \param datasource instance
@@ -49,28 +49,45 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         ## allowed subitems
         self.subItems = ["record", "doc", "device", "database", "query", "door"]
 
+        ## user interface
+        self.ui = Ui_DataSourceDlg()
+
+    ## handling escape action
+    def keyPressEvent(self, e):
+        
+        if e.key() == Qt.Key_Escape:
+            print "NO CLOSE"
+#            self.close()
+
 
     ## connects the dialog actions 
     def connectWidgets(self):
         
 
-        self.connect(self.dAddPushButton, SIGNAL("clicked()"), 
+        self.connect(self.ui.dAddPushButton, SIGNAL("clicked()"), 
                      self._addParameter)
-        self.connect(self.dRemovePushButton, SIGNAL("clicked()"), 
+        self.connect(self.ui.dRemovePushButton, SIGNAL("clicked()"), 
                      self.removeParameter)
-        self.connect(self.dParameterTableWidget, 
+        self.connect(self.ui.dParameterTableWidget, 
                      SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.tableItemChanged)
         
 
-        self.connect(self.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._typeComboBox)
-        self.connect(self.dParamComboBox, SIGNAL("currentIndexChanged(QString)"), self._dParamComboBox)
-        self.connect(self.cRecNameLineEdit, SIGNAL("textEdited(QString)"), self._cRecNameLineEdit)
-        self.connect(self.dQueryLineEdit, SIGNAL("textEdited(QString)"), self._dQueryLineEdit)
-        self.connect(self.tDevNameLineEdit, SIGNAL("textEdited(QString)"), self._tDevNameLineEdit)
-        self.connect(self.tMemberNameLineEdit, SIGNAL("textEdited(QString)"), self._tMemberNameLineEdit)
+        self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._typeComboBox)
+        self.connect(self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"), self._dParamComboBox)
+        self.connect(self.ui.cRecNameLineEdit, SIGNAL("textEdited(QString)"), self._cRecNameLineEdit)
+        self.connect(self.ui.dQueryLineEdit, SIGNAL("textEdited(QString)"), self._dQueryLineEdit)
+        self.connect(self.ui.tDevNameLineEdit, SIGNAL("textEdited(QString)"), self._tDevNameLineEdit)
+        self.connect(self.ui.tMemberNameLineEdit, SIGNAL("textEdited(QString)"), self._tMemberNameLineEdit)
 
 #        self.setFrames(self.datasource.dataSourceType)
+
+    ## sets focus on save button
+    # \brief It sets focus on save button
+    def setSaveFocus(self):
+        if self.ui :
+            self.ui.savePushButton.setFocus()
+
 
     ## shows and hides frames according to typeComboBox
     # \param text the edited text   
@@ -82,14 +99,14 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     ## calls updateUi when the name text is changing
     # \param text the edited text   
     def _cRecNameLineEdit(self, text):
-        combo = unicode(self.typeComboBox.currentText())
+        combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
     def _dQueryLineEdit(self, text):
-        combo = unicode(self.typeComboBox.currentText())
+        combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 
 
@@ -97,14 +114,14 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     ## calls updateUi when the name text is changing
     # \param text the edited text   
     def _tDevNameLineEdit(self, text):
-        combo = unicode(self.typeComboBox.currentText())
+        combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
     def _tMemberNameLineEdit(self, text):
-        combo = unicode(self.typeComboBox.currentText())
+        combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 
 
@@ -113,23 +130,23 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     # \brief It sets enable or disable the OK button
     def updateUi(self, text):
         if text == 'CLIENT':
-            enable = not self.cRecNameLineEdit.text().isEmpty()
-            self.applyPushButton.setEnabled(enable)
-            self.savePushButton.setEnabled(enable)
+            enable = not self.ui.cRecNameLineEdit.text().isEmpty()
+            self.ui.applyPushButton.setEnabled(enable)
+            self.ui.savePushButton.setEnabled(enable)
         elif text == 'DB':
-            enable = not self.dQueryLineEdit.text().isEmpty()
-            self.applyPushButton.setEnabled(enable)
-            self.savePushButton.setEnabled(enable)
+            enable = not self.ui.dQueryLineEdit.text().isEmpty()
+            self.ui.applyPushButton.setEnabled(enable)
+            self.ui.savePushButton.setEnabled(enable)
         elif text == 'TANGO':    
-            enable = not self.tDevNameLineEdit.text().isEmpty() and \
-                not self.tMemberNameLineEdit.text().isEmpty()
-            self.applyPushButton.setEnabled(enable)
-            self.savePushButton.setEnabled(enable)
+            enable = not self.ui.tDevNameLineEdit.text().isEmpty() and \
+                not self.ui.tMemberNameLineEdit.text().isEmpty()
+            self.ui.applyPushButton.setEnabled(enable)
+            self.ui.savePushButton.setEnabled(enable)
         else:
             ## Additional non-supported frame
             enable = True
-            self.applyPushButton.setEnabled(enable)
-            self.savePushButton.setEnabled(enable)
+            self.ui.applyPushButton.setEnabled(enable)
+            self.ui.savePushButton.setEnabled(enable)
         
 
 
@@ -139,17 +156,17 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     # \param text the edited text   
     def setFrames(self,text):
         if text == 'CLIENT':
-            self.clientFrame.show()
-            self.dbFrame.hide()
-            self.tangoFrame.hide()
+            self.ui.clientFrame.show()
+            self.ui.dbFrame.hide()
+            self.ui.tangoFrame.hide()
         elif text == 'TANGO':
-            self.clientFrame.hide()
-            self.dbFrame.hide()
-            self.tangoFrame.show()
+            self.ui.clientFrame.hide()
+            self.ui.dbFrame.hide()
+            self.ui.tangoFrame.show()
         elif text == 'DB':
-            self.clientFrame.hide()
-            self.dbFrame.show()
-            self.tangoFrame.hide()
+            self.ui.clientFrame.hide()
+            self.ui.dbFrame.show()
+            self.ui.tangoFrame.hide()
             self.populateParameters()
             
         self.updateUi(text)
@@ -167,7 +184,7 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     ## adds an parameter    
     #  \brief It runs the Parameter Dialog and fetches parameter name and value    
     def _addParameter(self):
-        name =  unicode(self.dParamComboBox.currentText())
+        name =  unicode(self.ui.dParamComboBox.currentText())
         if name not in self.dbParam.keys():
             self.dbParam[name] = ""
         self.populateParameters(name)
@@ -176,7 +193,7 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     ## takes a name of the current parameter
     # \returns name of the current parameter
     def _currentTableParameter(self):
-        item = self.dParameterTableWidget.item(self.dParameterTableWidget.currentRow(), 0)
+        item = self.ui.dParameterTableWidget.item(self.ui.dParameterTableWidget.currentRow(), 0)
         if item is None:
             return None
         return item.data(Qt.UserRole).toString()
@@ -205,7 +222,7 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         param = self._currentTableParameter()
         if unicode(param)  not in self.dbParam.keys():
             return
-        column = self.dParameterTableWidget.currentColumn()
+        column = self.ui.dParameterTableWidget.currentColumn()
         if column == 1:
             self.dbParam[unicode(param)] = unicode(item.text())
         if column == 0:
@@ -217,27 +234,27 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
     # \param selectedParameter selected parameter
     def populateParameters(self, selectedParameter = None):
         selected = None
-        self.dParameterTableWidget.clear()
-        self.dParameterTableWidget.setSortingEnabled(False)
-        self.dParameterTableWidget.setRowCount(len(self.dbParam))
+        self.ui.dParameterTableWidget.clear()
+        self.ui.dParameterTableWidget.setSortingEnabled(False)
+        self.ui.dParameterTableWidget.setRowCount(len(self.dbParam))
         headers = ["Name", "Value"]
-        self.dParameterTableWidget.setColumnCount(len(headers))
-        self.dParameterTableWidget.setHorizontalHeaderLabels(headers)	
+        self.ui.dParameterTableWidget.setColumnCount(len(headers))
+        self.ui.dParameterTableWidget.setHorizontalHeaderLabels(headers)	
         for row, name in enumerate(self.dbParam):
             item = QTableWidgetItem(name)
             item.setData(Qt.UserRole, QVariant(name))
-            self.dParameterTableWidget.setItem(row, 0, item)
+            self.ui.dParameterTableWidget.setItem(row, 0, item)
             item2 = QTableWidgetItem(self.dbParam[name])
             if selectedParameter is not None and selectedParameter == name:
                 selected = item2
-            self.dParameterTableWidget.setItem(row, 1, item2)
-        self.dParameterTableWidget.setSortingEnabled(True)
-        self.dParameterTableWidget.resizeColumnsToContents()
-        self.dParameterTableWidget.horizontalHeader().setStretchLastSection(True);
+            self.ui.dParameterTableWidget.setItem(row, 1, item2)
+        self.ui.dParameterTableWidget.setSortingEnabled(True)
+        self.ui.dParameterTableWidget.resizeColumnsToContents()
+        self.ui.dParameterTableWidget.horizontalHeader().setStretchLastSection(True);
         if selected is not None:
             selected.setSelected(True)
-            self.dParameterTableWidget.setCurrentItem(selected)
-            self.dParameterTableWidget.editItem(selected)
+            self.ui.dParameterTableWidget.setCurrentItem(selected)
+            self.ui.dParameterTableWidget.editItem(selected)
 
 
     ## closes the window and cleans the dialog label
@@ -250,8 +267,6 @@ class CommonDataSourceDlg(NodeDlg, Ui_DataSourceDlg):
         if hasattr(self.datasource,"methods"):
             self.datasource.methods.dialog = None
 
-## error of passed parameter
-class ParameterError(Exception): pass
 
 
         
@@ -306,60 +321,60 @@ class DataSourceMethods(object):
         if not self.dialog or not self.datasource:
             raise ParameterError, "updateForm parameters not defined"
         if self.datasource.doc is not None:
-            self.dialog.docTextEdit.setText(self.datasource.doc)
+            self.dialog.ui.docTextEdit.setText(self.datasource.doc)
 
         if self.datasource.dataSourceType is not None:
-            index = self.dialog.typeComboBox.findText(unicode(self.datasource.dataSourceType))
+            index = self.dialog.ui.typeComboBox.findText(unicode(self.datasource.dataSourceType))
             if  index > -1 :
-                self.dialog.typeComboBox.setCurrentIndex(index)
+                self.dialog.ui.typeComboBox.setCurrentIndex(index)
             else:
                 self.datasource.dataSourceType = 'CLIENT'    
     
         if self.datasource.dataSourceName is not None:
-            self.dialog.nameLineEdit.setText(self.datasource.dataSourceName)
+            self.dialog.ui.nameLineEdit.setText(self.datasource.dataSourceName)
 
         if self.datasource.clientRecordName is not None:
-            self.dialog.cRecNameLineEdit.setText(self.datasource.clientRecordName)
+            self.dialog.ui.cRecNameLineEdit.setText(self.datasource.clientRecordName)
 
         if self.datasource.tangoDeviceName is not None:
-            self.dialog.tDevNameLineEdit.setText(self.datasource.tangoDeviceName)
+            self.dialog.ui.tDevNameLineEdit.setText(self.datasource.tangoDeviceName)
         if self.datasource.tangoMemberName is not None:
-            self.dialog.tMemberNameLineEdit.setText(self.datasource.tangoMemberName)
+            self.dialog.ui.tMemberNameLineEdit.setText(self.datasource.tangoMemberName)
         if self.datasource.tangoMemberType is not None:
-            index = self.dialog.tMemberComboBox.findText(unicode(self.datasource.tangoMemberType))
+            index = self.dialog.ui.tMemberComboBox.findText(unicode(self.datasource.tangoMemberType))
             if  index > -1 :
-                self.dialog.tMemberComboBox.setCurrentIndex(index)
+                self.dialog.ui.tMemberComboBox.setCurrentIndex(index)
             else:
                 self.datasource.tangoMemberType = 'attribute'    
         if self.datasource.tangoHost is not None:
-            self.dialog.tHostLineEdit.setText(self.datasource.tangoHost)
+            self.dialog.ui.tHostLineEdit.setText(self.datasource.tangoHost)
         if self.datasource.tangoPort is not None:
-            self.dialog.tPortLineEdit.setText(self.datasource.tangoPort)
+            self.dialog.ui.tPortLineEdit.setText(self.datasource.tangoPort)
         if self.datasource.tangoEncoding is not None:
-            self.dialog.tEncodingLineEdit.setText(self.datasource.tangoEncoding)
+            self.dialog.ui.tEncodingLineEdit.setText(self.datasource.tangoEncoding)
 
 
 
         if self.datasource.dbType  is not None:
-            index = self.dialog.dTypeComboBox.findText(unicode(self.datasource.dbType))
+            index = self.dialog.ui.dTypeComboBox.findText(unicode(self.datasource.dbType))
             if  index > -1 :
-                self.dialog.dTypeComboBox.setCurrentIndex(index)
+                self.dialog.ui.dTypeComboBox.setCurrentIndex(index)
             else:
                 self.datasource.dbType = 'MYSQL'    
         if self.datasource.dbDataFormat is not None:
-            index = self.dialog.dFormatComboBox.findText(unicode(self.datasource.dbDataFormat))
+            index = self.dialog.ui.dFormatComboBox.findText(unicode(self.datasource.dbDataFormat))
             if  index > -1 :
-                self.dialog.dFormatComboBox.setCurrentIndex(index)
+                self.dialog.ui.dFormatComboBox.setCurrentIndex(index)
             else:
                 self.datasource.dbDataFormat = 'INIT'    
         
         if self.datasource.dbQuery is not None:        
-            self.dialog.dQueryLineEdit.setText(self.datasource.dbQuery)
+            self.dialog.ui.dQueryLineEdit.setText(self.datasource.dbQuery)
                 
         
         self.dialog.dbParam = {}
         for par in self.datasource.dbParameters.keys():
-            index = self.dialog.dParamComboBox.findText(unicode(par))
+            index = self.dialog.ui.dParamComboBox.findText(unicode(par))
             if  index < 0 :
                 QMessageBox.warning(self.dialog, "Unregistered parameter", 
                                     "Unknown parameter %s = '%s' will be removed." 
@@ -374,12 +389,12 @@ class DataSourceMethods(object):
     # \param enable logical variable which dis-/enables mode 
     def treeMode(self, enable = True):
         if enable:
-            self.dialog.closeSaveFrame.hide()
+            self.dialog.ui.closeSaveFrame.hide()
 #            self.datasource.nameFrame.show()
-            self.datasource._tree = True
+            self.datasource.tree = True
         else:
-            self.datasource._tree = False
-            self.dialog.closeSaveFrame.show()
+            self.datasource.tree = False
+            self.dialog.ui.closeSaveFrame.show()
 #            self.datasource.nameFrame.hide()
             
         
@@ -387,31 +402,22 @@ class DataSourceMethods(object):
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
 
-#        view = self.dialog.view
-#        if not self.dialog:
-#            self.dialog = CommonDataSourceDlg(self, datasource.parent)
-#        self.dialog.root = root
-#        self.dialog.node = node
-#        self.dialog.view = view
-#        print "cnode2",  node
-#        if node:
-#            print "pnode2",  node.parentNode()
-        self.dialog.setupUi(self.dialog)
+        self.dialog.ui.setupUi(self.dialog)
 
 
         self.updateForm()
         self.dialog.resize(460, 440)
 
-        if not self.datasource._tree :
-            self.dialog.connect(self.dialog.resetPushButton, SIGNAL("clicked()"), self.reset)
+        if not self.datasource.tree :
+            self.dialog.connect(self.dialog.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         else:
-            self.dialog.connect(self.dialog.resetPushButton, SIGNAL("clicked()"), self.dialog.reset)
+            self.dialog.connect(self.dialog.ui.resetPushButton, SIGNAL("clicked()"), self.dialog.reset)
 #        self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), self.close)
 
         self.dialog.connectWidgets()
         self.dialog.setFrames(self.datasource.dataSourceType)
 
-#        self.datasource.treeMode(datasource._tree)
+#        self.datasource.treeMode(datasource.tree)
 
 
             
@@ -500,7 +506,7 @@ class DataSourceMethods(object):
             if not self.datasource.dbType:
                 self.datasource.dbType = 'MYSQL'
                     
-            text = unicode(self.dialog._getText(database))
+            text = unicode(self.dialog.dts.getText(database))
             self.datasource.dbParameters['Oracle DSN'] = unicode(text).strip() if text else ""
             self.dialog.dbParam['Oracle DSN'] = unicode(text).strip() if text else ""
 
@@ -516,12 +522,12 @@ class DataSourceMethods(object):
                                                            if attributeMap.contains("format") else "SCALAR")
 
 
-            text = unicode(self.dialog._getText(query))
+            text = unicode(self.dialog.dts.getText(query))
             self.datasource.dbQuery = unicode(text).strip() if text else ""
 
 
         doc = self.dialog.node.firstChildElement(QString("doc"))           
-        text = self.dialog._getText(doc)    
+        text = self.dialog.dts.getText(doc)    
         self.datasource.doc = unicode(text).strip() if text else ""
 
 
@@ -537,41 +543,40 @@ class DataSourceMethods(object):
     def apply(self):
 
         self.datasource.applied = False
-        class CharacterError(Exception): pass
-        sourceType = unicode(self.dialog.typeComboBox.currentText())
-        self.datasource.dataSourceName = unicode(self.dialog.nameLineEdit.text())
+        sourceType = unicode(self.dialog.ui.typeComboBox.currentText())
+        self.datasource.dataSourceName = unicode(self.dialog.ui.nameLineEdit.text())
 
         if sourceType == 'CLIENT':
-            recName = unicode(self.dialog.cRecNameLineEdit.text())
+            recName = unicode(self.dialog.ui.cRecNameLineEdit.text())
 
             if not recName:
                 QMessageBox.warning(self.dialog, "Empty record name", 
                                     "Please define the record name")
-                self.dialog.cRecNameLineEdit.setFocus()
+                self.dialog.ui.cRecNameLineEdit.setFocus()
                 return
             self.datasource.clientRecordName = recName
         elif sourceType == 'TANGO':
-            devName = unicode(self.dialog.tDevNameLineEdit.text())
-            memName = unicode(self.dialog.tMemberNameLineEdit.text())
+            devName = unicode(self.dialog.ui.tDevNameLineEdit.text())
+            memName = unicode(self.dialog.ui.tMemberNameLineEdit.text())
             if not devName: 
                 QMessageBox.warning(self.dialog, "Empty device name", 
                                     "Please define the device name")
-                self.dialog.tDevNameLineEdit.setFocus()
+                self.dialog.ui.tDevNameLineEdit.setFocus()
                 return
             if not memName:
                 QMessageBox.warning(self.dialog, "Empty member name", 
                                     "Please define the member name")
-                self.dialog.tMemberNameLineEdit.setFocus()
+                self.dialog.ui.tMemberNameLineEdit.setFocus()
                 return
             self.datasource.tangoDeviceName = devName
             self.datasource.tangoMemberName = memName
-            self.datasource.tangoMemberType = unicode(self.dialog.tMemberComboBox.currentText())
-            self.datasource.tangoHost = unicode(self.dialog.tHostLineEdit.text())
-            self.datasource.tangoPort = unicode(self.dialog.tPortLineEdit.text())
-            self.datasource.tangoEncoding = unicode(self.dialog.tEncodingLineEdit.text())
+            self.datasource.tangoMemberType = unicode(self.dialog.ui.tMemberComboBox.currentText())
+            self.datasource.tangoHost = unicode(self.dialog.ui.tHostLineEdit.text())
+            self.datasource.tangoPort = unicode(self.dialog.ui.tPortLineEdit.text())
+            self.datasource.tangoEncoding = unicode(self.dialog.ui.tEncodingLineEdit.text())
                 
         elif sourceType == 'DB':
-            query = unicode(self.dialog.dQueryLineEdit.text())
+            query = unicode(self.dialog.ui.dQueryLineEdit.text())
 
             if not query:
                 QMessageBox.warning(self, "Empty query", 
@@ -579,8 +584,8 @@ class DataSourceMethods(object):
                 self.datasource.dQueryLineEdit.setFocus()
                 return
             self.datasource.dbQuery = query
-            self.datasource.dbType =  unicode(self.dialog.dTypeComboBox.currentText())
-            self.datasource.dbDataFormat =  unicode(self.dialog.dFormatComboBox.currentText())
+            self.datasource.dbType =  unicode(self.dialog.ui.dTypeComboBox.currentText())
+            self.datasource.dbDataFormat =  unicode(self.dialog.ui.dFormatComboBox.currentText())
 
             self.datasource.dbParameters.clear()
             for par in self.dialog.dbParam.keys():
@@ -589,7 +594,7 @@ class DataSourceMethods(object):
 
         self.datasource.dataSourceType = sourceType
 
-        self.datasource.doc = unicode(self.dialog.docTextEdit.toPlainText()).strip()
+        self.datasource.doc = unicode(self.dialog.ui.docTextEdit.toPlainText()).strip()
 
         index = QModelIndex()
         if hasattr(self.dialog,"view") and self.dialog.view and self.dialog.view.model():
@@ -619,7 +624,7 @@ class DataSourceMethods(object):
                 self.dialog.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
                 self.dialog.view.expand(index)    
 
-        if not self.datasource._tree:
+        if not self.datasource.tree:
             self.createNodes()
                 
         self.datasource.applied = True
@@ -704,9 +709,9 @@ class DataSourceMethods(object):
     ## updates the Node
     # \brief It sets node from the self.dialog variables
     def updateNode(self, index=QModelIndex()):
-#        print "tree", self.datasource._tree
+#        print "tree", self.datasource.tree
 #        print "index", index.internalPointer()
-        newDs = self.createNodes(self.datasource._tree)
+        newDs = self.createNodes(self.datasource.tree)
         oldDs = self.dialog.node
 
         elem = oldDs.toElement()
@@ -719,8 +724,9 @@ class DataSourceMethods(object):
             parent = QModelIndex()
 
         self.dialog.node = self.dialog.node.parentNode()   
-        if self.datasource._tree:
-            self.dialog._replaceNode(oldDs, newDs, parent)
+        if self.datasource.tree:
+            if self.dialog.view is not None and self.dialog.view.model() is not None: 
+                self.dialog.dts.replaceNode(oldDs, newDs, parent, self.dialog.view.model())
         else:
             self.dialog.node.replaceChild(newDs, oldDs)
         self.dialog.node = newDs
@@ -728,21 +734,21 @@ class DataSourceMethods(object):
     ## reconnects save actions
     # \brief It reconnects the save action 
     def reconnectSaveAction(self):
-        if self.datasource._externalSave:
-            self.dialog.disconnect(self.dialog.savePushButton, SIGNAL("clicked()"), 
-                         self.datasource._externalSave)
-            self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
-                         self.datasource._externalSave)
-        if self.datasource._externalClose:
-            self.dialog.disconnect(self.dialog.closePushButton, SIGNAL("clicked()"), 
-                         self.datasource._externalClose)
-            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), 
-                         self.datasource._externalClose)
-        if self.datasource._externalApply:
-            self.dialog.disconnect(self.dialog.applyPushButton, SIGNAL("clicked()"), 
-                         self.datasource._externalApply)
-            self.dialog.connect(self.dialog.applyPushButton, SIGNAL("clicked()"), 
-                         self.datasource._externalApply)
+        if self.datasource.externalSave:
+            self.dialog.disconnect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
+                         self.datasource.externalSave)
+            self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
+                         self.datasource.externalSave)
+        if self.datasource.externalClose:
+            self.dialog.disconnect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
+                         self.datasource.externalClose)
+            self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
+                         self.datasource.externalClose)
+        if self.datasource.externalApply:
+            self.dialog.disconnect(self.dialog.ui.applyPushButton, SIGNAL("clicked()"), 
+                         self.datasource.externalApply)
+            self.dialog.connect(self.dialog.ui.applyPushButton, SIGNAL("clicked()"), 
+                         self.datasource.externalApply)
 
 
     ## connects the save action and stores the apply action
@@ -750,18 +756,18 @@ class DataSourceMethods(object):
     # \param externalSave save action
     # \param externalClose close action
     def connectExternalActions(self, externalApply=None, externalSave=None, externalClose = None ):
-        if externalSave and self.datasource._externalSave is None:
-            self.dialog.connect(self.dialog.savePushButton, SIGNAL("clicked()"), 
+        if externalSave and self.datasource.externalSave is None:
+            self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
-            self.datasource._externalSave = externalSave
-        if externalClose and self.datasource._externalClose is None:
-            self.dialog.connect(self.dialog.closePushButton, SIGNAL("clicked()"), 
+            self.datasource.externalSave = externalSave
+        if externalClose and self.datasource.externalClose is None:
+            self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
                          externalClose)
-            self.datasource._externalClose = externalClose
-        if externalApply and self.datasource._externalApply is None:
-            self.dialog.connect(self.dialog.applyPushButton, SIGNAL("clicked()"), 
+            self.datasource.externalClose = externalClose
+        if externalApply and self.datasource.externalApply is None:
+            self.dialog.connect(self.dialog.ui.applyPushButton, SIGNAL("clicked()"), 
                      externalApply)
-            self.datasource._externalApply = externalApply
+            self.datasource.externalApply = externalApply
 
                     
     ## creates the new empty header
@@ -813,7 +819,7 @@ class DataSourceMethods(object):
         self.dialog.root.appendChild(definition)
 
 
-        ds = self.dialog._getFirstElement(self.datasource.document, "datasource")           
+        ds = self.dialog.dts.getFirstElement(self.datasource.document, "datasource")           
         if not ds:
             return
         # self.node = self.dialog.root.createElement(QString("datasource"))
@@ -876,10 +882,14 @@ class CommonDataSource(object):
         ## database parameters
         self.dbParameters = {}
 
-        self._externalSave = None
-        self._externalClose = None
-        self._externalApply = None
+        ## external save method
+        self.externalSave = None
+        ## external close method
+        self.externalClose = None
+        ## external apply method
+        self.externalApply = None
 
+        ## applied flag
         self.applied = False
 
         ## datasource id
@@ -887,7 +897,7 @@ class CommonDataSource(object):
 
         
         ## if datasource in the component tree
-        self._tree = False
+        self.tree = False
         
 
 
@@ -963,7 +973,7 @@ class CommonDataSource(object):
 #         name
          self.dataSourceName
          ) = state
-#        if self._tree:
+#        if self.tree:
 #            self.name = name
 #        print "SET",  unicode(state)
         self.dbParameters = copy.copy(dbParameters)
@@ -1042,7 +1052,7 @@ class DataSource(CommonDataSource):
     # \param directory directory of the datasources   
     def setName(self, name, directory):
         self.name = unicode(name)
-#        self.dialog.nameLineEdit.setText(self.name)
+#        self.dialog.ui.nameLineEdit.setText(self.name)
         if directory:
             self.directory = unicode(directory)
 
@@ -1088,7 +1098,7 @@ class DataSource(CommonDataSource):
                 if not self.document.setContent(fh):
                     raise ValueError, "could not parse XML"
 
-                ds = self.dialog._getFirstElement(self.document, "datasource")
+                ds = self.dialog.dts.getFirstElement(self.document, "datasource")
                 if ds:
                     self.setFromNode(ds)
                 self.savedXML = self.document.toString(0)
@@ -1124,7 +1134,7 @@ class DataSource(CommonDataSource):
             if ds and ds.nodeName() =="datasource":
                 return xml
         
-        ds = self.dialog._getFirstElement(olddoc, "datasource")           
+        ds = self.dialog.dts.getFirstElement(olddoc, "datasource")           
         
         newdoc = QDomDocument()
         processing = newdoc.createProcessingInstruction("xml", "version='1.0'") 
@@ -1148,7 +1158,7 @@ class DataSource(CommonDataSource):
         if not self.document.setContent(self.repair(xml)):
             raise ValueError, "could not parse XML"
 
-        ds = self.dialog._getFirstElement(self.document, "datasource")           
+        ds = self.dialog.dts.getFirstElement(self.document, "datasource")           
         if ds:
             self.setFromNode(ds)
             if new:
@@ -1348,6 +1358,8 @@ class DataSourceDlg(CommonDataSourceDlg):
         ## datasource methods
         self.methods = DataSourceMethods(self, self.datasource)
         
+
+
             
     ## updates the form
     # \brief abstract class

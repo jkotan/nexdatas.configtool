@@ -712,11 +712,11 @@ class ComponentOpen(Command):
                     self._cp.instance, self.receiver.mdi.subWindowList())
                 if subwindow:
                     self.receiver.mdi.setActiveSubWindow(subwindow) 
-                    self._cp.instance.dialog.savePushButton.setFocus()
+                    self._cp.instance.dialog.setSaveFocus()
                 else:    
                     self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
                     self._subwindow.resize(640,560)
-                    self._cpEdit.dialog.savePushButton.setFocus()
+                    self._cpEdit.dialog.setSaveFocus()
                     self._cpEdit.dialog.show()
                     self._cp.instance = self._cpEdit 
                 self._cpEdit.dialog.show()
@@ -796,12 +796,12 @@ class DataSourceOpen(Command):
                     self._ds.instance, self.receiver.mdi.subWindowList())
                 if subwindow:
                     self.receiver.mdi.setActiveSubWindow(subwindow) 
-                    self._ds.instance.dialog.savePushButton.setFocus()
+                    self._ds.instance.dialog.setSaveFocus()
                 else:    
  #               print "create"
                     self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit.dialog)
                     self._subwindow.resize(440,480)
-                    self._dsEdit.dialog.savePushButton.setFocus()
+                    self._dsEdit.dialog.setSaveFocus()
                     self._dsEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                     self._ds.instance = self._dsEdit 
@@ -886,6 +886,13 @@ class ComponentRemove(Command):
         if self._cp is not None:
 
             self.receiver.componentList.addComponent(self._cp, False)
+            if self._cp.instance is None:
+                self._cp.instance = Component()
+                self._cp.instance.idc = self._cp.id
+                self._cp.instance.directory = self.receiver.componentList.directory
+                self._cp.instance.name = self.receiver.componentList.components[self._cp.id].name
+
+
             self._cp.instance.createGUI()
             self._cp.instance.addContextMenu(self.receiver.contextMenuActions)
 
@@ -893,16 +900,23 @@ class ComponentRemove(Command):
                 self._cp.instance, self.receiver.mdi.subWindowList())
             if subwindow:
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
-                self._cp.instance.dialog.savePushButton.setFocus()
+                self._cp.instance.dialog.setSaveFocus()
             else:    
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
                 self._subwindow.resize(640,560)
-                self._cp.instance.dialog.savePushButton.setFocus()
+                self._cp.instance.dialog.setSaveFocus()
                 self._cp.instance.dialog.show()
 
             self._cp.instance.dialog.show()
+
+            if hasattr(self._cp.instance,"connectExternalActions"):     
+                self._cp.instance.connectExternalActions(self.receiver.componentApplyItem,
+                                                         self.receiver.componentSave,
+                                                         self.receiver.componentClose)
+
+
 
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
@@ -964,6 +978,7 @@ class ComponentEdit(Command):
                                                     self.receiver.componentSave,
                                                     self.receiver.componentClose)
 
+
             subwindow = self.receiver.subWindow(
                 self._cpEdit, self.receiver.mdi.subWindowList())
             if subwindow:
@@ -984,7 +999,6 @@ class ComponentEdit(Command):
                 self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
             self._cp.instance = self._cpEdit 
-
 
             
         print "EXEC componentEdit"
@@ -2364,12 +2378,12 @@ class DataSourceRemove(Command):
                 self._ds.instance, self.receiver.mdi.subWindowList())
             if subwindow:
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
-                self._ds.instance.dialog.savePushButton.setFocus()
+                self._ds.instance.dialog.setSaveFocus()
             else:    
                 self._ds.instance.createDialog()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
                 self._subwindow.resize(640,560)
-                self._ds.instance.dialog.savePushButton.setFocus()
+                self._ds.instance.dialog.setSaveFocus()
                 self._ds.instance.dialog.show()
                     
             self._ds.instance.dialog.show()
@@ -2581,17 +2595,26 @@ class ComponentItemCommand(Command):
     # \brief It stores the new states of the current component
     def postExecute(self):    
         if self._cp is not None:
+            if self._cp.instance is None:
+                self._cp.instance = Component()
+                self._cp.instance.idc = self._cp.id
+                self._cp.instance.directory = self.receiver.componentList.directory
+                self._cp.instance.name = self.receiver.componentList.components[self._cp.id].name
+
             if self._newstate is None and hasattr(self._cp.instance, "getState"):
                 self._newstate = self._cp.instance.getState() 
             else:
                 if hasattr(self.receiver.componentList.components[self._cp.id].instance,"setState"): 
                     self.receiver.componentList.components[self._cp.id].instance.setState(self._newstate)
-                
+
+
 
                 subwindow = self.receiver.subWindow(
                     self._cp.instance, self.receiver.mdi.subWindowList())
+
                 if subwindow:
                     self.receiver.mdi.setActiveSubWindow(subwindow) 
+                    self._cp.instance.reconnectSaveAction()
                 else:    
                     self._cp.instance.createGUI()
 
@@ -2607,6 +2630,11 @@ class ComponentItemCommand(Command):
 
                     if hasattr(self._cp.instance.dialog,"show"):
                         self._cp.instance.dialog.show()
+
+                if hasattr(self._cp.instance,"connectExternalActions"):     
+                    self._cp.instance.connectExternalActions(self.receiver.componentApplyItem,
+                                                             self.receiver.componentSave,
+                                                             self.receiver.componentClose)
 
 
         if hasattr(self._cp,"id"):
@@ -2639,6 +2667,11 @@ class ComponentItemCommand(Command):
             if subwindow:
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
             else:    
+                if self._cp.instance is None:
+                    self._cp.instance = Component()
+                    self._cp.instance.idc = self._cp.id
+                    self._cp.instance.directory = self.receiver.componentList.directory
+                    self._cp.instance.name = self.receiver.componentList.components[self._cp.id].name
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
@@ -3126,7 +3159,7 @@ class ComponentNewItem(ComponentItemCommand):
                         if  self._index.column() != 0 and self._index.row() is not None:
                             
                             self._index = self._cp.instance.view.model().index(self._index.row(), 0, self._index.parent())
-                        row = self._cp.instance.dialog.widget.getNodeRow(self._child)
+                        row = self._cp.instance.dialog.getWidgetNodeRow(self._child)
                         if row is not None:
                             self._childIndex = self._cp.instance.view.model().index(row, 0, self._index)
                             self._cp.instance.view.setCurrentIndex(self._childIndex)
@@ -3146,8 +3179,9 @@ class ComponentNewItem(ComponentItemCommand):
                     SIGNAL("dataChanged(QModelIndex,QModelIndex)"), self._index, self._index)
                 self._cp.instance.view.model().emit(
                     SIGNAL("dataChanged(QModelIndex,QModelIndex)"), finalIndex, self._childIndex)
+
         self.postExecute()
-            
+                        
             
 
 

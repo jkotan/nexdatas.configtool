@@ -26,7 +26,7 @@ from ui.ui_strategydlg import Ui_StrategyDlg
 from NodeDlg import NodeDlg 
 
 ## dialog defining an attribute
-class StrategyDlg(NodeDlg, Ui_StrategyDlg):
+class StrategyDlg(NodeDlg):
     
     ## constructor
     # \param parent patent instance
@@ -50,29 +50,30 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
         ## compression shuffle
         self.shuffle = True
 
-
+        ## user interface
+        self.ui = Ui_StrategyDlg()
 
     ## updates the field strategy
     # \brief It sets the form local variables 
     def updateForm(self):
         index = -1
         if self.mode is not None:
-            index = self.modeComboBox.findText(unicode(self.mode))
+            index = self.ui.modeComboBox.findText(unicode(self.mode))
             if  index > -1 :
-                self.modeComboBox.setCurrentIndex(index)
+                self.ui.modeComboBox.setCurrentIndex(index)
                 self.setFrames(self.mode)
         if index < 0 or index is None:        
-            index2 = self.modeComboBox.findText(unicode("STEP"))
+            index2 = self.ui.modeComboBox.findText(unicode("STEP"))
             self.mode = 'STEP'
-            self.modeComboBox.setCurrentIndex(index2)
+            self.ui.modeComboBox.setCurrentIndex(index2)
             self.setFrames(self.mode)
                 
         if self.trigger is not None :
-            self.triggerLineEdit.setText(self.trigger) 
+            self.ui.triggerLineEdit.setText(self.trigger) 
 
-        self.compressionCheckBox.setChecked(self.compression) 
-        self.shuffleCheckBox.setChecked(self.shuffle) 
-        self.rateSpinBox.setValue(self.rate)
+        self.ui.compressionCheckBox.setChecked(self.compression) 
+        self.ui.shuffleCheckBox.setChecked(self.shuffle) 
+        self.ui.rateSpinBox.setValue(self.rate)
 
         if self.grows is not None :
             try:
@@ -82,26 +83,26 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
                     grows = 0
             except:
                 grows = 0
-            self.growsSpinBox.setValue(grows) 
+            self.ui.growsSpinBox.setValue(grows) 
         if self.postrun is not None :
-            self.postLineEdit.setText(self.postrun) 
+            self.ui.postLineEdit.setText(self.postrun) 
         if self.doc is not None:
-            self.docTextEdit.setText(self.doc)
+            self.ui.docTextEdit.setText(self.doc)
 
 
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
-        self.setupUi(self)
+        self.ui.setupUi(self)
 
         self.updateForm()
 
-#        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
-        self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(self.modeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
-        self.connect(self.compressionCheckBox, SIGNAL("stateChanged(int)"), self.setCompression)
+#        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
+        self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.connect(self.ui.modeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
+        self.connect(self.ui.compressionCheckBox, SIGNAL("stateChanged(int)"), self.setCompression)
 
-        self.setCompression(self.compressionCheckBox.isChecked())
+        self.setCompression(self.ui.compressionCheckBox.isChecked())
 
 
     ## provides the state of the strategy dialog        
@@ -140,25 +141,25 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
     # \param text the edited text   
     def setFrames(self, text):
         if text == 'STEP':
-            self.triggerFrame.show()            
-            self.postFrame.hide()            
-            self.triggerLineEdit.setFocus()
+            self.ui.triggerFrame.show()            
+            self.ui.postFrame.hide()            
+            self.ui.triggerLineEdit.setFocus()
         elif text == 'POSTRUN':
-            self.postFrame.show()            
-            self.triggerFrame.hide()            
-            self.postLineEdit.setFocus()
+            self.ui.postFrame.show()            
+            self.ui.triggerFrame.hide()            
+            self.ui.postLineEdit.setFocus()
         else:
-            self.postFrame.hide()            
-            self.triggerFrame.hide()            
+            self.ui.postFrame.hide()            
+            self.ui.triggerFrame.hide()            
 
 
     ## shows and hides compression widgets according to compressionCheckBox
     # \param state value from compressionCheckBox
     def setCompression(self, state):
         enable = bool(state)
-        self.rateLabel.setEnabled(enable)
-        self.rateSpinBox.setEnabled(enable)
-        self.shuffleCheckBox.setEnabled(enable)
+        self.ui.rateLabel.setEnabled(enable)
+        self.ui.rateSpinBox.setEnabled(enable)
+        self.ui.shuffleCheckBox.setEnabled(enable)
                 
 
 
@@ -192,11 +193,11 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
                 self.rate = rate    
 
 
-        text = self._getText(node)    
+        text = self.dts.getText(node)    
         self.postrun = unicode(text).strip() if text else ""
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self._getText(doc)    
+        text = self.dts.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 
@@ -205,30 +206,29 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
     ## accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
     def apply(self):
-        class CharacterError(Exception): pass
 
         self.trigger = ''
         self.grows = ''
         self.postrun = ''
 
-        self.mode = unicode(self.modeComboBox.currentText())
+        self.mode = unicode(self.ui.modeComboBox.currentText())
         if self.mode ==  'STEP':
-            self.trigger = unicode(self.triggerLineEdit.text())
-            grows = int(self.growsSpinBox.value())
+            self.trigger = unicode(self.ui.triggerLineEdit.text())
+            grows = int(self.ui.growsSpinBox.value())
             if grows > 0:
                 self.grows= str(grows)
         if self.mode ==  'POSTRUN':
-            self.postrun = unicode(self.postLineEdit.text())
+            self.postrun = unicode(self.ui.postLineEdit.text())
 
 
-        self.compression = self.compressionCheckBox.isChecked()
-        self.shuffle = self.shuffleCheckBox.isChecked()
-        self.rate = self.rateSpinBox.value()
+        self.compression = self.ui.compressionCheckBox.isChecked()
+        self.shuffle = self.ui.shuffleCheckBox.isChecked()
+        self.rate = self.ui.rateSpinBox.value()
             
 
         print "cP", self.compression
 
-        self.doc = unicode(self.docTextEdit.toPlainText())
+        self.doc = unicode(self.ui.docTextEdit.toPlainText())
 
         index = self.view.currentIndex()
         finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
@@ -265,19 +265,19 @@ class StrategyDlg(NodeDlg, Ui_StrategyDlg):
             elem.setAttribute(QString("shuffle"), QString("true") if self.shuffle else "false" )
             elem.setAttribute(QString("rate"), QString(str(self.rate)))
 
-        self._replaceText(self.node, index, unicode(self.postrun))
+        self.replaceText(index, unicode(self.postrun))
 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self._removeElement(doc, index)
+            self.removeElement(doc, index)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self._replaceElement(doc, newDoc, index)
+                self.replaceElement(doc, newDoc, index)
             else:
-                self._appendElement(newDoc, index)
+                self.appendElement(newDoc, index)
 
 
 

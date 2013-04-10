@@ -16,9 +16,24 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndtsconfigtool nexdatas
-## \file ndtsconfigtool/__init__.py
-# package constructor
+## \file Errors.py
+# Error classes
 
-## version of the application
-__version__ = "1.1.2"
 
+## charater error
+class CharacterError(Exception): pass
+
+## error of passed parameter
+class ParameterError(Exception): pass
+
+
+## merging error for wrong node structure
+class IncompatibleNodeError(Exception): 
+    ## constructor
+    # \param value text of the error
+    # \param nodes list of error related nodes
+    def __init__(self, value, nodes = []):
+        ## text of the error
+        self.value = value
+        ## list of error related nodes
+        self.nodes = nodes

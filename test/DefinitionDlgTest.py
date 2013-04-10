@@ -36,6 +36,7 @@ from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
 
 
 from ndtsconfigtool.DefinitionDlg import DefinitionDlg
+from ndtsconfigtool.AttributeDlg import AttributeDlg
 from ndtsconfigtool.NodeDlg import NodeDlg
 
 from ndtsconfigtool.ui.ui_definitiondlg import Ui_DefinitionDlg
@@ -67,6 +68,10 @@ class DefinitionDlgTest(unittest.TestCase):
         ## MessageBox title
         self.title = None
 
+        ## attribute name
+        self.aname = "myname"
+        ## attribute value
+        self.avalue = "myentry"
 
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
@@ -1128,6 +1133,132 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(item.data(Qt.UserRole).toString(),sel)
 
 
+
+    def attributeWidget(self):
+        aw = QApplication.activeWindow()
+        mb = QApplication.activeModalWidget()
+        self.assertTrue(isinstance(mb, AttributeDlg))
+#        print mb.text()
+        print "AW", aw
+        print "mb", mb
+        QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
+        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
+        QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
+        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
+
+#        self.text = mb.text()
+#        self.title = mb.windowTitle()
+        mb.accept()
+        mb.close()
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_populateAttribute_setFromNode_selected_addattribute(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dks = []
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name","myname%s" %  nn)
+        qdn.setAttribute("type","mytype%s" %  nn)
+        qdn.setAttribute("unit","myunits%s" %  nn)
+        qdn.setAttribute("shortname","mynshort%s" %  nn)
+        doc.appendChild(qdn) 
+        dname = "doc"
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+
+
+        form = DefinitionDlg()
+        form.show()
+        form.node = qdn
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+
+        form.createGUI()
+        
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        
+        form.setFromNode()
+
+        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+
+        self.assertEqual(form.name, "myname%s" %  nn)
+        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.attributes, attributes)
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
+
+        
+        na =  self.__rnd.randint(0, len(attributes)-1) 
+        sel = attributes.keys()[na]
+        form.populateAttributes(sel)
+
+
+
+
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        for i in range(len(attributes)):
+            it = form.ui.attributeTableWidget.item(i, 0) 
+            k = str(it.text())
+            self.assertTrue(k in attributes.keys())
+            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            self.assertEqual(it2.text(), attributes[k])
+
+
+        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
+        
+        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+
+        self.aname = "addedAttribute"
+        self.avalue = "addedAttributeValue"
+
+        QTimer.singleShot(10, self.attributeWidget)
+        QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
+        
+
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes)+1)
+        for i in range(len(attributes)+1):
+            it = form.ui.attributeTableWidget.item(i, 0) 
+            k = str(it.text())
+            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            if k in attributes.keys():
+                self.assertEqual(it2.text(), attributes[k])
+            else:
+                self.assertEqual(it2.text(), self.avalue)
+                
 
 
     ## constructor test

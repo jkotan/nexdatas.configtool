@@ -63,6 +63,8 @@ class AttributeDlg(QDialog):
         try:
             if 1 in [c in name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
                 raise CharacterError, ("Name contains one of forbidden characters") 
+            if len(name) == 0:
+                raise CharacterError, ("Empty Name") 
             if name[0] == '-':
                 raise CharacterError, ("The first character of Name is '-'") 
 

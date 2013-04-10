@@ -40,6 +40,8 @@ from ndtsconfigtool.ComponentModel import ComponentModel
 
 from ndtsconfigtool.DomTools import DomTools
 
+##  Qt-application
+app = None
 
 
 
@@ -175,8 +177,6 @@ class Ui_NodeDlg(object):
 
 ## test fixture
 class NodeDlgTest(unittest.TestCase):
-    ##  Qt-application
-    app = None
 
     ## constructor
     # \param methodName name of the test method
@@ -210,8 +210,6 @@ class NodeDlgTest(unittest.TestCase):
         print "\nsetting up..."        
         print "SEED =", self.__seed 
         
-        if not NodeDlgTest.app:
-            NodeDlgTest.app = QApplication([])
 
 
     ## test closer
@@ -783,4 +781,6 @@ class NodeDlgTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    if not app:
+        app = QApplication([])
     unittest.main()

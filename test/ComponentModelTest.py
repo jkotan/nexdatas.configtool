@@ -28,9 +28,6 @@ import struct
 import binascii
 import time
 
-from PyQt4.QtTest import QTest
-from PyQt4.QtGui import (QApplication, QMessageBox, QPushButton)
-from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QAbstractItemModel, QModelIndex, QVariant
 from PyQt4.QtXml import QDomNode, QDomDocument
 

@@ -38,6 +38,10 @@ from ndtsconfigtool.AttributeDlg import AttributeDlg
 from ndtsconfigtool.ui.ui_attributedlg import Ui_AttributeDlg
 
 
+##  Qt-application
+app = None
+
+
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
@@ -46,8 +50,6 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 ## test fixture
 class AttributeDlgTest(unittest.TestCase):
-    ##  Qt-application
-    app = None
 
     ## constructor
     # \param methodName name of the test method
@@ -79,8 +81,6 @@ class AttributeDlgTest(unittest.TestCase):
         print "\nsetting up..."        
         print "SEED =", self.__seed 
         
-        if not AttributeDlgTest.app:
-            AttributeDlgTest.app = QApplication([])
 
 
     ## test closer
@@ -253,4 +253,6 @@ class AttributeDlgTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    if not app:
+        app = QApplication([])
     unittest.main()

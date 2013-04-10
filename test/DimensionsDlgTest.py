@@ -37,6 +37,10 @@ from ndtsconfigtool.DimensionsDlg import DimensionsDlg
 from ndtsconfigtool.ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
 
+##  Qt-application
+app = None
+
+
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -46,8 +50,6 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 ## test fixture
 class DimensionsDlgTest(unittest.TestCase):
-    ##  Qt-application
-    app = None
 
     ## constructor
     # \param methodName name of the test method
@@ -78,8 +80,6 @@ class DimensionsDlgTest(unittest.TestCase):
         print "\nsetting up..."        
         print "SEED =", self.__seed 
         
-        if not DimensionsDlgTest.app:
-            DimensionsDlgTest.app = QApplication([])
 
     ## test closer
     # \brief Common tear down
@@ -701,4 +701,6 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    if not app:
+        app = QApplication([])
     unittest.main()

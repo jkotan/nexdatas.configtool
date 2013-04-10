@@ -42,6 +42,10 @@ from ndtsconfigtool.NodeDlg import NodeDlg
 from ndtsconfigtool.ui.ui_definitiondlg import Ui_DefinitionDlg
 
 
+##  Qt-application
+app = None
+
+
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
@@ -50,8 +54,6 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 ## test fixture
 class DefinitionDlgTest(unittest.TestCase):
-    ##  Qt-application
-    app = None
 
     ## constructor
     # \param methodName name of the test method
@@ -87,9 +89,6 @@ class DefinitionDlgTest(unittest.TestCase):
         print "\nsetting up..."        
         print "SEED =", self.__seed 
         
-        if not DefinitionDlgTest.app:
-            DefinitionDlgTest.app = QApplication([])
-
 
     ## test closer
     # \brief Common tear down
@@ -1308,4 +1307,6 @@ class DefinitionDlgTest(unittest.TestCase):
         pass
 
 if __name__ == '__main__':
+    if not app:
+        app = QApplication([])
     unittest.main()

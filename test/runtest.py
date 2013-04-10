@@ -23,6 +23,10 @@
 import os 
 import unittest
 
+
+from PyQt4.QtGui import QApplication
+
+
 import AttributeDlgTest
 import ConnectDlgTest
 import DimensionsDlgTest
@@ -31,6 +35,8 @@ import NodeDlgTest
 import ComponentItemTest
 import ComponentModelTest
 import DomToolsTest
+
+
 
 try:
     import PyTango
@@ -82,6 +88,18 @@ def main():
     
     ## test suit
     suite = unittest.TestSuite()
+
+
+    app = QApplication([])
+    NodeDlgTest.app = app
+    DefinitionDlgTest.app = app
+    AttributeDlgTest.app = app
+    ConnectDlgTest.app = app
+    DimensionsDlgTest.app = app
+    ComponentItemTest.app = app
+    DomToolsTest.app = app
+
+
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(AttributeDlgTest) )

@@ -35,6 +35,8 @@ from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
 
 from ndtsconfigtool.ConnectDlg import ConnectDlg
 
+##  Qt-application
+app = None
 
 
 ## if 64-bit machione
@@ -45,8 +47,6 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 ## test fixture
 class ConnectDlgTest(unittest.TestCase):
-    ##  Qt-application
-    app = None
 
     ## constructor
     # \param methodName name of the test method
@@ -77,8 +77,6 @@ class ConnectDlgTest(unittest.TestCase):
         print "\nsetting up..."        
         print "SEED =", self.__seed 
         
-        if not ConnectDlgTest.app:
-            ConnectDlgTest.app = QApplication([])
 
     ## test closer
     # \brief Common tear down
@@ -475,4 +473,6 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.result(),1)
 
 if __name__ == '__main__':
+    if not app:
+        app = QApplication([])
     unittest.main()

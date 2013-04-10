@@ -151,6 +151,7 @@ class DefinitionDlg(NodeDlg):
         doc = self.node.firstChildElement(QString("doc"))           
         text = self.dts.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
+
              
     ## adds an attribute    
     #  \brief It runs the Definition Dialog and fetches attribute name and value    

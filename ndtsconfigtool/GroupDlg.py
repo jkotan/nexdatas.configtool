@@ -149,6 +149,7 @@ class GroupDlg(NodeDlg):
         self.doc = unicode(text).strip() if text else ""
              
 
+
     ## adds an attribute    
     #  \brief It runs the Group Dialog and fetches attribute name and value    
     def _addAttribute(self):

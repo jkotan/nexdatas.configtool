@@ -1145,7 +1145,18 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
 
         mb.accept()
-#        mb.close()
+
+    def attributeWidgetClose(self):
+        aw = QApplication.activeWindow()
+        mb = QApplication.activeModalWidget()
+        self.assertTrue(isinstance(mb, AttributeDlg))
+
+        QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
+        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
+        QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
+        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
+
+        mb.close()
 
 
 
@@ -1240,9 +1251,34 @@ class DefinitionDlgTest(unittest.TestCase):
         self.aname = "addedAttribute"
         self.avalue = "addedAttributeValue"
 
+        QTimer.singleShot(10, self.attributeWidgetClose)
+        QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
+        
+
+
+
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        for i in range(len(attributes)):
+            it = form.ui.attributeTableWidget.item(i, 0) 
+            k = str(it.text())
+            self.assertTrue(k in attributes.keys())
+            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            self.assertEqual(it2.text(), attributes[k])
+
+
+        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
+        
+        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+
+        self.aname = "addedAttribute"
+        self.avalue = "addedAttributeValue"
+
         QTimer.singleShot(10, self.attributeWidget)
         QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
         
+
+
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
         self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes)+1)
@@ -1255,6 +1291,8 @@ class DefinitionDlgTest(unittest.TestCase):
             else:
                 self.assertEqual(it2.text(), self.avalue)
                 
+        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)        
+        self.assertEqual(item.data(Qt.UserRole).toString(),self.aname)
 
 
     ## constructor test

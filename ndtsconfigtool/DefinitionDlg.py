@@ -121,7 +121,7 @@ class DefinitionDlg(NodeDlg):
         self.connect(self.ui.addPushButton, SIGNAL("clicked()"), self.__addAttribute)
         self.connect(self.ui.removePushButton, SIGNAL("clicked()"), self.__removeAttribute)
 
-        self.connect(self.ui.typeLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
+#        self.connect(self.ui.typeLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
 
 
     ## sets the form from the DOM node

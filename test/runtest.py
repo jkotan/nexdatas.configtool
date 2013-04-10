@@ -86,12 +86,16 @@ def main():
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(AttributeDlgTest) )
 
+
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ConnectDlgTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(DimensionsDlgTest) )
 
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DefinitionDlgTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NodeDlgTest) )
@@ -105,8 +109,6 @@ def main():
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(DomToolsTest) )
 
-    suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DefinitionDlgTest) )
 
 
     if "MYSQL" in DB_AVAILABLE:

@@ -1156,8 +1156,10 @@ class DefinitionDlgTest(unittest.TestCase):
         QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
         self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
 
-        mb.close()
+#        mb.close()
+        mb.reject()
 
+#        mb.accept()
 
 
 
@@ -1251,9 +1253,12 @@ class DefinitionDlgTest(unittest.TestCase):
         self.aname = "addedAttribute"
         self.avalue = "addedAttributeValue"
 
-        QTimer.singleShot(10, self.attributeWidgetClose)
+
+        print "W1"
+        QTimer.singleShot(100, self.attributeWidgetClose)
         QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
         
+        print "W2"
 
 
 
@@ -1274,8 +1279,10 @@ class DefinitionDlgTest(unittest.TestCase):
         self.aname = "addedAttribute"
         self.avalue = "addedAttributeValue"
 
-        QTimer.singleShot(10, self.attributeWidget)
+        print "WW1"
+        QTimer.singleShot(100, self.attributeWidget)
         QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
+        print "WW2"
         
 
 

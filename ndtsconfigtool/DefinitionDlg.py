@@ -106,7 +106,7 @@ class DefinitionDlg(NodeDlg):
 
 
     ##  creates GUI
-    # \brief It calls setupUi and  connects signals and slots    
+    # \brief It calls ui.setupUi(self),  updateForm() and connects signals and slots    
     def createGUI(self):
         self.ui.setupUi(self)
         
@@ -130,6 +130,9 @@ class DefinitionDlg(NodeDlg):
         if node:
             ## defined in NodeDlg class
             self.node = node
+        if not self.node:
+            ## exception?
+            return
         attributeMap = self.node.attributes()
         nNode = unicode(self.node.nodeName())
 

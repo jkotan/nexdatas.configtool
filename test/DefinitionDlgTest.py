@@ -32,6 +32,8 @@ from PyQt4.QtTest import QTest
 from PyQt4.QtGui import (QApplication, QMessageBox)
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
+from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
+
 
 from ndtsconfigtool.DefinitionDlg import DefinitionDlg
 from ndtsconfigtool.NodeDlg import NodeDlg
@@ -613,6 +615,257 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dks = []
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name","myname%s" %  nn)
+        qdn.setAttribute("type","mytype%s" %  nn)
+        qdn.setAttribute("unit","myunits%s" %  nn)
+        qdn.setAttribute("shortname","mynshort%s" %  nn)
+        doc.appendChild(qdn) 
+        dname = "doc"
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+
+
+        form = DefinitionDlg()
+        form.show()
+        form.node = qdn
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+
+        form.createGUI()
+        
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        
+        form.setFromNode()
+
+
+        self.assertEqual(form.name, "myname%s" %  nn)
+        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_parameter(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dks = []
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name","myname%s" %  nn)
+        qdn.setAttribute("type","mytype%s" %  nn)
+        qdn.setAttribute("unit","myunits%s" %  nn)
+        qdn.setAttribute("shortname","mynshort%s" %  nn)
+        doc.appendChild(qdn) 
+        dname = "doc"
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+
+
+        form = DefinitionDlg()
+        form.show()
+#        form.node = qdn
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+
+        form.createGUI()
+        
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        
+        form.setFromNode(qdn)
+        self.assertEqual(form.node, qdn)
+
+
+        self.assertEqual(form.name, "myname%s" %  nn)
+        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_noNode(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dks = []
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name","myname%s" %  nn)
+        qdn.setAttribute("type","mytype%s" %  nn)
+        qdn.setAttribute("unit","myunits%s" %  nn)
+        qdn.setAttribute("shortname","mynshort%s" %  nn)
+        doc.appendChild(qdn) 
+        dname = "doc"
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+
+
+        form = DefinitionDlg()
+        form.show()
+#        form.node = qdn
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+
+        form.createGUI()
+        
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        
+        form.setFromNode()
+
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_clean(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dks = []
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn) 
+
+
+        form = DefinitionDlg()
+        form.show()
+        form.node = qdn
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+
+        form.createGUI()
+        
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        
+        form.setFromNode()
+
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+
+
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_createGUI_connect(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()

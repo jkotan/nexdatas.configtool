@@ -1941,25 +1941,6 @@ class DefinitionDlgTest(unittest.TestCase):
         mdoc = "New text New text"
 
 
-#        form.name = nname
-#        form.nexusType = ntype
-#        form.attributes.clear()
-#        for at in attrs.keys() :
-#            form.attributes[at] =  attrs[at]
-#        form.doc = mdoc
-
-
-
-
-#        for at in attributes:
-#            self.assertEqual(attributes[at], state[3][at])#
-
-# #       self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-#        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-#        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
- 
-        
-        
 
         form.root = doc
 

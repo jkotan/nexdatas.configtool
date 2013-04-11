@@ -1610,6 +1610,95 @@ class DefinitionDlgTest(unittest.TestCase):
                 self.assertEqual(it2.text(), QVariant(aname+"_"+attributes[aname]))
 
 
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_updateForm(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dks = []
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name","myname%s" %  nn)
+        qdn.setAttribute("type","mytype%s" %  nn)
+        qdn.setAttribute("unit","myunits%s" %  nn)
+        qdn.setAttribute("shortname","mynshort%s" %  nn)
+        doc.appendChild(qdn) 
+        dname = "doc"
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+
+
+        form = DefinitionDlg()
+        form.show()
+        form.node = qdn
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+
+        form.createGUI()
+        form.setFromNode()
+
+        nname = "newname"
+        ntype = "newtype"
+        attrs = {"unit":"newunit","longname":"newlogname"}
+        doc = "New text \nNew text"
+
+        attributeMap = form.node.attributes()
+        
+        cnt = 0
+        for i in range(attributeMap.count()):
+            nm = attributeMap.item(i).nodeName()
+            vl = attributeMap.item(i).nodeValue()
+            if nm == "name":
+                self.assertEqual(vl,form.name)
+                cnt += 1 
+            elif nm == "type":
+                self.assertEqual(vl,form.nexusType)
+                cnt += 1 
+            else:
+                self.assertEqual(vl,form.attributes[str(nm)])
+        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+
+
+
+        form.name = nname
+        form.nexusType = nname
+        form.attributes.clear()
+        for at in attrs.keys() :
+            form.attributes[at] =  attrs[at]
+        form.doc = doc
+
+
+        form.updateNode()
+        cnt = 0
+        for i in range(attributeMap.count()):
+            nm = attributeMap.item(i).nodeName()
+            vl = attributeMap.item(i).nodeValue()
+            if nm == "name":
+                self.assertEqual(vl,form.name)
+                cnt += 1 
+            elif nm == "type":
+                self.assertEqual(vl,form.nexusType)
+                cnt += 1 
+            else:
+                self.assertEqual(vl,form.attributes[str(nm)])
+        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+        
+
     ## constructor test
     # \brief It tests default settings
     def test_createGUI_connect(self):

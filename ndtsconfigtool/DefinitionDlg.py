@@ -269,10 +269,11 @@ class DefinitionDlg(NodeDlg):
 
 
     ## updates the Node
+    # \param index current node index
     # \brief It sets node from the dialog variables
     def updateNode(self,index=QModelIndex()):
         elem=self.node.toElement()
-            
+        index = self.view.currentIndex()    
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())

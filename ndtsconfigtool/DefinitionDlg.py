@@ -271,8 +271,9 @@ class DefinitionDlg(NodeDlg):
     ## updates the Node
     # \param index current node index
     # \brief It sets node from the dialog variables
-    def updateNode(self,index=self.view.currentIndex()):
+    def updateNode(self,index=QModelIndex()):
         elem=self.node.toElement()
+        mindex = self.view.currentIndex() if not index.isValid() else index   
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
@@ -287,15 +288,15 @@ class DefinitionDlg(NodeDlg):
                 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self.removeElement(doc, index)
+            self.removeElement(doc, mindex)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self.replaceElement(doc, newDoc, index)
+                self.replaceElement(doc, newDoc, mindex)
             else:
-                self.appendElement(newDoc, index)
+                self.appendElement(newDoc, mindex)
 
         
 if __name__ == "__main__":

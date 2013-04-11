@@ -31,7 +31,7 @@ import time
 from PyQt4.QtTest import QTest
 from PyQt4.QtGui import (QApplication, QMessageBox, QTableWidgetItem)
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant
+from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString
 from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
 
 
@@ -1658,8 +1658,8 @@ class DefinitionDlgTest(unittest.TestCase):
                          ["group", "field", "attribute", "link", "component", "doc", "symbols"])
         self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
 
-        form.createGUI()
         form.setFromNode()
+        form.createGUI()
 
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -1667,7 +1667,6 @@ class DefinitionDlgTest(unittest.TestCase):
         di = cm.index(0,0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
-
 
         nname = "newname"
         ntype = "newtype"
@@ -1691,6 +1690,13 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
 
 
+        mydoc = form.node.firstChildElement(QString("doc"))           
+        text = form.dts.getText(mydoc)    
+        olddoc = unicode(text).strip() if text else ""
+
+        self.assertEqual(olddoc,form.doc)
+
+
 
         form.name = nname
         form.nexusType = ntype
@@ -1700,7 +1706,6 @@ class DefinitionDlgTest(unittest.TestCase):
         form.doc = mdoc
 
         form.root = doc
-        form.updateNode()
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
@@ -1708,6 +1713,10 @@ class DefinitionDlgTest(unittest.TestCase):
         di = cm.index(0,0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
+        print doc.nodeName()
+#        print di.internalPointer().node.nodeName()
+
+        form.updateNode()
 
         cnt = 0
         for i in range(attributeMap.count()):
@@ -1722,8 +1731,14 @@ class DefinitionDlgTest(unittest.TestCase):
             else:
                 self.assertEqual(vl,attrs[str(nm)])
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
-        newdoc = unicode(form.ui.docTextEdit.toPlainText())
-        self.assertEqual(mdoc,newdoc)
+
+
+        mydoc = form.node.firstChildElement(QString("doc"))           
+        text = form.dts.getText(mydoc)    
+        olddoc = unicode(text).strip() if text else ""
+
+        self.assertEqual(olddoc,mdoc)
+
 
         
 

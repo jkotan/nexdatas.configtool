@@ -36,6 +36,7 @@ from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
 
 
 from ndtsconfigtool.DefinitionDlg import DefinitionDlg
+from ndtsconfigtool.ComponentModel import ComponentModel
 from ndtsconfigtool.AttributeDlg import AttributeDlg
 from ndtsconfigtool.NodeDlg import NodeDlg
 
@@ -49,8 +50,16 @@ app = None
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+class TestView(object):
+    def __init__(self, model):
+        self.testIndex = None
+        self.testModel = model
 
+    def currentIndex(self):
+        return self.testIndex 
 
+    def model(self):
+        return self.testModel
 
 ## test fixture
 class DefinitionDlgTest(unittest.TestCase):
@@ -1652,10 +1661,18 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
         form.setFromNode()
 
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        ri = cm.rootIndex
+        di = cm.index(0,0,ri)
+        form.view = TestView(cm)
+        form.view.testIndex = di
+
+
         nname = "newname"
         ntype = "newtype"
         attrs = {"unit":"newunit","longname":"newlogname"}
-        doc = "New text \nNew text"
+        mdoc = "New text \nNew text"
 
         attributeMap = form.node.attributes()
         
@@ -1676,27 +1693,38 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         form.name = nname
-        form.nexusType = nname
+        form.nexusType = ntype
         form.attributes.clear()
         for at in attrs.keys() :
             form.attributes[at] =  attrs[at]
-        form.doc = doc
+        form.doc = mdoc
 
-
+        form.root = doc
         form.updateNode()
+
+        allAttr = True
+        cm = ComponentModel(doc, allAttr)
+        ri = cm.rootIndex
+        di = cm.index(0,0,ri)
+        form.view = TestView(cm)
+        form.view.testIndex = di
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
+                self.assertEqual(vl, nname)
                 cnt += 1 
             elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
+                self.assertEqual(vl, ntype)
                 cnt += 1 
             else:
-                self.assertEqual(vl,form.attributes[str(nm)])
-        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+                self.assertEqual(vl,attrs[str(nm)])
+        self.assertEqual(len(attrs),attributeMap.count() - cnt)
+        newdoc = unicode(form.ui.docTextEdit.toPlainText())
+        self.assertEqual(mdoc,newdoc)
+
         
 
     ## constructor test

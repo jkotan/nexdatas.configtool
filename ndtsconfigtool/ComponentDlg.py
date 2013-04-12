@@ -142,6 +142,8 @@ class Component(object):
         self.externalApply = None
         ## close action
         self.externalClose = None
+        ## datasource link action
+        self.externalDSLink = None
 
         ## item class shown in the frame
         self._tagClasses = {"field":FieldDlg, 
@@ -641,7 +643,9 @@ class Component(object):
     # \param externalApply apply action
     # \param externalSave save action
     # \param externalClose close action
-    def connectExternalActions(self, externalApply=None , externalSave=None, externalClose = None  ):
+    # \param externalDSLink dsource link action
+    def connectExternalActions(self, externalApply=None , externalSave=None
+                               , externalClose = None, externalDSLink = None  ):
         if externalSave and self.externalSave is None:
             self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
@@ -652,6 +656,9 @@ class Component(object):
             self.externalClose = externalClose
         if externalApply and self.externalApply is None:
             self.externalApply = externalApply
+        if externalDSLink and self.externalDSLink is None:
+            self.externalDSLink = externalDSLink
+
 
 
     ## reconnects save actions
@@ -727,7 +734,7 @@ class Component(object):
             self.dialog.ui.widget.setFromNode(node)
             self.dialog.ui.widget.createGUI()
             if hasattr(self.dialog.ui.widget,"connectExternalActions"):
-                self.dialog.ui.widget.connectExternalActions(self.externalApply)
+                self.dialog.ui.widget.connectExternalActions(self.externalApply, self.externalDSLink)
             if hasattr(self.dialog.ui.widget,"treeMode"):
                 self.dialog.ui.widget.treeMode()
             self.dialog.ui.widget.view = self.view

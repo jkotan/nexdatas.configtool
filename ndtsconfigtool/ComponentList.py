@@ -225,7 +225,9 @@ class ComponentList(QWidget):
     # \param externalSave save action
     # \param externalApply apply action
     # \param externalClose close action
-    def loadList(self, itemActions, externalSave = None, externalApply = None, externalClose = None ):
+    # \param externalDSLink datasource link action
+    def loadList(self, itemActions, externalSave = None, externalApply = None, 
+                 externalClose = None, externalDSLink = None ):
         try:
             dirList=[l for l in os.listdir(self.directory) if l.endswith(".xml")]
         except:
@@ -249,7 +251,7 @@ class ComponentList(QWidget):
 
             dlg.load()    
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(externalApply, externalSave, externalClose = None)    
+                dlg.connectExternalActions(externalApply, externalSave, externalClose, externalDSLink)    
 
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp
@@ -265,7 +267,9 @@ class ComponentList(QWidget):
     # \param externalSave save action
     # \param externalApply apply action
     # \param externalClose close action
-    def setList(self, components,  itemActions, externalSave = None, externalApply = None, externalClose = None ):
+    # \param externalDSLink datasource link action
+    def setList(self, components,  itemActions, externalSave = None, externalApply = None, 
+                externalClose = None, externalDSLink = None ):
         try:
             dirList=os.listdir(self.directory)
         except:
@@ -285,7 +289,7 @@ class ComponentList(QWidget):
 
             dlg.set(components[name])    
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(externalApply, externalSave, externalClose = None)    
+                dlg.connectExternalActions(externalApply, externalSave, externalClose, externalDSLink)    
 
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp

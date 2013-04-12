@@ -50,15 +50,21 @@ class NodeDlg(QDialog):
         ## external apply action
         self.externalApply = None
 
+        ## external apply action
+        self.externalDSLink = None
+
         ## DOM tools
         self.dts = DomTools()
 
     ## connects the given apply action
     # \param externalApply apply action   
-    def connectExternalActions(self,  externalApply=None):
+    def connectExternalActions(self,  externalApply=None, externalDSLink=None):
         if externalApply and self.externalApply is None and self.ui and self.ui.applyPushButton:
             self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), externalApply)
             self.externalApply = externalApply
+        if externalDSLink and self.externalDSLink is None and self.ui and self.ui.linkDSPushButton:
+            self.connect(self.ui.linkDSPushButton, SIGNAL("clicked()"), externalDSLink)
+            self.externalDSLink = externalDSLink
 
         
     ## resets the dialog

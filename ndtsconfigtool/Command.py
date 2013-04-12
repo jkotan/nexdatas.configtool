@@ -204,8 +204,8 @@ class ServerStoreComponent(Command):
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
                                                     self.receiver.componentSave,
-                                                    self.receiver.componentClose
-                                                    )
+                                                    self.receiver.componentClose,
+                                                    self.receiver.componentLinkDataSourceItem)      
 
 
                 
@@ -699,7 +699,8 @@ class ComponentOpen(Command):
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
                                                     self.receiver.componentSave,
-                                                    self.receiver.componentClose)      
+                                                    self.receiver.componentClose,
+                                                    self.receiver.componentLinkDataSourceItem)      
 
             if path:   
                 self._cp.name = self._cpEdit.name  
@@ -914,7 +915,8 @@ class ComponentRemove(Command):
             if hasattr(self._cp.instance,"connectExternalActions"):     
                 self._cp.instance.connectExternalActions(self.receiver.componentApplyItem,
                                                          self.receiver.componentSave,
-                                                         self.receiver.componentClose)
+                                                         self.receiver.componentClose,
+                                                         self.receiver.componentLinkDataSourceItem)      
 
 
 
@@ -976,7 +978,8 @@ class ComponentEdit(Command):
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
                                                     self.receiver.componentSave,
-                                                    self.receiver.componentClose)
+                                                    self.receiver.componentClose,
+                                                    self.receiver.componentLinkDataSourceItem) 
 
 
             subwindow = self.receiver.subWindow(
@@ -1053,7 +1056,8 @@ class ComponentSave(Command):
             if hasattr(self._cpEdit,"connectExternalActions"):     
                 self._cpEdit.connectExternalActions(self.receiver.componentApplyItem,
                                                     self.receiver.componentSave,
-                                                    self.receiver.componentClose
+                                                    self.receiver.componentClose,
+                                                    self.receiver.componentLinkDataSourceItem
                                                     )
 
 
@@ -2634,7 +2638,8 @@ class ComponentItemCommand(Command):
                 if hasattr(self._cp.instance,"connectExternalActions"):     
                     self._cp.instance.connectExternalActions(self.receiver.componentApplyItem,
                                                              self.receiver.componentSave,
-                                                             self.receiver.componentClose)
+                                                             self.receiver.componentClose,
+                                                             self.receiver.componentLinkDataSourceItem) 
 
 
         if hasattr(self._cp,"id"):
@@ -2732,8 +2737,10 @@ class ComponentClear(ComponentItemCommand):
                     if hasattr(self._cp.instance,"connectExternalActions"):     
                         self._cp.instance.connectExternalActions(self.receiver.componentApplyItem, 
                                                                  self.receiver.componentSave,
-                                                                 self.receiver.componentClose
-                                                                 )
+                                                                 self.receiver.componentClose,
+                                                                 self.receiver.componentLinkDataSourceItem) 
+
+
         self.postExecute()
             
 

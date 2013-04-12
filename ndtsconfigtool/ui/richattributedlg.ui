@@ -46,7 +46,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="linkDSPushButton">
              <property name="text">
               <string>&amp;Link DataSource</string>
              </property>
@@ -333,7 +333,7 @@
  </widget>
  <tabstops>
   <tabstop>nameLineEdit</tabstop>
-  <tabstop>pushButton</tabstop>
+  <tabstop>linkDSPushButton</tabstop>
   <tabstop>valueLineEdit</tabstop>
   <tabstop>typeComboBox</tabstop>
   <tabstop>typeLineEdit</tabstop>

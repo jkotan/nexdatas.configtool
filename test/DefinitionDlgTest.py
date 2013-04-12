@@ -109,7 +109,6 @@ class DefinitionDlgTest(unittest.TestCase):
     def tearDown(self):
         print "tearing down ..."
 
-
     def checkMessageBox(self):
         self.assertEqual(QApplication.activeWindow(),None)
         mb = QApplication.activeModalWidget()
@@ -1316,11 +1315,14 @@ class DefinitionDlgTest(unittest.TestCase):
     def rmAttributeWidget(self):
         aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
+#        print "CLASS", mb
+#        print "CLASS2", aw
         self.assertTrue(isinstance(mb, QMessageBox))
         self.text = mb.text()
         self.title = mb.windowTitle()
 
         QTest.mouseClick(mb.button(QMessageBox.Yes), Qt.LeftButton)
+
 
     def rmAttributeWidgetClose(self):
         aw = QApplication.activeWindow()
@@ -1455,6 +1457,7 @@ class DefinitionDlgTest(unittest.TestCase):
         
         form.populateAttributes(aname)
 
+        
 
         QTimer.singleShot(10, self.rmAttributeWidget)
         QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
@@ -1959,8 +1962,12 @@ class DefinitionDlgTest(unittest.TestCase):
         form.ui.docTextEdit.setText(str(mdoc))
         
         
+        
         for r in form.attributes:
             form.ui.attributeTableWidget.setCurrentCell(0,1)
+            item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0) 
+            print item.text()
+
 
             QTimer.singleShot(10, self.rmAttributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
@@ -2007,6 +2014,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(olddoc,mdoc)
 
 
+
         
 
     ## constructor test
@@ -2018,3 +2026,4 @@ if __name__ == '__main__':
     if not app:
         app = QApplication([])
     unittest.main()
+#    app.exec_()

@@ -1,0 +1,60 @@
+<?xml version='1.0'?>
+<definition>
+  <doc>Has to be merged into the DESY default component to get a full NEXUS SAS tree.</doc>
+  <group type="NXentry" name="entry">
+    <group type="NXsample" name="sample">
+      <field units="degree" type="NX_FLOAT" name="aequatorial_angle">
+        <strategy mode="STEP"/>
+      </field>
+    </group>
+    <group type="NXmonitor" name="control">
+      <field type="NX_FLOAT" name="integral"/>
+      <field type="NX_CHAR" name="mode"/>
+      <field type="NX_FLOAT" name="preset"/>
+    </group>
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="degree" type="NX_FLOAT" name="aequatorial_angle">
+          <strategy mode="STEP"/>
+        </field>
+        <field units="degree" type="NX_FLOAT" name="azimuthal_angle">
+          <strategy mode="STEP"/>
+        </field>
+        <field units="mm" type="NX_FLOAT" name="beam_center_x"/>
+        <field units="mm" type="NX_FLOAT" name="beam_center_y"/>
+        <field type="NX_INT" name="data">
+          <dimensions rank="2">
+            <dim value="1024" index="1"/>
+            <dim value="1024" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+        </field>
+        <field units="mm" type="NX_FLOAT" name="distance"/>
+        <field units="degree" type="NX_FLOAT" name="polar_angle">
+          <strategy mode="STEP"/>
+        </field>
+        <field units="degree" type="NX_FLOAT" name="rotation_angle">
+          <strategy mode="STEP"/>
+        </field>
+        <field units="um" type="NX_FLOAT" name="x_pixel_size"/>
+        <field units="um" type="NX_FLOAT" name="y_pixel_size"/>
+      </group>
+      <group type="NXmonochromator" name="monochromator">
+        <field units="nm" type="NX_FLOAT" name="wavelength"/>
+        <field units="nm" type="NX_FLOAT" name="wavelength_spread"/>
+      </group>
+      <group type="NXcollimator" name="collimator">
+        <group type="NXgeometry" name="geometry">
+          <group type="NXshape" name="shape">
+            <field type="NX_CHAR" name="shape"/>
+            <field units="mm" type="NX_FLOAT" name="size"/>
+          </group>
+        </group>
+      </group>
+    </group>
+    <group type="NXdata" name="data">
+      <link target="/entry/instrument/detector/data" name="data"/>
+    </group>
+    <field type="NX_CHAR" name="definition">NXsas</field>
+  </group>
+</definition>

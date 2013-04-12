@@ -16,25 +16,24 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndtsconfigtool nexdatas
-## \file LabeledObject.py
-# object with label and ID
+## \file Errors.py
+# Error classes
 
-## item of the component or datasource list
-class LabeledObject(object):
+
+## charater error
+class CharacterError(Exception): pass
+
+## error of passed parameter
+class ParameterError(Exception): pass
+
+
+## merging error for wrong node structure
+class IncompatibleNodeError(Exception): 
     ## constructor
-    # \param name item name
-    # \param instance instance related to the item
-    def __init__(self, name, instance):
-        ## item name
-        self.name = name
-        ## saved item name
-        self.savedName = name
-        ## item instance
-        self.instance = instance
-        ## item id
-        self.id = id(self)
-
-    ## checks if the name is not saved
-    # returns False if the name is not saved
-    def isDirty(self):
-        return False if self.name == self.savedName else True
+    # \param value text of the error
+    # \param nodes list of error related nodes
+    def __init__(self, value, nodes = []):
+        ## text of the error
+        self.value = value
+        ## list of error related nodes
+        self.nodes = nodes

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -37,23 +37,40 @@ class ComponentModel(QAbstractItemModel):
     def __init__(self, document, allAttributes, parent=None):
         super(ComponentModel, self).__init__(parent)
         
-        ## DOM document
-        self._domDocument = document
-
         ## show all attribures or only the type attribute
-        self._allAttributes = allAttributes
+        self.__allAttributes = allAttributes
         
         ## root item of the tree
-        self.rootItem = ComponentItem(self._domDocument)
+        self.__rootItem = ComponentItem(document)
         ## index of the root item
-        self.rootIndex = self.createIndex(0, 0, self.rootItem)
+        self.rootIndex = self.createIndex(0, 0, self.__rootItem)
 
+
+    ## provides access to the header data
+    # \param section integer index of the table column 
+    # \param orientation orientation of the header
+    # \param role access type of the header data
+    # \returns header data defined for the given index and formated according to the role    
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole :
+            if section == 0 :
+                return QVariant("Name")
+            elif section == 1:
+                if self.__allAttributes:
+                    return QVariant("Attributes")
+                else:
+                    return QVariant("Type")
+            elif section == 2:
+                return QVariant("Value")
+            else:
+                return QVariant()
+        
 
     ## switches between all attributes in the try or only type attribute
     # \param allAttributes all attributes are shown if True
     def setAttributeView(self, allAttributes):
-        self._allAttributes = allAttributes
-        
+        self.__allAttributes = allAttributes
+
 
     ## provides read access to the model data
     # \param index of the model item         
@@ -78,27 +95,26 @@ class ComponentModel(QAbstractItemModel):
                 name = attributeMap.namedItem("name").nodeValue()
 
             if name is not None:    
-                return node.nodeName() +": "+ name
+                return QVariant(node.nodeName() +": "+ name)
             else:
-                return node.nodeName() 
+                return QVariant(node.nodeName())
         elif index.column() == 1:
-            if self._allAttributes:
+            if self.__allAttributes:
                 attributes = QStringList()
                 for i in range(attributeMap.count()):
                     attribute = attributeMap.item(i)
                     attributes.append(attribute.nodeName() + "=\"" +attribute.nodeValue() + "\"")
-                return attributes.join(" ") + "  "    
+                return QVariant(attributes.join(" ") + "  ")
             else:
-                return (attributeMap.namedItem("type").nodeValue() + "  ") \
-                    if attributeMap.contains("type") else QString("  ")
+                return QVariant((attributeMap.namedItem("type").nodeValue() + "  ") 
+                                if attributeMap.contains("type") else QString("  "))
                  
         elif index.column() == 2:
-            return node.nodeValue().split("\n").join(" ")
+            return QVariant(node.nodeValue().split("\n").join(" "))
         else:
             return QVariant()
         
         
-
 
     ## provides flag of the model item    
     # \param index of the model item         
@@ -110,24 +126,6 @@ class ComponentModel(QAbstractItemModel):
                             Qt.ItemIsEnabled | Qt.ItemIsSelectable )
 
     
-    ## provides access to the header data
-    # \param section integer index of the table column 
-    # \param orientation orientation of the header
-    # \param role access type of the header data
-    # \returns header data defined for the given index and formated according to the role    
-    def headerData(self, section, orientation, role=Qt.DisplayRole):
-        if orientation == Qt.Horizontal and role == Qt.DisplayRole :
-            if section == 0 :
-                return QVariant("Name")
-            elif section == 1:
-                if self._allAttributes:
-                    return QVariant("Attributes")
-                else:
-                    return QVariant("Type")
-            elif section == 2:
-                return QVariant("Value")
-            else:
-                return QVariant()
         
     ## provides access to the item index
     # \param row integer index counting DOM child item
@@ -140,7 +138,7 @@ class ComponentModel(QAbstractItemModel):
             
 
         if not parent.isValid():
-            parentItem = self.rootItem
+            parentItem = self.__rootItem
         else:
             parentItem = parent.internalPointer()
             
@@ -167,13 +165,13 @@ class ComponentModel(QAbstractItemModel):
         
         parentItem = childItem.parent
 
-        if parentItem is None or parentItem == self.rootItem:
+        if parentItem is None or parentItem == self.__rootItem:
             return QModelIndex()
 
         if parentItem is None:
             return QModelIndex()
 
-#        if parentItem == self.rootItem:
+#        if parentItem == self.__rootItem:
 #            self.rootIndex
 
         return  self.createIndex(parentItem.childNumber(), 0, parentItem)
@@ -186,11 +184,11 @@ class ComponentModel(QAbstractItemModel):
             return 0
         
         if not parent.isValid():
-            parentItem = self.rootItem
+            parentItem = self.__rootItem
         else:
             parentItem = parent.internalPointer()
             
-        if not hasattr(parentItem,"node"):
+        if not hasattr(parentItem,"node") or parentItem.node is None:
             return 0  
         return parentItem.node.childNodes().count()
 
@@ -249,14 +247,14 @@ class ComponentModel(QAbstractItemModel):
 
     ## removes the given rows from the model
     # \param position row integer index of the first removed row
-    # \param node DOM node to remove
     # \param parent index of the parent item       
     # \returns True if parent exists
-    def removeItem(self, position, node,  parent = QModelIndex()):
+    def removeItem(self, position,  parent = QModelIndex()):
         item = parent.internalPointer()
         if not item:
             return False     
         self.beginRemoveRows(parent, position, position)
+        node = item.child(position).node
 
         status = item.removeChildren(position, 1)
         item.node.removeChild(node)

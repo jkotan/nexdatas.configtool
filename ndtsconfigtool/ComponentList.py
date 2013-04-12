@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,13 +25,12 @@ from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
 from ui.ui_componentlist import Ui_ComponentList
 import os
 
-from ComponentDlg import ComponentDlg
 from ComponentDlg import Component
 from LabeledObject import LabeledObject
 
 
 ## dialog defining a group tag
-class ComponentList(QWidget, Ui_ComponentList):
+class ComponentList(QWidget):
     
     ## constructor
     # \param directory component directory
@@ -51,14 +50,18 @@ class ComponentList(QWidget, Ui_ComponentList):
         ## show all attribures or only the type attribute
         self._allAttributes = False
 
+        ## user interface
+        self.ui = Ui_ComponentList()
+
+
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
 
-        self.setupUi(self)
+        self.ui.setupUi(self)
 
 
-#        self.connect(self.componentListWidget, 
+#        self.connect(self.ui.componentListWidget, 
 #                     SIGNAL("itemChanged(QListWidgetItem*)"),
 #                     self.listItemChanged)
 
@@ -85,14 +88,14 @@ class ComponentList(QWidget, Ui_ComponentList):
                 menu.addSeparator()
             else:
                 menu.addAction(action)
-        menu.exec_(self.componentListWidget.viewport().mapToGlobal(position))
+        menu.exec_(self.ui.componentListWidget.viewport().mapToGlobal(position))
 
 
     ## sets context menu actions for the component list
     # \param actions tuple with actions 
     def setActions(self, actions):
-        self.componentListWidget.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.componentListWidget.customContextMenuRequested.connect(self._openMenu)
+        self.ui.componentListWidget.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.ui.componentListWidget.customContextMenuRequested.connect(self._openMenu)
         self._actions = actions
         
         
@@ -108,7 +111,7 @@ class ComponentList(QWidget, Ui_ComponentList):
     ## takes a name of the current component
     # \returns name of the current component            
     def currentListComponent(self):
-        item = self.componentListWidget.currentItem()
+        item = self.ui.componentListWidget.currentItem()
         if item is None:
             return None    
         return self.components[item.data(Qt.UserRole).toLongLong()[0]] 
@@ -172,7 +175,7 @@ class ComponentList(QWidget, Ui_ComponentList):
     def populateComponents(self, selectedComponent = None, edit = False):
 #        print "populate"
         selected = None
-        self.componentListWidget.clear()
+        self.ui.componentListWidget.clear()
         
         slist = [(self.components[key].name, key) 
                  for key in self.components.keys()]
@@ -195,7 +198,7 @@ class ComponentList(QWidget, Ui_ComponentList):
             else:
                 item.setForeground(Qt.black)
 
-            self.componentListWidget.addItem(item)
+            self.ui.componentListWidget.addItem(item)
             if selectedComponent is not None and selectedComponent == self.components[cp].id:
                 selected = item
                                
@@ -211,9 +214,9 @@ class ComponentList(QWidget, Ui_ComponentList):
                     self.components[cp].instance.dialog =  None
         if selected is not None:
             selected.setSelected(True)
-            self.componentListWidget.setCurrentItem(selected)
+            self.ui.componentListWidget.setCurrentItem(selected)
             if edit:
-                self.componentListWidget.editItem(selected)
+                self.ui.componentListWidget.editItem(selected)
 
 
             

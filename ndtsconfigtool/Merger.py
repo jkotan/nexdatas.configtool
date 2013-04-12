@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,16 +25,10 @@ from PyQt4.QtXml import QDomNode
 from PyQt4.QtCore import QString, QThread, SIGNAL
 from PyQt4.QtGui import QDialog, QWidget, QLabel, QVBoxLayout, QPushButton
 
-## merging error for wrong node structure
-class IncompatibleNodeError(Exception): 
-    ## constructor
-    # \param value text of the error
-    # \param nodes list of error related nodes
-    def __init__(self, value, nodes = []):
-        ## text of the error
-        self.value = value
-        ## list of error related nodes
-        self.nodes = nodes
+from Errors import IncompatibleNodeError
+from DomTools import DomTools
+
+
         
 ## dialog of the merger
 class MergerDlg(QDialog):
@@ -84,6 +78,9 @@ class Merger(QThread):
             "link":["doc"]
             }
 
+        ## with unique text
+        self.uniqueText = ['field','attribute','query','strategy']
+
         ## required attributes
         self._requiredAttr ={
             "attribute":["name"],
@@ -108,17 +105,9 @@ class Merger(QThread):
         ## selected node
         self.selectedNode = None
 
-    ## fetches the text from all DOM child text nodes
-    # \param node the given DOM node
-    def _getText(self, node):
-        text = QString()
-        if node:
-            child = node.firstChild()
-            while not child.isNull():
-                if child.nodeType() == QDomNode.TextNode:
-                    text += child.toText().data()
-                child = child.nextSibling()
-        return text    
+        ## DOM tools
+        self.__dts = DomTools()
+
 
 
     ## fetches node ancestors int the tree
@@ -160,7 +149,10 @@ class Merger(QThread):
             if attr1.contains("name") else ""
 #        print "with names" ,name1,name2        
 
-        if name1 != name2 :
+        if name1 != name2 and name1 and name2:
+            if tagName in self._singles: 
+                raise IncompatibleNodeError("Incompatible element attributes  %s: " % unicode(tags),
+                                            [elem1, elem2])
             return False
 
         for i1 in range(attr1.count()):
@@ -175,17 +167,16 @@ class Merger(QThread):
                     
             
 
-        if not status  and tagName in self._singles: 
+        if not status  and (tagName in self._singles or (name1 and name1 == name2)): 
             raise IncompatibleNodeError("Incompatible element attributes  %s: " % unicode(tags),
                                         [elem1, elem2])
                 
 
-
-        if tagName == 'field':
-            text1=unicode(self._getText(elem1)).strip()
-            text2=unicode(self._getText(elem2)).strip()         
+        if tagName in self.uniqueText:
+            text1=unicode(self.__dts.getText(elem1)).strip()
+            text2=unicode(self.__dts.getText(elem2)).strip()         
             ## TODO white spaces?
-            if text1 != text2:
+            if text1 != text2 and text1 and text2:
                 raise IncompatibleNodeError(
                     "Incompatible \n%s element value\n%s \n%s "  \
                         % (unicode(self._getAncestors(elem1)), text1, text2),

@@ -1,0 +1,82 @@
+<?xml version='1.0'?>
+<definition>
+  <doc>Has to be merged into the DESY default component to get a full NEXUS SAS tree.</doc>
+  <group type="NXentry" name="entry">
+    <group type="NXsample" name="sample">
+      <field units="degree" type="NX_FLOAT" name="aequatorial_angle">
+        <strategy mode="STEP"/>
+        <datasource type="TANGO" name="exp_c01">
+          <record name="Counts"/>
+          <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.01"/>
+        </datasource>
+      </field>
+    </group>
+    <group type="NXmonitor" name="control">
+      <field type="NX_FLOAT" name="integral">
+        <strategy mode="FINAL"/>
+        <datasource type="CLIENT" name="counts">
+          <record name="counts"/>
+        </datasource>
+      </field>
+      <field type="NX_CHAR" name="mode">monitor</field>
+      <field type="NX_FLOAT" name="preset">0</field>
+    </group>
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="degree" type="NX_FLOAT" name="aequatorial_angle">
+          <strategy mode="STEP"/>
+          <datasource type="TANGO" name="exp_c01">
+            <record name="Counts"/>
+            <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.01"/>
+          </datasource>
+        </field>
+        <field units="degree" type="NX_FLOAT" name="azimuthal_angle">
+          <strategy mode="STEP"/>
+          <datasource type="TANGO" name="exp_c03">
+            <record name="Counts"/>
+            <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.03"/>
+          </datasource>
+        </field>
+        <field units="mm" type="NX_FLOAT" name="beam_center_x">0</field>
+        <field units="mm" type="NX_FLOAT" name="beam_center_y">0.1</field>
+        <field units="mm" type="NX_FLOAT" name="distance">100</field>
+        <field units="degree" type="NX_FLOAT" name="polar_angle">
+          <strategy mode="STEP"/>
+          <datasource type="TANGO" name="exp_c06">
+            <record name="Counts"/>
+            <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.06"/>
+          </datasource>
+        </field>
+        <field units="degree" type="NX_FLOAT" name="rotation_angle">
+          <strategy mode="STEP"/>
+          <datasource type="TANGO" name="exp_c07">
+            <record name="Counts"/>
+            <device port="10000" hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.07"/>
+          </datasource>
+        </field>
+        <field units="um" type="NX_FLOAT" name="x_pixel_size">1.2</field>
+        <field units="um" type="NX_FLOAT" name="y_pixel_size">1.1</field>
+        <field type="NX_INT" name="data">
+          <strategy mode="POSTRUN">http://haso.desy.de/sas/12345/sasimage.h5</strategy>
+          <dimensions rank="3"/>
+        </field>
+      </group>
+      <group type="NXmonochromator" name="monochromator">
+        <field units="nm" type="NX_FLOAT" name="wavelength">1</field>
+        <field units="nm" type="NX_FLOAT" name="wavelength_spread">0.1</field>
+      </group>
+      <group type="NXcollimator" name="collimator">
+        <group type="NXgeometry" name="geometry">
+          <group type="NXshape" name="shape">
+            <field type="NX_CHAR" name="shape">nxbox</field>
+            <field units="mm" type="NX_FLOAT" name="size">1</field>
+          </group>
+        </group>
+      </group>
+    </group>
+    <group type="NXdata" name="data">
+      <link target="NXentry/NXinstrument/NXdetector/data" name="data"/>
+    </group>
+    <field type="NX_CHAR" name="definition">NXsas</field>
+  </group>
+</definition>

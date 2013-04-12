@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -253,11 +253,11 @@ class MainWindow(QMainWindow):
 
        
         self.pool.createTask("dsourceChanged",commandArgs, DataSourceListChanged,
-                             self.sourceList.sourceListWidget, 
+                             self.sourceList.ui.sourceListWidget, 
                              "itemChanged(QListWidgetItem*)")
         
         self.pool.createTask("componentChanged",commandArgs, ComponentListChanged,
-                             self.componentList.componentListWidget, 
+                             self.componentList.ui.componentListWidget, 
                              "itemChanged(QListWidgetItem*)")
 
 
@@ -265,11 +265,11 @@ class MainWindow(QMainWindow):
 
 
 
-        self.connect(self.sourceList.sourceListWidget, 
+        self.connect(self.sourceList.ui.sourceListWidget, 
                      SIGNAL("itemClicked(QListWidgetItem*)"), 
                      self.dsourceEdit)
 
-        self.connect(self.componentList.componentListWidget, 
+        self.connect(self.componentList.ui.componentListWidget, 
                      SIGNAL("itemClicked(QListWidgetItem*)"), 
                      self.componentEdit)
 
@@ -606,6 +606,8 @@ class MainWindow(QMainWindow):
             "&Tile", self.mdi.tileSubWindows, tip = "Tile the windows")
         self.windows["RestoreAction"] = self._createAction(
             "&Restore All", self.windowRestoreAll, tip = "Restore the windows")
+        self.windows["CloseAllAction"] = self._createAction(
+            "&Close All", self.mdi.closeAllSubWindows, tip = "Close the windows")
         self.windows["MinimizeAction"] = self._createAction(
             "&Iconize All", self.windowMinimizeAll, tip = "Minimize the windows")
 #A        self.windows["ArrangeIconsAction"] = self._createAction(
@@ -873,24 +875,32 @@ class MainWindow(QMainWindow):
     # \param event Qt event   
     def closeEvent(self, event):
         failures = []
+        status = None
         for k in self.componentList.components.keys():
             cp = self.componentList.components[k]
             que = False
             if (hasattr(cp,"isDirty") and cp.isDirty()) or \
                     (hasattr(cp,"instance") and hasattr(cp.instance,"isDirty") and cp.instance.isDirty()):
-                status= QMessageBox.question(self, "Component - Save",
-                                             "Do you want to save the component: %s".encode() \
-                                                 %  (cp.name),
-                                             QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
-                                             QMessageBox.Save)
-
-                if status == QMessageBox.Save:
+                if status != QMessageBox.YesToAll and status != QMessageBox.NoToAll :
+                    status= QMessageBox.question(self, "Component - Save",
+                                                 "Do you want to save the component: %s".encode() \
+                                                     %  (cp.name),
+                                                 QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel \
+                                                     | QMessageBox.YesToAll| QMessageBox.NoToAll,
+                                                 QMessageBox.Yes)
+                    
+                if status == QMessageBox.Yes or status == QMessageBox.YesToAll :
                     try:
+                        cid = self.componentList.currentListComponent()
+                        self.componentList.populateComponents(cp.id)
+                        self.componentEdit()
                         cp.instance.merge()
                         if not cp.instance.save():
+                            self.componentList.populateComponents(cid)
                             event.ignore()
                             return
-                            
+                        self.componentList.populateComponents(cid)
+                        
                     except IOError, e:
                         failures.append(unicode(e))
                         
@@ -899,23 +909,33 @@ class MainWindow(QMainWindow):
                     return
 
 
+        status = None
         for k in self.sourceList.datasources.keys():
             ds = self.sourceList.datasources[k]
             que = False
             if (hasattr(ds,"isDirty") and ds.isDirty()) or \
                     (hasattr(ds,"instance") and hasattr(ds.instance,"isDirty") and ds.instance.isDirty()):
-                status= QMessageBox.question(self, "DataSource - Save",
-                                             "Do you want to save the datasource: %s".encode() \
-                                                 %  (ds.name),
-                                             QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
-                                             QMessageBox.Save)
-
-                if status == QMessageBox.Save:
+                if status != QMessageBox.YesToAll and status != QMessageBox.NoToAll:
+                    status= QMessageBox.question(self, "DataSource - Save",
+                                                 "Do you want to save the datasource: %s".encode() \
+                                                     %  (ds.name),
+                                                 QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel \
+                                                     | QMessageBox.YesToAll |  QMessageBox.NoToAll,
+                                                 QMessageBox.Yes)
+                
+                if status == QMessageBox.Yes or status == QMessageBox.YesToAll:
                     try:
+                        sid = self.sourceList.currentListDataSource()
+                        self.sourceList.populateDataSources(ds.id)
+                        self.dsourceEdit()
                         if not ds.instance.save():
+                            self.sourceList.populateDataSources(sid)
                             event.ignore()
                             return
-                            
+                        self.sourceList.populateDataSources(sid)
+
+
+
                     except IOError, e:
                         failures.append(unicode(e))
                         
@@ -1572,6 +1592,8 @@ class MainWindow(QMainWindow):
     ## add datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentAddDataSourceItem(self):
+        cmd = self.pool.getCommand('dsourceEdit').clone()
+        cmd.execute()
         cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
@@ -1917,13 +1939,13 @@ class MainWindow(QMainWindow):
     ## restores all windows
     # \brief It restores all windows in MDI
     def gotoComponentList(self):
-        self.componentList.componentListWidget.setFocus()
+        self.componentList.ui.componentListWidget.setFocus()
 
   
   ## restores all windows
     # \brief It restores all windows in MDI
     def gotoDataSourceList(self):
-        self.sourceList.sourceListWidget.setFocus()
+        self.sourceList.ui.sourceListWidget.setFocus()
 
 
     ## restores all windows
@@ -1945,7 +1967,7 @@ class MainWindow(QMainWindow):
     def helpAbout(self):
         QMessageBox.about(self, "About Component Designer",
                 """<b>Component Designer</b> v %s
-                <p>Copyright &copy; 2012 GNU GENERAL PUBLIC LICENSE
+                <p>Copyright &copy; 2012-2013 DESY, GNU GENERAL PUBLIC LICENSE
                 <p>This application can be used to create
                 XML configuration file for the Nexus Data Writer.
                 <p>Python %s - Qt %s - PyQt %s on %s""" % (
@@ -2056,6 +2078,7 @@ class MainWindow(QMainWindow):
 #A                                                self.windows["ArrangeIconsAction"], 
                                                 None,
                                                 self.windows["CloseAction"],
+                                                self.windows["CloseAllAction"],
                                                 None,
                                                 self.windows["ComponentListAction"], 
                                                 self.windows["DataSourceListAction"]

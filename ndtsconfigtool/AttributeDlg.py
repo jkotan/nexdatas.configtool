@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -21,12 +21,13 @@
 
 import re
 from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import (QDialog, QDialogButtonBox)
+from PyQt4.QtGui import (QDialog, QDialogButtonBox, QMessageBox)
 from ui.ui_attributedlg import Ui_AttributeDlg
 
+from Errors import CharacterError
 
 ## dialog defining a tag attribute 
-class AttributeDlg(QDialog, Ui_AttributeDlg):
+class AttributeDlg(QDialog):
 
     ## constructor
     # \param parent patent instance
@@ -37,28 +38,33 @@ class AttributeDlg(QDialog, Ui_AttributeDlg):
         self.name = u''
         ## attribute value
         self.value = u''
-        self.setupUi(self)
-        self._updateUi()
 
-        self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        ## user interface
+        self.ui = Ui_AttributeDlg()
+        self.ui.setupUi(self)
+        
+        self.__updateUi()
+
+        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
 
 
     ## updates attribute user interface
     # \brief It sets enable or disable the OK button
-    def _updateUi(self):
-        enable = not self.nameLineEdit.text().isEmpty()
-        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
+    def __updateUi(self):
+        enable = not self.ui.nameLineEdit.text().isEmpty()
+        self.ui.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
 
 
     ## accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
     def accept(self):
-        class CharacterError(Exception): pass
-        name = unicode(self.nameLineEdit.text())
+        name = unicode(self.ui.nameLineEdit.text())
         
         try:
             if 1 in [c in name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
                 raise CharacterError, ("Name contains one of forbidden characters") 
+            if len(name) == 0:
+                raise CharacterError, ("Empty Name") 
             if name[0] == '-':
                 raise CharacterError, ("The first character of Name is '-'") 
 
@@ -66,7 +72,7 @@ class AttributeDlg(QDialog, Ui_AttributeDlg):
             QMessageBox.warning(self, "Character Error", unicode(e))
             return
         self.name = name
-        self.value = unicode(self.valueLineEdit.text())
+        self.value = unicode(self.ui.valueLineEdit.text())
 
         QDialog.accept(self)
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,10 +19,6 @@
 ## \file ComponentItem.py
 # dom item
 
-from FieldDlg import FieldDlg
-from GroupDlg import GroupDlg
-from RichAttributeDlg import RichAttributeDlg
-
 ## dialog defining a tag link 
 class ComponentItem(object):
     
@@ -33,16 +29,16 @@ class ComponentItem(object):
         ## DOM node        
         self.node = node
         ## list with child items
-        self.childItems = []
-        ## the parent of the item
+        self.__childItems = []
+        ## the parent ComponentItem of the item
         self.parent = parent
         
 
-    ## provides a number of child Items 
-    # \returns number of children
+    ## provides a number of the current item
+    # \returns a number of the current item
     def childNumber(self):
         if self.parent:
-            return self.parent.childItems.index(self)
+            return self.parent.__childItems.index(self)
         return 0
         
 
@@ -50,14 +46,14 @@ class ComponentItem(object):
     # \param i child index
     # \returns requested child Item
     def child(self, i):
-        size = len(self.childItems)
+        size = len(self.__childItems)
         if i in range(size):
-            return self.childItems[i]
-        if i >=0 and i < self.node.childNodes().count():
+            return self.__childItems[i]
+        if i >= 0 and i < self.node.childNodes().count():
             childNode = self.node.childNodes().item(i)
             for j in range(size, i+1):                
                 childItem = ComponentItem(childNode, self)
-                self.childItems.append(childItem)
+                self.__childItems.append(childItem)
             return childItem
 
 
@@ -70,8 +66,8 @@ class ComponentItem(object):
             return False
         
         for i in range(count):
-            if position < len(self.childItems):
-                self.childItems.pop(position)
+            if position < len(self.__childItems):
+                self.__childItems.pop(position)
 
         return True
             
@@ -86,10 +82,10 @@ class ComponentItem(object):
             return False
 
         for i in range(position, position+count):
-            if position <= len(self.childItems):
+            if position <= len(self.__childItems):
                 childNode = self.node.childNodes().item(i)
                 childItem = ComponentItem(childNode, self)
-                self.childItems.insert(i, childItem)
+                self.__childItems.insert(i, childItem)
                 
         return True
 

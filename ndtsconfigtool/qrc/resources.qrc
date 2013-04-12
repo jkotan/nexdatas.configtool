@@ -23,10 +23,12 @@
 
 <file alias="cut.png">../images/cut.png</file>
 <file alias="copy.png">../images/copy.png</file>
-<file alias="paste.png">../images/paste.png</file>M
+<file alias="paste.png">../images/paste.png</file>
 <file alias="undo.png">../images/undo.png</file>
 <file alias="redo.png">../images/redo.png</file>
 
+<file alias="up.png">../images/arrow_up.png</file>
+<file alias="down.png">../images/arrow_down.png</file>
 <file alias="forward.png">../images/arrow_left.png</file>
 <file alias="back.png">../images/arrow_right.png</file>
 <file alias="help.png">../images/help.png</file>

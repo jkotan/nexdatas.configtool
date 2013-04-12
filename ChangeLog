@@ -1,8 +1,15 @@
+2013-04-12 Jan Kotanski <jankotan@gmail.com>
+	* improving merging algorithm
+	* small changes in the interface
+	* tagged as v1.1.2
+
 2013-01-23 Jan Kotanski <jankotan@gmail.com>
 	* adding additional hot-keys for Cutting and Pasting items
 	* adding dimensions to attributes
 	* adding take the current datasource action
+	* adding saving Yes/NoToAll during closing
 	* fixing seg fault during loading datasources
+	* fixing clean attributes
 	* tagged as v1.1.1
 
 2012-12-18 Jan Kotanski <jankotan@gmail.com>

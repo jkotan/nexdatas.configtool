@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ from LabeledObject import LabeledObject
 
 
 ## dialog defining a group tag
-class DataSourceList(QWidget, Ui_DataSourceList):
+class DataSourceList(QWidget):
     
     ## constructor
     # \param directory datasource directory
@@ -47,12 +47,14 @@ class DataSourceList(QWidget, Ui_DataSourceList):
         ## actions
         self._actions = []
 
+        ## user interface
+        self.ui = Ui_DataSourceList()
 
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
 
-        self.setupUi(self)
+        self.ui.setupUi(self)
         self.populateDataSources()
 
 
@@ -67,14 +69,14 @@ class DataSourceList(QWidget, Ui_DataSourceList):
                 menu.addSeparator()
             else:
                 menu.addAction(action)
-        menu.exec_(self.sourceListWidget.viewport().mapToGlobal(position))
+        menu.exec_(self.ui.sourceListWidget.viewport().mapToGlobal(position))
 
 
     ## sets context menu actions for the datasource list
     # \param actions tuple with actions 
     def setActions(self, actions):
-        self.sourceListWidget.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.sourceListWidget.customContextMenuRequested.connect(self._openMenu)
+        self.ui.sourceListWidget.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.ui.sourceListWidget.customContextMenuRequested.connect(self._openMenu)
         self._actions = actions
         
             
@@ -158,6 +160,8 @@ class DataSourceList(QWidget, Ui_DataSourceList):
             self.datasources[ids] =  ds
             if ds.instance is not None:
                 ds.instance.ids = ds.id
+                if new:
+                    ds.instance.applied =  True
             print name
         return ids    
 
@@ -172,7 +176,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
     ## takes a name of the current datasource
     # \returns name of the current datasource            
     def currentListDataSource(self):
-        item = self.sourceListWidget.currentItem()
+        item = self.ui.sourceListWidget.currentItem()
         if item is None:
             return None
         return self.datasources[item.data(Qt.UserRole).toLongLong()[0]] 
@@ -225,7 +229,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
     # \param edit flag if edit the selected item
     def populateDataSources(self, selectedDataSource = None, edit = False):
         selected = None
-        self.sourceListWidget.clear()
+        self.ui.sourceListWidget.clear()
 
         slist = [(self.datasources[key].name, key) 
                  for key in self.datasources.keys()]
@@ -249,7 +253,7 @@ class DataSourceList(QWidget, Ui_DataSourceList):
                 item.setForeground(Qt.black)
 
 
-            self.sourceListWidget.addItem(item)
+            self.ui.sourceListWidget.addItem(item)
             if selectedDataSource is not None and selectedDataSource == self.datasources[ds].id:
                 selected = item
 
@@ -266,9 +270,9 @@ class DataSourceList(QWidget, Ui_DataSourceList):
 
         if selected is not None:
             selected.setSelected(True)
-            self.sourceListWidget.setCurrentItem(selected)
+            self.ui.sourceListWidget.setCurrentItem(selected)
             if edit:
-                self.sourceListWidget.editItem(selected)
+                self.ui.sourceListWidget.editItem(selected)
 
             
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,9 +25,10 @@ from PyQt4.QtGui import (QMessageBox)
 from ui.ui_linkdlg import Ui_LinkDlg
 
 from NodeDlg import NodeDlg 
+from Errors import CharacterError
 
 ## dialog defining a tag link 
-class LinkDlg(NodeDlg, Ui_LinkDlg):
+class LinkDlg(NodeDlg):
     
     ## constructor
     # \param parent patent instance
@@ -44,22 +45,24 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
         ## allowed subitems
         self.subItems=[ "doc"]
 
+        ## user interface
+        self.ui = Ui_LinkDlg()
 
 
     ## updates the link dialog
     # \brief It sets the form local variables
     def updateForm(self):
         if self.name is not None:
-            self.nameLineEdit.setText(self.name) 
+            self.ui.nameLineEdit.setText(self.name) 
         if self.doc is not None:
-            self.docTextEdit.setText(self.doc)
+            self.ui.docTextEdit.setText(self.doc)
 
         if self.target is not None:    
-            self.targetLineEdit.setText(self.target)
+            self.ui.targetLineEdit.setText(self.target)
 
         if self.node:    
             doc = self.node.firstChildElement(QString("doc"))           
-            text = self._getText(doc)    
+            text = self.dts.getText(doc)    
         else:
             text = ""
         self.doc = unicode(text).strip() if text else ""
@@ -69,17 +72,17 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
 
-        self.setupUi(self)
-        self.targetToolButton.setEnabled(False)
+        self.ui.setupUi(self)
+        self.ui.targetToolButton.setEnabled(False)
 
         self.updateForm()
 
         self._updateUi()
 
 
-        #        self.connect(self.applyPushButton, SIGNAL("clicked()"), self.apply)
-        self.connect(self.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(self.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        #        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
+        self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
 
 
     ## provides the state of the link dialog        
@@ -120,7 +123,7 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
         self.target = unicode(attributeMap.namedItem("target").nodeValue() if attributeMap.contains("target") else "")
  
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self._getText(doc)    
+        text = self.dts.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 
@@ -128,16 +131,15 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
     ## updates link user interface
     # \brief It sets enable or disable the OK button
     def _updateUi(self):
-        enable = not self.nameLineEdit.text().isEmpty()
-        self.applyPushButton.setEnabled(enable)
+        enable = not self.ui.nameLineEdit.text().isEmpty()
+        self.ui.applyPushButton.setEnabled(enable)
 
 
 
     ## accepts input text strings
     # \brief It copies the link name and target from lineEdit widgets and accept the dialog
     def apply(self):
-        class CharacterError(Exception): pass
-        name = unicode(self.nameLineEdit.text())
+        name = unicode(self.ui.nameLineEdit.text())
         
         try:
             if 1 in [c in name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
@@ -149,9 +151,9 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
             QMessageBox.warning(self, "Character Error", unicode(e))
             return
         self.name = name
-        self.target = unicode(self.targetLineEdit.text())
+        self.target = unicode(self.ui.targetLineEdit.text())
 
-        self.doc = unicode(self.docTextEdit.toPlainText())
+        self.doc = unicode(self.ui.docTextEdit.toPlainText())
 
         index = self.view.currentIndex()
         finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
@@ -174,7 +176,7 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
 
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
-            attributeMap.removeNamedItem(attributeMap.item(i).nodeName())
+            attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         if self.name:    
             elem.setAttribute(QString("name"), QString(self.name))
         if self.target:    
@@ -183,15 +185,15 @@ class LinkDlg(NodeDlg, Ui_LinkDlg):
 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self._removeElement(doc, index)
+            self.removeElement(doc, index)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self._replaceElement(doc, newDoc, index)
+                self.replaceElement(doc, newDoc, index)
             else:
-                self._appendElement(newDoc, index)
+                self.appendElement(newDoc, index)
 
 
 

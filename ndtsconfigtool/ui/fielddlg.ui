@@ -298,6 +298,33 @@
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Maximum</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_8">
+       <item>
+        <widget class="QPushButton" name="linkDSPushButton">
+         <property name="text">
+          <string>&amp;Link DataSource</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
          <property name="sizeHint" stdset="0">
           <size>
            <width>40</width>
@@ -367,8 +394,6 @@
     </layout>
    </item>
   </layout>
-  <zorder>layoutWidget</zorder>
-  <zorder>attributesLabel</zorder>
  </widget>
  <tabstops>
   <tabstop>nameLineEdit</tabstop>
@@ -377,6 +402,7 @@
   <tabstop>typeLineEdit</tabstop>
   <tabstop>dimPushButton</tabstop>
   <tabstop>valueLineEdit</tabstop>
+  <tabstop>linkDSPushButton</tabstop>
   <tabstop>addPushButton</tabstop>
   <tabstop>removePushButton</tabstop>
   <tabstop>attributeTableWidget</tabstop>

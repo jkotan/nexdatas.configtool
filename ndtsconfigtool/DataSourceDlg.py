@@ -53,9 +53,9 @@ class CommonDataSourceDlg(NodeDlg):
         self.ui = Ui_DataSourceDlg()
 
     ## handling escape action
-    def keyPressEvent(self, e):
+    def keyPressEvent(self, event):
         
-        if e.key() == Qt.Key_Escape:
+        if event.key() == Qt.Key_Escape:
             print "NO CLOSE"
 #            self.close()
 

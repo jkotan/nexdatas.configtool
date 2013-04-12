@@ -67,7 +67,7 @@ class ComponentDlg(QDialog):
     ## function called on key press
     # \param event catched event
     def keyPressEvent(self, event):
-        if e.key() == Qt.Key_Escape:
+        if event.key() == Qt.Key_Escape:
             print "NO CLOSE"
 #            self.close()
             

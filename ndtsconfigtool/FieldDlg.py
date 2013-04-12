@@ -110,6 +110,11 @@ class FieldDlg(NodeDlg):
         self.attributes = copy.copy(attributes)
         self.dimensions = copy.copy(dimensions)
 
+    ## links dataSource
+    # \param dsName datasource name    
+    def linkDataSource(self, dsName):
+        self.value = "$datasources.%s" % dsName
+        self.updateForm()
 
     ## updates the field dialog
     # \brief It sets the form local variables 

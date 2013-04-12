@@ -1038,6 +1038,53 @@ class Component(object):
         self.view.expand(index)
         return True
 
+
+
+    ## link the datasource into the component tree
+    # \param dsName datasource name
+    def linkDataSourceItem(self, dsName):
+        print "Linking DataSource"
+        
+        if not self.view or not self.dialog or not self.view.model() \
+                or not self.dialog.ui or not self.dialog.ui.widget \
+                or not hasattr(self.dialog.ui.widget,"subItems") \
+                or "datasource" not in  self.dialog.ui.widget.subItems:
+            return
+
+        child = self.dialog.ui.widget.node.firstChild()
+        while not child.isNull():
+            if child.nodeName() == 'datasource':
+                QMessageBox.warning(self.dialog, "DataSource exists", 
+                                    "To link a new datasource please remove the old one")
+                return
+            child = child.nextSibling()    
+                
+
+        index = self.view.currentIndex()
+        if not index.isValid():
+            return
+        
+        sel = index.internalPointer()
+        if not sel:
+            return
+
+        node = sel.node
+        
+
+        
+        if hasattr(self.dialog.ui.widget,"linkDataSource"):
+            self.dialog.ui.widget.linkDataSource(dsName)
+            
+#        dsNode2 = self.document.importNode(dsNode, True)
+        if  index.column() != 0:
+            index = self.view.model().index(index.row(), 0, index.parent())
+        
+        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.expand(index)
+        return True
+
+
+
     ## accepts merger dialog and interrupts merging
     # \brief It is connected to closing Merger dialog
     def _closeMergerDlg(self):

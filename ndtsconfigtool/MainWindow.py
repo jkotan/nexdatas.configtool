@@ -92,6 +92,7 @@ from Command import (
      ComponentNewItem,
      ComponentLoadDataSourceItem,
      ComponentAddDataSourceItem,
+     ComponentLinkDataSourceItem,
      ComponentTakeDataSources,
      ComponentTakeDataSource,
      ComponentApplyItem,
@@ -453,8 +454,15 @@ class MainWindow(QMainWindow):
         componentAddDataSourceAction = self.pool.createCommand(
             "Add DataSource Item", "componentAddDataSourceItem", 
             commandArgs, ComponentAddDataSourceItem,
-            QKeySequence(Qt.CTRL + + Qt.Key_Plus),
+            QKeySequence(Qt.CTRL +  Qt.Key_Plus),
             "componentadditem", "Add the data source from the list")
+
+
+        componentLinkDataSourceAction = self.pool.createCommand(
+            "Link DataSource Item", "componentLinkDataSourceItem", 
+            commandArgs, ComponentLinkDataSourceItem,
+            "Ctrl+L",
+            "componentlinkitem", "Link the data source from the list")
 
 
         componentTakeDataSourceAction = self.pool.createCommand(
@@ -462,6 +470,8 @@ class MainWindow(QMainWindow):
             commandArgs, ComponentTakeDataSource,
             "Ctrl+G",
             "componenttakedatasource", "Take the currnet data sources from the component")
+
+
 
 
         componentTakeDataSourcesAction = self.pool.createCommand(
@@ -710,6 +720,7 @@ class MainWindow(QMainWindow):
                 componentLoadDataSourceAction,
                 None,
                 componentAddDataSourceAction,
+                componentLinkDataSourceAction,
                 None,
                 componentMoveUpItemAction,
                 componentMoveDownItemAction,
@@ -732,6 +743,8 @@ class MainWindow(QMainWindow):
             componentLoadComponentAction, componentLoadDataSourceAction,
             None,
             componentAddDataSourceAction,
+            componentLinkDataSourceAction,
+            None,
             componentRemoveItemAction, 
             componentCopyItemAction,
             componentPasteItemAction,
@@ -1599,6 +1612,21 @@ class MainWindow(QMainWindow):
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+
+    ## link datasource component item action
+    # \brief It adds the current datasource item into component tree
+    def componentLinkDataSourceItem(self):
+        cmd = self.pool.getCommand('dsourceEdit').clone()
+        cmd.execute()
+        cmd = self.pool.getCommand('componentLinkDataSourceItem').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
 
 
     ## merge component action

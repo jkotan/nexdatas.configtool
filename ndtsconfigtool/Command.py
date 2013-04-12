@@ -3285,12 +3285,10 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
                     return
 
                 if ds.instance is None:
-                    dsEdit = DataSourceDlg()
+                    dsEdit = DataSource()
                     dsEdit.ids = ds.id
                     dsEdit.directory = self.receiver.sourceList.directory
                     dsEdit.name = self.receiver.sourceList.datasources[ds.id].name
-                    dsEdit.createGUI()
-                    dsEdit.setWindowTitle("DataSource: %s" % ds.name)
                     ds.instance = dsEdit 
                 else:
                     dsEdit = ds.instance 
@@ -3337,6 +3335,101 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
     # \returns clone of the current instance
     def clone(self):
         return ComponentAddDataSourceItem(self.receiver, self.slot) 
+
+
+
+
+## Command which links the current datasource into the current component tree
+class ComponentLinkDataSourceItem(ComponentItemCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
+    def __init__(self, receiver, slot):
+        ComponentItemCommand.__init__(self, receiver, slot)
+        
+        
+    ## executes the command
+    # \brief It links the current datasource into the current component tree
+    def execute(self):
+        if self._cp is None:
+            self.preExecute()
+            if self._cp is not None:
+                if self._cp.instance is None or self._cp.instance.view is None or self._cp.instance.view.model() is None:
+                    self._oldstate = None
+                    self._index = None
+                    self._cp = None
+                    QMessageBox.warning(self.receiver, "Component Item not created", 
+                                        "Please edit one of the component Items")            
+                    return
+
+                ds = self.receiver.sourceList.currentListDataSource()
+                if ds is None:
+                    self._oldstate = None
+                    self._index = None
+                    self._cp = None
+                    QMessageBox.warning(self.receiver, "DataSource not selected", 
+                                        "Please select one of the datasources")            
+                    return
+
+                if ds.instance is None:
+                    dsEdit = DataSource()
+                    dsEdit.ids = ds.id
+                    dsEdit.directory = self.receiver.sourceList.directory
+                    dsEdit.name = self.receiver.sourceList.datasources[ds.id].name
+                    ds.instance = dsEdit 
+                else:
+                    dsEdit = ds.instance 
+
+                if not hasattr(ds.instance,"dataSourceName") or not ds.instance.dataSourceName:
+                    self._cp = None
+                    QMessageBox.warning(self.receiver, "DataSource wihtout name", 
+                                        "Please define datasource name")            
+                    return
+
+                    
+
+                if hasattr(dsEdit,"connectExternalActions"):     
+                    dsEdit.connectExternalActions(self.receiver.dsourceApply,
+                                                  self.receiver.dsourceSave,
+                                                  self.receiver.dsourceClose
+                                                  )
+                
+                if not hasattr(ds.instance,"createNodes"):
+                    self._cp = None
+                    QMessageBox.warning(self.receiver, "Component Item not created", 
+                                        "Please edit one of the component Items")            
+                    return
+
+                dsNode = ds.instance.createNodes()
+                if dsNode is None:
+                    self._cp = None
+                    QMessageBox.warning(self.receiver, "Datasource node cannot be created", 
+                                        "Problem in importing the external node")            
+                    return
+        
+                if not hasattr(self._cp.instance,"linkDataSourceItem"):
+                    self._cp = None
+                    QMessageBox.warning(self.receiver, "Component Item not created", 
+                                        "Please edit one of the component Items")            
+                    return
+                if not self._cp.instance.linkDataSourceItem(dsEdit.dataSourceName):
+                    QMessageBox.warning(self.receiver, "Linking the datasource item not possible", 
+                                        "Please ensure that you have selected the proper items")            
+
+
+
+        self.postExecute()
+            
+
+
+            
+        print "EXEC componentLinkDataSourceItem"
+
+    ## clones the command
+    # \returns clone of the current instance
+    def clone(self):
+        return ComponentLinkDataSourceItem(self.receiver, self.slot) 
 
 
 ## Command which applies the changes from the form for the current component item

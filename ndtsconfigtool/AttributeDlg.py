@@ -55,6 +55,13 @@ class AttributeDlg(QDialog):
         self.ui.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
 
 
+    ## links dataSource
+    # \param dsName datasource name    
+    def linkDataSource(self, dsName):
+        self.value = "$datasources.%s" % dsName
+        self.updateForm()
+
+
     ## accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
     def accept(self):

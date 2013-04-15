@@ -100,7 +100,7 @@ class RichAttributeDlg(NodeDlg):
     ## links dataSource
     # \param dsName datasource name    
     def linkDataSource(self, dsName):
-        self.value = "$datasources.%s" % dsName
+        self.value = "$%s.%s" % (self.dsLabel, dsName)
         self.updateForm()
 
 

@@ -130,8 +130,10 @@ class MainWindow(QMainWindow):
 
         ## list of datasources
         self.sourceList =  None
+        self.__previousDS = None
         ## list of components
         self.componentList =    None
+        self.__previousCP = None
         
         ## multi window workspace
         self.mdi = None
@@ -265,14 +267,24 @@ class MainWindow(QMainWindow):
         self.connect(self.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"), self.mdiWindowActivated)
 
 
+#        self.connect(self.sourceList.ui.sourceListWidget, 
+#                     SIGNAL("itemClicked(QListWidgetItem*)"), 
+#                     self.dsourceEdit)
 
-        self.connect(self.sourceList.ui.sourceListWidget, 
-                     SIGNAL("itemClicked(QListWidgetItem*)"), 
-                     self.dsourceEdit)
+#        self.connect(self.componentList.ui.componentListWidget, 
+#                     SIGNAL("itemClicked(QListWidgetItem*)"), 
+#                     self.componentEdit)
+
 
         self.connect(self.componentList.ui.componentListWidget, 
                      SIGNAL("itemClicked(QListWidgetItem*)"), 
-                     self.componentEdit)
+                     self.__cpItemChanged)
+
+
+        self.connect(self.sourceList.ui.sourceListWidget, 
+                     SIGNAL("itemClicked(QListWidgetItem*)"), 
+                     self.__dsItemChanged)
+
 
         
 
@@ -989,6 +1001,21 @@ class MainWindow(QMainWindow):
 #                files.append(instance.filename)
 #        settings.setValue("CurrentFiles", QVariant(files))
         self.mdi.closeAllSubWindows()
+
+    ## checks slow double click for components
+    ## \param item current list item
+    def __cpItemChanged(self, item):
+        if item == self.__previousCP and item != None:
+            self.componentEdit()
+        self.__previousCP = item
+
+
+    ## checks slow double click foir datasources   
+    ## \param item current list item
+    def __dsItemChanged(self, item):
+        if item == self.__previousDS and curr != None:
+            self.dsourceEdit()
+        self.__previousDS = item    
 
 
     ## disables/enable the server actions

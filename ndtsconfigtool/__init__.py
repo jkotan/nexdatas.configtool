@@ -20,5 +20,5 @@
 # package constructor
 
 ## version of the application
-__version__ = "1.X.Y"
+__version__ = "1.2.0"
 

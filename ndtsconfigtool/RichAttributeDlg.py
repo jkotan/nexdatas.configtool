@@ -97,6 +97,13 @@ class RichAttributeDlg(NodeDlg):
         self.dimensions = copy.copy(dimensions)
 
 
+    ## links dataSource
+    # \param dsName datasource name    
+    def linkDataSource(self, dsName):
+        self.value = "$%s.%s" % (self.dsLabel, dsName)
+        self.updateForm()
+
+
 
 
     ## updates the richattribute dialog

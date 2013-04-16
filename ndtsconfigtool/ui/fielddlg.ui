@@ -244,6 +244,13 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
+        <widget class="QPushButton" name="linkDSPushButton">
+         <property name="text">
+          <string>&amp;Link DataSource</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="dimPushButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -292,19 +299,6 @@
        </item>
        <item>
         <widget class="QLineEdit" name="valueLineEdit"/>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </item>
@@ -367,14 +361,13 @@
     </layout>
    </item>
   </layout>
-  <zorder>layoutWidget</zorder>
-  <zorder>attributesLabel</zorder>
  </widget>
  <tabstops>
   <tabstop>nameLineEdit</tabstop>
   <tabstop>unitsLineEdit</tabstop>
   <tabstop>typeComboBox</tabstop>
   <tabstop>typeLineEdit</tabstop>
+  <tabstop>linkDSPushButton</tabstop>
   <tabstop>dimPushButton</tabstop>
   <tabstop>valueLineEdit</tabstop>
   <tabstop>addPushButton</tabstop>

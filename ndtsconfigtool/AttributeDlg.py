@@ -55,6 +55,7 @@ class AttributeDlg(QDialog):
         self.ui.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
 
 
+
     ## accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
     def accept(self):

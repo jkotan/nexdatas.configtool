@@ -1013,7 +1013,7 @@ class MainWindow(QMainWindow):
     ## checks slow double click foir datasources   
     ## \param item current list item
     def __dsItemChanged(self, item):
-        if item == self.__previousDS and curr != None:
+        if item == self.__previousDS and item != None:
             self.dsourceEdit()
         self.__previousDS = item    
 

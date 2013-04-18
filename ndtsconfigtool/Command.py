@@ -150,6 +150,7 @@ class ServerFetchComponents(Command):
 
         if self.receiver.configServer:
             try:
+                self.receiver.configServer.connect()
                 cdict = self.receiver.configServer.fetchComponents()
 #                for k in cdict.keys():
 #                    print "dict:", k ," = ", cdict[k]
@@ -231,6 +232,7 @@ class ServerStoreComponent(Command):
                     
             try:
                 xml = self._cpEdit.get()    
+                self.receiver.configServer.connect()
                 self.receiver.configServer.storeComponent(self._cpEdit.name, xml)
                 self._cpEdit.savedXML = xml
                 self._cp.savedName = self._cp.name
@@ -282,6 +284,7 @@ class ServerDeleteComponent(Command):
         if self._cp is not None:
 
             try:
+                self.receiver.configServer.connect()
                 self.receiver.configServer.deleteComponent(self._cp.name)
                 self._cp.savedName = ""
                 if hasattr(self._cp,"instance"):
@@ -330,6 +333,7 @@ class ServerSetMandatoryComponent(Command):
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is not None:
             try:
+                self.receiver.configServer.connect()
                 self.receiver.configServer.setMandatory(self._cp.name)
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in setting the component as mandatory", unicode(e))
@@ -361,6 +365,7 @@ class ServerGetMandatoryComponents(Command):
     # \brief It fetches a list of the mandatory components from the configuration server
     def execute(self):       
         try:
+            self.receiver.configServer.connect()
             mandatory = self.receiver.configServer.getMandatory()
             QMessageBox.information(self.receiver,"Mandatory", "Mandatory Components: \n %s" % unicode(mandatory)) 
         except Exception, e:
@@ -398,6 +403,7 @@ class ServerUnsetMandatoryComponent(Command):
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is not None:
             try:
+                self.receiver.configServer.connect()
                 self.receiver.configServer.unsetMandatory(self._cp.name)
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in setting the component as mandatory", unicode(e))
@@ -444,6 +450,7 @@ class ServerFetchDataSources(Command):
 
         if self.receiver.configServer:
             try:
+                self.receiver.configServer.connect()
                 cdict = self.receiver.configServer.fetchDataSources()
                 self.receiver.setDataSources(cdict)
             except Exception, e:
@@ -482,6 +489,7 @@ class ServerStoreDataSource(Command):
         if self._ds is not None and hasattr(self._ds,"instance"):
             try:
                 xml = self._ds.instance.get()    
+                self.receiver.configServer.connect()
                 if self._ds.instance.name:
                     self.receiver.configServer.storeDataSource(self._ds.instance.dataSourceName, xml)
                 else:
@@ -538,6 +546,7 @@ class ServerDeleteDataSource(Command):
                     name = self._ds.instance.dataSourceName 
                     if name is None:
                         name = ""
+                    self.receiver.configServer.connect()
                     self.receiver.configServer.deleteDataSource(name)
                     self._ds.savedName = ""
 
@@ -1117,6 +1126,18 @@ class ComponentSaveAll(Command):
             
         for icp in self.receiver.componentList.components.keys():
             cp = self.receiver.componentList.components[icp]
+            if cp.instance is None:
+                #                self._cpEdit = FieldWg()  
+                cpEdit = Component()
+                cpEdit.idc = cp.id
+                cpEdit.directory = self.receiver.componentList.directory
+                cpEdit.name = self.receiver.componentList.components[cp.id].name
+                cpEdit.createGUI()
+                cpEdit.addContextMenu(self.receiver.contextMenuActions)
+                cpEdit.createHeader()
+                cpEdit.dialog.setWindowTitle("Component: %s" % cp.name)
+                cp.instance = cpEdit
+
             if cp.instance is not None:
                 cp.instance.merge()    
                 cp.instance.save()    
@@ -1134,6 +1155,67 @@ class ComponentSaveAll(Command):
     # \returns clone of the current instance
     def clone(self):
         return ComponentSaveAll(self.receiver, self.slot) 
+
+
+
+
+
+## Command which saves all components in the file
+class ServerStoreAllComponents(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        
+        
+    ## executes the command
+    # \brief It saves all components in the file
+    def execute(self):
+            
+        for icp in self.receiver.componentList.components.keys():
+            cp = self.receiver.componentList.components[icp]
+            if cp.instance is None:
+                #                self._cpEdit = FieldWg()  
+                cpEdit = Component()
+                cpEdit.idc = cp.id
+                cpEdit.directory = self.receiver.componentList.directory
+                cpEdit.name = self.receiver.componentList.components[cp.id].name
+                cpEdit.createGUI()
+                cpEdit.addContextMenu(self.receiver.contextMenuActions)
+                cpEdit.createHeader()
+                cpEdit.dialog.setWindowTitle("Component: %s" % cp.name)
+                cp.instance = cpEdit
+
+            try:
+                cp.instance.merge()    
+                xml = cp.instance.get()    
+                self.receiver.configServer.connect()
+                self.receiver.configServer.storeComponent(cp.instance.name, xml)
+                cp.instance.savedXML = xml
+                cp.savedName = cp.name
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in storing the component", unicode(e))
+        if hasattr(cp,"id"):
+            self.receiver.componentList.populateComponents(cp.id)
+        else:
+            self.receiver.componentList.populateComponents()
+
+
+        print "EXEC componentStoreAll"
+
+
+    ## unexecutes the command
+    # \brief It does nothing
+    def unexecute(self):
+        print "UNDO componentStoreAll"
+
+
+    ## clones the command
+    # \returns clone of the current instance
+    def clone(self):
+        return ServerStoreAllComponents(self.receiver, self.slot) 
 
 
 
@@ -1717,6 +1799,13 @@ class DataSourceSaveAll(Command):
             
         for ids in self.receiver.sourceList.datasources.keys():
             ds = self.receiver.sourceList.datasources[ids]
+            if ds.instance is None:
+                dsEdit = DataSource()
+                dsEdit.ids = ds.id
+                dsEdit.directory = self.receiver.sourceList.directory
+                dsEdit.name = self.receiver.sourceList.datasources[ds.id].name
+                ds.instance = dsEdit 
+
             if ds.instance is not None:
                 if ds.instance.save():
                     ds.savedName = ds.name
@@ -1742,6 +1831,66 @@ class DataSourceSaveAll(Command):
         return DataSourceSaveAll(self.receiver, self.slot) 
 
 
+
+
+## Command which saves all the datasources in files
+class ServerStoreAllDataSources(Command):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param slot slot name of the receiver related to the command
+    def __init__(self, receiver, slot):
+        Command.__init__(self, receiver, slot)
+        
+        
+    ## executes the command
+    # \brief It saves all the datasources in files
+    def execute(self):
+            
+        for ids in self.receiver.sourceList.datasources.keys():
+            ds = self.receiver.sourceList.datasources[ids]
+            if ds.instance is None:
+                dsEdit = DataSource()
+                dsEdit.ids = ds.id
+                dsEdit.directory = self.receiver.sourceList.directory
+                dsEdit.name = self.receiver.sourceList.datasources[ds.id].name
+                ds.instance = dsEdit 
+            print "Store", ds.instance.name
+
+            try:
+                xml = ds.instance.get()    
+                self.receiver.configServer.connect()
+                if ds.instance.name:
+                    self.receiver.configServer.storeDataSource(ds.instance.dataSourceName, xml)
+                else:
+                    self.receiver.configServer.storeDataSource(ds.instance.name, xml)
+                ds.instance.savedXML = xml
+                ds.savedName = ds.name
+            except Exception, e:
+                QMessageBox.warning(self.receiver, "Error in datasource storing", unicode(e))
+
+
+        ds = self.receiver.sourceList.currentListDataSource()
+        if hasattr(ds ,"id"):
+            self.receiver.sourceList.populateDataSources(ds.id)
+        else:
+            self.receiver.sourceList.populateDataSources()
+
+
+        print "EXEC dsourceStoreAll"
+
+    ## executes the command
+    # \brief It does nothing
+    def unexecute(self):
+        print "UNDO dsourceStoreAll"
+
+
+    ## clones the command
+    # \returns clone of the current instance
+    def clone(self):
+        return ServerStoreAllDataSources(self.receiver, self.slot) 
+
+
 ## Command which saves the current datasource in files
 class DataSourceSave(Command):
     def __init__(self, receiver, slot):
@@ -1759,6 +1908,13 @@ class DataSourceSave(Command):
                                 "Please select one of the datasources")            
 
         if self._ds is not None and hasattr(self._ds,"instance"):
+            if self._ds.instance is None:
+                dsEdit = DataSource()
+                dsEdit.ids =self._ds.id
+                dsEdit.directory = self.receiver.sourceList.directory
+                dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
+                self._ds.instance = dsEdit 
+
             if self._ds.instance.save():
                 self._ds.savedName = self._ds.name
 
@@ -1818,6 +1974,13 @@ class DataSourceSaveAs(Command):
             QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")            
         else:
+            if self._ds.instance is None:
+                dsEdit = DataSource()
+                dsEdit.ids =self._ds.id
+                dsEdit.directory = self.receiver.sourceList.directory
+                dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
+                self._ds.instance = dsEdit 
+            
             if self._ds.instance is not None:
                 self._pathFile = self._ds.instance.getNewName() 
                 fi = QFileInfo(self._pathFile)

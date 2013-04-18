@@ -42,12 +42,14 @@ from Command import (
      ServerConnect,
      ServerFetchComponents,
      ServerStoreComponent,
+     ServerStoreAllComponents,
      ServerDeleteComponent,
      ServerSetMandatoryComponent,
      ServerGetMandatoryComponents,
      ServerUnsetMandatoryComponent,
      ServerFetchDataSources,
      ServerStoreDataSource,
+     ServerStoreAllDataSources,
      ServerDeleteDataSource,
      ServerClose,
      ComponentNew,
@@ -552,11 +554,19 @@ class MainWindow(QMainWindow):
 
         serverStoreComponentAction = self.pool.createCommand(
             "&Store Component", "serverStoreComponent", commandArgs, ServerStoreComponent,
-            "Ctrl+B", "serverstoredatasource", "Store datasource in the configuration server")
+            "Ctrl+B", "serverstorecomponent", "Store component in the configuration server")
+
+        serverStoreAllComponentsAction = self.pool.createCommand(
+            "&Store All Components", "serverStoreAllComponents", commandArgs, ServerStoreAllComponents,
+            "", "serverstoreallcomponents", "Store all components in the configuration server")
 
         serverStoreDataSourceAction = self.pool.createCommand(
             "&Store Datasource", "serverStoreDataSource", commandArgs, ServerStoreDataSource,
             "Ctrl+Shift+B", "serverstoredatasource", "Store datasource in the configuration server")
+
+        serverStoreAllDataSourcesAction = self.pool.createCommand(
+            "&Store All Datasources", "serverStoreAllDataSources", commandArgs, ServerStoreAllDataSources,
+            "", "serverstorealldatasources", "Store all datasources in the configuration server")
 
         serverDeleteComponentAction = self.pool.createCommand(
             "&Delete Component", "serverDeleteComponent", commandArgs, ServerDeleteComponent,
@@ -591,12 +601,14 @@ class MainWindow(QMainWindow):
 
         serverFetchComponentsAction.setDisabled(True)
         serverStoreComponentAction.setDisabled(True)
+        serverStoreAllComponentsAction.setDisabled(True)
         serverDeleteComponentAction.setDisabled(True)
         serverGetMandatoryComponentsAction.setDisabled(True)
         serverSetMandatoryComponentAction.setDisabled(True)
         serverUnsetMandatoryComponentAction.setDisabled(True)
         serverFetchDataSourcesAction.setDisabled(True)
         serverStoreDataSourceAction.setDisabled(True)
+        serverStoreAllDataSourcesAction.setDisabled(True)
         serverDeleteDataSourceAction.setDisabled(True)
         serverCloseAction.setDisabled(True)
 
@@ -785,6 +797,7 @@ class MainWindow(QMainWindow):
             None,
             serverFetchComponentsAction,
             serverStoreComponentAction,
+            serverStoreAllComponentsAction,
             serverDeleteComponentAction,
             serverSetMandatoryComponentAction,
             serverUnsetMandatoryComponentAction,
@@ -809,6 +822,7 @@ class MainWindow(QMainWindow):
             None,
             serverFetchDataSourcesAction,
             serverStoreDataSourceAction,
+            serverStoreAllDataSourcesAction,
             serverDeleteDataSourceAction,
             None,
             dsourceReloadListAction,
@@ -822,10 +836,12 @@ class MainWindow(QMainWindow):
                 serverConnectAction,None,
                 serverFetchComponentsAction,
                 serverStoreComponentAction,
+                serverStoreAllComponentsAction,
                 serverDeleteComponentAction,
                 None,
                 serverFetchDataSourcesAction,
                 serverStoreDataSourceAction,
+                serverStoreAllDataSourcesAction,
                 serverDeleteDataSourceAction,
                 None,
                 serverGetMandatoryComponentsAction,
@@ -1023,12 +1039,14 @@ class MainWindow(QMainWindow):
     def disableServer(self, status):
         self.pool.setDisabled("serverFetchComponents", status)
         self.pool.setDisabled("serverStoreComponent", status)
+        self.pool.setDisabled("serverStoreAllComponents", status)
         self.pool.setDisabled("serverDeleteComponent", status)
         self.pool.setDisabled("serverGetMandatoryComponents", status)
         self.pool.setDisabled("serverSetMandatoryComponent", status)
         self.pool.setDisabled("serverUnsetMandatoryComponent", status)
         self.pool.setDisabled("serverFetchDataSources", status)
         self.pool.setDisabled("serverStoreDataSource", status)
+        self.pool.setDisabled("serverStoreAllDataSources", status)
         self.pool.setDisabled("serverDeleteDataSource", status)
         self.pool.setDisabled("serverClose", status)
         
@@ -1708,14 +1726,8 @@ class MainWindow(QMainWindow):
         cmd.execute()
         self.cmdStack.append(cmd)
 
-#        self.pool.setDisabled("serverConnect", True)
-
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
-
-#        self.cmdStack.clear()
-#        self.pool.setDisabled("undo", True, "Can't Undo")   
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     ## fetch server components action
@@ -1723,9 +1735,6 @@ class MainWindow(QMainWindow):
     def serverFetchComponents(self):
         cmd = self.pool.getCommand('serverFetchComponents').clone()
         cmd.execute()
-#        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
         self.cmdStack.clear()
         self.pool.setDisabled("undo", True, "Can't Undo")   
@@ -1744,6 +1753,16 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
         cmd = self.pool.getCommand('serverStoreComponent').clone()
         cmd.execute()
+
+
+    ## store server all components action
+    # \brief It stores all components in the configuration server
+    def serverStoreAllComponents(self):
+        cmd = self.pool.getCommand('serverStoreAllComponents').clone()
+        cmd.execute()
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     ## delete server component action
     # \brief It deletes the current component from the configuration server
@@ -1817,6 +1836,14 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('serverStoreDataSource').clone()
         cmd.execute()
 
+    ## store server all datasources action
+    # \brief It stores all components in the configuration server
+    def serverStoreAllDataSources(self):
+        cmd = self.pool.getCommand('serverStoreAllDataSources').clone()
+        cmd.execute()
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     ## delete server datasource action

@@ -180,9 +180,13 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
         self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
         self.assertTrue(isinstance(form, NodeDlg))
+        self.assertEqual(form.externalApply, None)
 
 
     ## constructor test

@@ -194,6 +194,8 @@ class NodeDlgTest(unittest.TestCase):
         self.title = None
         ## action status
         self.performed = False
+        ## 2 action status
+        self.performed2 = False
 
 
         try:
@@ -230,6 +232,9 @@ class NodeDlgTest(unittest.TestCase):
     def myAction(self):
         self.performed = True
 
+    def myAction2(self):
+        self.performed2 = True
+
     ## constructor test
     # \brief It tests default settings
     def test_constructor(self):
@@ -243,6 +248,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.subItems, [])
         self.assertEqual(form.ui, None)
         self.assertEqual(form.externalApply, None)
+        self.assertEqual(form.externalDSLink, None)
         self.assertTrue(isinstance(form.dts, DomTools))
 
 
@@ -263,6 +269,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.subItems, [])
         self.assertEqual(form.ui, None)
         self.assertEqual(form.externalApply, None)
+        self.assertEqual(form.externalDSLink, None)
         self.assertTrue(isinstance(form.dts, DomTools))
 
         self.assertEqual(form.result(),0)
@@ -296,6 +303,7 @@ class NodeDlgTest(unittest.TestCase):
         form = NodeDlg()
         form.ui = Ui_NodeDlg() 
         form.ui.applyPushButton = QPushButton(form)
+        form.ui.linkDSPushButton = QPushButton(form)
         form.show()
         self.assertEqual(form.connectExternalActions(),None)
         self.assertEqual(form.node, None)
@@ -304,6 +312,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.subItems, [])
         self.assertTrue(isinstance(form.ui,Ui_NodeDlg))
         self.assertEqual(form.externalApply, None)
+        self.assertEqual(form.externalDSLink, None)
         self.assertTrue(isinstance(form.dts, DomTools))
 
 
@@ -331,6 +340,68 @@ class NodeDlgTest(unittest.TestCase):
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
         self.assertEqual(self.performed, True)
+
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions_with_action_link_button(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = NodeDlg()
+        form.ui = Ui_NodeDlg() 
+#        form.ui.applyPushButton = QPushButton(form)
+        form.ui.linkDSPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(None,self.myAction),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, [])
+        self.assertTrue(isinstance(form.ui,Ui_NodeDlg))
+        self.assertEqual(form.externalDSLink, self.myAction)
+        self.performed = False
+
+        QTest.mouseClick(form.ui.linkDSPushButton, Qt.LeftButton)
+        self.assertEqual(self.performed, True)
+
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions_with_action_link_and_apply_button(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = NodeDlg()
+        form.ui = Ui_NodeDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.ui.linkDSPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(self.myAction,self.myAction2),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, [])
+        self.assertTrue(isinstance(form.ui,Ui_NodeDlg))
+        self.assertEqual(form.externalApply, self.myAction)
+        self.assertEqual(form.externalDSLink, self.myAction2)
+        self.performed = False
+        self.performed2 = False
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+        self.assertEqual(self.performed, True)
+        self.assertEqual(self.performed2, False)
+        QTest.mouseClick(form.ui.linkDSPushButton, Qt.LeftButton)
+        self.assertEqual(self.performed, True)
+        self.assertEqual(self.performed2, True)
 
 
         self.assertEqual(form.result(),0)

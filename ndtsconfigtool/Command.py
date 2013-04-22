@@ -1806,7 +1806,7 @@ class DataSourceSaveAll(Command):
                 dsEdit.name = self.receiver.sourceList.datasources[ds.id].name
                 ds.instance = dsEdit 
 
-            if ds.instance is not None:
+            if ds.instance is not None: 
                 if ds.instance.save():
                     ds.savedName = ds.name
 

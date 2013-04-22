@@ -1178,30 +1178,29 @@ class DataSource(CommonDataSource):
     # \brief It copies the parameters and saves the dialog
     def save(self):
         error = None
-        if self.applied:
-            filename = self.directory + "/" + self.name + ".ds.xml"
-            print "saving in %s"% (filename)
-            if filename:
-                try:
-                    fh = QFile(filename)
-                    if not fh.open(QIODevice.WriteOnly):
-                        raise IOError, unicode(fh.errorString())
-                    stream = QTextStream(fh)
-                    self.createNodes()
-                    self.document.setContent(self.repair(self.document.toString(0)))
-                    stream << self.document.toString(2)
+        filename = self.directory + "/" + self.name + ".ds.xml"
+        print "saving in %s"% (filename)
+        if filename:
+            try:
+                fh = QFile(filename)
+                if not fh.open(QIODevice.WriteOnly):
+                    raise IOError, unicode(fh.errorString())
+                stream = QTextStream(fh)
+                self.createNodes()
+                self.document.setContent(self.repair(self.document.toString(0)))
+                stream << self.document.toString(2)
             #                print self.document.toString(2)
-                    self.savedXML = self.document.toString(0)
-                except (IOError, OSError, ValueError), e:
-                    error = "Failed to save: %s " % e \
-                        + "Please try to use Save As command " \
-                        + "or change the datasource directory"
-                    print error
-                    QMessageBox.warning(self.dialog, "Saving problem",  error )
+                self.savedXML = self.document.toString(0)
+            except (IOError, OSError, ValueError), e:
+                error = "Failed to save: %s " % e \
+                    + "Please try to use Save As command " \
+                    + "or change the datasource directory"
+                print error
+                QMessageBox.warning(self.dialog, "Saving problem",  error )
 
-                finally:
-                    if fh is not None:
-                        fh.close()
+            finally:
+                if fh is not None:
+                    fh.close()
         if not error:
             return True
 

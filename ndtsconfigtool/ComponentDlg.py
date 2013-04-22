@@ -1215,7 +1215,7 @@ class Component(object):
                 if hasattr(self.dialog.ui.widget,"widget"):
                     self.dialog.ui.widget.widget.setVisible(False)
                 else:
-                    self.dialog.ui.widqget.setVisible(False)
+                    self.dialog.ui.widget.setVisible(False)
             self.dialog.ui.widget = QWidget()
             self._frameLayout.addWidget(self.dialog.ui.widget)
             self.dialog.ui.widget.show()

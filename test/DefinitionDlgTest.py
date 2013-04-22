@@ -190,6 +190,12 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
         self.assertTrue(isinstance(form, NodeDlg))
         self.assertEqual(form.externalApply, None)
+        self.assertEqual(form.externalDSLink, None)
+        
+        self.assertEqual(form.replaceText,super(DefinitionDlg,form).replaceText )
+        self.assertEqual(form.removeElement,super(DefinitionDlg,form).removeElement )
+        self.assertEqual(form.replaceElement,super(DefinitionDlg,form).replaceElement )
+        self.assertEqual(form.appendElement,super(DefinitionDlg,form).appendElement )
 
 
     ## constructor test

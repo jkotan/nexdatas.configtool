@@ -29,7 +29,7 @@ import binascii
 import time
 
 from PyQt4.QtTest import QTest
-from PyQt4.QtGui import (QApplication, QMessageBox, QTableWidgetItem)
+from PyQt4.QtGui import (QApplication, QMessageBox, QTableWidgetItem, QPushButton)
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString
 from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
@@ -88,6 +88,9 @@ class DefinitionDlgTest(unittest.TestCase):
         self.aname = "myname"
         ## attribute value
         self.avalue = "myentry"
+
+        ## action status
+        self.performed = False
 
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
@@ -2315,6 +2318,152 @@ class DefinitionDlgTest(unittest.TestCase):
         text = form.dts.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip())
+
+
+
+
+
+    def myAction(self):
+        self.performed = True
+
+
+    ## constructor test
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = DefinitionDlg()
+        form.show()
+        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+        self.assertEqual(form.externalApply, None)
+        self.assertEqual(form.externalDSLink, None)
+#        self.assertTrue(isinstance(form.dts, DomTools))
+
+        self.assertEqual(form.result(),0)
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions_with_action(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = DefinitionDlg()
+        form.show()
+        self.assertEqual(form.connectExternalActions(self.myAction),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+        self.assertEqual(form.externalApply, None)
+
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions_with_button(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = DefinitionDlg()
+        form.ui = Ui_DefinitionDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.ui.linkDSPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertTrue(isinstance(form.ui,Ui_DefinitionDlg))
+        self.assertEqual(form.externalApply, None)
+        self.assertEqual(form.externalDSLink, None)
+
+
+        self.assertEqual(form.result(),0)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions_with_action_button(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = DefinitionDlg()
+        form.ui = Ui_DefinitionDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(self.myAction),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertTrue(isinstance(form.ui,Ui_DefinitionDlg))
+        self.assertEqual(form.externalApply, self.myAction)
+        self.performed = False
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+        self.assertEqual(self.performed, True)
+
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions_with_action_link_button(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = DefinitionDlg()
+        form.createGUI()
+        form.show()
+        self.assertEqual(form.connectExternalActions(None,self.myAction),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertTrue(isinstance(form.ui,Ui_DefinitionDlg))
+        self.assertEqual(form.externalDSLink, None)
+        self.performed = False
+
+
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions_with_action_link_and_apply_button(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = DefinitionDlg()
+        form.createGUI()
+        form.show()
+        self.assertEqual(form.connectExternalActions(self.myAction,None),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertTrue(isinstance(form.ui,Ui_DefinitionDlg))
+        self.assertEqual(form.externalApply, self.myAction)
+        self.assertEqual(form.externalDSLink, None)
+        self.performed = False
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+        self.assertEqual(self.performed, True)
+
+
+        self.assertEqual(form.result(),0)
+
+
 
 
 

@@ -831,6 +831,9 @@ class Component(object):
                     return self._componentFile
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
+                QMessageBox.warning(self.dialog, "Loading problem",
+                                    error )
+                
                 print error
             finally:                 
                 if fh is not None:
@@ -923,6 +926,8 @@ class Component(object):
 
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
+                QMessageBox.warning(self.dialog, "Loading problem",
+                                    error )
                 print error
             finally:                 
                 if fh is not None:
@@ -1210,7 +1215,7 @@ class Component(object):
                 if hasattr(self.dialog.ui.widget,"widget"):
                     self.dialog.ui.widget.widget.setVisible(False)
                 else:
-                    self.dialog.ui.widget.setVisible(False)
+                    self.dialog.ui.widqget.setVisible(False)
             self.dialog.ui.widget = QWidget()
             self._frameLayout.addWidget(self.dialog.ui.widget)
             self.dialog.ui.widget.show()
@@ -1335,7 +1340,9 @@ class Component(object):
             self.savedXML = self.get()
             #                print self.document.toString(2)
         except (IOError, OSError, ValueError), e:
-            error = "Failed to save: %s" % e
+            error = "Failed to save: %s Please try to use Save as or change the component directory" % e
+            QMessageBox.warning(self.dialog, "Saving problem",
+                                error )
             print error
         finally:
             if fh is not None:

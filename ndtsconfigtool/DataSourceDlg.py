@@ -1112,8 +1112,10 @@ class DataSource(CommonDataSource):
         except (IOError, OSError, ValueError), e:
             error = "Failed to load: %s" % e
             print error
-            
+            QMessageBox.warning(self.dialog, "Saving problem", error )
+
         except Exception, e:
+            QMessageBox.warning(self.dialog, "Saving problem", e )
             print e
         finally:                 
             if fh is not None:
@@ -1191,8 +1193,12 @@ class DataSource(CommonDataSource):
             #                print self.document.toString(2)
                     self.savedXML = self.document.toString(0)
                 except (IOError, OSError, ValueError), e:
-                    error = "Failed to save: %s" % e
+                    error = "Failed to save: %s " % e \
+                        + "Please try to use Save As command " \
+                        + "or change the datasource directory"
                     print error
+                    QMessageBox.warning(self.dialog, "Saving problem",  error )
+
                 finally:
                     if fh is not None:
                         fh.close()

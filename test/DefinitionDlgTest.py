@@ -196,6 +196,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.removeElement,super(DefinitionDlg,form).removeElement )
         self.assertEqual(form.replaceElement,super(DefinitionDlg,form).replaceElement )
         self.assertEqual(form.appendElement,super(DefinitionDlg,form).appendElement )
+        self.assertEqual(form.reset,super(DefinitionDlg,form).reset )
 
 
     ## constructor test

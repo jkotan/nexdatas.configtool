@@ -1606,7 +1606,6 @@ class DefinitionDlgTest(unittest.TestCase):
 
         atw.setCurrentCell(ch,1)
 
-        QTimer.singleShot(10, self.checkMessageBox)
         atw.setItem(ch,1,it)
         
 
@@ -1869,6 +1868,157 @@ class DefinitionDlgTest(unittest.TestCase):
     ## constructor test
     # \brief It tests default settings
     def test_apply(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dks = []
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name","myname%s" %  nn)
+        qdn.setAttribute("type","mytype%s" %  nn)
+        qdn.setAttribute("unit","myunits%s" %  nn)
+        qdn.setAttribute("shortname","mynshort%s" %  nn)
+        doc.appendChild(qdn) 
+        dname = "doc"
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+
+
+        form = DefinitionDlg()
+        form.show()
+        form.node = qdn
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.subItems, 
+                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+
+        form.setFromNode()
+        form.createGUI()
+
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        ri = cm.rootIndex
+        di = cm.index(0,0,ri)
+        form.view = TestView(cm)
+        form.view.testIndex = di
+
+
+        attributeMap = form.node.attributes()
+        
+        cnt = 0
+        for i in range(attributeMap.count()):
+            nm = attributeMap.item(i).nodeName()
+            vl = attributeMap.item(i).nodeValue()
+            if nm == "name":
+                self.assertEqual(vl,form.name)
+                cnt += 1 
+            elif nm == "type":
+                self.assertEqual(vl,form.nexusType)
+                cnt += 1 
+            else:
+                self.assertEqual(vl,form.attributes[str(nm)])
+        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+
+
+        mydoc = form.node.firstChildElement(QString("doc"))           
+        text = form.dts.getText(mydoc)    
+        olddoc = unicode(text).strip() if text else ""
+
+        self.assertEqual(olddoc,form.doc)
+
+
+        nname = "newname"
+        ntype = "newtype"
+        attrs = {"unit":"newunit","longname":"newlogname", "mynew":"newvalue"}
+        mdoc = "New text New text"
+
+
+
+        form.root = doc
+
+        allAttr = True
+        cm = ComponentModel(doc, allAttr)
+        ri = cm.rootIndex
+        di = cm.index(0,0,ri)
+        form.view = TestView(cm)
+        form.view.testIndex = di
+
+
+        form.ui.nameLineEdit.setText(nname)
+        form.ui.typeLineEdit.setText(ntype)
+
+        form.ui.docTextEdit.setText(str(mdoc))
+        form.ui.docTextEdit.setText(str(mdoc))
+        
+        
+        
+        for r in form.attributes:
+            form.ui.attributeTableWidget.setCurrentCell(0,1)
+            item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0) 
+            print item.text()
+
+
+            QTimer.singleShot(10, self.rmAttributeWidget)
+            QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
+
+
+
+        i = 0
+        for r in attrs:
+            form.ui.attributeTableWidget.setCurrentCell(i,1)
+            self.aname = r
+            self.avalue = attrs[r]
+            QTimer.singleShot(10, self.attributeWidget)
+            QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
+            i += 1
+
+        form.apply()
+
+
+        self.assertEqual(form.name, nname)
+        self.assertEqual(form.nexusType, ntype)
+        self.assertEqual(form.doc, mdoc)
+        self.assertEqual(form.attributes, attrs)
+
+
+        cnt = 0
+        for i in range(attributeMap.count()):
+            nm = attributeMap.item(i).nodeName()
+            vl = attributeMap.item(i).nodeValue()
+            if nm == "name":
+                self.assertEqual(vl, nname)
+                cnt += 1 
+            elif nm == "type":
+                self.assertEqual(vl, ntype)
+                cnt += 1 
+            else:
+                self.assertEqual(vl,attrs[str(nm)])
+        self.assertEqual(len(attrs),attributeMap.count() - cnt)
+
+
+        mydoc = form.node.firstChildElement(QString("doc"))           
+        text = form.dts.getText(mydoc)    
+        olddoc = unicode(text).strip() if text else ""
+
+        self.assertEqual(olddoc,mdoc)
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_reset(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 

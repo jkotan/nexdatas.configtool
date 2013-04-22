@@ -3571,12 +3571,6 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                                         "Please edit one of the component Items")            
                     return
 
-                dsNode = ds.instance.createNodes()
-                if dsNode is None:
-                    self._cp = None
-                    QMessageBox.warning(self.receiver, "Datasource node cannot be created", 
-                                        "Problem in importing the external node")            
-                    return
         
                 if not hasattr(self._cp.instance,"linkDataSourceItem"):
                     self._cp = None

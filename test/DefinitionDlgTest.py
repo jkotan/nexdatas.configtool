@@ -93,7 +93,6 @@ class DefinitionDlgTest(unittest.TestCase):
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             self.__seed  = long(time.time() * 256) 
-         
         self.__rnd = random.Random(self.__seed)
 
 
@@ -110,13 +109,64 @@ class DefinitionDlgTest(unittest.TestCase):
         print "tearing down ..."
 
     def checkMessageBox(self):
-        self.assertEqual(QApplication.activeWindow(),None)
+#        self.assertEqual(QApplication.activeWindow(),None)
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
 #        print mb.text()
         self.text = mb.text()
         self.title = mb.windowTitle()
         mb.close()
+
+
+    def rmAttributeWidget(self):
+        aw = QApplication.activeWindow()
+        mb = QApplication.activeModalWidget()
+#        print "CLASS", mb
+#        print "CLASS2", aw
+        self.assertTrue(isinstance(mb, QMessageBox))
+        self.text = mb.text()
+        self.title = mb.windowTitle()
+
+        QTest.mouseClick(mb.button(QMessageBox.Yes), Qt.LeftButton)
+
+
+    def rmAttributeWidgetClose(self):
+        aw = QApplication.activeWindow()
+        mb = QApplication.activeModalWidget()
+        self.assertTrue(isinstance(mb, QMessageBox))
+        self.text = mb.text()
+        self.title = mb.windowTitle()
+
+        QTest.mouseClick(mb.button(QMessageBox.No), Qt.LeftButton)
+
+
+    def attributeWidget(self):
+        aw = QApplication.activeWindow()
+        mb = QApplication.activeModalWidget()
+        self.assertTrue(isinstance(mb, AttributeDlg))
+
+        QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
+        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
+        QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
+        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
+
+        mb.accept()
+
+    def attributeWidgetClose(self):
+        aw = QApplication.activeWindow()
+        mb = QApplication.activeModalWidget()
+        self.assertTrue(isinstance(mb, AttributeDlg))
+
+        QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
+        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
+        QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
+        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
+
+#        mb.close()
+        mb.reject()
+
+#        mb.accept()
+
 
 
     ## constructor test
@@ -1146,34 +1196,6 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-    def attributeWidget(self):
-        aw = QApplication.activeWindow()
-        mb = QApplication.activeModalWidget()
-        self.assertTrue(isinstance(mb, AttributeDlg))
-
-        QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
-        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
-        QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
-        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
-
-        mb.accept()
-
-    def attributeWidgetClose(self):
-        aw = QApplication.activeWindow()
-        mb = QApplication.activeModalWidget()
-        self.assertTrue(isinstance(mb, AttributeDlg))
-
-        QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
-        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
-        QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
-        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
-
-#        mb.close()
-        mb.reject()
-
-#        mb.accept()
-
-
 
     ## constructor test
     # \brief It tests default settings
@@ -1311,27 +1333,6 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-
-    def rmAttributeWidget(self):
-        aw = QApplication.activeWindow()
-        mb = QApplication.activeModalWidget()
-#        print "CLASS", mb
-#        print "CLASS2", aw
-        self.assertTrue(isinstance(mb, QMessageBox))
-        self.text = mb.text()
-        self.title = mb.windowTitle()
-
-        QTest.mouseClick(mb.button(QMessageBox.Yes), Qt.LeftButton)
-
-
-    def rmAttributeWidgetClose(self):
-        aw = QApplication.activeWindow()
-        mb = QApplication.activeModalWidget()
-        self.assertTrue(isinstance(mb, QMessageBox))
-        self.text = mb.text()
-        self.title = mb.windowTitle()
-
-        QTest.mouseClick(mb.button(QMessageBox.No), Qt.LeftButton)
 
 
 
@@ -2133,13 +2134,13 @@ class DefinitionDlgTest(unittest.TestCase):
             QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
             i += 1
 
-        form.apply()
+        form.reset()
 
-
-        self.assertEqual(form.name, nname)
-        self.assertEqual(form.nexusType, ntype)
-        self.assertEqual(form.doc, mdoc)
-        self.assertEqual(form.attributes, attrs)
+        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        self.assertEqual(form.name, "myname%s" %  nn)
+        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.doc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip()) 
+        self.assertEqual(form.attributes,  ats )
 
 
         cnt = 0
@@ -2147,21 +2148,21 @@ class DefinitionDlgTest(unittest.TestCase):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl, nname)
+                self.assertEqual(vl, "myname%s" % nn)
                 cnt += 1 
             elif nm == "type":
-                self.assertEqual(vl, ntype)
+                self.assertEqual(vl, "mytype%s" % nn)
                 cnt += 1 
             else:
-                self.assertEqual(vl,attrs[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
+                self.assertEqual(vl,ats[str(nm)])
+        self.assertEqual(len(ats),attributeMap.count() - cnt)
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
         text = form.dts.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
+        self.assertEqual(olddoc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip())
 
-        self.assertEqual(olddoc,mdoc)
 
 
 

@@ -20,6 +20,7 @@
 # Main window of the application
 
 import sys
+import os
 
 from PyQt4.QtCore import (SIGNAL, SLOT, QSettings, Qt,  QSignalMapper, 
                           QVariant, QT_VERSION_STR, PYQT_VERSION_STR, QStringList )
@@ -27,7 +28,6 @@ from PyQt4.QtGui import (QMainWindow, QDockWidget, QSplitter, QWorkspace , QMdiA
                          QListWidgetItem, QAction, QKeySequence, QMessageBox, QIcon)
 
 import platform
-
 from qrc import qrc_resources
 
 from CommandPool import (CommandPool,CommandStack)
@@ -114,9 +114,9 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent)
 
         ## datasource directory
-        self.dsDirectory = "./datasources"
+        self.dsDirectory = ""
         ## component directory
-        self.cpDirectory = "./components"
+        self.cpDirectory = ""
 
         ## component tree menu under mouse cursor
         self.contextMenuActions = None
@@ -154,8 +154,24 @@ class MainWindow(QMainWindow):
         self.windows = {}
 
         settings = QSettings()
-        self.dsDirectory = unicode(settings.value("DataSources/directory").toString())
-        self.cpDirectory = unicode(settings.value("Components/directory").toString())
+        dsdir = unicode(settings.value("DataSources/directory").toString())
+        if dsdir:
+            self.dsDirectory = os.path.abspath(dsdir)
+        else:
+            if os.path.exists(os.path.join(os.getcwd(),"datasources")):
+                self.dsDirectory = os.path.abspath(os.path.join(os.getcwd(),"datasources"))
+            else:
+                self.dsDirectory = os.getcwd()
+                
+            
+        cpdir = unicode(settings.value("Components/directory").toString())    
+        if cpdir:
+            self.cpDirectory = os.path.abspath(cpdir)
+        else:
+            if os.path.exists(os.path.join(os.getcwd(),"components")):
+                self.cpDirectory = os.path.abspath(os.path.join(os.getcwd(),"components"))
+            else:
+                self.cpDirectory = os.getcwd()
 
         self.createGUI()
 
@@ -174,9 +190,9 @@ class MainWindow(QMainWindow):
         self.loadComponents()
 
         self.restoreGeometry(
-                settings.value("MainWindow/Geometry").toByteArray())
+            settings.value("MainWindow/Geometry").toByteArray())
         self.restoreState(
-                settings.value("MainWindow/State").toByteArray())
+            settings.value("MainWindow/State").toByteArray())
 
 
         if PYTANGO_AVAILABLE:
@@ -503,14 +519,14 @@ class MainWindow(QMainWindow):
         componentChangeDirectoryAction = self.pool.createCommand(
             "Change Directory...", "componentChangeDirectory", commandArgs, 
             ComponentChangeDirectory,
-            "", "componentrechangedirecotry", "Change the component list directory")
+            "", "componentrechangedirectory", "Change the component list directory")
 
 
 
         dsourceChangeDirectoryAction = self.pool.createCommand(
             "Change DataSource Directory...", "dsourceChangeDirectory", commandArgs, 
             DataSourceChangeDirectory,
-            "", "dsourcerechangedirecotry", "Change the data-source list directory")
+            "", "dsourcerechangedirectory", "Change the data-source list directory")
 
 
         
@@ -998,9 +1014,9 @@ class MainWindow(QMainWindow):
         settings.setValue("MainWindow/State",
                           QVariant(self.saveState()))
         settings.setValue("DataSources/directory",
-                          QVariant(self.dsDirectory))
+                          QVariant(os.path.abspath(self.dsDirectory)))
         settings.setValue("Components/directory",
-                          QVariant(self.cpDirectory))
+                          QVariant(os.path.abspath(self.cpDirectory)))
 
         if self.configServer:
             settings.setValue("ConfigServer/device",

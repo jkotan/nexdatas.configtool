@@ -232,7 +232,10 @@ class ComponentList(QWidget):
             dirList=[l for l in os.listdir(self.directory) if l.endswith(".xml")]
         except:
             try:
-                self.directory = "./components"
+                if os.path.exists(os.path.join(os.getcwd(),"components")):
+                    self.directory = os.path.abspath(os.path.join(os.getcwd(),"components"))
+                else:
+                    self.directory = os.getcwd()
                 dirList=[l for l in os.listdir(self.directory) if l.endswith(".xml")]
             except:
                 return
@@ -274,7 +277,10 @@ class ComponentList(QWidget):
             dirList=os.listdir(self.directory)
         except:
             try:
-                self.directory = "./components"
+                if os.path.exists(os.path.join(os.getcwd(),"components")):
+                    self.directory = os.path.abspath(os.path.join(os.getcwd(),"components"))
+                else:
+                    self.directory = os.getcwd() 
             except:
                 ## todo
                 return

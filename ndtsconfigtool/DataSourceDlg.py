@@ -20,6 +20,7 @@
 # Data Source dialog class
 
 import re
+import os
 from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, Qt, QFileInfo, QFile, QIODevice, 
                           QTextStream, QVariant)
 from PyQt4.QtGui import (QApplication, QFileDialog, QMessageBox, QTableWidgetItem, QWidget)
@@ -1076,7 +1077,7 @@ class DataSource(CommonDataSource):
                     else:
                         self.name = fname
             else:
-                filename = self.directory + "/" + self.name + ".ds.xml"
+                filename = os.path.join(self.directory, self.name + ".xml") 
         else:
             filename = fname
             if not self.name:
@@ -1178,7 +1179,7 @@ class DataSource(CommonDataSource):
     # \brief It copies the parameters and saves the dialog
     def save(self):
         error = None
-        filename = self.directory + "/" + self.name + ".ds.xml"
+        filename = os.path.join(self.directory, self.name + ".xml") 
         print "saving in %s"% (filename)
         if filename:
             try:

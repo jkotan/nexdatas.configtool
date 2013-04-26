@@ -1099,7 +1099,7 @@ class MainWindow(QMainWindow):
             self.contextMenuActions,
             self.componentCollect,
             self.componentApplyItem,
-            self.dsourceClose,
+            self.componentClose,
             self.componentLinkDataSourceItem
             )
         idc =  self.componentList.components.itervalues().next().id \
@@ -1117,7 +1117,7 @@ class MainWindow(QMainWindow):
             self.contextMenuActions,
             self.componentCollect,
             self.componentApplyItem,
-            self.dsourceClose,
+            self.componentClose,
             self.componentLinkDataSourceItem
             )
         idc =  self.componentList.components.itervalues().next().id \

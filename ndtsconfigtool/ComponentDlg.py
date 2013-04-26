@@ -838,6 +838,10 @@ class Component(object):
                         self.name = self.name[:-4]
                     self.savedXML = self.get()
                     return self._componentFile
+                else:
+                    QMessageBox.warning(self.dialog, "Cannot open the file", 
+                                        "Cannot open the file: %s" % (self._componentFile))
+
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
                 QMessageBox.warning(self.dialog, "Loading problem",

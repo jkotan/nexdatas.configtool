@@ -110,7 +110,6 @@ class DataSourceList(QWidget):
             dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
-#            dlg.createGUI()
             dlg.load()    
 
             

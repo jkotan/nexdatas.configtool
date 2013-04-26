@@ -1077,7 +1077,7 @@ class DataSource(CommonDataSource):
                     else:
                         self.name = fname
             else:
-                filename = os.path.join(self.directory, self.name + ".xml") 
+                filename = os.path.join(self.directory, self.name + ".ds.xml") 
         else:
             filename = fname
             if not self.name:
@@ -1103,7 +1103,10 @@ class DataSource(CommonDataSource):
                 if ds:
                     self.setFromNode(ds)
                 self.savedXML = self.document.toString(0)
-            try:    
+            else:
+                QMessageBox.warning(self.dialog, "Cannot open the file", 
+                                    "Cannot open the file: %s" % (filename))
+            try:
                 self.createGUI()
 
             except Exception, e:

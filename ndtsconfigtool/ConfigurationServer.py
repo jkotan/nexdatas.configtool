@@ -29,6 +29,7 @@ except ImportError, e:
 
 
 from ConnectDlg import  ConnectDlg
+import time
 
 ## configuration server
 class ConfigurationServer(object):
@@ -82,7 +83,7 @@ class ConfigurationServer(object):
                     if self._proxy.state() != PyTango.DevState.RUNNING:
                         found = True
                 except Exception,e:
-                    #                sys.stderr.write(str(e))
+                    
                     time.sleep(0.01)
                     found = False
                 cnt +=1

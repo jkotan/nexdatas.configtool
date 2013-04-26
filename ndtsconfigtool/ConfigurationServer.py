@@ -29,6 +29,7 @@ except ImportError, e:
 
 
 from ConnectDlg import  ConnectDlg
+import time
 
 ## configuration server
 class ConfigurationServer(object):
@@ -73,9 +74,25 @@ class ConfigurationServer(object):
         else:
             self._proxy = PyTango.DeviceProxy(self.device.encode())
         if self._proxy:
-            self._proxy.set_timeout_millis(25000)
-            self._proxy.Open()
-            self.connected = True
+            found = False
+            cnt = 0
+            while not found and cnt < 1000:
+                if cnt > 1:
+                    time.sleep(0.01)
+                try:
+                    if self._proxy.state() != PyTango.DevState.RUNNING:
+                        found = True
+                except Exception,e:
+                    
+                    time.sleep(0.01)
+                    found = False
+                cnt +=1
+
+
+            if found:    
+                self._proxy.set_timeout_millis(25000)
+                self._proxy.Open()
+                self.connected = True
 
 
     ## opens connection to the configuration server

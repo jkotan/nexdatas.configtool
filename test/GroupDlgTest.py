@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file DefinitionDlgTest.py
+## \file GroupDlgTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -35,12 +35,12 @@ from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString
 from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
 
 
-from ndtsconfigtool.DefinitionDlg import DefinitionDlg
+from ndtsconfigtool.GroupDlg import GroupDlg
 from ndtsconfigtool.ComponentModel import ComponentModel
 from ndtsconfigtool.AttributeDlg import AttributeDlg
 from ndtsconfigtool.NodeDlg import NodeDlg
 
-from ndtsconfigtool.ui.ui_definitiondlg import Ui_DefinitionDlg
+from ndtsconfigtool.ui.ui_groupdlg import Ui_GroupDlg
 
 
 ##  Qt-application
@@ -67,7 +67,7 @@ class TestView(object):
         self.stack.append(index)
 
 ## test fixture
-class DefinitionDlgTest(unittest.TestCase):
+class GroupDlgTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -177,7 +177,7 @@ class DefinitionDlgTest(unittest.TestCase):
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
@@ -186,17 +186,17 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
         self.assertTrue(isinstance(form, NodeDlg))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
         
-        self.assertEqual(form.replaceText,super(DefinitionDlg,form).replaceText )
-        self.assertEqual(form.removeElement,super(DefinitionDlg,form).removeElement )
-        self.assertEqual(form.replaceElement,super(DefinitionDlg,form).replaceElement )
-        self.assertEqual(form.appendElement,super(DefinitionDlg,form).appendElement )
-        self.assertEqual(form.reset,super(DefinitionDlg,form).reset )
+        self.assertEqual(form.replaceText,super(GroupDlg,form).replaceText )
+        self.assertEqual(form.removeElement,super(GroupDlg,form).removeElement )
+        self.assertEqual(form.replaceElement,super(GroupDlg,form).replaceElement )
+        self.assertEqual(form.appendElement,super(GroupDlg,form).appendElement )
+        self.assertEqual(form.reset,super(GroupDlg,form).reset )
 
 
     ## constructor test
@@ -204,21 +204,21 @@ class DefinitionDlgTest(unittest.TestCase):
     def test_constructor_accept(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
+        self.assertTrue(not form.ui.applyPushButton.isEnabled())
         self.assertTrue(form.ui.resetPushButton.isEnabled())
 
         name = "myname"
@@ -248,14 +248,14 @@ class DefinitionDlgTest(unittest.TestCase):
     def test_updateForm(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
 
@@ -366,14 +366,14 @@ class DefinitionDlgTest(unittest.TestCase):
     def test_getState(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
 
@@ -480,14 +480,14 @@ class DefinitionDlgTest(unittest.TestCase):
     def test_setState(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
 
@@ -592,7 +592,7 @@ class DefinitionDlgTest(unittest.TestCase):
     def test_createGUI(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.createGUI()
 
@@ -606,7 +606,7 @@ class DefinitionDlgTest(unittest.TestCase):
         doc = "My documentation: \n ble ble ble "
         attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
         
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.createGUI()
  
@@ -614,7 +614,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.typeLineEdit.text(), '')
         self.assertEqual(form.ui.docTextEdit.toPlainText(), '')
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.name = name
 
@@ -628,7 +628,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.nexusType = nType
 
@@ -643,7 +643,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.doc = doc
 
@@ -656,7 +656,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.name = name
         form.doc = doc
@@ -703,7 +703,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -721,7 +721,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -729,8 +729,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
         
@@ -739,7 +739,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
         
         form.setFromNode()
 
@@ -749,7 +749,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -771,7 +771,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -789,7 +789,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
 #        form.node = qdn
         self.assertEqual(form.name, '')
@@ -797,8 +797,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
         
@@ -807,7 +807,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
         
         form.setFromNode(qdn)
         self.assertEqual(form.node, qdn)
@@ -818,7 +818,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -837,7 +837,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -855,7 +855,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
 #        form.node = qdn
         self.assertEqual(form.name, '')
@@ -863,8 +863,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
         
@@ -873,7 +873,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
         
         form.setFromNode()
 
@@ -882,7 +882,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -902,12 +902,12 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         doc.appendChild(qdn) 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -915,8 +915,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
         
@@ -925,7 +925,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
         
         form.setFromNode()
 
@@ -934,7 +934,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
 
 
 
@@ -955,7 +955,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -973,7 +973,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -981,8 +981,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
         
@@ -991,7 +991,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
         
         form.setFromNode()
 
@@ -1002,7 +1002,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1041,7 +1041,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -1059,7 +1059,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -1067,8 +1067,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
         
@@ -1077,7 +1077,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
         
         form.setFromNode()
 
@@ -1088,7 +1088,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1129,7 +1129,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -1147,7 +1147,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -1155,8 +1155,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
         
@@ -1165,7 +1165,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
         
         form.setFromNode()
 
@@ -1176,7 +1176,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1219,7 +1219,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -1237,7 +1237,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -1245,8 +1245,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
         
@@ -1255,7 +1255,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
         
         form.setFromNode()
 
@@ -1266,7 +1266,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1358,7 +1358,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -1377,7 +1377,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -1385,8 +1385,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
         
@@ -1395,7 +1395,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
         
         form.setFromNode()
 
@@ -1406,7 +1406,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1505,7 +1505,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -1524,7 +1524,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -1532,8 +1532,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.createGUI()
 
@@ -1543,7 +1543,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
         
         form.setFromNode()
 
@@ -1554,7 +1554,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+                         ["group", "field", "attribute", "link", "component", "doc"])
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1651,7 +1651,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -1669,7 +1669,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -1677,8 +1677,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.setFromNode()
         form.createGUI()
@@ -1769,7 +1769,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -1787,7 +1787,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -1795,8 +1795,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.setFromNode()
         form.createGUI()
@@ -1888,7 +1888,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -1906,7 +1906,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -1914,8 +1914,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.setFromNode()
         form.createGUI()
@@ -2039,7 +2039,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -2057,7 +2057,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -2065,8 +2065,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.setFromNode()
         form.createGUI()
@@ -2188,7 +2188,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         dks = []
         doc = QDomDocument()
-        nname = "definition"
+        nname = "group"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("name","myname%s" %  nn)
@@ -2206,7 +2206,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
@@ -2214,8 +2214,8 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
 
         form.setFromNode()
         form.createGUI()
@@ -2342,13 +2342,13 @@ class DefinitionDlgTest(unittest.TestCase):
     def test_connect_actions(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         self.assertEqual(form.connectExternalActions(),None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
 #        self.assertTrue(isinstance(form.dts, DomTools))
@@ -2360,13 +2360,13 @@ class DefinitionDlgTest(unittest.TestCase):
     def test_connect_actions_with_action(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.show()
         self.assertEqual(form.connectExternalActions(self.myAction),None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
+        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
         self.assertEqual(form.externalApply, None)
 
 
@@ -2380,8 +2380,8 @@ class DefinitionDlgTest(unittest.TestCase):
     def test_connect_actions_with_button(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DefinitionDlg()
-        form.ui = Ui_DefinitionDlg() 
+        form = GroupDlg()
+        form.ui = Ui_GroupDlg() 
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
@@ -2389,7 +2389,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DefinitionDlg))
+        self.assertTrue(isinstance(form.ui,Ui_GroupDlg))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
 
@@ -2403,15 +2403,41 @@ class DefinitionDlgTest(unittest.TestCase):
     def test_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DefinitionDlg()
-        form.ui = Ui_DefinitionDlg() 
+        form = GroupDlg()
+        form.ui = Ui_GroupDlg() 
         form.ui.applyPushButton = QPushButton(form)
         form.show()
         self.assertEqual(form.connectExternalActions(self.myAction),None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DefinitionDlg))
+        self.assertTrue(isinstance(form.ui,Ui_GroupDlg))
+        self.assertEqual(form.externalApply, self.myAction)
+        self.performed = False
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+        self.assertEqual(self.performed, True)
+
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions_with_action_button(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = GroupDlg()
+        form.ui = Ui_GroupDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.show()
+        self.assertEqual(form.connectExternalActions(self.myAction),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertTrue(isinstance(form.ui,Ui_GroupDlg))
         self.assertEqual(form.externalApply, self.myAction)
         self.performed = False
 
@@ -2429,14 +2455,14 @@ class DefinitionDlgTest(unittest.TestCase):
     def test_connect_actions_with_action_link_button(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DefinitionDlg()
+        form = GroupDlg()
         form.createGUI()
         form.show()
         self.assertEqual(form.connectExternalActions(None,self.myAction),None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DefinitionDlg))
+        self.assertTrue(isinstance(form.ui,Ui_GroupDlg))
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
 
@@ -2452,14 +2478,46 @@ class DefinitionDlgTest(unittest.TestCase):
     def test_connect_actions_with_action_link_and_apply_button(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DefinitionDlg()
+        form = GroupDlg()
+        form.ui = Ui_GroupDlg() 
+        form.ui.applyPushButton = QPushButton(form)
         form.createGUI()
         form.show()
         self.assertEqual(form.connectExternalActions(self.myAction,None),None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DefinitionDlg))
+        self.assertTrue(isinstance(form.ui,Ui_GroupDlg))
+        self.assertEqual(form.externalApply, self.myAction)
+        self.assertEqual(form.externalDSLink, None)
+        self.performed = False
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+        self.assertEqual(self.performed, False)
+
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions_with_action_link_and_apply_button(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = GroupDlg()
+        form.ui = Ui_GroupDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.createGUI()
+        QTest.keyClicks(form.ui.typeLineEdit, "namename")
+
+        form.show()
+        self.assertEqual(form.connectExternalActions(self.myAction,None),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertTrue(isinstance(form.ui,Ui_GroupDlg))
         self.assertEqual(form.externalApply, self.myAction)
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
@@ -2469,6 +2527,9 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         self.assertEqual(form.result(),0)
+
+
+
 
 
 

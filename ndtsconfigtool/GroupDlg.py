@@ -46,7 +46,7 @@ class GroupDlg(NodeDlg):
         ## group attributes
         self.attributes = {}
         ## group attributes
-        self._attributes = {}
+        self.__attributes = {}
         
         ## allowed subitems
         self.subItems = ["group", "field", "attribute", "link", "component", "doc"]
@@ -65,9 +65,9 @@ class GroupDlg(NodeDlg):
         if self.doc is not None:
             self.ui.docTextEdit.setText(self.doc)
 
-        self._attributes.clear()
+        self.__attributes.clear()
         for at in self.attributes.keys():
-            self._attributes[unicode(at)]=self.attributes[(unicode(at))]
+            self.__attributes[unicode(at)]=self.attributes[(unicode(at))]
 
         self.populateAttributes()
         
@@ -79,17 +79,17 @@ class GroupDlg(NodeDlg):
         
         self.updateForm()
 
-        self._updateUi()
+        self.__updateUi()
 
 #        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), 
 #                     self.apply)
         self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.ui.attributeTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
-                     self._tableItemChanged)
-        self.connect(self.ui.addPushButton, SIGNAL("clicked()"), self._addAttribute)
-        self.connect(self.ui.removePushButton, SIGNAL("clicked()"), self._removeAttribute)
+                     self.__tableItemChanged)
+        self.connect(self.ui.addPushButton, SIGNAL("clicked()"), self.__addAttribute)
+        self.connect(self.ui.removePushButton, SIGNAL("clicked()"), self.__removeAttribute)
 
-        self.connect(self.ui.typeLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        self.connect(self.ui.typeLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
 
 
     ## provides the state of the group dialog        
@@ -127,6 +127,9 @@ class GroupDlg(NodeDlg):
         if node:
             ## defined in NodeDlg class
             self.node = node
+        if not self.node:
+            ## exception?
+            return
         attributeMap = self.node.attributes()
         nNode = unicode(self.node.nodeName())
 
@@ -136,13 +139,13 @@ class GroupDlg(NodeDlg):
             attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else "")
 
         self.attributes.clear()    
-        self._attributes.clear()    
+        self.__attributes.clear()    
         for i in range(attributeMap.count()):
             attribute = attributeMap.item(i)
             attrName = unicode(attribute.nodeName())
             if attrName != "name" and attrName != "type":
                 self.attributes[attrName] = unicode(attribute.nodeValue())
-                self._attributes[attrName] = unicode(attribute.nodeValue())
+                self.__attributes[attrName] = unicode(attribute.nodeValue())
 
         doc = self.node.firstChildElement(QString("doc"))           
         text = self.dts.getText(doc)    
@@ -152,14 +155,14 @@ class GroupDlg(NodeDlg):
 
     ## adds an attribute    
     #  \brief It runs the Group Dialog and fetches attribute name and value    
-    def _addAttribute(self):
+    def __addAttribute(self):
         aform  = AttributeDlg()
         if aform.exec_():
             name = aform.name
             value = aform.value
             
-            if not aform.name in self._attributes.keys():
-                self._attributes[aform.name] = aform.value
+            if not aform.name in self.__attributes.keys():
+                self.__attributes[aform.name] = aform.value
                 self.populateAttributes(aform.name)
             else:
                 QMessageBox.warning(self, "Attribute name exists", "To change the attribute value, please edit the value in the attribute table")
@@ -167,7 +170,7 @@ class GroupDlg(NodeDlg):
                 
     ## takes a name of the current attribute
     # \returns name of the current attribute            
-    def _currentTableAttribute(self):
+    def __currentTableAttribute(self):
         item = self.ui.attributeTableWidget.item(self.ui.attributeTableWidget.currentRow(), 0)
         if item is None:
             return None
@@ -176,29 +179,29 @@ class GroupDlg(NodeDlg):
 
     ## removes an attribute    
     #  \brief It removes the current attribute asking before about it
-    def _removeAttribute(self):
-        attr = self._currentTableAttribute()
+    def __removeAttribute(self):
+        attr = self.__currentTableAttribute()
         if attr is None:
             return
         if QMessageBox.question(self, "Attribute - Remove",
-                                "Remove attribute: %s = \'%s\'".encode() %  (attr, self._attributes[unicode(attr)]),
+                                "Remove attribute: %s = \'%s\'".encode() %  (attr, self.__attributes[unicode(attr)]),
                                 QMessageBox.Yes | QMessageBox.No,
                                 QMessageBox.Yes ) == QMessageBox.No :
             return
-        if unicode(attr) in self._attributes.keys():
-            self._attributes.pop(unicode(attr))
+        if unicode(attr) in self.__attributes.keys():
+            self.__attributes.pop(unicode(attr))
             self.populateAttributes()
 
 
     ## changes the current value of the attribute        
     # \brief It changes the current value of the attribute and informs the user that attribute names arenot editable
-    def _tableItemChanged(self, item):
-        attr = self._currentTableAttribute()
-        if unicode(attr)  not in self._attributes.keys():
+    def __tableItemChanged(self, item):
+        attr = self.__currentTableAttribute()
+        if unicode(attr)  not in self.__attributes.keys():
             return
         column = self.ui.attributeTableWidget.currentColumn()
         if column == 1:
-            self._attributes[unicode(attr)] = unicode(item.text())
+            self.__attributes[unicode(attr)] = unicode(item.text())
         if column == 0:
             QMessageBox.warning(self, "Attribute name is not editable", "To change the attribute name, please remove the attribute and add the new one")
         self.populateAttributes()
@@ -210,15 +213,15 @@ class GroupDlg(NodeDlg):
         selected = None
         self.ui.attributeTableWidget.clear()
         self.ui.attributeTableWidget.setSortingEnabled(False)
-        self.ui.attributeTableWidget.setRowCount(len(self._attributes))
+        self.ui.attributeTableWidget.setRowCount(len(self.__attributes))
         headers = ["Name", "Value"]
         self.ui.attributeTableWidget.setColumnCount(len(headers))
         self.ui.attributeTableWidget.setHorizontalHeaderLabels(headers)	
-        for row, name in enumerate(self._attributes):
+        for row, name in enumerate(self.__attributes):
             item = QTableWidgetItem(name)
             item.setData(Qt.UserRole, QVariant(name))
             self.ui.attributeTableWidget.setItem(row, 0, item)
-            item2 =  QTableWidgetItem(self._attributes[name])
+            item2 =  QTableWidgetItem(self.__attributes[name])
             self.ui.attributeTableWidget.setItem(row, 1, item2)
             if selectedAttribute is not None and selectedAttribute == name:
                 selected = item2
@@ -232,7 +235,7 @@ class GroupDlg(NodeDlg):
 
     ## updates group user interface
     # \brief It sets enable or disable the OK button
-    def _updateUi(self):
+    def __updateUi(self):
         enable = not self.ui.typeLineEdit.text().isEmpty()
         self.ui.applyPushButton.setEnabled(enable)
 
@@ -251,8 +254,8 @@ class GroupDlg(NodeDlg):
 
         
         self.attributes.clear()
-        for at in self._attributes.keys():
-            self.attributes[at] = self._attributes[at]
+        for at in self.__attributes.keys():
+            self.attributes[at] = self.__attributes[at]
 
         self.view.expand(index)    
 
@@ -268,7 +271,8 @@ class GroupDlg(NodeDlg):
     # \brief It sets node from the dialog variables
     def updateNode(self,index=QModelIndex()):
         elem=self.node.toElement()
-        
+        mindex = self.view.currentIndex() if not index.isValid() else index   
+
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
@@ -280,18 +284,18 @@ class GroupDlg(NodeDlg):
         for attr in self.attributes.keys():
             elem.setAttribute(QString(attr), QString(self.attributes[attr]))
 
-                
+
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self.removeElement(doc, index)
+            self.removeElement(doc, mindex)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self.replaceElement(doc, newDoc, index)
+                self.replaceElement(doc, newDoc, mindex)
             else:
-                self.appendElement(newDoc, index)
+                self.appendElement(newDoc, mindex)
 
         
         

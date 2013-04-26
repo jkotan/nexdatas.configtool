@@ -126,10 +126,19 @@ class Component(object):
         ## component DOM document
         self.document = None        
 
+        if os.path.exists(os.path.join(os.getcwd(),"components")):
+            self._xmlPath = os.path.abspath(os.path.join(os.getcwd(),"components"))
+        else:
+            self._xmlPath =  os.getcwd() 
 
-        self._xmlPath = os.path.dirname("./components/")
+        if os.path.exists(os.path.join(os.getcwd(),"datasources")):
+            self._dsPath = os.path.abspath(os.path.join(os.getcwd(),"datasources"))
+        else:
+            self._dsPath =  os.getcwd() 
+            
         self._componentFile = None
-        self._dsPath = os.path.dirname("./datasources/")
+
+
 
 #        ## item frame
 #        self.frame = None
@@ -795,9 +804,9 @@ class Component(object):
         elif self.directory:
             dr = self.directory
         else:
-            dr = '.'
+            dr = os.getcwd()
         
-        self._componentFile = dr + "/" + name + ".xml"
+        self._componentFile = os.path.join(dr, name + ".xml")
         self.name = name
         self._xmlPath = self._componentFile
         
@@ -813,7 +822,7 @@ class Component(object):
                         "XML files (*.xml);;HTML files (*.html);;"
                         "SVG files (*.svg);;User Interface files (*.ui)"))
             else:
-                self._componentFile = self.directory + "/" + self.name + ".xml"
+                self._componentFile = os.path.join(self.directory, self.name + ".xml") 
         else:
             self._componentFile = filePath
         if self._componentFile:
@@ -829,8 +838,15 @@ class Component(object):
                         self.name = self.name[:-4]
                     self.savedXML = self.get()
                     return self._componentFile
+                else:
+                    QMessageBox.warning(self.dialog, "Cannot open the file", 
+                                        "Cannot open the file: %s" % (self._componentFile))
+
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
+                QMessageBox.warning(self.dialog, "Loading problem",
+                                    error )
+                
                 print error
             finally:                 
                 if fh is not None:
@@ -840,7 +856,7 @@ class Component(object):
     ## sets component from XML string and reset component file name
     # \param xml XML string               
     def set(self, xml):
-        self._componentFile = self.directory + "/" + self.name + ".xml"
+        self._componentFile = os.path.join(self.directory, self.name + ".xml") 
         self._loadFromString(xml)
         self._xmlPath = self._componentFile
         self.savedXML = self.get()
@@ -923,6 +939,8 @@ class Component(object):
 
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
+                QMessageBox.warning(self.dialog, "Loading problem",
+                                    error )
                 print error
             finally:                 
                 if fh is not None:
@@ -1335,7 +1353,9 @@ class Component(object):
             self.savedXML = self.get()
             #                print self.document.toString(2)
         except (IOError, OSError, ValueError), e:
-            error = "Failed to save: %s" % e
+            error = "Failed to save: %s Please try to use Save as or change the component directory" % e
+            QMessageBox.warning(self.dialog, "Saving problem",
+                                error )
             print error
         finally:
             if fh is not None:

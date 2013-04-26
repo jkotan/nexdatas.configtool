@@ -20,6 +20,7 @@
 # Main window of the application
 
 import sys
+import os
 
 from PyQt4.QtCore import (SIGNAL, SLOT, QSettings, Qt,  QSignalMapper, 
                           QVariant, QT_VERSION_STR, PYQT_VERSION_STR, QStringList )
@@ -27,7 +28,6 @@ from PyQt4.QtGui import (QMainWindow, QDockWidget, QSplitter, QWorkspace , QMdiA
                          QListWidgetItem, QAction, QKeySequence, QMessageBox, QIcon)
 
 import platform
-
 from qrc import qrc_resources
 
 from CommandPool import (CommandPool,CommandStack)
@@ -42,12 +42,14 @@ from Command import (
      ServerConnect,
      ServerFetchComponents,
      ServerStoreComponent,
+     ServerStoreAllComponents,
      ServerDeleteComponent,
      ServerSetMandatoryComponent,
      ServerGetMandatoryComponents,
      ServerUnsetMandatoryComponent,
      ServerFetchDataSources,
      ServerStoreDataSource,
+     ServerStoreAllDataSources,
      ServerDeleteDataSource,
      ServerClose,
      ComponentNew,
@@ -112,9 +114,9 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent)
 
         ## datasource directory
-        self.dsDirectory = "./datasources"
+        self.dsDirectory = ""
         ## component directory
-        self.cpDirectory = "./components"
+        self.cpDirectory = ""
 
         ## component tree menu under mouse cursor
         self.contextMenuActions = None
@@ -130,8 +132,10 @@ class MainWindow(QMainWindow):
 
         ## list of datasources
         self.sourceList =  None
+        self.__previousDS = None
         ## list of components
         self.componentList =    None
+        self.__previousCP = None
         
         ## multi window workspace
         self.mdi = None
@@ -150,8 +154,24 @@ class MainWindow(QMainWindow):
         self.windows = {}
 
         settings = QSettings()
-        self.dsDirectory = unicode(settings.value("DataSources/directory").toString())
-        self.cpDirectory = unicode(settings.value("Components/directory").toString())
+        dsdir = unicode(settings.value("DataSources/directory").toString())
+        if dsdir:
+            self.dsDirectory = os.path.abspath(dsdir)
+        else:
+            if os.path.exists(os.path.join(os.getcwd(),"datasources")):
+                self.dsDirectory = os.path.abspath(os.path.join(os.getcwd(),"datasources"))
+            else:
+                self.dsDirectory = os.getcwd()
+                
+            
+        cpdir = unicode(settings.value("Components/directory").toString())    
+        if cpdir:
+            self.cpDirectory = os.path.abspath(cpdir)
+        else:
+            if os.path.exists(os.path.join(os.getcwd(),"components")):
+                self.cpDirectory = os.path.abspath(os.path.join(os.getcwd(),"components"))
+            else:
+                self.cpDirectory = os.getcwd()
 
         self.createGUI()
 
@@ -170,9 +190,9 @@ class MainWindow(QMainWindow):
         self.loadComponents()
 
         self.restoreGeometry(
-                settings.value("MainWindow/Geometry").toByteArray())
+            settings.value("MainWindow/Geometry").toByteArray())
         self.restoreState(
-                settings.value("MainWindow/State").toByteArray())
+            settings.value("MainWindow/State").toByteArray())
 
 
         if PYTANGO_AVAILABLE:
@@ -265,14 +285,24 @@ class MainWindow(QMainWindow):
         self.connect(self.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"), self.mdiWindowActivated)
 
 
+#        self.connect(self.sourceList.ui.sourceListWidget, 
+#                     SIGNAL("itemClicked(QListWidgetItem*)"), 
+#                     self.dsourceEdit)
 
-        self.connect(self.sourceList.ui.sourceListWidget, 
-                     SIGNAL("itemClicked(QListWidgetItem*)"), 
-                     self.dsourceEdit)
+#        self.connect(self.componentList.ui.componentListWidget, 
+#                     SIGNAL("itemClicked(QListWidgetItem*)"), 
+#                     self.componentEdit)
+
 
         self.connect(self.componentList.ui.componentListWidget, 
                      SIGNAL("itemClicked(QListWidgetItem*)"), 
-                     self.componentEdit)
+                     self.__cpItemChanged)
+
+
+        self.connect(self.sourceList.ui.sourceListWidget, 
+                     SIGNAL("itemClicked(QListWidgetItem*)"), 
+                     self.__dsItemChanged)
+
 
         
 
@@ -489,14 +519,14 @@ class MainWindow(QMainWindow):
         componentChangeDirectoryAction = self.pool.createCommand(
             "Change Directory...", "componentChangeDirectory", commandArgs, 
             ComponentChangeDirectory,
-            "", "componentrechangedirecotry", "Change the component list directory")
+            "", "componentrechangedirectory", "Change the component list directory")
 
 
 
         dsourceChangeDirectoryAction = self.pool.createCommand(
             "Change DataSource Directory...", "dsourceChangeDirectory", commandArgs, 
             DataSourceChangeDirectory,
-            "", "dsourcerechangedirecotry", "Change the data-source list directory")
+            "", "dsourcerechangedirectory", "Change the data-source list directory")
 
 
         
@@ -540,11 +570,19 @@ class MainWindow(QMainWindow):
 
         serverStoreComponentAction = self.pool.createCommand(
             "&Store Component", "serverStoreComponent", commandArgs, ServerStoreComponent,
-            "Ctrl+B", "serverstoredatasource", "Store datasource in the configuration server")
+            "Ctrl+B", "serverstorecomponent", "Store component in the configuration server")
+
+        serverStoreAllComponentsAction = self.pool.createCommand(
+            "&Store All Components", "serverStoreAllComponents", commandArgs, ServerStoreAllComponents,
+            "", "serverstoreallcomponents", "Store all components in the configuration server")
 
         serverStoreDataSourceAction = self.pool.createCommand(
             "&Store Datasource", "serverStoreDataSource", commandArgs, ServerStoreDataSource,
             "Ctrl+Shift+B", "serverstoredatasource", "Store datasource in the configuration server")
+
+        serverStoreAllDataSourcesAction = self.pool.createCommand(
+            "&Store All Datasources", "serverStoreAllDataSources", commandArgs, ServerStoreAllDataSources,
+            "", "serverstorealldatasources", "Store all datasources in the configuration server")
 
         serverDeleteComponentAction = self.pool.createCommand(
             "&Delete Component", "serverDeleteComponent", commandArgs, ServerDeleteComponent,
@@ -579,12 +617,14 @@ class MainWindow(QMainWindow):
 
         serverFetchComponentsAction.setDisabled(True)
         serverStoreComponentAction.setDisabled(True)
+        serverStoreAllComponentsAction.setDisabled(True)
         serverDeleteComponentAction.setDisabled(True)
         serverGetMandatoryComponentsAction.setDisabled(True)
         serverSetMandatoryComponentAction.setDisabled(True)
         serverUnsetMandatoryComponentAction.setDisabled(True)
         serverFetchDataSourcesAction.setDisabled(True)
         serverStoreDataSourceAction.setDisabled(True)
+        serverStoreAllDataSourcesAction.setDisabled(True)
         serverDeleteDataSourceAction.setDisabled(True)
         serverCloseAction.setDisabled(True)
 
@@ -773,6 +813,7 @@ class MainWindow(QMainWindow):
             None,
             serverFetchComponentsAction,
             serverStoreComponentAction,
+            serverStoreAllComponentsAction,
             serverDeleteComponentAction,
             serverSetMandatoryComponentAction,
             serverUnsetMandatoryComponentAction,
@@ -797,6 +838,7 @@ class MainWindow(QMainWindow):
             None,
             serverFetchDataSourcesAction,
             serverStoreDataSourceAction,
+            serverStoreAllDataSourcesAction,
             serverDeleteDataSourceAction,
             None,
             dsourceReloadListAction,
@@ -810,10 +852,12 @@ class MainWindow(QMainWindow):
                 serverConnectAction,None,
                 serverFetchComponentsAction,
                 serverStoreComponentAction,
+                serverStoreAllComponentsAction,
                 serverDeleteComponentAction,
                 None,
                 serverFetchDataSourcesAction,
                 serverStoreDataSourceAction,
+                serverStoreAllDataSourcesAction,
                 serverDeleteDataSourceAction,
                 None,
                 serverGetMandatoryComponentsAction,
@@ -970,9 +1014,9 @@ class MainWindow(QMainWindow):
         settings.setValue("MainWindow/State",
                           QVariant(self.saveState()))
         settings.setValue("DataSources/directory",
-                          QVariant(self.dsDirectory))
+                          QVariant(os.path.abspath(self.dsDirectory)))
         settings.setValue("Components/directory",
-                          QVariant(self.cpDirectory))
+                          QVariant(os.path.abspath(self.cpDirectory)))
 
         if self.configServer:
             settings.setValue("ConfigServer/device",
@@ -990,18 +1034,35 @@ class MainWindow(QMainWindow):
 #        settings.setValue("CurrentFiles", QVariant(files))
         self.mdi.closeAllSubWindows()
 
+    ## checks slow double click for components
+    ## \param item current list item
+    def __cpItemChanged(self, item):
+        if item == self.__previousCP and item != None:
+            self.componentEdit()
+        self.__previousCP = item
+
+
+    ## checks slow double click foir datasources   
+    ## \param item current list item
+    def __dsItemChanged(self, item):
+        if item == self.__previousDS and item != None:
+            self.dsourceEdit()
+        self.__previousDS = item    
+
 
     ## disables/enable the server actions
     # \param status True for disable
     def disableServer(self, status):
         self.pool.setDisabled("serverFetchComponents", status)
         self.pool.setDisabled("serverStoreComponent", status)
+        self.pool.setDisabled("serverStoreAllComponents", status)
         self.pool.setDisabled("serverDeleteComponent", status)
         self.pool.setDisabled("serverGetMandatoryComponents", status)
         self.pool.setDisabled("serverSetMandatoryComponent", status)
         self.pool.setDisabled("serverUnsetMandatoryComponent", status)
         self.pool.setDisabled("serverFetchDataSources", status)
         self.pool.setDisabled("serverStoreDataSource", status)
+        self.pool.setDisabled("serverStoreAllDataSources", status)
         self.pool.setDisabled("serverDeleteDataSource", status)
         self.pool.setDisabled("serverClose", status)
         
@@ -1038,7 +1099,7 @@ class MainWindow(QMainWindow):
             self.contextMenuActions,
             self.componentCollect,
             self.componentApplyItem,
-            self.dsourceClose,
+            self.componentClose,
             self.componentLinkDataSourceItem
             )
         idc =  self.componentList.components.itervalues().next().id \
@@ -1056,7 +1117,7 @@ class MainWindow(QMainWindow):
             self.contextMenuActions,
             self.componentCollect,
             self.componentApplyItem,
-            self.dsourceClose,
+            self.componentClose,
             self.componentLinkDataSourceItem
             )
         idc =  self.componentList.components.itervalues().next().id \
@@ -1607,8 +1668,8 @@ class MainWindow(QMainWindow):
     ## add datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentAddDataSourceItem(self):
-        cmd = self.pool.getCommand('dsourceEdit').clone()
-        cmd.execute()
+#        cmd = self.pool.getCommand('dsourceEdit').clone()
+#        cmd.execute()
         cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
@@ -1620,8 +1681,6 @@ class MainWindow(QMainWindow):
     ## link datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentLinkDataSourceItem(self):
-        cmd = self.pool.getCommand('dsourceEdit').clone()
-        cmd.execute()
         cmd = self.pool.getCommand('componentLinkDataSourceItem').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
@@ -1683,14 +1742,8 @@ class MainWindow(QMainWindow):
         cmd.execute()
         self.cmdStack.append(cmd)
 
-#        self.pool.setDisabled("serverConnect", True)
-
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
-
-#        self.cmdStack.clear()
-#        self.pool.setDisabled("undo", True, "Can't Undo")   
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     ## fetch server components action
@@ -1698,9 +1751,6 @@ class MainWindow(QMainWindow):
     def serverFetchComponents(self):
         cmd = self.pool.getCommand('serverFetchComponents').clone()
         cmd.execute()
-#        self.cmdStack.append(cmd)
-#        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-#        self.pool.setDisabled("redo", True, "Can't Redo")      
 
         self.cmdStack.clear()
         self.pool.setDisabled("undo", True, "Can't Undo")   
@@ -1719,6 +1769,16 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
         cmd = self.pool.getCommand('serverStoreComponent').clone()
         cmd.execute()
+
+
+    ## store server all components action
+    # \brief It stores all components in the configuration server
+    def serverStoreAllComponents(self):
+        cmd = self.pool.getCommand('serverStoreAllComponents').clone()
+        cmd.execute()
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     ## delete server component action
     # \brief It deletes the current component from the configuration server
@@ -1792,6 +1852,14 @@ class MainWindow(QMainWindow):
         cmd = self.pool.getCommand('serverStoreDataSource').clone()
         cmd.execute()
 
+    ## store server all datasources action
+    # \brief It stores all components in the configuration server
+    def serverStoreAllDataSources(self):
+        cmd = self.pool.getCommand('serverStoreAllDataSources').clone()
+        cmd.execute()
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     ## delete server datasource action

@@ -20,6 +20,7 @@
 # Data Source dialog class
 
 import re
+import os
 from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, Qt, QFileInfo, QFile, QIODevice, 
                           QTextStream, QVariant)
 from PyQt4.QtGui import (QApplication, QFileDialog, QMessageBox, QTableWidgetItem, QWidget)
@@ -1076,7 +1077,7 @@ class DataSource(CommonDataSource):
                     else:
                         self.name = fname
             else:
-                filename = self.directory + "/" + self.name + ".ds.xml"
+                filename = os.path.join(self.directory, self.name + ".ds.xml") 
         else:
             filename = fname
             if not self.name:
@@ -1102,7 +1103,10 @@ class DataSource(CommonDataSource):
                 if ds:
                     self.setFromNode(ds)
                 self.savedXML = self.document.toString(0)
-            try:    
+            else:
+                QMessageBox.warning(self.dialog, "Cannot open the file", 
+                                    "Cannot open the file: %s" % (filename))
+            try:
                 self.createGUI()
 
             except Exception, e:
@@ -1112,8 +1116,10 @@ class DataSource(CommonDataSource):
         except (IOError, OSError, ValueError), e:
             error = "Failed to load: %s" % e
             print error
-            
+            QMessageBox.warning(self.dialog, "Saving problem", error )
+
         except Exception, e:
+            QMessageBox.warning(self.dialog, "Saving problem", e )
             print e
         finally:                 
             if fh is not None:
@@ -1176,26 +1182,29 @@ class DataSource(CommonDataSource):
     # \brief It copies the parameters and saves the dialog
     def save(self):
         error = None
-        if self.applied:
-            filename = self.directory + "/" + self.name + ".ds.xml"
-            print "saving in %s"% (filename)
-            if filename:
-                try:
-                    fh = QFile(filename)
-                    if not fh.open(QIODevice.WriteOnly):
-                        raise IOError, unicode(fh.errorString())
-                    stream = QTextStream(fh)
-                    self.createNodes()
-                    self.document.setContent(self.repair(self.document.toString(0)))
-                    stream << self.document.toString(2)
+        filename = os.path.join(self.directory, self.name + ".xml") 
+        print "saving in %s"% (filename)
+        if filename:
+            try:
+                fh = QFile(filename)
+                if not fh.open(QIODevice.WriteOnly):
+                    raise IOError, unicode(fh.errorString())
+                stream = QTextStream(fh)
+                self.createNodes()
+                self.document.setContent(self.repair(self.document.toString(0)))
+                stream << self.document.toString(2)
             #                print self.document.toString(2)
-                    self.savedXML = self.document.toString(0)
-                except (IOError, OSError, ValueError), e:
-                    error = "Failed to save: %s" % e
-                    print error
-                finally:
-                    if fh is not None:
-                        fh.close()
+                self.savedXML = self.document.toString(0)
+            except (IOError, OSError, ValueError), e:
+                error = "Failed to save: %s " % e \
+                    + "Please try to use Save As command " \
+                    + "or change the datasource directory"
+                print error
+                QMessageBox.warning(self.dialog, "Saving problem",  error )
+
+            finally:
+                if fh is not None:
+                    fh.close()
         if not error:
             return True
 

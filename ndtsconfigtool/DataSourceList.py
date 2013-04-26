@@ -90,7 +90,11 @@ class DataSourceList(QWidget):
             dirList=[l for l in  os.listdir(self.directory) if l.endswith(".ds.xml")]
         except:
             try:
-                self.directory = "./datasources"
+                if os.path.exists(os.path.join(os.getcwd(),"datasources")):
+                    self.directory = os.path.abspath(os.path.join(os.getcwd(),"datasources"))
+                else:
+                    self.directory = os.getcwd()
+
                 dirList=[l for l in  os.listdir(self.directory) if l.endswith(".ds.xml")]
             except:
                 return
@@ -106,7 +110,6 @@ class DataSourceList(QWidget):
             dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
-#            dlg.createGUI()
             dlg.load()    
 
             
@@ -132,7 +135,10 @@ class DataSourceList(QWidget):
             dirList=os.listdir(self.directory)
         except:
             try:
-                self.directory = "./datasources"
+                if os.path.exists(os.path.join(os.getcwd(),"datasources")):
+                    self.directory = os.path.abspath(os.path.join(os.getcwd(),"datasources"))
+                else:
+                    self.directory = os.getcwd()
             except:
                 return
             

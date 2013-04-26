@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>432</width>
-    <height>556</height>
+    <width>379</width>
+    <height>573</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -19,38 +19,53 @@
   <property name="windowTitle">
    <string>Field</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
+  <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_7">
+      <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0">
-          <widget class="QLabel" name="nameLabel">
-           <property name="text">
-            <string>&amp;Name:</string>
-           </property>
-           <property name="buddy">
-            <cstring>nameLineEdit</cstring>
-           </property>
-          </widget>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="QLabel" name="nameLabel">
+             <property name="text">
+              <string>&amp;Name:</string>
+             </property>
+             <property name="buddy">
+              <cstring>nameLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="nameLineEdit"/>
+           </item>
+          </layout>
          </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="nameLineEdit"/>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="unitsLabel">
-           <property name="text">
-            <string>&amp;Units:</string>
-           </property>
-           <property name="buddy">
-            <cstring>unitsLineEdit</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="unitsLineEdit"/>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <item>
+            <widget class="QPushButton" name="linkDSPushButton">
+             <property name="text">
+              <string>&amp;Link DataSource</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
@@ -87,6 +102,40 @@
           </widget>
          </item>
         </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_10">
+       <item>
+        <widget class="QLabel" name="unitsLabel">
+         <property name="text">
+          <string>&amp;Units:</string>
+         </property>
+         <property name="buddy">
+          <cstring>unitsLineEdit</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="unitsLineEdit"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="valueLabel">
+         <property name="text">
+          <string>&amp;Value:</string>
+         </property>
+         <property name="buddy">
+          <cstring>valueLineEdit</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="valueLineEdit"/>
        </item>
       </layout>
      </item>
@@ -244,13 +293,6 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QPushButton" name="linkDSPushButton">
-         <property name="text">
-          <string>&amp;Link DataSource</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="dimPushButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -282,23 +324,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="valueLabel">
-         <property name="text">
-          <string>&amp;Value:</string>
-         </property>
-         <property name="buddy">
-          <cstring>valueLineEdit</cstring>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="valueLineEdit"/>
        </item>
       </layout>
      </item>
@@ -364,12 +389,12 @@
  </widget>
  <tabstops>
   <tabstop>nameLineEdit</tabstop>
+  <tabstop>linkDSPushButton</tabstop>
   <tabstop>unitsLineEdit</tabstop>
+  <tabstop>valueLineEdit</tabstop>
   <tabstop>typeComboBox</tabstop>
   <tabstop>typeLineEdit</tabstop>
-  <tabstop>linkDSPushButton</tabstop>
   <tabstop>dimPushButton</tabstop>
-  <tabstop>valueLineEdit</tabstop>
   <tabstop>addPushButton</tabstop>
   <tabstop>removePushButton</tabstop>
   <tabstop>attributeTableWidget</tabstop>

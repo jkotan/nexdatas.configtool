@@ -22,7 +22,7 @@
      <property name="handleWidth">
       <number>6</number>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QTreeView" name="view"/>
@@ -32,7 +32,7 @@
          <item>
           <widget class="QPushButton" name="savePushButton">
            <property name="text">
-            <string>&amp;Save</string>
+            <string>C&amp;ollect</string>
            </property>
           </widget>
          </item>

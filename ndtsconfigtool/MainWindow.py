@@ -295,13 +295,13 @@ class MainWindow(QMainWindow):
 
 
         self.connect(self.componentList.ui.componentListWidget, 
-                     SIGNAL("itemClicked(QListWidgetItem*)"), 
-                     self.__cpItemChanged)
+                     SIGNAL("itemDoubleClicked(QListWidgetItem*)"), 
+                     self.componentEdit)
 
 
         self.connect(self.sourceList.ui.sourceListWidget, 
-                     SIGNAL("itemClicked(QListWidgetItem*)"), 
-                     self.__dsItemChanged)
+                     SIGNAL("itemDoubleClicked(QListWidgetItem*)"), 
+                     self.dsourceEdit)
 
 
         

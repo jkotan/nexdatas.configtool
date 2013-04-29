@@ -55,6 +55,10 @@ class DataSourceList(QWidget):
     def createGUI(self):
 
         self.ui.setupUi(self)
+#        print "TRIG", int(self.ui.sourceListWidget.editTriggers())
+        self.ui.sourceListWidget.setEditTriggers(self.ui.sourceListWidget.SelectedClicked)
+#        print "TRIG2", int(self.ui.sourceListWidget.editTriggers())
+
         self.populateDataSources()
 
 

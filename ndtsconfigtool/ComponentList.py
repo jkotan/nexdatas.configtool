@@ -60,6 +60,7 @@ class ComponentList(QWidget):
 
         self.ui.setupUi(self)
 
+        self.ui.componentListWidget.setEditTriggers(self.ui.componentListWidget.SelectedClicked)
 
 #        self.connect(self.ui.componentListWidget, 
 #                     SIGNAL("itemChanged(QListWidgetItem*)"),

@@ -1182,7 +1182,7 @@ class DataSource(CommonDataSource):
     # \brief It copies the parameters and saves the dialog
     def save(self):
         error = None
-        filename = os.path.join(self.directory, self.name + ".xml") 
+        filename = os.path.join(self.directory, self.name + ".ds.xml") 
         print "saving in %s"% (filename)
         if filename:
             try:

@@ -812,21 +812,11 @@ class DataSourceMethods(object):
             raise ValueError, "could not parse XML"
 
 
-
-        processing = self.dialog.root.createProcessingInstruction("xml", "version='1.0'") 
-        self.dialog.root.appendChild(processing)
-
-        definition = self.dialog.root.createElement(QString("definition"))
-        self.dialog.root.appendChild(definition)
-
-
         ds = self.dialog.dts.getFirstElement(self.datasource.document, "datasource")           
         if not ds:
             return
-        # self.node = self.dialog.root.createElement(QString("datasource"))
         self.dialog.root.removeChild(ds)            
-        
-        definition.appendChild(ds)            
+
 
         self.setFromNode(ds)
         return True
@@ -1151,7 +1141,8 @@ class DataSource(CommonDataSource):
 
         newds = newdoc.importNode(ds,True)
         definition.appendChild(newds)            
-            
+           
+        print "NEW TEXT", newdoc.toString(0)
         return newdoc.toString(0)
 
             

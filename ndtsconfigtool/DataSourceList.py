@@ -152,9 +152,15 @@ class DataSourceList(QWidget):
             dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
-            
-            dlg.set(datasources[dsname], new)    
-
+        
+            try:
+                dlg.set(datasources[dsname], new)    
+            except:
+                QMessageBox.warning(self, "DataSource cannot be loaded",
+                                    "DataSource %s cannot be loaded" % name),
+                dlg.createGUI()
+                            
+                
             dlg.dataSourceName = dsname
 
             if hasattr(dlg,"connectExternalActions"):     

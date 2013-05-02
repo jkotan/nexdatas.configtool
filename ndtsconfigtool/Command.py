@@ -150,7 +150,18 @@ class ServerFetchComponents(Command):
 
         if self.receiver.configServer:
             try:
+                if not self.receiver.configServer.connected:
+                    QMessageBox.information(
+                        self.receiver, "Connecting to Configuration Server", 
+                        "Connecting to %s on %s:%s" % (
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
+                            )
+                        )
+
                 self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
                 cdict = self.receiver.configServer.fetchComponents()
 #                for k in cdict.keys():
 #                    print "dict:", k ," = ", cdict[k]
@@ -229,7 +240,18 @@ class ServerStoreComponent(Command):
                     
             try:
                 xml = self._cpEdit.get()    
+                if not self.receiver.configServer.connected:
+                    QMessageBox.information(
+                        self.receiver, "Connecting to Configuration Server", 
+                        "Connecting to %s on %s:%s" % (
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
+                            )
+                        )
+
                 self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
                 self.receiver.configServer.storeComponent(self._cpEdit.name, xml)
                 self._cpEdit.savedXML = xml
                 self._cp.savedName = self._cp.name
@@ -281,7 +303,18 @@ class ServerDeleteComponent(Command):
         if self._cp is not None:
 
             try:
+                if not self.receiver.configServer.connected:
+                    QMessageBox.information(
+                        self.receiver, "Connecting to Configuration Server", 
+                        "Connecting to %s on %s:%s" % (
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
+                            )
+                        )
+
                 self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
                 self.receiver.configServer.deleteComponent(self._cp.name)
                 self._cp.savedName = ""
                 if hasattr(self._cp,"instance"):
@@ -330,7 +363,18 @@ class ServerSetMandatoryComponent(Command):
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is not None:
             try:
+                if not self.receiver.configServer.connected:
+                    QMessageBox.information(
+                        self.receiver, "Connecting to Configuration Server", 
+                        "Connecting to %s on %s:%s" % (
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
+                            )
+                        )
+
                 self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
                 self.receiver.configServer.setMandatory(self._cp.name)
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in setting the component as mandatory", unicode(e))
@@ -362,7 +406,18 @@ class ServerGetMandatoryComponents(Command):
     # \brief It fetches a list of the mandatory components from the configuration server
     def execute(self):       
         try:
+            if not self.receiver.configServer.connected:
+                QMessageBox.information(
+                    self.receiver, "Connecting to Configuration Server", 
+                    "Connecting to %s on %s:%s" % (
+                        self.receiver.configServer.device,
+                        self.receiver.configServer.host,
+                        self.receiver.configServer.port
+                        )
+                    )
+
             self.receiver.configServer.connect()
+            self.receiver.disableServer(False)
             mandatory = self.receiver.configServer.getMandatory()
             QMessageBox.information(self.receiver,"Mandatory", "Mandatory Components: \n %s" % unicode(mandatory)) 
         except Exception, e:
@@ -400,7 +455,18 @@ class ServerUnsetMandatoryComponent(Command):
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is not None:
             try:
+                if not self.receiver.configServer.connected:
+                    QMessageBox.information(
+                        self.receiver, "Connecting to Configuration Server", 
+                        "Connecting to %s on %s:%s" % (
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
+                            )
+                        )
+
                 self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
                 self.receiver.configServer.unsetMandatory(self._cp.name)
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in setting the component as mandatory", unicode(e))
@@ -447,7 +513,17 @@ class ServerFetchDataSources(Command):
 
         if self.receiver.configServer:
             try:
+                if not self.receiver.configServer.connected:
+                    QMessageBox.information(
+                        self.receiver, "Connecting to Configuration Server", 
+                        "Connecting to %s on %s:%s" % (
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
+                            )
+                        )
                 self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
                 cdict = self.receiver.configServer.fetchDataSources()
                 self.receiver.setDataSources(cdict)
             except Exception, e:
@@ -486,7 +562,17 @@ class ServerStoreDataSource(Command):
         if self._ds is not None and hasattr(self._ds,"instance"):
             try:
                 xml = self._ds.instance.get()    
+                if not self.receiver.configServer.connected:
+                    QMessageBox.information(
+                        self.receiver, "Connecting to Configuration Server", 
+                        "Connecting to %s on %s:%s" % (
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
+                            )
+                        )
                 self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
                 if self._ds.instance.name:
                     self.receiver.configServer.storeDataSource(self._ds.instance.dataSourceName, xml)
                 else:
@@ -543,7 +629,18 @@ class ServerDeleteDataSource(Command):
                     name = self._ds.instance.dataSourceName 
                     if name is None:
                         name = ""
+                    if not self.receiver.configServer.connected:
+                        QMessageBox.information(
+                            self.receiver, "Connecting to Configuration Server", 
+                            "Connecting to %s on %s:%s" % (
+                                self.receiver.configServer.device,
+                                self.receiver.configServer.host,
+                                self.receiver.configServer.port
+                                )
+                            )
+
                     self.receiver.configServer.connect()
+                    self.receiver.disableServer(False)
                     self.receiver.configServer.deleteDataSource(name)
                     self._ds.savedName = ""
 
@@ -1173,7 +1270,17 @@ class ServerStoreAllComponents(Command):
             try:
                 cp.instance.merge()    
                 xml = cp.instance.get()    
+                if not self.receiver.configServer.connected:
+                    QMessageBox.information(
+                        self.receiver, "Connecting to Configuration Server", 
+                        "Connecting to %s on %s:%s" % (
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
+                            )
+                        )
                 self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
                 self.receiver.configServer.storeComponent(cp.instance.name, xml)
                 cp.instance.savedXML = xml
                 cp.savedName = cp.name
@@ -1839,7 +1946,17 @@ class ServerStoreAllDataSources(Command):
 
             try:
                 xml = ds.instance.get()    
+                if not self.receiver.configServer.connected:
+                    QMessageBox.information(
+                        self.receiver, "Connecting to Configuration Server", 
+                        "Connecting to %s on %s:%s" % (
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
+                            )
+                        )
                 self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
                 if ds.instance.name:
                     self.receiver.configServer.storeDataSource(ds.instance.dataSourceName, xml)
                 else:

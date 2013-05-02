@@ -32,7 +32,14 @@
          <item>
           <widget class="QPushButton" name="savePushButton">
            <property name="text">
-            <string>C&amp;ollect</string>
+            <string>&amp;Save</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="storePushButton">
+           <property name="text">
+            <string>&amp;Store</string>
            </property>
           </widget>
          </item>
@@ -78,6 +85,12 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>savePushButton</tabstop>
+  <tabstop>storePushButton</tabstop>
+  <tabstop>closePushButton</tabstop>
+  <tabstop>view</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

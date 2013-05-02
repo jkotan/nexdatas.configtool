@@ -134,20 +134,24 @@ class CommonDataSourceDlg(NodeDlg):
             enable = not self.ui.cRecNameLineEdit.text().isEmpty()
             self.ui.applyPushButton.setEnabled(enable)
             self.ui.savePushButton.setEnabled(enable)
+            self.ui.storePushButton.setEnabled(enable)
         elif text == 'DB':
             enable = not self.ui.dQueryLineEdit.text().isEmpty()
             self.ui.applyPushButton.setEnabled(enable)
             self.ui.savePushButton.setEnabled(enable)
+            self.ui.storePushButton.setEnabled(enable)
         elif text == 'TANGO':    
             enable = not self.ui.tDevNameLineEdit.text().isEmpty() and \
                 not self.ui.tMemberNameLineEdit.text().isEmpty()
             self.ui.applyPushButton.setEnabled(enable)
             self.ui.savePushButton.setEnabled(enable)
+            self.ui.storePushButton.setEnabled(enable)
         else:
             ## Additional non-supported frame
             enable = True
             self.ui.applyPushButton.setEnabled(enable)
             self.ui.savePushButton.setEnabled(enable)
+            self.ui.storePushButton.setEnabled(enable)
         
 
 
@@ -737,37 +741,48 @@ class DataSourceMethods(object):
     def reconnectSaveAction(self):
         if self.datasource.externalSave:
             self.dialog.disconnect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
-                         self.datasource.externalSave)
+                                   self.datasource.externalSave)
             self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
-                         self.datasource.externalSave)
+                                self.datasource.externalSave)
+        if self.datasource.externalStore:
+            self.dialog.disconnect(self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
+                                   self.datasource.externalStore)
+            self.dialog.connect(self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
+                                self.datasource.externalStore)
         if self.datasource.externalClose:
             self.dialog.disconnect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
-                         self.datasource.externalClose)
+                                   self.datasource.externalClose)
             self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
-                         self.datasource.externalClose)
+                                self.datasource.externalClose)
         if self.datasource.externalApply:
             self.dialog.disconnect(self.dialog.ui.applyPushButton, SIGNAL("clicked()"), 
-                         self.datasource.externalApply)
+                                   self.datasource.externalApply)
             self.dialog.connect(self.dialog.ui.applyPushButton, SIGNAL("clicked()"), 
-                         self.datasource.externalApply)
+                                self.datasource.externalApply)
 
 
     ## connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action
     # \param externalClose close action
-    def connectExternalActions(self, externalApply=None, externalSave=None, externalClose = None ):
+    # \param externalStore store action
+    def connectExternalActions(self, externalApply=None, externalSave=None,  
+                               externalClose = None, externalStore=None):
         if externalSave and self.datasource.externalSave is None:
             self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
-                         externalSave)
+                                externalSave)
             self.datasource.externalSave = externalSave
+        if externalStore and self.datasource.externalStore is None:
+            self.dialog.connect(self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
+                                externalStore)
+            self.datasource.externalStore = externalStore
         if externalClose and self.datasource.externalClose is None:
             self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
-                         externalClose)
+                                externalClose)
             self.datasource.externalClose = externalClose
         if externalApply and self.datasource.externalApply is None:
             self.dialog.connect(self.dialog.ui.applyPushButton, SIGNAL("clicked()"), 
-                     externalApply)
+                                externalApply)
             self.datasource.externalApply = externalApply
 
                     
@@ -875,6 +890,8 @@ class CommonDataSource(object):
 
         ## external save method
         self.externalSave = None
+        ## external store method
+        self.externalStore = None
         ## external close method
         self.externalClose = None
         ## external apply method
@@ -1312,9 +1329,12 @@ class DataSource(CommonDataSource):
     # \param externalApply apply action
     # \param externalSave save action
     # \param externalClose close action
-    def connectExternalActions(self, externalApply=None, externalSave=None, externalClose=None ):
+    # \param externalStore store action
+    def connectExternalActions(self, externalApply=None, externalSave=None, 
+                               externalClose=None,externalStore=None):
         if hasattr(self,"methods")  and self.methods:
-            return self.methods.connectExternalActions(externalApply, externalSave, externalClose)
+            return self.methods.connectExternalActions(
+                externalApply, externalSave, externalClose, externalStore)
 
     ## reconnects save actions
     # \brief It reconnects the save action 
@@ -1406,9 +1426,10 @@ class DataSourceDlg(CommonDataSourceDlg):
     # \param externalApply apply action
     # \param externalSave save action 
     # \param externalClose close action 
-    def connectExternalActions(self, externalApply=None, externalSave=None, externalClose=None):
+    # \param externalStore store action 
+    def connectExternalActions(self, externalApply=None, externalSave=None, externalClose=None, externalStore=None):
         if hasattr(self,"methods")  and self.methods:
-            return self.methods.connectExternalActions(externalApply, externalSave, externalClose)
+            return self.methods.connectExternalActions(externalApply, externalSave, externalClose, externalStore)
 
 
 if __name__ == "__main__":

@@ -121,6 +121,12 @@ class MainWindow(QMainWindow):
         ## component tree menu under mouse cursor
         self.contextMenuActions = None
 
+        ## slots for DataSource widget buttons
+        self.externalDSActions = {}
+
+        ## slots for Component widget buttons
+        self.externalCPActions = {}
+
         ## component list menu under mouse cursor
         self.componentListMenuActions = None
 
@@ -926,6 +932,21 @@ class MainWindow(QMainWindow):
                 ))
         
 
+        self.externalDSActions = {
+            "externalSave":self.dsourceSave, 
+            "externalApply":self.dsourceApply, 
+            "externalClose":self.dsourceClose, 
+            "externalStore":self.serverStoreDataSource}    
+
+
+        self.externalCPActions = {
+            "externalSave":self.componentSave,
+            "externalStore":self.serverStoreComponent,
+            "externalApply":self.componentApplyItem,
+            "externalClose":self.componentClose,
+            "externalDSLink":self.componentLinkDataSourceItem}
+
+
     ## stores the setting before finishing the application 
     # \param event Qt event   
     def closeEvent(self, event):
@@ -1055,7 +1076,7 @@ class MainWindow(QMainWindow):
     ## loads the datasource list
     # \brief It loads the datasource list from the default directory
     def loadDataSources(self):
-        self.sourceList.loadList(self.dsourceCollect, self.dsourceApply, self.dsourceClose)
+        self.sourceList.loadList(self.externalDSActions)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 
@@ -1066,14 +1087,15 @@ class MainWindow(QMainWindow):
     # \param datasources dictionary with datasources, i.e. name:xml
     # \param new logical variable set to True if objects are not saved    
     def setDataSources(self, datasources, new = False):
-        last = self.sourceList.setList(datasources, self.dsourceCollect, self.dsourceApply, self.dsourceClose, new)
+        last = self.sourceList.setList(
+            datasources,self.externalDSActions, new)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 
         self.sourceList.populateDataSources(ids)
         return last
         
-
+    
 
     ## sets the component list from the given dictionary
     # \param components dictionary with components, i.e. name:xml
@@ -1081,11 +1103,8 @@ class MainWindow(QMainWindow):
         self.componentList.setList(
             components, 
             self.contextMenuActions,
-            self.componentCollect,
-            self.componentApplyItem,
-            self.componentClose,
-            self.componentLinkDataSourceItem
-            )
+            self.externalCPActions 
+           )
         idc =  self.componentList.components.itervalues().next().id \
             if len(self.componentList.components) else None
 
@@ -1099,10 +1118,7 @@ class MainWindow(QMainWindow):
 #        self.componentList.components = {}
         self.componentList.loadList(
             self.contextMenuActions,
-            self.componentCollect,
-            self.componentApplyItem,
-            self.componentClose,
-            self.componentLinkDataSourceItem
+            self.externalCPActions, 
             )
         idc =  self.componentList.components.itervalues().next().id \
             if len(self.componentList.components) else None

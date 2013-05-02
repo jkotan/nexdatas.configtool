@@ -568,7 +568,14 @@
           <item>
            <widget class="QPushButton" name="savePushButton">
             <property name="text">
-             <string>C&amp;ollect</string>
+             <string>&amp;Save</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="storePushButton">
+            <property name="text">
+             <string>&amp;Store</string>
             </property>
            </widget>
           </item>
@@ -603,6 +610,7 @@
  </widget>
  <tabstops>
   <tabstop>typeComboBox</tabstop>
+  <tabstop>nameLineEdit</tabstop>
   <tabstop>cRecNameLineEdit</tabstop>
   <tabstop>tDevNameLineEdit</tabstop>
   <tabstop>tMemberComboBox</tabstop>
@@ -618,9 +626,11 @@
   <tabstop>dAddPushButton</tabstop>
   <tabstop>dRemovePushButton</tabstop>
   <tabstop>docTextEdit</tabstop>
+  <tabstop>savePushButton</tabstop>
+  <tabstop>storePushButton</tabstop>
+  <tabstop>closePushButton</tabstop>
   <tabstop>applyPushButton</tabstop>
   <tabstop>resetPushButton</tabstop>
-  <tabstop>closePushButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

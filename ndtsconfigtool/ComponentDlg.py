@@ -147,6 +147,8 @@ class Component(object):
 
         ## save action
         self.externalSave = None
+        ## strore action
+        self.externalStore = None
         ## apply action
         self.externalApply = None
         ## close action
@@ -652,13 +654,19 @@ class Component(object):
     # \param externalApply apply action
     # \param externalSave save action
     # \param externalClose close action
+    # \param externalStore store action
     # \param externalDSLink dsource link action
     def connectExternalActions(self, externalApply=None , externalSave=None
-                               , externalClose = None, externalDSLink = None  ):
+                               , externalClose = None , externalStore=None, 
+                               externalDSLink = None  ):
         if externalSave and self.externalSave is None:
             self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
             self.externalSave = externalSave
+        if externalStore and self.externalStore is None:
+            self.dialog.connect(self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
+                         externalStore)
+            self.externalStore = externalStore
         if externalClose and self.externalClose is None:
             self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
                          externalClose)
@@ -678,6 +686,12 @@ class Component(object):
                          self.externalSave)
             self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                          self.externalSave)
+        if self.externalStore:
+            self.dialog.disconnect(self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
+                         self.externalStore)
+            self.dialog.connect(self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
+                         self.externalStore)
+        if self.externalClose:
             self.dialog.disconnect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
                          self.externalClose)
             self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 

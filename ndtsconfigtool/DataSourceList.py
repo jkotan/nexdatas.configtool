@@ -55,6 +55,8 @@ class DataSourceList(QWidget):
     def createGUI(self):
 
         self.ui.setupUi(self)
+        self.ui.sourceListWidget.setEditTriggers(self.ui.sourceListWidget.SelectedClicked)
+
         self.populateDataSources()
 
 
@@ -82,10 +84,8 @@ class DataSourceList(QWidget):
             
 
     ## loads the datasource list from the given dictionary
-    # \param externalSave save action
-    # \param externalApply apply action
-    # \param externalClose close action
-    def loadList(self, externalSave = None, externalApply = None , externalClose = None ):
+    # \param externalActions dictionary with external actions
+    def loadList(self, externalActions = {}):
         try:
             dirList=[l for l in  os.listdir(self.directory) if l.endswith(".ds.xml")]
         except:
@@ -114,7 +114,7 @@ class DataSourceList(QWidget):
 
             
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(externalApply, externalSave, externalClose)    
+                dlg.connectExternalActions(**externalActions)    
             
             ds = LabeledObject(name, dlg)
             self.datasources[id(ds)] =  ds
@@ -126,11 +126,9 @@ class DataSourceList(QWidget):
 
     ## sets the datasources
     # \param datasources dictionary with the datasources, i.e. name:xml
-    # \param externalSave save action
-    # \param externalApply apply action
-    # \param externalClose close action
+    # \param externalActions dictionary with external actions
     # \param new logical variableset to True if datasource is not saved
-    def setList(self, datasources, externalSave = None, externalApply = None, externalClose = None, new = False):
+    def setList(self, datasources, externalActions = {}, new = False):
         try:
             dirList=os.listdir(self.directory)
         except:
@@ -150,13 +148,19 @@ class DataSourceList(QWidget):
             dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
-            
-            dlg.set(datasources[dsname], new)    
-
+        
+            try:
+                dlg.set(datasources[dsname], new)    
+            except:
+                QMessageBox.warning(self, "DataSource cannot be loaded",
+                                    "DataSource %s cannot be loaded" % name),
+                dlg.createGUI()
+                            
+                
             dlg.dataSourceName = dsname
 
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(externalApply, externalSave, externalClose)    
+                dlg.connectExternalActions(**externalActions)    
             
             ds = LabeledObject(name, dlg)
             if new:

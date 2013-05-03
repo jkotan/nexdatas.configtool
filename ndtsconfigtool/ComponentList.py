@@ -60,6 +60,7 @@ class ComponentList(QWidget):
 
         self.ui.setupUi(self)
 
+        self.ui.componentListWidget.setEditTriggers(self.ui.componentListWidget.SelectedClicked)
 
 #        self.connect(self.ui.componentListWidget, 
 #                     SIGNAL("itemChanged(QListWidgetItem*)"),
@@ -222,12 +223,8 @@ class ComponentList(QWidget):
             
     ## loads the component list from the given dictionary
     # \param itemActions actions of the context menu
-    # \param externalSave save action
-    # \param externalApply apply action
-    # \param externalClose close action
-    # \param externalDSLink datasource link action
-    def loadList(self, itemActions, externalSave = None, externalApply = None, 
-                 externalClose = None, externalDSLink = None ):
+    # \param externalActions dictionary with external actions
+    def loadList(self, itemActions, externalActions = {}):
         try:
             dirList=[l for l in os.listdir(self.directory) if l.endswith(".xml")]
         except:
@@ -254,7 +251,7 @@ class ComponentList(QWidget):
 
             dlg.load()    
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(externalApply, externalSave, externalClose, externalDSLink)    
+                dlg.connectExternalActions(**externalActions)    
 
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp
@@ -267,12 +264,8 @@ class ComponentList(QWidget):
     ## sets the component
     # \param components dictionary with the components, i.e. name:xml
     # \param itemActions actions of the tree context menu
-    # \param externalSave save action
-    # \param externalApply apply action
-    # \param externalClose close action
-    # \param externalDSLink datasource link action
-    def setList(self, components,  itemActions, externalSave = None, externalApply = None, 
-                externalClose = None, externalDSLink = None ):
+    # \param externalActions dictionary with external actions
+    def setList(self, components,  itemActions, externalActions = {}):
         try:
             dirList=os.listdir(self.directory)
         except:
@@ -292,10 +285,15 @@ class ComponentList(QWidget):
             dlg.name = name
             dlg.createGUI()
             dlg.addContextMenu(itemActions)
+            try:
+                dlg.set(components[name])    
+            except:
+                QMessageBox.warning(self, "Component cannot be loaded",
+                                    "Component %s cannot be loaded" % name),
 
-            dlg.set(components[name])    
+                
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(externalApply, externalSave, externalClose, externalDSLink)    
+                dlg.connectExternalActions(**externalActions)    
 
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp

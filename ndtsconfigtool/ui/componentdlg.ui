@@ -22,7 +22,7 @@
      <property name="handleWidth">
       <number>6</number>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QTreeView" name="view"/>
@@ -33,6 +33,13 @@
           <widget class="QPushButton" name="savePushButton">
            <property name="text">
             <string>&amp;Save</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="storePushButton">
+           <property name="text">
+            <string>&amp;Store</string>
            </property>
           </widget>
          </item>
@@ -78,6 +85,12 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>savePushButton</tabstop>
+  <tabstop>storePushButton</tabstop>
+  <tabstop>closePushButton</tabstop>
+  <tabstop>view</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

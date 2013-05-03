@@ -566,6 +566,27 @@
         <item row="0" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
+           <widget class="QPushButton" name="savePushButton">
+            <property name="text">
+             <string>&amp;Save</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="storePushButton">
+            <property name="text">
+             <string>&amp;Store</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="closePushButton">
+            <property name="text">
+             <string>&amp;Close</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -578,20 +599,6 @@
             </property>
            </spacer>
           </item>
-          <item>
-           <widget class="QPushButton" name="closePushButton">
-            <property name="text">
-             <string>&amp;Close</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="savePushButton">
-            <property name="text">
-             <string>&amp;Save</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
        </layout>
@@ -602,8 +609,8 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>savePushButton</tabstop>
   <tabstop>typeComboBox</tabstop>
+  <tabstop>nameLineEdit</tabstop>
   <tabstop>cRecNameLineEdit</tabstop>
   <tabstop>tDevNameLineEdit</tabstop>
   <tabstop>tMemberComboBox</tabstop>
@@ -619,9 +626,11 @@
   <tabstop>dAddPushButton</tabstop>
   <tabstop>dRemovePushButton</tabstop>
   <tabstop>docTextEdit</tabstop>
+  <tabstop>savePushButton</tabstop>
+  <tabstop>storePushButton</tabstop>
+  <tabstop>closePushButton</tabstop>
   <tabstop>applyPushButton</tabstop>
   <tabstop>resetPushButton</tabstop>
-  <tabstop>closePushButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

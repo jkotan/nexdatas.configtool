@@ -221,7 +221,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
     def checkMessageBox(self):
-        self.assertEqual(QApplication.activeWindow(),None)
+#        self.assertEqual(QApplication.activeWindow(),None)
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
 #        print mb.text()

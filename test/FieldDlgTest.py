@@ -281,24 +281,43 @@ class FieldDlgTest(unittest.TestCase):
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
         self.assertEqual(form.ui.typeComboBox.currentIndex(), 
                          form.ui.typeComboBox.findText('other ...'))
         
         self.assertTrue(not form.ui.applyPushButton.isEnabled())
         self.assertTrue(form.ui.resetPushButton.isEnabled())
 
-        name = "myname"
-        nType = "NXEntry"
+        name = "myfield"
+        nType = "NX_DATE_TIME"
+        units = "seconds"
+        value = "14:45"
         QTest.keyClicks(form.ui.nameLineEdit, name)
         self.assertEqual(form.ui.nameLineEdit.text(),name)
         QTest.keyClicks(form.ui.typeLineEdit, nType)
         self.assertEqual(form.ui.typeLineEdit.text(), nType)
+
+        QTest.keyClicks(form.ui.unitsLineEdit, units)
+        self.assertEqual(form.ui.unitsLineEdit.text(), units)
+        QTest.keyClicks(form.ui.valueLineEdit, value)
+        self.assertEqual(form.ui.valueLineEdit.text(), value)
+
+
         self.assertEqual(form.ui.typeComboBox.currentIndex(), 
                          form.ui.typeComboBox.findText('other ...'))
 
      
         self.assertTrue(not form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(not form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.valueLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
+        
 
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
@@ -322,7 +341,14 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
+        self.assertEqual(form.value, '')
+        self.assertEqual(form.dimDoc, '')
+        self.assertEqual(form.rank, 0) 
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
 
@@ -331,30 +357,57 @@ class FieldDlgTest(unittest.TestCase):
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
 
 
         name = "myname"
         nType = "NXEntry"
+        units = "seconds"
+        value = "14:45"
         doc = "My documentation: \n ble ble ble "
         attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
+        nn =  self.__rnd.randint(1, 9) 
+
+        dimensions = [self.__rnd.randint(0, 40)  for n in range(nn)]
         
         self.assertEqual(form.updateForm(),None)
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.rank,0)
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
 
         form.name = name
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
 
         self.assertEqual(form.updateForm(),None)
     
         self.assertEqual(form.ui.nameLineEdit.text(),name)
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertEqual(form.rank,0)
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
 
         form.ui.nameLineEdit.setText("")
 
@@ -364,30 +417,166 @@ class FieldDlgTest(unittest.TestCase):
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertEqual(form.rank,0)
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
 
         self.assertEqual(form.updateForm(),None)
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertEqual(form.ui.typeLineEdit.text(), nType)
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.rank,0)
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
+
 
 
 
 
         form.ui.typeLineEdit.setText("")
 
-        form.doc = doc
         form.nexusType = ""
+
+        form.units = units
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertEqual(form.rank,0)
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
+
+        self.assertEqual(form.updateForm(),None)
+    
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertEqual(form.rank,0)
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.unitsLineEdit.text(), units)
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
+
+
+        form.ui.unitsLineEdit.setText("")
+        form.units = ""
+
+
+        form.dimensions = dimensions
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.rank,0)
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
+
+        self.assertEqual(form.updateForm(),None)
+    
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty)
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),str(dimensions))
+        self.assertEqual(form.rank,len(dimensions))
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
+
+
+        form.ui.dimLabel.setText("[]")
+        form.dimensions = []
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.rank,len(dimensions))
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
+
+        self.assertEqual(form.updateForm(),None)
+    
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty)
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),str([0]*len(dimensions)).replace('0','*'))
+        self.assertEqual(form.rank,len(dimensions))
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
+
+
+        form.ui.dimLabel.setText("[]")
+        form.dimensions = []
+        form.rank = 0
+
+        form.value = value
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.rank,0)
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
+
+        self.assertEqual(form.updateForm(),None)
+    
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.valueLineEdit.text(), value)
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
+
+
+        form.ui.valueLineEdit.setText("")
+        form.value = ""
+
+
+        form.doc = doc
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
 
         self.assertEqual(form.updateForm(),None)
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
 
 
 

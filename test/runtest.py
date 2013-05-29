@@ -32,6 +32,7 @@ import ConnectDlgTest
 import DimensionsDlgTest
 import DefinitionDlgTest
 import GroupDlgTest
+import FieldDlgTest
 import NodeDlgTest
 import ComponentItemTest
 import ComponentModelTest
@@ -97,6 +98,7 @@ def main():
     AttributeDlgTest.app = app
     ConnectDlgTest.app = app
     DimensionsDlgTest.app = app
+    GroupDlgTest.app = app
     ComponentItemTest.app = app
     DomToolsTest.app = app
 
@@ -118,6 +120,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(GroupDlgTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(FieldDlgTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NodeDlgTest) )

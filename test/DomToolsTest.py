@@ -66,7 +66,6 @@ class DomToolsTest(unittest.TestCase):
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             self.__seed  = long(time.time() * 256) 
-        self.__seed = 19735062335824498925800919817530668364
 
 
         self.__rnd = random.Random(self.__seed)

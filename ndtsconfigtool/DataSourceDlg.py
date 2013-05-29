@@ -57,7 +57,8 @@ class CommonDataSourceDlg(NodeDlg):
     def keyPressEvent(self, event):
         
         if event.key() == Qt.Key_Escape:
-            print "NO CLOSE"
+            pass
+#            print "NO CLOSE"
 #            self.close()
 
 
@@ -614,9 +615,10 @@ class DataSourceMethods(object):
         row = index.row()
         column = index.column()
         parent = index.parent()
-        
+
         if self.dialog.root :
             self.updateNode(index)
+                
             if index.isValid():
                 index = self.dialog.view.model().index(row, column, parent)
                 self.dialog.view.setCurrentIndex(index)
@@ -637,17 +639,9 @@ class DataSourceMethods(object):
         return True    
 
 
-
-    ## creates datasource node
-    # \param external True if it should be create on a local DOM root, i.e. in component tree
-    # \returns created DOM node   
-    def createNodes(self, external = False):        
-        if external:
-            root = QDomDocument()
-        else:
-            if not self.dialog.root or not self.dialog.node:
-                self.createHeader()
-            root = self.dialog.root 
+    ## creates DOM datasource node
+    # \param root root node 
+    def __createDOMNodes(self, root):
         newDs = root.createElement(QString("datasource"))
         elem=newDs.toElement()
 #        attributeMap = self.datasource.newDs.attributes()
@@ -700,11 +694,24 @@ class DataSourceMethods(object):
             newText = root.createTextNode(QString(self.datasource.doc))
             newDoc.appendChild(newText)
             elem.appendChild(newDoc)
+        return elem    
+        
 
+    ## creates datasource node
+    # \param external True if it should be create on a local DOM root, i.e. in component tree
+    # \returns created DOM node   
+    def createNodes(self, external = False):        
+        if external:
+            root = QDomDocument()
+        else:
+            if not self.dialog.root or not self.dialog.node:
+                self.createHeader()
+            root = self.dialog.root 
 
-        if external and hasattr(self.dialog.root,"importNode"):
+        elem = self.__createDOMNodes(root)    
+
+        if external and hasattr(self.dialog.root, "importNode"):
             rootDs = self.dialog.root.importNode(elem, True)
-            print "import"
         else:
             rootDs = elem
         return rootDs
@@ -721,7 +728,6 @@ class DataSourceMethods(object):
 
         elem = oldDs.toElement()
         
-        print
 
         if hasattr(index,"parent"):
             parent = index.parent()
@@ -825,9 +831,11 @@ class DataSourceMethods(object):
         self.dialog.root = self.datasource.document
         if not self.datasource.document.setContent(self.datasource.repair(text)):
             raise ValueError, "could not parse XML"
-
-
-        ds = self.dialog.dts.getFirstElement(self.datasource.document, "datasource")           
+        else:
+            if self.dialog and hasattr(self.dialog,"root"):
+                self.dialog.root = self.datasource.document 
+                self.dialog.node = self.dialog.dts.getFirstElement(self.datasource.document, 
+                                                                   "datasource")
         if not ds:
             return
         self.dialog.root.removeChild(ds)            
@@ -1041,10 +1049,8 @@ class DataSource(CommonDataSource):
     # \returns True if it is not saved     
     def isDirty(self):
         string = self.get()
-#        if string != self.savedXML:
-#            print "name:", self.name
-#            print "string", string
-#            print "saved string", self.savedXML 
+
+            
         return False if string == self.savedXML else True
 
 
@@ -1158,8 +1164,7 @@ class DataSource(CommonDataSource):
 
         newds = newdoc.importNode(ds,True)
         definition.appendChild(newds)            
-           
-        print "NEW TEXT", newdoc.toString(0)
+
         return newdoc.toString(0)
 
             
@@ -1171,6 +1176,9 @@ class DataSource(CommonDataSource):
         self.root = self.document
         if not self.document.setContent(self.repair(xml)):
             raise ValueError, "could not parse XML"
+        else:
+            if self.dialog and hasattr(self.dialog,"root"):
+                self.dialog.root = self.document 
 
         ds = self.dialog.dts.getFirstElement(self.document, "datasource")           
         if ds:
@@ -1189,6 +1197,7 @@ class DataSource(CommonDataSource):
     ## accepts and save input text strings
     # \brief It copies the parameters and saves the dialog
     def save(self):
+
         error = None
         filename = os.path.join(self.directory, self.name + ".ds.xml") 
         print "saving in %s"% (filename)
@@ -1199,10 +1208,12 @@ class DataSource(CommonDataSource):
                     raise IOError, unicode(fh.errorString())
                 stream = QTextStream(fh)
                 self.createNodes()
-                self.document.setContent(self.repair(self.document.toString(0)))
-                stream << self.document.toString(2)
+                document = QDomDocument()
+                document.setContent(self.repair(self.document.toString(0)))
+                
+                stream << document.toString(2)
             #                print self.document.toString(2)
-                self.savedXML = self.document.toString(0)
+                self.savedXML = document.toString(0)
             except (IOError, OSError, ValueError), e:
                 error = "Failed to save: %s " % e \
                     + "Please try to use Save As command " \

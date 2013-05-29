@@ -425,7 +425,8 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.createGUI(), None)
         form.show()
 
-        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+#        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+        form.ui.rankSpinBox.setValue(rank)
         self.assertEqual(form.ui.rankSpinBox.value(), rank)
 
         form.accept()
@@ -461,7 +462,8 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.createGUI(), None)
         form.show()
 
-        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+#        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+        form.ui.rankSpinBox.setValue(rank)
 
         self.assertEqual(form.ui.rankSpinBox.value(),rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
@@ -508,7 +510,8 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.createGUI(), None)
         form.show()
 
-        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+#        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+        form.ui.rankSpinBox.setValue(rank)
 
 #        form.ui.docTextEdit.setText(str(doc))
 
@@ -553,7 +556,8 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.createGUI(), None)
         form.show()
 
-        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+        form.ui.rankSpinBox.setValue(rank)
+#        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
 
 #        form.ui.docTextEdit.setText(str(doc))
 
@@ -606,7 +610,8 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.createGUI(), None)
         form.show()
 
-        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+        form.ui.rankSpinBox.setValue(rank)
+#        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
 
 #        form.ui.docTextEdit.setText(str(doc))
 
@@ -660,7 +665,8 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.createGUI(), None)
         form.show()
 
-        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
+        form.ui.rankSpinBox.setValue(rank)
+#        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
 
 #        form.ui.docTextEdit.setText(str(doc))
 

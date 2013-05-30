@@ -191,6 +191,8 @@ class FieldDlg(NodeDlg):
         if node:
             ## defined in NodeDlg
             self.node = node
+        if not self.node:
+            return
         attributeMap = self.node.attributes()
         nNode = unicode(self.node.nodeName())
 

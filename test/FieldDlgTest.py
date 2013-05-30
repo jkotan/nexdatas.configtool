@@ -1507,13 +1507,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.result(),0)
 
 
-##################
-############ TODO
-
-
-
-
-
 
     ## constructor test
     # \brief It tests default settings
@@ -1532,12 +1525,28 @@ class FieldDlgTest(unittest.TestCase):
         qdn.setAttribute("shortname","mynshort%s" %  nn)
         doc.appendChild(qdn) 
         dname = "doc"
+
         mdoc = doc.createElement(dname)
         qdn.appendChild(mdoc) 
         ndcs =  self.__rnd.randint(0, 10) 
         for n in range(ndcs):
             dks.append(doc.createTextNode("\nText\n %s\n" %  n))
             mdoc.appendChild(dks[-1]) 
+
+        rn =  self.__rnd.randint(1, 9) 
+        dimensions = [self.__rnd.randint(0, 40)  for n in range(rn)]
+
+        mdim = doc.createElement('dimensions')
+        mdim.setAttribute("rank", QString(unicode(rn)))
+        
+        for i in range(rn):
+            dim = doc.createElement(QString("dim"))
+            dim.setAttribute(QString("index"), QString(unicode(i+1)))
+            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            mdim.appendChild(dim)
+                
+        qdn.appendChild(mdim) 
+
 
 
 
@@ -1548,6 +1557,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
@@ -1558,6 +1568,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         
@@ -1571,10 +1582,12 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
 
+        self.assertEqual(form.dimensions, dimensions)
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(), '[]')
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
         self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
@@ -1600,6 +1613,7 @@ class FieldDlgTest(unittest.TestCase):
         qdn.setAttribute("shortname","mynshort%s" %  nn)
         doc.appendChild(qdn) 
         dname = "doc"
+
         mdoc = doc.createElement(dname)
         qdn.appendChild(mdoc) 
         ndcs =  self.__rnd.randint(0, 10) 
@@ -1607,15 +1621,31 @@ class FieldDlgTest(unittest.TestCase):
             dks.append(doc.createTextNode("\nText\n %s\n" %  n))
             mdoc.appendChild(dks[-1]) 
 
+        rn =  self.__rnd.randint(1, 9) 
+        dimensions = [self.__rnd.randint(0, 40)  for n in range(rn)]
+
+        mdim = doc.createElement('dimensions')
+        mdim.setAttribute("rank", QString(unicode(rn)))
+        
+        for i in range(rn):
+            dim = doc.createElement(QString("dim"))
+            dim.setAttribute(QString("index"), QString(unicode(i+1)))
+            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            mdim.appendChild(dim)
+                
+        qdn.appendChild(mdim) 
+
+
 
 
         form = FieldDlg()
         form.show()
-#        form.node = qdn
+        form.node = None
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
@@ -1626,11 +1656,11 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         
         form.setFromNode(qdn)
-        self.assertEqual(form.node, qdn)
 
 
         self.assertEqual(form.name, "myname%s" %  nn)
@@ -1640,18 +1670,24 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
 
+        self.assertEqual(form.dimensions, dimensions)
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(), '[]')
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
         self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
 
 
+
+
+
+
     ## constructor test
     # \brief It tests default settings
-    def ttest_setFromNode_noNode(self):
+    def test_setFromNode_nonode(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
@@ -1666,6 +1702,7 @@ class FieldDlgTest(unittest.TestCase):
         qdn.setAttribute("shortname","mynshort%s" %  nn)
         doc.appendChild(qdn) 
         dname = "doc"
+
         mdoc = doc.createElement(dname)
         qdn.appendChild(mdoc) 
         ndcs =  self.__rnd.randint(0, 10) 
@@ -1673,15 +1710,31 @@ class FieldDlgTest(unittest.TestCase):
             dks.append(doc.createTextNode("\nText\n %s\n" %  n))
             mdoc.appendChild(dks[-1]) 
 
+        rn =  self.__rnd.randint(1, 9) 
+        dimensions = [self.__rnd.randint(0, 40)  for n in range(rn)]
+
+        mdim = doc.createElement('dimensions')
+        mdim.setAttribute("rank", QString(unicode(rn)))
+        
+        for i in range(rn):
+            dim = doc.createElement(QString("dim"))
+            dim.setAttribute(QString("index"), QString(unicode(i+1)))
+            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            mdim.appendChild(dim)
+                
+        qdn.appendChild(mdim) 
+
+
 
 
         form = FieldDlg()
         form.show()
-#        form.node = qdn
+        form.node = None
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
@@ -1692,6 +1745,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         
@@ -1701,17 +1755,17 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(), '[]')
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
         self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
 
 
     ## constructor test
@@ -1727,6 +1781,8 @@ class FieldDlgTest(unittest.TestCase):
         doc.appendChild(qdn) 
 
 
+
+
         form = FieldDlg()
         form.show()
         form.node = qdn
@@ -1734,6 +1790,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
@@ -1744,6 +1801,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         
@@ -1753,6 +1811,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
 
@@ -1761,9 +1820,20 @@ class FieldDlgTest(unittest.TestCase):
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(), '[]')
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
         self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
+
+
+
+
+##################
+############ TODO
+
+
+
+
 
 
 

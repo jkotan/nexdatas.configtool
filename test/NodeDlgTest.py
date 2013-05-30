@@ -250,7 +250,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
         self.assertTrue(isinstance(form.dts, DomTools))
-
+        self.assertEqual(form.dsLabel, 'datasources')
 
         self.assertEqual(form.result(),0)
 

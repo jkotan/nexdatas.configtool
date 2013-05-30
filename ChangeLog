@@ -1,3 +1,7 @@
+2013-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* removing doc for dimensions
+	* tagged as v1.2.4
+
 2013-05-30 Jan Kotanski <jankotan@gmail.com>
 	* fixes for datasource saving
 	* adding tests

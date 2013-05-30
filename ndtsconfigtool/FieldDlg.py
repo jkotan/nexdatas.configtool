@@ -52,8 +52,6 @@ class FieldDlg(NodeDlg):
         self.value = u''
         ## field doc
         self.doc = u''
-        ## dimensions doc
-        self.dimDoc = u''
         ## field attributes
         self.attributes = {}
         self.__attributes = {}
@@ -82,7 +80,6 @@ class FieldDlg(NodeDlg):
                  self.units,
                  self.value,
                  self.doc,
-                 self.dimDoc,
                  self.rank,
                  attributes,
                  dimensions
@@ -101,7 +98,6 @@ class FieldDlg(NodeDlg):
          self.units,
          self.value,
          self.doc,
-         self.dimDoc,
          self.rank,
          attributes,
          dimensions
@@ -292,11 +288,9 @@ class FieldDlg(NodeDlg):
         dform  = DimensionsDlg( self)
         dform.rank = self.rank
         dform.lengths = [ln for ln in self.__dimensions]
-        dform.doc = self.dimDoc
         dform.createGUI()
         if dform.exec_():
             self.rank = dform.rank
-            self.dimDoc = dform.doc
             if self.rank:
                 self.__dimensions = [ln for ln in dform.lengths]
             else:    
@@ -524,7 +518,6 @@ if __name__ == "__main__":
     form.doc = """Distance between the source and the mca detector.
 It should be defined by client."""
     form.dimensions = [3]
-    form.dimDoc = "(x,y,z) coordinates"
     form.value ="1.23,3.43,4.23"
     form.createGUI()
     form.show()
@@ -547,8 +540,6 @@ It should be defined by client."""
         print "Dimensions:"
         for row, ln in enumerate(form.dimensions):
             print  " %s: %s " % (row+1, ln)
-    if form.dimDoc:
-        print "Dimensions Doc: \n%s" % form.dimDoc
             
     if form.doc:
         print "Doc: \n%s" % form.doc

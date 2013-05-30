@@ -182,7 +182,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
         self.assertEqual(form.units, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})
@@ -213,7 +212,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.units, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
@@ -267,7 +265,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
         self.assertEqual(form.units, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})
@@ -344,7 +341,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
         self.assertEqual(form.units, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})
@@ -674,7 +670,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.units, '')
         self.assertEqual(form.dimensions, [])
@@ -692,18 +687,17 @@ class FieldDlgTest(unittest.TestCase):
         units = "Tmm"
         value = "asd1234"
         doc = "My documentation: \n ble ble ble "
-        dimdoc = "My Dim documentation: \n ble ble ble "
         rank = 3
         attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
         dimensions = [1, 2, 3, 4]
 
         
-        self.assertEqual(form.getState(),('','','','','','',0,{},[]))
+        self.assertEqual(form.getState(),('','','','','',0,{},[]))
     
 
         form.name = name
 
-        self.assertEqual(form.getState(),(name,'','','','','',0,{},[]))
+        self.assertEqual(form.getState(),(name,'','','','',0,{},[]))
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
@@ -718,7 +712,7 @@ class FieldDlgTest(unittest.TestCase):
         form.name = ""
 
         form.nexusType = nType
-        self.assertEqual(form.getState(),('',nType,'','','','',0,{},[]))
+        self.assertEqual(form.getState(),('',nType,'','','',0,{},[]))
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
@@ -732,7 +726,7 @@ class FieldDlgTest(unittest.TestCase):
 
 
         form.units = units
-        self.assertEqual(form.getState(),('','',units,'','','',0,{},[]))
+        self.assertEqual(form.getState(),('','',units,'','',0,{},[]))
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -744,7 +738,7 @@ class FieldDlgTest(unittest.TestCase):
         form.units = ""
 
         form.value = value
-        self.assertEqual(form.getState(),('','','',value,'','',0,{},[]))
+        self.assertEqual(form.getState(),('','','',value,'',0,{},[]))
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -758,7 +752,7 @@ class FieldDlgTest(unittest.TestCase):
 
 
         form.doc = doc
-        self.assertEqual(form.getState(),('','','','',doc,'',0,{},[]))
+        self.assertEqual(form.getState(),('','','','',doc,0,{},[]))
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -770,22 +764,11 @@ class FieldDlgTest(unittest.TestCase):
         form.doc = ""
 
 
-        form.dimDoc = dimdoc
-        self.assertEqual(form.getState(),('','','','','',dimdoc,0,{},[]))
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-        form.dimDoc = ""
 
 
 
         form.rank = rank
-        self.assertEqual(form.getState(),('','','','','','',rank,{},[]))
+        self.assertEqual(form.getState(),('','','','','',rank,{},[]))
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -806,13 +789,12 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(state[2],'')
         self.assertEqual(state[3],'')
         self.assertEqual(state[4],'')
-        self.assertEqual(state[5],'')
-        self.assertEqual(state[6],0)
-        self.assertEqual(state[8],[])
-        self.assertEqual(len(state),9)
-        self.assertEqual(len(state[7]),len(attributes))
+        self.assertEqual(state[5],0)
+        self.assertEqual(state[7],[])
+        self.assertEqual(len(state),8)
+        self.assertEqual(len(state[6]),len(attributes))
         for at in attributes:
-            self.assertEqual(attributes[at], state[7][at])
+            self.assertEqual(attributes[at], state[6][at])
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
@@ -834,13 +816,12 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(state[2],'')
         self.assertEqual(state[3],'')
         self.assertEqual(state[4],'')
-        self.assertEqual(state[5],'')
-        self.assertEqual(state[6],0)
-        self.assertEqual(state[7],{})
-        self.assertEqual(len(state),9)
-        self.assertEqual(len(state[8]),len(dimensions))
+        self.assertEqual(state[5],0)
+        self.assertEqual(state[6],{})
+        self.assertEqual(len(state),8)
+        self.assertEqual(len(state[7]),len(dimensions))
         for i in range(len(dimensions)):
-            self.assertEqual(dimensions[i], state[8][i])
+            self.assertEqual(dimensions[i], state[7][i])
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
@@ -859,7 +840,6 @@ class FieldDlgTest(unittest.TestCase):
         form.units = units
         form.value = value
         form.doc = doc
-        form.dimDoc = dimdoc
         form.rank = rank
         form.dimensions = dimensions
         form.attributes = attributes
@@ -871,16 +851,15 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(state[2],units)
         self.assertEqual(state[3],value)
         self.assertEqual(state[4],doc)
-        self.assertEqual(state[5],dimdoc)
-        self.assertEqual(state[6],rank)
-        self.assertEqual(len(state),9)
-        self.assertTrue(state[7] is not attributes)
-        self.assertEqual(len(state[7]),len(attributes))
+        self.assertEqual(state[5],rank)
+        self.assertEqual(len(state),8)
+        self.assertTrue(state[6] is not attributes)
+        self.assertEqual(len(state[6]),len(attributes))
         for at in attributes:
-            self.assertEqual(attributes[at], state[7][at])
-        self.assertEqual(len(state[8]),len(dimensions))
+            self.assertEqual(attributes[at], state[6][at])
+        self.assertEqual(len(state[7]),len(dimensions))
         for i in range(len(dimensions)):
-            self.assertEqual(dimensions[i], state[8][i])
+            self.assertEqual(dimensions[i], state[7][i])
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
@@ -917,7 +896,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
         self.assertEqual(form.units, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})
@@ -935,13 +913,12 @@ class FieldDlgTest(unittest.TestCase):
         units = "Tmm"
         value = "asd1234"
         doc = "My documentation: \n ble ble ble "
-        dimdoc = "My Dim documentation: \n ble ble ble "
         rank = 3
         attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
         dimensions = [1, 2, 3, 4]
 
         
-        self.assertEqual(form.setState(['','','','','','',0,{},[]]), None)
+        self.assertEqual(form.setState(['','','','','',0,{},[]]), None)
     
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -958,13 +935,12 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
         self.assertEqual(form.units, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})
 
 
-        self.assertEqual(form.setState([name,'','','','','',0,{},[]]), None)
+        self.assertEqual(form.setState([name,'','','','',0,{},[]]), None)
     
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -981,7 +957,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.units, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})
@@ -990,7 +965,7 @@ class FieldDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['',nType,'','','','',0,{},[]]), None)
+        self.assertEqual(form.setState(['',nType,'','','',0,{},[]]), None)
     
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1007,7 +982,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
         self.assertEqual(form.units, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})
@@ -1017,7 +991,7 @@ class FieldDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['','',units,'','','',0,{},[]]), None)
+        self.assertEqual(form.setState(['','',units,'','',0,{},[]]), None)
     
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1034,7 +1008,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.units, units)
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})
@@ -1044,7 +1017,7 @@ class FieldDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['','','',value,'','',0,{},[]]), None)
+        self.assertEqual(form.setState(['','','',value,'',0,{},[]]), None)
     
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1060,7 +1033,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, value)
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})
@@ -1071,7 +1043,7 @@ class FieldDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['','','','',doc,'',0,{},[]]), None)
+        self.assertEqual(form.setState(['','','','',doc,0,{},[]]), None)
     
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1087,7 +1059,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, doc)
         self.assertEqual(form.value, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})
@@ -1097,33 +1068,10 @@ class FieldDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['','','','','',dimdoc,0,{},[]]), None)
-    
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.dimDoc, dimdoc)
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
-
-        form.dimdoc = ''
 
 
 
-
-        self.assertEqual(form.setState(['','','','','','',rank,{},[]]), None)
+        self.assertEqual(form.setState(['','','','','',rank,{},[]]), None)
     
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1140,7 +1088,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
         self.assertEqual(form.units, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, rank) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})
@@ -1150,7 +1097,7 @@ class FieldDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['','','','','','',0,attributes,[]]), None)
+        self.assertEqual(form.setState(['','','','','',0,attributes,[]]), None)
     
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1166,7 +1113,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, attributes)
@@ -1175,7 +1121,7 @@ class FieldDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['','','','','','',0,{},dimensions]), None)
+        self.assertEqual(form.setState(['','','','','',0,{},dimensions]), None)
     
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1191,7 +1137,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.units, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, dimensions)
@@ -1199,7 +1144,7 @@ class FieldDlgTest(unittest.TestCase):
 
         form.dimensions = {}
 
-        self.assertEqual(form.setState([name,nType,units,value,doc,dimdoc,rank,attributes,dimensions]), None)
+        self.assertEqual(form.setState([name,nType,units,value,doc,rank,attributes,dimensions]), None)
     
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
@@ -1216,7 +1161,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, doc)
         self.assertEqual(form.value, value)
         self.assertEqual(form.units, units)
-        self.assertEqual(form.dimDoc, dimdoc)
         self.assertEqual(form.rank, rank) 
         self.assertEqual(form.dimensions, dimensions)
         self.assertEqual(form.attributes, attributes)
@@ -1314,7 +1258,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.value, '')
         self.assertEqual(form.units, '')
-        self.assertEqual(form.dimDoc, '')
         self.assertEqual(form.rank, 0) 
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.attributes, {})

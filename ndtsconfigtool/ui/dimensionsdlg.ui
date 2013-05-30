@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>236</width>
-    <height>317</height>
+    <width>225</width>
+    <height>215</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -83,19 +83,6 @@
      <item>
       <widget class="QTableWidget" name="dimTableWidget"/>
      </item>
-     <item>
-      <widget class="QLabel" name="docLabel">
-       <property name="text">
-        <string>&amp;Doc:</string>
-       </property>
-       <property name="buddy">
-        <cstring>docTextEdit</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QTextEdit" name="docTextEdit"/>
-     </item>
     </layout>
    </item>
   </layout>
@@ -103,7 +90,6 @@
  <tabstops>
   <tabstop>rankSpinBox</tabstop>
   <tabstop>dimTableWidget</tabstop>
-  <tabstop>docTextEdit</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>

@@ -56,10 +56,12 @@ class NodeDlg(QDialog):
         ## DOM tools
         self.dts = DomTools()
 
+        ## datasource label for templated XML
         self.dsLabel = "datasources"
 
     ## connects the given apply action
     # \param externalApply apply action   
+    # \param externalDSLink datasource link action   
     def connectExternalActions(self,  externalApply=None, externalDSLink=None):
         if externalApply and self.externalApply is None and self.ui and \
                 hasattr(self.ui,"applyPushButton") and self.ui.applyPushButton:

@@ -1187,6 +1187,96 @@ class FieldDlgTest(unittest.TestCase):
 
         self.assertEqual(form.result(),0)
 
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_linkDataSource(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = FieldDlg()
+        form.show()
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.value, '')
+        self.assertEqual(form.units, '')
+        self.assertEqual(form.dimDoc, '')
+        self.assertEqual(form.rank, 0) 
+        self.assertEqual(form.dimensions, [])
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+        self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
+
+        form.createGUI()
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(),'[]')
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText('other ...'))
+
+
+        name = "myname"
+        nType = "NXEntry"
+        units = "seconds"
+        value = "14:45"
+        doc = "My documentation: \n ble ble ble "
+        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
+        rank =  self.__rnd.randint(1, 9) 
+
+        dimensions = [self.__rnd.randint(0, 40)  for n in range(rank)]
+        
+        form.name = name
+        form.nexusType = nType
+        form.units = units
+        form.value = value
+        form.doc = doc
+        form.attributes = attributes
+        form.dimensions = dimensions
+        form.rank = rank
+        form.dsLabel = 'Sdatasources'
+
+        myds = "mydsName"
+        self.assertEqual(form.linkDataSource(myds),None)
+    
+        self.assertEqual(form.ui.typeLineEdit.text(), nType)
+        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+        self.assertEqual(form.ui.unitsLineEdit.text(),units)
+        self.assertEqual(form.ui.valueLineEdit.text(), "$%s.%s" % (form.dsLabel, myds) )
+
+
+
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        for i in range(len(attributes)):
+            it = form.ui.attributeTableWidget.item(i, 0) 
+            k = str(it.text())
+            self.assertTrue(k in attributes.keys())
+            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            self.assertEqual(it2.text(), attributes[k])
+
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+
 ##################
 ############ TODO
 

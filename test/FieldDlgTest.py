@@ -4016,7 +4016,408 @@ class FieldDlgTest(unittest.TestCase):
 
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_appendElement(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
+
+        dks = []
+        doc = QDomDocument()
+        nname = "field"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name","myname%s" %  nn)
+        qdn.setAttribute("type","mytype%s" %  nn)
+        qdn.setAttribute("unit","myunits%s" %  nn)
+        qdn.setAttribute("units","myunits%s" %  nn)
+        qdn.setAttribute("shortname","mynshort%s" %  nn)
+        doc.appendChild(qdn) 
+        dname = "doc"
+
+        dval = []
+        nval =  self.__rnd.randint(0, 10) 
+        for n in range(nval):
+            dval.append(doc.createTextNode("\nVAL\n %s\n" %  n))
+            qdn.appendChild(dval[-1]) 
+
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+        rn =  self.__rnd.randint(1, 9) 
+
+        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+
+        mdim = doc.createElement('dimensions')
+        mdim.setAttribute("rank", QString(unicode(rn)))
+        
+        for i in range(rn):
+            dim = doc.createElement(QString("dim"))
+            dim.setAttribute(QString("index"), QString(unicode(i+1)))
+            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            mdim.appendChild(dim)
+                
+        qdn.appendChild(mdim) 
+
+
+        form = FieldDlg()
+        form.show()
+        form.node = qdn
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.value, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
+        self.assertEqual(form.subItems, 
+                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+        self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
+
+        form.setFromNode()
+        form.createGUI()
+
+        attributeMap = form.node.attributes()
+        attrs = {"longname":"newlogname","unit":"myunits%s" %  nn}
+
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        ri = cm.rootIndex
+        di = cm.index(0,0,ri)
+        form.view = TestView(cm)
+        form.view.testIndex = di
+
+        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+
+
+        self.assertEqual(form.name, "myname%s" %  nn)
+        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.units, "myunits%s" % nn)
+        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" %  i  for i in range(nval)])).strip())
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(form.subItems, 
+                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+
+        self.assertEqual(form.dimensions, dimensions)
+
+
+
+        cnt = 0
+        for i in range(attributeMap.count()):
+            nm = attributeMap.item(i).nodeName()
+            vl = attributeMap.item(i).nodeValue()
+            if nm == "name":
+                self.assertEqual(vl,  "myname%s" %  nn)
+                cnt += 1 
+            elif nm == "type":
+                self.assertEqual(vl,  "mytype%s" %  nn)
+                cnt += 1 
+            elif nm == "units":
+                self.assertEqual(vl, "myunits%s" % nn)
+                cnt += 1 
+            else:
+                self.assertEqual(vl,ats[str(nm)])
+        self.assertEqual(len(attrs),attributeMap.count() - cnt)
+
+
+        mydoc = form.node.firstChildElement(QString("doc"))           
+        text = form.dts.getText(mydoc)    
+        olddoc = unicode(text).strip() if text else ""
+        self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        
+        vtext = form.dts.getText(qdn)    
+        oldval = unicode(vtext).strip() if vtext else ""
+        self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
+
+        mydm = form.node.firstChildElement(QString("dimensions"))           
+         
+        atdim = mydm.attributes()
+        self.assertEqual(rn, int(atdim.namedItem("rank").nodeValue()))
+        child = mydm.firstChild()           
+        while not child.isNull():
+            if child.nodeName() == unicode("dim"):
+                at = child.attributes()
+                ind = int(at.namedItem("index").nodeValue())
+                vl = int(at.namedItem("value").nodeValue())
+                self.assertTrue(ind >0 )
+                self.assertTrue(ind <= rn )
+                self.assertEqual(dimensions[ind-1], vl)
+            child = child.nextSibling()    
+
+
+
+
+
+        doc2 = QDomDocument()
+        nname2 = "datasource"
+        qdn2 = doc2.createElement(nname2)
+        qdn2.setAttribute("name","my2name%s" %  nn)
+        qdn2.setAttribute("type","my2type%s" %  nn)
+        qdn2.setAttribute("unit2","my2units%s" %  nn)
+        qdn2.setAttribute("units","my2units%s" %  nn)
+        qdn2.setAttribute("shortname2","my2nshort%s" %  nn)
+        doc2.appendChild(qdn2) 
+
+
+
+        form.appendElement(qdn2,di)
+
+
+        cnt = 0
+        for i in range(attributeMap.count()):
+            nm = attributeMap.item(i).nodeName()
+            vl = attributeMap.item(i).nodeValue()
+            if nm == "name":
+                self.assertEqual(vl,  "myname%s" %  nn)
+                cnt += 1 
+            elif nm == "type":
+                self.assertEqual(vl,  "mytype%s" %  nn)
+                cnt += 1 
+            elif nm == "units":
+                self.assertEqual(vl, "myunits%s" % nn)
+                cnt += 1 
+            else:
+                self.assertEqual(vl,ats[str(nm)])
+        self.assertEqual(len(attrs),attributeMap.count() - cnt)
+
+
+        mydoc = form.node.firstChildElement(QString("doc"))           
+        text = form.dts.getText(mydoc)    
+        olddoc = unicode(text).strip() if text else ""
+        self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        
+        vtext = form.dts.getText(qdn)    
+        oldval = unicode(vtext).strip() if vtext else ""
+        self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
+
+        mydm = form.node.firstChildElement(QString("dimensions"))           
+         
+        atdim = mydm.attributes()
+        self.assertEqual(rn, int(atdim.namedItem("rank").nodeValue()))
+        child = mydm.firstChild()           
+        while not child.isNull():
+            if child.nodeName() == unicode("dim"):
+                at = child.attributes()
+                ind = int(at.namedItem("index").nodeValue())
+                vl = int(at.namedItem("value").nodeValue())
+                self.assertTrue(ind >0 )
+                self.assertTrue(ind <= rn )
+                self.assertEqual(dimensions[ind-1], vl)
+            child = child.nextSibling()    
+
+
+        ats2= {u'shortname2': u'my2nshort%s' % nn, u'unit2': u'my2units%s' % nn}
+
+        ds = form.node.firstChildElement(QString("datasource"))           
+        attributeMap2 = ds.attributes()
+        cnt = 0
+        for i in range(attributeMap.count()):
+            nm = attributeMap2.item(i).nodeName()
+            vl = attributeMap2.item(i).nodeValue()
+            print "nv",nm,vl
+            if nm == "name":
+                self.assertEqual(vl,  "my2name%s" %  nn)
+                cnt += 1 
+            elif nm == "type":
+                self.assertEqual(vl,  "my2type%s" %  nn)
+                cnt += 1 
+            elif nm == "units":
+                self.assertEqual(vl, "my2units%s" % nn)
+                cnt += 1 
+            else:
+                print ats2, nm
+                self.assertEqual(vl,ats2[str(nm)])
+        self.assertEqual(len(attrs),attributeMap.count() - cnt)
+
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_appendElement_error(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        dks = []
+        doc = QDomDocument()
+        nname = "field"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name","myname%s" %  nn)
+        qdn.setAttribute("type","mytype%s" %  nn)
+        qdn.setAttribute("unit","myunits%s" %  nn)
+        qdn.setAttribute("units","myunits%s" %  nn)
+        qdn.setAttribute("shortname","mynshort%s" %  nn)
+        doc.appendChild(qdn) 
+        dname = "doc"
+
+        dval = []
+        nval =  self.__rnd.randint(0, 10) 
+        for n in range(nval):
+            dval.append(doc.createTextNode("\nVAL\n %s\n" %  n))
+            qdn.appendChild(dval[-1]) 
+
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+        rn =  self.__rnd.randint(1, 9) 
+
+        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+
+        mdim = doc.createElement('dimensions')
+        mdim.setAttribute("rank", QString(unicode(rn)))
+        
+        for i in range(rn):
+            dim = doc.createElement(QString("dim"))
+            dim.setAttribute(QString("index"), QString(unicode(i+1)))
+            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            mdim.appendChild(dim)
+                
+        qdn.appendChild(mdim) 
+
+
+        form = FieldDlg()
+        form.show()
+        form.node = qdn
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.value, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
+        self.assertEqual(form.subItems, 
+                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+        self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
+
+        form.setFromNode()
+        form.createGUI()
+
+        attributeMap = form.node.attributes()
+        attrs = {"longname":"newlogname","unit":"myunits%s" %  nn}
+
+        allAttr = True
+        cm = ComponentModel(doc,allAttr)
+        ri = cm.rootIndex
+        di = cm.index(0,0,ri)
+        form.view = TestView(cm)
+        form.view.testIndex = di
+
+        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+
+
+        self.assertEqual(form.name, "myname%s" %  nn)
+        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.units, "myunits%s" % nn)
+        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" %  i  for i in range(nval)])).strip())
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(form.subItems, 
+                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+
+        self.assertEqual(form.dimensions, dimensions)
+
+
+
+        cnt = 0
+        for i in range(attributeMap.count()):
+            nm = attributeMap.item(i).nodeName()
+            vl = attributeMap.item(i).nodeValue()
+            if nm == "name":
+                self.assertEqual(vl,  "myname%s" %  nn)
+                cnt += 1 
+            elif nm == "type":
+                self.assertEqual(vl,  "mytype%s" %  nn)
+                cnt += 1 
+            elif nm == "units":
+                self.assertEqual(vl, "myunits%s" % nn)
+                cnt += 1 
+            else:
+                self.assertEqual(vl,ats[str(nm)])
+        self.assertEqual(len(attrs),attributeMap.count() - cnt)
+
+
+        mydoc = form.node.firstChildElement(QString("doc"))           
+        text = form.dts.getText(mydoc)    
+        olddoc = unicode(text).strip() if text else ""
+        self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        
+        vtext = form.dts.getText(qdn)    
+        oldval = unicode(vtext).strip() if vtext else ""
+        self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
+
+        mydm = form.node.firstChildElement(QString("dimensions"))           
+         
+        atdim = mydm.attributes()
+        self.assertEqual(rn, int(atdim.namedItem("rank").nodeValue()))
+        child = mydm.firstChild()           
+        while not child.isNull():
+            if child.nodeName() == unicode("dim"):
+                at = child.attributes()
+                ind = int(at.namedItem("index").nodeValue())
+                vl = int(at.namedItem("value").nodeValue())
+                self.assertTrue(ind >0 )
+                self.assertTrue(ind <= rn )
+                self.assertEqual(dimensions[ind-1], vl)
+            child = child.nextSibling()    
+
+
+        tags = ["datasource","strategy"]
+        wtext = "To add a new %s please remove the old one"
+        for tg in tags:
+
+
+
+            doc2 = QDomDocument()
+            nname2 = tg
+            qdn2 = doc2.createElement(nname2)
+            qdn2.setAttribute("name","my2name%s" %  nn)
+            qdn2.setAttribute("type","my2type%s" %  nn)
+            qdn2.setAttribute("unit2","my2units%s" %  nn)
+            qdn2.setAttribute("units","my2units%s" %  nn)
+            qdn2.setAttribute("shortname2","my2nshort%s" %  nn)
+            doc2.appendChild(qdn2) 
+
+            form.appendElement(qdn2,di)
+
+            QTimer.singleShot(10, self.checkMessageBox)
+            form.appendElement(qdn2,di)
+            self.assertEqual(self.text, wtext % nname2)
+
+
+
+        tags = ["mydatasource","mystrategy","random"]
+        wtext = "To add a new %s please remove the old one"
+        for tg in tags:
+
+
+
+            doc2 = QDomDocument()
+            nname2 = tg
+            qdn2 = doc2.createElement(nname2)
+            qdn2.setAttribute("name","my2name%s" %  nn)
+            qdn2.setAttribute("type","my2type%s" %  nn)
+            qdn2.setAttribute("unit2","my2units%s" %  nn)
+            qdn2.setAttribute("units","my2units%s" %  nn)
+            qdn2.setAttribute("shortname2","my2nshort%s" %  nn)
+            doc2.appendChild(qdn2) 
+
+            form.appendElement(qdn2,di)
+
+            form.appendElement(qdn2,di)
+        
 
 if __name__ == '__main__':
     if not app:

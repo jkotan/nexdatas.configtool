@@ -252,26 +252,25 @@ class Merger(QThread):
             self._hasAttributes(node)
 
 #            print "merging the children of: ", node.nodeName()
-            changes = True            
-            while changes and self.running:
-                children = node.childNodes()
-                changes = False
-                for c1 in range(children.count()):
-                    child1 = children.item(c1)
-                    elem1 = child1.toElement()
-                    for c2 in range(children.count()):
-                        child2 = children.item(c2)
-                        if child1 != child2:
-                            elem2 = child2.toElement()
-                            if elem1 is not None and elem2 is not None:
-                                if self._areMergeable(elem1,elem2):
-                                    self._mergeNodes(elem1, elem2)
-                                    changes = True
-                                    status = True
-                        if changes:
-                            break
-                    if changes:
-                        break
+            
+            children = node.childNodes()
+            nchildren = children.count()
+            c1 = 0
+            while c1 < nchildren:
+                child1 = children.item(c1)
+                elem1 = child1.toElement()
+                c2 = c1 + 1
+                while c2 < nchildren:
+                    child2 = children.item(c2)
+                    if child1 != child2:
+                        elem2 = child2.toElement()
+                        if elem1 is not None and elem2 is not None:
+                            if self._areMergeable(elem1,elem2):
+                                self._mergeNodes(elem1, elem2)
+                                nchildren -= 1
+                                c2 -= 1
+                    c2 += 1            
+                c1 += 1            
                         
             child = node.firstChild()
             elem = node.toElement()

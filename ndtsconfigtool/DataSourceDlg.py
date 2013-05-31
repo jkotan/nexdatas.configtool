@@ -723,6 +723,7 @@ class DataSourceMethods(object):
     def updateNode(self, index=QModelIndex()):
 #        print "tree", self.datasource.tree
 #        print "index", index.internalPointer()
+
         newDs = self.createNodes(self.datasource.tree)
         oldDs = self.dialog.node
 

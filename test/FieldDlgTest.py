@@ -3708,10 +3708,6 @@ class FieldDlgTest(unittest.TestCase):
 
 
 
-##################
-############ TODO
-
-
 
 
 
@@ -3795,6 +3791,7 @@ class FieldDlgTest(unittest.TestCase):
         form = FieldDlg()
         form.ui = Ui_FieldDlg() 
         form.ui.applyPushButton = QPushButton(form)
+        form.ui.linkDSPushButton = QPushButton(form)
         form.show()
         self.assertEqual(form.connectExternalActions(self.myAction),None)
         self.assertEqual(form.node, None)
@@ -3821,6 +3818,7 @@ class FieldDlgTest(unittest.TestCase):
         form = FieldDlg()
         form.ui = Ui_FieldDlg() 
         form.ui.applyPushButton = QPushButton(form)
+        form.ui.linkDSPushButton = QPushButton(form)
         form.show()
         self.assertEqual(form.connectExternalActions(self.myAction),None)
         self.assertEqual(form.node, None)
@@ -3839,20 +3837,24 @@ class FieldDlgTest(unittest.TestCase):
 
 
 
+
+
     ## constructor test
     # \brief It tests default settings
-    def ttest_connect_actions_with_action_link_button(self):
+    def test_connect_actions_with_action_link_button(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         form = FieldDlg()
         form.createGUI()
+        form.ui.applyPushButton = QPushButton(form)
+        form.ui.linkDSPushButton = QPushButton(form)
         form.show()
         self.assertEqual(form.connectExternalActions(None,self.myAction),None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertTrue(isinstance(form.ui,Ui_FieldDlg))
-        self.assertEqual(form.externalDSLink, None)
+        self.assertEqual(form.externalDSLink, self.myAction)
         self.performed = False
 
 
@@ -3864,7 +3866,7 @@ class FieldDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def ttest_connect_actions_with_action_link_and_apply_button(self):
+    def ttest_connect_actions_with_action_and_apply_button(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         form = FieldDlg()
@@ -3890,9 +3892,70 @@ class FieldDlgTest(unittest.TestCase):
 
 
 
+
     ## constructor test
     # \brief It tests default settings
-    def ttest_connect_actions_with_action_link_and_apply_button(self):
+    def test_connect_actions_with_action_and_sapply_button(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = FieldDlg()
+        form.ui = Ui_FieldDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.ui.linkDSPushButton = QPushButton(form)
+        form.createGUI()
+        QTest.keyClicks(form.ui.nameLineEdit, "namename")
+
+        form.show()
+        self.assertEqual(form.connectExternalActions(self.myAction,None),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertTrue(isinstance(form.ui,Ui_FieldDlg))
+        self.assertEqual(form.externalApply, self.myAction)
+        self.assertEqual(form.externalDSLink, None)
+        self.performed = False
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+        self.assertEqual(self.performed, True)
+
+
+        self.assertEqual(form.result(),0)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions_with_action_and_slink_button(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = FieldDlg()
+        form.ui = Ui_FieldDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.ui.linkDSPushButton = QPushButton(form)
+        form.createGUI()
+        QTest.keyClicks(form.ui.nameLineEdit, "namename")
+
+        form.show()
+        self.assertEqual(form.connectExternalActions(None,self.myAction),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertTrue(isinstance(form.ui,Ui_FieldDlg))
+        self.assertEqual(form.externalApply,None)
+        self.assertEqual(form.externalDSLink, self.myAction)
+        self.performed = False
+
+        QTest.mouseClick(form.ui.linkDSPushButton, Qt.LeftButton)
+        self.assertEqual(self.performed, True)
+
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions_with_action_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         form = FieldDlg()
@@ -3912,7 +3975,38 @@ class FieldDlgTest(unittest.TestCase):
         self.performed = False
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
-        self.assertEqual(self.performed, True)
+        self.assertEqual(self.performed, False)
+
+
+        self.assertEqual(form.result(),0)
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_connect_actions_with_action_link_and_apply_button_noname(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        form = FieldDlg()
+        form.ui = Ui_FieldDlg() 
+        form.ui.applyPushButton = QPushButton(form)
+        form.createGUI()
+        QTest.keyClicks(form.ui.typeLineEdit, "namename")
+
+        form.show()
+        self.assertEqual(form.connectExternalActions(self.myAction,None),None)
+        self.assertEqual(form.node, None)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertTrue(isinstance(form.ui,Ui_FieldDlg))
+        self.assertEqual(form.externalApply, self.myAction)
+        self.assertEqual(form.externalDSLink, None)
+        self.performed = False
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+        self.assertEqual(self.performed, False)
 
 
         self.assertEqual(form.result(),0)

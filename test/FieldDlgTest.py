@@ -1968,7 +1968,7 @@ class FieldDlgTest(unittest.TestCase):
 
         rn =  self.__rnd.randint(1, 9) 
 
-        dimensions = [self.__rnd.randint(0, 40)  for n in range(rn)]
+        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", QString(unicode(rn)))
@@ -2046,12 +2046,6 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(item,None)
         
 
-
-
-
-##################
-############ TODO
-
     ## constructor test
     # \brief It tests default settings
     def test_populateAttribute_setFromNode_selected(self):
@@ -2069,12 +2063,29 @@ class FieldDlgTest(unittest.TestCase):
         qdn.setAttribute("shortname","mynshort%s" %  nn)
         doc.appendChild(qdn) 
         dname = "doc"
+
         mdoc = doc.createElement(dname)
         qdn.appendChild(mdoc) 
         ndcs =  self.__rnd.randint(0, 10) 
         for n in range(ndcs):
             dks.append(doc.createTextNode("\nText\n %s\n" %  n))
             mdoc.appendChild(dks[-1]) 
+
+        rn =  self.__rnd.randint(1, 9) 
+
+        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+
+        mdim = doc.createElement('dimensions')
+        mdim.setAttribute("rank", QString(unicode(rn)))
+        
+        for i in range(rn):
+            dim = doc.createElement(QString("dim"))
+            dim.setAttribute(QString("index"), QString(unicode(i+1)))
+            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            mdim.appendChild(dim)
+                
+        qdn.appendChild(mdim) 
+
 
 
 
@@ -2085,6 +2096,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
@@ -2095,29 +2107,33 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" %  nn)
         self.assertEqual(form.nexusType, "mytype%s" %  nn)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, attributes)
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
 
+        self.assertEqual(form.dimensions, dimensions)
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(), '[]')
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
         self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
 
-        
+        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+
+
         na =  self.__rnd.randint(0, len(attributes)-1) 
         sel = attributes.keys()[na]
         form.populateAttributes(sel)
@@ -2138,6 +2154,9 @@ class FieldDlgTest(unittest.TestCase):
         item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
         
         self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+
+
+
 
 
 
@@ -2159,12 +2178,29 @@ class FieldDlgTest(unittest.TestCase):
         qdn.setAttribute("shortname","mynshort%s" %  nn)
         doc.appendChild(qdn) 
         dname = "doc"
+
         mdoc = doc.createElement(dname)
         qdn.appendChild(mdoc) 
         ndcs =  self.__rnd.randint(0, 10) 
         for n in range(ndcs):
             dks.append(doc.createTextNode("\nText\n %s\n" %  n))
             mdoc.appendChild(dks[-1]) 
+
+        rn =  self.__rnd.randint(1, 9) 
+
+        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+
+        mdim = doc.createElement('dimensions')
+        mdim.setAttribute("rank", QString(unicode(rn)))
+        
+        for i in range(rn):
+            dim = doc.createElement(QString("dim"))
+            dim.setAttribute(QString("index"), QString(unicode(i+1)))
+            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            mdim.appendChild(dim)
+                
+        qdn.appendChild(mdim) 
+
 
 
 
@@ -2175,6 +2211,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
@@ -2185,29 +2222,33 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" %  nn)
         self.assertEqual(form.nexusType, "mytype%s" %  nn)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, attributes)
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
 
+        self.assertEqual(form.dimensions, dimensions)
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(), '[]')
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
         self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
 
-        
+        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+
+
         na =  self.__rnd.randint(0, len(attributes)-1) 
         sel = attributes.keys()[na]
         form.populateAttributes(sel)
@@ -2228,6 +2269,8 @@ class FieldDlgTest(unittest.TestCase):
         item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
         
         self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+
+
 
         self.aname = "addedAttribute"
         self.avalue = "addedAttributeValue"
@@ -2281,151 +2324,6 @@ class FieldDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
-    # \brief It tests default settings
-    def test_populateAttribute_setFromNode_selected_removeAttribute(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-
-        dks = []
-        doc = QDomDocument()
-        nname = "field"
-        qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        qdn.setAttribute("logname","mynlong%s" %  nn)
-        doc.appendChild(qdn) 
-        dname = "doc"
-        mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
-        for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
-
-        form = FieldDlg()
-        form.show()
-        form.node = qdn
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
-
-        form.createGUI()
-        
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        
-        form.setFromNode()
-
-        attributes = {u'shortname': u'mynshort%s' % nn, u'logname': u'mynlong%s' %nn, u'unit': u'myunits%s' % nn}
-
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, attributes)
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-        
-        na =  self.__rnd.randint(0, len(attributes)-1) 
-        sel = attributes.keys()[na]
-        form.populateAttributes(sel)
-
-
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
-        for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
-            k = str(it.text())
-            self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
-            self.assertEqual(it2.text(), attributes[k])
-
-
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-        
-        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
-
-        aname = self.__rnd.choice(attributes.keys())
-        avalue = attributes[aname]
-        
-        
-        form.populateAttributes(aname)
-
-
-        QTimer.singleShot(10, self.rmAttributeWidgetClose)
-        QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
-        
-        self.assertEqual(self.text,"Remove attribute: %s = '%s'" % (aname,avalue))
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
-        for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
-            k = str(it.text())
-            self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
-            self.assertEqual(it2.text(), attributes[k])
-
-
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-
-
-
-
-        aname = self.__rnd.choice(attributes.keys())
-        avalue = attributes[aname]
-        
-        
-        form.populateAttributes(aname)
-
-        
-
-        QTimer.singleShot(10, self.rmAttributeWidget)
-        QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
-        
-        self.assertEqual(self.text,"Remove attribute: %s = '%s'" % (aname,avalue))
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(), len(attributes)-1)
-        for i in range(len(attributes)-1):
-            it = form.ui.attributeTableWidget.item(i, 0) 
-            k = str(it.text())
-            self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
-            self.assertEqual(it2.text(), attributes[k])
-
-
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-        self.assertEqual(item, None)
-
-
-
 
 
     ## constructor test
@@ -2443,15 +2341,31 @@ class FieldDlgTest(unittest.TestCase):
         qdn.setAttribute("type","mytype%s" %  nn)
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
-        qdn.setAttribute("logname","mynlong%s" %  nn)
         doc.appendChild(qdn) 
         dname = "doc"
+
         mdoc = doc.createElement(dname)
         qdn.appendChild(mdoc) 
         ndcs =  self.__rnd.randint(0, 10) 
         for n in range(ndcs):
             dks.append(doc.createTextNode("\nText\n %s\n" %  n))
             mdoc.appendChild(dks[-1]) 
+
+        rn =  self.__rnd.randint(1, 9) 
+
+        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+
+        mdim = doc.createElement('dimensions')
+        mdim.setAttribute("rank", QString(unicode(rn)))
+        
+        for i in range(rn):
+            dim = doc.createElement(QString("dim"))
+            dim.setAttribute(QString("index"), QString(unicode(i+1)))
+            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            mdim.appendChild(dim)
+                
+        qdn.appendChild(mdim) 
+
 
 
 
@@ -2462,40 +2376,46 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
 
         form.createGUI()
-
+        
         atw = form.ui.attributeTableWidget        
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
         
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'logname': u'mynlong%s' %nn, u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" %  nn)
         self.assertEqual(form.nexusType, "mytype%s" %  nn)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, attributes)
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
         self.assertEqual(form.subItems, 
                          ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
 
+        self.assertEqual(form.dimensions, dimensions)
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
         self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(), '[]')
 
-        self.assertEqual(atw.columnCount(),2)
-        self.assertEqual(atw.rowCount(),0)
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
 
-        
+        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+
+
+
         na =  self.__rnd.randint(0, len(attributes)-1) 
         sel = attributes.keys()[na]
         form.populateAttributes(sel)
@@ -2570,6 +2490,12 @@ class FieldDlgTest(unittest.TestCase):
             else:
                 it2 = atw.item(i, 1) 
                 self.assertEqual(it2.text(), QVariant(aname+"_"+attributes[aname]))
+
+
+
+##################
+############ TODO
+
 
 
 

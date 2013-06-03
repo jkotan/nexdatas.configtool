@@ -1413,7 +1413,7 @@ def test():
     component.dialog.resize(640, 560)
     component.createHeader()
     component.dialog.show()        
-    component.dialog.setWindowTitle("Component: %s" % component.name)
+    component.dialog.setWindowTitle("%s [Component]" % component.name)
 
     app.exec_()
 

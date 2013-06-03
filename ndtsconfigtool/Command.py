@@ -209,7 +209,7 @@ class ServerStoreComponent(Command):
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 self._cpEdit.createHeader()
-                self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)
+                self._cpEdit.dialog.setWindowTitle("%s [Component]" % self._cp.name)
             else:
                 self._cpEdit = self._cp.instance 
                 
@@ -227,9 +227,9 @@ class ServerStoreComponent(Command):
 
                 self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 if self._cpEdit.isDirty():
-                    self._cpEdit.dialog.setWindowTitle("Component: %s*" % self._cp.name)
+                    self._cpEdit.dialog.setWindowTitle("%s [Component]*" % self._cp.name)
                 else:
-                    self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)
+                    self._cpEdit.dialog.setWindowTitle("%s [Component]" % self._cp.name)
                      
                 self._cpEdit.reconnectSaveAction()
                 subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
@@ -807,7 +807,7 @@ class ComponentOpen(Command):
                 self._cp.instance = self._cpEdit
             
                 self.receiver.componentList.addComponent(self._cp,False)
-                self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)
+                self._cpEdit.dialog.setWindowTitle("%s [Component]" % self._cp.name)
 
                 subwindow = self.receiver.subWindow(
                     self._cp.instance, self.receiver.mdi.subWindowList())
@@ -889,7 +889,7 @@ class DataSourceOpen(Command):
                 self.receiver.sourceList.addDataSource(self._ds,False)
             #               print  "ID", self._cp.id
  #               print "STAT", self._cp.id in self.receiver.componentList.components
-                self._dsEdit.dialog.setWindowTitle("DataSource: %s" % self._ds.name)                  
+                self._dsEdit.dialog.setWindowTitle("%s [DataSource]" % self._ds.name)                  
 
                 subwindow = self.receiver.subWindow(
                     self._ds.instance, self.receiver.mdi.subWindowList())
@@ -1065,7 +1065,7 @@ class ComponentEdit(Command):
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 self._cpEdit.createHeader()
-                self._cpEdit.dialog.setWindowTitle("Component: %s*" % self._cp.name)
+                self._cpEdit.dialog.setWindowTitle("%s [Component]*" % self._cp.name)
             else:
                 self._cpEdit = self._cp.instance 
                 
@@ -1084,9 +1084,9 @@ class ComponentEdit(Command):
 
                 self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 if self._cpEdit.isDirty():
-                    self._cpEdit.dialog.setWindowTitle("Component: %s*" % self._cp.name)
+                    self._cpEdit.dialog.setWindowTitle("%s [Component]*" % self._cp.name)
                 else:
-                    self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)
+                    self._cpEdit.dialog.setWindowTitle("%s [Component]" % self._cp.name)
                      
                 self._cpEdit.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
@@ -1141,7 +1141,7 @@ class ComponentSave(Command):
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 self._cpEdit.createHeader()
-                self._cpEdit.dialog.setWindowTitle("Component: %s" % self._cp.name)
+                self._cpEdit.dialog.setWindowTitle("%s [Component]" % self._cp.name)
             else:
                 self._cpEdit = self._cp.instance 
                 
@@ -1214,7 +1214,7 @@ class ComponentSaveAll(Command):
                 cpEdit.createGUI()
                 cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 cpEdit.createHeader()
-                cpEdit.dialog.setWindowTitle("Component: %s" % cp.name)
+                cpEdit.dialog.setWindowTitle("%s [Component]" % cp.name)
                 cp.instance = cpEdit
 
             if cp.instance is not None:
@@ -1264,7 +1264,7 @@ class ServerStoreAllComponents(Command):
                 cpEdit.createGUI()
                 cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 cpEdit.createHeader()
-                cpEdit.dialog.setWindowTitle("Component: %s" % cp.name)
+                cpEdit.dialog.setWindowTitle("%s [Component]" % cp.name)
                 cp.instance = cpEdit
 
             try:
@@ -1463,9 +1463,9 @@ class DataSourceCopy(Command):
                 self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
                 else:
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
@@ -1495,9 +1495,9 @@ class DataSourceCopy(Command):
                 self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
                 else:
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
@@ -1560,9 +1560,9 @@ class DataSourceCut(Command):
                 self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
                 else:
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
@@ -1597,9 +1597,9 @@ class DataSourceCut(Command):
                 self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
                 else:
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
@@ -1679,9 +1679,9 @@ class DataSourcePaste(Command):
                 self._ds.instance.createDialog()
 
                 if self._ds.instance.isDirty():
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
                 else:
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
@@ -1714,9 +1714,9 @@ class DataSourcePaste(Command):
                 self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
                 else:
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
@@ -1768,7 +1768,7 @@ class DataSourceApply(Command):
             self._ds.instance.name = self.receiver.sourceList.datasources[self._ds.id].name
         if not self._ds.instance.dialog:
             self._ds.instance.createDialog()
-            self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+            self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
             
             if hasattr(self._ds.instance,"connectExternalActions"):     
                 self._ds.instance.connectExternalActions(**self.receiver.externalDSActions)
@@ -1797,9 +1797,9 @@ class DataSourceApply(Command):
                 self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
-                    self._ds.instance.dialog.setWindowTitle("Component: %s*" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [Component]*" % self._ds.name)
                 else:
-                    self._ds.instance.dialog.setWindowTitle("Component: %s" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [Component]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
@@ -1841,9 +1841,9 @@ class DataSourceApply(Command):
 
                 self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
                 if self._ds.instance.isDirty():
-                    self._ds.instance.dialog.setWindowTitle("Component: %s*" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [Component]*" % self._ds.name)
                 else:
-                    self._ds.instance.dialog.setWindowTitle("Component: %s" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [Component]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
@@ -2536,12 +2536,12 @@ class DataSourceEdit(Command):
                 self._dsEdit.directory = self.receiver.sourceList.directory
                 self._dsEdit.name = self.receiver.sourceList.datasources[self._ds.id].name
                 self._dsEdit.createDialog()
-                self._dsEdit.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                self._dsEdit.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
                 self._ds.instance = self._dsEdit 
             else:
                 if not self._ds.instance.dialog:
                     self._ds.instance.createDialog()
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
                 self._dsEdit = self._ds.instance 
                 
             if hasattr(self._dsEdit,"connectExternalActions"):     
@@ -2557,9 +2557,9 @@ class DataSourceEdit(Command):
                     self._ds.instance.createDialog()
 
                 if self._ds.instance.isDirty():
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s*" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
                 else:
-                    self._ds.instance.dialog.setWindowTitle("DataSource: %s" % self._ds.name)
+                    self._ds.instance.dialog.setWindowTitle("%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
@@ -2881,9 +2881,9 @@ class ComponentItemCommand(Command):
 
                     self._cp.instance.addContextMenu(self.receiver.contextMenuActions)
                     if self._cp.instance.isDirty():
-                        self._cp.instance.dialog.setWindowTitle("Component: %s*" % self._cp.name)
+                        self._cp.instance.dialog.setWindowTitle("%s [Component]*" % self._cp.name)
                     else:
-                        self._cp.instance.dialog.setWindowTitle("Component: %s" % self._cp.name)
+                        self._cp.instance.dialog.setWindowTitle("%s [Component]" % self._cp.name)
                      
                     self._cp.instance.reconnectSaveAction()
                     self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)

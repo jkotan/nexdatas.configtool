@@ -206,9 +206,9 @@ class ComponentList(QWidget):
             if self.components[cp].instance is not None and self.components[cp].instance.dialog is not None:
                 try:
                     if dirty:
-                        self.components[cp].instance.dialog.setWindowTitle("Component: %s*" %name)
+                        self.components[cp].instance.dialog.setWindowTitle("%s [Component]*" %name)
                     else:
-                        self.components[cp].instance.dialog.setWindowTitle("Component: %s" %name)
+                        self.components[cp].instance.dialog.setWindowTitle("%s [Component]" %name)
                 except:
 #                    print "C++", self.components[cp].name
                     # C++ dialog was deleted

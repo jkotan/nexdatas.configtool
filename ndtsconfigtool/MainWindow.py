@@ -113,10 +113,6 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-        ## datasource directory
-        self.dsDirectory = ""
-        ## component directory
-        self.cpDirectory = ""
 
         ## component tree menu under mouse cursor
         self.contextMenuActions = None
@@ -133,13 +129,20 @@ class MainWindow(QMainWindow):
         ## datasource list menu under mouse cursor
         self.dsourceListMenuActions = None
 
-        ## dock with components and datasources
-        self.compDockWidget = None
+
+        ## datasource directory
+        self.dsDirectory = ""
+        ## component directory
+        self.cpDirectory = ""
 
         ## list of datasources
         self.sourceList =  None
         ## list of components
         self.componentList =    None
+
+        ## dock with components and datasources
+        self.compDockWidget = None
+
         
         ## multi window workspace
         self.mdi = None

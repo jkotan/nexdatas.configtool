@@ -837,12 +837,10 @@ class DataSourceMethods(object):
                 self.dialog.root = self.datasource.document 
                 self.dialog.node = self.dialog.dts.getFirstElement(self.datasource.document, 
                                                                    "datasource")
-        if not ds:
+        if not self.dialog.node:
             return
-        self.dialog.root.removeChild(ds)            
+        self.setFromNode(self.dialog.node)
 
-
-        self.setFromNode(ds)
         return True
 
 

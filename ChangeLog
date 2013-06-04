@@ -2,6 +2,7 @@
 	* removing doc for dimensions
 	* improving merging algorithm
 	* fixes for storing FieldDlg value
+	* fixes for copyFromClipboard of datasources
 	* tagged as v1.2.4
 
 2013-05-30 Jan Kotanski <jankotan@gmail.com>
@@ -10,7 +11,7 @@
 	* tagged as v1.2.3
 
 2013-05-15 Jan Kotanski <jankotan@gmail.com>
-	* adding store button for storing datasources and components in DB 
+	* adding store button for storing datasources and components in DB
 	* exchanging fast double click with slow double click
 	* fixing saving datasources
 	* tagged as v1.2.2

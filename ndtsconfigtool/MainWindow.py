@@ -25,7 +25,8 @@ import os
 from PyQt4.QtCore import (SIGNAL, SLOT, QSettings, Qt,  QSignalMapper, 
                           QVariant, QT_VERSION_STR, PYQT_VERSION_STR, QStringList )
 from PyQt4.QtGui import (QMainWindow, QDockWidget, QSplitter, QWorkspace , QMdiArea,
-                         QListWidgetItem, QAction, QKeySequence, QMessageBox, QIcon)
+                         QListWidgetItem, QAction, QKeySequence, QMessageBox, QIcon, 
+                         QLabel, QFrame)
 
 import platform
 from qrc import qrc_resources
@@ -143,6 +144,10 @@ class MainWindow(QMainWindow):
         ## dock with components and datasources
         self.compDockWidget = None
 
+        ## component directory label
+        self.cpDirLabel = None
+        ## datasource directory label
+        self.dsDirLabel = None
 
         
         ## multi window workspace
@@ -214,13 +219,23 @@ class MainWindow(QMainWindow):
 
         status = self.statusBar()
         status.setSizeGripEnabled(False)
-        
+        self.cpDirLabel = QLabel("CP: %s" % (self.cpDirectory))
+        self.cpDirLabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
+        self.dsDirLabel = QLabel("DS: %s" % (self.dsDirectory))
+        self.dsDirLabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
+        status.addWidget(QLabel(""),4)
+        status.addWidget(self.cpDirLabel,4)
+        status.addWidget(self.dsDirLabel,4)
         self.updateWindowMenu()
         status.showMessage("Ready", 5000)
 
         self.setWindowTitle("NDTS Component Designer")
 
-
+    ## updates directories in status bar
+    def updateStatusBar(self):
+        self.cpDirLabel.setText("CP: %s" % (self.cpDirectory))
+        self.dsDirLabel.setText("DS: %s" % (self.dsDirectory))
+        
 
     ##  creates GUI
     # \brief It create dialogs for the main window application

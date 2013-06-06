@@ -1403,6 +1403,7 @@ class ComponentChangeDirectory(Command):
 
         self.receiver.componentList.components = {} 
         self.receiver.cpDirectory = path
+        self.receiver.updateStatusBar()
         self.receiver.componentList.directory = path
 
         self.receiver.loadComponents()
@@ -2146,6 +2147,7 @@ class DataSourceChangeDirectory(Command):
 
         self.receiver.sourceList.datasources = {} 
         self.receiver.dsDirectory = path
+        self.receiver.updateStatusBar()
         self.receiver.sourceList.directory = path
 
         self.receiver.loadDataSources()

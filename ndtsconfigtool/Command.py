@@ -93,7 +93,7 @@ class ServerConnect(Command):
                 else:
                     self.receiver.configServer.setState(self._state)
                     self.receiver.configServer.connect()
-
+                    
                 self.receiver.disableServer(False)
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in connecting to Configuration Server", unicode(e))

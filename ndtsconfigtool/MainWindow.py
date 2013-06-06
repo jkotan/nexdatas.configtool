@@ -143,6 +143,7 @@ class MainWindow(QMainWindow):
         ## dock with components and datasources
         self.compDockWidget = None
 
+
         
         ## multi window workspace
         self.mdi = None
@@ -1074,6 +1075,22 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("serverDeleteDataSource", status)
         self.pool.setDisabled("serverClose", status)
         
+
+        if self.configServer and self.configServer.device:
+            dev = "%s:%s/%s" % ( 
+                self.configServer.host if self.configServer.host else "localhost", 
+                str(self.configServer.port) if self.configServer.port else "10000",
+                self.configServer.device
+                )
+        else :
+            dev = "None"
+            
+        if status:
+            self.setWindowTitle("NDTS Component Designer -||- [%s]" % dev)
+        else:
+            self.setWindowTitle("NDTS Component Designer <-> [%s]" % dev)
+            
+            
 
 
     ## loads the datasource list

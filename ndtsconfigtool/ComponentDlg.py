@@ -1343,8 +1343,6 @@ class Component(object):
     ## saves the component
     # \brief It saves the component in the xml file 
     def save(self):
-#        import gc
-#        gc.collect()
         if not self._merged:
             QMessageBox.warning(self.dialog, "Saving problem",
                                 "Document not merged" )
@@ -1352,12 +1350,10 @@ class Component(object):
         error = None
         if self._componentFile is None:
             self.setName(self.name, self.directory)
-#        print "saving ", self._componentFile 
         fpath = os.path.join(self.directory, self.name + ".xml")     
         print "saving ", fpath
         try:
             fh = QFile(fpath)
-#            fh = QFile(self._componentFile)
             if not fh.open(QIODevice.WriteOnly):
                 raise IOError, unicode(fh.errorString())
             stream = QTextStream(fh)

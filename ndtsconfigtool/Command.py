@@ -788,7 +788,6 @@ class ComponentOpen(Command):
     def execute(self):
         if hasattr(self.receiver,'mdi'):
             if self._cp is None:
-                print "NONE"
                 self._cp = LabeledObject("", None)
             else:    
                 self._cp.instance = None
@@ -874,7 +873,11 @@ class DataSourceOpen(Command):
     # \brief It loads an existing datasource from the file
     def execute(self):
         if hasattr(self.receiver,'mdi'):
-            self._ds = LabeledObject("", None)
+            if self._ds is None:
+                self._ds = LabeledObject("", None)
+            else:    
+                self._ds.instance = None
+
             self._dsEdit = DataSource()
             self._dsEdit.ids = self._ds.id
             self._dsEdit.directory = self.receiver.sourceList.directory
@@ -933,7 +936,6 @@ class DataSourceOpen(Command):
 
                 self.receiver.sourceList.removeDataSource(self._ds, False)
                 self._ds.instance = None
-                self._ds = None
             
         print "UNDO dsourceOpen"
 

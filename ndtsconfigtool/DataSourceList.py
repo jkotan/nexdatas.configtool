@@ -38,7 +38,7 @@ class DataSourceList(QWidget):
     # \param parent patent instance
     def __init__(self, directory, parent=None):
         super(DataSourceList, self).__init__(parent)
-         ## directory from which components are loaded by default
+         ## directWory from which components are loaded by default
         self.directory = directory
         
         ## group datasources

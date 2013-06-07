@@ -563,13 +563,13 @@ class MainWindow(QMainWindow):
             "", "dsourcereloadlist", "Reload the data-source list")
 
         dsourceOpenAction = self.pool.createCommand(
-            "&Open DataSource...", "dsourceOpen", commandArgs, DataSourceOpen,
-            "Ctrl+Shift+O", "dsourceopen", "Open an existing data source")
+            "&Load DataSource...", "dsourceOpen", commandArgs, DataSourceOpen,
+            "Ctrl+Shift+O", "dsourceopen", "Load an existing data source")
 
 
         componentOpenAction = self.pool.createCommand(
-            "&Open...", "componentOpen", commandArgs, ComponentOpen,
-            QKeySequence.Open, "componentopen", "Open an existing component")
+            "&Load...", "componentOpen", commandArgs, ComponentOpen,
+            QKeySequence.Open, "componentopen", "Load an existing component")
         
         componentRemoveAction = self.pool.createCommand(
             "&Close", "componentRemove", commandArgs, ComponentRemove,

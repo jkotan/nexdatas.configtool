@@ -1352,9 +1352,12 @@ class Component(object):
         error = None
         if self._componentFile is None:
             self.setName(self.name, self.directory)
-        print "saving ", self._componentFile
+#        print "saving ", self._componentFile 
+        fpath = os.path.join(self.directory, self.name + ".xml")     
+        print "saving ", fpath
         try:
-            fh = QFile(self._componentFile)
+            fh = QFile(fpath)
+#            fh = QFile(self._componentFile)
             if not fh.open(QIODevice.WriteOnly):
                 raise IOError, unicode(fh.errorString())
             stream = QTextStream(fh)

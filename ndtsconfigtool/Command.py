@@ -787,7 +787,12 @@ class ComponentOpen(Command):
     # \brief It loads an existing component from the file
     def execute(self):
         if hasattr(self.receiver,'mdi'):
-            self._cp = LabeledObject("", None)
+            if self._cp is None:
+                print "NONE"
+                self._cp = LabeledObject("", None)
+            else:    
+                self._cp.instance = None
+
             self._cpEdit = Component()
             self._cpEdit.idc = self._cp.id
             self._cpEdit.directory = self.receiver.componentList.directory
@@ -829,9 +834,8 @@ class ComponentOpen(Command):
     def unexecute(self):
         if hasattr(self._cp, "instance"):
             if self._fpath:
-                
 
-                if hasattr(self._cp,'instance'):
+                if hasattr(self._cp,'instance') and self._cp.instance:
                     subwindow = self.receiver.subWindow(
                         self._cpEdit, self.receiver.mdi.subWindowList())
                     if subwindow:
@@ -840,7 +844,6 @@ class ComponentOpen(Command):
 
                 self.receiver.componentList.removeComponent(self._cp, False)
                 self._cp.instance = None
-                self._cp = None
 
 
             
@@ -3375,6 +3378,7 @@ class ComponentMerge(ComponentItemCommand):
             if self._cp is not None:                
                 if hasattr(self._cp.instance,"merge"):
                     self._cp.instance.merge()
+        
         self.postExecute()
             
             

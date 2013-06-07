@@ -787,7 +787,11 @@ class ComponentOpen(Command):
     # \brief It loads an existing component from the file
     def execute(self):
         if hasattr(self.receiver,'mdi'):
-            self._cp = LabeledObject("", None)
+            if self._cp is None:
+                self._cp = LabeledObject("", None)
+            else:    
+                self._cp.instance = None
+
             self._cpEdit = Component()
             self._cpEdit.idc = self._cp.id
             self._cpEdit.directory = self.receiver.componentList.directory
@@ -829,9 +833,8 @@ class ComponentOpen(Command):
     def unexecute(self):
         if hasattr(self._cp, "instance"):
             if self._fpath:
-                
 
-                if hasattr(self._cp,'instance'):
+                if hasattr(self._cp,'instance') and self._cp.instance:
                     subwindow = self.receiver.subWindow(
                         self._cpEdit, self.receiver.mdi.subWindowList())
                     if subwindow:
@@ -840,7 +843,6 @@ class ComponentOpen(Command):
 
                 self.receiver.componentList.removeComponent(self._cp, False)
                 self._cp.instance = None
-                self._cp = None
 
 
             
@@ -871,7 +873,11 @@ class DataSourceOpen(Command):
     # \brief It loads an existing datasource from the file
     def execute(self):
         if hasattr(self.receiver,'mdi'):
-            self._ds = LabeledObject("", None)
+            if self._ds is None:
+                self._ds = LabeledObject("", None)
+            else:    
+                self._ds.instance = None
+
             self._dsEdit = DataSource()
             self._dsEdit.ids = self._ds.id
             self._dsEdit.directory = self.receiver.sourceList.directory
@@ -930,7 +936,6 @@ class DataSourceOpen(Command):
 
                 self.receiver.sourceList.removeDataSource(self._ds, False)
                 self._ds.instance = None
-                self._ds = None
             
         print "UNDO dsourceOpen"
 
@@ -3375,6 +3380,7 @@ class ComponentMerge(ComponentItemCommand):
             if self._cp is not None:                
                 if hasattr(self._cp.instance,"merge"):
                     self._cp.instance.merge()
+        
         self.postExecute()
             
             

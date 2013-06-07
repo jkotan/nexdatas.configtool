@@ -1081,7 +1081,7 @@ class DataSource(CommonDataSource):
                         "XML files (*.xml);;HTML files (*.html);;"
                         "SVG files (*.svg);;User Interface files (*.ui)"))
                 fi = QFileInfo(filename)
-                fname = fi.fileName()
+                fname = str(fi.fileName())
                 if fname[-4:] == '.xml':
                     self.name = fname[:-4]
                     if self.name[-3:] == '.ds':
@@ -1089,12 +1089,12 @@ class DataSource(CommonDataSource):
                     else:
                         self.name = fname
             else:
-                filename = os.path.join(self.directory, self.name + ".ds.xml") 
+                filename = os.path.join(self.directory, self.name + ".ds.xml")
         else:
             filename = fname
             if not self.name:
                 fi = QFileInfo(filename)
-                fname = fi.fileName()
+                fname = str(fi.fileName())
                 if fname[-4:] == '.xml':
                     self.name = fname[:-4]
                     if self.name[-3:] == '.ds':

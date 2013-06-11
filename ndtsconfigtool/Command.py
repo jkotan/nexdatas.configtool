@@ -62,9 +62,9 @@ class Command(object):
         pass
 
     ## reexecutes the command
-    # \brief It is an abstract member function to reimplement re-do execution of the derived command
+    # \brief It is an abstract member function to reimplement re-do execution of the derived command. In the current implementation it calls self.execute()
     def reexecute(self):
-        self.execute()
+        return self.execute()
 
 
     ## clones the command

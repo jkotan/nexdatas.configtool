@@ -171,8 +171,6 @@ class ServerFetchComponents(Command):
                 self.receiver.configServer.connect()
                 self.receiver.disableServer(False)
                 cdict = self.receiver.configServer.fetchComponents()
-#                for k in cdict.keys():
-#                    print "dict:", k ," = ", cdict[k]
                 self.receiver.setComponents(cdict)
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in fetching components", unicode(e))

@@ -112,6 +112,8 @@ class ServerConnect(Command):
         if self.receiver.configServer:
             try:
                 self.receiver.configServer.close()
+                if self._oldstate is None:
+                    self.receiver.configServer.setState(self._oldstate)
                 self.receiver.disableServer(True)
             except Exception, e:
                 QMessageBox.warning(self.receiver, "Error in Closing Configuration Server Connection", unicode(e))

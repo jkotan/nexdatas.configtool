@@ -61,6 +61,12 @@ class Command(object):
     def unexecute(self):
         pass
 
+    ## reexecutes the command
+    # \brief It is an abstract member function to reimplement re-do execution of the derived command
+    def reexecute(self):
+        self.execute()
+
+
     ## clones the command
     # \brief It is an abstract member function to reimplement cloning of the derived command
     def clone(self): 

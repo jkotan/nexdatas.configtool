@@ -2019,7 +2019,7 @@ class MainWindow(QMainWindow):
         cmd.execute()
 
         rucmd = self.cmdStack.redo()
-        if hasattr(rucmd,'execute'):
+        if hasattr(rucmd,'reexecute'):
             rucmd.reexecute()
         else:
             print "Redo not possible"

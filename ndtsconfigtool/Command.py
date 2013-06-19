@@ -247,14 +247,15 @@ class ServerStoreComponent(Command):
             try:
                 xml = self._cpEdit.get()    
                 if not self.receiver.configServer.connected:
-                    QMessageBox.information(
-                        self.receiver, "Connecting to Configuration Server", 
-                        "Connecting to %s on %s:%s" % (
+                    if QMessageBox.question(self.receiver, "Connecting to Configuration Server", 
+                                            "Connecting to %s on %s:%s" % (
                             self.receiver.configServer.device,
                             self.receiver.configServer.host,
                             self.receiver.configServer.port
-                            )
-                        )
+                            ),
+                                            QMessageBox.Yes | QMessageBox.No,
+                                            QMessageBox.Yes) == QMessageBox.No :
+                        raise Exception("Server not connected")
 
                 self.receiver.configServer.connect()
                 self.receiver.disableServer(False)
@@ -569,14 +570,16 @@ class ServerStoreDataSource(Command):
             try:
                 xml = self._ds.instance.get()    
                 if not self.receiver.configServer.connected:
-                    QMessageBox.information(
-                        self.receiver, "Connecting to Configuration Server", 
-                        "Connecting to %s on %s:%s" % (
+                    if QMessageBox.question(self.receiver, "Connecting to Configuration Server", 
+                                            "Connecting to %s on %s:%s" % (
                             self.receiver.configServer.device,
                             self.receiver.configServer.host,
                             self.receiver.configServer.port
-                            )
-                        )
+                            ),
+                                            QMessageBox.Yes | QMessageBox.No,
+                                            QMessageBox.Yes) == QMessageBox.No :
+                        raise Exception("Server not connected")
+
                 self.receiver.configServer.connect()
                 self.receiver.disableServer(False)
                 if self._ds.instance.name:

@@ -637,12 +637,15 @@ class Component(object):
 
 
         
-
+        print "GUI"
         self.updateForm()
-#        self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), self.save)
+        self.__connect()
+
+    def __connect(self):
+        #        self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), self.save)
 #        self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), self._close)
         self.dialog.connect(self.view.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
-#        self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
+        #        self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
 #        self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
         self.dialog.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)
@@ -1198,8 +1201,10 @@ class Component(object):
                 self.view.setModel(newModel)
                 self._hideFrame()
 
+                self.__connect()    
                 if hasattr(self._merger, "selectedNode") and self._merger.selectedNode: 
                     self._showNodes([self._merger.selectedNode])
+
 
             self._merger = None
 

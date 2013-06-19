@@ -639,12 +639,11 @@ class Component(object):
         
 
         self.updateForm()
-
-
 #        self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), self.save)
 #        self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), self._close)
-        self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
-        self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
+        self.dialog.connect(self.view.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
+#        self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
+#        self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
         self.dialog.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)
 

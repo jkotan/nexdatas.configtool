@@ -4,6 +4,7 @@
 	* improving merging algorithm
 	* fixes for storing FieldDlg value
 	* fixes for copyFromClipboard of datasources
+	* fixes for item selection in tree view
 	* tagged as v1.2.4
 
 2013-05-30 Jan Kotanski <jankotan@gmail.com>

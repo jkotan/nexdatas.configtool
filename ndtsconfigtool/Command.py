@@ -2953,6 +2953,7 @@ class ComponentItemCommand(Command):
                 self._subwindow.resize(640,560)
 
                 self._cp.instance.dialog.show()
+        self._cp.instance.reconnectSaveAction()
         if hasattr(self._cp,"id"):
             self.receiver.componentList.populateComponents(self._cp.id)
         else:

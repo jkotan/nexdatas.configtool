@@ -637,17 +637,19 @@ class Component(object):
 
 
         
-        print "GUI"
         self.updateForm()
-        self.__connect()
+        self.connectView()
 
-    def __connect(self):
+    def connectView(self):
         #        self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), self.save)
 #        self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), self._close)
+        self.dialog.disconnect(self.view.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
         #        self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
 #        self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
+        self.dialog.disconnect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
         self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
+        self.dialog.disconnect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)
         self.dialog.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)
 
 
@@ -683,6 +685,7 @@ class Component(object):
     ## reconnects save actions
     # \brief It reconnects the save action 
     def reconnectSaveAction(self):
+        self.connectView()
         if self.externalSave:
             self.dialog.disconnect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                          self.externalSave)
@@ -1201,7 +1204,7 @@ class Component(object):
                 self.view.setModel(newModel)
                 self._hideFrame()
 
-                self.__connect()    
+                self.connectView()    
                 if hasattr(self._merger, "selectedNode") and self._merger.selectedNode: 
                     self._showNodes([self._merger.selectedNode])
 

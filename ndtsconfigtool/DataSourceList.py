@@ -148,12 +148,17 @@ class DataSourceList(QWidget):
             dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
-        
+
             try:
-                dlg.set(datasources[dsname], new)    
+                if str(datasources[dsname]).strip():
+                    dlg.set(datasources[dsname], new)    
+                else:
+                    QMessageBox.warning(self, "DataSource cannot be loaded",
+                                        "DataSource %s without content" % dsname)
+                    dlg.createGUI()
             except:
                 QMessageBox.warning(self, "DataSource cannot be loaded",
-                                    "DataSource %s cannot be loaded" % name),
+                                    "DataSource %s cannot be loaded" % dsname),
                 dlg.createGUI()
                             
                 

@@ -286,10 +286,15 @@ class ComponentList(QWidget):
             dlg.createGUI()
             dlg.addContextMenu(itemActions)
             try:
-                dlg.set(components[name])    
+                if str(components[name]).strip():
+                    dlg.set(components[name])    
+                else:    
+                    dlg.createHeader()
+                    QMessageBox.warning(self, "Component cannot be loaded",
+                                        "Component %s without content" % name)
             except:
                 QMessageBox.warning(self, "Component cannot be loaded",
-                                    "Component %s cannot be loaded" % name),
+                                    "Component %s cannot be loaded" % name)
 
                 
             if hasattr(dlg,"connectExternalActions"):     

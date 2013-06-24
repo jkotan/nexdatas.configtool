@@ -122,7 +122,18 @@ class ConfigurationServer(object):
         comps = []
         if self._proxy and self.connected:
             names = self._proxy.AvailableComponents()
-            comps = self._proxy.Components(names)
+
+            try:
+                comps = self._proxy.Components(names)
+            except:
+                comps = []
+                for n in names:
+                    try:
+                        xml = self._proxy.Components([n])
+                        comps.append(xml[0])
+                    except:
+                        comps.append("")
+            print "comps", names, comps            
             return dict(zip(names, comps))
             
 
@@ -134,7 +145,17 @@ class ConfigurationServer(object):
         ds = []
         if self._proxy and self.connected:
             names = self._proxy.AvailableDataSources()
-            ds= self._proxy.DataSources(names)
+            try:
+                ds = self._proxy.DataSources(names)
+            except:
+                ds = []
+                for n in names:
+                    try:
+                        xml = self._proxy.DataSources([n])
+                        ds.extend(xml)
+                    except:
+                        ds.append("")
+                        
             return dict(zip(names, ds))
 
 

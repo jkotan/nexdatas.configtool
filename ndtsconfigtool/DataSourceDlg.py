@@ -723,6 +723,7 @@ class DataSourceMethods(object):
     def updateNode(self, index=QModelIndex()):
 #        print "tree", self.datasource.tree
 #        print "index", index.internalPointer()
+
         newDs = self.createNodes(self.datasource.tree)
         oldDs = self.dialog.node
 
@@ -836,12 +837,10 @@ class DataSourceMethods(object):
                 self.dialog.root = self.datasource.document 
                 self.dialog.node = self.dialog.dts.getFirstElement(self.datasource.document, 
                                                                    "datasource")
-        if not ds:
+        if not self.dialog.node:
             return
-        self.dialog.root.removeChild(ds)            
+        self.setFromNode(self.dialog.node)
 
-
-        self.setFromNode(ds)
         return True
 
 
@@ -1082,7 +1081,7 @@ class DataSource(CommonDataSource):
                         "XML files (*.xml);;HTML files (*.html);;"
                         "SVG files (*.svg);;User Interface files (*.ui)"))
                 fi = QFileInfo(filename)
-                fname = fi.fileName()
+                fname = str(fi.fileName())
                 if fname[-4:] == '.xml':
                     self.name = fname[:-4]
                     if self.name[-3:] == '.ds':
@@ -1090,12 +1089,12 @@ class DataSource(CommonDataSource):
                     else:
                         self.name = fname
             else:
-                filename = os.path.join(self.directory, self.name + ".ds.xml") 
+                filename = os.path.join(self.directory, self.name + ".ds.xml")
         else:
             filename = fname
             if not self.name:
                 fi = QFileInfo(filename)
-                fname = fi.fileName()
+                fname = str(fi.fileName())
                 if fname[-4:] == '.xml':
                     self.name = fname[:-4]
                     if self.name[-3:] == '.ds':

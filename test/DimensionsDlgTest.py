@@ -93,9 +93,8 @@ class DimensionsDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, []) 
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.result(), 0)
@@ -121,9 +120,8 @@ class DimensionsDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, []) 
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -133,7 +131,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.ui.rankSpinBox.value(),0)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(),0)
@@ -150,9 +147,8 @@ class DimensionsDlgTest(unittest.TestCase):
         form = DimensionsDlg()
         form.rank = rank
         self.assertEqual(form.rank, rank)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, []) 
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -162,7 +158,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, [None]*rank)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.ui.rankSpinBox.value(),rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
@@ -184,8 +179,7 @@ class DimensionsDlgTest(unittest.TestCase):
         form.rank = rank
         form.lengths = lengths
         self.assertEqual(form.rank, rank)
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -195,7 +189,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.ui.rankSpinBox.value(),rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
@@ -216,9 +209,8 @@ class DimensionsDlgTest(unittest.TestCase):
         form.rank = rank
         form.lengths = lengths
         self.assertEqual(form.rank, rank)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -228,7 +220,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, int(rank))
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.ui.rankSpinBox.value(), int(rank))
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(), int(rank))
@@ -249,9 +240,8 @@ class DimensionsDlgTest(unittest.TestCase):
         form.rank = rank
         form.lengths = lengths
         self.assertEqual(form.rank, rank)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -261,7 +251,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.ui.rankSpinBox.value(),0)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(),0)
@@ -278,11 +267,9 @@ class DimensionsDlgTest(unittest.TestCase):
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
-        form.doc = doc
         self.assertEqual(form.rank, rank)
-        self.assertEqual(form.doc, doc)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -292,11 +279,9 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.doc, doc)
         self.assertEqual(form.ui.rankSpinBox.value(),rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0) 
             self.assertEqual(it.text(), str(lengths[r]))
@@ -314,9 +299,8 @@ class DimensionsDlgTest(unittest.TestCase):
         form.rank = rank
         form.lengths = lengths
         self.assertEqual(form.rank, rank)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -326,7 +310,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.ui.rankSpinBox.value(),rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
@@ -347,9 +330,8 @@ class DimensionsDlgTest(unittest.TestCase):
         form.rank = rank
         form.lengths = lengths
         self.assertEqual(form.rank, rank)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -359,7 +341,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.ui.rankSpinBox.value(),rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
@@ -376,15 +357,12 @@ class DimensionsDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
-        doc = 'My Document'*self.__rnd.randint(1, 10) 
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
-        form.doc = doc
         self.assertEqual(form.rank, rank)
-        self.assertEqual(form.doc, doc)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -395,7 +373,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.doc, doc)
         self.assertEqual(form.ui.rankSpinBox.value(),rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
@@ -414,12 +391,10 @@ class DimensionsDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
-        doc = 'My Document'*self.__rnd.randint(1, 10) 
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, [])
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -434,7 +409,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, [None]*rank)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.ui.rankSpinBox.value(),rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
@@ -451,12 +425,10 @@ class DimensionsDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
-        doc = 'My Document'*self.__rnd.randint(1, 10) 
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, [])
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -474,8 +446,6 @@ class DimensionsDlgTest(unittest.TestCase):
             self.assertEqual(it.text(), '')
 
 
-        QTest.keyClicks(form.ui.docTextEdit, str(doc))
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
         okWidget = form.ui.buttonBox.button(form.ui.buttonBox.Ok)
         QTest.mouseClick(okWidget, Qt.LeftButton)
@@ -485,7 +455,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, [None]*rank)
-        self.assertEqual(form.doc, doc)
 
 
 
@@ -499,12 +468,10 @@ class DimensionsDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
-        doc = 'My Document'*self.__rnd.randint(1, 10) 
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, [])
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -512,8 +479,6 @@ class DimensionsDlgTest(unittest.TestCase):
 
 #        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
         form.ui.rankSpinBox.setValue(rank)
-
-#        form.ui.docTextEdit.setText(str(doc))
 
         self.assertEqual(form.ui.rankSpinBox.value(),rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
@@ -523,8 +488,6 @@ class DimensionsDlgTest(unittest.TestCase):
             it = form.ui.dimTableWidget.item(r, 0) 
             self.assertEqual(it.text(), '')
 
-        QTest.keyClicks(form.ui.docTextEdit, str(doc))
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
         cancelWidget = form.ui.buttonBox.button(form.ui.buttonBox.Cancel)
         QTest.mouseClick(cancelWidget, Qt.LeftButton)
@@ -534,7 +497,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, [None]*rank)
-        self.assertEqual(form.doc, '')
 
 
 
@@ -545,12 +507,10 @@ class DimensionsDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
-        doc = 'My Document'*self.__rnd.randint(1, 10) 
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, [])
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -559,7 +519,6 @@ class DimensionsDlgTest(unittest.TestCase):
         form.ui.rankSpinBox.setValue(rank)
 #        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
 
-#        form.ui.docTextEdit.setText(str(doc))
 
         self.assertEqual(form.ui.rankSpinBox.value(),rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
@@ -568,9 +527,6 @@ class DimensionsDlgTest(unittest.TestCase):
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0) 
             self.assertEqual(it.text(), '')
-
-        QTest.keyClicks(form.ui.docTextEdit, str(doc))
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
         for r in range(rank):
             form.ui.dimTableWidget.setCurrentCell(r,0)
@@ -588,7 +544,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.doc, '')
 
 
 
@@ -599,12 +554,10 @@ class DimensionsDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
-        doc = 'My Document'*self.__rnd.randint(1, 10) 
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, [])
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -613,7 +566,6 @@ class DimensionsDlgTest(unittest.TestCase):
         form.ui.rankSpinBox.setValue(rank)
 #        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
 
-#        form.ui.docTextEdit.setText(str(doc))
 
         self.assertEqual(form.ui.rankSpinBox.value(),rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
@@ -623,8 +575,6 @@ class DimensionsDlgTest(unittest.TestCase):
             it = form.ui.dimTableWidget.item(r, 0) 
             self.assertEqual(it.text(), '')
 
-        QTest.keyClicks(form.ui.docTextEdit, str(doc))
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
         for r in range(rank):
             QTimer.singleShot(10, self.checkMessageBox)
@@ -642,7 +592,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, [None]*rank)
-        self.assertEqual(form.doc, doc)
 
 
 
@@ -654,12 +603,10 @@ class DimensionsDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
-        doc = 'My Document'*self.__rnd.randint(1, 10) 
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
-        self.assertEqual(form.doc, '')
         self.assertEqual(form.lengths, [])
-        self.assertEqual(form.subItems, ["dim", "doc"])
+        self.assertEqual(form.subItems, ["dim"])
         self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
 
         self.assertEqual(form.createGUI(), None)
@@ -668,7 +615,6 @@ class DimensionsDlgTest(unittest.TestCase):
         form.ui.rankSpinBox.setValue(rank)
 #        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
 
-#        form.ui.docTextEdit.setText(str(doc))
 
         self.assertEqual(form.ui.rankSpinBox.value(),rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(),1)
@@ -677,9 +623,6 @@ class DimensionsDlgTest(unittest.TestCase):
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0) 
             self.assertEqual(it.text(), '')
-
-        QTest.keyClicks(form.ui.docTextEdit, str(doc))
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
         for r in range(rank):
             form.ui.dimTableWidget.setCurrentCell(r,0)
@@ -702,7 +645,6 @@ class DimensionsDlgTest(unittest.TestCase):
         
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.doc, doc)
 
 
 

@@ -1,10 +1,20 @@
+2013-06-24 Jan Kotanski <jankotan@gmail.com>
+	* adding labels for directories and configuration server
+	* removing doc for dimensions
+	* improving merging algorithm
+	* fixes for storing FieldDlg value
+	* fixes for copyFromClipboard of datasources
+	* fixes for item selection in tree view
+	* fixes for fetching empty XML string
+	* tagged as v1.2.4
+
 2013-05-30 Jan Kotanski <jankotan@gmail.com>
 	* fixes for datasource saving
 	* adding tests
 	* tagged as v1.2.3
 
 2013-05-15 Jan Kotanski <jankotan@gmail.com>
-	* adding store button for storing datasources and components in DB 
+	* adding store button for storing datasources and components in DB
 	* exchanging fast double click with slow double click
 	* fixing saving datasources
 	* tagged as v1.2.2

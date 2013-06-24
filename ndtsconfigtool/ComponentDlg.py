@@ -637,15 +637,19 @@ class Component(object):
 
 
         
-
         self.updateForm()
+        self.connectView()
 
-
-#        self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), self.save)
+    def connectView(self):
+        #        self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), self.save)
 #        self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), self._close)
-        self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
-        self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
+        self.dialog.disconnect(self.view.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
+        self.dialog.connect(self.view.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
+        #        self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
+#        self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
+        self.dialog.disconnect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
         self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
+        self.dialog.disconnect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)
         self.dialog.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)
 
 
@@ -681,6 +685,7 @@ class Component(object):
     ## reconnects save actions
     # \brief It reconnects the save action 
     def reconnectSaveAction(self):
+        self.connectView()
         if self.externalSave:
             self.dialog.disconnect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                          self.externalSave)
@@ -1199,8 +1204,10 @@ class Component(object):
                 self.view.setModel(newModel)
                 self._hideFrame()
 
+                self.connectView()    
                 if hasattr(self._merger, "selectedNode") and self._merger.selectedNode: 
                     self._showNodes([self._merger.selectedNode])
+
 
             self._merger = None
 
@@ -1343,8 +1350,6 @@ class Component(object):
     ## saves the component
     # \brief It saves the component in the xml file 
     def save(self):
-#        import gc
-#        gc.collect()
         if not self._merged:
             QMessageBox.warning(self.dialog, "Saving problem",
                                 "Document not merged" )
@@ -1352,9 +1357,10 @@ class Component(object):
         error = None
         if self._componentFile is None:
             self.setName(self.name, self.directory)
-        print "saving ", self._componentFile
+        fpath = os.path.join(self.directory, self.name + ".xml")     
+        print "saving ", fpath
         try:
-            fh = QFile(self._componentFile)
+            fh = QFile(fpath)
             if not fh.open(QIODevice.WriteOnly):
                 raise IOError, unicode(fh.errorString())
             stream = QTextStream(fh)
@@ -1413,7 +1419,7 @@ def test():
     component.dialog.resize(640, 560)
     component.createHeader()
     component.dialog.show()        
-    component.dialog.setWindowTitle("Component: %s" % component.name)
+    component.dialog.setWindowTitle("%s [Component]" % component.name)
 
     app.exec_()
 

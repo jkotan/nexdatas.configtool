@@ -38,7 +38,7 @@ class DataSourceList(QWidget):
     # \param parent patent instance
     def __init__(self, directory, parent=None):
         super(DataSourceList, self).__init__(parent)
-         ## directory from which components are loaded by default
+         ## directWory from which components are loaded by default
         self.directory = directory
         
         ## group datasources
@@ -148,12 +148,17 @@ class DataSourceList(QWidget):
             dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
-        
+
             try:
-                dlg.set(datasources[dsname], new)    
+                if str(datasources[dsname]).strip():
+                    dlg.set(datasources[dsname], new)    
+                else:
+                    QMessageBox.warning(self, "DataSource cannot be loaded",
+                                        "DataSource %s without content" % dsname)
+                    dlg.createGUI()
             except:
                 QMessageBox.warning(self, "DataSource cannot be loaded",
-                                    "DataSource %s cannot be loaded" % name),
+                                    "DataSource %s cannot be loaded" % dsname),
                 dlg.createGUI()
                             
                 
@@ -271,9 +276,9 @@ class DataSourceList(QWidget):
             if self.datasources[ds].instance is not None and self.datasources[ds].instance.dialog is not None:
                 try:
                     if  dirty:
-                        self.datasources[ds].instance.dialog.setWindowTitle("DataSource: %s*" %name)
+                        self.datasources[ds].instance.dialog.setWindowTitle("%s [DataSource]*" %name)
                     else:
-                        self.datasources[ds].instance.dialog.setWindowTitle("DataSource: %s" %name)
+                        self.datasources[ds].instance.dialog.setWindowTitle("%s [DataSource]" %name)
                 except:
 #                    print "C++", self.datasources[ds].name
                     self.datasources[ds].instance.dialog = None

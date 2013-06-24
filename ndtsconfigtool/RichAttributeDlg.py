@@ -45,8 +45,6 @@ class RichAttributeDlg(NodeDlg):
         self.nexusType = u''
         ## attribute doc
         self.doc = u''
-        ## dimensions doc
-        self.dimDoc = u''
 
         ## rank
         self.rank = 0
@@ -72,7 +70,6 @@ class RichAttributeDlg(NodeDlg):
                  self.value,
                  self.nexusType,
                  self.doc,
-                 self.dimDoc,
                  self.rank,
                  dimensions
                  )
@@ -89,7 +86,6 @@ class RichAttributeDlg(NodeDlg):
          self.value,
          self.nexusType,
          self.doc,
-         self.dimDoc,
          self.rank,
          dimensions
          ) = state
@@ -245,11 +241,9 @@ class RichAttributeDlg(NodeDlg):
         dform  = DimensionsDlg( self)
         dform.rank = self.rank
         dform.lengths = [ln for ln in self._dimensions]
-        dform.doc = self.dimDoc
         dform.createGUI()
         if dform.exec_():
             self.rank = dform.rank
-            self.dimDoc = dform.doc
             if self.rank:
                 self._dimensions = [ln for ln in dform.lengths]
             else:    
@@ -323,6 +317,7 @@ class RichAttributeDlg(NodeDlg):
     # \brief It sets node from the dialog variables
     def updateNode(self,index=QModelIndex()):
         elem=self.node.toElement()
+        mindex = self.view.currentIndex() if not index.isValid() else index   
 
 
         attributeMap = self.node.attributes()
@@ -332,23 +327,23 @@ class RichAttributeDlg(NodeDlg):
         if self.nexusType:
             elem.setAttribute(QString("type"), QString(self.nexusType))
 
-        self.replaceText(index, unicode(self.value))
+        self.replaceText(mindex, unicode(self.value))
 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self.removeElement(doc, index)
+            self.removeElement(doc, mindex)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self.replaceElement(doc, newDoc, index)
+                self.replaceElement(doc, newDoc, mindex)
             else:
-                self.appendElement(newDoc, index)
+                self.appendElement(newDoc, mindex)
 
         dimens = self.node.firstChildElement(QString("dimensions"))           
         if not self.dimensions and dimens and dimens.nodeName() == "dimensions":
-            self.removeElement(dimens,index)
+            self.removeElement(dimens,mindex)
         elif self.dimensions:
             newDimens = self.root.createElement(QString("dimensions"))
             newDimens.setAttribute(QString("rank"), QString(unicode(self.rank)))
@@ -364,9 +359,9 @@ class RichAttributeDlg(NodeDlg):
                     newDimens.appendChild(dim)
                 
             if dimens and dimens.nodeName() == "dimensions" :
-                self.replaceElement(dimens, newDimens, index)
+                self.replaceElement(dimens, newDimens, mindex)
             else:
-                self.appendElement(newDimens, index)
+                self.appendElement(newDimens, mindex)
                     
 
 

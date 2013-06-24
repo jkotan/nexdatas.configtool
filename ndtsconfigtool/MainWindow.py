@@ -25,7 +25,8 @@ import os
 from PyQt4.QtCore import (SIGNAL, SLOT, QSettings, Qt,  QSignalMapper, 
                           QVariant, QT_VERSION_STR, PYQT_VERSION_STR, QStringList )
 from PyQt4.QtGui import (QMainWindow, QDockWidget, QSplitter, QWorkspace , QMdiArea,
-                         QListWidgetItem, QAction, QKeySequence, QMessageBox, QIcon)
+                         QListWidgetItem, QAction, QKeySequence, QMessageBox, QIcon, 
+                         QLabel, QFrame)
 
 import platform
 from qrc import qrc_resources
@@ -113,10 +114,6 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-        ## datasource directory
-        self.dsDirectory = ""
-        ## component directory
-        self.cpDirectory = ""
 
         ## component tree menu under mouse cursor
         self.contextMenuActions = None
@@ -133,13 +130,25 @@ class MainWindow(QMainWindow):
         ## datasource list menu under mouse cursor
         self.dsourceListMenuActions = None
 
-        ## dock with components and datasources
-        self.compDockWidget = None
+
+        ## datasource directory
+        self.dsDirectory = ""
+        ## component directory
+        self.cpDirectory = ""
 
         ## list of datasources
         self.sourceList =  None
         ## list of components
         self.componentList =    None
+
+        ## dock with components and datasources
+        self.compDockWidget = None
+
+        ## component directory label
+        self.cpDirLabel = None
+        ## datasource directory label
+        self.dsDirLabel = None
+
         
         ## multi window workspace
         self.mdi = None
@@ -210,13 +219,23 @@ class MainWindow(QMainWindow):
 
         status = self.statusBar()
         status.setSizeGripEnabled(False)
-        
+        self.cpDirLabel = QLabel("CP: %s" % (self.cpDirectory))
+        self.cpDirLabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
+        self.dsDirLabel = QLabel("DS: %s" % (self.dsDirectory))
+        self.dsDirLabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
+        status.addWidget(QLabel(""),4)
+        status.addWidget(self.cpDirLabel,4)
+        status.addWidget(self.dsDirLabel,4)
         self.updateWindowMenu()
         status.showMessage("Ready", 5000)
 
         self.setWindowTitle("NDTS Component Designer")
 
-
+    ## updates directories in status bar
+    def updateStatusBar(self):
+        self.cpDirLabel.setText("CP: %s" % (self.cpDirectory))
+        self.dsDirLabel.setText("DS: %s" % (self.dsDirectory))
+        
 
     ##  creates GUI
     # \brief It create dialogs for the main window application
@@ -544,13 +563,13 @@ class MainWindow(QMainWindow):
             "", "dsourcereloadlist", "Reload the data-source list")
 
         dsourceOpenAction = self.pool.createCommand(
-            "&Open DataSource...", "dsourceOpen", commandArgs, DataSourceOpen,
-            "Ctrl+Shift+O", "dsourceopen", "Open an existing data source")
+            "&Load DataSource...", "dsourceOpen", commandArgs, DataSourceOpen,
+            "Ctrl+Shift+O", "dsourceopen", "Load an existing data source")
 
 
         componentOpenAction = self.pool.createCommand(
-            "&Open...", "componentOpen", commandArgs, ComponentOpen,
-            QKeySequence.Open, "componentopen", "Open an existing component")
+            "&Load...", "componentOpen", commandArgs, ComponentOpen,
+            QKeySequence.Open, "componentopen", "Load an existing component")
         
         componentRemoveAction = self.pool.createCommand(
             "&Close", "componentRemove", commandArgs, ComponentRemove,
@@ -1071,6 +1090,22 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("serverDeleteDataSource", status)
         self.pool.setDisabled("serverClose", status)
         
+
+        if self.configServer and self.configServer.device:
+            dev = "%s:%s/%s" % ( 
+                self.configServer.host if self.configServer.host else "localhost", 
+                str(self.configServer.port) if self.configServer.port else "10000",
+                self.configServer.device
+                )
+        else :
+            dev = "None"
+            
+        if status:
+            self.setWindowTitle("NDTS Component Designer -||- [%s]" % dev)
+        else:
+            self.setWindowTitle("NDTS Component Designer <-> [%s]" % dev)
+            
+            
 
 
     ## loads the datasource list
@@ -1984,8 +2019,8 @@ class MainWindow(QMainWindow):
         cmd.execute()
 
         rucmd = self.cmdStack.redo()
-        if hasattr(rucmd,'execute'):
-            rucmd.execute()
+        if hasattr(rucmd,'reexecute'):
+            rucmd.reexecute()
         else:
             print "Redo not possible"
 

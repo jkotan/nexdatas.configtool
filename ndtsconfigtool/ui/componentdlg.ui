@@ -32,14 +32,14 @@
          <item>
           <widget class="QPushButton" name="savePushButton">
            <property name="text">
-            <string>&amp;Save</string>
+            <string>Sa&amp;ve to File</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="storePushButton">
            <property name="text">
-            <string>&amp;Store</string>
+            <string>St&amp;ore in DB</string>
            </property>
           </widget>
          </item>

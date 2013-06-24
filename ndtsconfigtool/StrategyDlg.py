@@ -249,6 +249,7 @@ class StrategyDlg(NodeDlg):
     def updateNode(self,index=QModelIndex()):
         elem=self.node.toElement()
 
+        mindex = self.view.currentIndex() if not index.isValid() else index   
 
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
@@ -265,19 +266,19 @@ class StrategyDlg(NodeDlg):
             elem.setAttribute(QString("shuffle"), QString("true") if self.shuffle else "false" )
             elem.setAttribute(QString("rate"), QString(str(self.rate)))
 
-        self.replaceText(index, unicode(self.postrun))
+        self.replaceText(mindex, unicode(self.postrun))
 
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
-            self.removeElement(doc, index)
+            self.removeElement(doc, mindex)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc" :
-                self.replaceElement(doc, newDoc, index)
+                self.replaceElement(doc, newDoc, mindex)
             else:
-                self.appendElement(newDoc, index)
+                self.appendElement(newDoc, mindex)
 
 
 

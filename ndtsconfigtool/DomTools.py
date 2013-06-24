@@ -112,11 +112,15 @@ class DomTools(object):
     def replaceText(self, node, index, model, text = None):
         if node:
             root = model.rootIndex.internalPointer().node
-            child = node.firstChild()
-            while not child.isNull():
+            children = node.childNodes()
+            i = 0
+            while i < children.count():
+                child = children.item(i)
                 if child.nodeType() == QDomNode.TextNode:
                     self.removeNode(child, index, model)
-                child = child.nextSibling()
+                else:
+                    i += 1
+
             if text:
                 textNode = root.createTextNode(QString(text))
                 self.appendNode(textNode,index, model)

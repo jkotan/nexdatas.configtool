@@ -35,8 +35,6 @@ class DimensionsDlg(QDialog):
 
         ## dimensions rank
         self.rank = 0
-        ## dimensions doc
-        self.doc = u''
         ## dimensions lengths
         self.lengths = []
 
@@ -44,7 +42,7 @@ class DimensionsDlg(QDialog):
         self.ui = Ui_DimensionsDlg()
 
         ## allowed subitems
-        self.subItems = ["dim", "doc"]
+        self.subItems = ["dim"]
 
 
     ##  creates GUI
@@ -70,8 +68,6 @@ class DimensionsDlg(QDialog):
             
         self.ui.setupUi(self)
 
-        if self.doc :
-            self.ui.docTextEdit.setText(self.doc)
         
         self.ui.rankSpinBox.setValue(self.rank)    
 
@@ -159,7 +155,6 @@ class DimensionsDlg(QDialog):
     ## accepts input text strings
     # \brief It copies the dimensions name and type from lineEdit widgets and accept the dialog
     def accept(self):
-        self.doc = unicode(self.ui.docTextEdit.toPlainText())
         while len(self.lengths) > self.rank:
             self.lengths.pop()
         QDialog.accept(self)
@@ -175,7 +170,6 @@ if __name__ == "__main__":
     form.rank = 2
     form.lengths = [25,27]
 #    form.lengths = [None,3]
-    form.doc = "Two dimensional array"
     form.createGUI()
     form.show()
     app.exec_()

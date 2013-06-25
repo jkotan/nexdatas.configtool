@@ -286,7 +286,7 @@ class MainWindow(QMainWindow):
             DataSourceNew,"Ctrl+Shift+N", "dsourceadd", "Create a new data source") 
 
         dsourceRemoveAction = self.pool.createCommand(
-            "&Close DataSource", "dsourceRemove",  commandArgs, 
+            "&Remove DataSource", "dsourceRemove",  commandArgs, 
             DataSourceRemove,"Ctrl+Shift+P", "dsourceremove", "Close the data source")
 
         dsourceEditAction =  self.pool.createCommand(
@@ -572,7 +572,7 @@ class MainWindow(QMainWindow):
             QKeySequence.Open, "componentopen", "Load an existing component")
         
         componentRemoveAction = self.pool.createCommand(
-            "&Close", "componentRemove", commandArgs, ComponentRemove,
+            "&Remove", "componentRemove", commandArgs, ComponentRemove,
             "Ctrl+P", "componentremove", "Close the component")
 
 

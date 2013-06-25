@@ -2165,11 +2165,6 @@ class MainWindow(QMainWindow):
             
             ds = subwindow.widget().datasource
 
-            if QMessageBox.question(self, "Close datasource",
-                                    "Would you like to close the datasource?", 
-                                    QMessageBox.Yes | QMessageBox.No,
-                                    QMessageBox.Yes ) == QMessageBox.No :
-                return
             ds.updateForm()
             if ds.dialog:
                 ds.dialog.reject()
@@ -2185,11 +2180,6 @@ class MainWindow(QMainWindow):
         subwindow = self.mdi.activeSubWindow()
         if subwindow and isinstance(subwindow.widget(),ComponentDlg) and subwindow.widget().component:
             cp = subwindow.widget().component
-
-            if QMessageBox.question(self, "Close component",
-                                    "Would you like to close the component ?", 
-                                    QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
-                return
 
             if cp.dialog:
                 cp.dialog.reject()

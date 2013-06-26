@@ -1474,7 +1474,7 @@ class DataSourceCopy(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
-    #            self._ds.instance.createGUI()
+                self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
                     self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
@@ -1506,7 +1506,7 @@ class DataSourceCopy(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
-#                self._ds.instance.createGUI()
+                self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
                     self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
@@ -1571,7 +1571,7 @@ class DataSourceCut(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
-#                self._ds.instance.createGUI()
+                self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
                     self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
@@ -1608,7 +1608,7 @@ class DataSourceCut(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
-#                self._ds.instance.createGUI()
+                self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
                     self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
@@ -1725,7 +1725,7 @@ class DataSourcePaste(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
-#                self._ds.instance.createGUI()
+                self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
                     self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
@@ -1808,7 +1808,7 @@ class DataSourceApply(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction()
             else:    
-#                self._ds.instance.createGUI()
+                self._ds.instance.createGUI()
 
                 if self._ds.instance.isDirty():
                     self._ds.instance.dialog.setWindowTitle("%s [Component]*" % self._ds.name)
@@ -2648,7 +2648,7 @@ class DataSourceRemove(Command):
 
             self.receiver.sourceList.addDataSource(self._ds, False)
 
-#            self._ds.instance.createGUI()
+            self._ds.instance.createGUI()
 
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.mdi.subWindowList())

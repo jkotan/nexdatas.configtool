@@ -1462,7 +1462,6 @@ class DataSourceCopy(Command):
             if self._newstate is None:
                 if self._oldstate is None:
                     self._oldstate = self._ds.instance.getState() 
-
                 self._ds.instance.copyToClipboard()
             else:
                 self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._newstate)
@@ -2649,7 +2648,7 @@ class DataSourceRemove(Command):
 
             self.receiver.sourceList.addDataSource(self._ds, False)
 
-#            self._ds.instance.createGUI()
+            self._ds.instance.createGUI()
 
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.mdi.subWindowList())

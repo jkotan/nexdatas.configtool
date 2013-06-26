@@ -408,7 +408,8 @@ class DataSourceMethods(object):
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
 
-        self.dialog.ui.setupUi(self.dialog)
+        if self.dialog and self.dialog.ui and not hasattr(self.dialog.ui,"resetPushButton"):
+            self.dialog.ui.setupUi(self.dialog)
 
 
         self.updateForm()

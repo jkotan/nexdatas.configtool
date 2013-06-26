@@ -133,7 +133,6 @@ class ConfigurationServer(object):
                         comps.append(xml[0])
                     except:
                         comps.append("")
-            print "comps", names, comps            
             return dict(zip(names, comps))
             
 

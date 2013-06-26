@@ -286,7 +286,7 @@ class MainWindow(QMainWindow):
             DataSourceNew,"Ctrl+Shift+N", "dsourceadd", "Create a new data source") 
 
         dsourceRemoveAction = self.pool.createCommand(
-            "&Close DataSource", "dsourceRemove",  commandArgs, 
+            "&Remove DataSource", "dsourceRemove",  commandArgs, 
             DataSourceRemove,"Ctrl+Shift+P", "dsourceremove", "Close the data source")
 
         dsourceEditAction =  self.pool.createCommand(
@@ -572,7 +572,7 @@ class MainWindow(QMainWindow):
             QKeySequence.Open, "componentopen", "Load an existing component")
         
         componentRemoveAction = self.pool.createCommand(
-            "&Close", "componentRemove", commandArgs, ComponentRemove,
+            "&Remove", "componentRemove", commandArgs, ComponentRemove,
             "Ctrl+P", "componentremove", "Close the component")
 
 
@@ -2165,11 +2165,6 @@ class MainWindow(QMainWindow):
             
             ds = subwindow.widget().datasource
 
-            if QMessageBox.question(self, "Close datasource",
-                                    "Would you like to close the datasource?", 
-                                    QMessageBox.Yes | QMessageBox.No,
-                                    QMessageBox.Yes ) == QMessageBox.No :
-                return
             ds.updateForm()
             if ds.dialog:
                 ds.dialog.reject()
@@ -2185,11 +2180,6 @@ class MainWindow(QMainWindow):
         subwindow = self.mdi.activeSubWindow()
         if subwindow and isinstance(subwindow.widget(),ComponentDlg) and subwindow.widget().component:
             cp = subwindow.widget().component
-
-            if QMessageBox.question(self, "Close component",
-                                    "Would you like to close the component ?", 
-                                    QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
-                return
 
             if cp.dialog:
                 cp.dialog.reject()

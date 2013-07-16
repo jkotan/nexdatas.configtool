@@ -368,6 +368,31 @@ class RichAttributeDlg(NodeDlg):
                     
 
 
+
+
+    ## appends newElement
+    # \param newElement DOM node to append
+    # \param parent parent DOM node        
+    def appendElement(self, newElement, parent):
+        singles = {"datasource":"DataSource", "strategy":"Strategy"}
+        if unicode(newElement.nodeName()) in singles:
+            if not self.node:
+                return
+            child = self.node.firstChild()
+            while not child.isNull():
+                if child.nodeName() == unicode(newElement.nodeName()):
+                    QMessageBox.warning(
+                        self, "%s exists" % singles[str(newElement.nodeName())], 
+                        "To add a new %s please remove the old one" % newElement.nodeName())
+                    return False
+                child = child.nextSibling()    
+
+
+
+        return NodeDlg.appendElement(self, newElement, parent)       
+        
+
+
 if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication

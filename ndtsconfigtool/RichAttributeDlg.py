@@ -26,6 +26,7 @@ from ui.ui_richattributedlg import  Ui_RichAttributeDlg
 
 from NodeDlg import NodeDlg 
 from DimensionsDlg import DimensionsDlg
+import copy
 
 from Errors import CharacterError
 

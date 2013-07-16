@@ -171,6 +171,8 @@ class RichAttributeDlg(NodeDlg):
         if node:
             ## defined in NodeDlg
             self.node = node
+        if not self.node:
+            return
         attributeMap = self.node.attributes()
         nNode = self.node.nodeName()
 
@@ -178,7 +180,7 @@ class RichAttributeDlg(NodeDlg):
         self.nexusType = unicode(attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else "")
 
 
-        text = self.dts.getText(node)    
+        text = self.dts.getText(self.node)    
         self.value = unicode(text).strip() if text else ""
 
 

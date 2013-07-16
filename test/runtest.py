@@ -37,6 +37,7 @@ import NodeDlgTest
 import ComponentItemTest
 import ComponentModelTest
 import DomToolsTest
+import RichAttributeDlgTest
 
 
 
@@ -123,6 +124,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(FieldDlgTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(RichAttributeDlgTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NodeDlgTest) )

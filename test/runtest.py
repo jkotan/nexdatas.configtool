@@ -39,6 +39,7 @@ import ComponentModelTest
 import DomToolsTest
 import RichAttributeDlgTest
 import LinkDlgTest
+import StrategyDlgTest
 
 
 
@@ -111,6 +112,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(LinkDlgTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(StrategyDlgTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ConnectDlgTest) )

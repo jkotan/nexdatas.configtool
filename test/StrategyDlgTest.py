@@ -2450,7 +2450,7 @@ class StrategyDlgTest(unittest.TestCase):
         
         self.assertEqual(form.mode, nmode)
         self.assertEqual(form.trigger, ntrigger if nmode =='STEP' else '')
-        self.assertEqual(form.grows, str(ngrows) if nmode =='STEP' else '')
+        self.assertEqual(form.grows, str(ngrows) if nmode =='STEP' and ngrows > 0  else '')
         self.assertEqual(form.postrun, npost if nmode =='POSTRUN' else '')
         self.assertEqual(form.compression, ncompr)
         self.assertEqual(form.rate, nrate)
@@ -2492,7 +2492,7 @@ class StrategyDlgTest(unittest.TestCase):
         
         vtext = form.dts.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
-        self.assertEqual(oldval,npost if mode =='POSTRUN' else '')
+        self.assertEqual(oldval,npost if nmode =='POSTRUN' else '')
 
  
 

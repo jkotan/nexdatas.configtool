@@ -1992,7 +1992,6 @@ class StrategyDlgTest(unittest.TestCase):
         form.view = TestView(cm)
         form.view.testIndex = di
 
-        print di.internalPointer().node.nodeName()
         
 
         attributeMap = form.node.attributes()
@@ -2069,16 +2068,11 @@ class StrategyDlgTest(unittest.TestCase):
 
         mydoc = form.node.firstChildElement(QString("doc"))           
         text = form.dts.getText(mydoc)    
-        print "TT1111111", text
 
-        print "f.text", form.doc
         form.updateNode()
 
         mydoc = form.node.firstChildElement(QString("doc"))           
         text = form.dts.getText(mydoc)    
-        print "TT222222", text
-        print "f2.text", form.doc
-        print "ROOt", form.root.toString()
 
 
         vtext = form.dts.getText(qdn)    
@@ -2253,7 +2247,6 @@ class StrategyDlgTest(unittest.TestCase):
         mydoc = form.node.firstChildElement(QString("doc"))           
         text = form.dts.getText(mydoc)    
 
-        print "ROOT", form.root.toString()
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,nmdoc.strip())

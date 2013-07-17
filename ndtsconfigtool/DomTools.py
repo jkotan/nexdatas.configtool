@@ -114,16 +114,24 @@ class DomTools(object):
             root = model.rootIndex.internalPointer().node
             children = node.childNodes()
             i = 0
+            j = 0
             while i < children.count():
                 child = children.item(i)
                 if child.nodeType() == QDomNode.TextNode:
-                    self.removeNode(child, index, model)
-                else:
-                    i += 1
+                    if j==0 and text: 
+                        print "piltext", text,child.toText().data()
+                        child.toText().setData(QString(text))
+                        print "pildata",child.toText().data()
+                    else:
+                        child.toText().setData(QString(""))
+                        pass
+                    j += 1
+#                    self.removeNode(child, index, model)
+                i += 1
 
-            if text:
+            if j == 0 and text:
                 textNode = root.createTextNode(QString(text))
-                self.appendNode(textNode,index, model)
+                self.appendNode(textNode, index, model)
     
 
     ## removes node
@@ -191,11 +199,14 @@ class DomTools(object):
             return
         node = parent.internalPointer().node
         row = self.__getElementRow(oldElement, node)
+        print "ROW",row
         if row is not None:
             model.removeItem(row, parent)
-            if row  < node.childNodes().count():
+            if row < node.childNodes().count():
+                print "insert"
                 model.insertItem(row, newElement, parent)
             else:
+                print "append"
                 model.appendItem(newElement, parent)
 
 

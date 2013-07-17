@@ -1992,8 +1992,8 @@ class StrategyDlgTest(unittest.TestCase):
         form.view = TestView(cm)
         form.view.testIndex = di
 
-
-
+        print di.internalPointer().node.nodeName()
+        
 
         attributeMap = form.node.attributes()
         
@@ -2090,7 +2090,7 @@ class StrategyDlgTest(unittest.TestCase):
         olddoc = unicode(text).strip() if text else ""
 
 #        self.assertEqual(olddoc,"".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(olddoc,nmdoc)
+        self.assertEqual(olddoc,nmdoc.strip())
 
 
 
@@ -2256,7 +2256,7 @@ class StrategyDlgTest(unittest.TestCase):
         print "ROOT", form.root.toString()
         olddoc = unicode(text).strip() if text else ""
 
-        self.assertEqual(olddoc,nmdoc)
+        self.assertEqual(olddoc,nmdoc.strip())
 
 
 

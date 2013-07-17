@@ -100,7 +100,6 @@ class RichAttributeDlgTest(unittest.TestCase):
         except NotImplementedError:
             self.__seed  = long(time.time() * 256) 
 
-        self.__seed= 309284324384944322060160783760382990541
 
         self.__rnd = random.Random(self.__seed)
 

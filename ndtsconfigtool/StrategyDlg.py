@@ -50,6 +50,10 @@ class StrategyDlg(NodeDlg):
         ## compression shuffle
         self.shuffle = True
 
+        ## allowed subitems
+        self.subItems=[ "doc"]
+
+
         ## user interface
         self.ui = Ui_StrategyDlg()
 
@@ -78,7 +82,6 @@ class StrategyDlg(NodeDlg):
         if self.grows is not None :
             try:
                 grows = int(self.grows)
-                print "GROWS", grows
                 if grows < 0:
                     grows = 0
             except:
@@ -226,7 +229,6 @@ class StrategyDlg(NodeDlg):
         self.rate = self.ui.rateSpinBox.value()
             
 
-        print "cP", self.compression
 
         self.doc = unicode(self.ui.docTextEdit.toPlainText())
 

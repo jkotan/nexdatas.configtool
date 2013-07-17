@@ -175,6 +175,7 @@ class DomTools(object):
                 or not hasattr(parent.internalPointer(),"node"):
             return
         row = self.__getElementRow(element, parent.internalPointer().node)
+        print "parent",parent.internalPointer().node.nodeName()
         if row is not None:
             model.removeItem(row, parent)
 

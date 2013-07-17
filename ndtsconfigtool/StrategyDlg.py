@@ -172,7 +172,9 @@ class StrategyDlg(NodeDlg):
     def setFromNode(self, node=None):
         if node:
             ## defined in NodeDlg class
-            self.node = node
+            self.node = node 
+        if not self.node:
+            return
         attributeMap = self.node.attributes()
 
         self.trigger = attributeMap.namedItem("trigger").nodeValue() if attributeMap.contains("trigger") else ""
@@ -196,7 +198,7 @@ class StrategyDlg(NodeDlg):
                 self.rate = rate    
 
 
-        text = self.dts.getText(node)    
+        text = self.dts.getText(self.node)    
         self.postrun = unicode(text).strip() if text else ""
 
         doc = self.node.firstChildElement(QString("doc"))           
@@ -262,7 +264,7 @@ class StrategyDlg(NodeDlg):
             if self.trigger:
                 elem.setAttribute(QString("trigger"), QString(self.trigger))
             if self.grows:
-                elem.setAttribute(QString("grows"), QString(self.grows))
+                elem.setAttribute(QString("grows"), QString(str(self.grows)))
         if self.compression:
             elem.setAttribute(QString("compression"), QString("true"))
             elem.setAttribute(QString("shuffle"), QString("true") if self.shuffle else "false" )
@@ -273,14 +275,25 @@ class StrategyDlg(NodeDlg):
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
             self.removeElement(doc, mindex)
+            
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
-            newDoc.appendChild(newText)
+            newDoc.appendChild(newText) 
+            print "DOC", self.doc, newText.data()
+            print "R1", self.root.toString()
             if doc and doc.nodeName() == "doc" :
-                self.replaceElement(doc, newDoc, mindex)
-            else:
+                print "replace", self.dts.getText(doc)
+                self.removeElement(doc, mindex)
+#                self.replaceElement(doc, newDoc, mindex)
+                
                 self.appendElement(newDoc, mindex)
+                doc = self.node.firstChildElement(QString("doc"))           
+                print "replace2", self.dts.getText(doc)
+            else:
+                print "append"
+                self.appendElement(newDoc, mindex)
+            print "R2",self.root.toString()
 
 
 

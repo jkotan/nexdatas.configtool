@@ -255,12 +255,7 @@ class ComponentModel(QAbstractItemModel):
             return False     
         self.beginRemoveRows(parent, position, position)
         node = item.child(position).node
-        print "parent remove", item.node.nodeName()
-        print "remove", node.nodeName(),type(node),node.isText(),position
-#        node2 = item.child(1).node
-#        print "not remove",  node2.nodeName()
-#        if node.isText():
-#            print "data", node.toText().data()
+
         status = item.removeChildren(position, 1)
         item.node.removeChild(node)
         self.endRemoveRows()

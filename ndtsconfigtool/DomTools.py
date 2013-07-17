@@ -119,14 +119,10 @@ class DomTools(object):
                 child = children.item(i)
                 if child.nodeType() == QDomNode.TextNode:
                     if j==0 and text: 
-                        print "piltext", text,child.toText().data()
                         child.toText().setData(QString(text))
-                        print "pildata",child.toText().data()
                     else:
                         child.toText().setData(QString(""))
-                        pass
                     j += 1
-#                    self.removeNode(child, index, model)
                 i += 1
 
             if j == 0 and text:
@@ -183,7 +179,6 @@ class DomTools(object):
                 or not hasattr(parent.internalPointer(),"node"):
             return
         row = self.__getElementRow(element, parent.internalPointer().node)
-        print "parent",parent.internalPointer().node.nodeName()
         if row is not None:
             model.removeItem(row, parent)
 
@@ -199,14 +194,11 @@ class DomTools(object):
             return
         node = parent.internalPointer().node
         row = self.__getElementRow(oldElement, node)
-        print "ROW",row
         if row is not None:
             model.removeItem(row, parent)
             if row < node.childNodes().count():
-                print "insert"
                 model.insertItem(row, newElement, parent)
             else:
-                print "append"
                 model.appendItem(newElement, parent)
 
 

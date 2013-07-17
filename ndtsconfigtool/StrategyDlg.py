@@ -280,20 +280,11 @@ class StrategyDlg(NodeDlg):
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText) 
-            print "DOC", self.doc, newText.data()
-            print "R1", self.root.toString()
             if doc and doc.nodeName() == "doc" :
-                print "replace", self.dts.getText(doc)
                 self.replaceElement(doc, newDoc, mindex)
-                
-                doc = self.node.firstChildElement(QString("doc"))           
-                print "replace2", self.dts.getText(doc)
             else:
-                print "append"
                 self.appendElement(newDoc, mindex)
-            print "R2",self.root.toString()
 
-#        self.replaceText(mindex, unicode(self.postrun))
 
 
 

@@ -2507,21 +2507,33 @@ class StrategyDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
 
+        mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
+        compr = self.__rnd.choice([True, False])
+        rate = self.__rnd.randint(0, 9) 
+        shuffle = self.__rnd.choice([True, False])
+        ndoc = "My documentation: \n ble ble ble "
+        trigger = "MyTrigger"
+        grows = self.__rnd.randint(-1, 3) 
+        post = "Pilatus300k"
+
+
+
         dks = []
         doc = QDomDocument()
-        nname = "field"
+        nname = "strategy"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
+        qdn.setAttribute("mode",mode)
+        qdn.setAttribute("compression","True" if compr else "False")
+        qdn.setAttribute("rate",rate)
+        qdn.setAttribute("shuffle", "True" if shuffle else "False")
+        qdn.setAttribute("trigger",trigger)
+        qdn.setAttribute("grows",grows)
+        
+        
         doc.appendChild(qdn) 
         dname = "doc"
 
-        dval = []
-        nval =  self.__rnd.randint(0, 10) 
-        for n in range(nval):
-            dval.append(doc.createTextNode("\nVAL\n %s\n" %  n))
-            qdn.appendChild(dval[-1]) 
 
         mdoc = doc.createElement(dname)
         qdn.appendChild(mdoc) 
@@ -2530,33 +2542,34 @@ class StrategyDlgTest(unittest.TestCase):
             dks.append(doc.createTextNode("\nText\n %s\n" %  n))
             mdoc.appendChild(dks[-1]) 
 
-        rn =  self.__rnd.randint(1, 9) 
-
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
-
-        mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
-        
-        for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
-            mdim.appendChild(dim)
-                
-        qdn.appendChild(mdim) 
+        dval = []
+        dval.append(doc.createTextNode(post))
+        qdn.appendChild(dval[-1]) 
 
 
         form = StrategyDlg()
         form.show()
         form.node = qdn
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+
+
+
+
+        self.assertEqual(form.mode, '')
+        self.assertEqual(form.trigger, '')
+        self.assertEqual(form.grows, '')
+        self.assertEqual(form.postrun, '')
+        self.assertEqual(form.compression, False)
+        self.assertEqual(form.rate, 5)
+        self.assertEqual(form.shuffle,True)
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['enumeration', 'doc', 'datasource', 'strategy', 'dimensions'])
+        self.assertEqual(form.node, qdn)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, ['doc'] )
         self.assertTrue(isinstance(form.ui, Ui_StrategyDlg))
+        self.assertTrue(isinstance(form, NodeDlg))
+        self.assertEqual(form.externalApply, None)
+        self.assertEqual(form.externalDSLink, None)
 
         form.setFromNode()
         form.createGUI()
@@ -2569,10 +2582,15 @@ class StrategyDlgTest(unittest.TestCase):
         form.view = TestView(cm)
         form.view.testIndex = di
 
-        nname = "newname"
-        ntype = "newtype"
-        mdoc = "New text \nNew text"
-        mvalue = "My new value ble ble"
+        nmode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
+        ncompr = self.__rnd.choice([True, False])
+        nrate = self.__rnd.randint(0, 9) 
+        nshuffle = self.__rnd.choice([True, False])
+        nmdoc = "My new documentation: \n ble ble ble "
+        ntrigger = "MyTrigger2"
+        ngrows = self.__rnd.randint(-1, 3) 
+        npost = "Pilatus1M"
+
 
         attributeMap = form.node.attributes()
         
@@ -2580,29 +2598,44 @@ class StrategyDlgTest(unittest.TestCase):
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
-            if nm == "name":
-                self.assertEqual(vl,form.name)
+            if nm == "mode":
+                self.assertEqual(vl,form.mode)
                 cnt += 1 
-            elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
+            elif nm == "trigger":
+                self.assertEqual(vl,form.trigger)
+                cnt += 1 
+            elif nm == "grows":
+                self.assertEqual(vl,str(form.grows))
+                cnt += 1 
+            elif nm == "compression":
+                self.assertEqual(vl,str(form.compression))
+                cnt += 1 
+            elif nm == "rate":
+                self.assertEqual(vl,str(form.rate))
+                cnt += 1 
+            elif nm == "shuffle":
+                self.assertEqual(vl,str(form.shuffle))
                 cnt += 1 
 
         vtext = form.dts.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
-        self.assertEqual(oldval,form.value)
+        self.assertEqual(oldval,form.postrun)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
         text = form.dts.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
+        self.assertEqual(form.mode, mode)
+        self.assertEqual(form.trigger, trigger)
+        self.assertEqual(form.grows, str(grows))
+        self.assertEqual(form.postrun, post)
+        self.assertEqual(form.compression, compr)
+        self.assertEqual(form.rate, rate)
+        self.assertEqual(form.shuffle,shuffle)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
 
 
-        form.name = nname
-        form.nexusType = ntype
-        form.value = mvalue
-
-        form.doc = mdoc
 
         form.root = doc
 
@@ -2615,33 +2648,61 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
+        nmode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
+        ncompr = self.__rnd.choice([True, False])
+        nrate = self.__rnd.randint(0, 9) 
+        nshuffle = self.__rnd.choice([True, False])
+        nmdoc = "My new documentation: \n ble ble ble "
+        ntrigger = "MyTrigger2"
+        ngrows = self.__rnd.randint(-1, 3) 
+        npost = "Pilatus1M"
 
-        form.ui.nameLineEdit.setText(nname)
-        form.ui.typeLineEdit.setText(ntype)
-        form.ui.valueLineEdit.setText(mvalue)
-        form.ui.docTextEdit.setText(str(mdoc))
-        
-        
-        
+        self.assertEqual(form.mode, mode)
+        self.assertEqual(form.trigger, trigger)
+        self.assertEqual(form.grows, str(grows))
+        self.assertEqual(form.postrun, post)
+        self.assertEqual(form.compression, compr)
+        self.assertEqual(form.rate, rate)
+        self.assertEqual(form.shuffle,shuffle)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
 
-        mrnk = self.__rnd.randint(0,5)     
-        self.dimensions = [self.__rnd.randint(1, 40)  for n in range(mrnk)]
 
-        QTimer.singleShot(10, self.dimensionsWidget)
-        QTest.mouseClick(form.ui.dimPushButton, Qt.LeftButton)
+        form.mode =  nmode
+        form.compression = ncompr
+        form.postrun = npost
+        form.rate = nrate
+        form.shuffle = nshuffle
+        form.doc = nmdoc
+        form.trigger = ntrigger
+        form.grows = ngrows
+
+
+        
+        index = form.ui.modeComboBox.findText(unicode(nmode))
+        if  index > -1 :
+            form.ui.modeComboBox.setCurrentIndex(index)
+        form.ui.compressionCheckBox.setChecked(ncompr) 
+        form.ui.rateSpinBox.setValue(nrate)
+        form.ui.shuffleCheckBox.setChecked(nshuffle) 
+        form.ui.triggerLineEdit.setText(ntrigger) 
+        form.ui.growsSpinBox.setValue(ngrows if ngrows>0 else 0) 
+
+
+        form.ui.postLineEdit.setText(npost) 
+        form.ui.docTextEdit.setText(nmdoc)
+
 
         form.reset()
-        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
 
-
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" %  i  for i in range(nval)])).strip())
+        
+        self.assertEqual(form.mode, mode)
+        self.assertEqual(form.trigger, trigger)
+        self.assertEqual(form.grows, str(grows))
+        self.assertEqual(form.postrun, post)
+        self.assertEqual(form.compression, compr)
+        self.assertEqual(form.rate, rate)
+        self.assertEqual(form.shuffle,shuffle)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.subItems, 
-                         ['enumeration', 'doc', 'datasource', 'strategy', 'dimensions'])
-
-        self.assertEqual(form.dimensions, dimensions)
 
 
 
@@ -2649,63 +2710,75 @@ class StrategyDlgTest(unittest.TestCase):
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
-            if nm == "name":
-                self.assertEqual(vl,  "myname%s" %  nn)
+            if nm == "mode":
+                self.assertEqual(vl,mode)
                 cnt += 1 
-            elif nm == "type":
-                self.assertEqual(vl,  "mytype%s" %  nn)
+            elif nm == "trigger":
+                self.assertEqual(vl,trigger)
                 cnt += 1 
+            elif nm == "grows":
+                self.assertEqual(vl,str(grows))
+                cnt += 1 
+            elif nm == "compression":
+                self.assertEqual(vl,str(compr))
+                cnt += 1 
+            elif nm == "rate":
+                self.assertEqual(vl,str(rate))
+                cnt += 1 
+            elif nm == "shuffle":
+                self.assertEqual(vl,str(shuffle))
+                cnt += 1 
+
+
 
         mydoc = form.node.firstChildElement(QString("doc"))           
         text = form.dts.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(olddoc,"".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+
         
         vtext = form.dts.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
-        self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
+        self.assertEqual(oldval,post)
 
-        mydm = form.node.firstChildElement(QString("dimensions"))           
-         
-        atdim = mydm.attributes()
-        self.assertEqual(rn, int(atdim.namedItem("rank").nodeValue()))
-        child = mydm.firstChild()           
-        while not child.isNull():
-            if child.nodeName() == unicode("dim"):
-                at = child.attributes()
-                ind = int(at.namedItem("index").nodeValue())
-                vl = int(at.namedItem("value").nodeValue())
-                self.assertTrue(ind >0 )
-                self.assertTrue(ind <= rn )
-                self.assertEqual(dimensions[ind-1], vl)
-            child = child.nextSibling()    
+ 
 
 
 
 
 
-    ## constructor test
-    # \brief It tests default settings
     def test_reset_button(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
 
+        mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
+        compr = self.__rnd.choice([True, False])
+        rate = self.__rnd.randint(0, 9) 
+        shuffle = self.__rnd.choice([True, False])
+        ndoc = "My documentation: \n ble ble ble "
+        trigger = "MyTrigger"
+        grows = self.__rnd.randint(-1, 3) 
+        post = "Pilatus300k"
+
+
+
         dks = []
         doc = QDomDocument()
-        nname = "field"
+        nname = "strategy"
         qdn = doc.createElement(nname)
         nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
+        qdn.setAttribute("mode",mode)
+        qdn.setAttribute("compression","True" if compr else "False")
+        qdn.setAttribute("rate",rate)
+        qdn.setAttribute("shuffle", "True" if shuffle else "False")
+        qdn.setAttribute("trigger",trigger)
+        qdn.setAttribute("grows",grows)
+        
+        
         doc.appendChild(qdn) 
         dname = "doc"
 
-        dval = []
-        nval =  self.__rnd.randint(0, 10) 
-        for n in range(nval):
-            dval.append(doc.createTextNode("\nVAL\n %s\n" %  n))
-            qdn.appendChild(dval[-1]) 
 
         mdoc = doc.createElement(dname)
         qdn.appendChild(mdoc) 
@@ -2714,33 +2787,34 @@ class StrategyDlgTest(unittest.TestCase):
             dks.append(doc.createTextNode("\nText\n %s\n" %  n))
             mdoc.appendChild(dks[-1]) 
 
-        rn =  self.__rnd.randint(1, 9) 
-
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
-
-        mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
-        
-        for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
-            mdim.appendChild(dim)
-                
-        qdn.appendChild(mdim) 
+        dval = []
+        dval.append(doc.createTextNode(post))
+        qdn.appendChild(dval[-1]) 
 
 
         form = StrategyDlg()
         form.show()
         form.node = qdn
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+
+
+
+
+        self.assertEqual(form.mode, '')
+        self.assertEqual(form.trigger, '')
+        self.assertEqual(form.grows, '')
+        self.assertEqual(form.postrun, '')
+        self.assertEqual(form.compression, False)
+        self.assertEqual(form.rate, 5)
+        self.assertEqual(form.shuffle,True)
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['enumeration', 'doc', 'datasource', 'strategy', 'dimensions'])
+        self.assertEqual(form.node, qdn)
+        self.assertEqual(form.root, None)
+        self.assertEqual(form.view, None)
+        self.assertEqual(form.subItems, ['doc'] )
         self.assertTrue(isinstance(form.ui, Ui_StrategyDlg))
+        self.assertTrue(isinstance(form, NodeDlg))
+        self.assertEqual(form.externalApply, None)
+        self.assertEqual(form.externalDSLink, None)
 
         form.setFromNode()
         form.createGUI()
@@ -2753,12 +2827,15 @@ class StrategyDlgTest(unittest.TestCase):
         form.view = TestView(cm)
         form.view.testIndex = di
 
-        nname = "newname"
-        ntype = "newtype"
-        units = "myunits"
-        attrs = {"longname":"newlogname","unit":"myunits%s" %  nn}
-        mdoc = "New text \nNew text"
-        mvalue = "My new value ble ble"
+        nmode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
+        ncompr = self.__rnd.choice([True, False])
+        nrate = self.__rnd.randint(0, 9) 
+        nshuffle = self.__rnd.choice([True, False])
+        nmdoc = "My new documentation: \n ble ble ble "
+        ntrigger = "MyTrigger2"
+        ngrows = self.__rnd.randint(-1, 3) 
+        npost = "Pilatus1M"
+
 
         attributeMap = form.node.attributes()
         
@@ -2766,29 +2843,44 @@ class StrategyDlgTest(unittest.TestCase):
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
-            if nm == "name":
-                self.assertEqual(vl,form.name)
+            if nm == "mode":
+                self.assertEqual(vl,form.mode)
                 cnt += 1 
-            elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
+            elif nm == "trigger":
+                self.assertEqual(vl,form.trigger)
+                cnt += 1 
+            elif nm == "grows":
+                self.assertEqual(vl,str(form.grows))
+                cnt += 1 
+            elif nm == "compression":
+                self.assertEqual(vl,str(form.compression))
+                cnt += 1 
+            elif nm == "rate":
+                self.assertEqual(vl,str(form.rate))
+                cnt += 1 
+            elif nm == "shuffle":
+                self.assertEqual(vl,str(form.shuffle))
                 cnt += 1 
 
         vtext = form.dts.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
-        self.assertEqual(oldval,form.value)
+        self.assertEqual(oldval,form.postrun)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
         text = form.dts.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
+        self.assertEqual(form.mode, mode)
+        self.assertEqual(form.trigger, trigger)
+        self.assertEqual(form.grows, str(grows))
+        self.assertEqual(form.postrun, post)
+        self.assertEqual(form.compression, compr)
+        self.assertEqual(form.rate, rate)
+        self.assertEqual(form.shuffle,shuffle)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
 
 
-        form.name = nname
-        form.nexusType = ntype
-        form.value = mvalue
-
-        form.doc = mdoc
 
         form.root = doc
 
@@ -2801,33 +2893,61 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
+        nmode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
+        ncompr = self.__rnd.choice([True, False])
+        nrate = self.__rnd.randint(0, 9) 
+        nshuffle = self.__rnd.choice([True, False])
+        nmdoc = "My new documentation: \n ble ble ble "
+        ntrigger = "MyTrigger2"
+        ngrows = self.__rnd.randint(-1, 3) 
+        npost = "Pilatus1M"
 
-        form.ui.nameLineEdit.setText(nname)
-        form.ui.typeLineEdit.setText(ntype)
-        form.ui.valueLineEdit.setText(mvalue)
-        form.ui.docTextEdit.setText(str(mdoc))
-        
-        
-        
+        self.assertEqual(form.mode, mode)
+        self.assertEqual(form.trigger, trigger)
+        self.assertEqual(form.grows, str(grows))
+        self.assertEqual(form.postrun, post)
+        self.assertEqual(form.compression, compr)
+        self.assertEqual(form.rate, rate)
+        self.assertEqual(form.shuffle,shuffle)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
 
-        mrnk = self.__rnd.randint(0,5)     
-        self.dimensions = [self.__rnd.randint(1, 40)  for n in range(mrnk)]
 
-        QTimer.singleShot(10, self.dimensionsWidget)
-        QTest.mouseClick(form.ui.dimPushButton, Qt.LeftButton)
+        form.mode =  nmode
+        form.compression = ncompr
+        form.postrun = npost
+        form.rate = nrate
+        form.shuffle = nshuffle
+        form.doc = nmdoc
+        form.trigger = ntrigger
+        form.grows = ngrows
+
+
+        
+        index = form.ui.modeComboBox.findText(unicode(nmode))
+        if  index > -1 :
+            form.ui.modeComboBox.setCurrentIndex(index)
+        form.ui.compressionCheckBox.setChecked(ncompr) 
+        form.ui.rateSpinBox.setValue(nrate)
+        form.ui.shuffleCheckBox.setChecked(nshuffle) 
+        form.ui.triggerLineEdit.setText(ntrigger) 
+        form.ui.growsSpinBox.setValue(ngrows if ngrows>0 else 0) 
+
+
+        form.ui.postLineEdit.setText(npost) 
+        form.ui.docTextEdit.setText(nmdoc)
+
 
         QTest.mouseClick(form.ui.resetPushButton, Qt.LeftButton)
-        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
 
-
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" %  i  for i in range(nval)])).strip())
+        
+        self.assertEqual(form.mode, mode)
+        self.assertEqual(form.trigger, trigger)
+        self.assertEqual(form.grows, str(grows))
+        self.assertEqual(form.postrun, post)
+        self.assertEqual(form.compression, compr)
+        self.assertEqual(form.rate, rate)
+        self.assertEqual(form.shuffle,shuffle)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.subItems, 
-                         ['enumeration', 'doc', 'datasource', 'strategy', 'dimensions'])
-
-        self.assertEqual(form.dimensions, dimensions)
 
 
 
@@ -2835,36 +2955,39 @@ class StrategyDlgTest(unittest.TestCase):
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
-            if nm == "name":
-                self.assertEqual(vl,  "myname%s" %  nn)
+            if nm == "mode":
+                self.assertEqual(vl,mode)
                 cnt += 1 
-            elif nm == "type":
-                self.assertEqual(vl,  "mytype%s" %  nn)
+            elif nm == "trigger":
+                self.assertEqual(vl,trigger)
                 cnt += 1 
+            elif nm == "grows":
+                self.assertEqual(vl,str(grows))
+                cnt += 1 
+            elif nm == "compression":
+                self.assertEqual(vl,str(compr))
+                cnt += 1 
+            elif nm == "rate":
+                self.assertEqual(vl,str(rate))
+                cnt += 1 
+            elif nm == "shuffle":
+                self.assertEqual(vl,str(shuffle))
+                cnt += 1 
+
+
 
         mydoc = form.node.firstChildElement(QString("doc"))           
         text = form.dts.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(olddoc,"".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+
         
         vtext = form.dts.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
-        self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
+        self.assertEqual(oldval,post)
 
-        mydm = form.node.firstChildElement(QString("dimensions"))           
-         
-        atdim = mydm.attributes()
-        self.assertEqual(rn, int(atdim.namedItem("rank").nodeValue()))
-        child = mydm.firstChild()           
-        while not child.isNull():
-            if child.nodeName() == unicode("dim"):
-                at = child.attributes()
-                ind = int(at.namedItem("index").nodeValue())
-                vl = int(at.namedItem("value").nodeValue())
-                self.assertTrue(ind >0 )
-                self.assertTrue(ind <= rn )
-                self.assertEqual(dimensions[ind-1], vl)
-            child = child.nextSibling()    
+ 
+
 
 
 

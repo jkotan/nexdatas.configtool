@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+1#!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -38,6 +38,7 @@ import ComponentItemTest
 import ComponentModelTest
 import DomToolsTest
 import RichAttributeDlgTest
+import LinkDlgTest
 
 
 
@@ -108,6 +109,8 @@ def main():
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(AttributeDlgTest) )
 
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(LinkDlgTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ConnectDlgTest) )

@@ -60,12 +60,6 @@ class LinkDlg(NodeDlg):
         if self.target is not None:    
             self.ui.targetLineEdit.setText(self.target)
 
-        if self.node:    
-            doc = self.node.firstChildElement(QString("doc"))           
-            text = self.dts.getText(doc)    
-        else:
-            text = ""
-        self.doc = unicode(text).strip() if text else ""
 
 
     ##  creates GUI
@@ -116,6 +110,8 @@ class LinkDlg(NodeDlg):
         if node:
             ## defined in NodeDlg
             self.node = node
+        if not self.node:
+            return
         attributeMap = self.node.attributes()
         nNode = unicode(self.node.nodeName())
 

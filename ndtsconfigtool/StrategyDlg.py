@@ -128,7 +128,7 @@ class StrategyDlg(NodeDlg):
     # \param state strategy state written in tuple 
     def setState(self, state):
 
-        (self.name,
+        (self.mode,
          self.trigger,
          self.grows,
          self.postrun,

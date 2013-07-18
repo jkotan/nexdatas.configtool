@@ -54,28 +54,6 @@ class CommonDataSourceDlg(NodeDlg):
         self.ui = Ui_DataSourceDlg()
 
 
-    ## connects the dialog actions 
-    def connectWidgets(self):
-        
-
-        self.connect(self.ui.dAddPushButton, SIGNAL("clicked()"), 
-                     self._addParameter)
-        self.connect(self.ui.dRemovePushButton, SIGNAL("clicked()"), 
-                     self.removeParameter)
-        self.connect(self.ui.dParameterTableWidget, 
-                     SIGNAL("itemChanged(QTableWidgetItem*)"),
-                     self.tableItemChanged)
-        
-
-        self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._typeComboBox)
-        self.connect(self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"), self._dParamComboBox)
-        self.connect(self.ui.cRecNameLineEdit, SIGNAL("textEdited(QString)"), self._cRecNameLineEdit)
-        self.connect(self.ui.dQueryLineEdit, SIGNAL("textEdited(QString)"), self._dQueryLineEdit)
-        self.connect(self.ui.tDevNameLineEdit, SIGNAL("textEdited(QString)"), self._tDevNameLineEdit)
-        self.connect(self.ui.tMemberNameLineEdit, SIGNAL("textEdited(QString)"), self._tMemberNameLineEdit)
-
-#        self.setFrames(self.datasource.dataSourceType)
-
     ## sets focus on save button
     # \brief It sets focus on save button
     def setSaveFocus(self):
@@ -228,6 +206,9 @@ class CommonDataSourceDlg(NodeDlg):
         self.populateParameters()
 
 
+
+
+
     ## fills in the paramter table      
     # \param selectedParameter selected parameter
     def populateParameters(self, selectedParameter = None):
@@ -253,6 +234,27 @@ class CommonDataSourceDlg(NodeDlg):
             selected.setSelected(True)
             self.ui.dParameterTableWidget.setCurrentItem(selected)
             self.ui.dParameterTableWidget.editItem(selected)
+
+
+    ## connects the dialog actions 
+    def connectWidgets(self):
+        
+
+        self.connect(self.ui.dAddPushButton, SIGNAL("clicked()"), 
+                     self._addParameter)
+        self.connect(self.ui.dRemovePushButton, SIGNAL("clicked()"), 
+                     self.removeParameter)
+        self.connect(self.ui.dParameterTableWidget, 
+                     SIGNAL("itemChanged(QTableWidgetItem*)"),
+                     self.tableItemChanged)
+        
+
+        self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._typeComboBox)
+        self.connect(self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"), self._dParamComboBox)
+        self.connect(self.ui.cRecNameLineEdit, SIGNAL("textEdited(QString)"), self._cRecNameLineEdit)
+        self.connect(self.ui.dQueryLineEdit, SIGNAL("textEdited(QString)"), self._dQueryLineEdit)
+        self.connect(self.ui.tDevNameLineEdit, SIGNAL("textEdited(QString)"), self._tDevNameLineEdit)
+        self.connect(self.ui.tMemberNameLineEdit, SIGNAL("textEdited(QString)"), self._tMemberNameLineEdit)
 
 
     ## closes the window and cleans the dialog label

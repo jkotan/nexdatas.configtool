@@ -64,7 +64,6 @@ class CommonDataSourceDlg(NodeDlg):
     ## updates group user interface
     # \brief It sets enable or disable the OK button
     def updateUi(self, text):
-        print "Update", text
         if text == 'CLIENT':
             enable = not self.ui.cRecNameLineEdit.text().isEmpty()
             self.ui.applyPushButton.setEnabled(enable)
@@ -87,12 +86,10 @@ class CommonDataSourceDlg(NodeDlg):
             self.ui.applyPushButton.setEnabled(enable)
             self.ui.savePushButton.setEnabled(enable)
             self.ui.storePushButton.setEnabled(enable)
-        print "Updated", self.ui.cRecNameLineEdit.text()
 
     ## shows and hides frames according to typeComboBox
     # \param text the edited text   
     def setFrames(self,text):
-        print "setFrames"
         if text == 'CLIENT':
             self.ui.clientFrame.show()
             self.ui.dbFrame.hide()
@@ -114,14 +111,12 @@ class CommonDataSourceDlg(NodeDlg):
 
     ## calls updateUi when the name text is changing
     def _cRecNameLineEdit(self,text):
-        print "cRecNLE"
-#       combo = unicode(self.ui.typeComboBox.currentText())
-#        self.updateUi(combo)
-        self.updateUi(unicode(text))
+ #       self.updateUi(unicode(text))
+        self.updateUi(text)
 
 
     ## calls updateUi when the name text is changing
-    def _dQueryLineEdit(self):
+    def _dQueryLineEdit(self ):
         combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 

@@ -92,6 +92,7 @@ class CommonDataSourceDlg(NodeDlg):
     ## shows and hides frames according to typeComboBox
     # \param text the edited text   
     def setFrames(self,text):
+        print "setFrames"
         if text == 'CLIENT':
             self.ui.clientFrame.show()
             self.ui.dbFrame.hide()
@@ -112,9 +113,11 @@ class CommonDataSourceDlg(NodeDlg):
 
 
     ## calls updateUi when the name text is changing
-    def _cRecNameLineEdit(self):
-        combo = unicode(self.ui.typeComboBox.currentText())
-        self.updateUi(combo)
+    def _cRecNameLineEdit(self,text):
+        print "cRecNLE"
+#       combo = unicode(self.ui.typeComboBox.currentText())
+#        self.updateUi(combo)
+        self.updateUi(unicode(text))
 
 
     ## calls updateUi when the name text is changing
@@ -245,10 +248,10 @@ class CommonDataSourceDlg(NodeDlg):
 
         self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
         self.connect(self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"), self._dParamComboBox)
-        self.connect(self.ui.cRecNameLineEdit, SIGNAL("textEdited(QString)"), self._cRecNameLineEdit)
-        self.connect(self.ui.dQueryLineEdit, SIGNAL("textEdited(QString)"), self._dQueryLineEdit)
-        self.connect(self.ui.tDevNameLineEdit, SIGNAL("textEdited(QString)"), self._tDevNameLineEdit)
-        self.connect(self.ui.tMemberNameLineEdit, SIGNAL("textEdited(QString)"), self._tMemberNameLineEdit)
+        self.connect(self.ui.cRecNameLineEdit, SIGNAL("textChanged(QString)"), self._cRecNameLineEdit)
+        self.connect(self.ui.dQueryLineEdit, SIGNAL("textChanged(QString)"), self._dQueryLineEdit)
+        self.connect(self.ui.tDevNameLineEdit, SIGNAL("textChanged(QString)"), self._tDevNameLineEdit)
+        self.connect(self.ui.tMemberNameLineEdit, SIGNAL("textChanged(QString)"), self._tMemberNameLineEdit)
 
 
     ## closes the window and cleans the dialog label

@@ -465,9 +465,9 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         parent = None
         dsrc = DataSource(parent)
         self.form = CommonDataSourceDlg(dsrc, parent)
-        self.form.show()
 
         self.form.ui.setupUi(self.form)
+        self.form.show()
         
 
 
@@ -475,23 +475,29 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 #        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
 
         self.form.connectWidgets()
-#        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        print "CHECK1"
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        print "TEST1", self.form.ui.savePushButton.isEnabled()
+        print "CHECK2"
         self.form.ui.cRecNameLineEdit.setText("")
+        print "CHECK3"
         
         index = self.form.ui.typeComboBox.findText("CLIENT")
         print "INDEX ", index, self.form.ui.typeComboBox.currentIndex(),self.form.ui.typeComboBox.currentText()
         self.form.ui.typeComboBox.setCurrentIndex(index)
-#        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
 
-        print "TEST"
+        print "TEST2", self.form.ui.savePushButton.isEnabled()
         self.form.ui.cRecNameLineEdit.setText("name")
         print "UD", self.form.ui.cRecNameLineEdit.text()
 
         self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
         print "UD2", self.form.ui.cRecNameLineEdit.text()
-        self.clientVisible()
         print "CHECK"
+#        self.form.setFrames("CLIENT")
         self.enableButtons()
+
+#        self.clientVisible()
 
 
 
@@ -609,48 +615,48 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         
 
         self.enableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
-        self.form._cRecNameLineEdit()
+ #       self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form._cRecNameLineEdit("")
         self.enableButtons()
 
 
         
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
-        self.form._cRecNameLineEdit()
+#        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form._cRecNameLineEdit("CLIENT")
 #        self.enableButtons()
         
         self.form.ui.cRecNameLineEdit.setText("name")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
-        self.form._cRecNameLineEdit()
+#        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form._cRecNameLineEdit("CLIENT")
         self.enableButtons()
 
 
         self.form.ui.cRecNameLineEdit.setText("")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
-        self.form._cRecNameLineEdit()
+#        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form._cRecNameLineEdit("CLIENT")
         self.disableButtons()
 
 
 
         self.form.ui.dQueryLineEdit.setText("name")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
-        self.form._cRecNameLineEdit()
+#        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.form._cRecNameLineEdit("DB")
         self.enableButtons()
 
 
         self.form.ui.tDevNameLineEdit.setText("name")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
-        self.form._cRecNameLineEdit()
+#        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form._cRecNameLineEdit("TANGO")
         self.disableButtons()
 
         self.form.ui.tMemberNameLineEdit.setText("name")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
-        self.form._cRecNameLineEdit()
+#        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form._cRecNameLineEdit("TANGO")
         self.enableButtons()
 
         self.form.ui.tDevNameLineEdit.setText("")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
-        self.form._cRecNameLineEdit()
+ #       self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form._cRecNameLineEdit("TANGO")
         self.disableButtons()
         
         

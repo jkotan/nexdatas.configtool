@@ -108,10 +108,6 @@ class CommonDataSourceDlg(NodeDlg):
         self.updateUi(text)
 
 
-    ## shows and hides frames according to typeComboBox
-    # \param text the edited text   
-    def _typeComboBox(self, text):
-        self.setFrames(text)
 
 
     ## calls updateUi when the name text is changing
@@ -250,7 +246,7 @@ class CommonDataSourceDlg(NodeDlg):
                      self.tableItemChanged)
         
 
-        self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._typeComboBox)
+        self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
         self.connect(self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"), self._dParamComboBox)
         self.connect(self.ui.cRecNameLineEdit, SIGNAL("textEdited(QString)"), self._cRecNameLineEdit)
         self.connect(self.ui.dQueryLineEdit, SIGNAL("textEdited(QString)"), self._dQueryLineEdit)

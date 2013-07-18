@@ -112,6 +112,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.__rnd = random.Random(self.__seed)
 
 
+        self.form = None
 
     ## test starter
     # \brief Common set up
@@ -291,6 +292,38 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 #        self.assertTrue(form.ui.savePushButton.hasFocus())
         
 
+    def enableButtons(self):   
+        self.assertTrue(self.form.ui.savePushButton.isEnabled())
+        self.assertTrue(self.form.ui.applyPushButton.isEnabled())
+        self.assertTrue(self.form.ui.storePushButton.isEnabled())
+
+    def disableButtons(self):    
+        self.assertTrue(not self.form.ui.savePushButton.isEnabled())
+        self.assertTrue(not self.form.ui.applyPushButton.isEnabled())
+        self.assertTrue(not self.form.ui.storePushButton.isEnabled())
+
+    def clientVisible(self):    
+        self.assertTrue(self.form.ui.clientFrame.isVisible())
+        self.assertTrue(not self.form.ui.dbFrame.isVisible())
+        self.assertTrue(not self.form.ui.tangoFrame.isVisible())
+
+
+    def dbVisible(self):    
+        self.assertTrue(not self.form.ui.clientFrame.isVisible())
+        self.assertTrue(self.form.ui.dbFrame.isVisible())
+        self.assertTrue(not self.form.ui.tangoFrame.isVisible())
+
+
+    def tangoVisible(self):    
+        self.assertTrue(not self.form.ui.clientFrame.isVisible())
+        self.assertTrue(not self.form.ui.dbFrame.isVisible())
+        self.assertTrue(self.form.ui.tangoFrame.isVisible())
+
+    def noneVisible(self):    
+        self.assertTrue(not self.form.ui.clientFrame.isVisible())
+        self.assertTrue(not self.form.ui.dbFrame.isVisible())
+        self.assertTrue(not self.form.ui.tangoFrame.isVisible())
+
 
 
 
@@ -301,69 +334,49 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
         dsrc = DataSource(parent)
-        form = CommonDataSourceDlg(dsrc, parent)
-        form.show()
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
 
-        form.ui.setupUi(form)
+        self.form.ui.setupUi(self.form)
         
+        self.enableButtons()
+        self.form.updateUi("")
+        self.enableButtons()
+        tm = QTimer() 
+        self.enableButtons() 
+        time.sleep(0.1)
 
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
-        form.updateUi("")
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
-
-
-        form.updateUi("CLIENT")
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        self.form.updateUi("CLIENT")
+        self.disableButtons()
         
-        form.ui.cRecNameLineEdit.setText("name")
-        form.updateUi("CLIENT")
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
+        self.form.ui.cRecNameLineEdit.setText("name")
+        self.form.updateUi("CLIENT")
+        self.enableButtons()
 
 
-        form.ui.cRecNameLineEdit.setText("")
-        form.updateUi("CLIENT")
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        self.form.ui.cRecNameLineEdit.setText("")
+        self.form.updateUi("CLIENT")
+        self.disableButtons()
 
 
-
-
-
-        form.ui.dQueryLineEdit.setText("name")
-        form.updateUi("DB")
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
+        self.form.ui.dQueryLineEdit.setText("name")
+        self.form.updateUi("DB")
+        self.enableButtons()
 
 
 
 
-        form.ui.tDevNameLineEdit.setText("name")
-        form.updateUi("TANGO")
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        self.form.ui.tDevNameLineEdit.setText("name")
+        self.form.updateUi("TANGO")
+        self.disableButtons()
 
-        form.ui.tMemberNameLineEdit.setText("name")
-        form.updateUi("TANGO")
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
+        self.form.ui.tMemberNameLineEdit.setText("name")
+        self.form.updateUi("TANGO")
+        self.enableButtons()
 
-        form.ui.tDevNameLineEdit.setText("")
-        form.updateUi("TANGO")
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        self.form.ui.tDevNameLineEdit.setText("")
+        self.form.updateUi("TANGO")
+        self.disableButtons()
         
         
 
@@ -378,116 +391,107 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
         dsrc = DataSource(parent)
-        form = CommonDataSourceDlg(dsrc, parent)
-        form.show()
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
 
-        form.ui.setupUi(form)
+        self.form.ui.setupUi(self.form)
         
 
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
+        self.enableButtons()
+        self.noneVisible()
 
-        form.setFrames("")
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
+        self.form.setFrames("")
+        self.enableButtons()
+        self.noneVisible()
 
 
-        form.setFrames("CLIENT")
-        self.assertTrue(form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        self.form.setFrames("CLIENT")
+        self.clientVisible()
+        self.disableButtons()
         
 
-        form.ui.cRecNameLineEdit.setText("")
-        form.setFrames("CLIENT")
-        self.assertTrue(form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        self.form.ui.cRecNameLineEdit.setText("")
+        self.form.setFrames("CLIENT")
+        self.clientVisible()
+        self.disableButtons()
 
-        form.ui.cRecNameLineEdit.setText("name")
-        form.setFrames("CLIENT")
-        self.assertTrue(form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
+        self.form.ui.cRecNameLineEdit.setText("name")
+        self.form.setFrames("CLIENT")
+        self.clientVisible()
+        self.enableButtons()
 
 
 
 
 
 
-        form.ui.dQueryLineEdit.setText("")
-        form.setFrames("DB")
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        self.form.ui.dQueryLineEdit.setText("")
+        self.form.setFrames("DB")
+        self.dbVisible()
+        self.disableButtons()
 
 
-        form.ui.dQueryLineEdit.setText("name")
-        form.setFrames("DB")
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
+        self.form.ui.dQueryLineEdit.setText("name")
+        self.form.setFrames("DB")
+        self.dbVisible()
+        self.enableButtons()
 
 
-        form.setFrames("TANGO")
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(form.ui.tangoFrame.isVisible())
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        self.form.setFrames("TANGO")
+        self.tangoVisible()
+        self.disableButtons()
 
 
-        form.ui.tDevNameLineEdit.setText("name")
-        form.setFrames("TANGO")
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(form.ui.tangoFrame.isVisible())
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        self.form.ui.tDevNameLineEdit.setText("name")
+        self.form.setFrames("TANGO")
+        self.tangoVisible()
+        self.disableButtons()
 
-        form.ui.tMemberNameLineEdit.setText("name")
-        form.setFrames("TANGO")
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(form.ui.tangoFrame.isVisible())
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
+        self.form.ui.tMemberNameLineEdit.setText("name")
+        self.form.setFrames("TANGO")
+        self.tangoVisible()
+        self.enableButtons()
 
-        form.ui.tDevNameLineEdit.setText("")
-        form.setFrames("TANGO")
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(form.ui.tangoFrame.isVisible())
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        self.form.ui.tDevNameLineEdit.setText("")
+        self.form.setFrames("TANGO")
+        self.tangoVisible()
+        self.disableButtons()
         
+
+
+    def test_aasetFrames_error(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
+
+        self.form.ui.setupUi(self.form)
+        
+
+
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+#        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+
+        self.form.connectWidgets()
+#        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.cRecNameLineEdit.setText("")
+        
+        index = self.form.ui.typeComboBox.findText("CLIENT")
+        print "INDEX ", index, self.form.ui.typeComboBox.currentIndex(),self.form.ui.typeComboBox.currentText()
+        self.form.ui.typeComboBox.setCurrentIndex(index)
+#        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+
+        print "TEST"
+        self.form.ui.cRecNameLineEdit.setText("name")
+        print "UD", self.form.ui.cRecNameLineEdit.text()
+
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        print "UD2", self.form.ui.cRecNameLineEdit.text()
+        self.clientVisible()
+        print "CHECK"
+        self.enableButtons()
 
 
 
@@ -498,149 +502,156 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
         dsrc = DataSource(parent)
-        form = CommonDataSourceDlg(dsrc, parent)
-        form.show()
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
 
-        form.ui.setupUi(form)
+        self.form.ui.setupUi(self.form)
         
 
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
+        self.enableButtons()
+        self.noneVisible()
 
 
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
 
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
+        self.enableButtons()
+        self.noneVisible()
 
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("DB"))
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
 
 
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
+        self.enableButtons()
+        self.noneVisible()
 
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
 
 
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
+        self.enableButtons()
+        self.noneVisible()
 
-        form.connectWidgets()
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText(""))
+        self.form.connectWidgets()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
 
 
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
+        self.enableButtons()
+        self.noneVisible()
 
 
-        form.connectWidgets()
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("CLIENT"))
-        self.assertTrue(form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.clientVisible()
+        self.disableButtons()
+
+#        self.form.ui.cRecNameLineEdit.setText("")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.clientVisible()
+        self.disableButtons()
+
+        print "TEST"
+        self.form.ui.cRecNameLineEdit.setText("name")
+        print "UD", self.form.ui.cRecNameLineEdit.text()
+
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        print "UD2", self.form.ui.cRecNameLineEdit.text()
+        self.clientVisible()
+        print "CHECK"
+        self.enableButtons()
+
+
+
+
+
+
+        self.form.ui.dQueryLineEdit.setText("")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.dbVisible()
+        self.disableButtons()
+
+
+        self.form.ui.dQueryLineEdit.setText("name")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.dbVisible()
+#        self.enableButtons()
+
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.tangoVisible()
+        self.disableButtons()
+
+
+        self.form.ui.tDevNameLineEdit.setText("name")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.tangoVisible()
+        self.disableButtons()
+
+        self.form.ui.tMemberNameLineEdit.setText("name")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.tangoVisible()
+ #       self.enableButtons()
+
+        self.form.ui.tDevNameLineEdit.setText("")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.tangoVisible()
+        self.disableButtons()
+        
         
 
-        form.ui.cRecNameLineEdit.setText("")
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("CLIENT"))
-        self.assertTrue(form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
 
-        form.ui.cRecNameLineEdit.setText("name")
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("CLIENT"))
-        self.assertTrue(form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
+    ## constructor test
+    # \brief It tests default settings
+    def test_cRecNameLineEdit(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
 
+        self.form.ui.setupUi(self.form)
+        
 
-
+        self.enableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form._cRecNameLineEdit()
+        self.enableButtons()
 
 
-
-        form.ui.dQueryLineEdit.setText("")
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("DB"))
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
-
-
-        form.ui.dQueryLineEdit.setText("name")
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("DB"))
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(form.ui.dbFrame.isVisible())
-        self.assertTrue(not form.ui.tangoFrame.isVisible())
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
+        
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form._cRecNameLineEdit()
+#        self.enableButtons()
+        
+        self.form.ui.cRecNameLineEdit.setText("name")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form._cRecNameLineEdit()
+        self.enableButtons()
 
 
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("TANGO"))
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(form.ui.tangoFrame.isVisible())
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        self.form.ui.cRecNameLineEdit.setText("")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form._cRecNameLineEdit()
+        self.disableButtons()
 
 
-        form.ui.tDevNameLineEdit.setText("name")
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("TANGO"))
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(form.ui.tangoFrame.isVisible())
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
 
-        form.ui.tMemberNameLineEdit.setText("name")
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("TANGO"))
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(form.ui.tangoFrame.isVisible())
-        self.assertTrue(form.ui.savePushButton.isEnabled())
-        self.assertTrue(form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.storePushButton.isEnabled())
+        self.form.ui.dQueryLineEdit.setText("name")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.form._cRecNameLineEdit()
+        self.enableButtons()
 
-        form.ui.tDevNameLineEdit.setText("")
-        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("TANGO"))
-        self.assertTrue(not form.ui.clientFrame.isVisible())
-        self.assertTrue(not form.ui.dbFrame.isVisible())
-        self.assertTrue(form.ui.tangoFrame.isVisible())
-        self.assertTrue(not form.ui.savePushButton.isEnabled())
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(not form.ui.storePushButton.isEnabled())
+
+        self.form.ui.tDevNameLineEdit.setText("name")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form._cRecNameLineEdit()
+        self.disableButtons()
+
+        self.form.ui.tMemberNameLineEdit.setText("name")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form._cRecNameLineEdit()
+        self.enableButtons()
+
+        self.form.ui.tDevNameLineEdit.setText("")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form._cRecNameLineEdit()
+        self.disableButtons()
         
         
 

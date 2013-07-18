@@ -64,7 +64,7 @@ class CommonDataSourceDlg(NodeDlg):
     ## updates group user interface
     # \brief It sets enable or disable the OK button
     def updateUi(self, text):
-        print "UPDATE", text
+        print "Update", text
         if text == 'CLIENT':
             enable = not self.ui.cRecNameLineEdit.text().isEmpty()
             self.ui.applyPushButton.setEnabled(enable)
@@ -87,7 +87,7 @@ class CommonDataSourceDlg(NodeDlg):
             self.ui.applyPushButton.setEnabled(enable)
             self.ui.savePushButton.setEnabled(enable)
             self.ui.storePushButton.setEnabled(enable)
-        print "EN", enable
+        print "Updated", self.ui.cRecNameLineEdit.text()
 
     ## shows and hides frames according to typeComboBox
     # \param text the edited text   
@@ -112,30 +112,26 @@ class CommonDataSourceDlg(NodeDlg):
 
 
     ## calls updateUi when the name text is changing
-    # \param text the edited text   
-    def _cRecNameLineEdit(self, text):
+    def _cRecNameLineEdit(self):
         combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 
 
     ## calls updateUi when the name text is changing
-    # \param text the edited text   
-    def _dQueryLineEdit(self, text):
+    def _dQueryLineEdit(self):
         combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 
 
 
     ## calls updateUi when the name text is changing
-    # \param text the edited text   
-    def _tDevNameLineEdit(self, text):
+    def _tDevNameLineEdit(self):
         combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 
 
     ## calls updateUi when the name text is changing
-    # \param text the edited text   
-    def _tMemberNameLineEdit(self, text):
+    def _tMemberNameLineEdit(self):
         combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 

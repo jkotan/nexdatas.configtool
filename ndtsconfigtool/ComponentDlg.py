@@ -164,7 +164,6 @@ class Component(object):
                            "link":LinkDlg,
                            "datasource":DataSourceDlg,
                            "strategy":StrategyDlg
-#                           ,"dimensions":DimensionsDlg
                            }
 
         ## current component tag

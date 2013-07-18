@@ -686,7 +686,7 @@ class MainWindow(QMainWindow):
 #A        self.windows["ArrangeIconsAction"] = self._createAction(
 #A            "&Arrange Icons", self.mdi.arrangeIcons, tip = "Arrange the icons")
         self.windows["CloseAction"] = self._createAction(
-            "&Close", self.mdi.closeActiveSubWindow, QKeySequence.Close,
+            "&Close", self.mdi.closeActiveSubWindow, QKeySequence(Qt.Key_Escape),
             tip = "Close the window" )
         self.windows["ComponentListAction"] = self._createAction(
             "&Component List", self.gotoComponentList, "Ctrl+<",

@@ -48,18 +48,10 @@ class CommonDataSourceDlg(NodeDlg):
         self.dbParam = {}
 
         ## allowed subitems
-        self.subItems = ["record", "doc", "device", "database", "query", "door"]
+        self.subItems = ["record", "doc", "device", "database", "query"]
 
         ## user interface
         self.ui = Ui_DataSourceDlg()
-
-    ## handling escape action
-    def keyPressEvent(self, event):
-        
-        if event.key() == Qt.Key_Escape:
-            pass
-#            print "NO CLOSE"
-#            self.close()
 
 
     ## connects the dialog actions 
@@ -272,6 +264,16 @@ class CommonDataSourceDlg(NodeDlg):
         self.datasource.dialog = None
         if hasattr(self.datasource,"methods"):
             self.datasource.methods.dialog = None
+
+    ## handling escape action
+    def keyPressEvent(self, event):
+        
+        if event.key() == Qt.Key_Escape:
+            pass
+            print "NO CLOSE"
+#            self.close()
+        else:     
+            super(CommonDataSourceDlg,self).keyPressEvent(event)
 
 
 

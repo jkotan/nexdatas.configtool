@@ -40,6 +40,7 @@ import DomToolsTest
 import RichAttributeDlgTest
 import LinkDlgTest
 import StrategyDlgTest
+import LabeledObjectTest
 
 
 
@@ -146,6 +147,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(DomToolsTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(LabeledObjectTest) )
 
 
 

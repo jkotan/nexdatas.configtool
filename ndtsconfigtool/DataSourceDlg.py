@@ -64,6 +64,7 @@ class CommonDataSourceDlg(NodeDlg):
     ## updates group user interface
     # \brief It sets enable or disable the OK button
     def updateUi(self, text):
+        print "UPDATE", text
         if text == 'CLIENT':
             enable = not self.ui.cRecNameLineEdit.text().isEmpty()
             self.ui.applyPushButton.setEnabled(enable)
@@ -86,7 +87,7 @@ class CommonDataSourceDlg(NodeDlg):
             self.ui.applyPushButton.setEnabled(enable)
             self.ui.savePushButton.setEnabled(enable)
             self.ui.storePushButton.setEnabled(enable)
-        
+        print "EN", enable
 
     ## shows and hides frames according to typeComboBox
     # \param text the edited text   

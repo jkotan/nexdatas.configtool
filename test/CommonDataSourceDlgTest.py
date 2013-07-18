@@ -511,7 +511,40 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.assertTrue(not form.ui.dbFrame.isVisible())
         self.assertTrue(not form.ui.tangoFrame.isVisible())
 
-        form.setFrames("")
+
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("CLIENT"))
+
+        self.assertTrue(form.ui.savePushButton.isEnabled())
+        self.assertTrue(form.ui.applyPushButton.isEnabled())
+        self.assertTrue(form.ui.storePushButton.isEnabled())
+        self.assertTrue(not form.ui.clientFrame.isVisible())
+        self.assertTrue(not form.ui.dbFrame.isVisible())
+        self.assertTrue(not form.ui.tangoFrame.isVisible())
+
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("DB"))
+
+
+        self.assertTrue(form.ui.savePushButton.isEnabled())
+        self.assertTrue(form.ui.applyPushButton.isEnabled())
+        self.assertTrue(form.ui.storePushButton.isEnabled())
+        self.assertTrue(not form.ui.clientFrame.isVisible())
+        self.assertTrue(not form.ui.dbFrame.isVisible())
+        self.assertTrue(not form.ui.tangoFrame.isVisible())
+
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("TANGO"))
+
+
+        self.assertTrue(form.ui.savePushButton.isEnabled())
+        self.assertTrue(form.ui.applyPushButton.isEnabled())
+        self.assertTrue(form.ui.storePushButton.isEnabled())
+        self.assertTrue(not form.ui.clientFrame.isVisible())
+        self.assertTrue(not form.ui.dbFrame.isVisible())
+        self.assertTrue(not form.ui.tangoFrame.isVisible())
+
+        form.connectWidgets()
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText(""))
+
+
         self.assertTrue(form.ui.savePushButton.isEnabled())
         self.assertTrue(form.ui.applyPushButton.isEnabled())
         self.assertTrue(form.ui.storePushButton.isEnabled())
@@ -520,7 +553,8 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.assertTrue(not form.ui.tangoFrame.isVisible())
 
 
-        form.ui.typeComboBox.setText("CLIENT")
+        form.connectWidgets()
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("CLIENT"))
         self.assertTrue(form.ui.clientFrame.isVisible())
         self.assertTrue(not form.ui.dbFrame.isVisible())
         self.assertTrue(not form.ui.tangoFrame.isVisible())
@@ -530,7 +564,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         
 
         form.ui.cRecNameLineEdit.setText("")
-        form.setFrames("CLIENT")
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("CLIENT"))
         self.assertTrue(form.ui.clientFrame.isVisible())
         self.assertTrue(not form.ui.dbFrame.isVisible())
         self.assertTrue(not form.ui.tangoFrame.isVisible())
@@ -539,7 +573,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.assertTrue(not form.ui.storePushButton.isEnabled())
 
         form.ui.cRecNameLineEdit.setText("name")
-        form.setFrames("CLIENT")
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("CLIENT"))
         self.assertTrue(form.ui.clientFrame.isVisible())
         self.assertTrue(not form.ui.dbFrame.isVisible())
         self.assertTrue(not form.ui.tangoFrame.isVisible())
@@ -553,7 +587,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
         form.ui.dQueryLineEdit.setText("")
-        form.setFrames("DB")
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("DB"))
         self.assertTrue(not form.ui.clientFrame.isVisible())
         self.assertTrue(form.ui.dbFrame.isVisible())
         self.assertTrue(not form.ui.tangoFrame.isVisible())
@@ -563,7 +597,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
         form.ui.dQueryLineEdit.setText("name")
-        form.setFrames("DB")
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("DB"))
         self.assertTrue(not form.ui.clientFrame.isVisible())
         self.assertTrue(form.ui.dbFrame.isVisible())
         self.assertTrue(not form.ui.tangoFrame.isVisible())
@@ -572,7 +606,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.assertTrue(form.ui.storePushButton.isEnabled())
 
 
-        form.setFrames("TANGO")
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("TANGO"))
         self.assertTrue(not form.ui.clientFrame.isVisible())
         self.assertTrue(not form.ui.dbFrame.isVisible())
         self.assertTrue(form.ui.tangoFrame.isVisible())
@@ -582,7 +616,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
         form.ui.tDevNameLineEdit.setText("name")
-        form.setFrames("TANGO")
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("TANGO"))
         self.assertTrue(not form.ui.clientFrame.isVisible())
         self.assertTrue(not form.ui.dbFrame.isVisible())
         self.assertTrue(form.ui.tangoFrame.isVisible())
@@ -591,7 +625,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.assertTrue(not form.ui.storePushButton.isEnabled())
 
         form.ui.tMemberNameLineEdit.setText("name")
-        form.setFrames("TANGO")
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("TANGO"))
         self.assertTrue(not form.ui.clientFrame.isVisible())
         self.assertTrue(not form.ui.dbFrame.isVisible())
         self.assertTrue(form.ui.tangoFrame.isVisible())
@@ -600,7 +634,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.assertTrue(form.ui.storePushButton.isEnabled())
 
         form.ui.tDevNameLineEdit.setText("")
-        form.setFrames("TANGO")
+        form.ui.typeComboBox.setCurrentIndex(form.ui.typeComboBox.findText("TANGO"))
         self.assertTrue(not form.ui.clientFrame.isVisible())
         self.assertTrue(not form.ui.dbFrame.isVisible())
         self.assertTrue(form.ui.tangoFrame.isVisible())

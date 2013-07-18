@@ -61,11 +61,57 @@ class CommonDataSourceDlg(NodeDlg):
             self.ui.savePushButton.setFocus()
 
 
+    ## updates group user interface
+    # \brief It sets enable or disable the OK button
+    def updateUi(self, text):
+        if text == 'CLIENT':
+            enable = not self.ui.cRecNameLineEdit.text().isEmpty()
+            self.ui.applyPushButton.setEnabled(enable)
+            self.ui.savePushButton.setEnabled(enable)
+            self.ui.storePushButton.setEnabled(enable)
+        elif text == 'DB':
+            enable = not self.ui.dQueryLineEdit.text().isEmpty()
+            self.ui.applyPushButton.setEnabled(enable)
+            self.ui.savePushButton.setEnabled(enable)
+            self.ui.storePushButton.setEnabled(enable)
+        elif text == 'TANGO':    
+            enable = not self.ui.tDevNameLineEdit.text().isEmpty() and \
+                not self.ui.tMemberNameLineEdit.text().isEmpty()
+            self.ui.applyPushButton.setEnabled(enable)
+            self.ui.savePushButton.setEnabled(enable)
+            self.ui.storePushButton.setEnabled(enable)
+        else:
+            ## Additional non-supported frame
+            enable = True
+            self.ui.applyPushButton.setEnabled(enable)
+            self.ui.savePushButton.setEnabled(enable)
+            self.ui.storePushButton.setEnabled(enable)
+        
+
+    ## shows and hides frames according to typeComboBox
+    # \param text the edited text   
+    def setFrames(self,text):
+        if text == 'CLIENT':
+            self.ui.clientFrame.show()
+            self.ui.dbFrame.hide()
+            self.ui.tangoFrame.hide()
+        elif text == 'TANGO':
+            self.ui.clientFrame.hide()
+            self.ui.dbFrame.hide()
+            self.ui.tangoFrame.show()
+        elif text == 'DB':
+            self.ui.clientFrame.hide()
+            self.ui.dbFrame.show()
+            self.ui.tangoFrame.hide()
+            self.populateParameters()
+            
+        self.updateUi(text)
+
+
     ## shows and hides frames according to typeComboBox
     # \param text the edited text   
     def _typeComboBox(self, text):
         self.setFrames(text)
-        self.updateUi(unicode(text))
 
 
     ## calls updateUi when the name text is changing
@@ -98,54 +144,9 @@ class CommonDataSourceDlg(NodeDlg):
 
 
         
-    ## updates group user interface
-    # \brief It sets enable or disable the OK button
-    def updateUi(self, text):
-        if text == 'CLIENT':
-            enable = not self.ui.cRecNameLineEdit.text().isEmpty()
-            self.ui.applyPushButton.setEnabled(enable)
-            self.ui.savePushButton.setEnabled(enable)
-            self.ui.storePushButton.setEnabled(enable)
-        elif text == 'DB':
-            enable = not self.ui.dQueryLineEdit.text().isEmpty()
-            self.ui.applyPushButton.setEnabled(enable)
-            self.ui.savePushButton.setEnabled(enable)
-            self.ui.storePushButton.setEnabled(enable)
-        elif text == 'TANGO':    
-            enable = not self.ui.tDevNameLineEdit.text().isEmpty() and \
-                not self.ui.tMemberNameLineEdit.text().isEmpty()
-            self.ui.applyPushButton.setEnabled(enable)
-            self.ui.savePushButton.setEnabled(enable)
-            self.ui.storePushButton.setEnabled(enable)
-        else:
-            ## Additional non-supported frame
-            enable = True
-            self.ui.applyPushButton.setEnabled(enable)
-            self.ui.savePushButton.setEnabled(enable)
-            self.ui.storePushButton.setEnabled(enable)
-        
 
 
 
-
-    ## shows and hides frames according to typeComboBox
-    # \param text the edited text   
-    def setFrames(self,text):
-        if text == 'CLIENT':
-            self.ui.clientFrame.show()
-            self.ui.dbFrame.hide()
-            self.ui.tangoFrame.hide()
-        elif text == 'TANGO':
-            self.ui.clientFrame.hide()
-            self.ui.dbFrame.hide()
-            self.ui.tangoFrame.show()
-        elif text == 'DB':
-            self.ui.clientFrame.hide()
-            self.ui.dbFrame.show()
-            self.ui.tangoFrame.hide()
-            self.populateParameters()
-            
-        self.updateUi(text)
 
 
     ## calls updateUi when the name text is changing

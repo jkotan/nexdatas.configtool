@@ -56,6 +56,7 @@ class FocusedWidget():
         self.focused = False
     def setFocus(self):
         self.focused = True
+
         
 
 class TestView(object):
@@ -288,6 +289,82 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         form.setSaveFocus()
         self.assertTrue(form.ui.savePushButton.focused)
 #        self.assertTrue(form.ui.savePushButton.hasFocus())
+        
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_updateUi(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        form = CommonDataSourceDlg(dsrc, parent)
+        form.show()
+
+        form.ui.setupUi(form)
+        
+
+        self.assertTrue(form.ui.savePushButton.isEnabled())
+        self.assertTrue(form.ui.applyPushButton.isEnabled())
+        self.assertTrue(form.ui.storePushButton.isEnabled())
+        form.updateUi("")
+        self.assertTrue(form.ui.savePushButton.isEnabled())
+        self.assertTrue(form.ui.applyPushButton.isEnabled())
+        self.assertTrue(form.ui.storePushButton.isEnabled())
+
+
+        form.updateUi("CLIENT")
+        self.assertTrue(not form.ui.savePushButton.isEnabled())
+        self.assertTrue(not form.ui.applyPushButton.isEnabled())
+        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        
+        form.ui.cRecNameLineEdit.setText("name")
+        form.updateUi("CLIENT")
+        self.assertTrue(form.ui.savePushButton.isEnabled())
+        self.assertTrue(form.ui.applyPushButton.isEnabled())
+        self.assertTrue(form.ui.storePushButton.isEnabled())
+
+
+        form.ui.cRecNameLineEdit.setText("")
+        form.updateUi("CLIENT")
+        self.assertTrue(not form.ui.savePushButton.isEnabled())
+        self.assertTrue(not form.ui.applyPushButton.isEnabled())
+        self.assertTrue(not form.ui.storePushButton.isEnabled())
+
+
+
+
+
+        form.ui.dQueryLineEdit.setText("name")
+        form.updateUi("DB")
+        self.assertTrue(form.ui.savePushButton.isEnabled())
+        self.assertTrue(form.ui.applyPushButton.isEnabled())
+        self.assertTrue(form.ui.storePushButton.isEnabled())
+
+
+
+
+        form.ui.tDevNameLineEdit.setText("name")
+        form.updateUi("TANGO")
+        self.assertTrue(not form.ui.savePushButton.isEnabled())
+        self.assertTrue(not form.ui.applyPushButton.isEnabled())
+        self.assertTrue(not form.ui.storePushButton.isEnabled())
+
+        form.ui.tMemberNameLineEdit.setText("name")
+        form.updateUi("TANGO")
+        self.assertTrue(form.ui.savePushButton.isEnabled())
+        self.assertTrue(form.ui.applyPushButton.isEnabled())
+        self.assertTrue(form.ui.storePushButton.isEnabled())
+
+        form.ui.tDevNameLineEdit.setText("")
+        form.updateUi("TANGO")
+        self.assertTrue(not form.ui.savePushButton.isEnabled())
+        self.assertTrue(not form.ui.applyPushButton.isEnabled())
+        self.assertTrue(not form.ui.storePushButton.isEnabled())
+        
         
 
 

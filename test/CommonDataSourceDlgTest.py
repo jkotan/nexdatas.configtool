@@ -431,7 +431,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
                    "DB user":"werwer", 
                    "DB password":"werwer", 
                    "Mysql cnf":"werwer", 
-                   "ORACLE mode":"werwer", 
+                   "Oracle mode":"werwer", 
                    "Oracle DSN":"asdasdf"}        
 
  
@@ -556,7 +556,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
                    "DB user":"werwer", 
                    "DB password":"werwer", 
                    "Mysql cnf":"werwer", 
-                   "ORACLE mode":"werwer", 
+                   "Oracle mode":"werwer", 
                    "Oracle DSN":"asdasdf"}        
 
  
@@ -788,7 +788,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
                    "DB user":"werwer", 
                    "DB password":"werwer", 
                    "Mysql cnf":"werwer", 
-                   "ORACLE mode":"werwer", 
+                   "Oracle mode":"wwer", 
                    "Oracle DSN":"asdasdf"}        
 
         na =  self.__rnd.randint(0, len(myParam)-1) 
@@ -826,7 +826,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
             "DB user":"erwer", 
             "DB password":"weer", 
             "Mysql cnf":"weer", 
-            "ORACLE mode":"wwer", 
+            "Oracle mode":"wwer", 
             "Oracle DSN":"aasdf"}        
         
         na =  self.__rnd.randint(0, len(myParam)-1) 
@@ -938,7 +938,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
             "DB user":"erwer", 
             "DB password":"weer", 
             "Mysql cnf":"weer", 
-            "ORACLE mode":"wwer", 
+            "Oracle mode":"wwer", 
             "Oracle DSN":"aasdf"}        
         
         table = self.form.ui.dParameterTableWidget
@@ -957,12 +957,13 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
         QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
-        
+
 
 
         item = table.item(table.currentRow(), 0)
         self.checkParam(dict(myParam,**{str(sel):myParam[sel]}), 
                         self.form.ui.dParameterTableWidget, item.data(Qt.UserRole).toString())
+
         self.checkParam(dict(myParam,**{str(sel):myParam[sel]}), 
                         self.form.ui.dParameterTableWidget, sel)
         self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):myParam[sel]}))
@@ -1014,7 +1015,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
             "DB user":"erwer", 
             "DB password":"weer", 
             "Mysql cnf":"weer", 
-            "ORACLE mode":"wwer", 
+            "Oracle mode":"wwer", 
             "Oracle DSN":"aasdf"}        
         
         table = self.form.ui.dParameterTableWidget

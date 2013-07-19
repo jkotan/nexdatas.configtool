@@ -1077,12 +1077,10 @@ class DataSourceDlgTest(unittest.TestCase):
         
         ev = TestEvent()
         self.assertTrue(not ev.accepted)
-        self.assertTrue(isinstance(self.form.datasource.methods, DataSourceMethods))
-        self.assertTrue(isinstance(self.form.datasource.methods.dialog, DataSourceDlg))
-        self.assertTrue(isinstance(self.form.datasource.dialog, DataSourceDlg))
+        print "qwe",self.form.datasource.dialog
+        self.assertTrue(self.form.datasource.dialog is not None)
 
         self.form.closeEvent(ev)
-        self.assertTrue(self.form.datasource.methods.dialog is None)
         self.assertTrue(self.form.datasource.dialog is None)
 
         self.assertTrue(ev.accepted)
@@ -1090,6 +1088,12 @@ class DataSourceDlgTest(unittest.TestCase):
 
 
 
+class TestEvent():
+    def __init__(self):
+        self.accepted = False
+
+    def accept(self):
+        self.accepted = True
 
 
 

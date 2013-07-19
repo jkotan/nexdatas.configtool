@@ -1072,14 +1072,20 @@ class DataSourceDlgTest(unittest.TestCase):
         self.form = DataSourceDlg(parent)
         self.form.show()
 
-        self.form.ui.setupUi(self.form)
+        self.form.createGUI()
         
         ev = TestEvent()
         self.assertTrue(not ev.accepted)
         self.assertTrue(self.form.datasource.dialog is not None)
+        self.assertTrue(isinstance(self.form.methods, DataSourceMethods))
+        self.assertTrue(isinstance(self.form.methods.dialog, CommonDataSourceDlg))
+        self.assertTrue(isinstance(self.form.datasource.dialog, NodeDlg))
+        self.assertTrue(self.form.methods is not None)
+        self.assertTrue(self.form.methods is not None)
 
         self.form.closeEvent(ev)
         self.assertTrue(self.form.datasource.dialog is None)
+        self.assertTrue(self.form.methods.dialog is  not None)
 
         self.assertTrue(ev.accepted)
         

@@ -31,7 +31,7 @@ import time
 from PyQt4.QtTest import QTest
 from PyQt4.QtGui import (QApplication, QMessageBox, QTableWidgetItem, QPushButton)
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString
+from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString, QModelIndex
 from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
 
 
@@ -74,6 +74,15 @@ class TestView(object):
     def expand(self, index):
         self.stack.append("expand")
         self.stack.append(index)
+
+
+class TestEvent():
+    def __init__(self):
+        self.accepted = False
+
+    def accept(self):
+        self.accepted = True
+
 
 ## test fixture
 class DataSourceDlgTest(unittest.TestCase):
@@ -1073,15 +1082,13 @@ class DataSourceDlgTest(unittest.TestCase):
         self.form.show()
 
         self.form.createGUI()
-        
+         
         ev = TestEvent()
         self.assertTrue(not ev.accepted)
         self.assertTrue(self.form.datasource.dialog is not None)
         self.assertTrue(isinstance(self.form.methods, DataSourceMethods))
         self.assertTrue(isinstance(self.form.methods.dialog, CommonDataSourceDlg))
         self.assertTrue(isinstance(self.form.datasource.dialog, NodeDlg))
-        self.assertTrue(self.form.methods is not None)
-        self.assertTrue(self.form.methods is not None)
 
         self.form.closeEvent(ev)
         self.assertTrue(self.form.datasource.dialog is None)
@@ -1091,13 +1098,151 @@ class DataSourceDlgTest(unittest.TestCase):
         
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_updateForm(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        self.form = DataSourceDlg(parent)
+        self.form.show()
 
-class TestEvent():
+        self.form.createGUI()
+        self.form.methods = TestMethods()
+        self.form.updateForm()
+        self.assertEqual(len(self.form.methods.stack), 1)
+        self.assertEqual(self.form.methods.stack[-1], "updateForm")
+
+        index = "my index"
+        self.form.updateNode(index)
+        self.assertEqual(len(self.form.methods.stack), 3)
+        self.assertEqual(self.form.methods.stack[-2], "updateNode")
+        self.assertTrue(self.form.methods.stack[-1] is index)
+
+
+        self.form.updateNode()
+        self.assertEqual(len(self.form.methods.stack), 5)
+        self.assertEqual(self.form.methods.stack[-2], "updateNode")
+        self.assertTrue(isinstance(self.form.methods.stack[-1], QModelIndex))
+
+
+        self.form.createGUI()
+        self.assertEqual(len(self.form.methods.stack), 6)
+        self.assertEqual(self.form.methods.stack[-1], "createGUI")
+
+
+        node = "my node"
+        self.form.setFromNode(node)
+        self.assertEqual(len(self.form.methods.stack), 8)
+        self.assertEqual(self.form.methods.stack[-2], "setFromNode")
+        self.assertTrue(self.form.methods.stack[-1] is node)
+
+
+        self.form.setFromNode()
+        self.assertEqual(len(self.form.methods.stack), 10)
+        self.assertEqual(self.form.methods.stack[-2], "setFromNode")
+        self.assertEqual(self.form.methods.stack[-1], None)
+
+
+        self.form.apply()
+        self.assertEqual(len(self.form.methods.stack), 11)
+        self.assertEqual(self.form.methods.stack[-1], "apply")
+
+
+        enable = "my node"
+        self.form.treeMode(enable)
+        self.assertEqual(len(self.form.methods.stack), 13)
+        self.assertEqual(self.form.methods.stack[-2], "treeMode")
+        self.assertTrue(self.form.methods.stack[-1] is enable)
+
+
+        self.form.treeMode()
+        self.assertEqual(len(self.form.methods.stack), 15)
+        self.assertEqual(self.form.methods.stack[-2], "treeMode")
+        self.assertEqual(self.form.methods.stack[-1], True)
+
+
+        self.form.connectExternalActions()
+        self.assertEqual(len(self.form.methods.stack), 20)
+        self.assertEqual(self.form.methods.stack[-5], "connectExternalActions")
+        self.assertEqual(self.form.methods.stack[-4], None)
+        self.assertEqual(self.form.methods.stack[-3], None)
+        self.assertEqual(self.form.methods.stack[-2], None)
+        self.assertEqual(self.form.methods.stack[-1], None)
+
+
+
+        eapply = "my apply"
+        self.form.connectExternalActions(eapply)
+        self.assertEqual(len(self.form.methods.stack), 25)
+        self.assertEqual(self.form.methods.stack[-5], "connectExternalActions")
+        self.assertTrue(self.form.methods.stack[-4] is eapply)
+        self.assertEqual(self.form.methods.stack[-3], None)
+        self.assertEqual(self.form.methods.stack[-2], None)
+        self.assertEqual(self.form.methods.stack[-1], None)
+
+        esave = "my save"
+        self.form.connectExternalActions(eapply, esave)
+        self.assertEqual(len(self.form.methods.stack), 30)
+        self.assertEqual(self.form.methods.stack[-5], "connectExternalActions")
+        self.assertTrue(self.form.methods.stack[-4] is eapply)
+        self.assertTrue(self.form.methods.stack[-3] is esave)
+        self.assertEqual(self.form.methods.stack[-2], None)
+        self.assertEqual(self.form.methods.stack[-1], None)
+
+        eclose = "my close"
+        self.form.connectExternalActions(eapply, esave, eclose)
+        self.assertEqual(len(self.form.methods.stack), 35)
+        self.assertEqual(self.form.methods.stack[-5], "connectExternalActions")
+        self.assertTrue(self.form.methods.stack[-4] is eapply)
+        self.assertTrue(self.form.methods.stack[-3] is esave)
+        self.assertTrue(self.form.methods.stack[-2] is eclose)
+        self.assertEqual(self.form.methods.stack[-1], None)
+
+        estore = "my store"
+        self.form.connectExternalActions(eapply, esave, eclose, estore)
+        self.assertEqual(len(self.form.methods.stack), 40)
+        self.assertEqual(self.form.methods.stack[-5], "connectExternalActions")
+        self.assertTrue(self.form.methods.stack[-4] is eapply)
+        self.assertTrue(self.form.methods.stack[-3] is esave)
+        self.assertTrue(self.form.methods.stack[-2] is eclose)
+        self.assertTrue(self.form.methods.stack[-1] is estore)
+
+        
+class TestMethods(object):
     def __init__(self):
-        self.accepted = False
+        self.stack = []
 
-    def accept(self):
-        self.accepted = True
+    def createGUI(self):
+        self.stack.append("createGUI")
+
+    def updateForm(self):
+        self.stack.append("updateForm")
+
+
+    def updateNode(self, index):
+        self.stack.append("updateNode")
+        self.stack.append(index)
+
+
+    def setFromNode(self, node):
+        self.stack.append("setFromNode")
+        self.stack.append(node)
+
+    def apply(self):
+        self.stack.append("apply")
+
+    def treeMode(self, enable):
+        self.stack.append("treeMode")
+        self.stack.append(enable)
+
+
+    def connectExternalActions(self, externalApply, externalSave, externalClose, externalStore):
+        self.stack.append("connectExternalActions")
+        self.stack.append(externalApply)
+        self.stack.append(externalSave) 
+        self.stack.append(externalClose) 
+        self.stack.append(externalStore)
 
 
 

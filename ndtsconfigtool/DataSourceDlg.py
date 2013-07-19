@@ -179,7 +179,7 @@ class CommonDataSourceDlg(NodeDlg):
 
     ## takes a name of the current parameter
     # \returns name of the current parameter
-    def _currentTableParameter(self):
+    def __currentTableParameter(self):
         item = self.ui.dParameterTableWidget.item(self.ui.dParameterTableWidget.currentRow(), 0)
         if item is None:
             return None
@@ -189,7 +189,7 @@ class CommonDataSourceDlg(NodeDlg):
     ## removes an parameter    
     #  \brief It removes the current parameter asking before about it
     def __removeParameter(self):
-        param = self._currentTableParameter()
+        param = self.__currentTableParameter()
         if param is None:
             return
         if QMessageBox.question(self, "Parameter - Remove",
@@ -206,7 +206,7 @@ class CommonDataSourceDlg(NodeDlg):
     ## changes the current value of the parameter        
     # \brief It changes the current value of the parameter and informs the user that parameter names arenot editable
     def __tableItemChanged(self, item):
-        param = self._currentTableParameter()
+        param = self.__currentTableParameter()
         if unicode(param)  not in self.dbParam.keys():
             return
         column = self.ui.dParameterTableWidget.currentColumn()

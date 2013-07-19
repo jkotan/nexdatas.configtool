@@ -328,7 +328,6 @@ class DataSourceDlgTest(unittest.TestCase):
         self.enableButtons()
         tm = QTimer() 
         self.enableButtons() 
-        time.sleep(0.1)
 
         self.form.updateUi("CLIENT")
         self.disableButtons()
@@ -1077,7 +1076,6 @@ class DataSourceDlgTest(unittest.TestCase):
         
         ev = TestEvent()
         self.assertTrue(not ev.accepted)
-        print "qwe",self.form.datasource.dialog
         self.assertTrue(self.form.datasource.dialog is not None)
 
         self.form.closeEvent(ev)

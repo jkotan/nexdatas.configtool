@@ -35,7 +35,7 @@ from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString
 from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
 
 
-from ndtsconfigtool.DataSourceDlg import CommonDataSourceDlg, DataSource
+from ndtsconfigtool.DataSourceDlg import CommonDataSourceDlg, DataSource, DataSourceMethods
 from ndtsconfigtool.ComponentModel import ComponentModel
 from ndtsconfigtool.AttributeDlg import AttributeDlg
 from ndtsconfigtool.NodeDlg import NodeDlg
@@ -331,7 +331,6 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.enableButtons()
         tm = QTimer() 
         self.enableButtons() 
-        time.sleep(0.1)
 
         self.form.updateUi("CLIENT")
         self.disableButtons()
@@ -1073,14 +1072,44 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.assertEqual(self.form.dbParam, dict(rparam))
 
 
+        
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_closeEvent(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
+
+        self.form.ui.setupUi(self.form)
+        
+        ev = TestEvent()
+        self.assertTrue(not ev.accepted)
+        self.assertTrue(isinstance(self.form.datasource.methods, DataSourceMethods))
+        self.assertTrue(isinstance(self.form.datasource.methods.dialog, CommonDataSourceDlg))
+        self.assertTrue(isinstance(self.form.datasource.dialog, CommonDataSourceDlg))
+
+        self.form.closeEvent(ev)
+        self.assertTrue(self.form.datasource.methods.dialog is None)
+        self.assertTrue(self.form.datasource.dialog is None)
+
+        self.assertTrue(ev.accepted)
+        
 
 
 
 
 
+class TestEvent():
+    def __init__(self):
+        self.accepted = False
 
-
-
+    def accept(self):
+        self.accepted = True
+    
 
 
 if __name__ == '__main__':

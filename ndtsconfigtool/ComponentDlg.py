@@ -96,6 +96,7 @@ class ComponentDlg(QDialog):
     def closeEvent(self, event):
         super(ComponentDlg,self).closeEvent(event)
         self.component.dialog = None
+        event.accept()    
 
 
 

@@ -35,7 +35,7 @@ from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString
 from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
 
 
-from ndtsconfigtool.DataSourceDlg import DataSourceDlg, CommonDataSource, CommonDataSourceDlg
+from ndtsconfigtool.DataSourceDlg import DataSourceDlg, CommonDataSource, CommonDataSourceDlg, DataSourceMethods
 from ndtsconfigtool.ComponentModel import ComponentModel
 from ndtsconfigtool.AttributeDlg import AttributeDlg
 from ndtsconfigtool.NodeDlg import NodeDlg
@@ -1062,8 +1062,31 @@ class DataSourceDlgTest(unittest.TestCase):
 
 
 
+        
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_closeEvent(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        self.form = DataSourceDlg(parent)
+        self.form.show()
 
+        self.form.ui.setupUi(self.form)
+        
+        ev = TestEvent()
+        self.assertTrue(not ev.accepted)
+        self.assertTrue(isinstance(self.form.datasource.methods, DataSourceMethods))
+        self.assertTrue(isinstance(self.form.datasource.methods.dialog, DataSourceDlg))
+        self.assertTrue(isinstance(self.form.datasource.dialog, DataSourceDlg))
+
+        self.form.closeEvent(ev)
+        self.assertTrue(self.form.datasource.methods.dialog is None)
+        self.assertTrue(self.form.datasource.dialog is None)
+
+        self.assertTrue(ev.accepted)
+        
 
 
 

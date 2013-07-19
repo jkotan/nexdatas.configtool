@@ -251,12 +251,12 @@ class CommonDataSourceDlg(NodeDlg):
     ## closes the window and cleans the dialog label
     # \param event closing event
     def closeEvent(self, event):
-        super(CommonDataSourceDlg,self).closeEvent(event)
         if hasattr(self.datasource.dialog,"methods"):
             self.datasource.dialog.methods.dialog = None
         self.datasource.dialog = None
         if hasattr(self.datasource,"methods"):
             self.datasource.methods.dialog = None
+        event.accept()    
 
     ## handling escape action
     def keyPressEvent(self, event):

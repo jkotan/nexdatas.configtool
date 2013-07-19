@@ -594,25 +594,146 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
         self.form.ui.dQueryLineEdit.setText("name")
         self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
-        self.form._cRecNameLineEdit()
+        self.form._dQueryLineEdit()
         self.enableButtons()
 
 
         self.form.ui.tDevNameLineEdit.setText("name")
         self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
-        self.form._cRecNameLineEdit()
+        self.form._tDevNameLineEdit()
         self.disableButtons()
 
         self.form.ui.tMemberNameLineEdit.setText("name")
         self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
-        self.form._cRecNameLineEdit()
+        self.form._tMemberNameLineEdit()
         self.enableButtons()
 
         self.form.ui.tDevNameLineEdit.setText("")
         self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
-        self.form._cRecNameLineEdit()
+        self.form._tMemberNameLineEdit()
         self.disableButtons()
         
+
+        
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_cRecNameLineEdit_signal(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
+
+        self.form.ui.setupUi(self.form)
+        
+
+        self.enableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.cRecNameLineEdit.setText("")
+        self.enableButtons()
+        
+        self.form.connectWidgets()
+
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.cRecNameLineEdit.setText("")
+        self.disableButtons()
+        
+        self.form.ui.cRecNameLineEdit.setText("name")
+        self.enableButtons()
+
+
+        self.form.ui.cRecNameLineEdit.setText("")
+        self.disableButtons()
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_dQueryLineEdit_signal(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
+
+        self.form.ui.setupUi(self.form)
+        
+
+        self.enableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.dQueryLineEdit.setText("")
+        self.enableButtons()
+        
+        self.form.connectWidgets()
+
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.form.ui.dQueryLineEdit.setText("")
+        self.disableButtons()
+        
+        self.form.ui.dQueryLineEdit.setText("name")
+        self.enableButtons()
+
+
+        self.form.ui.dQueryLineEdit.setText("")
+        self.disableButtons()
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_tDevNameLineEdit_tMemberNameLineEdit_signal(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
+
+        self.form.ui.setupUi(self.form)
+        
+
+        self.enableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.tDevNameLineEdit.setText("")
+        self.enableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.tMemberNameLineEdit.setText("")
+        self.enableButtons()
+
+        
+        self.form.connectWidgets()
+
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.tDevNameLineEdit.setText("")
+        self.disableButtons()
+        
+        self.form.ui.tDevNameLineEdit.setText("name")
+        self.disableButtons()
+
+        self.form.ui.tMemberNameLineEdit.setText("name2")
+        self.enableButtons()
+
+
+        self.form.ui.tDevNameLineEdit.setText("")
+        self.disableButtons()
+
+        self.form.ui.tMemberNameLineEdit.setText("name2")
+        self.disableButtons()
+
+
+        self.form.ui.tMemberNameLineEdit.setText("name2")
+        self.disableButtons()
+
+        self.form.ui.tDevNameLineEdit.setText("name")
+        self.enableButtons()
+
         
 
 

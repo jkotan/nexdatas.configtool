@@ -427,7 +427,7 @@ class DataSourceDlgTest(unittest.TestCase):
                    "DB user":"werwer", 
                    "DB password":"werwer", 
                    "Mysql cnf":"werwer", 
-                   "ORACLE mode":"werwer", 
+                   "Oracle mode":"werwer", 
                    "Oracle DSN":"asdasdf"}        
 
  
@@ -551,7 +551,7 @@ class DataSourceDlgTest(unittest.TestCase):
                    "DB user":"werwer", 
                    "DB password":"werwer", 
                    "Mysql cnf":"werwer", 
-                   "ORACLE mode":"werwer", 
+                   "Oracle mode":"werwer", 
                    "Oracle DSN":"asdasdf"}        
 
  
@@ -779,7 +779,7 @@ class DataSourceDlgTest(unittest.TestCase):
                    "DB user":"werwer", 
                    "DB password":"werwer", 
                    "Mysql cnf":"werwer", 
-                   "ORACLE mode":"werwer", 
+                   "Oracle mode":"werwer", 
                    "Oracle DSN":"asdasdf"}        
 
         na =  self.__rnd.randint(0, len(myParam)-1) 
@@ -816,7 +816,7 @@ class DataSourceDlgTest(unittest.TestCase):
             "DB user":"erwer", 
             "DB password":"weer", 
             "Mysql cnf":"weer", 
-            "ORACLE mode":"wwer", 
+            "Oracle mode":"wwer", 
             "Oracle DSN":"aasdf"}        
         
         na =  self.__rnd.randint(0, len(myParam)-1) 
@@ -927,7 +927,7 @@ class DataSourceDlgTest(unittest.TestCase):
             "DB user":"erwer", 
             "DB password":"weer", 
             "Mysql cnf":"weer", 
-            "ORACLE mode":"wwer", 
+            "Oracle mode":"wwer", 
             "Oracle DSN":"aasdf"}        
         
         table = self.form.ui.dParameterTableWidget
@@ -1002,7 +1002,7 @@ class DataSourceDlgTest(unittest.TestCase):
             "DB user":"erwer", 
             "DB password":"weer", 
             "Mysql cnf":"weer", 
-            "ORACLE mode":"wwer", 
+            "Oracle mode":"wwer", 
             "Oracle DSN":"aasdf"}        
         
         table = self.form.ui.dParameterTableWidget

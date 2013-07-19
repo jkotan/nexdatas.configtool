@@ -130,13 +130,12 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 #        self.assertEqual(QApplication.activeWindow(),None)
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
-#        print mb.text()
         self.text = mb.text()
         self.title = mb.windowTitle()
         mb.close()
 
 
-    def rmAttributeWidget(self):
+    def rmParamWidget(self):
         aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
@@ -146,7 +145,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         QTest.mouseClick(mb.button(QMessageBox.Yes), Qt.LeftButton)
 
 
-    def rmAttributeWidgetClose(self):
+    def rmParamWidgetClose(self):
         aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
@@ -170,27 +169,6 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
 
-    def dimensionsWidget(self):
-        aw = QApplication.activeWindow()
-        mb = QApplication.activeModalWidget()
-        self.assertTrue(isinstance(mb, DimensionsDlg))
-        self.assertTrue(hasattr(mb, "ui"))
-
-        mb.ui.rankSpinBox.setValue(len(self.dimensions))
-        
-        for r in range(len(self.dimensions)):
-            mb.ui.dimTableWidget.setCurrentCell(r,0)
-            it = QTableWidgetItem(unicode(self.dimensions[r]))
-            mb.ui.dimTableWidget.setItem(r,0,it)
-
-#        QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
-#        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
-#        QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
-#        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
-
-        mb.accept()
-
-
     def attributeWidgetClose(self):
         aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
@@ -201,10 +179,20 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
         self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
 
-#        mb.close()
         mb.reject()
 
-#        mb.accept()
+
+    def paramWidgetClose(self):
+        aw = QApplication.activeWindow()
+        mb = QApplication.activeModalWidget()
+        self.assertTrue(isinstance(mb, AttributeDlg))
+
+        QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
+        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
+        QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
+        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
+
+        mb.reject()
 
 
 
@@ -436,6 +424,35 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.enableButtons()
 
 
+
+        myParam = {"DB Name":"sdfsdf",
+                   "DB host":"werwer", 
+                   "DB port":"werwer", 
+                   "DB user":"werwer", 
+                   "DB password":"werwer", 
+                   "Mysql cnf":"werwer", 
+                   "ORACLE mode":"werwer", 
+                   "Oracle DSN":"asdasdf"}        
+
+ 
+
+
+        self.form.ui.dQueryLineEdit.setText("name")
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        self.form.dbParam = myParam
+        self.form.populateParameters(sel)
+        self.assertEqual(self.form.dbParam,myParam)
+        
+        self.form.setFrames("DB")
+        self.assertEqual(self.form.dbParam,myParam)
+        self.dbVisible()
+        self.enableButtons()
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
+
+
+
+
         self.form.setFrames("TANGO")
         self.tangoVisible()
         self.disableButtons()
@@ -531,6 +548,33 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
         self.dbVisible()
         self.enableButtons()
+
+
+        myParam = {"DB Name":"sdfsdf",
+                   "DB host":"werwer", 
+                   "DB port":"werwer", 
+                   "DB user":"werwer", 
+                   "DB password":"werwer", 
+                   "Mysql cnf":"werwer", 
+                   "ORACLE mode":"werwer", 
+                   "Oracle DSN":"asdasdf"}        
+
+ 
+
+
+        self.form.ui.dQueryLineEdit.setText("name")
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        self.form.dbParam = myParam
+        self.form.populateParameters(sel)
+        self.assertEqual(self.form.dbParam,myParam)
+        
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.assertEqual(self.form.dbParam,myParam)
+        self.dbVisible()
+        self.enableButtons()
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
+
 
         self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
         self.tangoVisible()
@@ -735,6 +779,734 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.enableButtons()
 
         
+
+
+
+
+
+
+    def checkParam(self, param, table, sel = None):   
+
+        self.assertEqual(table.columnCount(),2)
+        self.assertEqual(table.rowCount(),len(param))
+        for i in range(len(param)):
+            it = table.item(i, 0) 
+            k = str(it.text())
+            self.assertTrue(k in param.keys())
+            it2 = table.item(i, 1) 
+            self.assertEqual(it2.text(), param[k])
+
+        if sel is not None:    
+            item = table.item(table.currentRow(), 0)
+            self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+ 
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_populateParameters(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
+
+        self.form.ui.setupUi(self.form)
+        
+
+        self.enableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.dQueryLineEdit.setText("")
+        self.enableButtons()
+        
+        self.form.connectWidgets()
+
+        myParam = {}        
+        self.form.dbParam = myParam
+        self.form.populateParameters()
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget)
+
+
+        myParam = {"user":"sdfsdf","sdfsd":"werwer", "asdas":"asdasdf"}        
+        self.form.dbParam = myParam
+        self.form.populateParameters()
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget)
+
+
+        myParam = {"user":"sdfsdf","sdfsd":"werwer", "asdas":"asdasdf"}        
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        self.form.dbParam = myParam
+        self.form.populateParameters(sel)
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
+
+
+        myParam = {"DB name":"sdfsdf",
+                   "DB host":"werwer", 
+                   "DB port":"werwer", 
+                   "DB user":"werwer", 
+                   "DB password":"werwer", 
+                   "Mysql cnf":"werwer", 
+                   "ORACLE mode":"werwer", 
+                   "Oracle DSN":"asdasdf"}        
+
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        self.form.dbParam = myParam
+        self.form.populateParameters(sel)
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_populateParameters_addremoveParamter(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
+
+        self.form.ui.setupUi(self.form)
+        
+
+        self.enableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.dQueryLineEdit.setText("")
+        self.enableButtons()
+        
+        self.form.connectWidgets()
+
+
+        myParam = {
+#            "DB name":"sdfsdf",
+            "DB host":"wer", 
+            "DB port":"wwer", 
+            "DB user":"erwer", 
+            "DB password":"weer", 
+            "Mysql cnf":"weer", 
+            "ORACLE mode":"wwer", 
+            "Oracle DSN":"aasdf"}        
+        
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        self.form.dbParam = dict(myParam)
+        self.form.populateParameters(sel)
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
+
+
+
+        QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
+        
+        table = self.form.ui.dParameterTableWidget
+
+        item = table.item(table.currentRow(), 0)
+        self.checkParam(dict(myParam,**{"DB name":""}), 
+                        self.form.ui.dParameterTableWidget, item.data(Qt.UserRole).toString())
+        self.checkParam(dict(myParam,**{"DB name":""}), 
+                        self.form.ui.dParameterTableWidget, "DB name")
+        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":""}))
+        
+        QTimer.singleShot(10, self.rmParamWidgetClose)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+
+        self.checkParam(dict(myParam,**{"DB name":""}), 
+                        self.form.ui.dParameterTableWidget, "DB name")
+        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":""}))
+
+        QTimer.singleShot(10, self.rmParamWidget)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(myParam))
+
+
+
+
+        QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
+        
+        table = self.form.ui.dParameterTableWidget
+
+        ch = table.currentRow()
+        item = table.item(ch, 0)
+
+        pname = str(item.data(Qt.UserRole).toString())
+
+
+        it = QTableWidgetItem(unicode(pname))
+        it.setData(Qt.DisplayRole, QVariant("Myname2"))
+        it.setData(Qt.UserRole, QVariant(pname))
+
+
+        table.setItem(ch,0,it)
+
+        self.checkParam(dict(myParam,**{"DB name":"Myname2"}), 
+                        self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":"Myname2"}))
+        
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+        table.setCurrentCell(ch,0)
+
+        self.checkParam(dict(myParam,**{"DB name":"Myname2"}), 
+                        self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":"Myname2"}))
+
+        QTimer.singleShot(10, self.rmParamWidgetClose)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+
+        self.checkParam(dict(myParam,**{"DB name":"Myname2"}), 
+                        self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":"Myname2"}))
+
+        QTimer.singleShot(10, self.rmParamWidget)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(myParam))
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_populateParameters_changeParamter(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
+
+        self.form.ui.setupUi(self.form)
+        
+
+        self.enableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.dQueryLineEdit.setText("")
+        self.enableButtons()
+        
+        self.form.connectWidgets()
+
+
+        myParam = {
+            "DB name":"sdfsdf",
+            "DB host":"wer", 
+            "DB port":"wwer", 
+            "DB user":"erwer", 
+            "DB password":"weer", 
+            "Mysql cnf":"weer", 
+            "ORACLE mode":"wwer", 
+            "Oracle DSN":"aasdf"}        
+        
+        table = self.form.ui.dParameterTableWidget
+
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        self.form.dbParam = dict(myParam)
+        self.form.populateParameters(sel)
+        self.checkParam(myParam, table, sel)
+
+        if sel == "DB password":
+            QTimer.singleShot(10, self.checkMessageBox)
+        self.form.ui.dParamComboBox.setCurrentIndex(self.form.ui.dParamComboBox.findText(str(sel)))
+        
+        ch = table.currentRow()
+
+
+        QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
+        
+
+
+        item = table.item(table.currentRow(), 0)
+        self.checkParam(dict(myParam,**{str(sel):myParam[sel]}), 
+                        self.form.ui.dParameterTableWidget, item.data(Qt.UserRole).toString())
+        self.checkParam(dict(myParam,**{str(sel):myParam[sel]}), 
+                        self.form.ui.dParameterTableWidget, sel)
+        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):myParam[sel]}))
+        
+        QTimer.singleShot(10, self.rmParamWidgetClose)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+
+        self.checkParam(dict(myParam,**{str(sel):myParam[sel]}), 
+                        self.form.ui.dParameterTableWidget, str(sel))        
+        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):myParam[sel]}))
+
+        QTimer.singleShot(10, self.rmParamWidget)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+        
+        rparam = dict(myParam)
+        del rparam[sel]
+        self.checkParam(rparam, self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(rparam))
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_populateParameters_changeParamter_value(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
+
+        self.form.ui.setupUi(self.form)
+        
+
+        self.enableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.dQueryLineEdit.setText("")
+        self.enableButtons()
+        
+        self.form.connectWidgets()
+
+
+        myParam = {
+            "DB name":"sdfsdf",
+            "DB host":"wer", 
+            "DB port":"wwer", 
+            "DB user":"erwer", 
+            "DB password":"weer", 
+            "Mysql cnf":"weer", 
+            "ORACLE mode":"wwer", 
+            "Oracle DSN":"aasdf"}        
+        
+        table = self.form.ui.dParameterTableWidget
+
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        sel = "DB password"
+        self.form.dbParam = dict(myParam)
+        self.form.populateParameters(sel)
+        self.checkParam(myParam, table, sel)
+
+        if sel == "DB password":
+            QTimer.singleShot(10, self.checkMessageBox)
+        self.form.ui.dParamComboBox.setCurrentIndex(self.form.ui.dParamComboBox.findText(str(sel)))
+        
+        ch = table.currentRow()
+
+
+        QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
+        
+        item = table.item(ch, 0)
+
+        pname = str(item.data(Qt.UserRole).toString())
+
+
+        it = QTableWidgetItem(unicode(pname))
+        it.setData(Qt.DisplayRole, QVariant("Myname2"))
+        it.setData(Qt.UserRole, QVariant(pname))
+
+        table.setItem(ch,0,it)
+
+
+        self.checkParam(dict(myParam,**{str(sel):"Myname2"}), 
+                        self.form.ui.dParameterTableWidget, None)
+        self.checkParam(dict(myParam,**{str(sel):"Myname2"}), 
+                        self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):"Myname2"}))
+        
+        table.setCurrentCell(ch,0)
+        QTimer.singleShot(10, self.rmParamWidgetClose)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+
+        self.checkParam(dict(myParam,**{str(sel):"Myname2"}), 
+                        self.form.ui.dParameterTableWidget, str(sel))        
+        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):"Myname2"}))
+
+        QTimer.singleShot(10, self.rmParamWidget)
+        it = table.item(table.currentRow(),0)
+        
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+        
+        rparam = dict(myParam)
+        del rparam[sel]
+        self.checkParam(rparam, self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(rparam))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def ttest_populateParameter_setFromNode_selected_addAttribute(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dks = []
+        doc = QDomDocument()
+        nname = "field"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name","myname%s" %  nn)
+        qdn.setAttribute("type","mytype%s" %  nn)
+        qdn.setAttribute("unit","myunits%s" %  nn)
+        qdn.setAttribute("units","mmyunits%s" %  nn)
+        qdn.setAttribute("shortname","mynshort%s" %  nn)
+        doc.appendChild(qdn) 
+        dname = "doc"
+
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+        dval = []
+        nval =  self.__rnd.randint(0, 10) 
+        for n in range(nval):
+            dval.append(doc.createTextNode("\nVAL\n %s\n" %  n))
+            qdn.appendChild(dval[-1]) 
+
+        rn =  self.__rnd.randint(1, 9) 
+
+        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+
+        mdim = doc.createElement('dimensions')
+        mdim.setAttribute("rank", QString(unicode(rn)))
+        
+        for i in range(rn):
+            dim = doc.createElement(QString("dim"))
+            dim.setAttribute(QString("index"), QString(unicode(i+1)))
+            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            mdim.appendChild(dim)
+                
+        qdn.appendChild(mdim) 
+
+
+
+
+        form = CommonDataSourceDlg()
+        form.show()
+        form.node = qdn
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.value, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.units, '')
+        self.assertEqual(form.dimensions, [])
+        self.assertEqual(form.subItems, 
+                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+        self.assertTrue(isinstance(form.ui, Ui_CommonDataSourceDlg))
+
+        form.createGUI()
+        
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.units, '')
+        self.assertEqual(form.value, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
+        self.assertEqual(form.subItems, 
+                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+        
+        form.setFromNode()
+
+
+        self.assertEqual(form.name, "myname%s" %  nn)
+        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.units, 'mmyunits%s'%nn)
+        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" %  i  for i in range(nval)])).strip())
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(form.subItems, 
+                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+
+        self.assertEqual(form.dimensions, dimensions)
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(), '[]')
+
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
+
+        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+
+
+        na =  self.__rnd.randint(0, len(attributes)-1) 
+        sel = attributes.keys()[na]
+        form.populateAttributes(sel)
+
+
+
+
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        for i in range(len(attributes)):
+            it = form.ui.attributeTableWidget.item(i, 0) 
+            k = str(it.text())
+            self.assertTrue(k in attributes.keys())
+            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            self.assertEqual(it2.text(), attributes[k])
+
+
+        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
+        
+        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+
+
+
+        self.aname = "addedAttribute"
+        self.avalue = "addedAttributeValue"
+
+
+        QTimer.singleShot(10, self.attributeWidgetClose)
+        QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
+        
+
+
+
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        for i in range(len(attributes)):
+            it = form.ui.attributeTableWidget.item(i, 0) 
+            k = str(it.text())
+            self.assertTrue(k in attributes.keys())
+            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            self.assertEqual(it2.text(), attributes[k])
+
+
+        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
+        
+        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+
+        self.aname = "addedAttribute"
+        self.avalue = "addedAttributeValue"
+
+        QTimer.singleShot(10, self.attributeWidget)
+        QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
+        
+
+
+
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes)+1)
+        for i in range(len(attributes)+1):
+            it = form.ui.attributeTableWidget.item(i, 0) 
+            k = str(it.text())
+            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            if k in attributes.keys():
+                self.assertEqual(it2.text(), attributes[k])
+            else:
+                self.assertEqual(it2.text(), self.avalue)
+                
+        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)        
+        self.assertEqual(item.data(Qt.UserRole).toString(),self.aname)
+
+
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def ttest_populateAttribute_setFromNode_selected_tableItemChanged(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        dks = []
+        doc = QDomDocument()
+        nname = "field"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name","myname%s" %  nn)
+        qdn.setAttribute("type","mytype%s" %  nn)
+        qdn.setAttribute("units","mmyunits%s" %  nn)
+        qdn.setAttribute("unit","myunits%s" %  nn)
+        qdn.setAttribute("shortname","mynshort%s" %  nn)
+        doc.appendChild(qdn) 
+        dname = "doc"
+
+        dval = []
+        nval =  self.__rnd.randint(0, 10) 
+        for n in range(nval):
+            dval.append(doc.createTextNode("\nVAL\n %s\n" %  n))
+            qdn.appendChild(dval[-1]) 
+
+
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+        rn =  self.__rnd.randint(1, 9) 
+
+        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+
+        mdim = doc.createElement('dimensions')
+        mdim.setAttribute("rank", QString(unicode(rn)))
+        
+        for i in range(rn):
+            dim = doc.createElement(QString("dim"))
+            dim.setAttribute(QString("index"), QString(unicode(i+1)))
+            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            mdim.appendChild(dim)
+                
+        qdn.appendChild(mdim) 
+
+
+
+
+        form = CommonDataSourceDlg()
+        form.show()
+        form.node = qdn
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.value, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.units, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.dimensions, [])
+        self.assertEqual(form.subItems, 
+                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+        self.assertTrue(isinstance(form.ui, Ui_CommonDataSourceDlg))
+
+        form.createGUI()
+        
+        atw = form.ui.attributeTableWidget        
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.value, '')
+        self.assertEqual(form.attributes, {})
+        self.assertEqual(form.units, '')
+        self.assertEqual(form.dimensions, [])
+        self.assertEqual(form.subItems, 
+                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+        
+        form.setFromNode()
+
+
+        self.assertEqual(form.name, "myname%s" %  nn)
+        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" %  i  for i in range(nval)])).strip())
+        self.assertEqual(form.units, 'mmyunits%s'%nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(form.subItems, 
+                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+
+        self.assertEqual(form.dimensions, dimensions)
+
+        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.dimLabel.text(), '[]')
+
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
+
+        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+
+
+
+        na =  self.__rnd.randint(0, len(attributes)-1) 
+        sel = attributes.keys()[na]
+        form.populateAttributes(sel)
+
+
+        self.assertEqual(atw.columnCount(),2)
+        self.assertEqual(atw.rowCount(),len(attributes))
+        for i in range(len(attributes)):
+            it = atw.item(i, 0) 
+            k = str(it.text())
+            self.assertTrue(k in attributes.keys())
+            it2 = atw.item(i, 1) 
+            self.assertEqualDa(it2.text(), attributes[k])
+
+
+        item = atw.item(atw.currentRow(), 0)
+        self.assertEqual(item.data(Qt.UserRole).toString(), sel)
+
+        ch = self.__rnd.randint(0, len(attributes)-1)
+        atw.setCurrentCell(ch,0)
+        item = atw.item(atw.currentRow(), 0)
+        aname = str(item.data(Qt.UserRole).toString())
+
+        it = QTableWidgetItem(unicode(aname))
+        it.setData(Qt.DisplayRole, QVariant(aname+"_"+attributes[aname]))
+        it.setData(Qt.UserRole, QVariant(aname))
+
+        atw.setCurrentCell(ch,0)
+
+        QTimer.singleShot(10, self.checkMessageBox)
+        atw.setItem(ch,0,it)
+        self.assertEqual(self.text, 
+                         "To change the attribute name, please remove the attribute and add the new one")
+        
+
+        avalue = attributes[str(aname)]
+                
+
+        self.assertEqual(atw.columnCount(),2)
+        self.assertEqual(atw.rowCount(),len(attributes))
+        for i in range(len(attributes)):
+            it = atw.item(i, 0) 
+            k = str(it.text())
+            self.assertTrue(k in attributes.keys())
+            it2 = atw.item(i, 1) 
+            self.assertEqual(it2.text(), attributes[k])
+
+
+
+
+        it = QTableWidgetItem(unicode(aname))
+        it.setData(Qt.DisplayRole, QVariant(aname+"_"+attributes[aname]))
+        it.setData(Qt.UserRole, QVariant(aname))
+
+        atw.setCurrentCell(ch,1)
+
+        atw.setItem(ch,1,it)
+        
+
+        avalue = attributes[str(aname)]
+                
+
+        self.assertEqual(atw.columnCount(),2)
+        self.assertEqual(atw.rowCount(),len(attributes))
+        for i in range(len(attributes)):
+            it = atw.item(i, 0)
+            k = str(it.text())
+            if k != aname:
+                self.assertTrue(k in attributes.keys())
+                it2 = atw.item(i, 1) 
+                self.assertEqual(it2.text(), attributes[k])
+            else:
+                it2 = atw.item(i, 1) 
+                self.assertEqual(it2.text(), QVariant(aname+"_"+attributes[aname]))
+
+
+
+
+
+
 
 
 
@@ -2637,370 +3409,6 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
         
         self.assertEqual(item.data(Qt.UserRole).toString(),sel)
-
-
-
-
-
-
-
-    ## constructor test
-    # \brief It tests default settings
-    def ttest_populateAttribute_setFromNode_selected_addAttribute(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-
-        dks = []
-        doc = QDomDocument()
-        nname = "field"
-        qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("units","mmyunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
-        dname = "doc"
-
-        mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
-        for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-        dval = []
-        nval =  self.__rnd.randint(0, 10) 
-        for n in range(nval):
-            dval.append(doc.createTextNode("\nVAL\n %s\n" %  n))
-            qdn.appendChild(dval[-1]) 
-
-        rn =  self.__rnd.randint(1, 9) 
-
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
-
-        mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
-        
-        for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
-            mdim.appendChild(dim)
-                
-        qdn.appendChild(mdim) 
-
-
-
-
-        form = CommonDataSourceDlg()
-        form.show()
-        form.node = qdn
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_CommonDataSourceDlg))
-
-        form.createGUI()
-        
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        
-        form.setFromNode()
-
-
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.units, 'mmyunits%s'%nn)
-        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" %  i  for i in range(nval)])).strip())
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-
-        self.assertEqual(form.dimensions, dimensions)
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(), '[]')
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
-
-
-        na =  self.__rnd.randint(0, len(attributes)-1) 
-        sel = attributes.keys()[na]
-        form.populateAttributes(sel)
-
-
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
-        for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
-            k = str(it.text())
-            self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
-            self.assertEqual(it2.text(), attributes[k])
-
-
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-        
-        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
-
-
-
-        self.aname = "addedAttribute"
-        self.avalue = "addedAttributeValue"
-
-
-        QTimer.singleShot(10, self.attributeWidgetClose)
-        QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
-        
-
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
-        for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
-            k = str(it.text())
-            self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
-            self.assertEqual(it2.text(), attributes[k])
-
-
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-        
-        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
-
-        self.aname = "addedAttribute"
-        self.avalue = "addedAttributeValue"
-
-        QTimer.singleShot(10, self.attributeWidget)
-        QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
-        
-
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes)+1)
-        for i in range(len(attributes)+1):
-            it = form.ui.attributeTableWidget.item(i, 0) 
-            k = str(it.text())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
-            if k in attributes.keys():
-                self.assertEqual(it2.text(), attributes[k])
-            else:
-                self.assertEqual(it2.text(), self.avalue)
-                
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)        
-        self.assertEqual(item.data(Qt.UserRole).toString(),self.aname)
-
-
-
-
-
-
-
-
-    ## constructor test
-    # \brief It tests default settings
-    def ttest_populateAttribute_setFromNode_selected_tableItemChanged(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-
-        dks = []
-        doc = QDomDocument()
-        nname = "field"
-        qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("units","mmyunits%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
-        dname = "doc"
-
-        dval = []
-        nval =  self.__rnd.randint(0, 10) 
-        for n in range(nval):
-            dval.append(doc.createTextNode("\nVAL\n %s\n" %  n))
-            qdn.appendChild(dval[-1]) 
-
-
-        mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
-        for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-        rn =  self.__rnd.randint(1, 9) 
-
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
-
-        mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
-        
-        for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
-            mdim.appendChild(dim)
-                
-        qdn.appendChild(mdim) 
-
-
-
-
-        form = CommonDataSourceDlg()
-        form.show()
-        form.node = qdn
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_CommonDataSourceDlg))
-
-        form.createGUI()
-        
-        atw = form.ui.attributeTableWidget        
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        
-        form.setFromNode()
-
-
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" %  i  for i in range(nval)])).strip())
-        self.assertEqual(form.units, 'mmyunits%s'%nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-
-        self.assertEqual(form.dimensions, dimensions)
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(), '[]')
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
-
-
-
-        na =  self.__rnd.randint(0, len(attributes)-1) 
-        sel = attributes.keys()[na]
-        form.populateAttributes(sel)
-
-
-        self.assertEqual(atw.columnCount(),2)
-        self.assertEqual(atw.rowCount(),len(attributes))
-        for i in range(len(attributes)):
-            it = atw.item(i, 0) 
-            k = str(it.text())
-            self.assertTrue(k in attributes.keys())
-            it2 = atw.item(i, 1) 
-            self.assertEqual(it2.text(), attributes[k])
-
-
-        item = atw.item(atw.currentRow(), 0)
-        self.assertEqual(item.data(Qt.UserRole).toString(), sel)
-
-        ch = self.__rnd.randint(0, len(attributes)-1)
-        atw.setCurrentCell(ch,0)
-        item = atw.item(atw.currentRow(), 0)
-        aname = str(item.data(Qt.UserRole).toString())
-
-        it = QTableWidgetItem(unicode(aname))
-        it.setData(Qt.DisplayRole, QVariant(aname+"_"+attributes[aname]))
-        it.setData(Qt.UserRole, QVariant(aname))
-
-        atw.setCurrentCell(ch,0)
-
-        QTimer.singleShot(10, self.checkMessageBox)
-        atw.setItem(ch,0,it)
-        self.assertEqual(self.text, 
-                         "To change the attribute name, please remove the attribute and add the new one")
-        
-
-        avalue = attributes[str(aname)]
-                
-
-        self.assertEqual(atw.columnCount(),2)
-        self.assertEqual(atw.rowCount(),len(attributes))
-        for i in range(len(attributes)):
-            it = atw.item(i, 0) 
-            k = str(it.text())
-            self.assertTrue(k in attributes.keys())
-            it2 = atw.item(i, 1) 
-            self.assertEqual(it2.text(), attributes[k])
-
-
-
-
-        it = QTableWidgetItem(unicode(aname))
-        it.setData(Qt.DisplayRole, QVariant(aname+"_"+attributes[aname]))
-        it.setData(Qt.UserRole, QVariant(aname))
-
-        atw.setCurrentCell(ch,1)
-
-        atw.setItem(ch,1,it)
-        
-
-        avalue = attributes[str(aname)]
-                
-
-        self.assertEqual(atw.columnCount(),2)
-        self.assertEqual(atw.rowCount(),len(attributes))
-        for i in range(len(attributes)):
-            it = atw.item(i, 0)
-            k = str(it.text())
-            if k != aname:
-                self.assertTrue(k in attributes.keys())
-                it2 = atw.item(i, 1) 
-                self.assertEqual(it2.text(), attributes[k])
-            else:
-                it2 = atw.item(i, 1) 
-                self.assertEqual(it2.text(), QVariant(aname+"_"+attributes[aname]))
-
 
 
 

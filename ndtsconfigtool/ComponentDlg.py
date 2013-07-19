@@ -70,6 +70,8 @@ class ComponentDlg(QDialog):
         if event.key() == Qt.Key_Escape:
             print "NO CLOSE"
 #            self.close()
+        else:     
+            super(ComponentDlg, self).keyPressEvent(event)
             
 
     ## provides row number of the given node

@@ -289,7 +289,6 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.assertTrue(not form.ui.savePushButton.focused)
         form.setSaveFocus()
         self.assertTrue(form.ui.savePushButton.focused)
-#        self.assertTrue(form.ui.savePushButton.hasFocus())
         
 
     def enableButtons(self):   
@@ -570,40 +569,48 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         
 
         self.enableButtons()
-        self.form._cRecNameLineEdit("")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form._cRecNameLineEdit()
         self.enableButtons()
 
 
         
-        self.form._cRecNameLineEdit("CLIENT")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form._cRecNameLineEdit()
         self.disableButtons()
         
         self.form.ui.cRecNameLineEdit.setText("name")
-        self.form._cRecNameLineEdit("CLIENT")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form._cRecNameLineEdit()
         self.enableButtons()
 
 
         self.form.ui.cRecNameLineEdit.setText("")
-        self.form._cRecNameLineEdit("CLIENT")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form._cRecNameLineEdit()
         self.disableButtons()
 
 
 
         self.form.ui.dQueryLineEdit.setText("name")
-        self.form._cRecNameLineEdit("DB")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.form._cRecNameLineEdit()
         self.enableButtons()
 
 
         self.form.ui.tDevNameLineEdit.setText("name")
-        self.form._cRecNameLineEdit("TANGO")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form._cRecNameLineEdit()
         self.disableButtons()
 
         self.form.ui.tMemberNameLineEdit.setText("name")
-        self.form._cRecNameLineEdit("TANGO")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form._cRecNameLineEdit()
         self.enableButtons()
 
         self.form.ui.tDevNameLineEdit.setText("")
-        self.form._cRecNameLineEdit("TANGO")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form._cRecNameLineEdit()
         self.disableButtons()
         
         

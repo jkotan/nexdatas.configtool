@@ -110,13 +110,13 @@ class CommonDataSourceDlg(NodeDlg):
 
 
     ## calls updateUi when the name text is changing
-    def _cRecNameLineEdit(self,text):
- #       self.updateUi(unicode(text))
-        self.updateUi(text)
+    def _cRecNameLineEdit(self):
+        combo = unicode(self.ui.typeComboBox.currentText())
+        self.updateUi(combo)
 
 
     ## calls updateUi when the name text is changing
-    def _dQueryLineEdit(self ):
+    def _dQueryLineEdit(self):
         combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 

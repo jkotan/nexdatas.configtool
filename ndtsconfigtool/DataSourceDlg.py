@@ -113,45 +113,45 @@ class CommonDataSourceDlg(NodeDlg):
 
         self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
 
-        self.connect(self.ui.cRecNameLineEdit, SIGNAL("textChanged(QString)"), self._cRecNameLineEdit)
-        self.connect(self.ui.tDevNameLineEdit, SIGNAL("textChanged(QString)"), self._tDevNameLineEdit)
-        self.connect(self.ui.tMemberNameLineEdit, SIGNAL("textChanged(QString)"), self._tMemberNameLineEdit)
-        self.connect(self.ui.dQueryLineEdit, SIGNAL("textChanged(QString)"), self._dQueryLineEdit)
+        self.connect(self.ui.cRecNameLineEdit, SIGNAL("textChanged(QString)"), self.__cRecNameLineEdit)
+        self.connect(self.ui.tDevNameLineEdit, SIGNAL("textChanged(QString)"), self.__tDevNameLineEdit)
+        self.connect(self.ui.tMemberNameLineEdit, SIGNAL("textChanged(QString)"), self.__tMemberNameLineEdit)
+        self.connect(self.ui.dQueryLineEdit, SIGNAL("textChanged(QString)"), self.__dQueryLineEdit)
 
 
         
         self.connect(self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"), 
-                     self._dParamComboBox)
+                     self.__dParamComboBox)
 
-        self.connect(self.ui.dAddPushButton, SIGNAL("clicked()"), self._addParameter)
-        self.connect(self.ui.dRemovePushButton, SIGNAL("clicked()"), self.removeParameter)
+        self.connect(self.ui.dAddPushButton, SIGNAL("clicked()"), self.__addParameter)
+        self.connect(self.ui.dRemovePushButton, SIGNAL("clicked()"), self.__removeParameter)
         self.connect(self.ui.dParameterTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
-                     self.tableItemChanged)
+                     self.__tableItemChanged)
 
 
 
 
     ## calls updateUi when the name text is changing
-    def _cRecNameLineEdit(self):
+    def __cRecNameLineEdit(self):
         combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 
 
     ## calls updateUi when the name text is changing
-    def _dQueryLineEdit(self):
+    def __dQueryLineEdit(self):
         combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 
 
 
     ## calls updateUi when the name text is changing
-    def _tDevNameLineEdit(self):
+    def __tDevNameLineEdit(self):
         combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 
 
     ## calls updateUi when the name text is changing
-    def _tMemberNameLineEdit(self):
+    def __tMemberNameLineEdit(self):
         combo = unicode(self.ui.typeComboBox.currentText())
         self.updateUi(combo)
 
@@ -160,7 +160,7 @@ class CommonDataSourceDlg(NodeDlg):
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
-    def _dParamComboBox(self, text):
+    def __dParamComboBox(self, text):
         param = unicode(text)
         if param == 'DB password':
             QMessageBox.warning(self, "Unprotected password", "Please note that there is no support for any password protection")
@@ -170,7 +170,7 @@ class CommonDataSourceDlg(NodeDlg):
 
     ## adds an parameter    
     #  \brief It runs the Parameter Dialog and fetches parameter name and value    
-    def _addParameter(self):
+    def __addParameter(self):
         name =  unicode(self.ui.dParamComboBox.currentText())
         if name not in self.dbParam.keys():
             self.dbParam[name] = ""
@@ -188,7 +188,7 @@ class CommonDataSourceDlg(NodeDlg):
 
     ## removes an parameter    
     #  \brief It removes the current parameter asking before about it
-    def removeParameter(self):
+    def __removeParameter(self):
         param = self._currentTableParameter()
         if param is None:
             return
@@ -205,7 +205,7 @@ class CommonDataSourceDlg(NodeDlg):
 
     ## changes the current value of the parameter        
     # \brief It changes the current value of the parameter and informs the user that parameter names arenot editable
-    def tableItemChanged(self, item):
+    def __tableItemChanged(self, item):
         param = self._currentTableParameter()
         if unicode(param)  not in self.dbParam.keys():
             return

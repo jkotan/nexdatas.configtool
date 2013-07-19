@@ -42,6 +42,7 @@ import LinkDlgTest
 import StrategyDlgTest
 import LabeledObjectTest
 import CommonDataSourceDlgTest
+import DataSourceDlgTest
 
 
 
@@ -106,6 +107,12 @@ def main():
     GroupDlgTest.app = app
     ComponentItemTest.app = app
     DomToolsTest.app = app
+    RichAttributeDlgTest.app = app
+    LinkDlgTest.app = app
+    StrategyDlgTest.app = app
+    LabeledObjectTest.app = app
+    CommonDataSourceDlgTest.app = app
+    DataSourceDlgTest.app = app
 
 
 
@@ -154,6 +161,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(CommonDataSourceDlgTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceDlgTest) )
 
 
 

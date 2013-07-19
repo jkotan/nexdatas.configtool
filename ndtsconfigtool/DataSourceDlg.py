@@ -258,16 +258,6 @@ class CommonDataSourceDlg(NodeDlg):
             self.datasource.methods.dialog = None
         event.accept()    
 
-    ## handling escape action
-    def keyPressEvent(self, event):
-        
-        if event.key() == Qt.Key_Escape:
-            pass
-            print "NO CLOSE"
-#            self.close()
-        else:     
-            super(CommonDataSourceDlg, self).keyPressEvent(event)
-
 
 
         

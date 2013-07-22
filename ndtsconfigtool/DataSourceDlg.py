@@ -927,6 +927,7 @@ class CommonDataSource(object):
 #        if self.dialog:
 #            self.dialog.dbParam = {}
         
+        
 
     ## provides the state of the datasource dialog        
     # \returns state of the datasource in tuple
@@ -946,14 +947,14 @@ class CommonDataSource(object):
                  self.dbDataFormat,
                  self.dbQuery,
                  dbParameters,
-                 self.dataSourceName,
-                 self.ids
+                 self.dataSourceName
                  )
         return state
 
 
 
     ## sets the state of the datasource dialog        
+    # \brief note that ids, applied and tree are not in the state
     # \param state state datasource written in tuple 
     def setState(self, state):
 
@@ -970,8 +971,7 @@ class CommonDataSource(object):
          self.dbDataFormat,
          self.dbQuery,
          dbParameters,
-         self.dataSourceName,
-         self.ids
+         self.dataSourceName
          ) = state
         self.dbParameters = copy.copy(dbParameters)
 

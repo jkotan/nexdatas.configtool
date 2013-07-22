@@ -28,8 +28,8 @@ import struct
 import binascii
 import time
 
-
-from PyQt4.QtGui import (QApplication)
+from PyQt4.QtCore import (QModelIndex)
+from PyQt4.QtGui import (QApplication, QMessageBox)
 
 from ndtsconfigtool.DataSourceDlg import CommonDataSource, DataSource, CommonDataSourceDlg, DataSourceMethods
 from ndtsconfigtool.NodeDlg import NodeDlg
@@ -39,6 +39,43 @@ app = None
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+
+class TestMethods(object):
+    def __init__(self):
+        self.stack = []
+
+    def createGUI(self):
+        self.stack.append("createGUI")
+
+    def updateForm(self):
+        self.stack.append("updateForm")
+
+
+    def updateNode(self, index):
+        self.stack.append("updateNode")
+        self.stack.append(index)
+
+
+    def setFromNode(self, node):
+        self.stack.append("setFromNode")
+        self.stack.append(node)
+
+    def apply(self):
+        self.stack.append("apply")
+
+    def treeMode(self, enable):
+        self.stack.append("treeMode")
+        self.stack.append(enable)
+
+
+    def connectExternalActions(self, externalApply, externalSave, externalClose, externalStore):
+        self.stack.append("connectExternalActions")
+        self.stack.append(externalApply)
+        self.stack.append(externalSave) 
+        self.stack.append(externalClose) 
+        self.stack.append(externalStore)
+
 
 
 ## test fixture
@@ -106,6 +143,60 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.name, None)
         self.assertEqual(cds.document, None)
         self.assertEqual(cds.savedXML, None)
+        self.assertEqual(cds.parent, None)
+
+        self.assertEqual(cds.dataSourceName, u'')
+        self.assertEqual(cds.clientRecordName, u'')
+        self.assertEqual(cds.tangoDeviceName, u'')
+        self.assertEqual(cds.tangoMemberName, u'')
+        self.assertEqual(cds.tangoMemberType, u'')
+        self.assertEqual(cds.tangoHost, u'')
+        self.assertEqual(cds.tangoPort, u'')
+        self.assertEqual(cds.tangoEncoding, u'')
+
+        self.assertEqual(cds.dbType, 'MYSQL')
+        self.assertEqual(cds.dbDataFormat, 'SCALAR')
+        self.assertEqual(cds.dbQuery, "")
+        self.assertEqual(cds.dbParameters, {})
+
+        self.assertEqual(cds.externalSave, None)
+        self.assertEqual(cds.externalStore, None)
+        self.assertEqual(cds.externalClose, None)
+        self.assertEqual(cds.externalApply, None)
+
+        self.assertEqual(cds.applied, False)
+
+        self.assertEqual(cds.ids, None)
+
+        
+        self.assertEqual(cds.tree, False)
+        
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_constructor_parent(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        parent = QMessageBox()
+
+        cds = DataSource(parent)
+        self.assertEqual(cds.dataSourceType, 'CLIENT')
+        self.assertEqual(cds.doc, '')
+
+        self.assertTrue(isinstance(cds, DataSource))
+        self.assertTrue(isinstance(cds.dialog, NodeDlg))
+        self.assertTrue(isinstance(cds.dialog, CommonDataSourceDlg))
+        self.assertTrue(isinstance(cds.methods, DataSourceMethods))
+
+
+        self.assertEqual(cds.directory, '')
+        self.assertEqual(cds.name, None)
+        self.assertEqual(cds.document, None)
+        self.assertEqual(cds.savedXML, None)
+        self.assertTrue(cds.parent is parent)
+
 
         self.assertEqual(cds.dataSourceName, u'')
         self.assertEqual(cds.clientRecordName, u'')
@@ -244,8 +335,12 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.applied, False)
         self.assertEqual(cds.ids, None)
         self.assertEqual(cds.tree, False)
-        
+
+        cds.dialog.dbParam = dict(dbParameters)
+
         cds.clear()
+
+        self.assertEqual(cds.dialog.dbParam, {})
 
         self.assertEqual(cds.applied, False)
         self.assertEqual(cds.ids, None)
@@ -318,7 +413,29 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.ids, nn)
         self.assertEqual(cds.tree, True)
         
-        
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_createDialog(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        form = DataSource(parent)
+
+        form.methods = TestMethods()
+
+        form.createDialog()
+        self.assertEqual(len(form.methods.stack), 4)
+        self.assertEqual(form.methods.stack[-1], "updateForm")
+        self.assertTrue(isinstance(form.methods.stack[-2],QModelIndex))
+        self.assertEqual(form.methods.stack[-3], "updateNode")
+        self.assertEqual(form.methods.stack[-4], "createGUI")
+
+
+   
 
 if __name__ == '__main__':
     if not app:

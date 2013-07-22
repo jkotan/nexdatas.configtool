@@ -2557,6 +2557,7 @@ class DataSourceEdit(Command):
                 if not self._ds.instance.dialog:
                     self._ds.instance.createDialog()
                     self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
+                print self._ds.instance.dialog    
                 self._dsEdit = self._ds.instance 
                 
             if hasattr(self._dsEdit,"connectExternalActions"):     

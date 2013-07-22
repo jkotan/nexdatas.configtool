@@ -396,7 +396,6 @@ class DataSourceMethods(object):
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
-
         if self.dialog and self.dialog.ui and not hasattr(self.dialog.ui,"resetPushButton"):
             self.dialog.ui.setupUi(self.dialog)
 
@@ -996,7 +995,7 @@ class DataSource(CommonDataSource):
         self.dialog = CommonDataSourceDlg(self, parent)
 
         ## datasource methods
-        self._methods = DataSourceMethods(self.dialog, self)
+        self.__methods = DataSourceMethods(self.dialog, self)
 
         ## datasource directory
         self.directory = ""
@@ -1015,7 +1014,7 @@ class DataSource(CommonDataSource):
     # \brief It creates dialog, its GUI , updates Nodes and Form
     def createDialog(self):
         self.dialog = CommonDataSourceDlg(self, self.parent)
-        self._methods.setDialog(self.dialog)
+        self.__methods.setDialog(self.dialog)
         self.createGUI()
         self.updateNode()
         self.updateForm()
@@ -1273,57 +1272,57 @@ class DataSource(CommonDataSource):
     ## clears the dialog
     # \brief clears the dialog
     def clearDialog(self):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.setDialog(None)
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.setDialog(None)
 
     ## updates the form
     # \brief abstract class
     def updateForm(self):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.updateForm()
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.updateForm()
 
 
     ## updates the node
     # \brief abstract class
     def updateNode(self, index=QModelIndex()):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.updateNode(index)
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.updateNode(index)
 
         
 
     ## creates GUI
     # \brief abstract class
     def createGUI(self):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.createGUI()
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.createGUI()
 
         
     ## sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.setFromNode(node)
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.setFromNode(node)
 
     ## creates datasource node
     # \param external True if it should be create on a local DOM root, i.e. in component tree
     # \returns created DOM node   
     def createNodes(self, external = False):        
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.createNodes(external)
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.createNodes(external)
         
 
     ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.apply()
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.apply()
 
 
     ## sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode 
     def treeMode(self, enable = True):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.treeMode(enable)
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.treeMode(enable)
 
     ## connects the save action and stores the apply action
     # \param externalApply apply action
@@ -1332,15 +1331,15 @@ class DataSource(CommonDataSource):
     # \param externalStore store action
     def connectExternalActions(self, externalApply=None, externalSave=None, 
                                externalClose=None,externalStore=None):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.connectExternalActions(
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.connectExternalActions(
                 externalApply, externalSave, externalClose, externalStore)
 
     ## reconnects save actions
     # \brief It reconnects the save action 
     def reconnectSaveAction(self):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.reconnectSaveAction()
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.reconnectSaveAction()
 
         
 
@@ -1348,22 +1347,22 @@ class DataSource(CommonDataSource):
     ## copies the datasource to the clipboard
     # \brief It copies the current datasource to the clipboard
     def copyToClipboard(self):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.copyToClipboard()
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.copyToClipboard()
         
 
     ## copies the datasource from the clipboard  to the current datasource dialog
     # \return status True on success
     def copyFromClipboard(self):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.copyFromClipboard()
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.copyFromClipboard()
 
 
     ## creates the new empty header
     # \brief It clean the DOM tree and put into it xml and definition nodes
     def createHeader(self):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.createHeader()
+        if hasattr(self,"_DataSource__methods")  and self.__methods:
+            return self.__methods.createHeader()
 
 ## dialog defining separate datasource
 class DataSourceDlg(CommonDataSourceDlg):
@@ -1376,7 +1375,7 @@ class DataSourceDlg(CommonDataSourceDlg):
         ## datasource data
         self.datasource = CommonDataSource()
         ## datasource methods
-        self._methods = DataSourceMethods(self, self.datasource)
+        self.__methods = DataSourceMethods(self, self.datasource)
         
 
 
@@ -1384,50 +1383,50 @@ class DataSourceDlg(CommonDataSourceDlg):
     ## updates the form
     # \brief updates the form
     def updateForm(self):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.updateForm()
+        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+            return self.__methods.updateForm()
 
 
     ## clears the dialog
     # \brief clears the dialog
     def clearDialog(self):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.setDialog(None)
+        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+            return self.__methods.setDialog(None)
 
 
     ## updates the node
     # \brief updates the node 
     def updateNode(self, index=QModelIndex()):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.updateNode(index)
+        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+            return self.__methods.updateNode(index)
         
 
     ## creates GUI
     # \brief creates GUI
     def createGUI(self):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.createGUI()
+        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+            return self.__methods.createGUI()
 
         
     ## sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.setFromNode(node)
+        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+            return self.__methods.setFromNode(node)
         
 
     ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.apply()
+        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+            return self.__methods.apply()
 
 
     ## sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode 
     def treeMode(self, enable = True):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.treeMode(enable)
+        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+            return self.__methods.treeMode(enable)
 
     ## connects the save action and stores the apply action
     # \param externalApply apply action
@@ -1435,8 +1434,8 @@ class DataSourceDlg(CommonDataSourceDlg):
     # \param externalClose close action 
     # \param externalStore store action 
     def connectExternalActions(self, externalApply=None, externalSave=None, externalClose=None, externalStore=None):
-        if hasattr(self,"_methods")  and self._methods:
-            return self._methods.connectExternalActions(externalApply, externalSave, externalClose, externalStore)
+        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+            return self.__methods.connectExternalActions(externalApply, externalSave, externalClose, externalStore)
 
 
 if __name__ == "__main__":

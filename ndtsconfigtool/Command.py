@@ -1842,6 +1842,10 @@ class DataSourceApply(Command):
         if self._ds is not None and hasattr(self._ds,'instance') and  self._ds.instance is not None:
         
             self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._oldstate)
+            print "print", self.receiver.sourceList.datasources[self._ds.id].instance.get()
+            self.receiver.sourceList.datasources[self._ds.id].instance.apply()
+            print "state", self._oldstate
+            print "print2", self.receiver.sourceList.datasources[self._ds.id].instance.get()
 
 
             subwindow = self.receiver.subWindow(
@@ -1850,19 +1854,22 @@ class DataSourceApply(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
                 self._ds.instance.reconnectSaveAction()
+                
             else:    
                 self._ds.instance.createDialog()
 
                 self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
-                if self._ds.instance.isDirty():
-                    self._ds.instance.dialog.setWindowTitle("%s [Component]*" % self._ds.name)
-                else:
-                    self._ds.instance.dialog.setWindowTitle("%s [Component]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
                 self._subwindow.resize(440,480)
-                self._ds.instance.dialog.show()
+            if self._ds.instance.isDirty():
+                print "DIRTY"
+                self._ds.instance.dialog.setWindowTitle("%s [Component]*" % self._ds.name)
+            else:
+                print "NOT DIRTY"
+                self._ds.instance.dialog.setWindowTitle("%s [Component]" % self._ds.name)
+            self._ds.instance.dialog.show()
     
 
             if hasattr(self._ds ,"id"):
@@ -2557,7 +2564,6 @@ class DataSourceEdit(Command):
                 if not self._ds.instance.dialog:
                     self._ds.instance.createDialog()
                     self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
-                print self._ds.instance.dialog    
                 self._dsEdit = self._ds.instance 
                 
             if hasattr(self._dsEdit,"connectExternalActions"):     

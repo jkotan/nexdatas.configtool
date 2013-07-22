@@ -946,10 +946,9 @@ class CommonDataSource(object):
                  self.dbDataFormat,
                  self.dbQuery,
                  dbParameters,
-#                 self.name
-                 self.dataSourceName
+                 self.dataSourceName,
+                 self.ids
                  )
-#        print  "GET", unicode(state)
         return state
 
 
@@ -971,12 +970,9 @@ class CommonDataSource(object):
          self.dbDataFormat,
          self.dbQuery,
          dbParameters,
-#         name
-         self.dataSourceName
+         self.dataSourceName,
+         self.ids
          ) = state
-#        if self.tree:
-#            self.name = name
-#        print "SET",  unicode(state)
         self.dbParameters = copy.copy(dbParameters)
 
 

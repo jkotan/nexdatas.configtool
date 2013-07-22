@@ -251,11 +251,11 @@ class CommonDataSourceDlg(NodeDlg):
     ## closes the window and cleans the dialog label
     # \param event closing event
     def closeEvent(self, event):
-        if hasattr(self.datasource.dialog,"methods"):
-            self.datasource.dialog.methods.dialog = None
+        if hasattr(self.datasource.dialog,"clearDialog"):
+            self.datasource.dialog.clearDialog()
         self.datasource.dialog = None
         if hasattr(self.datasource,"methods"):
-            self.datasource.methods.dialog = None
+            self.datasource.clearDialog()
         event.accept()    
 
 
@@ -284,8 +284,12 @@ class DataSourceMethods(object):
                       "mycnf":"Mysql cnf",
                       "mode":"Oracle mode"
                      } 
+        self.__idbmap = dict(zip(self.dbmap.values(), self.dbmap.keys()))
 
-
+    ## clears the dialog
+    # \brief It sets dialog to None
+    def clearDialog(self):
+        self.dialog = None
 
     ## rejects the changes
     # \brief It asks for the cancellation  and reject the changes
@@ -568,7 +572,6 @@ class DataSourceMethods(object):
             self.datasource.tangoEncoding = unicode(self.dialog.ui.tEncodingLineEdit.text())
                 
         elif sourceType == 'DB':
-            query = unicode(self.dialog.ui.dQueryLineEdit.text())
 
             if not query:
                 QMessageBox.warning(self, "Empty query", 
@@ -664,7 +667,7 @@ class DataSourceMethods(object):
                     newText = root.createTextNode(QString(self.datasource.dbParameters[par]))
                     db.appendChild(newText)
                 else:
-                    db.setAttribute(QString(par), QString(self.datasource.dbParameters[par]))
+                    db.setAttribute(QString(self.__idbmap[par]), QString(self.datasource.dbParameters[par]))
             elem.appendChild(db)            
 
             query = root.createElement(QString("query"))
@@ -1145,7 +1148,6 @@ class DataSource(CommonDataSource):
 
         newds = newdoc.importNode(ds,True)
         definition.appendChild(newds)            
-
         return newdoc.toString(0)
 
             
@@ -1189,9 +1191,10 @@ class DataSource(CommonDataSource):
                     raise IOError, unicode(fh.errorString())
                 stream = QTextStream(fh)
                 self.createNodes()
+
+                xml = self.repair(self.document.toString(0))
                 document = QDomDocument()
-                document.setContent(self.repair(self.document.toString(0)))
-                
+                document.setContent(xml)
                 stream << document.toString(2)
             #                print self.document.toString(2)
                 self.savedXML = document.toString(0)
@@ -1267,6 +1270,11 @@ class DataSource(CommonDataSource):
                 return self.dialog.show()
 
 
+    ## clears the dialog
+    # \brief clears the dialog
+    def clearDialog(self):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.clearDialog()
 
     ## updates the form
     # \brief abstract class
@@ -1374,21 +1382,28 @@ class DataSourceDlg(CommonDataSourceDlg):
 
             
     ## updates the form
-    # \brief abstract class
+    # \brief updates the form
     def updateForm(self):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.updateForm()
 
 
+    ## clears the dialog
+    # \brief clears the dialog
+    def clearDialog(self):
+        if hasattr(self,"methods")  and self.methods:
+            return self.methods.clearDialog()
+
+
     ## updates the node
-    # \brief abstract class
+    # \brief updates the node 
     def updateNode(self, index=QModelIndex()):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.updateNode(index)
         
 
     ## creates GUI
-    # \brief abstract class
+    # \brief creates GUI
     def createGUI(self):
         if hasattr(self,"methods")  and self.methods:
             return self.methods.createGUI()

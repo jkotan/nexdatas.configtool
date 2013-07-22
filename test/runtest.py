@@ -44,6 +44,7 @@ import LabeledObjectTest
 import CommonDataSourceDlgTest
 import DataSourceDlgTest
 import CommonDataSourceTest
+import DataSourceTest
 
 
 
@@ -115,6 +116,7 @@ def main():
     CommonDataSourceDlgTest.app = app
     DataSourceDlgTest.app = app
     CommonDataSourceTest.app = app
+    DataSourceTest.app = app
 
 
 
@@ -169,6 +171,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(CommonDataSourceTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceTest) )
 
 
 

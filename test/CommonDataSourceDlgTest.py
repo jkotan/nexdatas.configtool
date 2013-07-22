@@ -1088,12 +1088,12 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         
         ev = TestEvent()
         self.assertTrue(not ev.accepted)
-        self.assertTrue(isinstance(self.form.datasource.methods, DataSourceMethods))
-        self.assertTrue(isinstance(self.form.datasource.methods.dialog, CommonDataSourceDlg))
+#        self.assertTrue(isinstance(self.form.datasource.methods, DataSourceMethods))
+#        self.assertTrue(isinstance(self.form.datasource.methods.dialog, CommonDataSourceDlg))
         self.assertTrue(isinstance(self.form.datasource.dialog, CommonDataSourceDlg))
 
         self.form.closeEvent(ev)
-        self.assertTrue(self.form.datasource.methods.dialog is None)
+#        self.assertTrue(self.form.datasource.methods.dialog is None)
         self.assertTrue(self.form.datasource.dialog is None)
 
         self.assertTrue(ev.accepted)

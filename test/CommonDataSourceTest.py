@@ -153,7 +153,8 @@ class CommonDataSourceTest(unittest.TestCase):
         dbParameters = {}
         for i in range(nn):
             dbParameters["param%s" % i] = "value%s" %i
-        
+
+            
         cds.setState((dataSourceType,
                       doc,
                       clientRecordName, 
@@ -231,12 +232,18 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.externalApply, None)
 
         self.assertEqual(cds.applied, False)
-
         self.assertEqual(cds.ids, None)
-
-        
         self.assertEqual(cds.tree, False)
         
+        cds.clear()
+
+        self.assertEqual(cds.applied, False)
+        self.assertEqual(cds.ids, None)
+        self.assertEqual(cds.tree, False)
+        
+        cds.applied = True
+        cds.ids = nn
+        cds.tree = True
 
         cds.clear()
 
@@ -264,12 +271,9 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.externalClose, None)
         self.assertEqual(cds.externalApply, None)
 
-        self.assertEqual(cds.applied, False)
-
-        self.assertEqual(cds.ids, None)
-
-        
-        self.assertEqual(cds.tree, False)
+        self.assertEqual(cds.applied, True)
+        self.assertEqual(cds.ids, nn)        
+        self.assertEqual(cds.tree, True)
 
 
         cds.setState(state)
@@ -300,12 +304,9 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.externalClose, None)
         self.assertEqual(cds.externalApply, None)
 
-        self.assertEqual(cds.applied, False)
-
-        self.assertEqual(cds.ids, None)
-
-        
-        self.assertEqual(cds.tree, False)
+        self.assertEqual(cds.applied, True)
+        self.assertEqual(cds.ids, nn)
+        self.assertEqual(cds.tree, True)
         
         
 

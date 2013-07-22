@@ -276,7 +276,7 @@ class DataSourceMethods(object):
         self.datasource = datasource
 
         ## parameter map for xml tags
-        self.dbmap = {"dbname":"DB name",
+        self.__dbmap = {"dbname":"DB name",
                       "hostname":"DB host",
                       "port":"DB port",
                       "user":"DB user",
@@ -284,7 +284,7 @@ class DataSourceMethods(object):
                       "mycnf":"Mysql cnf",
                       "mode":"Oracle mode"
                      } 
-        self.__idbmap = dict(zip(self.dbmap.values(), self.dbmap.keys()))
+        self.__idbmap = dict(zip(self.__dbmap.values(), self.__dbmap.keys()))
 
     ## clears the dialog
     # \brief It sets dialog to None
@@ -493,9 +493,9 @@ class DataSourceMethods(object):
                     name = unicode(attributeMap.item(i).nodeName())
                     if name == 'dbtype':
                         self.datasource.dbType = unicode(attributeMap.item(i).nodeValue())
-                    elif name in self.dbmap:
-                        self.datasource.dbParameters[self.dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
-                        self.dialog.dbParam[self.dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
+                    elif name in self.__dbmap:
+                        self.datasource.dbParameters[self.__dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
+                        self.dialog.dbParam[self.__dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
 
                     
             if not self.datasource.dbType:

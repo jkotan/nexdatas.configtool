@@ -1017,8 +1017,9 @@ class DataSource(CommonDataSource):
         self.dialog = CommonDataSourceDlg(self, self.parent)
         self.__methods.setDialog(self.dialog)
         self.createGUI()
-        self.updateNode()
+        
         self.updateForm()
+        self.updateNode()
 
 
     ## clears the datasource content

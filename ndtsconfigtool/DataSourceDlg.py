@@ -709,7 +709,7 @@ class DataSourceMethods(object):
     ## updates the Node
     # \brief It sets node from the self.__dialog variables
     def updateNode(self, index=QModelIndex()):
-#        print "tree", self.__datasource.tree
+        print "tree", self.__datasource.tree
 #        print "index", index.internalPointer()
 
         newDs = self.createNodes(self.__datasource.tree)
@@ -718,10 +718,11 @@ class DataSourceMethods(object):
         elem = oldDs.toElement()
         
 
-        if hasattr(index,"parent"):
+        if hasattr(index, "parent"):
             parent = index.parent()
         else:
             parent = QModelIndex()
+         
 
         self.__dialog.node = self.__dialog.node.parentNode()   
         if self.__datasource.tree:
@@ -1033,9 +1034,6 @@ class DataSource(CommonDataSource):
     def isDirty(self):
         string = self.get()
 
-        if self.name == 'vvv' or not self.name:
-            print "DR", string 
-            print "SDR",self.savedXML   
         return False if string == self.savedXML else True
 
 

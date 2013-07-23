@@ -634,7 +634,6 @@ class ServerDeleteDataSource(Command):
             try:
                 if hasattr(self._ds,"instance"):
                     self._ds.instance.savedXML = ""
-                    print "DEL", self._ds.instance.dataSourceName
                     name = self._ds.instance.dataSourceName 
                     if name is None:
                         name = ""
@@ -743,7 +742,6 @@ class ComponentNew(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._comp = None
-        
 
     ## executes the command
     # \brief It creates a new component
@@ -1780,7 +1778,6 @@ class DataSourceApply(Command):
             self._ds.instance.ids = self._ds.id
             self._ds.instance.directory = self.receiver.sourceList.directory
             self._ds.instance.name = self.receiver.sourceList.datasources[self._ds.id].name
-        print "S1", self._ds.instance.getState() 
         if not self._ds.instance.dialog:
             self._ds.instance.createDialog()
             self._ds.instance.dialog.setWindowTitle("%s [DataSource]*" % self._ds.name)
@@ -1792,19 +1789,17 @@ class DataSourceApply(Command):
             self._ds.instance.dialog.show()
 
     
-        print "S2", self._ds.instance.getState() 
         if self._ds is not None and self._ds.instance is not None:
             if self._newstate is None:
                 if self._oldstate is None:
-                    print "S3", self._ds.instance.getState() 
                     self._oldstate = self._ds.instance.getState() 
             else:
                 self.receiver.sourceList.datasources[self._ds.id].instance.setState(
                     self._newstate)
-                print "S4", self._ds.instance.getState() 
+                if not hasattr(self._ds.instance.dialog.ui,"docTextEdit"):
+                    self._ds.instance.createDialog()
                 self._ds.instance.updateForm()
                 
-            print "SO", self._oldstate
 
 
             subwindow = self.receiver.subWindow(
@@ -1838,21 +1833,15 @@ class DataSourceApply(Command):
             QMessageBox.warning(self.receiver, "DataSource not created", 
                                 "Please edit one of the datasources")            
             
-        print "SO2", self._oldstate
         print "EXEC dsourceApply"
 
 
     ## unexecutes the command
     # \brief It recovers the old state of the current datasource
     def unexecute(self):
-        print "SU4", self._oldstate
         if self._ds is not None and hasattr(self._ds,'instance') and  self._ds.instance is not None:
         
             self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._oldstate)
-            print "print", self.receiver.sourceList.datasources[self._ds.id].instance.get()
-            print "state", self._oldstate
-            print "print2", self.receiver.sourceList.datasources[self._ds.id].instance.get()
-
 
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.mdi.subWindowList())
@@ -1869,15 +1858,14 @@ class DataSourceApply(Command):
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
                 self._subwindow.resize(440,480)
+
+            self._ds.instance.updateNode()
             if self._ds.instance.isDirty():
-                print "DIRTY"
                 self._ds.instance.dialog.setWindowTitle("%s [Component]*" % self._ds.name)
             else:
-                print "NOT DIRTY"
                 self._ds.instance.dialog.setWindowTitle("%s [Component]" % self._ds.name)
             self._ds.instance.dialog.show()
     
-
             if hasattr(self._ds ,"id"):
                 self.receiver.sourceList.populateDataSources(self._ds.id)
             else:

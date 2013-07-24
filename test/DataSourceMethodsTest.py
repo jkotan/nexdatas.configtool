@@ -76,6 +76,25 @@ class TestView(object):
         self.stack.append("expand")
         self.stack.append(index)
 
+
+class ClassVar(object):
+    def __init__(self):
+        self.dataSourceName =  ''
+        self.dataSourceType = 'CLIENT'
+        self.doc = ''
+        self.clientRecordName =  ''
+        self.tangoDeviceName =  ''
+        self.tangoMemberName =  ''
+        self.tangoMemberType = "attribute"
+        self.tangoHost =  ''
+        self.tangoPort =  ''
+        self.tangoEncoding =  ''
+        self.dbType = "MYSQL"
+        self.dbDataFormat =  "SCALAR"
+        self.dbQuery =  ''
+        self.dbParameters =  {}        
+        self.dbCurrentParam = 'DB name'
+
 ## test fixture
 class DataSourceMethodsTest(unittest.TestCase):
 
@@ -272,31 +291,49 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertTrue(form.ui.savePushButton.focused)
 
 
+    def check_form(self, form, params={}):
 
-    ## constructor test
-    # \brief It tests default settings
-    def test_updateForm(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-
-        meth = DataSourceMethods(None, None)
-        self.myAssertRaise(Exception, meth.updateForm)
+        cv = ClassVar()
+        for key in params.keys():
+            setattr(cv, key, params[key])
 
 
-        form = CommonDataSourceDlg(None)
-        cds = None
+        self.assertTrue(isinstance(form.ui, Ui_DataSourceDlg))
+        self.assertEqual(form.ui.nameLineEdit.text(), cv.dataSourceName) 
+        self.assertEqual(form.ui.docTextEdit.toPlainText(),cv.doc)
+        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
+                         form.ui.typeComboBox.findText(cv.dataSourceType))
+        self.assertEqual(form.ui.cRecNameLineEdit.text(), cv.clientRecordName) 
+        self.assertEqual(form.ui.tDevNameLineEdit.text(), cv.tangoDeviceName) 
+        self.assertEqual(form.ui.tMemberNameLineEdit.text(), cv.tangoMemberName) 
+        self.assertEqual(form.ui.tHostLineEdit.text(), cv.tangoHost) 
+        self.assertEqual(form.ui.tPortLineEdit.text(), cv.tangoPort) 
+        self.assertEqual(form.ui.tEncodingLineEdit.text(), cv.tangoEncoding) 
+        self.assertEqual(form.ui.dTypeComboBox.currentIndex(), 
+                         form.ui.dTypeComboBox.findText(cv.dbType))
+        self.assertEqual(form.ui.dFormatComboBox.currentIndex(), 
+                         form.ui.dFormatComboBox.findText(cv.dbDataFormat))
+        self.assertEqual(form.ui.dQueryLineEdit.text(), cv.dbQuery) 
+        self.assertEqual(form.ui.dParamComboBox.currentIndex(), 
+                         form.ui.dParamComboBox.findText(cv.dbCurrentParam))
+
+        self.assertEqual(form.ui.dParameterTableWidget.columnCount(),2)
+        self.assertEqual(form.ui.dParameterTableWidget.rowCount(),len(cv.dbParameters))
+        self.assertEqual(form.ui.dParameterTableWidget.rowCount(),len(form.dbParam))
+
+        for i in range(len(cv.dbParameters)):
+            it = form.ui.dParameterTableWidget.item(i, 0) 
+            k = str(it.text())
+            self.assertTrue(k in cv.dbParameters.keys())
+            it2 = form.ui.dParameterTableWidget.item(i, 1) 
+            self.assertEqual(it2.text(), cv.dbParameters[k])
+            self.assertEqual(form.dbParam[k], cv.dbParameters[k])
+
+        
+
+
+    def check_updateForm(self, form, cds):
         meth = DataSourceMethods(form, cds)
-        self.myAssertRaise(Exception, meth.updateForm)
-
-        form = None
-        cds = CommonDataSource()
-        meth = DataSourceMethods(form, cds)
-        self.myAssertRaise(Exception, meth.updateForm)
-
-        form = DataSourceDlg()
-        cds = form.datasource
-        meth = DataSourceMethods(form, cds)
-
 
 
         self.assertEqual(cds.dataSourceType, 'CLIENT')
@@ -365,37 +402,17 @@ class DataSourceMethodsTest(unittest.TestCase):
         
         self.assertEqual(cds.tree, False)
         
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceDlg))
+        self.check_form(form)
 
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('CLIENT'))
-        self.assertTrue(form.ui.cRecNameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tDevNameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tMemberNameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tHostLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tPortLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tEncodingLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.dTypeComboBox.currentIndex(), 
-                         form.ui.dTypeComboBox.findText('MYSQL'))
-        self.assertEqual(form.ui.dFormatComboBox.currentIndex(), 
-                         form.ui.dFormatComboBox.findText('SCALAR'))
-        self.assertTrue(form.ui.dQueryLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.dParamComboBox.currentIndex(), 
-                         form.ui.dParamComboBox.findText('DB name'))
-
-        self.assertEqual(form.ui.dParameterTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.dParameterTableWidget.rowCount(),0)
 
 
 
         n1 =  self.__rnd.randint(1, 9) 
 
-        dataSourceType = self.__rnd.choice(["CLIENT","TANGO","DB"])
         doc = "My document %s" % n1
-        clientRecordName =  "My document %s" % n1
+        dataSourceType = self.__rnd.choice(["CLIENT","TANGO","DB"])
+        dataSourceName =  "mydatasource%s" % n1
+        clientRecordName =  "Myname%s" % n1
         tangoDeviceName =  "Mydevice %s" % n1
         tangoMemberName =  "Mymemeber %s" % n1
         tangoMemberType = self.__rnd.choice(["property","command","attribute"]) 
@@ -405,99 +422,164 @@ class DataSourceMethodsTest(unittest.TestCase):
         dbType = self.__rnd.choice(["MYSQL","ORACLE","PGSQL"]) 
         dbDataFormat =  self.__rnd.choice(["SCALAR","SPECTRUM","IMAGE"]) 
         dbQuery =  "select name from device limit %s" % n1
-        dbParameters =  {"DB Name":"sdfsdf%s" % n1,
-                   "DB host":"werwer%s" % n1, 
-                   "DB port":"werwer%s" % n1, 
-                   "DB user":"werwer%s" % n1, 
-                   "DB password":"werwer%s" % n1, 
-                   "Mysql cnf":"werwer%s" % n1, 
-                   "Oracle mode":"werwer%s" % n1, 
-                   "Oracle DSN":"asdasdf%s" % n1}        
-        dataSourceName =  "mydatasource%s" % n1
+        dbParameters =  {"DB name":"sdfsdf%s" % n1,
+                         "DB host":"werwer%s" % n1, 
+                         "DB port":"werwer%s" % n1, 
+                         "DB user":"werwer%s" % n1, 
+                         "DB password":"werwer%s" % n1, 
+                         "Mysql cnf":"werwer%s" % n1, 
+                         "Oracle mode":"werwer%s" % n1, 
+                         "Oracle DSN":"asdasdf%s" % n1}        
+        dbCurrentParam = self.__rnd.choice(dbParameters.keys())
         
         self.assertEqual(form.updateForm(),None)
-    
+        self.check_form(form)
+
+        cds.doc = doc
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"doc":doc})
+        form.ui.docTextEdit.setText("")
+        cds.doc = ''
+
+        cds.dataSourceType = dataSourceType
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(), None)
+        self.check_form(form, {"dataSourceType":dataSourceType})
+        index = form.ui.typeComboBox.findText('CLIENT')
+        form.ui.typeComboBox.setCurrentIndex(index)
+        cds.dataSourceType = 'CLIENT'
+
+        cds.dataSourceName = dataSourceName
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"dataSourceName":dataSourceName})
+        form.ui.nameLineEdit.setText("")
+        cds.dataSourceName = ''
 
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('CLIENT'))
-        self.assertTrue(form.ui.cRecNameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tDevNameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tMemberNameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tHostLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tPortLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tEncodingLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.dTypeComboBox.currentIndex(), 
-                         form.ui.dTypeComboBox.findText('MYSQL'))
-        self.assertEqual(form.ui.dFormatComboBox.currentIndex(), 
-                         form.ui.dFormatComboBox.findText('SCALAR'))
-        self.assertTrue(form.ui.dQueryLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.dParamComboBox.currentIndex(), 
-                         form.ui.dParamComboBox.findText('DB name'))
 
-        self.assertEqual(form.ui.dParameterTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.dParameterTableWidget.rowCount(),0)
+        cds.clientRecordName = clientRecordName
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"clientRecordName":clientRecordName})
+        form.ui.cRecNameLineEdit.setText("")
+        cds.clientRecordName = ''
 
+
+
+        cds.tangoDeviceName = tangoDeviceName
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"tangoDeviceName":tangoDeviceName})
+        form.ui.tDevNameLineEdit.setText("")
+        cds.tangoDeviceName = ''
+
+        cds.tangoMemberName = tangoMemberName
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"tangoMemberName":tangoMemberName})
+        form.ui.tMemberNameLineEdit.setText("")
+        cds.tangoMemberName = ''
+
+        cds.tangoMemberType = tangoMemberType
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"tangoMemberType":tangoMemberType})
+        index = form.ui.tMemberComboBox.findText('attribute')
+        form.ui.tMemberComboBox.setCurrentIndex(index)
+        cds.tangoMemberType = ''
+
+
+        cds.tangoHost = tangoHost
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"tangoHost":tangoHost})
+        form.ui.tHostLineEdit.setText("")
+        cds.tangoHost = ''
+
+        cds.tangoPort = tangoPort
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"tangoPort":tangoPort})
+        form.ui.tPortLineEdit.setText("")
+        cds.tangoPort = ''
+
+        cds.tangoEncoding = tangoEncoding
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"tangoEncoding":tangoEncoding})
+        form.ui.tEncodingLineEdit.setText("")
+        cds.tangoEncoding = ''
+
+
+
+
+        cds.dbType = dbType
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"dbType":dbType})
+        index = form.ui.dTypeComboBox.findText('MYSQL')
+        form.ui.dTypeComboBox.setCurrentIndex(index)
+        cds.dbType = ''
+
+        cds.dbDataFormat = dbDataFormat
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"dbDataFormat":dbDataFormat})
+        index = form.ui.dFormatComboBox.findText('SCALAR')
+        form.ui.dFormatComboBox.setCurrentIndex(index)
+        cds.dbDataFormat = ''
+
+        cds.dbQuery = dbQuery
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"dbQuery":dbQuery})
+        form.ui.dQueryLineEdit.setText("")
+        cds.dbQuery = ''
+        
+        cds.dbParameters = dict(dbParameters)
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"dbParameters":dbParameters})
+        while form.ui.dParameterTableWidget.rowCount():
+            form.ui.dParameterTableWidget.removeRow(0)
+        form.ui.dParameterTableWidget.clear()
+        cds.dbParameters = {}
+        form.dbParam ={}
 
 
         cds.doc = doc
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('CLIENT'))
-        self.assertTrue(form.ui.cRecNameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tDevNameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tMemberNameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tHostLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tPortLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tEncodingLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.dTypeComboBox.currentIndex(), 
-                         form.ui.dTypeComboBox.findText('MYSQL'))
-        self.assertEqual(form.ui.dFormatComboBox.currentIndex(), 
-                         form.ui.dFormatComboBox.findText('SCALAR'))
-        self.assertTrue(form.ui.dQueryLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.dParamComboBox.currentIndex(), 
-                         form.ui.dParamComboBox.findText('DB name'))
-
-        self.assertEqual(form.ui.dParameterTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.dParameterTableWidget.rowCount(),0)
-
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.docTextEdit.toPlainText(),doc)
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('CLIENT'))
-        self.assertTrue(form.ui.cRecNameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tDevNameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tMemberNameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tHostLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tPortLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.tEncodingLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.dTypeComboBox.currentIndex(), 
-                         form.ui.dTypeComboBox.findText('MYSQL'))
-        self.assertEqual(form.ui.dFormatComboBox.currentIndex(), 
-                         form.ui.dFormatComboBox.findText('SCALAR'))
-        self.assertTrue(form.ui.dQueryLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.dParamComboBox.currentIndex(), 
-                         form.ui.dParamComboBox.findText('DB name'))
-
-        self.assertEqual(form.ui.dParameterTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.dParameterTableWidget.rowCount(),0)
-
-
-        form.ui.docTextEdit.setText("")
-
-
-
-
-
-
-
-
+        cds.dataSourceType = dataSourceType
+        cds.dataSourceName = dataSourceName
+        cds.clientRecordName = clientRecordName
+        cds.tangoDeviceName = tangoDeviceName
+        cds.tangoMemberName = tangoMemberName
+        cds.tangoMemberType = tangoMemberType
+        cds.tangoHost = tangoHost
+        cds.tangoPort = tangoPort
+        cds.tangoEncoding = tangoEncoding
+        cds.dbType = dbType
+        cds.dbDataFormat = dbDataFormat
+        cds.dbQuery = dbQuery
+        cds.dbParameters = dict(dbParameters)
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {
+                "doc":doc,
+                "dataSourceType":dataSourceType,
+                "dataSourceName":dataSourceName,
+                "clientRecordName":clientRecordName,
+                "tangoDeviceName":tangoDeviceName,
+                "tangoMemberName":tangoMemberName,
+                "tangoMemberType":tangoMemberType,
+                "tangoHost":tangoHost,
+                "tangoPort":tangoPort,
+                "tangoEncoding":tangoEncoding,
+                "dbType":dbType,
+                "dbDataFormat":dbDataFormat,
+                "dbQuery":dbQuery,
+                "dbParameters":dbParameters})
 
 
 
@@ -539,8 +621,58 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 #        self.assertEqual(form.result(),0)
 
+    
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_updateForm_errors(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        meth = DataSourceMethods(None, None)
+        self.myAssertRaise(Exception, meth.updateForm)
+
+
+        form = CommonDataSourceDlg(None)
+        cds = None
+        meth = DataSourceMethods(form, cds)
+        self.myAssertRaise(Exception, meth.updateForm)
+
+        form = None
+        cds = CommonDataSource()
+        meth = DataSourceMethods(form, cds)
+        self.myAssertRaise(Exception, meth.updateForm)
+
+        form = DataSourceDlg()
+        cds = form.datasource
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_updateForm_DSD(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        form = DataSourceDlg()
+        cds = form.datasource
+        self.check_updateForm(form, cds)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_updateForm_DS(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        cds = DataSource()
+        form = cds.dialog
+        self.check_updateForm(form, cds)
+    
 
 
 
@@ -594,7 +726,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         dbType = self.__rnd.choice("MYSQL","ORACLE","PGSQL") 
         dbDataFormat =  self.__rnd.choice("SCALAR","SPECTRUM","IMAGE") 
         dbQuery =  "select name from device limit %s" % n1
-        dbParameters =  {"DB Name":"sdfsdf%s" % n1,
+        dbParameters =  {"DB name":"sdfsdf%s" % n1,
                    "DB host":"werwer%s" % n1, 
                    "DB port":"werwer%s" % n1, 
                    "DB user":"werwer%s" % n1, 

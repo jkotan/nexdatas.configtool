@@ -429,7 +429,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
 
 
-        myParam = {"DB Name":"sdfsdf",
+        myParam = {"DB name":"sdfsdf",
                    "DB host":"werwer", 
                    "DB port":"werwer", 
                    "DB user":"werwer", 
@@ -553,7 +553,7 @@ class DataSourceDlgTest(unittest.TestCase):
         self.enableButtons()
 
 
-        myParam = {"DB Name":"sdfsdf",
+        myParam = {"DB name":"sdfsdf",
                    "DB host":"werwer", 
                    "DB port":"werwer", 
                    "DB user":"werwer", 

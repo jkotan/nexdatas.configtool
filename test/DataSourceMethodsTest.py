@@ -583,43 +583,11 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-#        form.name = name
-#        form.doc = doc
-#        form.nexusType = nType
-#        form.units = units
-#3        form.value = value
-#        form.attributes = attributes
 
-#        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-#        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-#        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-#        self.assertEqual(form.updateForm(),None)
-    
-#        self.assertEqual(form.ui.unitsLineEdit.text(), units)
-#        self.assertEqual(form.ui.valueLineEdit.text(), value)
-#        self.assertEqual(form.ui.typeLineEdit.text(), nType)
-#        self.assertEqual(form.ui.nameLineEdit.text(),name)
-#        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
 
-
-#        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-#        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
-#        for i in range(len(attributes)):
-#            it = form.ui.attributeTableWidget.item(i, 0) 
-#            k = str(it.text())
-#            self.assertTrue(k in attributes.keys())
-#            it2 = form.ui.attributeTableWidget.item(i, 1) 
-#            self.assertEqual(it2.text(), attributes[k])
-
-#        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
-
-
-#        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
-
-
-#        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(),0)
 
     
 

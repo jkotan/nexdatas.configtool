@@ -430,6 +430,13 @@ class DataSourceMethodsTest(unittest.TestCase):
                          "Mysql cnf":"werwer%s" % n1, 
                          "Oracle mode":"werwer%s" % n1, 
                          "Oracle DSN":"asdasdf%s" % n1}        
+
+        dbParameters2 =  {"DB name":"sdfsdf%s" % n1,
+                         "DB user":"werwer%s" % n1, 
+                         "DB password":"werwer%s" % n1, 
+                         "Oracle DSN":"asdasdf%s" % n1}        
+
+
         dbCurrentParam = self.__rnd.choice(dbParameters.keys())
         
         self.assertEqual(form.updateForm(),None)
@@ -542,6 +549,17 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.check_form(form)
         self.assertEqual(meth.updateForm(),None)
         self.check_form(form, {"dbParameters":dbParameters})
+        while form.ui.dParameterTableWidget.rowCount():
+            form.ui.dParameterTableWidget.removeRow(0)
+        form.ui.dParameterTableWidget.clear()
+        cds.dbParameters = {}
+        form.dbParam ={}
+
+
+        cds.dbParameters = dict(dbParameters2)
+        self.check_form(form)
+        self.assertEqual(meth.updateForm(),None)
+        self.check_form(form, {"dbParameters":dbParameters2})
         while form.ui.dParameterTableWidget.rowCount():
             form.ui.dParameterTableWidget.removeRow(0)
         form.ui.dParameterTableWidget.clear()

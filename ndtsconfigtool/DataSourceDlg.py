@@ -285,7 +285,7 @@ class DataSourceMethods(object):
                       "mode":"Oracle mode"
                      } 
         self.__idbmap = dict(zip(self.__dbmap.values(), self.__dbmap.keys()))
-
+        
     ## clears the dialog
     # \brief It sets dialog to None
     def setDialog(self, dialog = None):
@@ -317,7 +317,6 @@ class DataSourceMethods(object):
             raise ParameterError, "updateForm parameters not defined"
         if self.__datasource.doc is not None:
             self.__dialog.ui.docTextEdit.setText(self.__datasource.doc)
-
         if self.__datasource.dataSourceType is not None:
             index = self.__dialog.ui.typeComboBox.findText(unicode(self.__datasource.dataSourceType))
             if  index > -1 :
@@ -361,7 +360,7 @@ class DataSourceMethods(object):
             if  index > -1 :
                 self.__dialog.ui.dFormatComboBox.setCurrentIndex(index)
             else:
-                self.__datasource.dbDataFormat = 'INIT'    
+                self.__datasource.dbDataFormat = 'SCALAR'    
         
         if self.__datasource.dbQuery is not None:        
             self.__dialog.ui.dQueryLineEdit.setText(self.__datasource.dbQuery)
@@ -398,7 +397,6 @@ class DataSourceMethods(object):
     def createGUI(self):
         if self.__dialog and self.__dialog.ui and not hasattr(self.__dialog.ui,"resetPushButton"):
             self.__dialog.ui.setupUi(self.__dialog)
-
 
         self.updateForm()
         self.__dialog.resize(460, 440)
@@ -709,7 +707,7 @@ class DataSourceMethods(object):
     ## updates the Node
     # \brief It sets node from the self.__dialog variables
     def updateNode(self, index=QModelIndex()):
-        print "tree", self.__datasource.tree
+#        print "tree", self.__datasource.tree
 #        print "index", index.internalPointer()
 
         newDs = self.createNodes(self.__datasource.tree)

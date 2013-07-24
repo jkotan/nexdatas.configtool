@@ -332,7 +332,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         
 
 
-    def check_updateForm(self, form, cds):
+    def check_updateForm(self, form, cds, func = "updateForm"):
         meth = DataSourceMethods(form, cds)
 
 
@@ -439,19 +439,19 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         dbCurrentParam = self.__rnd.choice(dbParameters.keys())
         
-        self.assertEqual(form.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form)
 
         cds.doc = doc
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"doc":doc})
         form.ui.docTextEdit.setText("")
         cds.doc = ''
 
         cds.dataSourceType = dataSourceType
         self.check_form(form)
-        self.assertEqual(meth.updateForm(), None)
+        self.assertEqual(getattr(meth, func)(), None)
         self.check_form(form, {"dataSourceType":dataSourceType})
         index = form.ui.typeComboBox.findText('CLIENT')
         form.ui.typeComboBox.setCurrentIndex(index)
@@ -459,7 +459,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dataSourceName = dataSourceName
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"dataSourceName":dataSourceName})
         form.ui.nameLineEdit.setText("")
         cds.dataSourceName = ''
@@ -468,7 +468,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.clientRecordName = clientRecordName
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"clientRecordName":clientRecordName})
         form.ui.cRecNameLineEdit.setText("")
         cds.clientRecordName = ''
@@ -477,21 +477,21 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.tangoDeviceName = tangoDeviceName
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"tangoDeviceName":tangoDeviceName})
         form.ui.tDevNameLineEdit.setText("")
         cds.tangoDeviceName = ''
 
         cds.tangoMemberName = tangoMemberName
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"tangoMemberName":tangoMemberName})
         form.ui.tMemberNameLineEdit.setText("")
         cds.tangoMemberName = ''
 
         cds.tangoMemberType = tangoMemberType
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"tangoMemberType":tangoMemberType})
         index = form.ui.tMemberComboBox.findText('attribute')
         form.ui.tMemberComboBox.setCurrentIndex(index)
@@ -500,21 +500,21 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.tangoHost = tangoHost
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"tangoHost":tangoHost})
         form.ui.tHostLineEdit.setText("")
         cds.tangoHost = ''
 
         cds.tangoPort = tangoPort
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"tangoPort":tangoPort})
         form.ui.tPortLineEdit.setText("")
         cds.tangoPort = ''
 
         cds.tangoEncoding = tangoEncoding
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"tangoEncoding":tangoEncoding})
         form.ui.tEncodingLineEdit.setText("")
         cds.tangoEncoding = ''
@@ -524,7 +524,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dbType = dbType
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"dbType":dbType})
         index = form.ui.dTypeComboBox.findText('MYSQL')
         form.ui.dTypeComboBox.setCurrentIndex(index)
@@ -532,7 +532,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dbDataFormat = dbDataFormat
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"dbDataFormat":dbDataFormat})
         index = form.ui.dFormatComboBox.findText('SCALAR')
         form.ui.dFormatComboBox.setCurrentIndex(index)
@@ -540,14 +540,14 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dbQuery = dbQuery
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"dbQuery":dbQuery})
         form.ui.dQueryLineEdit.setText("")
         cds.dbQuery = ''
         
         cds.dbParameters = dict(dbParameters)
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"dbParameters":dbParameters})
         while form.ui.dParameterTableWidget.rowCount():
             form.ui.dParameterTableWidget.removeRow(0)
@@ -558,7 +558,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dbParameters = dict(dbParameters2)
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {"dbParameters":dbParameters2})
         while form.ui.dParameterTableWidget.rowCount():
             form.ui.dParameterTableWidget.removeRow(0)
@@ -582,7 +582,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         cds.dbQuery = dbQuery
         cds.dbParameters = dict(dbParameters)
         self.check_form(form)
-        self.assertEqual(meth.updateForm(),None)
+        self.assertEqual(getattr(meth, func)(),None)
         self.check_form(form, {
                 "doc":doc,
                 "dataSourceType":dataSourceType,
@@ -637,7 +637,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_updateForm_DSD(self):
+    def test_updateForm(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
@@ -647,17 +647,27 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.check_updateForm(form, cds)
 
 
+        cds = DataSource()
+        form = cds.dialog
+        self.check_updateForm(form, cds)
+    
+
 
     ## constructor test
     # \brief It tests default settings
-    def test_updateForm_DS(self):
+    def test_reset(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
 
+        form = DataSourceDlg()
+        cds = form.datasource
+        self.check_updateForm(form, cds, "reset")
+
+
         cds = DataSource()
         form = cds.dialog
-        self.check_updateForm(form, cds)
+        self.check_updateForm(form, cds, "reset")
     
 
 

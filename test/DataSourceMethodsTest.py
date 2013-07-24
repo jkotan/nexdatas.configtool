@@ -123,6 +123,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         ## action status
         self.performed = False
 
+        self.meth = None
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
@@ -169,7 +170,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         mb.close()
 
 
-    def rmAttributeWidget(self):
+    def messageWidget(self):
         aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
@@ -179,7 +180,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         QTest.mouseClick(mb.button(QMessageBox.Yes), Qt.LeftButton)
 
 
-    def rmAttributeWidgetClose(self):
+    def messageWidgetClose(self):
         aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
@@ -332,9 +333,9 @@ class DataSourceMethodsTest(unittest.TestCase):
         
 
 
-    def check_updateForm(self, form, cds, func = "updateForm"):
-        meth = DataSourceMethods(form, cds)
-
+    def check_updateForm(self, meth, form, cds, func = "updateForm", inst = None): 
+        ins = inst if inst else meth
+        
 
         self.assertEqual(cds.dataSourceType, 'CLIENT')
         self.assertEqual(cds.doc, '')
@@ -439,19 +440,19 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         dbCurrentParam = self.__rnd.choice(dbParameters.keys())
         
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form)
 
         cds.doc = doc
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"doc":doc})
         form.ui.docTextEdit.setText("")
         cds.doc = ''
 
         cds.dataSourceType = dataSourceType
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(), None)
+        self.assertEqual(getattr(ins, func)(), None)
         self.check_form(form, {"dataSourceType":dataSourceType})
         index = form.ui.typeComboBox.findText('CLIENT')
         form.ui.typeComboBox.setCurrentIndex(index)
@@ -459,7 +460,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dataSourceName = dataSourceName
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"dataSourceName":dataSourceName})
         form.ui.nameLineEdit.setText("")
         cds.dataSourceName = ''
@@ -468,7 +469,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.clientRecordName = clientRecordName
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"clientRecordName":clientRecordName})
         form.ui.cRecNameLineEdit.setText("")
         cds.clientRecordName = ''
@@ -477,21 +478,21 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.tangoDeviceName = tangoDeviceName
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"tangoDeviceName":tangoDeviceName})
         form.ui.tDevNameLineEdit.setText("")
         cds.tangoDeviceName = ''
 
         cds.tangoMemberName = tangoMemberName
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"tangoMemberName":tangoMemberName})
         form.ui.tMemberNameLineEdit.setText("")
         cds.tangoMemberName = ''
 
         cds.tangoMemberType = tangoMemberType
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"tangoMemberType":tangoMemberType})
         index = form.ui.tMemberComboBox.findText('attribute')
         form.ui.tMemberComboBox.setCurrentIndex(index)
@@ -500,21 +501,21 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.tangoHost = tangoHost
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"tangoHost":tangoHost})
         form.ui.tHostLineEdit.setText("")
         cds.tangoHost = ''
 
         cds.tangoPort = tangoPort
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"tangoPort":tangoPort})
         form.ui.tPortLineEdit.setText("")
         cds.tangoPort = ''
 
         cds.tangoEncoding = tangoEncoding
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"tangoEncoding":tangoEncoding})
         form.ui.tEncodingLineEdit.setText("")
         cds.tangoEncoding = ''
@@ -524,7 +525,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dbType = dbType
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"dbType":dbType})
         index = form.ui.dTypeComboBox.findText('MYSQL')
         form.ui.dTypeComboBox.setCurrentIndex(index)
@@ -532,7 +533,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dbDataFormat = dbDataFormat
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"dbDataFormat":dbDataFormat})
         index = form.ui.dFormatComboBox.findText('SCALAR')
         form.ui.dFormatComboBox.setCurrentIndex(index)
@@ -540,14 +541,14 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dbQuery = dbQuery
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"dbQuery":dbQuery})
         form.ui.dQueryLineEdit.setText("")
         cds.dbQuery = ''
         
         cds.dbParameters = dict(dbParameters)
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"dbParameters":dbParameters})
         while form.ui.dParameterTableWidget.rowCount():
             form.ui.dParameterTableWidget.removeRow(0)
@@ -558,7 +559,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dbParameters = dict(dbParameters2)
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {"dbParameters":dbParameters2})
         while form.ui.dParameterTableWidget.rowCount():
             form.ui.dParameterTableWidget.removeRow(0)
@@ -582,7 +583,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         cds.dbQuery = dbQuery
         cds.dbParameters = dict(dbParameters)
         self.check_form(form)
-        self.assertEqual(getattr(meth, func)(),None)
+        self.assertEqual(getattr(ins, func)(),None)
         self.check_form(form, {
                 "doc":doc,
                 "dataSourceType":dataSourceType,
@@ -600,6 +601,268 @@ class DataSourceMethodsTest(unittest.TestCase):
                 "dbParameters":dbParameters})
 
 
+
+
+        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+
+
+        self.assertEqual(form.result(),0)
+
+    
+
+
+
+    def check_updateForm_no(self, meth, form, cds, func = "updateForm", inst = None): 
+        ins = inst if inst else meth
+        
+
+        self.assertEqual(cds.dataSourceType, 'CLIENT')
+        self.assertEqual(cds.doc, '')
+
+        self.assertTrue(isinstance(cds.dialog, NodeDlg))
+        self.assertEqual(cds.dataSourceName, u'')
+        self.assertEqual(cds.clientRecordName, u'')
+        self.assertEqual(cds.tangoDeviceName, u'')
+        self.assertEqual(cds.tangoMemberName, u'')
+        self.assertEqual(cds.tangoMemberType, u'')
+        self.assertEqual(cds.tangoHost, u'')
+        self.assertEqual(cds.tangoPort, u'')
+        self.assertEqual(cds.tangoEncoding, u'')
+
+        self.assertEqual(cds.dbType, 'MYSQL')
+        self.assertEqual(cds.dbDataFormat, 'SCALAR')
+        self.assertEqual(cds.dbQuery, "")
+        self.assertEqual(cds.dbParameters, {})
+
+        self.assertEqual(cds.externalSave, None)
+        self.assertEqual(cds.externalStore, None)
+        self.assertEqual(cds.externalClose, None)
+        self.assertEqual(cds.externalApply, None)
+
+        self.assertEqual(cds.applied, False)
+
+        self.assertEqual(cds.ids, None)
+
+        
+        self.assertEqual(cds.tree, False)
+        
+        self.assertTrue(isinstance(form.ui, Ui_DataSourceDlg))
+
+        meth.createGUI()
+
+
+
+        self.assertEqual(cds.dataSourceType, 'CLIENT')
+        self.assertEqual(cds.doc, '')
+
+        self.assertTrue(isinstance(cds.dialog, NodeDlg))
+        self.assertEqual(cds.dataSourceName, u'')
+        self.assertEqual(cds.clientRecordName, u'')
+        self.assertEqual(cds.tangoDeviceName, u'')
+        self.assertEqual(cds.tangoMemberName, u'')
+        self.assertEqual(cds.tangoMemberType, u'attribute')
+        self.assertEqual(cds.tangoHost, u'')
+        self.assertEqual(cds.tangoPort, u'')
+        self.assertEqual(cds.tangoEncoding, u'')
+
+        self.assertEqual(cds.dbType, 'MYSQL')
+        self.assertEqual(cds.dbDataFormat, 'SCALAR')
+        self.assertEqual(cds.dbQuery, "")
+        self.assertEqual(cds.dbParameters, {})
+
+        self.assertEqual(cds.externalSave, None)
+        self.assertEqual(cds.externalStore, None)
+        self.assertEqual(cds.externalClose, None)
+        self.assertEqual(cds.externalApply, None)
+
+        self.assertEqual(cds.applied, False)
+
+        self.assertEqual(cds.ids, None)
+
+        
+        self.assertEqual(cds.tree, False)
+        
+        self.check_form(form)
+
+
+
+
+        n1 =  self.__rnd.randint(1, 9) 
+
+        doc = "My document %s" % n1
+        dataSourceType = self.__rnd.choice(["CLIENT","TANGO","DB"])
+        dataSourceName =  "mydatasource%s" % n1
+        clientRecordName =  "Myname%s" % n1
+        tangoDeviceName =  "Mydevice %s" % n1
+        tangoMemberName =  "Mymemeber %s" % n1
+        tangoMemberType = self.__rnd.choice(["property","command","attribute"]) 
+        tangoHost =  "haso.desy.de %s" % n1
+        tangoPort =  "1000%s" % n1
+        tangoEncoding =  "UTF%s" % n1
+        dbType = self.__rnd.choice(["MYSQL","ORACLE","PGSQL"]) 
+        dbDataFormat =  self.__rnd.choice(["SCALAR","SPECTRUM","IMAGE"]) 
+        dbQuery =  "select name from device limit %s" % n1
+        dbParameters =  {"DB name":"sdfsdf%s" % n1,
+                         "DB host":"werwer%s" % n1, 
+                         "DB port":"werwer%s" % n1, 
+                         "DB user":"werwer%s" % n1, 
+                         "DB password":"werwer%s" % n1, 
+                         "Mysql cnf":"werwer%s" % n1, 
+                         "Oracle mode":"werwer%s" % n1, 
+                         "Oracle DSN":"asdasdf%s" % n1}        
+
+        dbParameters2 =  {"DB name":"sdfsdf%s" % n1,
+                         "DB user":"werwer%s" % n1, 
+                         "DB password":"werwer%s" % n1, 
+                         "Oracle DSN":"asdasdf%s" % n1}        
+
+
+        dbCurrentParam = self.__rnd.choice(dbParameters.keys())
+        
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+
+        cds.doc = doc
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        form.ui.docTextEdit.setText("")
+        cds.doc = ''
+
+        cds.dataSourceType = dataSourceType
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(), None)
+        self.check_form(form)
+        index = form.ui.typeComboBox.findText('CLIENT')
+        form.ui.typeComboBox.setCurrentIndex(index)
+        cds.dataSourceType = 'CLIENT'
+
+        cds.dataSourceName = dataSourceName
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        form.ui.nameLineEdit.setText("")
+        cds.dataSourceName = ''
+
+
+
+        cds.clientRecordName = clientRecordName
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        form.ui.cRecNameLineEdit.setText("")
+        cds.clientRecordName = ''
+
+
+
+        cds.tangoDeviceName = tangoDeviceName
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        form.ui.tDevNameLineEdit.setText("")
+        cds.tangoDeviceName = ''
+
+        cds.tangoMemberName = tangoMemberName
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        form.ui.tMemberNameLineEdit.setText("")
+        cds.tangoMemberName = ''
+
+        cds.tangoMemberType = tangoMemberType
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        index = form.ui.tMemberComboBox.findText('attribute')
+        form.ui.tMemberComboBox.setCurrentIndex(index)
+        cds.tangoMemberType = ''
+
+
+        cds.tangoHost = tangoHost
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        form.ui.tHostLineEdit.setText("")
+        cds.tangoHost = ''
+
+        cds.tangoPort = tangoPort
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        form.ui.tPortLineEdit.setText("")
+        cds.tangoPort = ''
+
+        cds.tangoEncoding = tangoEncoding
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        form.ui.tEncodingLineEdit.setText("")
+        cds.tangoEncoding = ''
+
+
+
+
+        cds.dbType = dbType
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        index = form.ui.dTypeComboBox.findText('MYSQL')
+        form.ui.dTypeComboBox.setCurrentIndex(index)
+        cds.dbType = ''
+
+        cds.dbDataFormat = dbDataFormat
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        index = form.ui.dFormatComboBox.findText('SCALAR')
+        form.ui.dFormatComboBox.setCurrentIndex(index)
+        cds.dbDataFormat = ''
+
+        cds.dbQuery = dbQuery
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        form.ui.dQueryLineEdit.setText("")
+        cds.dbQuery = ''
+        
+        cds.dbParameters = dict(dbParameters)
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        while form.ui.dParameterTableWidget.rowCount():
+            form.ui.dParameterTableWidget.removeRow(0)
+        form.ui.dParameterTableWidget.clear()
+        cds.dbParameters = {}
+        form.dbParam ={}
+
+
+        cds.dbParameters = dict(dbParameters2)
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
+        while form.ui.dParameterTableWidget.rowCount():
+            form.ui.dParameterTableWidget.removeRow(0)
+        form.ui.dParameterTableWidget.clear()
+        cds.dbParameters = {}
+        form.dbParam ={}
+
+
+        cds.doc = doc
+        cds.dataSourceType = dataSourceType
+        cds.dataSourceName = dataSourceName
+        cds.clientRecordName = clientRecordName
+        cds.tangoDeviceName = tangoDeviceName
+        cds.tangoMemberName = tangoMemberName
+        cds.tangoMemberType = tangoMemberType
+        cds.tangoHost = tangoHost
+        cds.tangoPort = tangoPort
+        cds.tangoEncoding = tangoEncoding
+        cds.dbType = dbType
+        cds.dbDataFormat = dbDataFormat
+        cds.dbQuery = dbQuery
+        cds.dbParameters = dict(dbParameters)
+        self.check_form(form)
+        self.assertEqual(getattr(ins, func)(),None)
+        self.check_form(form)
 
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
@@ -644,12 +907,14 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         form = DataSourceDlg()
         cds = form.datasource
-        self.check_updateForm(form, cds)
+        meth = DataSourceMethods(form, cds)
+        self.check_updateForm(meth, form, cds)
 
 
         cds = DataSource()
         form = cds.dialog
-        self.check_updateForm(form, cds)
+        meth = DataSourceMethods(form, cds)
+        self.check_updateForm(meth, form, cds)
     
 
 
@@ -662,12 +927,63 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         form = DataSourceDlg()
         cds = form.datasource
-        self.check_updateForm(form, cds, "reset")
+        meth = DataSourceMethods(form, cds)
+        self.check_updateForm(meth, form, cds, "reset")
 
 
         cds = DataSource()
         form = cds.dialog
-        self.check_updateForm(form, cds, "reset")
+        meth = DataSourceMethods(form, cds)
+        self.check_updateForm(meth, form, cds, "reset")
+    
+
+
+    def message_and_close(self):
+        QTimer.singleShot(10, self.messageWidget)
+        self.meth.close()
+
+
+    def messageno_and_close(self):
+        QTimer.singleShot(10, self.messageWidgetClose)
+        self.meth.close()
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_close_yes(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        form = DataSourceDlg()
+        cds = form.datasource
+        self.meth = DataSourceMethods(form, cds)
+        self.check_updateForm(self.meth, form, cds, "message_and_close", self)
+
+
+        cds = DataSource()
+        form = cds.dialog
+        self.meth = DataSourceMethods(form, cds)
+        self.check_updateForm(self.meth, form, cds, "message_and_close", self)
+    
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_close_no(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        form = DataSourceDlg()
+        cds = form.datasource
+        self.meth = DataSourceMethods(form, cds)
+        self.check_updateForm_no(self.meth, form, cds, "messageno_and_close", self)
+
+
+        cds = DataSource()
+        form = cds.dialog
+        self.meth = DataSourceMethods(form, cds)
+        self.check_updateForm_no(self.meth, form, cds, "messageno_and_close", self)
     
 
 

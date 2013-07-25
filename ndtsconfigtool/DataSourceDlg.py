@@ -427,10 +427,11 @@ class DataSourceMethods(object):
             self.__dialog.node = node
             if self.__dialog:
                 self.__dialog.node = node
+        
         attributeMap = self.__dialog.node.attributes()
         
-        value = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
 
+        value = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
         if attributeMap.contains("name"):
             self.__datasource.dataSourceName = attributeMap.namedItem("name").nodeValue()
         

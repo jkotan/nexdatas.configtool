@@ -79,6 +79,7 @@ class TestView(object):
 
 class ClassVar(object):
     def __init__(self):
+        self.tree = False
         self.dataSourceName =  ''
         self.dataSourceType = 'CLIENT'
         self.doc = ''
@@ -94,6 +95,12 @@ class ClassVar(object):
         self.dbQuery =  ''
         self.dbParameters =  {}        
         self.dbCurrentParam = 'DB name'
+        self.externalSave = None
+        self.externalStore = None
+        self.externalClose = None
+        self.externalApply = None
+        self.applied = False
+        self.ids = None
 
 ## test fixture
 class DataSourceMethodsTest(unittest.TestCase):
@@ -122,8 +129,10 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         ## action status
         self.performed = False
-
+ 
         self.meth = None
+        self.form = None 
+        self.cds = None
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
@@ -309,6 +318,46 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertTrue(not form.ui.savePushButton.focused)
         form.setSaveFocus()
         self.assertTrue(form.ui.savePushButton.focused)
+
+
+
+    def check_cds(self, cds, params={}):
+
+        cv = ClassVar()
+        for key in params.keys():
+            setattr(cv, key, params[key])
+
+
+        self.assertEqual(cds.tree, cv.tree)
+        self.assertEqual(cds.dataSourceName, cv.dataSourceName)
+
+
+        self.assertEqual(cds.dataSourceType, cv.dataSourceType)
+        self.assertEqual(cds.doc, cv.doc)
+
+        self.assertTrue(isinstance(cds.dialog, NodeDlg))
+        self.assertEqual(cds.clientRecordName, cv.clientRecordName)
+        self.assertEqual(cds.tangoDeviceName, cv.tangoDeviceName)
+        self.assertEqual(cds.tangoMemberName, cv.tangoMemberName)
+        self.assertEqual(cds.tangoMemberType, cv.tangoMemberType)
+        self.assertEqual(cds.tangoHost, cv.tangoHost)
+        self.assertEqual(cds.tangoPort, cv.tangoPort)
+        self.assertEqual(cds.tangoEncoding, cv.tangoEncoding)
+
+        self.assertEqual(cds.dbType, cv.dbType)
+        self.assertEqual(cds.dbDataFormat, cv.dbDataFormat)
+        self.assertEqual(cds.dbQuery, cv.dbQuery)
+        self.assertEqual(cds.dbParameters, cv.dbParameters)
+
+        self.assertEqual(cds.externalSave, cv.externalSave)
+        self.assertEqual(cds.externalStore, cv.externalStore)
+        self.assertEqual(cds.externalClose, cv.externalClose)
+        self.assertEqual(cds.externalApply, cv.externalApply)
+
+        self.assertEqual(cds.applied, cv.applied)
+
+        self.assertEqual(cds.ids, cv.ids)
+
 
 
     def check_form(self, form, params={}):
@@ -1789,7 +1838,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_createGUI_populateParameters_addremoveParamterDD(self):
+    def test_createGUI_populateParameters_addremoveParamter(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
@@ -2095,289 +2144,103 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(self.form.dbParam, dict(rparam))
 
 
-        
+        QTest.mouseClick(self.form.ui.applyPushButton, Qt.LeftButton)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        self.assertEqual(self.form.result(),0)
 
 
 
     ## constructor test
     # \brief It tests default settings
-    def tttest_createGUI(self):
+    def test_setFromNode_client(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DataSourceMethods()
-        form.show()
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.node, None)
-        self.assertEqual(form.root, None)
-        self.assertEqual(form.view, None)
-        self.assertEqual(form.subItems, ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
-
-        form = DataSourceMethods()
-        form.show()
-        self.assertEqual(form.createGUI(),None)
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
 
 
-        name = "myname"
-        nType = "NXEntry"
-        nType2 = "NX_INT64"
-        units = "seconds"
-        value = "14:45"
-        doc = "My documentation: \n ble ble ble "
-        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
-        nn =  self.__rnd.randint(1, 9) 
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_client(cds)
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(nn)]
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_client(cds)
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_client_tree(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_client(cds, True)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_client(cds, True)
+
+    ## constructor test
+    # \brief It tests default settings
+    def check_setFromNode_client(self, cds, tree = False):
+
+
+
+        n1 =  self.__rnd.randint(1, 9) 
+
+        doc = "My document %s" % n1
+        dataSourceType = "CLIENT"
+        dataSourceName =  "mydatasource%s" % n1
+        clientRecordName =  "Myname%s" % n1
+
+        dks = []
+        doc = QDomDocument()
+        nname = "datasource"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name",dataSourceName)
+        qdn.setAttribute("type",dataSourceType)
+
+
+        rec = doc.createElement("record")
+        rec.setAttribute("name",clientRecordName)
+        qdn.appendChild(rec) 
+
+        dname = "doc"
+
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+
+        self.form.node = qdn
+
+        self.meth.createGUI()
+        self.meth.treeMode(tree)
+        self.form.show()
+        self.check_form(self.form)
+        self.check_cds(cds,{"tree":tree})
         
-        self.assertEqual(form.updateForm(),None)
-    
+        
+        self.meth.setFromNode()
 
-        form = DataSourceMethods()
-        form.show()
-        form.name = name
-
-
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertEqual(form.rank,0)
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        form.ui.nameLineEdit.setText("")
-
-        form.name = ""
-
-        form = DataSourceMethods()
-        form.show()
-        form.nexusType = nType
-
-
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.typeLineEdit.text(), nType)
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.rank,0)
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        form.ui.typeLineEdit.setText("")
-        form.nexusType = ""
+        self.check_cds(cds,{"doc":"".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip(),
+                            "dataSourceType":dataSourceType,
+                            "dataSourceName":dataSourceName,
+                            "clientRecordName":clientRecordName,
+                            "tree":tree})
+        self.check_form(self.form)
 
 
 
 
-        form = DataSourceMethods()
-        form.show()
-
-        form.nexusType = nType2
-
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.rank,0)
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText(nType2))
-
-        form.ui.typeLineEdit.setText("")
-        form.nexusType = ""
-        index2 = form.ui.typeComboBox.findText('other ...')
-        form.ui.typeComboBox.setCurrentIndex(index2)
-
-
-
-        form = DataSourceMethods()
-        form.show()
-        form.units = units
-
-
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertEqual(form.rank,0)
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.unitsLineEdit.text(), units)
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-
-        form.ui.unitsLineEdit.setText("")
-        form.units = ""
-
-
-        form = DataSourceMethods()
-        form.show()
-        form.dimensions = dimensions
-
-
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty)
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),str(dimensions))
-        self.assertEqual(form.rank,len(dimensions))
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-        form.ui.dimLabel.setText("[]")
-        form.dimensions = []
-
-        form = DataSourceMethods()
-        form.show()
-
-        form.rank = nn
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty)
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),str([0]*len(dimensions)).replace('0','*'))
-        self.assertEqual(form.rank,len(dimensions))
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-
-        form.ui.dimLabel.setText("[]")
-        form.dimensions = []
-        form.rank = 0
-
-        form = DataSourceMethods()
-        form.show()
-        form.value = value
-
-
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.valueLineEdit.text(), value)
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-
-        form.ui.valueLineEdit.setText("")
-        form.value = ""
-
-
-        form = DataSourceMethods()
-        form.show()
-        form.doc = doc
-
-
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-
-
-        form.ui.docTextEdit.setText("")
-
-
-
-
-
-
-        form = DataSourceMethods()
-        form.show()
-        form.name = name
-        form.doc = doc
-        form.nexusType = nType
-        form.units = units
-        form.value = value
-        form.attributes = attributes
-
-
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertEqual(form.ui.unitsLineEdit.text(), units)
-        self.assertEqual(form.ui.valueLineEdit.text(), value)
-        self.assertEqual(form.ui.typeLineEdit.text(), nType)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
-        for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
-            k = str(it.text())
-            self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
-            self.assertEqual(it2.text(), attributes[k])
-
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
-
-
-        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
-
-
-        self.assertEqual(form.result(),0)
 
 
 

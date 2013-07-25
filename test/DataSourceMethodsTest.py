@@ -987,6 +987,63 @@ class DataSourceMethodsTest(unittest.TestCase):
     
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_treeMode(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        meth = DataSourceMethods(None, None)
+        self.myAssertRaise(Exception, meth.treeMode)
+
+
+        form = CommonDataSourceDlg(None)
+        cds = None
+        meth = DataSourceMethods(form, cds)
+        self.myAssertRaise(Exception, meth.treeMode)
+
+        form = None
+        cds = CommonDataSource()
+        meth = DataSourceMethods(form, cds)
+        self.myAssertRaise(Exception, meth.treeMode)
+
+        form = DataSourceDlg()
+        cds = form.datasource
+        meth = DataSourceMethods(form, cds)
+        meth.createGUI()
+        form.show()
+        self.assertEqual(cds.tree, False)
+        self.assertEqual(form.ui.closeSaveFrame.isVisible(), True)
+        meth.treeMode()
+        self.assertEqual(cds.tree, True)
+        self.assertEqual(form.ui.closeSaveFrame.isVisible(), False)
+        meth.treeMode(False)
+        self.assertEqual(cds.tree, False)
+        self.assertEqual(form.ui.closeSaveFrame.isVisible(), True)
+        meth.treeMode(True)
+        self.assertEqual(cds.tree, True)
+        self.assertEqual(form.ui.closeSaveFrame.isVisible(), False)
+
+
+        cds = DataSource()
+        form = cds.dialog
+        meth = DataSourceMethods(form, cds)
+        meth.createGUI()
+        form.show()
+        self.assertEqual(cds.tree, False)
+        self.assertEqual(form.ui.closeSaveFrame.isVisible(), True)
+        meth.treeMode()
+        self.assertEqual(cds.tree, True)
+        self.assertEqual(form.ui.closeSaveFrame.isVisible(), False)
+        meth.treeMode(False)
+        self.assertEqual(cds.tree, False)
+        self.assertEqual(form.ui.closeSaveFrame.isVisible(), True)
+        meth.treeMode(True)
+        self.assertEqual(cds.tree, True)
+        self.assertEqual(form.ui.closeSaveFrame.isVisible(), False)
+
+
+
 
         
 

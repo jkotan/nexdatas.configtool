@@ -984,6 +984,29 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(form, cds)
         self.check_updateForm(self.meth, form, cds, "message_and_close", self)
     
+    def message_and_reset(self):
+        QTest.mouseClick(self.form.ui.resetPushButton, Qt.LeftButton)
+        
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_reset_signal(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_updateForm(self.meth, self.form, cds, "message_and_reset", self)
+    
+
+        form = DataSourceDlg()
+        cds = form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_updateForm(self.meth, self.form, cds, "message_and_reset", self)
+
+
 
 
     ## constructor test
@@ -1685,7 +1708,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_aaacreateGUI_populateParameters_addremoveParamterDD(self):
+    def test_createGUI_populateParameters_addremoveParamterDD(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
@@ -1695,10 +1718,10 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_populateParameters_addremoveParamter(cds)
 
-#        cds = DataSource()
-#        self.form = cds.dialog
-#        self.meth = DataSourceMethods(self.form, cds)
-#        self.check_createGUI_populateParameters_addremoveParamter(cds)
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_populateParameters_addremoveParamter(cds)
 
 
 
@@ -1804,24 +1827,34 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(self.form.dbParam, dict(myParam))
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_createGUI_populateParameters_changeParamter(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_populateParameters_changeParamter(cds)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_populateParameters_changeParamter(cds)
+
 
 
 
 
     ## constructor test
     # \brief It tests default settings
-    def ttest_populateParameters_changeParamter(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        parent = None
-        dsrc = DataSource(parent)
-        self.form = CommonDataSourceDlg(dsrc, parent)
+    def check_createGUI_populateParameters_changeParamter(self,cds):
+        self.meth.createGUI()
         self.form.show()
 
-        self.form.ui.setupUi(self.form)
-        
-
-        self.enableButtons()
+        self.disableButtons()
         self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
         self.form.ui.dQueryLineEdit.setText("")
         self.enableButtons()
@@ -1882,23 +1915,33 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(self.form.dbParam, dict(rparam))
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_createGUI_populateParameters_changeParamter_value(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_populateParameters_changeParamter_value(cds)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_populateParameters_changeParamter_value(cds)
+
 
 
 
     ## constructor test
     # \brief It tests default settings
-    def ttest_populateParameters_changeParamter_value(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        parent = None
-        dsrc = DataSource(parent)
-        self.form = CommonDataSourceDlg(dsrc, parent)
+    def check_createGUI_populateParameters_changeParamter_value(self,cds):
+        self.meth.createGUI()
         self.form.show()
 
-        self.form.ui.setupUi(self.form)
-        
-
-        self.enableButtons()
+        self.disableButtons()
         self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
         self.form.ui.dQueryLineEdit.setText("")
         self.enableButtons()

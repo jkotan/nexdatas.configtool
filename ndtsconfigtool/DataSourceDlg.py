@@ -111,18 +111,27 @@ class CommonDataSourceDlg(NodeDlg):
     def connectWidgets(self):
         
 
-        self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
+        self.disconnect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
+        self.disconnect(self.ui.cRecNameLineEdit, SIGNAL("textChanged(QString)"), self.__cRecNameLineEdit)
+        self.disconnect(self.ui.tDevNameLineEdit, SIGNAL("textChanged(QString)"), self.__tDevNameLineEdit)
+        self.disconnect(self.ui.tMemberNameLineEdit, SIGNAL("textChanged(QString)"), self.__tMemberNameLineEdit)
+        self.disconnect(self.ui.dQueryLineEdit, SIGNAL("textChanged(QString)"), self.__dQueryLineEdit)
+        self.disconnect(self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"), 
+                     self.__dParamComboBox)
+        self.disconnect(self.ui.dAddPushButton, SIGNAL("clicked()"), self.__addParameter)
+        self.disconnect(self.ui.dRemovePushButton, SIGNAL("clicked()"), self.__removeParameter)
+        self.disconnect(self.ui.dParameterTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
+                     self.__tableItemChanged)
 
+
+
+        self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
         self.connect(self.ui.cRecNameLineEdit, SIGNAL("textChanged(QString)"), self.__cRecNameLineEdit)
         self.connect(self.ui.tDevNameLineEdit, SIGNAL("textChanged(QString)"), self.__tDevNameLineEdit)
         self.connect(self.ui.tMemberNameLineEdit, SIGNAL("textChanged(QString)"), self.__tMemberNameLineEdit)
         self.connect(self.ui.dQueryLineEdit, SIGNAL("textChanged(QString)"), self.__dQueryLineEdit)
-
-
-        
         self.connect(self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"), 
                      self.__dParamComboBox)
-
         self.connect(self.ui.dAddPushButton, SIGNAL("clicked()"), self.__addParameter)
         self.connect(self.ui.dRemovePushButton, SIGNAL("clicked()"), self.__removeParameter)
         self.connect(self.ui.dParameterTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
@@ -383,12 +392,10 @@ class DataSourceMethods(object):
     def treeMode(self, enable = True):
         if enable:
             self.__dialog.ui.closeSaveFrame.hide()
-#            self.__datasource.nameFrame.show()
             self.__datasource.tree = True
         else:
             self.__datasource.tree = False
             self.__dialog.ui.closeSaveFrame.show()
-#            self.__datasource.nameFrame.hide()
             
         
     ##  creates GUI
@@ -401,15 +408,14 @@ class DataSourceMethods(object):
         self.__dialog.resize(460, 440)
 
         if not self.__datasource.tree :
+            self.__dialog.disconnect(self.__dialog.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
             self.__dialog.connect(self.__dialog.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         else:
+            self.__dialog.disconnect(self.__dialog.ui.resetPushButton, SIGNAL("clicked()"), self.__dialog.reset)
             self.__dialog.connect(self.__dialog.ui.resetPushButton, SIGNAL("clicked()"), self.__dialog.reset)
-#        self.__dialog.connect(self.__dialog.closePushButton, SIGNAL("clicked()"), self.close)
-
         self.__dialog.connectWidgets()
         self.__dialog.setFrames(self.__datasource.dataSourceType)
 
-#        self.__datasource.treeMode(datasource.tree)
 
 
             
@@ -762,18 +768,26 @@ class DataSourceMethods(object):
     def connectExternalActions(self, externalApply=None, externalSave=None,  
                                externalClose = None, externalStore=None):
         if externalSave and self.__datasource.externalSave is None:
+            self.__dialog.disconnect(self.__dialog.ui.savePushButton, SIGNAL("clicked()"), 
+                                externalSave)
             self.__dialog.connect(self.__dialog.ui.savePushButton, SIGNAL("clicked()"), 
                                 externalSave)
             self.__datasource.externalSave = externalSave
         if externalStore and self.__datasource.externalStore is None:
+            self.__dialog.disconnect(self.__dialog.ui.storePushButton, SIGNAL("clicked()"), 
+                                externalStore)
             self.__dialog.connect(self.__dialog.ui.storePushButton, SIGNAL("clicked()"), 
                                 externalStore)
             self.__datasource.externalStore = externalStore
         if externalClose and self.__datasource.externalClose is None:
+            self.__dialog.disconnect(self.__dialog.ui.closePushButton, SIGNAL("clicked()"), 
+                                externalClose)
             self.__dialog.connect(self.__dialog.ui.closePushButton, SIGNAL("clicked()"), 
                                 externalClose)
             self.__datasource.externalClose = externalClose
         if externalApply and self.__datasource.externalApply is None:
+            self.__dialog.disconnect(self.__dialog.ui.applyPushButton, SIGNAL("clicked()"), 
+                                externalApply)
             self.__dialog.connect(self.__dialog.ui.applyPushButton, SIGNAL("clicked()"), 
                                 externalApply)
             self.__datasource.externalApply = externalApply

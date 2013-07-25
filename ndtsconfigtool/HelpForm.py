@@ -89,17 +89,23 @@ class HelpForm(QDialog):
         self.toolBar.addSeparator()
         self.toolBar.addWidget(self.pageLabel)
 
-        self.connect(
-            backAction, SIGNAL("triggered()"),
+        self.disconnect(backAction, SIGNAL("triggered()"),
             self.textBrowser, SLOT("backward()"))
-        self.connect(
-            forwardAction, SIGNAL("triggered()"),
+        self.disconnect(forwardAction, SIGNAL("triggered()"),
             self.textBrowser, SLOT("forward()"))
-        self.connect(
-            homeAction, SIGNAL("triggered()"),
+        self.disconnect(homeAction, SIGNAL("triggered()"),
             self.textBrowser, SLOT("home()"))
-        self.connect(
-            self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
+        self.disconnect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
+            self.updatePageTitle)
+
+
+        self.connect(backAction, SIGNAL("triggered()"),
+            self.textBrowser, SLOT("backward()"))
+        self.connect(forwardAction, SIGNAL("triggered()"),
+            self.textBrowser, SLOT("forward()"))
+        self.connect(homeAction, SIGNAL("triggered()"),
+            self.textBrowser, SLOT("home()"))
+        self.connect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
             self.updatePageTitle)
 
 

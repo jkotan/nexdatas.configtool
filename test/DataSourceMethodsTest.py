@@ -160,6 +160,25 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(error, True)
 
 
+    def rmParamWidget(self):
+        aw = QApplication.activeWindow()
+        mb = QApplication.activeModalWidget()
+        self.assertTrue(isinstance(mb, QMessageBox))
+        self.text = mb.text()
+        self.title = mb.windowTitle()
+
+        QTest.mouseClick(mb.button(QMessageBox.Yes), Qt.LeftButton)
+
+
+    def rmParamWidgetClose(self):
+        aw = QApplication.activeWindow()
+        mb = QApplication.activeModalWidget()
+        self.assertTrue(isinstance(mb, QMessageBox))
+        self.text = mb.text()
+        self.title = mb.windowTitle()
+
+        QTest.mouseClick(mb.button(QMessageBox.No), Qt.LeftButton)
+
     def checkMessageBox(self):
 #        self.assertEqual(QApplication.activeWindow(),None)
         mb = QApplication.activeModalWidget()
@@ -1010,6 +1029,11 @@ class DataSourceMethodsTest(unittest.TestCase):
         form = DataSourceDlg()
         cds = form.datasource
         meth = DataSourceMethods(form, cds)
+        self.myAssertRaise(Exception, meth.treeMode)
+
+        form = DataSourceDlg()
+        cds = form.datasource
+        meth = DataSourceMethods(form, cds)
         meth.createGUI()
         form.show()
         self.assertEqual(cds.tree, False)
@@ -1048,952 +1072,612 @@ class DataSourceMethodsTest(unittest.TestCase):
         
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_createGUI_updataForm_errors(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        meth = DataSourceMethods(None, None)
+        self.myAssertRaise(Exception, meth.updateForm)
+
+
+        form = CommonDataSourceDlg(None)
+        cds = None
+        meth = DataSourceMethods(form, cds)
+        self.myAssertRaise(Exception, meth.createGUI)
+
+        form = None
+        cds = CommonDataSource()
+        meth = DataSourceMethods(form, cds)
+        self.myAssertRaise(Exception, meth.createGUI)
+
+
 
     ## constructor test
     # \brief It tests default settings
-    def tttest_updateForm(self):
+    def test_createGUI_updateForm(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DataSourceMethods()
-        form.show()
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.node, None)
-        self.assertEqual(form.root, None)
-        self.assertEqual(form.view, None)
-        self.assertEqual(form.subItems, ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
 
-        form.createGUI()
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
+        form = DataSourceDlg()
+        cds = form.datasource
+        meth = DataSourceMethods(form, cds)
+        self.check_updateForm(meth, form, cds, "createGUI")
 
-        n1 =  self.__rnd.randint(1, 9) 
 
-        dataSourceType = self.__rnd.choice("CLIENT","TANGO","DB")
-        doc = "My document %s" % n1
-        clientRecordName =  "My document %s" % n1
-        tangoDeviceName =  "Mydevice %s" % n1
-        tangoMemberName =  "Mymemeber %s" % n1
-        tangoMemberType = self.__rnd.choice("property","command","attribute") 
-        tangoHost =  "haso.desy.de %s" % n1
-        tangoPort =  "1000%s" % n1
-        tangoEncoding =  "UTF%s" % n1
-        dbType = self.__rnd.choice("MYSQL","ORACLE","PGSQL") 
-        dbDataFormat =  self.__rnd.choice("SCALAR","SPECTRUM","IMAGE") 
-        dbQuery =  "select name from device limit %s" % n1
-        dbParameters =  {"DB name":"sdfsdf%s" % n1,
-                   "DB host":"werwer%s" % n1, 
-                   "DB port":"werwer%s" % n1, 
-                   "DB user":"werwer%s" % n1, 
-                   "DB password":"werwer%s" % n1, 
-                   "Mysql cnf":"werwer%s" % n1, 
-                   "Oracle mode":"werwer%s" % n1, 
-                   "Oracle DSN":"asdasdf%s" % n1}        
-        dataSourceName =  "mydatasource%s" % n1
+        cds = DataSource()
+        form = cds.dialog
+        meth = DataSourceMethods(form, cds)
+        self.check_updateForm(meth, form, cds, "createGUI")
 
-        name = "myname"
-        nType = "NXEntry"
-        nType2 = "NX_INT64"
-        units = "seconds"
-        value = "14:45"
-        doc = "My documentation: \n ble ble ble "
-        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
-        nn =  self.__rnd.randint(1, 9) 
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(nn)]
-        
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.rank,0)
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
 
-        form.name = name
+    def enableButtons(self):   
+        self.assertTrue(self.form.ui.savePushButton.isEnabled())
+        self.assertTrue(self.form.ui.applyPushButton.isEnabled())
+        self.assertTrue(self.form.ui.storePushButton.isEnabled())
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
+    def disableButtons(self):    
+        self.assertTrue(not self.form.ui.savePushButton.isEnabled())
+        self.assertTrue(not self.form.ui.applyPushButton.isEnabled())
+        self.assertTrue(not self.form.ui.storePushButton.isEnabled())
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertEqual(form.rank,0)
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
+    def clientVisible(self):    
+        self.assertTrue(self.form.ui.clientFrame.isVisible())
+        self.assertTrue(not self.form.ui.dbFrame.isVisible())
+        self.assertTrue(not self.form.ui.tangoFrame.isVisible())
 
-        form.ui.nameLineEdit.setText("")
 
-        form.name = ""
+    def dbVisible(self):    
+        self.assertTrue(not self.form.ui.clientFrame.isVisible())
+        self.assertTrue(self.form.ui.dbFrame.isVisible())
+        self.assertTrue(not self.form.ui.tangoFrame.isVisible())
 
-        form.nexusType = nType
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertEqual(form.rank,0)
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
+    def tangoVisible(self):    
+        self.assertTrue(not self.form.ui.clientFrame.isVisible())
+        self.assertTrue(not self.form.ui.dbFrame.isVisible())
+        self.assertTrue(self.form.ui.tangoFrame.isVisible())
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.typeLineEdit.text(), nType)
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.rank,0)
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        form.ui.typeLineEdit.setText("")
-        form.nexusType = ""
+    def noneVisible(self):    
+        self.assertTrue(not self.form.ui.clientFrame.isVisible())
+        self.assertTrue(not self.form.ui.dbFrame.isVisible())
+        self.assertTrue(not self.form.ui.tangoFrame.isVisible())
 
 
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_createGUI_setFrames(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
-        form.nexusType = nType2
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertEqual(form.rank,0)
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_setFrames(cds)
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.rank,0)
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText(nType2))
 
-        form.ui.typeLineEdit.setText("")
-        form.nexusType = ""
-        index2 = form.ui.typeComboBox.findText('other ...')
-        form.ui.typeComboBox.setCurrentIndex(index2)
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_setFrames(cds)
 
 
 
-        form.units = units
+    def checkParam(self, param, table, sel = None):   
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertEqual(form.rank,0)
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertEqual(form.rank,0)
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.unitsLineEdit.text(), units)
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-
-        form.ui.unitsLineEdit.setText("")
-        form.units = ""
-
-
-        form.dimensions = dimensions
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.rank,0)
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty)
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),str(dimensions))
-        self.assertEqual(form.rank,len(dimensions))
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-
-        form.ui.dimLabel.setText("[]")
-        form.dimensions = []
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.rank,len(dimensions))
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty)
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),str([0]*len(dimensions)).replace('0','*'))
-        self.assertEqual(form.rank,len(dimensions))
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-
-        form.ui.dimLabel.setText("[]")
-        form.dimensions = []
-        form.rank = 0
-
-        form.value = value
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.rank,0)
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.valueLineEdit.text(), value)
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-
-        form.ui.valueLineEdit.setText("")
-        form.value = ""
-
-
-        form.doc = doc
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-
-
-        form.ui.docTextEdit.setText("")
-
-
-
-
-
-
-        form.name = name
-        form.doc = doc
-        form.nexusType = nType
-        form.units = units
-        form.value = value
-        form.attributes = attributes
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertEqual(form.ui.unitsLineEdit.text(), units)
-        self.assertEqual(form.ui.valueLineEdit.text(), value)
-        self.assertEqual(form.ui.typeLineEdit.text(), nType)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
-
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
-        for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
+        self.assertEqual(table.columnCount(),2)
+        self.assertEqual(table.rowCount(),len(param))
+        for i in range(len(param)):
+            it = table.item(i, 0) 
             k = str(it.text())
-            self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
-            self.assertEqual(it2.text(), attributes[k])
+            self.assertTrue(k in param.keys())
+            it2 = table.item(i, 1) 
+            self.assertEqual(it2.text(), param[k])
 
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
-
-
-        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
-
-
-        self.assertEqual(form.result(),0)
-
-
-
-
-
-
-        
+        if sel is not None:    
+            item = table.item(table.currentRow(), 0)
+            self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+ 
 
     ## constructor test
     # \brief It tests default settings
-    def tttest_constructor_accept_long(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DataSourceMethods()
-        form.show()
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.node, None)
-        self.assertEqual(form.root, None)
-        self.assertEqual(form.view, None)
-        self.assertEqual(form.subItems, ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
-
-        form.createGUI()
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-        
-        self.assertTrue(not form.ui.applyPushButton.isEnabled())
-        self.assertTrue(form.ui.resetPushButton.isEnabled())
-
-        name = "myfield"
-        nType = "NX_DATE_TIME"
-        units = "seconds"
-        value = "14:45"
-        QTest.keyClicks(form.ui.nameLineEdit, name)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
-        QTest.keyClicks(form.ui.typeLineEdit, nType)
-        self.assertEqual(form.ui.typeLineEdit.text(), nType)
-
-        QTest.keyClicks(form.ui.unitsLineEdit, units)
-        self.assertEqual(form.ui.unitsLineEdit.text(), units)
-        QTest.keyClicks(form.ui.valueLineEdit, value)
-        self.assertEqual(form.ui.valueLineEdit.text(), value)
-
-
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-     
-        self.assertTrue(not form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(not form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(not form.ui.valueLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
+    def check_createGUI_setFrames(self, cds):
+        parent = None
         
 
 
-        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
-
-#        form.apply()
-#        self.assertEqual(form.name, name)
-#        self.assertEqual(form.nexusType, nType)
-
-        self.assertEqual(form.result(),0)
+        cds.dataSourceType = ""
+        self.meth.createGUI()
+        self.form.show()
+        self.disableButtons()
+        self.clientVisible()
 
 
-
-
-    ## constructor test
-    # \brief It tests default settings
-    def tttest_getState(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DataSourceMethods()
-        form.show()
-
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.node, None)
-        self.assertEqual(form.root, None)
-        self.assertEqual(form.view, None)
-        self.assertEqual(form.subItems, ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
-
-        form.createGUI()
-
-        name = "myname"
-        nType = "NXEntry"
-        units = "Tmm"
-        value = "asd1234"
-        doc = "My documentation: \n ble ble ble "
-        rank = 3
-        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
-        dimensions = [1, 2, 3, 4]
-
+        cds.dataSourceType = "CLIENT"
+        self.meth.createGUI()
+        self.form.show()
+        self.clientVisible()
+        self.disableButtons()
         
-        self.assertEqual(form.getState(),('','','','','',0,{},[]))
-    
+        cds.clientRecordName =""
+        cds.dataSourceType = "CLIENT"
+        self.meth.createGUI()
+        self.form.show()
+        self.clientVisible()
+        self.disableButtons()
 
-        form.name = name
-
-        self.assertEqual(form.getState(),(name,'','','','',0,{},[]))
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-
-        form.name = ""
-
-        form.nexusType = nType
-        self.assertEqual(form.getState(),('',nType,'','','',0,{},[]))
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-        form.nexusType = ""
-
-
-        form.units = units
-        self.assertEqual(form.getState(),('','',units,'','',0,{},[]))
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-        form.units = ""
-
-        form.value = value
-        self.assertEqual(form.getState(),('','','',value,'',0,{},[]))
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-        form.value = ""
-
-
-
-        form.doc = doc
-        self.assertEqual(form.getState(),('','','','',doc,0,{},[]))
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-        form.doc = ""
+        cds.clientRecordName ="name"
+        cds.dataSourceType = "CLIENT"
+        self.meth.createGUI()
+        self.form.show()
+        self.clientVisible()
+        self.enableButtons()
 
 
 
 
 
-        form.rank = rank
-        self.assertEqual(form.getState(),('','','','','',rank,{},[]))
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-        form.rank = 0
+
+        cds.dbQuery =""
+        cds.dataSourceType = "DB"
+        self.meth.createGUI()
+        self.form.show()
+        self.dbVisible()
+        self.disableButtons()
 
 
+        cds.dbQuery ="name"
+        cds.dataSourceType = "DB"
+        self.meth.createGUI()
+        self.form.show()
+        self.dbVisible()
+        self.enableButtons()
+
+
+
+        myParam = {"DB name":"sdfsdf",
+                   "DB host":"werwer", 
+                   "DB port":"werwer", 
+                   "DB user":"werwer", 
+                   "DB password":"werwer", 
+                   "Mysql cnf":"werwer", 
+                   "Oracle mode":"werwer", 
+                   "Oracle DSN":"asdasdf"}        
+
+ 
+
+
+        cds.dbQuery ="name"
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        cds.dbParameters = dict(myParam)
         
-        form.attributes = attributes
-        state = form.getState()
-
-        self.assertEqual(state[0],'')
-        self.assertEqual(state[1],'')
-        self.assertEqual(state[2],'')
-        self.assertEqual(state[3],'')
-        self.assertEqual(state[4],'')
-        self.assertEqual(state[5],0)
-        self.assertEqual(state[7],[])
-        self.assertEqual(len(state),8)
-        self.assertEqual(len(state[6]),len(attributes))
-        for at in attributes:
-            self.assertEqual(attributes[at], state[6][at])
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        form.attributes = {}
-
-
-        form.dimensions = dimensions
-        state = form.getState()
-
-        self.assertEqual(state[0],'')
-        self.assertEqual(state[1],'')
-        self.assertEqual(state[2],'')
-        self.assertEqual(state[3],'')
-        self.assertEqual(state[4],'')
-        self.assertEqual(state[5],0)
-        self.assertEqual(state[6],{})
-        self.assertEqual(len(state),8)
-        self.assertEqual(len(state[7]),len(dimensions))
-        for i in range(len(dimensions)):
-            self.assertEqual(dimensions[i], state[7][i])
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        form.dimensions = []
-
-
-        form.name = name
-        form.nexusType = nType
-        form.units = units
-        form.value = value
-        form.doc = doc
-        form.rank = rank
-        form.dimensions = dimensions
-        form.attributes = attributes
-
-        state = form.getState()
-
-        self.assertEqual(state[0],name)
-        self.assertEqual(state[1],nType)
-        self.assertEqual(state[2],units)
-        self.assertEqual(state[3],value)
-        self.assertEqual(state[4],doc)
-        self.assertEqual(state[5],rank)
-        self.assertEqual(len(state),8)
-        self.assertTrue(state[6] is not attributes)
-        self.assertEqual(len(state[6]),len(attributes))
-        for at in attributes:
-            self.assertEqual(attributes[at], state[6][at])
-        self.assertEqual(len(state[7]),len(dimensions))
-        for i in range(len(dimensions)):
-            self.assertEqual(dimensions[i], state[7][i])
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-
-        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
-
-
-        self.assertEqual(form.result(),0)
+        cds.dataSourceType = "DB"
+        self.meth.createGUI()
+        self.form.show()
+        self.assertEqual(self.form.dbParam,myParam)
+        self.assertEqual(cds.dbParameters,myParam)
+        self.dbVisible()
+        self.enableButtons()
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
 
 
 
+        cds.dataSourceType = "TANGO"
+        cds.tangoDeviceName = ""
+        self.meth.createGUI()
+        self.form.show()
+        self.tangoVisible()
+        self.disableButtons()
+
+
+        cds.tangoDeviceName = "name"
+        cds.dataSourceType = "TANGO"
+        self.meth.createGUI()
+        self.form.show()
+        self.tangoVisible()
+        self.disableButtons()
+
+        cds.tangoMemberName = "name2"
+        cds.dataSourceType = "TANGO"
+        self.meth.createGUI()
+        self.form.show()
+        self.tangoVisible()
+        self.enableButtons()
+
+        cds.tangoDeviceName = ""
+        cds.dataSourceType = "TANGO"
+        self.meth.createGUI()
+        self.form.show()
+        self.tangoVisible()
+        self.disableButtons()
+        
 
 
 
 
     ## constructor test
     # \brief It tests default settings
-    def tttest_setState(self):
+    def test_createGUI_setFrames_signal(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DataSourceMethods()
-        form.show()
 
 
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.node, None)
-        self.assertEqual(form.root, None)
-        self.assertEqual(form.view, None)
-        self.assertEqual(form.subItems, ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
-
-        form.createGUI()
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_setFrames_signal(cds)
 
 
-        name = "myname"
-        nType = "NXEntry"
-        units = "Tmm"
-        value = "asd1234"
-        doc = "My documentation: \n ble ble ble "
-        rank = 3
-        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
-        dimensions = [1, 2, 3, 4]
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_setFrames_signal(cds)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def check_createGUI_setFrames_signal(self, cds):
+
+        self.meth.createGUI()
+        
+        self.form.show()
+        
+
+        self.disableButtons()
+        self.clientVisible()
+
+ 
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+
+        self.disableButtons()
+        self.clientVisible()
+
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+
+        self.disableButtons()
+        self.dbVisible()
+
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+
+
+        self.disableButtons()
+        self.tangoVisible()
+
+        self.form.connectWidgets()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+
+
+        self.enableButtons()
+        self.tangoVisible()
+
+
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.clientVisible()
+        self.disableButtons()
+
+        self.form.ui.cRecNameLineEdit.setText("")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.clientVisible()
+        self.disableButtons()
+
+        self.form.ui.cRecNameLineEdit.setText("name")
+
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.clientVisible()
+        self.enableButtons()
+
+
+
+
+
+
+        self.form.ui.dQueryLineEdit.setText("")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.dbVisible()
+        self.disableButtons()
+
+
+        self.form.ui.dQueryLineEdit.setText("name")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.dbVisible()
+        self.enableButtons()
+
+
+        myParam = {"DB name":"sdfsdf",
+                   "DB host":"werwer", 
+                   "DB port":"werwer", 
+                   "DB user":"werwer", 
+                   "DB password":"werwer", 
+                   "Mysql cnf":"werwer", 
+                   "Oracle mode":"werwer", 
+                   "Oracle DSN":"asdasdf"}        
+
+ 
+
+
+        self.form.ui.dQueryLineEdit.setText("name")
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        self.form.dbParam = myParam
+        self.form.populateParameters(sel)
+        self.assertEqual(self.form.dbParam,myParam)
+        
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.assertEqual(self.form.dbParam,myParam)
+        self.dbVisible()
+        self.enableButtons()
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
+
+
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.tangoVisible()
+        self.disableButtons()
+
+
+        self.form.ui.tDevNameLineEdit.setText("name")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.tangoVisible()
+        self.disableButtons()
+
+        self.form.ui.tMemberNameLineEdit.setText("name")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.tangoVisible()
+        self.enableButtons()
+
+        self.form.ui.tDevNameLineEdit.setText("")
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.tangoVisible()
+        self.disableButtons()
+        
+        
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_createGUI_cRecNameLineEdit_signal(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_cRecNameLineEdit_signal(cds)
+
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_cRecNameLineEdit_signal(cds)
+
 
         
-        self.assertEqual(form.setState(['','','','','',0,{},[]]), None)
-    
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
-
-
-        self.assertEqual(form.setState([name,'','','','',0,{},[]]), None)
-    
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
-
-        self.assertEqual(form.name, name)
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
-
-        form.name = ""
-
-
-
-        self.assertEqual(form.setState(['',nType,'','','',0,{},[]]), None)
-    
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
 
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, nType)
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
 
-        form.nexusType = ''
+    ## constructor test
+    # \brief It tests default settings
+    def check_createGUI_cRecNameLineEdit_signal(self, cds):
 
+        self.meth.createGUI()
+        self.form.show()
 
 
+        self.disableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.cRecNameLineEdit.setText("")
+        self.enableButtons()
+        
+        self.form.connectWidgets()
 
-        self.assertEqual(form.setState(['','',units,'','',0,{},[]]), None)
-    
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.cRecNameLineEdit.setText("")
+        self.disableButtons()
+        
+        self.form.ui.cRecNameLineEdit.setText("name")
+        self.enableButtons()
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
 
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.units, units)
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
+        self.form.ui.cRecNameLineEdit.setText("")
+        self.disableButtons()
 
-        form.units = ''
 
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_createGUI_dQueryLineEdit_signal(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
-        self.assertEqual(form.setState(['','','',value,'',0,{},[]]), None)
-    
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_dQueryLineEdit_signal(cds)
 
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, value)
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
 
-        form.value = ''
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_dQueryLineEdit_signal(cds)
 
 
+        
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def check_createGUI_dQueryLineEdit_signal(self, cds):
 
-        self.assertEqual(form.setState(['','','','',doc,0,{},[]]), None)
-    
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
 
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, doc)
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.units, '')
-
-        form.doc = ''
+        self.meth.createGUI()
+        self.form.show()
 
+        self.disableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.dQueryLineEdit.setText("")
+        self.enableButtons()
+        
+        self.form.connectWidgets()
 
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.form.ui.dQueryLineEdit.setText("")
+        self.disableButtons()
+        
+        self.form.ui.dQueryLineEdit.setText("name")
+        self.enableButtons()
 
 
+        self.form.ui.dQueryLineEdit.setText("")
+        self.disableButtons()
 
 
-        self.assertEqual(form.setState(['','','','','',rank,{},[]]), None)
-    
+    ## constructor test
+    # \brief It tests default settings
+    def test_createGUI_tDevNameLineEdit_tMemberNameLineEdit_signal(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
 
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.rank, rank) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, {})
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_tDevNameLineEdit_tMemberNameLineEdit_signal(cds)
 
-        form.rank = 0
 
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_tDevNameLineEdit_tMemberNameLineEdit_signal(cds)
 
 
+        
 
-        self.assertEqual(form.setState(['','','','','',0,attributes,[]]), None)
-    
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
 
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.attributes, attributes)
+    ## constructor test
+    # \brief It tests default settings
+    def check_createGUI_tDevNameLineEdit_tMemberNameLineEdit_signal(self, cds):
+        self.meth.createGUI()
+        self.form.show()
 
-        form.attributes = {}
+        self.disableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.tDevNameLineEdit.setText("")
+        self.enableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.tMemberNameLineEdit.setText("")
+        self.enableButtons()
 
+        
+        self.form.connectWidgets()
 
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.tDevNameLineEdit.setText("")
+        self.disableButtons()
+        
+        self.form.ui.tDevNameLineEdit.setText("name")
+        self.disableButtons()
 
-        self.assertEqual(form.setState(['','','','','',0,{},dimensions]), None)
-    
+        self.form.ui.tMemberNameLineEdit.setText("name2")
+        self.enableButtons()
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
 
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.units, '')
-        self.assertEqual(form.rank, 0) 
-        self.assertEqual(form.dimensions, dimensions)
-        self.assertEqual(form.attributes, {})
+        self.form.ui.tDevNameLineEdit.setText("")
+        self.disableButtons()
 
-        form.dimensions = {}
+        self.form.ui.tMemberNameLineEdit.setText("name2")
+        self.disableButtons()
 
-        self.assertEqual(form.setState([name,nType,units,value,doc,rank,attributes,dimensions]), None)
-    
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
+        self.form.ui.tMemberNameLineEdit.setText("name2")
+        self.disableButtons()
 
-        self.assertEqual(form.name, name)
-        self.assertEqual(form.nexusType, nType)
-        self.assertEqual(form.doc, doc)
-        self.assertEqual(form.value, value)
-        self.assertEqual(form.units, units)
-        self.assertEqual(form.rank, rank) 
-        self.assertEqual(form.dimensions, dimensions)
-        self.assertEqual(form.attributes, attributes)
+        self.form.ui.tDevNameLineEdit.setText("name")
+        self.enableButtons()
 
+        
+    ## constructor test
+    # \brief It tests default settings
+    def test_createGUI_populateParameters(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
 
-        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_populateParameters(cds)
 
 
-        self.assertEqual(form.result(),0)
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_populateParameters(cds)
+
+
+        
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def check_createGUI_populateParameters(self ,cds):
+        self.meth.createGUI()
+        self.form.show()
+
+        self.disableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.dQueryLineEdit.setText("")
+        self.enableButtons()
+        
+        self.form.connectWidgets()
+
+        myParam = {}        
+        self.form.dbParam = myParam
+        self.form.populateParameters()
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget)
+
+
+        myParam = {"user":"sdfsdf","sdfsd":"werwer", "asdas":"asdasdf"}        
+        self.form.dbParam = myParam
+        self.form.populateParameters()
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget)
+
+
+        myParam = {"user":"sdfsdf","sdfsd":"werwer", "asdas":"asdasdf"}        
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        self.form.dbParam = myParam
+        self.form.populateParameters(sel)
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
+
+
+        myParam = {"DB name":"sdfsdf",
+                   "DB host":"werwer", 
+                   "DB port":"werwer", 
+                   "DB user":"werwer", 
+                   "DB password":"werwer", 
+                   "Mysql cnf":"werwer", 
+                   "Oracle mode":"wwer", 
+                   "Oracle DSN":"asdasdf"}        
+
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        self.form.dbParam = myParam
+        self.form.populateParameters(sel)
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
+
 
 
 
@@ -2001,70 +1685,312 @@ class DataSourceMethodsTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def tttest_linkDataSource(self):
+    def test_aaacreateGUI_populateParameters_addremoveParamterDD(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        form = DataSourceMethods()
-        form.show()
-        form.createGUI()
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertTrue(form.ui.unitsLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.valueLineEdit.text().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(),'[]')
-        self.assertEqual(form.ui.typeComboBox.currentIndex(), 
-                         form.ui.typeComboBox.findText('other ...'))
 
 
-        name = "myname"
-        nType = "NXEntry"
-        units = "seconds"
-        value = "14:45"
-        doc = "My documentation: \n ble ble ble "
-        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
-        rank =  self.__rnd.randint(1, 9) 
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_createGUI_populateParameters_addremoveParamter(cds)
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rank)]
+#        cds = DataSource()
+#        self.form = cds.dialog
+#        self.meth = DataSourceMethods(self.form, cds)
+#        self.check_createGUI_populateParameters_addremoveParamter(cds)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def check_createGUI_populateParameters_addremoveParamter(self, cds):
+        self.meth.createGUI()
+        self.form.show()
+
+        self.disableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.dQueryLineEdit.setText("")
+        self.enableButtons()
         
-        form.name = name
-        form.nexusType = nType
-        form.units = units
-        form.value = value
-        form.doc = doc
-        form.attributes = attributes
-        form.dimensions = dimensions
-        form.rank = rank
-        form.dsLabel = 'Sdatasources'
-
-        myds = "mydsName"
-        self.assertEqual(form.linkDataSource(myds),None)
-    
-        self.assertEqual(form.ui.typeLineEdit.text(), nType)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
-        self.assertEqual(form.ui.unitsLineEdit.text(),units)
-        self.assertEqual(form.ui.valueLineEdit.text(), "$%s.%s" % (form.dsLabel, myds) )
+        self.form.connectWidgets()
 
 
+        myParam = {
+#            "DB name":"sdfsdf",
+            "DB host":"wer", 
+            "DB port":"wwer", 
+            "DB user":"erwer", 
+            "DB password":"weer", 
+            "Mysql cnf":"weer", 
+            "Oracle mode":"wwer", 
+            "Oracle DSN":"aasdf"}        
+        
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        self.form.dbParam = dict(myParam)
+        self.form.populateParameters(sel)
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
 
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
-        for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
-            k = str(it.text())
-            self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
-            self.assertEqual(it2.text(), attributes[k])
 
-        self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
+        QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
+        
+        table = self.form.ui.dParameterTableWidget
+
+        item = table.item(table.currentRow(), 0)
+        self.checkParam(dict(myParam,**{"DB name":""}), 
+                        self.form.ui.dParameterTableWidget, item.data(Qt.UserRole).toString())
+        self.checkParam(dict(myParam,**{"DB name":""}), 
+                        self.form.ui.dParameterTableWidget, "DB name")
+        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":""}))
+        
+        QTimer.singleShot(10, self.rmParamWidgetClose)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+
+        self.checkParam(dict(myParam,**{"DB name":""}), 
+                        self.form.ui.dParameterTableWidget, "DB name")
+        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":""}))
 
 
-        QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
+        QTimer.singleShot(10, self.rmParamWidget)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
 
 
-        self.assertEqual(form.result(),0)
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(myParam))
+
+
+
+
+        QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
+        
+        table = self.form.ui.dParameterTableWidget
+
+        ch = table.currentRow()
+        item = table.item(ch, 0)
+
+        pname = str(item.data(Qt.UserRole).toString())
+
+
+        it = QTableWidgetItem(unicode(pname))
+        it.setData(Qt.DisplayRole, QVariant("Myname2"))
+        it.setData(Qt.UserRole, QVariant(pname))
+
+
+        table.setItem(ch,0,it)
+
+        self.checkParam(dict(myParam,**{"DB name":"Myname2"}), 
+                        self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":"Myname2"}))
+        
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+        table.setCurrentCell(ch,0)
+
+        self.checkParam(dict(myParam,**{"DB name":"Myname2"}), 
+                        self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":"Myname2"}))
+
+        QTimer.singleShot(10, self.rmParamWidgetClose)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+
+        self.checkParam(dict(myParam,**{"DB name":"Myname2"}), 
+                        self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":"Myname2"}))
+
+        QTimer.singleShot(10, self.rmParamWidget)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+
+        self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(myParam))
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def ttest_populateParameters_changeParamter(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
+
+        self.form.ui.setupUi(self.form)
+        
+
+        self.enableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.dQueryLineEdit.setText("")
+        self.enableButtons()
+        
+        self.form.connectWidgets()
+
+
+        myParam = {
+            "DB name":"sdfsdf",
+            "DB host":"wer", 
+            "DB port":"wwer", 
+            "DB user":"erwer", 
+            "DB password":"weer", 
+            "Mysql cnf":"weer", 
+            "Oracle mode":"wwer", 
+            "Oracle DSN":"aasdf"}        
+        
+        table = self.form.ui.dParameterTableWidget
+
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        self.form.dbParam = dict(myParam)
+        self.form.populateParameters(sel)
+        self.checkParam(myParam, table, sel)
+
+        if sel == "DB password":
+            QTimer.singleShot(10, self.checkMessageBox)
+        self.form.ui.dParamComboBox.setCurrentIndex(self.form.ui.dParamComboBox.findText(str(sel)))
+        
+        ch = table.currentRow()
+
+
+        QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
+
+
+
+        item = table.item(table.currentRow(), 0)
+        self.checkParam(dict(myParam,**{str(sel):myParam[sel]}), 
+                        self.form.ui.dParameterTableWidget, item.data(Qt.UserRole).toString())
+
+        self.checkParam(dict(myParam,**{str(sel):myParam[sel]}), 
+                        self.form.ui.dParameterTableWidget, sel)
+        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):myParam[sel]}))
+        
+        QTimer.singleShot(10, self.rmParamWidgetClose)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+
+        self.checkParam(dict(myParam,**{str(sel):myParam[sel]}), 
+                        self.form.ui.dParameterTableWidget, str(sel))        
+        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):myParam[sel]}))
+
+        QTimer.singleShot(10, self.rmParamWidget)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+        
+        rparam = dict(myParam)
+        del rparam[sel]
+        self.checkParam(rparam, self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(rparam))
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def ttest_populateParameters_changeParamter_value(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        parent = None
+        dsrc = DataSource(parent)
+        self.form = CommonDataSourceDlg(dsrc, parent)
+        self.form.show()
+
+        self.form.ui.setupUi(self.form)
+        
+
+        self.enableButtons()
+        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.dQueryLineEdit.setText("")
+        self.enableButtons()
+        
+        self.form.connectWidgets()
+
+
+        myParam = {
+            "DB name":"sdfsdf",
+            "DB host":"wer", 
+            "DB port":"wwer", 
+            "DB user":"erwer", 
+            "DB password":"weer", 
+            "Mysql cnf":"weer", 
+            "Oracle mode":"wwer", 
+            "Oracle DSN":"aasdf"}        
+        
+        table = self.form.ui.dParameterTableWidget
+
+        na =  self.__rnd.randint(0, len(myParam)-1) 
+        sel = myParam.keys()[na]
+        sel = "DB password"
+        self.form.dbParam = dict(myParam)
+        self.form.populateParameters(sel)
+        self.checkParam(myParam, table, sel)
+
+        if sel == "DB password":
+            QTimer.singleShot(10, self.checkMessageBox)
+        self.form.ui.dParamComboBox.setCurrentIndex(self.form.ui.dParamComboBox.findText(str(sel)))
+        
+        ch = table.currentRow()
+
+
+        QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
+        
+        item = table.item(ch, 0)
+
+        pname = str(item.data(Qt.UserRole).toString())
+
+
+        it = QTableWidgetItem(unicode(pname))
+        it.setData(Qt.DisplayRole, QVariant("Myname2"))
+        it.setData(Qt.UserRole, QVariant(pname))
+
+        table.setItem(ch,0,it)
+
+
+        self.checkParam(dict(myParam,**{str(sel):"Myname2"}), 
+                        self.form.ui.dParameterTableWidget, None)
+        self.checkParam(dict(myParam,**{str(sel):"Myname2"}), 
+                        self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):"Myname2"}))
+        
+        table.setCurrentCell(ch,0)
+        QTimer.singleShot(10, self.rmParamWidgetClose)
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+
+        self.checkParam(dict(myParam,**{str(sel):"Myname2"}), 
+                        self.form.ui.dParameterTableWidget, str(sel))        
+        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):"Myname2"}))
+
+        QTimer.singleShot(10, self.rmParamWidget)
+        it = table.item(table.currentRow(),0)
+        
+        QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
+        
+        rparam = dict(myParam)
+        del rparam[sel]
+        self.checkParam(rparam, self.form.ui.dParameterTableWidget, None)
+        self.assertEqual(self.form.dbParam, dict(rparam))
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -74,7 +74,6 @@ class LinkDlg(NodeDlg):
         self._updateUi()
 
 
-        #        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
 

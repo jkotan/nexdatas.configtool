@@ -386,6 +386,7 @@ class DataSourceMethods(object):
                 self.__dialog.dbParam[unicode(par)]=self.__datasource.dbParameters[(unicode(par))]
         self.__dialog.populateParameters()
         self.__dialog.setFrames(self.__datasource.dataSourceType)
+
     
     ## sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode 
@@ -415,11 +416,6 @@ class DataSourceMethods(object):
             self.__dialog.connect(self.__dialog.ui.resetPushButton, SIGNAL("clicked()"), self.__dialog.reset)
         self.__dialog.connectWidgets()
         self.__dialog.setFrames(self.__datasource.dataSourceType)
-
-
-
-            
-            
 
             
 

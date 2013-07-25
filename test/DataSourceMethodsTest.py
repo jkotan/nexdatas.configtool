@@ -352,7 +352,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         
 
 
-    def check_updateForm(self, meth, form, cds, func = "updateForm", inst = None): 
+    def check_updateForm(self, meth, form, cds, func = "updateForm", inst = None, tree = False): 
         ins = inst if inst else meth
         
 
@@ -383,13 +383,15 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-        
         self.assertEqual(cds.tree, False)
+        
         
         self.assertTrue(isinstance(form.ui, Ui_DataSourceDlg))
 
         meth.createGUI()
+        meth.treeMode(tree)
 
+        self.assertEqual(cds.tree, tree)
 
 
         self.assertEqual(cds.dataSourceType, 'CLIENT')
@@ -420,7 +422,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(cds.ids, None)
 
         
-        self.assertEqual(cds.tree, False)
+        self.assertEqual(cds.tree, tree)
         
         self.check_form(form)
 
@@ -631,7 +633,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    def check_updateForm_no(self, meth, form, cds, func = "updateForm", inst = None): 
+    def check_updateForm_no(self, meth, form, cds, func = "updateForm", inst = None, tree = False): 
         ins = inst if inst else meth
         
 
@@ -662,13 +664,14 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-        
         self.assertEqual(cds.tree, False)
+        
         
         self.assertTrue(isinstance(form.ui, Ui_DataSourceDlg))
 
         meth.createGUI()
-
+        meth.treeMode(tree)
+        self.assertEqual(cds.tree, tree)
 
 
         self.assertEqual(cds.dataSourceType, 'CLIENT')
@@ -699,7 +702,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(cds.ids, None)
 
         
-        self.assertEqual(cds.tree, False)
+        self.assertEqual(cds.tree, tree)
         
         self.check_form(form)
 
@@ -983,6 +986,28 @@ class DataSourceMethodsTest(unittest.TestCase):
         form = cds.dialog
         self.meth = DataSourceMethods(form, cds)
         self.check_updateForm(self.meth, form, cds, "message_and_close", self)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_close_yes_tree(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        form = DataSourceDlg()
+        cds = form.datasource
+        self.meth = DataSourceMethods(form, cds)
+        self.check_updateForm(self.meth, form, cds, "message_and_close", self, True)
+
+
+        cds = DataSource()
+        form = cds.dialog
+        self.meth = DataSourceMethods(form, cds)
+        self.check_updateForm(self.meth, form, cds, "message_and_close", self, True)
+
+
     
     def message_and_reset(self):
         QTest.mouseClick(self.form.ui.resetPushButton, Qt.LeftButton)
@@ -995,16 +1020,34 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
-        cds = DataSource()
-        self.form = cds.dialog
-        self.meth = DataSourceMethods(self.form, cds)
-        self.check_updateForm(self.meth, self.form, cds, "message_and_reset", self)
+        self.cds = DataSource()
+        self.form = self.cds.dialog
+        self.meth = DataSourceMethods(self.form, self.cds)
+        self.check_updateForm(self.meth, self.form, self.cds, "message_and_reset", self)
     
 
         form = DataSourceDlg()
-        cds = form.datasource
-        self.meth = DataSourceMethods(self.form, cds)
-        self.check_updateForm(self.meth, self.form, cds, "message_and_reset", self)
+        self.cds = form.datasource
+        self.meth = DataSourceMethods(self.form, self.cds)
+        self.check_updateForm(self.meth, self.form, self.cds, "message_and_reset", self)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_reset_signal_tree(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        self.cds = DataSource()
+        self.form = self.cds.dialog
+        self.meth = DataSourceMethods(self.form, self.cds)
+        self.check_updateForm(self.meth, self.form, self.cds, "message_and_reset", self,True)
+    
+
+        form = DataSourceDlg()
+        self.cds = form.datasource
+        self.meth = DataSourceMethods(self.form, self.cds)
+        self.check_updateForm(self.meth, self.form, self.cds, "message_and_reset", self, True)
 
 
 
@@ -1026,6 +1069,25 @@ class DataSourceMethodsTest(unittest.TestCase):
         form = cds.dialog
         self.meth = DataSourceMethods(form, cds)
         self.check_updateForm_no(self.meth, form, cds, "messageno_and_close", self)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_close_no_tree(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        form = DataSourceDlg()
+        cds = form.datasource
+        self.meth = DataSourceMethods(form, cds)
+        self.check_updateForm_no(self.meth, form, cds, "messageno_and_close", self, True)
+
+
+        cds = DataSource()
+        form = cds.dialog
+        self.meth = DataSourceMethods(form, cds)
+        self.check_updateForm_no(self.meth, form, cds, "messageno_and_close", self, True)
     
 
 
@@ -1134,6 +1196,25 @@ class DataSourceMethodsTest(unittest.TestCase):
         form = cds.dialog
         meth = DataSourceMethods(form, cds)
         self.check_updateForm(meth, form, cds, "createGUI")
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_createGUI_updateForm_tree(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        form = DataSourceDlg()
+        cds = form.datasource
+        meth = DataSourceMethods(form, cds)
+        self.check_updateForm(meth, form, cds, "createGUI", None, True)
+
+
+        cds = DataSource()
+        form = cds.dialog
+        meth = DataSourceMethods(form, cds)
+        self.check_updateForm(meth, form, cds, "createGUI", None, True)
 
 
 

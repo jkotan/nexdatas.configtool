@@ -2186,7 +2186,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def check_setFromNode_client(self, cds, tree = False):
+    def check_setFromNode_client(self, cds, tree = False, node = None):
 
 
 
@@ -2229,8 +2229,11 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.check_cds(cds,{"tree":tree})
         
         
-        self.meth.setFromNode()
-
+        if node:
+            self.meth.setFromNode(qdn)
+        else:     
+            self.meth.setFromNode()
+ 
         self.check_cds(cds,{"doc":"".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip(),
                             "dataSourceType":dataSourceType,
                             "dataSourceName":dataSourceName,
@@ -2241,7 +2244,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-
+##TODO
 
 
     ## constructor test

@@ -1133,14 +1133,11 @@ class Component(object):
     ## merges the component tree
     # \returns True on success
     def merge(self):
-#        import gc
-#        gc.collect()
         document = None
         dialog = False
 
         self._mergerdlg = MergerDlg(self.dialog)
         self._mergerdlg.createGUI()
-#        self.dialog.disconnect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
         self.dialog.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
         self.dialog.connect(self._mergerdlg.interruptButton, SIGNAL("clicked()"), self._interruptMerger)
 

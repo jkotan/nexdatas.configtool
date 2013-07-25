@@ -2184,6 +2184,44 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_client(cds, True)
 
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_client_node(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_client(cds,False,True)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_client(cds,False,True)
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_client_tree_node(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_client(cds, True, True)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_client(cds, True, True)
+
+
+
     ## constructor test
     # \brief It tests default settings
     def check_setFromNode_client(self, cds, tree = False, node = None):
@@ -2219,8 +2257,8 @@ class DataSourceMethodsTest(unittest.TestCase):
             dks.append(doc.createTextNode("\nText\n %s\n" %  n))
             mdoc.appendChild(dks[-1]) 
 
-
-        self.form.node = qdn
+        if not node:    
+            self.form.node = qdn
 
         self.meth.createGUI()
         self.meth.treeMode(tree)
@@ -2233,13 +2271,15 @@ class DataSourceMethodsTest(unittest.TestCase):
             self.meth.setFromNode(qdn)
         else:     
             self.meth.setFromNode()
- 
+
         self.check_cds(cds,{"doc":"".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip(),
                             "dataSourceType":dataSourceType,
                             "dataSourceName":dataSourceName,
                             "clientRecordName":clientRecordName,
                             "tree":tree})
         self.check_form(self.form)
+
+
 
 
 

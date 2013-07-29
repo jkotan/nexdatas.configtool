@@ -2282,6 +2282,161 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_tango(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_tango(cds)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_tango(cds)
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_tango_tree(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_tango(cds, True)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_tango(cds, True)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_tango_node(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_tango(cds,False,True)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_tango(cds,False,True)
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_tango_tree_node(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_tango(cds, True, True)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_tango(cds, True, True)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def check_setFromNode_tango(self, cds, tree = False, node = None):
+
+
+
+        n1 =  self.__rnd.randint(1, 9) 
+
+        doc = "My document %s" % n1
+        dataSourceType = "TANGO"
+        dataSourceName =  "mydatasource%s" % n1
+
+
+        tangoDeviceName =  'my/device/%s' % n1
+        tangoMemberName =  'position%s' % n1
+        tangoMemberType = self.__rnd.choice(["attribute","command","property"])
+        tangoHost =  'haso%s.desy.de' % n1
+        tangoPort =  '100%s' % n1
+        tangoEncoding =  'UTF%s' % n1
+
+
+
+        dks = []
+        doc = QDomDocument()
+        nname = "datasource"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name",dataSourceName)
+        qdn.setAttribute("type",dataSourceType)
+
+
+        rec = doc.createElement("record")
+        rec.setAttribute("name",tangoMemberName)
+        qdn.appendChild(rec) 
+
+
+        dev = doc.createElement("device")
+        dev.setAttribute("hostname", tangoHost)
+        dev.setAttribute("port", tangoPort)
+        dev.setAttribute("member", tangoMemberType)
+        dev.setAttribute("name", tangoDeviceName)
+        dev.setAttribute("encoding", tangoEncoding)
+        qdn.appendChild(dev) 
+
+        dname = "doc"
+
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+        if not node:    
+            self.form.node = qdn
+
+        self.meth.createGUI()
+        self.meth.treeMode(tree)
+        self.form.show()
+        self.check_form(self.form)
+        self.check_cds(cds,{"tree":tree})
+        
+        
+        if node:
+            self.meth.setFromNode(qdn)
+        else:     
+            self.meth.setFromNode()
+
+        self.check_cds(cds,{"doc":"".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip(),
+                            "dataSourceType":dataSourceType,
+                            "dataSourceName":dataSourceName,
+                            "tangoDeviceName":tangoDeviceName,
+                            "tangoMemberName":tangoMemberName,
+                            "tangoMemberType":tangoMemberType,
+                            "tangoHost":tangoHost,
+                            "tangoPort":tangoPort,
+                            "tangoEncoding":tangoEncoding,
+                            "tree":tree})
+        self.check_form(self.form)
+
+
+
+
 
 
 ##TODO TANGO DB setFromNode,/ nonode/populateparameters

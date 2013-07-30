@@ -388,7 +388,6 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         self.assertEqual(form.ui.dParameterTableWidget.columnCount(),2)
         self.assertEqual(form.ui.dParameterTableWidget.rowCount(),len(cv.dbParameters))
-        self.assertEqual(form.ui.dParameterTableWidget.rowCount(),len(form.dbParam))
 
         for i in range(len(cv.dbParameters)):
             it = form.ui.dParameterTableWidget.item(i, 0) 
@@ -2256,6 +2255,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         for n in range(ndcs):
             dks.append(doc.createTextNode("\nText\n %s\n" %  n))
             mdoc.appendChild(dks[-1]) 
+        doc.appendChild(qdn) 
 
         if not node:    
             self.form.node = qdn
@@ -2406,6 +2406,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         for n in range(ndcs):
             dks.append(doc.createTextNode("\nText\n %s\n" %  n))
             mdoc.appendChild(dks[-1]) 
+        doc.appendChild(qdn) 
 
         if not node:    
             self.form.node = qdn
@@ -2439,7 +2440,181 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-##TODO TANGO DB setFromNode,/ nonode/populateparameters
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_db(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_db(cds)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_db(cds)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_db_tree(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_db(cds, True)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_db(cds, True)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_db_node(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_db(cds,False,True)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_db(cds,False,True)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_db_tree_node(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_db(cds, True, True)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_db(cds, True, True)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def check_setFromNode_db(self, cds, tree = False, node = None):
+
+
+        n1 =  self.__rnd.randint(1, 9) 
+
+        doc = "My document %s" % n1
+        dataSourceType = "DB"
+        dataSourceName =  "mydatasource%s" % n1
+
+        dbType = self.__rnd.choice(["MYSQL","ORACLE","PGSQL"]) 
+        dbDataFormat =  self.__rnd.choice(["SCALAR","SPECTRUM","IMAGE"]) 
+        dbQuery =  "select name from device limit %s" % n1
+        dbParameters =  {"DB name":"tango%s" % n1,
+                         "DB host":"haso%s.desy.de" % n1, 
+                         "DB port":"100000%s" % n1, 
+                         "DB user":"smith%s" % n1, 
+                         "DB password":"FJFJDv%s" % n1, 
+                         "Mysql cnf":"/etc/my%s.cnf" % n1, 
+                         "Oracle mode":"m%s" % n1, 
+                         "Oracle DSN":"(some dns%s)" % n1}        
+        dbmap = {"dbname":"DB name",
+                 "hostname":"DB host",
+                 "port":"DB port",
+                 "user":"DB user",
+                 "passwd":"DB password",
+                 "mycnf":"Mysql cnf",
+                 "mode":"Oracle mode"
+                 } 
+
+
+
+
+        dks = []
+        doc = QDomDocument()
+        nname = "datasource"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name",dataSourceName)
+        qdn.setAttribute("type",dataSourceType)
+            
+
+
+
+
+        db = doc.createElement("database")
+        db.setAttribute("dbtype",dbType)
+        for dm in dbmap.keys():
+            db.setAttribute(dm,dbParameters[dbmap[dm]])
+        db.appendChild(doc.createTextNode(dbParameters["Oracle DSN"]))
+        qdn.appendChild(db) 
+
+        
+        qr = doc.createElement("query")
+        qr.setAttribute("format", dbDataFormat)
+        qr.appendChild(doc.createTextNode(dbQuery))
+
+        qdn.appendChild(qr) 
+
+        dname = "doc"
+
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+            
+
+        doc.appendChild(qdn) 
+
+        if not node:    
+            self.form.node = qdn
+
+        self.meth.createGUI()
+        self.meth.treeMode(tree)
+        self.form.show()
+        self.check_form(self.form)
+        self.check_cds(cds,{"tree":tree})
+        
+        
+        if node:
+            self.meth.setFromNode(qdn)
+        else:     
+            self.meth.setFromNode()
+            
+        self.check_cds(cds,{"doc":"".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip(),
+                            "dataSourceType":dataSourceType,
+                            "dataSourceName":dataSourceName,
+                            "dbType":dbType,
+                            "dbDataFormat":dbDataFormat,
+                            "dbQuery":dbQuery,
+                            "dbParameters":dbParameters,
+                            "tree":tree})
+        self.check_form(self.form)
+
+
+
+
+##TODO DB setFromNode,/ nonode/populateparameters
 
 
     ## constructor test

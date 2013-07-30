@@ -481,7 +481,6 @@ class DataSourceMethods(object):
                                     
         elif value == 'DB':
             self.__datasource.dataSourceType = unicode(value)
-            
             database = self.__dialog.node.firstChildElement(QString("database"))           
             if database.nodeName() != "database":
                 QMessageBox.warning(self.__dialog, "Internal error", 
@@ -496,11 +495,9 @@ class DataSourceMethods(object):
                     elif name in self.__dbmap:
                         self.__datasource.dbParameters[self.__dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
                         self.__dialog.dbParam[self.__dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
-
-                    
+                        
             if not self.__datasource.dbType:
                 self.__datasource.dbType = 'MYSQL'
-                    
             text = unicode(self.__dialog.dts.getText(database))
             self.__datasource.dbParameters['Oracle DSN'] = unicode(text).strip() if text else ""
             self.__dialog.dbParam['Oracle DSN'] = unicode(text).strip() if text else ""

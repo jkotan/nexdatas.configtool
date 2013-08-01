@@ -53,6 +53,8 @@ class StrategyDlg(NodeDlg):
         ## allowed subitems
         self.subItems=[ "doc"]
 
+        ## writing can fail 
+        self.canfail = False
 
         ## user interface
         self.ui = Ui_StrategyDlg()
@@ -76,6 +78,7 @@ class StrategyDlg(NodeDlg):
             self.ui.triggerLineEdit.setText(self.trigger) 
 
         self.ui.compressionCheckBox.setChecked(self.compression) 
+        self.ui.canFailCheckBox.setChecked(self.canfail) 
         self.ui.shuffleCheckBox.setChecked(self.shuffle) 
         self.ui.rateSpinBox.setValue(self.rate)
 
@@ -118,6 +121,7 @@ class StrategyDlg(NodeDlg):
                  self.compression,
                  self.rate,
                  self.shuffle,
+                 self.canfail,
                  self.doc
                  )
 #        print  "GET", unicode(state)
@@ -135,6 +139,7 @@ class StrategyDlg(NodeDlg):
          self.compression,
          self.rate,
          self.shuffle,
+         self.canfail,
          self.doc
          ) = state
 #        print "SET",  unicode(state)
@@ -181,6 +186,10 @@ class StrategyDlg(NodeDlg):
         self.grows = attributeMap.namedItem("grows").nodeValue() if attributeMap.contains("grows") else ""
         self.mode = attributeMap.namedItem("mode").nodeValue() if attributeMap.contains("mode") else ""
 
+        if attributeMap.contains("canfail"):
+            self.canfail = \
+                False if str(attributeMap.namedItem("canfail").nodeValue()).upper() == "FALSE"  else True
+
         if attributeMap.contains("compression"):
             self.compression = \
                 False if str(attributeMap.namedItem("compression").nodeValue()).upper() == "FALSE"  else True
@@ -226,6 +235,7 @@ class StrategyDlg(NodeDlg):
             self.postrun = unicode(self.ui.postLineEdit.text())
 
 
+        self.canfail = self.ui.canFailCheckBox.isChecked()
         self.compression = self.ui.compressionCheckBox.isChecked()
         self.shuffle = self.ui.shuffleCheckBox.isChecked()
         self.rate = self.ui.rateSpinBox.value()
@@ -265,6 +275,8 @@ class StrategyDlg(NodeDlg):
                 elem.setAttribute(QString("trigger"), QString(self.trigger))
             if self.grows:
                 elem.setAttribute(QString("grows"), QString(str(self.grows)))
+        if self.canfail:
+            elem.setAttribute(QString("canfail"), QString("true"))
         if self.compression:
             elem.setAttribute(QString("compression"), QString("true"))
             elem.setAttribute(QString("shuffle"), QString("true") if self.shuffle else "false" )

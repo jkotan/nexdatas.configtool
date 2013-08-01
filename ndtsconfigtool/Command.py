@@ -239,7 +239,7 @@ class ServerStoreComponent(Command):
                      
                 self._cpEdit.reconnectSaveAction()
                 subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
-                subwindow.resize(640,560)
+                subwindow.resize(680,560)
                 self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.instance = self._cpEdit 
@@ -827,7 +827,7 @@ class ComponentOpen(Command):
                     self._cp.instance.dialog.setSaveFocus()
                 else:    
                     self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
-                    self._subwindow.resize(640,560)
+                    self._subwindow.resize(680,560)
                     self._cpEdit.dialog.setSaveFocus()
                     self._cpEdit.dialog.show()
                     self._cp.instance = self._cpEdit 
@@ -921,7 +921,7 @@ class DataSourceOpen(Command):
 
 
 #                self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit)
-#                self._subwindow.resize(640,560)
+#                self._subwindow.resize(680,560)
                     
 #            self._component.setAttribute(Qt.WA_DeleteOnClose)
                 self._dsEdit.dialog.show()
@@ -1016,7 +1016,7 @@ class ComponentRemove(Command):
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
-                self._subwindow.resize(640,560)
+                self._subwindow.resize(680,560)
                 self._cp.instance.dialog.setSaveFocus()
                 self._cp.instance.dialog.show()
 
@@ -1102,7 +1102,7 @@ class ComponentEdit(Command):
                      
                 self._cpEdit.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
-                self._subwindow.resize(640,560)
+                self._subwindow.resize(680,560)
                 self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
             self._cp.instance = self._cpEdit 
@@ -1169,7 +1169,7 @@ class ComponentSave(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
             else:    
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
-                self._subwindow.resize(640,560)
+                self._subwindow.resize(680,560)
                 self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
             self._cp.instance = self._cpEdit 
@@ -2659,7 +2659,7 @@ class DataSourceRemove(Command):
             else:    
                 self._ds.instance.createDialog()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(640,560)
+                self._subwindow.resize(680,560)
                 self._ds.instance.dialog.setSaveFocus()
                 self._ds.instance.dialog.show()
                     
@@ -2903,7 +2903,7 @@ class ComponentItemCommand(Command):
                      
                     self._cp.instance.reconnectSaveAction()
                     self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
-                    self._subwindow.resize(640,560)
+                    self._subwindow.resize(680,560)
 
                     if hasattr(self._cp.instance.dialog,"show"):
                         self._cp.instance.dialog.show()
@@ -2950,7 +2950,7 @@ class ComponentItemCommand(Command):
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
-                self._subwindow.resize(640,560)
+                self._subwindow.resize(680,560)
 
                 self._cp.instance.dialog.show()
         self._cp.instance.reconnectSaveAction()

@@ -1399,7 +1399,7 @@ def test():
     app = QApplication(sys.argv)
     component = Component()
     component.createGUI()
-    component.dialog.resize(640, 560)
+    component.dialog.resize(680, 560)
     component.createHeader()
     component.dialog.show()        
     component.dialog.setWindowTitle("%s [Component]" % component.name)

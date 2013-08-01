@@ -2614,7 +2614,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-##TODO DB setFromNode,/ nonode/populateparameters
+##TODO setFromNode nonode/populateparameters
 
 
     ## constructor test

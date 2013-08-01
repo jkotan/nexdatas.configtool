@@ -100,7 +100,6 @@ class StrategyDlgTest(unittest.TestCase):
         except NotImplementedError:
             self.__seed  = long(time.time() * 256) 
 
-
         self.__rnd = random.Random(self.__seed)
 
 
@@ -211,6 +210,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle,True)
         self.assertEqual(form.doc, '')
@@ -242,6 +242,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle,True)
         self.assertEqual(form.doc, '')
@@ -259,6 +260,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), "STEP")
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -283,6 +285,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), "STEP")
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -318,6 +321,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle,True)
         self.assertEqual(form.doc, '')
@@ -334,6 +338,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), "STEP")
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -350,6 +355,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         doc = "My documentation: \n ble ble ble "
@@ -363,6 +369,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), "STEP")
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -376,6 +383,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), "STEP")
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -388,6 +396,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), mode)
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -407,6 +416,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -418,6 +428,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertEqual(form.ui.compressionCheckBox.isChecked(), compr)
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -428,12 +439,11 @@ class StrategyDlgTest(unittest.TestCase):
         form.compression = False
         form.ui.compressionCheckBox.setChecked(form.compression) 
 
-
-
-        form.shuffle = shuffle
+        form.canfail = canf
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -445,6 +455,36 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertEqual(form.ui.canFailCheckBox.isChecked(), canf)
+        self.assertEqual(form.ui.rateSpinBox.value(), 5)
+        self.assertTrue(form.ui.shuffleCheckBox.isChecked())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.triggerLineEdit.text().isEmpty()) 
+        self.assertEqual(form.ui.growsSpinBox.value(), 0)
+        self.assertTrue(form.ui.postLineEdit.text().isEmpty())
+    
+        form.canfail = False
+        form.ui.canFailCheckBox.setChecked(form.canfail) 
+
+
+
+        form.shuffle = shuffle
+
+        self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
+        self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
+        self.assertEqual(form.ui.rateSpinBox.value(), 5)
+        self.assertTrue(form.ui.shuffleCheckBox.isChecked())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.triggerLineEdit.text().isEmpty()) 
+        self.assertEqual(form.ui.growsSpinBox.value(), 0)
+        self.assertTrue(form.ui.postLineEdit.text().isEmpty())
+
+        self.assertEqual(form.updateForm(),None)
+
+        self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
+        self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertEqual(form.ui.shuffleCheckBox.isChecked(), shuffle)
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -462,6 +502,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -473,6 +514,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), rate)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -489,6 +531,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -500,6 +543,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -519,6 +563,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -530,6 +575,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -548,6 +594,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -559,6 +606,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -578,6 +626,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -590,6 +639,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertEqual(form.ui.docTextEdit.toPlainText(),doc)
@@ -603,6 +653,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         form.mode = mode
         form.compression = compr
+        form.canfail = canf
         form.rate = rate
         form.shuffle = shuffle
         form.doc = doc
@@ -618,6 +669,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -630,6 +682,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), mode)
         self.assertEqual(form.ui.compressionCheckBox.isChecked(), compr)
+        self.assertEqual(form.ui.canFailCheckBox.isChecked(), canf)
         self.assertEqual(form.ui.rateSpinBox.value(), rate)
         self.assertEqual(form.ui.shuffleCheckBox.isChecked(), shuffle)
         self.assertEqual(form.ui.triggerLineEdit.text(), trigger) 
@@ -660,6 +713,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle,True)
         self.assertEqual(form.doc, '')
@@ -681,6 +735,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         doc = "My documentation: \n ble ble ble "
@@ -688,15 +743,16 @@ class StrategyDlgTest(unittest.TestCase):
         grows = self.__rnd.randint(-1, 3) 
         post = "Pilatus300k"
         
-        self.assertEqual(form.getState(), ('STEP', u'', u'', u'',False,5,True, u''))
+        self.assertEqual(form.getState(), ('STEP', u'', u'', u'',False,5,True, False, u''))
     
 
         form.mode = mode
 
-        self.assertEqual(form.getState(), (mode, u'', u'', u'',False,5,True, u''))
+        self.assertEqual(form.getState(), (mode, u'', u'', u'',False,5,True, False, u''))
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -710,10 +766,11 @@ class StrategyDlgTest(unittest.TestCase):
 
         form.trigger = trigger
 
-        self.assertEqual(form.getState(), ('STEP', trigger, u'', u'',False,5,True, u''))
+        self.assertEqual(form.getState(), ('STEP', trigger, u'', u'',False,5,True, False, u''))
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -727,10 +784,11 @@ class StrategyDlgTest(unittest.TestCase):
 
 
         form.grows = grows
-        self.assertEqual(form.getState(), ('STEP', u'', grows, u'',False,5,True, u''))
+        self.assertEqual(form.getState(), ('STEP', u'', grows, u'',False,5,True, False, u''))
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -743,10 +801,11 @@ class StrategyDlgTest(unittest.TestCase):
 
 
         form.postrun = post
-        self.assertEqual(form.getState(), ('STEP', u'', u'', post, False,5,True, u''))
+        self.assertEqual(form.getState(), ('STEP', u'', u'', post, False,5,True, False, u''))
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -760,10 +819,11 @@ class StrategyDlgTest(unittest.TestCase):
 
 
         form.compression = compr
-        self.assertEqual(form.getState(), ('STEP', u'', u'', u'', compr,5,True, u''))
+        self.assertEqual(form.getState(), ('STEP', u'', u'', u'', compr,5,True, False, u''))
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -775,11 +835,29 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-        form.rate = rate
-        self.assertEqual(form.getState(), ('STEP', u'', u'', u'', False,rate,True, u''))
+        form.canfail = canf
+        self.assertEqual(form.getState(), ('STEP', u'', u'', u'', False,5,True, canf, u''))
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
+        self.assertEqual(form.ui.rateSpinBox.value(), 5)
+        self.assertTrue(form.ui.shuffleCheckBox.isChecked())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.triggerLineEdit.text().isEmpty()) 
+        self.assertEqual(form.ui.growsSpinBox.value(), 0)
+        self.assertTrue(form.ui.postLineEdit.text().isEmpty())
+
+        form.canfail = False
+
+
+
+        form.rate = rate
+        self.assertEqual(form.getState(), ('STEP', u'', u'', u'', False,rate,True, False, u''))
+    
+        self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
+        self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -792,10 +870,11 @@ class StrategyDlgTest(unittest.TestCase):
 
 
         form.shuffle = shuffle
-        self.assertEqual(form.getState(), ('STEP', u'', u'', u'', False,5,shuffle, u''))
+        self.assertEqual(form.getState(), ('STEP', u'', u'', u'', False,5,shuffle, False, u''))
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -808,10 +887,11 @@ class StrategyDlgTest(unittest.TestCase):
 
 
         form.doc = doc
-        self.assertEqual(form.getState(), ('STEP', u'', u'', u'', False,5,True, doc))
+        self.assertEqual(form.getState(), ('STEP', u'', u'', u'', False,5,True, False, doc))
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -827,14 +907,16 @@ class StrategyDlgTest(unittest.TestCase):
         form.grows = grows
         form.postrun = post
         form.compression = compr
+        form.canfail = canf
         form.rate = rate
         form.shuffle = shuffle
         form.doc = doc
 
-        self.assertEqual(form.getState(), (mode,trigger, grows,post,compr,rate, shuffle, doc))
+        self.assertEqual(form.getState(), (mode,trigger, grows,post,compr,rate, shuffle, canf, doc))
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -864,6 +946,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle,True)
         self.assertEqual(form.doc, '')
@@ -883,6 +966,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         doc = "My documentation: \n ble ble ble "
@@ -891,11 +975,12 @@ class StrategyDlgTest(unittest.TestCase):
         post = "Pilatus300k"
 
     
-        self.assertEqual(form.setState([mode,  u'', u'', u'', False, 5,True, u'']),None)
+        self.assertEqual(form.setState([mode,  u'', u'', u'', False, 5,True,False, u'']),None)
                          
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -910,6 +995,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
@@ -917,10 +1003,11 @@ class StrategyDlgTest(unittest.TestCase):
         form.mode = ""
 
 
-        self.assertEqual(form.setState(['STEP',  trigger, u'', u'', False, 5,True, u'']),None)
+        self.assertEqual(form.setState(['STEP',  trigger, u'', u'', False, 5,True, False, u'']),None)
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -935,6 +1022,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
@@ -942,10 +1030,11 @@ class StrategyDlgTest(unittest.TestCase):
         form.trigger = ""
 
 
-        self.assertEqual(form.setState(['STEP',  u'', grows, u'', False, 5,True, u'']),None)
+        self.assertEqual(form.setState(['STEP',  u'', grows, u'', False, 5,True, False, u'']),None)
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -960,6 +1049,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, grows)
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
@@ -969,10 +1059,11 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['STEP',  u'', u'', post , False, 5,True, u'']),None)
+        self.assertEqual(form.setState(['STEP',  u'', u'', post , False, 5,True, False, u'']),None)
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -987,6 +1078,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
@@ -995,10 +1087,11 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['STEP',  u'', u'', u'', compr, 5,True, u'']),None)
+        self.assertEqual(form.setState(['STEP',  u'', u'', u'', compr, 5,True, False, u'']),None)
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1013,6 +1106,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, compr)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
@@ -1023,10 +1117,11 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['STEP',  u'', u'', u'', False, rate,True, u'']),None)
+        self.assertEqual(form.setState(['STEP',  u'', u'', u'', False, 5,True, canf, u'']),None)
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1041,6 +1136,37 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, canf)
+        self.assertEqual(form.rate, 5)
+        self.assertEqual(form.shuffle, True)
+        self.assertEqual(form.doc, '')
+
+        form.canfail = False
+
+
+
+
+
+        self.assertEqual(form.setState(['STEP',  u'', u'', u'', False, rate,True, False, u'']),None)
+    
+        self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
+        self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
+        self.assertEqual(form.ui.rateSpinBox.value(), 5)
+        self.assertTrue(form.ui.shuffleCheckBox.isChecked())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.triggerLineEdit.text().isEmpty()) 
+        self.assertEqual(form.ui.growsSpinBox.value(), 0)
+        self.assertTrue(form.ui.postLineEdit.text().isEmpty())
+
+
+
+        self.assertEqual(form.mode, 'STEP')
+        self.assertEqual(form.trigger,'')
+        self.assertEqual(form.grows, '')
+        self.assertEqual(form.postrun, '')
+        self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
@@ -1049,10 +1175,11 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['STEP',  u'', u'', u'', False, 5,shuffle, u'']),None)
+        self.assertEqual(form.setState(['STEP',  u'', u'', u'', False, 5,shuffle, False, u'']),None)
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1067,6 +1194,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, shuffle)
         self.assertEqual(form.doc, '')
@@ -1075,10 +1203,11 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['STEP',  u'', u'', u'', False, 5,True, doc]),None)
+        self.assertEqual(form.setState(['STEP',  u'', u'', u'', False, 5,True, False, doc]),None)
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1101,10 +1230,11 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState([mode, trigger, grows, post, compr, rate,shuffle, doc]),None)
+        self.assertEqual(form.setState([mode, trigger, grows, post, compr, rate, shuffle, canf, doc]),None)
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1119,6 +1249,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, grows)
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, compr)
+        self.assertEqual(form.canfail, canf)
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle, shuffle)
         self.assertEqual(form.doc, doc)
@@ -1150,6 +1281,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.trigger, '')
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.compression, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle,True)
@@ -1171,6 +1303,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1182,6 +1315,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         doc = "My documentation: \n ble ble ble "
@@ -1204,6 +1338,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), mode)
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1218,6 +1353,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
@@ -1235,6 +1371,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1248,6 +1385,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.trigger, trigger)
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.compression, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
@@ -1266,6 +1404,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1279,6 +1418,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.trigger,'')
         self.assertEqual(form.grows, grows )
         self.assertEqual(form.postrun, '')
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.compression, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
@@ -1295,10 +1435,11 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.createGUI(), None)
 
 
-        self.assertEqual(form.setState(['STEP',  u'', u'', post , False, 5,True, u'']),None)
+        self.assertEqual(form.setState(['STEP',  u'', u'', post , False, 5,True, False, u'']),None)
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1313,6 +1454,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
@@ -1329,6 +1471,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertEqual(form.ui.compressionCheckBox.isChecked(), compr)
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1343,11 +1486,46 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, compr)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
 
         form.compression = False
+
+
+
+
+        form = StrategyDlg()
+        form.show()
+
+        form.canfail = canf
+
+        self.assertEqual(form.createGUI(), None)
+    
+        self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
+        self.assertEqual(form.ui.compressionCheckBox.isChecked(), False)
+        self.assertEqual(form.ui.canFailCheckBox.isChecked(), canf)
+        self.assertEqual(form.ui.rateSpinBox.value(), 5)
+        self.assertTrue(form.ui.shuffleCheckBox.isChecked())
+        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.triggerLineEdit.text().isEmpty()) 
+        self.assertEqual(form.ui.growsSpinBox.value(), 0)
+        self.assertTrue(form.ui.postLineEdit.text().isEmpty())
+
+
+
+        self.assertEqual(form.mode, 'STEP')
+        self.assertEqual(form.trigger,'')
+        self.assertEqual(form.grows, '')
+        self.assertEqual(form.postrun, '')
+        self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, canf)
+        self.assertEqual(form.rate, 5)
+        self.assertEqual(form.shuffle, True)
+        self.assertEqual(form.doc, '')
+
+        form.canfail = False
 
 
 
@@ -1362,6 +1540,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), rate)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1376,6 +1555,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
@@ -1394,6 +1574,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertEqual(form.ui.shuffleCheckBox.isChecked(), shuffle)
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1408,6 +1589,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, shuffle)
         self.assertEqual(form.doc, '')
@@ -1426,6 +1608,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
@@ -1440,6 +1623,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, doc)
@@ -1455,6 +1639,7 @@ class StrategyDlgTest(unittest.TestCase):
         form.grows = grows
         form.postrun = post
         form.compression = compr
+        form.canfail = canf
         form.rate = rate
         form.shuffle = shuffle
         form.doc = doc
@@ -1464,6 +1649,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), mode)
         self.assertEqual(form.ui.compressionCheckBox.isChecked(), compr)
+        self.assertEqual(form.ui.canFailCheckBox.isChecked(),canf)
         self.assertEqual(form.ui.rateSpinBox.value(), rate)
         self.assertEqual(form.ui.shuffleCheckBox.isChecked(), shuffle)
         self.assertEqual(form.ui.docTextEdit.toPlainText(),doc)
@@ -1478,6 +1664,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, grows)
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, compr)
+        self.assertEqual(form.canfail, canf)
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle, shuffle)
         self.assertEqual(form.doc, doc)
@@ -1503,6 +1690,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         doc = "My documentation: \n ble ble ble "
@@ -1519,6 +1707,7 @@ class StrategyDlgTest(unittest.TestCase):
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("mode",mode)
         qdn.setAttribute("compression","True" if compr else "False")
+        qdn.setAttribute("canfail","True" if canf else "False")
         qdn.setAttribute("rate",rate)
         qdn.setAttribute("shuffle", "True" if shuffle else "False")
         qdn.setAttribute("trigger",trigger)
@@ -1551,6 +1740,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1563,6 +1753,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.trigger,'')
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.compression, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
@@ -1575,6 +1766,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertEqual(form.ui.compressionCheckBox.isChecked(), False)
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertEqual(form.ui.shuffleCheckBox.isChecked(), True)
         self.assertEqual(form.ui.docTextEdit.toPlainText(),'')
@@ -1588,6 +1780,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, str(grows))
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, compr )
+        self.assertEqual(form.canfail, canf )
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle, shuffle)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -1608,6 +1801,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         doc = "My documentation: \n ble ble ble "
@@ -1624,6 +1818,7 @@ class StrategyDlgTest(unittest.TestCase):
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("mode",mode)
         qdn.setAttribute("compression","True" if compr else "False")
+        qdn.setAttribute("canfail","True" if canf else "False")
         qdn.setAttribute("rate",rate)
         qdn.setAttribute("shuffle", "True" if shuffle else "False")
         qdn.setAttribute("trigger",trigger)
@@ -1655,6 +1850,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1668,6 +1864,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
@@ -1679,6 +1876,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertEqual(form.ui.compressionCheckBox.isChecked(), False)
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertEqual(form.ui.shuffleCheckBox.isChecked(), True)
         self.assertEqual(form.ui.docTextEdit.toPlainText(),'')
@@ -1692,6 +1890,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, str(grows))
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, compr )
+        self.assertEqual(form.canfail, canf )
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle, shuffle)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -1713,6 +1912,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         doc = "My documentation: \n ble ble ble "
@@ -1729,6 +1929,7 @@ class StrategyDlgTest(unittest.TestCase):
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("mode",mode)
         qdn.setAttribute("compression","True" if compr else "False")
+        qdn.setAttribute("canfail","True" if canf else "False")
         qdn.setAttribute("rate",rate)
         qdn.setAttribute("shuffle", "True" if shuffle else "False")
         qdn.setAttribute("trigger",trigger)
@@ -1760,6 +1961,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1773,6 +1975,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
@@ -1784,6 +1987,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertEqual(form.ui.compressionCheckBox.isChecked(), False)
+        self.assertEqual(form.ui.canFailCheckBox.isChecked(), False)
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertEqual(form.ui.shuffleCheckBox.isChecked(), True)
         self.assertEqual(form.ui.docTextEdit.toPlainText(),'')
@@ -1797,6 +2001,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False )
+        self.assertEqual(form.canfail, False )
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, "")
@@ -1817,6 +2022,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         doc = "My documentation: \n ble ble ble "
@@ -1855,6 +2061,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertTrue(not form.ui.compressionCheckBox.isChecked())
+        self.assertTrue(not form.ui.canFailCheckBox.isChecked())
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertTrue(form.ui.shuffleCheckBox.isChecked())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
@@ -1868,6 +2075,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, '')
@@ -1879,6 +2087,7 @@ class StrategyDlgTest(unittest.TestCase):
     
         self.assertEqual(form.ui.modeComboBox.currentText(), 'STEP')
         self.assertEqual(form.ui.compressionCheckBox.isChecked(), False)
+        self.assertEqual(form.ui.canFailCheckBox.isChecked(), False)
         self.assertEqual(form.ui.rateSpinBox.value(), 5)
         self.assertEqual(form.ui.shuffleCheckBox.isChecked(), True)
         self.assertEqual(form.ui.docTextEdit.toPlainText(),'')
@@ -1892,6 +2101,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False )
+        self.assertEqual(form.canfail, False )
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle, True)
         self.assertEqual(form.doc, "")
@@ -1917,6 +2127,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         ndoc = "My documentation: \n ble ble ble "
@@ -1933,6 +2144,7 @@ class StrategyDlgTest(unittest.TestCase):
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("mode",mode)
         qdn.setAttribute("compression","True" if compr else "False")
+        qdn.setAttribute("canfail","True" if canf else "False")
         qdn.setAttribute("rate",rate)
         qdn.setAttribute("shuffle", "True" if shuffle else "False")
         qdn.setAttribute("trigger",trigger)
@@ -1967,6 +2179,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle,True)
         self.assertEqual(form.doc, '')
@@ -2010,6 +2223,9 @@ class StrategyDlgTest(unittest.TestCase):
             elif nm == "compression":
                 self.assertEqual(vl,str(form.compression))
                 cnt += 1 
+            elif nm == "canfail":
+                self.assertEqual(vl,str(form.canfail))
+                cnt += 1 
             elif nm == "rate":
                 self.assertEqual(vl,str(form.rate))
                 cnt += 1 
@@ -2033,6 +2249,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         nmode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         ncompr = self.__rnd.choice([True, False])
+        ncanf = self.__rnd.choice([True, False])
         nrate = self.__rnd.randint(0, 9) 
         nshuffle = self.__rnd.choice([True, False])
         nmdoc = "My new documentation: \n ble ble ble "
@@ -2043,6 +2260,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         form.mode =  nmode
         form.compression = ncompr
+        form.canfail = ncanf
         form.postrun = npost
         form.rate = nrate
         form.shuffle = nshuffle
@@ -2097,6 +2315,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         ndoc = "My documentation: \n ble ble ble "
@@ -2113,6 +2332,7 @@ class StrategyDlgTest(unittest.TestCase):
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("mode",mode)
         qdn.setAttribute("compression","True" if compr else "False")
+        qdn.setAttribute("canfail","True" if canf else "False")
         qdn.setAttribute("rate",rate)
         qdn.setAttribute("shuffle", "True" if shuffle else "False")
         qdn.setAttribute("trigger",trigger)
@@ -2145,6 +2365,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle,True)
         self.assertEqual(form.doc, '')
@@ -2180,6 +2401,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         nmode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         ncompr = self.__rnd.choice([True, False])
+        ncanf = self.__rnd.choice([True, False])
         nrate = self.__rnd.randint(0, 9) 
         nshuffle = self.__rnd.choice([True, False])
         nmdoc = "My new documentation: \n ble ble ble "
@@ -2191,6 +2413,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         form.mode =  nmode
         form.compression = ncompr
+        form.canfail = ncanf
         form.postrun = npost
         form.rate = nrate
         form.shuffle = nshuffle
@@ -2230,6 +2453,9 @@ class StrategyDlgTest(unittest.TestCase):
             elif nm == "compression":
                 self.assertEqual(vl,str(form.compression).lower())
                 cnt += 1 
+            elif nm == "canfail":
+                self.assertEqual(vl,str(form.canfail).lower())
+                cnt += 1 
             elif nm == "rate":
                 self.assertEqual(vl,str(form.rate))
                 cnt += 1 
@@ -2262,6 +2488,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         ndoc = "My documentation: \n ble ble ble "
@@ -2278,6 +2505,7 @@ class StrategyDlgTest(unittest.TestCase):
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("mode",mode)
         qdn.setAttribute("compression","True" if compr else "False")
+        qdn.setAttribute("canfail","True" if canf else "False")
         qdn.setAttribute("rate",rate)
         qdn.setAttribute("shuffle", "True" if shuffle else "False")
         qdn.setAttribute("trigger",trigger)
@@ -2312,6 +2540,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle,True)
         self.assertEqual(form.doc, '')
@@ -2363,6 +2592,9 @@ class StrategyDlgTest(unittest.TestCase):
             elif nm == "compression":
                 self.assertEqual(vl,str(form.compression))
                 cnt += 1 
+            elif nm == "canfail":
+                self.assertEqual(vl,str(form.canfail))
+                cnt += 1 
             elif nm == "rate":
                 self.assertEqual(vl,str(form.rate))
                 cnt += 1 
@@ -2384,6 +2616,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, str(grows))
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, compr)
+        self.assertEqual(form.canfail, canf)
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle,shuffle)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -2403,6 +2636,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         nmode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         ncompr = self.__rnd.choice([True, False])
+        ncanf = self.__rnd.choice([True, False])
         nrate = self.__rnd.randint(0, 9) 
         nshuffle = self.__rnd.choice([True, False])
         nmdoc = "My new documentation: \n ble ble ble "
@@ -2415,6 +2649,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, str(grows))
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, compr)
+        self.assertEqual(form.canfail, canf)
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle,shuffle)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -2422,6 +2657,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         form.mode =  nmode
         form.compression = ncompr
+        form.canfail = ncanf
         form.postrun = npost
         form.rate = nrate
         form.shuffle = nshuffle
@@ -2435,6 +2671,7 @@ class StrategyDlgTest(unittest.TestCase):
         if  index > -1 :
             form.ui.modeComboBox.setCurrentIndex(index)
         form.ui.compressionCheckBox.setChecked(ncompr) 
+        form.ui.canFailCheckBox.setChecked(ncanf) 
         form.ui.rateSpinBox.setValue(nrate)
         form.ui.shuffleCheckBox.setChecked(nshuffle) 
         form.ui.triggerLineEdit.setText(ntrigger) 
@@ -2453,6 +2690,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, str(ngrows) if nmode =='STEP' and ngrows > 0  else '')
         self.assertEqual(form.postrun, npost if nmode =='POSTRUN' else '')
         self.assertEqual(form.compression, ncompr)
+        self.assertEqual(form.canfail, ncanf)
         self.assertEqual(form.rate, nrate)
         self.assertEqual(form.shuffle,nshuffle)
         self.assertEqual(form.doc, nmdoc)
@@ -2474,6 +2712,9 @@ class StrategyDlgTest(unittest.TestCase):
                 cnt += 1 
             elif nm == "compression":
                 self.assertEqual(vl,str(ncompr).lower())
+                cnt += 1 
+            elif nm == "canfail":
+                self.assertEqual(vl,str(ncanf).lower())
                 cnt += 1 
             elif nm == "rate":
                 self.assertEqual(vl,str(nrate))
@@ -2509,6 +2750,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         ndoc = "My documentation: \n ble ble ble "
@@ -2525,6 +2767,7 @@ class StrategyDlgTest(unittest.TestCase):
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("mode",mode)
         qdn.setAttribute("compression","True" if compr else "False")
+        qdn.setAttribute("canfail","True" if canf else "False")
         qdn.setAttribute("rate",rate)
         qdn.setAttribute("shuffle", "True" if shuffle else "False")
         qdn.setAttribute("trigger",trigger)
@@ -2559,6 +2802,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle,True)
         self.assertEqual(form.doc, '')
@@ -2584,6 +2828,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         nmode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         ncompr = self.__rnd.choice([True, False])
+        ncanf = self.__rnd.choice([True, False])
         nrate = self.__rnd.randint(0, 9) 
         nshuffle = self.__rnd.choice([True, False])
         nmdoc = "My new documentation: \n ble ble ble "
@@ -2610,6 +2855,9 @@ class StrategyDlgTest(unittest.TestCase):
             elif nm == "compression":
                 self.assertEqual(vl,str(form.compression))
                 cnt += 1 
+            elif nm == "canfail":
+                self.assertEqual(vl,str(form.canfail))
+                cnt += 1 
             elif nm == "rate":
                 self.assertEqual(vl,str(form.rate))
                 cnt += 1 
@@ -2631,6 +2879,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, str(grows))
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, compr)
+        self.assertEqual(form.canfail, canf)
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle,shuffle)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -2650,6 +2899,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         nmode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         ncompr = self.__rnd.choice([True, False])
+        ncanf = self.__rnd.choice([True, False])
         nrate = self.__rnd.randint(0, 9) 
         nshuffle = self.__rnd.choice([True, False])
         nmdoc = "My new documentation: \n ble ble ble "
@@ -2662,6 +2912,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, str(grows))
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, compr)
+        self.assertEqual(form.canfail, canf)
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle,shuffle)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -2669,6 +2920,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         form.mode =  nmode
         form.compression = ncompr
+        form.canfail = ncanf
         form.postrun = npost
         form.rate = nrate
         form.shuffle = nshuffle
@@ -2682,6 +2934,7 @@ class StrategyDlgTest(unittest.TestCase):
         if  index > -1 :
             form.ui.modeComboBox.setCurrentIndex(index)
         form.ui.compressionCheckBox.setChecked(ncompr) 
+        form.ui.canFailCheckBox.setChecked(ncanf) 
         form.ui.rateSpinBox.setValue(nrate)
         form.ui.shuffleCheckBox.setChecked(nshuffle) 
         form.ui.triggerLineEdit.setText(ntrigger) 
@@ -2700,6 +2953,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, str(grows))
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, compr)
+        self.assertEqual(form.canfail, canf)
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle,shuffle)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -2721,6 +2975,9 @@ class StrategyDlgTest(unittest.TestCase):
                 cnt += 1 
             elif nm == "compression":
                 self.assertEqual(vl,str(compr))
+                cnt += 1 
+            elif nm == "canfail":
+                self.assertEqual(vl,str(canf))
                 cnt += 1 
             elif nm == "rate":
                 self.assertEqual(vl,str(rate))
@@ -2754,6 +3011,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
+        canf = self.__rnd.choice([True, False])
         rate = self.__rnd.randint(0, 9) 
         shuffle = self.__rnd.choice([True, False])
         ndoc = "My documentation: \n ble ble ble "
@@ -2770,6 +3028,7 @@ class StrategyDlgTest(unittest.TestCase):
         nn =  self.__rnd.randint(0, 9) 
         qdn.setAttribute("mode",mode)
         qdn.setAttribute("compression","True" if compr else "False")
+        qdn.setAttribute("canfail","True" if canf else "False")
         qdn.setAttribute("rate",rate)
         qdn.setAttribute("shuffle", "True" if shuffle else "False")
         qdn.setAttribute("trigger",trigger)
@@ -2804,6 +3063,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, '')
         self.assertEqual(form.postrun, '')
         self.assertEqual(form.compression, False)
+        self.assertEqual(form.canfail, False)
         self.assertEqual(form.rate, 5)
         self.assertEqual(form.shuffle,True)
         self.assertEqual(form.doc, '')
@@ -2829,6 +3089,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         nmode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         ncompr = self.__rnd.choice([True, False])
+        ncanf = self.__rnd.choice([True, False])
         nrate = self.__rnd.randint(0, 9) 
         nshuffle = self.__rnd.choice([True, False])
         nmdoc = "My new documentation: \n ble ble ble "
@@ -2855,6 +3116,9 @@ class StrategyDlgTest(unittest.TestCase):
             elif nm == "compression":
                 self.assertEqual(vl,str(form.compression))
                 cnt += 1 
+            elif nm == "canfail":
+                self.assertEqual(vl,str(form.canfail))
+                cnt += 1 
             elif nm == "rate":
                 self.assertEqual(vl,str(form.rate))
                 cnt += 1 
@@ -2876,6 +3140,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, str(grows))
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, compr)
+        self.assertEqual(form.canfail, canf)
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle,shuffle)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -2895,6 +3160,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         nmode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         ncompr = self.__rnd.choice([True, False])
+        ncanf = self.__rnd.choice([True, False])
         nrate = self.__rnd.randint(0, 9) 
         nshuffle = self.__rnd.choice([True, False])
         nmdoc = "My new documentation: \n ble ble ble "
@@ -2907,6 +3173,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, str(grows))
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, compr)
+        self.assertEqual(form.canfail, canf)
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle,shuffle)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -2914,6 +3181,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         form.mode =  nmode
         form.compression = ncompr
+        form.canfail = ncanf
         form.postrun = npost
         form.rate = nrate
         form.shuffle = nshuffle
@@ -2927,6 +3195,7 @@ class StrategyDlgTest(unittest.TestCase):
         if  index > -1 :
             form.ui.modeComboBox.setCurrentIndex(index)
         form.ui.compressionCheckBox.setChecked(ncompr) 
+        form.ui.canFailCheckBox.setChecked(ncanf) 
         form.ui.rateSpinBox.setValue(nrate)
         form.ui.shuffleCheckBox.setChecked(nshuffle) 
         form.ui.triggerLineEdit.setText(ntrigger) 
@@ -2945,6 +3214,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.grows, str(grows))
         self.assertEqual(form.postrun, post)
         self.assertEqual(form.compression, compr)
+        self.assertEqual(form.canfail, canf)
         self.assertEqual(form.rate, rate)
         self.assertEqual(form.shuffle,shuffle)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -2966,6 +3236,9 @@ class StrategyDlgTest(unittest.TestCase):
                 cnt += 1 
             elif nm == "compression":
                 self.assertEqual(vl,str(compr))
+                cnt += 1 
+            elif nm == "canfail":
+                self.assertEqual(vl,str(canf))
                 cnt += 1 
             elif nm == "rate":
                 self.assertEqual(vl,str(rate))

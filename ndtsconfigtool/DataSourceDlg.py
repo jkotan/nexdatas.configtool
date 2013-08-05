@@ -1233,35 +1233,35 @@ class DataSource(CommonDataSource):
 
     ## gets the current view
     # \returns the current view  
-    def _getview(self):
+    def __getview(self):
         if self.dialog and hasattr(self.dialog,"view"):
             return self.dialog.view
 
     ## sets the current view
     # \param view value to be set 
-    def _setview(self, view):
+    def __setview(self, view):
         if self.dialog and hasattr(self.dialog,"view"):
             self.dialog.view = view
 
     ## attribute value       
-    view = property(_getview, _setview)            
+    view = property(__getview, __setview)            
 
 
 
     ## gets the current root
     # \returns the current root  
-    def _getroot(self):
+    def __getroot(self):
         if self.dialog and hasattr(self.dialog,"root"):
             return self.dialog.root
 
     ## sets the current root
     # \param root value to be set 
-    def _setroot(self, root):
+    def __setroot(self, root):
         if self.dialog and hasattr(self.dialog,"root"):
             self.dialog.root = root
 
     ## attribute value       
-    root = property(_getroot, _setroot)            
+    root = property(__getroot, __setroot)            
 
 
 

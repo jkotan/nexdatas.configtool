@@ -427,7 +427,8 @@ class DataSourceMethods(object):
             self.__dialog.node = node
             if self.__dialog:
                 self.__dialog.node = node
-        
+        if not self.__dialog.node or not hasattr(self.__dialog.node,"attributes"):
+            return
         attributeMap = self.__dialog.node.attributes()
         
 

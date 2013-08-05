@@ -2610,366 +2610,182 @@ class DataSourceMethodsTest(unittest.TestCase):
                             "dbParameters":dbParameters,
                             "tree":tree})
         self.check_form(self.form)
+        self.form.populateParameters()
 
+
+        self.check_cds(cds,{"doc":"".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip(),
+                            "dataSourceType":dataSourceType,
+                            "dataSourceName":dataSourceName,
+                            "dbType":dbType,
+                            "dbDataFormat":dbDataFormat,
+                            "dbQuery":dbQuery,
+                            "dbParameters":dbParameters,
+                            "tree":tree})
+        self.check_form(self.form,{"dbParameters":dbParameters})
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_nonode(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_nonode(cds)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_nonode(cds)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_nonode_tree(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_nonode(cds, True)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_nonode(cds, True)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_nonode_node(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_nonode(cds,False,True)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_nonode(cds,False,True)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setFromNode_nonode_tree_node(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+
+        self.form = DataSourceDlg()
+        cds = self.form.datasource
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_nonode(cds, True, True)
+
+        cds = DataSource()
+        self.form = cds.dialog
+        self.meth = DataSourceMethods(self.form, cds)
+        self.check_setFromNode_nonode(cds, True, True)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def check_setFromNode_nonode(self, cds, tree = False, node = None):
+
+
+        n1 =  self.__rnd.randint(1, 9) 
+
+        doc = "My document %s" % n1
+        dataSourceType = "DB"
+        dataSourceName =  "mydatasource%s" % n1
+
+        dbType = self.__rnd.choice(["MYSQL","ORACLE","PGSQL"]) 
+        dbDataFormat =  self.__rnd.choice(["SCALAR","SPECTRUM","IMAGE"]) 
+        dbQuery =  "select name from device limit %s" % n1
+        dbParameters =  {"DB name":"tango%s" % n1,
+                         "DB host":"haso%s.desy.de" % n1, 
+                         "DB port":"100000%s" % n1, 
+                         "DB user":"smith%s" % n1, 
+                         "DB password":"FJFJDv%s" % n1, 
+                         "Mysql cnf":"/etc/my%s.cnf" % n1, 
+                         "Oracle mode":"m%s" % n1, 
+                         "Oracle DSN":"(some dns%s)" % n1}        
+        dbmap = {"dbname":"DB name",
+                 "hostname":"DB host",
+                 "port":"DB port",
+                 "user":"DB user",
+                 "passwd":"DB password",
+                 "mycnf":"Mysql cnf",
+                 "mode":"Oracle mode"
+                 } 
+
+
+
+
+        dks = []
+        doc = QDomDocument()
+        nname = "datasource"
+        qdn = doc.createElement(nname)
+        nn =  self.__rnd.randint(0, 9) 
+        qdn.setAttribute("name",dataSourceName)
+        qdn.setAttribute("type",dataSourceType)
+            
+
+
+
+
+        db = doc.createElement("database")
+        db.setAttribute("dbtype",dbType)
+        for dm in dbmap.keys():
+            db.setAttribute(dm,dbParameters[dbmap[dm]])
+        db.appendChild(doc.createTextNode(dbParameters["Oracle DSN"]))
+        qdn.appendChild(db) 
+
+        
+        qr = doc.createElement("query")
+        qr.setAttribute("format", dbDataFormat)
+        qr.appendChild(doc.createTextNode(dbQuery))
+
+        qdn.appendChild(qr) 
+
+        dname = "doc"
+
+        mdoc = doc.createElement(dname)
+        qdn.appendChild(mdoc) 
+        ndcs =  self.__rnd.randint(0, 10) 
+        for n in range(ndcs):
+            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
+            mdoc.appendChild(dks[-1]) 
+
+            
+
+        doc.appendChild(qdn) 
+
+
+        self.meth.createGUI()
+        self.meth.treeMode(tree)
+        self.form.show()
+        self.check_form(self.form)
+        self.check_cds(cds,{"tree":tree})
+        
+        
+        self.meth.setFromNode()
+            
+        self.check_form(self.form)
+        self.check_cds(cds,{"tree":tree})
 
 
 
 ##TODO setFromNode nonode/populateparameters
-
-
-    ## constructor test
-    # \brief It tests default settings
-    def tttest_setFromNode(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-
-        dks = []
-        doc = QDomDocument()
-        nname = "field"
-        qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
-        dname = "doc"
-
-        mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
-        for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-        dval = []
-        nval =  self.__rnd.randint(0, 10) 
-        for n in range(nval):
-            dval.append(doc.createTextNode("\nVAL\n %s\n" %  n))
-            qdn.appendChild(dval[-1]) 
-
-
-        rn =  self.__rnd.randint(1, 9) 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
-
-        mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
-        
-        for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
-            mdim.appendChild(dim)
-                
-        qdn.appendChild(mdim) 
-
-
-
-
-        form = DataSourceMethods()
-        form.show()
-        form.node = qdn
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
-
-        form.createGUI()
-        
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        
-        form.setFromNode()
-
-
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" %  i  for i in range(nval)])).strip())
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-
-        self.assertEqual(form.dimensions, dimensions)
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(), '[]')
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-
-
-
-
-    ## constructor test
-    # \brief It tests default settings
-    def tttest_setFromNode_parameter(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-
-        dks = []
-        doc = QDomDocument()
-        nname = "field"
-        qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
-        dname = "doc"
-
-        mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
-        for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-        dval = []
-        nval =  self.__rnd.randint(0, 10) 
-        for n in range(nval):
-            dval.append(doc.createTextNode("\nVAL\n %s\n" %  n))
-            qdn.appendChild(dval[-1]) 
-
-
-        rn =  self.__rnd.randint(1, 9) 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
-
-        mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
-        
-        for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
-            mdim.appendChild(dim)
-                
-        qdn.appendChild(mdim) 
-
-
-
-
-        form = DataSourceMethods()
-        form.show()
-        form.node = None
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
-
-        form.createGUI()
-        
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        
-        form.setFromNode(qdn)
-
-
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" %  i  for i in range(nval)])).strip())
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-
-        self.assertEqual(form.dimensions, dimensions)
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(), '[]')
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-
-
-
-
-
-    ## constructor test
-    # \brief It tests default settings
-    def tttest_setFromNode_nonode(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-
-        dks = []
-        doc = QDomDocument()
-        nname = "field"
-        qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
-        dname = "doc"
-
-        mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
-        for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
-        dval = []
-        nval =  self.__rnd.randint(0, 10) 
-        for n in range(nval):
-            dval.append(doc.createTextNode("\nVAL\n %s\n" %  n))
-            qdn.appendChild(dval[-1]) 
-
-        rn =  self.__rnd.randint(1, 9) 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
-
-        mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
-        
-        for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
-            mdim.appendChild(dim)
-                
-        qdn.appendChild(mdim) 
-
-
-
-
-        form = DataSourceMethods()
-        form.show()
-        form.node = None
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
-
-        form.createGUI()
-        
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        
-        form.setFromNode()
-
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(), '[]')
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-
-    ## constructor test
-    # \brief It tests default settings
-    def tttest_setFromNode_clean(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-
-        dks = []
-        doc = QDomDocument()
-        nname = "field"
-        qdn = doc.createElement(nname)
-        doc.appendChild(qdn) 
-
-
-
-
-        form = DataSourceMethods()
-        form.show()
-        form.node = qdn
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
-
-        form.createGUI()
-        
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        
-        form.setFromNode()
-
-        self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
-        self.assertEqual(form.doc, '')
-        self.assertEqual(form.value, '')
-        self.assertEqual(form.attributes, {})
-        self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems, 
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-
-
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.dimLabel.text(), '[]')
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-
-
-
-
 
 
 

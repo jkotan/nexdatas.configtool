@@ -171,7 +171,7 @@ class FieldDlg(NodeDlg):
 
         self.__updateUi()
 
-#       self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
+
         self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.ui.attributeTableWidget, 
                      SIGNAL("itemChanged(QTableWidgetItem*)"), self.__tableItemChanged)

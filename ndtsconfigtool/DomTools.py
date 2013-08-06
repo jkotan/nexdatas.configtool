@@ -114,16 +114,20 @@ class DomTools(object):
             root = model.rootIndex.internalPointer().node
             children = node.childNodes()
             i = 0
+            j = 0
             while i < children.count():
                 child = children.item(i)
                 if child.nodeType() == QDomNode.TextNode:
-                    self.removeNode(child, index, model)
-                else:
-                    i += 1
+                    if j==0 and text: 
+                        child.toText().setData(QString(text))
+                    else:
+                        child.toText().setData(QString(""))
+                    j += 1
+                i += 1
 
-            if text:
+            if j == 0 and text:
                 textNode = root.createTextNode(QString(text))
-                self.appendNode(textNode,index, model)
+                self.appendNode(textNode, index, model)
     
 
     ## removes node
@@ -192,7 +196,7 @@ class DomTools(object):
         row = self.__getElementRow(oldElement, node)
         if row is not None:
             model.removeItem(row, parent)
-            if row  < node.childNodes().count():
+            if row < node.childNodes().count():
                 model.insertItem(row, newElement, parent)
             else:
                 model.appendItem(newElement, parent)

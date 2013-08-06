@@ -60,12 +60,6 @@ class LinkDlg(NodeDlg):
         if self.target is not None:    
             self.ui.targetLineEdit.setText(self.target)
 
-        if self.node:    
-            doc = self.node.firstChildElement(QString("doc"))           
-            text = self.dts.getText(doc)    
-        else:
-            text = ""
-        self.doc = unicode(text).strip() if text else ""
 
 
     ##  creates GUI
@@ -73,14 +67,12 @@ class LinkDlg(NodeDlg):
     def createGUI(self):
 
         self.ui.setupUi(self)
-        self.ui.targetToolButton.setEnabled(False)
 
         self.updateForm()
 
         self._updateUi()
 
 
-        #        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
 
@@ -116,6 +108,8 @@ class LinkDlg(NodeDlg):
         if node:
             ## defined in NodeDlg
             self.node = node
+        if not self.node:
+            return
         attributeMap = self.node.attributes()
         nNode = unicode(self.node.nodeName())
 

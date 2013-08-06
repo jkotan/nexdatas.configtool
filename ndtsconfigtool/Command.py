@@ -239,7 +239,7 @@ class ServerStoreComponent(Command):
                      
                 self._cpEdit.reconnectSaveAction()
                 subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
-                subwindow.resize(640,560)
+                subwindow.resize(680,560)
                 self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
                 self._cp.instance = self._cpEdit 
@@ -634,7 +634,6 @@ class ServerDeleteDataSource(Command):
             try:
                 if hasattr(self._ds,"instance"):
                     self._ds.instance.savedXML = ""
-                    print "DEL", self._ds.instance.dataSourceName
                     name = self._ds.instance.dataSourceName 
                     if name is None:
                         name = ""
@@ -743,7 +742,6 @@ class ComponentNew(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self,receiver, slot)
         self._comp = None
-        
 
     ## executes the command
     # \brief It creates a new component
@@ -829,7 +827,7 @@ class ComponentOpen(Command):
                     self._cp.instance.dialog.setSaveFocus()
                 else:    
                     self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
-                    self._subwindow.resize(640,560)
+                    self._subwindow.resize(680,560)
                     self._cpEdit.dialog.setSaveFocus()
                     self._cpEdit.dialog.show()
                     self._cp.instance = self._cpEdit 
@@ -923,7 +921,7 @@ class DataSourceOpen(Command):
 
 
 #                self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit)
-#                self._subwindow.resize(640,560)
+#                self._subwindow.resize(680,560)
                     
 #            self._component.setAttribute(Qt.WA_DeleteOnClose)
                 self._dsEdit.dialog.show()
@@ -1018,7 +1016,7 @@ class ComponentRemove(Command):
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
-                self._subwindow.resize(640,560)
+                self._subwindow.resize(680,560)
                 self._cp.instance.dialog.setSaveFocus()
                 self._cp.instance.dialog.show()
 
@@ -1104,7 +1102,7 @@ class ComponentEdit(Command):
                      
                 self._cpEdit.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
-                self._subwindow.resize(640,560)
+                self._subwindow.resize(680,560)
                 self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
             self._cp.instance = self._cpEdit 
@@ -1171,7 +1169,7 @@ class ComponentSave(Command):
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
             else:    
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cpEdit.dialog)
-                self._subwindow.resize(640,560)
+                self._subwindow.resize(680,560)
                 self._cpEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
             self._cp.instance = self._cpEdit 
@@ -1798,8 +1796,10 @@ class DataSourceApply(Command):
             else:
                 self.receiver.sourceList.datasources[self._ds.id].instance.setState(
                     self._newstate)
+                if not hasattr(self._ds.instance.dialog.ui,"docTextEdit"):
+                    self._ds.instance.createDialog()
                 self._ds.instance.updateForm()
-
+                
 
 
             subwindow = self.receiver.subWindow(
@@ -1843,28 +1843,29 @@ class DataSourceApply(Command):
         
             self.receiver.sourceList.datasources[self._ds.id].instance.setState(self._oldstate)
 
-
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.mdi.subWindowList())
             if subwindow:
                 self.receiver.mdi.setActiveSubWindow(subwindow) 
                 self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
                 self._ds.instance.reconnectSaveAction()
+                
             else:    
                 self._ds.instance.createDialog()
 
                 self.receiver.sourceList.datasources[self._ds.id].instance.updateForm()
-                if self._ds.instance.isDirty():
-                    self._ds.instance.dialog.setWindowTitle("%s [Component]*" % self._ds.name)
-                else:
-                    self._ds.instance.dialog.setWindowTitle("%s [Component]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
                 self._subwindow.resize(440,480)
-                self._ds.instance.dialog.show()
-    
 
+            self._ds.instance.updateNode()
+            if self._ds.instance.isDirty():
+                self._ds.instance.dialog.setWindowTitle("%s [Component]*" % self._ds.name)
+            else:
+                self._ds.instance.dialog.setWindowTitle("%s [Component]" % self._ds.name)
+            self._ds.instance.dialog.show()
+    
             if hasattr(self._ds ,"id"):
                 self.receiver.sourceList.populateDataSources(self._ds.id)
             else:
@@ -2658,7 +2659,7 @@ class DataSourceRemove(Command):
             else:    
                 self._ds.instance.createDialog()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(640,560)
+                self._subwindow.resize(680,560)
                 self._ds.instance.dialog.setSaveFocus()
                 self._ds.instance.dialog.show()
                     
@@ -2902,7 +2903,7 @@ class ComponentItemCommand(Command):
                      
                     self._cp.instance.reconnectSaveAction()
                     self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
-                    self._subwindow.resize(640,560)
+                    self._subwindow.resize(680,560)
 
                     if hasattr(self._cp.instance.dialog,"show"):
                         self._cp.instance.dialog.show()
@@ -2949,7 +2950,7 @@ class ComponentItemCommand(Command):
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._cp.instance.dialog)
-                self._subwindow.resize(640,560)
+                self._subwindow.resize(680,560)
 
                 self._cp.instance.dialog.show()
         self._cp.instance.reconnectSaveAction()

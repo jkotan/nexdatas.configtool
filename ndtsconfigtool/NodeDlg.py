@@ -104,7 +104,6 @@ class NodeDlg(QDialog):
             return self.dts.removeElement(element, parent, self.view.model())
 
 
-
     ## replaces node element
     # \param oldElement old DOM node element 
     # \param newElement new DOM node element 

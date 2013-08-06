@@ -26,6 +26,7 @@ from ui.ui_richattributedlg import  Ui_RichAttributeDlg
 
 from NodeDlg import NodeDlg 
 from DimensionsDlg import DimensionsDlg
+import copy
 
 from Errors import CharacterError
 
@@ -170,6 +171,8 @@ class RichAttributeDlg(NodeDlg):
         if node:
             ## defined in NodeDlg
             self.node = node
+        if not self.node:
+            return
         attributeMap = self.node.attributes()
         nNode = self.node.nodeName()
 
@@ -177,7 +180,7 @@ class RichAttributeDlg(NodeDlg):
         self.nexusType = unicode(attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else "")
 
 
-        text = self.dts.getText(node)    
+        text = self.dts.getText(self.node)    
         self.value = unicode(text).strip() if text else ""
 
 
@@ -363,6 +366,31 @@ class RichAttributeDlg(NodeDlg):
             else:
                 self.appendElement(newDimens, mindex)
                     
+
+
+
+
+    ## appends newElement
+    # \param newElement DOM node to append
+    # \param parent parent DOM node        
+    def appendElement(self, newElement, parent):
+        singles = {"datasource":"DataSource", "strategy":"Strategy"}
+        if unicode(newElement.nodeName()) in singles:
+            if not self.node:
+                return
+            child = self.node.firstChild()
+            while not child.isNull():
+                if child.nodeName() == unicode(newElement.nodeName()):
+                    QMessageBox.warning(
+                        self, "%s exists" % singles[str(newElement.nodeName())], 
+                        "To add a new %s please remove the old one" % newElement.nodeName())
+                    return False
+                child = child.nextSibling()    
+
+
+
+        return NodeDlg.appendElement(self, newElement, parent)       
+        
 
 
 if __name__ == "__main__":

@@ -50,6 +50,12 @@ class StrategyDlg(NodeDlg):
         ## compression shuffle
         self.shuffle = True
 
+        ## allowed subitems
+        self.subItems=[ "doc"]
+
+        ## writing can fail 
+        self.canfail = False
+
         ## user interface
         self.ui = Ui_StrategyDlg()
 
@@ -72,13 +78,13 @@ class StrategyDlg(NodeDlg):
             self.ui.triggerLineEdit.setText(self.trigger) 
 
         self.ui.compressionCheckBox.setChecked(self.compression) 
+        self.ui.canFailCheckBox.setChecked(self.canfail) 
         self.ui.shuffleCheckBox.setChecked(self.shuffle) 
         self.ui.rateSpinBox.setValue(self.rate)
 
         if self.grows is not None :
             try:
                 grows = int(self.grows)
-                print "GROWS", grows
                 if grows < 0:
                     grows = 0
             except:
@@ -115,6 +121,7 @@ class StrategyDlg(NodeDlg):
                  self.compression,
                  self.rate,
                  self.shuffle,
+                 self.canfail,
                  self.doc
                  )
 #        print  "GET", unicode(state)
@@ -125,13 +132,14 @@ class StrategyDlg(NodeDlg):
     # \param state strategy state written in tuple 
     def setState(self, state):
 
-        (self.name,
+        (self.mode,
          self.trigger,
          self.grows,
          self.postrun,
          self.compression,
          self.rate,
          self.shuffle,
+         self.canfail,
          self.doc
          ) = state
 #        print "SET",  unicode(state)
@@ -169,12 +177,18 @@ class StrategyDlg(NodeDlg):
     def setFromNode(self, node=None):
         if node:
             ## defined in NodeDlg class
-            self.node = node
+            self.node = node 
+        if not self.node:
+            return
         attributeMap = self.node.attributes()
 
         self.trigger = attributeMap.namedItem("trigger").nodeValue() if attributeMap.contains("trigger") else ""
         self.grows = attributeMap.namedItem("grows").nodeValue() if attributeMap.contains("grows") else ""
         self.mode = attributeMap.namedItem("mode").nodeValue() if attributeMap.contains("mode") else ""
+
+        if attributeMap.contains("canfail"):
+            self.canfail = \
+                False if str(attributeMap.namedItem("canfail").nodeValue()).upper() == "FALSE"  else True
 
         if attributeMap.contains("compression"):
             self.compression = \
@@ -193,7 +207,7 @@ class StrategyDlg(NodeDlg):
                 self.rate = rate    
 
 
-        text = self.dts.getText(node)    
+        text = self.dts.getText(self.node)    
         self.postrun = unicode(text).strip() if text else ""
 
         doc = self.node.firstChildElement(QString("doc"))           
@@ -221,12 +235,12 @@ class StrategyDlg(NodeDlg):
             self.postrun = unicode(self.ui.postLineEdit.text())
 
 
+        self.canfail = self.ui.canFailCheckBox.isChecked()
         self.compression = self.ui.compressionCheckBox.isChecked()
         self.shuffle = self.ui.shuffleCheckBox.isChecked()
         self.rate = self.ui.rateSpinBox.value()
             
 
-        print "cP", self.compression
 
         self.doc = unicode(self.ui.docTextEdit.toPlainText())
 
@@ -260,7 +274,9 @@ class StrategyDlg(NodeDlg):
             if self.trigger:
                 elem.setAttribute(QString("trigger"), QString(self.trigger))
             if self.grows:
-                elem.setAttribute(QString("grows"), QString(self.grows))
+                elem.setAttribute(QString("grows"), QString(str(self.grows)))
+        if self.canfail:
+            elem.setAttribute(QString("canfail"), QString("true"))
         if self.compression:
             elem.setAttribute(QString("compression"), QString("true"))
             elem.setAttribute(QString("shuffle"), QString("true") if self.shuffle else "false" )
@@ -271,14 +287,16 @@ class StrategyDlg(NodeDlg):
         doc = self.node.firstChildElement(QString("doc"))           
         if not self.doc and doc and doc.nodeName() == "doc" :
             self.removeElement(doc, mindex)
+            
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
-            newDoc.appendChild(newText)
+            newDoc.appendChild(newText) 
             if doc and doc.nodeName() == "doc" :
                 self.replaceElement(doc, newDoc, mindex)
             else:
                 self.appendElement(newDoc, mindex)
+
 
 
 

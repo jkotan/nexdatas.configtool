@@ -114,14 +114,12 @@ class DefinitionDlg(NodeDlg):
 
         self.__updateUi()
 
-#        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.ui.attributeTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.__tableItemChanged)
         self.connect(self.ui.addPushButton, SIGNAL("clicked()"), self.__addAttribute)
         self.connect(self.ui.removePushButton, SIGNAL("clicked()"), self.__removeAttribute)
 
-#        self.connect(self.ui.typeLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
 
 
     ## sets the form from the DOM node

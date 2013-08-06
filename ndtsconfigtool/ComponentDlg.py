@@ -64,13 +64,6 @@ class ComponentDlg(QDialog):
         self.__dts = DomTools()
 
 
-    ## function called on key press
-    # \param event catched event
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Escape:
-            print "NO CLOSE"
-#            self.close()
-            
 
     ## provides row number of the given node
     # \param child child item
@@ -94,6 +87,7 @@ class ComponentDlg(QDialog):
     def closeEvent(self, event):
         super(ComponentDlg,self).closeEvent(event)
         self.component.dialog = None
+        event.accept()    
 
 
 
@@ -164,7 +158,6 @@ class Component(object):
                            "link":LinkDlg,
                            "datasource":DataSourceDlg,
                            "strategy":StrategyDlg
-#                           ,"dimensions":DimensionsDlg
                            }
 
         ## current component tag
@@ -633,20 +626,13 @@ class Component(object):
         self.dialog.ui.setupUi(self.dialog)
         self.view = self.dialog.ui.view
 
-#        self.createGUI()
-
-
         
         self.updateForm()
         self.connectView()
 
     def connectView(self):
-        #        self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), self.save)
-#        self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), self._close)
         self.dialog.disconnect(self.view.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
         self.dialog.connect(self.view.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
-        #        self.dialog.connect(self.view, SIGNAL("activated(QModelIndex)"), self.tagClicked)  
-#        self.dialog.connect(self.view, SIGNAL("clicked(QModelIndex)"), self.tagClicked)  
         self.dialog.disconnect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
         self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
         self.dialog.disconnect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)
@@ -1147,14 +1133,11 @@ class Component(object):
     ## merges the component tree
     # \returns True on success
     def merge(self):
-#        import gc
-#        gc.collect()
         document = None
         dialog = False
 
         self._mergerdlg = MergerDlg(self.dialog)
         self._mergerdlg.createGUI()
-#        self.dialog.disconnect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
         self.dialog.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
         self.dialog.connect(self._mergerdlg.interruptButton, SIGNAL("clicked()"), self._interruptMerger)
 
@@ -1416,7 +1399,7 @@ def test():
     app = QApplication(sys.argv)
     component = Component()
     component.createGUI()
-    component.dialog.resize(640, 560)
+    component.dialog.resize(680, 560)
     component.createHeader()
     component.dialog.show()        
     component.dialog.setWindowTitle("%s [Component]" % component.name)

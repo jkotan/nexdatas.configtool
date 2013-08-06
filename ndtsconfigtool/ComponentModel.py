@@ -258,7 +258,6 @@ class ComponentModel(QAbstractItemModel):
 
         status = item.removeChildren(position, 1)
         item.node.removeChild(node)
-
         self.endRemoveRows()
         return status
 

@@ -71,8 +71,7 @@ class DimensionsDlg(QDialog):
         
         self.ui.rankSpinBox.setValue(self.rank)    
 
-        self.connect(self.ui.dimTableWidget, 
-                     SIGNAL("itemChanged(QTableWidgetItem*)"),
+        self.connect(self.ui.dimTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.__tableItemChanged)
 
         self.ui.dimTableWidget.setSortingEnabled(False)

@@ -37,6 +37,15 @@ import NodeDlgTest
 import ComponentItemTest
 import ComponentModelTest
 import DomToolsTest
+import RichAttributeDlgTest
+import LinkDlgTest
+import StrategyDlgTest
+import LabeledObjectTest
+import CommonDataSourceDlgTest
+import DataSourceDlgTest
+import CommonDataSourceTest
+import DataSourceTest
+import DataSourceMethodsTest
 
 
 
@@ -101,12 +110,26 @@ def main():
     GroupDlgTest.app = app
     ComponentItemTest.app = app
     DomToolsTest.app = app
+    RichAttributeDlgTest.app = app
+    LinkDlgTest.app = app
+    StrategyDlgTest.app = app
+    LabeledObjectTest.app = app
+    CommonDataSourceDlgTest.app = app
+    DataSourceDlgTest.app = app
+    CommonDataSourceTest.app = app
+    DataSourceTest.app = app
+    DataSourceMethodsTest.app = app
 
 
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(AttributeDlgTest) )
 
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(LinkDlgTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(StrategyDlgTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ConnectDlgTest) )
@@ -125,6 +148,9 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(FieldDlgTest) )
 
     suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(RichAttributeDlgTest) )
+
+    suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NodeDlgTest) )
 
     suite.addTests(
@@ -135,6 +161,24 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(DomToolsTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(LabeledObjectTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(CommonDataSourceDlgTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceDlgTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(CommonDataSourceTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceMethodsTest) )
 
 
 

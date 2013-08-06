@@ -1,4 +1,4 @@
-2013-XX-XX Jan Kotanski <jankotan@gmail.com>
+2013-08-06 Jan Kotanski <jankotan@gmail.com>
 	* adding canFail strategy checkbox
 	* fixing creating DB node
 	* disconnecting duplicated signals

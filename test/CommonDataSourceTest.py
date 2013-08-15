@@ -144,6 +144,7 @@ class CommonDataSourceTest(unittest.TestCase):
         tangoMemberName = 'position%s' %nn
         tangoMemberType = 'attribute%s' %nn
         tangoHost = 'haso.desy.de%s' %nn
+        tangoGroup = 'group%s' %nn
         tangoPort = '100%s' %nn
         tangoEncoding = 'UTF%s' %nn
 
@@ -164,6 +165,7 @@ class CommonDataSourceTest(unittest.TestCase):
                       tangoHost,
                       tangoPort,
                       tangoEncoding,
+                      tangoGroup,
                       dbType,
                       dbDataFormat,
                       dbQuery,

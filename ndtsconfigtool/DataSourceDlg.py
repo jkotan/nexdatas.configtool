@@ -354,6 +354,8 @@ class DataSourceMethods(object):
             self.__dialog.ui.tPortLineEdit.setText(self.__datasource.tangoPort)
         if self.__datasource.tangoEncoding is not None:
             self.__dialog.ui.tEncodingLineEdit.setText(self.__datasource.tangoEncoding)
+        if self.__datasource.tangoGroup is not None:
+            self.__dialog.ui.tGroupLineEdit.setText(self.__datasource.tangoGroup)
 
 
 
@@ -478,6 +480,8 @@ class DataSourceMethods(object):
                                                         if attributeMap.contains("port") else "")
                 self.__datasource.tangoEncoding = unicode(attributeMap.namedItem("encoding").nodeValue() \
                                                             if attributeMap.contains("encoding") else "")
+                self.__datasource.tangoGroup = unicode(attributeMap.namedItem("group").nodeValue() \
+                                                            if attributeMap.contains("group") else "")
 
                                     
         elif value == 'DB':
@@ -567,6 +571,7 @@ class DataSourceMethods(object):
             self.__datasource.tangoHost = unicode(self.__dialog.ui.tHostLineEdit.text())
             self.__datasource.tangoPort = unicode(self.__dialog.ui.tPortLineEdit.text())
             self.__datasource.tangoEncoding = unicode(self.__dialog.ui.tEncodingLineEdit.text())
+            self.__datasource.tangoGroup = unicode(self.__dialog.ui.tGroupLineEdit.text())
                 
         elif sourceType == 'DB':
 
@@ -654,6 +659,8 @@ class DataSourceMethods(object):
                 device.setAttribute(QString("port"), QString(self.__datasource.tangoPort))
             if self.__datasource.tangoEncoding:
                 device.setAttribute(QString("encoding"), QString(self.__datasource.tangoEncoding))
+            if self.__datasource.tangoGroup:
+                device.setAttribute(QString("group"), QString(self.__datasource.tangoGroup))
             elem.appendChild(device)            
             
         elif self.__datasource.dataSourceType == 'DB':
@@ -880,6 +887,8 @@ class CommonDataSource(object):
         self.tangoPort = u''
         ## encoding for DevEncoded Tango types
         self.tangoEncoding = u''
+        ## group for Tango DataSources
+        self.tangoGroup = u''
 
         ## database type
         self.dbType = 'MYSQL'
@@ -927,6 +936,7 @@ class CommonDataSource(object):
         self.tangoHost = u''
         self.tangoPort = u''
         self.tangoEncoding = u''
+        self.tangoGroup = u''
 
         self.dbType = 'MYSQL'
         self.dbDataFormat = 'SCALAR'
@@ -952,6 +962,7 @@ class CommonDataSource(object):
                  self.tangoHost,
                  self.tangoPort,
                  self.tangoEncoding,
+                 self.tangoGroup,
                  self.dbType,
                  self.dbDataFormat,
                  self.dbQuery,
@@ -976,6 +987,7 @@ class CommonDataSource(object):
          self.tangoHost,
          self.tangoPort,
          self.tangoEncoding,
+         self.tangoGroup,
          self.dbType,
          self.dbDataFormat,
          self.dbQuery,
@@ -1467,6 +1479,7 @@ if __name__ == "__main__":
     form.tangoHost = 'hasso.desy.de'
     form.tangoPort = '10000'
     form.tangoEncoding = 'LIMA2D'
+    form.tangoGroup = 'Coordinates'
 
     form.dataSourceType = 'DB'
     form.dbType = 'PGSQL'

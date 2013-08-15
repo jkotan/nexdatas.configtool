@@ -1,3 +1,7 @@
+2013-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* adding group for tango datasources
+	* tagged as v1.2.7
+
 2013-08-06 Jan Kotanski <jankotan@gmail.com>
 	* adding canFail strategy checkbox
 	* fixing creating DB node

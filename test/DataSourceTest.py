@@ -244,6 +244,7 @@ class DataSourceTest(unittest.TestCase):
         tangoDeviceName = 'mydevice%s' %nn
         tangoMemberName = 'position%s' %nn
         tangoMemberType = 'attribute%s' %nn
+        tangoGroup = 'group%s' %nn
         tangoHost = 'haso.desy.de%s' %nn
         tangoPort = '100%s' %nn
         tangoEncoding = 'UTF%s' %nn
@@ -265,6 +266,7 @@ class DataSourceTest(unittest.TestCase):
                       tangoHost,
                       tangoPort,
                       tangoEncoding,
+                      tangoGroup,
                       dbType,
                       dbDataFormat,
                       dbQuery,

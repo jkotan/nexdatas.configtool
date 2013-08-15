@@ -2256,14 +2256,19 @@ class ComponentTakeDataSources(Command):
             if self._cp.instance is not None:
                 datasources = self._cp.instance.getDataSources()
         
-                dialogs = self.receiver.mdi.subWindowList()
-                if dialogs:
-                    for dialog in dialogs:
-                        if isinstance(dialog, DataSourceDlg):
-                            self.receiver.mdi.setActiveSubWindow(dialog)
-                            self.receiver.mdi.closeActiveSubWindow()
+                if datasources:
+                    dialogs = self.receiver.mdi.subWindowList()
+                    if dialogs:
+                        for dialog in dialogs:
+                            if isinstance(dialog, DataSourceDlg):
+                                self.receiver.mdi.setActiveSubWindow(dialog)
+                                self.receiver.mdi.closeActiveSubWindow()
         
-                self.receiver.setDataSources(datasources, new = True)
+                    self.receiver.setDataSources(datasources, new = True)
+                else:
+                    QMessageBox.warning(self.receiver, "DataSource item not selected", 
+                                        "Please select one of the datasource items")            
+
 
         print "EXEC componentTakeDataSources"
 
@@ -2318,16 +2323,21 @@ class ComponentTakeDataSource(Command):
                 if self._cp.instance is not None:
 
                     datasource = self._cp.instance.getCurrentDataSource()
-                    dialogs = self.receiver.mdi.subWindowList()
-                    if dialogs:
-                        for dialog in dialogs:
-                            if isinstance(dialog, DataSourceDlg):
-                                self.receiver.mdi.setActiveSubWindow(dialog)
-                                self.receiver.mdi.closeActiveSubWindow()
+                    if datasource:            
+                        dialogs = self.receiver.mdi.subWindowList()
+                        if dialogs:
+                            for dialog in dialogs:
+                                if isinstance(dialog, DataSourceDlg):
+                                    self.receiver.mdi.setActiveSubWindow(dialog)
+                                    self.receiver.mdi.closeActiveSubWindow()
         
-                    self._ids = self.receiver.setDataSources(datasource, new = True)
-                    self._ds = self.receiver.sourceList.datasources[self._ids]
-                    self.receiver.sourceList.populateDataSources(self._ids)
+                        self._ids = self.receiver.setDataSources(datasource, new = True)
+                        self._ds = self.receiver.sourceList.datasources[self._ids]
+                        self.receiver.sourceList.populateDataSources(self._ids)
+                    else:
+                        QMessageBox.warning(self.receiver, "DataSource item not selected", 
+                                            "Please select one of the datasource items")            
+                        
         print "EXEC componentTakeDataSource"
 
     ## unexecutes the command

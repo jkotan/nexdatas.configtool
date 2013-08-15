@@ -408,7 +408,7 @@ class DataSourceMethods(object):
             self.__dialog.ui.setupUi(self.__dialog)
 
         self.updateForm()
-        self.__dialog.resize(460, 440)
+        self.__dialog.resize(460, 520)
 
         if not self.__datasource.tree :
             self.__dialog.disconnect(self.__dialog.ui.resetPushButton, SIGNAL("clicked()"), self.reset)

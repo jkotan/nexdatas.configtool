@@ -6,16 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>461</width>
-    <height>1047</height>
+    <width>477</width>
+    <height>1409</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>DataSource</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_4">
+  <layout class="QGridLayout" name="gridLayout_8">
    <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout_4">
+    <layout class="QVBoxLayout" name="verticalLayout_5">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -43,6 +43,11 @@
          <item>
           <property name="text">
            <string>DB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PYEVAL</string>
           </property>
          </item>
         </widget>
@@ -530,6 +535,65 @@
       </widget>
      </item>
      <item>
+      <widget class="QFrame" name="peFrame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QLabel" name="peInputLabel">
+            <property name="text">
+             <string>DataSource variables (i.e.: ds.pitch ds.roll):</string>
+            </property>
+            <property name="buddy">
+             <cstring>peInputLineEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="peInputLineEdit"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="peScriptLabel">
+            <property name="text">
+             <string>Python Script:</string>
+            </property>
+            <property name="buddy">
+             <cstring>peScriptTextEdit</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTextEdit" name="peScriptTextEdit"/>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QLabel" name="peResultLabel">
+              <property name="text">
+               <string>Result variable:</string>
+              </property>
+              <property name="buddy">
+               <cstring>peResultLineEdit</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="peResultLineEdit"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
       <widget class="QFrame" name="docFrame">
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
@@ -639,6 +703,9 @@
   <tabstop>dParamComboBox</tabstop>
   <tabstop>dAddPushButton</tabstop>
   <tabstop>dRemovePushButton</tabstop>
+  <tabstop>peInputLineEdit</tabstop>
+  <tabstop>peScriptTextEdit</tabstop>
+  <tabstop>peResultLineEdit</tabstop>
   <tabstop>docTextEdit</tabstop>
   <tabstop>savePushButton</tabstop>
   <tabstop>storePushButton</tabstop>

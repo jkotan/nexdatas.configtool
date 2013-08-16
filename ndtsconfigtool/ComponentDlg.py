@@ -339,6 +339,7 @@ class Component(object):
         model = ComponentModel(self.document,self._allAttributes,self.dialog)
 #        model = ComponentModel(QDomDocument(),self._allAttributes,self.dialog)
         self.view.setModel(model)
+        self.connectView()
         
         self.dialog.ui.widget = QWidget()
         self._frameLayout = QGridLayout()
@@ -702,6 +703,7 @@ class Component(object):
 #             self.view.reset()
              newModel = ComponentModel(self.document, self._allAttributes ,self.dialog)
              self.view.setModel(newModel)
+             self.connectView()
              self._hideFrame()
              if cNode:
                  self._showNodes([cNode])
@@ -887,7 +889,7 @@ class Component(object):
         if self.dialog and self.dialog.ui:
             newModel = ComponentModel(self.document,self._allAttributes, self.dialog)
             self.view.setModel(newModel)
-        self.connectView()
+            self.connectView()
         
 
     ## loads the component item from the xml file 
@@ -1166,6 +1168,7 @@ class Component(object):
                 self.view.setModel(newModel)
                 self.view.reset()
                 self._hideFrame()
+                self.connectView()
 
             self._merger.start()
 
@@ -1187,6 +1190,7 @@ class Component(object):
             if dialog:
                 self.view.setModel(newModel)
                 self._hideFrame()
+                self.connectView()
 
                 self.connectView()    
                 if hasattr(self._merger, "selectedNode") and self._merger.selectedNode: 
@@ -1205,6 +1209,7 @@ class Component(object):
             if dialog:
                 self.view.setModel(newModel)
                 self._hideFrame()
+                self.connectView()
                 if hasattr(e, "nodes") and e.nodes: 
                     self._showNodes(e.nodes)
             if dialog:    
@@ -1218,6 +1223,7 @@ class Component(object):
                 self.document = document
                 self.view.setModel(newModel)
                 self._hideFrame()
+                self.connectView()
             if dialog:    
                 QMessageBox.warning(self.dialog, "Warning",
                                     "%s" % unicode(e) )
@@ -1251,6 +1257,7 @@ class Component(object):
         if self.dialog and self.dialog.ui:
             newModel = ComponentModel(self.document, self._allAttributes, self.dialog)
             self.view.setModel(newModel)
+            self.connectView()
         self._hideFrame()
 
 

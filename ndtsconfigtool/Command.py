@@ -3013,6 +3013,7 @@ class ComponentClear(ComponentItemCommand):
                 
                     newModel = ComponentModel(self._cp.instance.document, self._cp.instance._allAttributes)
                     self._cp.instance.view.setModel(newModel)
+                    self._cp.instance.connectView()
 
                     if hasattr(self._cp.instance,"connectExternalActions"):     
                         self._cp.instance.connectExternalActions(**self.receiver.externalCPActions) 

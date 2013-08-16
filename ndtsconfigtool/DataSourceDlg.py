@@ -27,6 +27,7 @@ from PyQt4.QtGui import (QApplication, QFileDialog, QMessageBox, QTableWidgetIte
 from ui.ui_datasourcedlg import Ui_DataSourceDlg
 from PyQt4.QtXml import (QDomDocument, QDomNode)
 from NodeDlg import NodeDlg 
+from DomTools import DomTools
 import copy
 import gc
 
@@ -548,6 +549,7 @@ class DataSourceMethods(object):
     ## sets the PYEVAL form from the DOM node
     # \brief it sets the PYEVAL form from the DOM node
     def __setFromNodePyEval(self):
+        print "SET FROM"
         res = self.__dialog.node.firstChildElement(QString("result"))           
         text = self.__dialog.dts.getText(res)    
         self.__datasource.peScript = unicode(text) if text else ""
@@ -557,15 +559,20 @@ class DataSourceMethods(object):
 
         ds = self.__dialog.dts.getText(self.__dialog.node)    
         dslist = unicode(ds).strip().split() if unicode(ds).strip() else []
+        self.__datasource.peDataSources = {}
         child = self.__dialog.node.firstChildElement(QString("datasource"))           
-        while not child.isNull(): 
+        while not child.isNull():
             if child.nodeName() == 'datasource':
                 attributeMap = child.attributes()
                 name = unicode(attributeMap.namedItem("name").nodeValue() \
                                    if attributeMap.contains("name") else "")
                 if name.strip():
                     dslist.append(name.strip())
+                    doc = QDomDocument()
+                    doc.appendChild(doc.importNode(child,True))
+                    self.__datasource.peDataSources[name] = unicode(doc.toString(0))
                     child = child.nextSiblingElement("datasource")    
+                    
             
         self.__datasource.peInput = " ".join(
             "ds."+ (d[13:] if (len(d)> 13 and d[:13] =="$datasources.") else d) for d in dslist)
@@ -783,6 +790,44 @@ class DataSourceMethods(object):
             query.appendChild(newText)
 
         elem.appendChild(query)            
+
+
+    ## creates PYEVAL datasource node
+    # \param root root node 
+    # \param elem datasource node 
+    def __createPyEvalNodes(self, root, elem):
+        print "CREATE node"
+        res = root.createElement(QString("result"))
+        if self.__datasource.peResult:
+            res.setAttribute(QString("name"), QString(self.__datasource.peResult))
+        if self.__datasource.peScript:
+            script = root.createTextNode(QString(self.__datasource.peScript))
+            res.appendChild(script)
+        elem.appendChild(res)            
+        if self.__datasource.peInput:
+            dslist = unicode(self.__datasource.peInput).split()
+            newds = "" 
+            dts = DomTools()  
+            for d in dslist:
+                name = d[3:] if (len(d) > 3 or d[:3] == 'ds.' ) else d
+                if name in self.__datasource.peDataSources.keys():
+                    document = QDomDocument() 
+                    if not document.setContent(self.__datasource.peDataSources[name]):
+                        raise ValueError, "could not parse XML"  
+                    else:
+                        if self.__dialog and hasattr(self.__dialog,"root"):
+
+                            dsnode = dts.getFirstElement(
+                                document, "datasource")
+                            child = root.importNode(dsnode,True)
+                            elem.appendChild(child)
+
+                            pass
+                else :
+                    newds = "\n ".join([newds,"$datasources." + name])
+                
+            newText = root.createTextNode(QString(newds))
+            elem.appendChild(newText)
 
 
 
@@ -1028,6 +1073,8 @@ class CommonDataSource(object):
         self.peInput = ""
         ## pyeval python script
         self.peScript = ""
+        ## pyeval datasources
+        self.peDataSources = {}
 
         ## external save method
         self.externalSave = None
@@ -1076,6 +1123,7 @@ class CommonDataSource(object):
         self.peResult = "ds.result"
         self.peInput = ""
         self.peScript = ""
+        self.peDataSouces = {}
 
 
 #        if self.dialog:
@@ -1087,6 +1135,7 @@ class CommonDataSource(object):
     # \returns state of the datasource in tuple
     def getState(self):
         dbParameters = copy.copy(self.dbParameters)
+        peDataSources = copy.copy(self.peDataSources)
 
         state = (self.dataSourceType,
                  self.doc,
@@ -1105,6 +1154,7 @@ class CommonDataSource(object):
                  self.peResult,
                  self.peInput,
                  self.peScript,
+                 peDataSources,
                  self.dataSourceName
                  )
         return state
@@ -1133,9 +1183,11 @@ class CommonDataSource(object):
          self.peResult,
          self.peInput,
          self.peScript,
+         peDataSources,
          self.dataSourceName
          ) = state
         self.dbParameters = copy.copy(dbParameters)
+        self.peDataSources = copy.copy(peDataSources)
 
 
 

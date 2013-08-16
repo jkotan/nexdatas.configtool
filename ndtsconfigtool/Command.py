@@ -1556,7 +1556,6 @@ class DataSourceCut(Command):
                     self._oldstate = self._ds.instance.getState() 
                 self._ds.instance.copyToClipboard()
                 self._ds.instance.clear()
-#                self._ds.instance.createNodes()
                 self._ds.instance.updateForm()
                 self._ds.instance.dialog.show()
             else:

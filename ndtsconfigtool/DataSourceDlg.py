@@ -569,7 +569,7 @@ class DataSourceMethods(object):
             self.__datasource.tangoEncoding = unicode(self.__dialog.ui.tEncodingLineEdit.text())
                 
         elif sourceType == 'DB':
-
+            query = unicode(self.__dialog.ui.dQueryLineEdit.text()).strip()
             if not query:
                 QMessageBox.warning(self, "Empty query", 
                                     "Please define the DB query")

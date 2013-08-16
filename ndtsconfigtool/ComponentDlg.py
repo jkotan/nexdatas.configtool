@@ -887,6 +887,7 @@ class Component(object):
         if self.dialog and self.dialog.ui:
             newModel = ComponentModel(self.document,self._allAttributes, self.dialog)
             self.view.setModel(newModel)
+        self.connectView()
         
 
     ## loads the component item from the xml file 

@@ -662,7 +662,16 @@ class DataSourceMethods(object):
     ## copies  parameters from PYEVAL form to datasource instance
     # \brief It copies parameters from PYEVAL form to datasource instance
     def __fromFormPyEval(self):
-
+        self.__datasource.peInput = unicode(self.__dialog.ui.peInputLineEdit.text()).strip()
+        self.__datasource.peResult = unicode(self.__dialog.ui.peResultLineEdit.text()).strip()
+        script = unicode(self.__dialog.ui.peScriptTextEdit.toPlainText())
+        if not script:
+            QMessageBox.warning(self, "Empty script", 
+                                "Please define the PyEval script")
+            self.__datasource.dQueryLineEdit.setFocus()
+            return 
+        self.__datasource.peScript = script
+        
 
     ## accepts input text strings
     # \brief It copies the parameters and accept the self.__dialog

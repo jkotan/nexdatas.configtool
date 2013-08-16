@@ -1123,7 +1123,7 @@ class CommonDataSource(object):
         self.peResult = "ds.result"
         self.peInput = ""
         self.peScript = ""
-        self.peDataSouces = {}
+        self.peDataSources = {}
 
 
 #        if self.dialog:

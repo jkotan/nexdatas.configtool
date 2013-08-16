@@ -225,14 +225,12 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.tree, False)
         
 
-
-
     ## constructor test
     # \brief It tests default settings
     def test_set_get_clean_State(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
-        cds = DataSource()
+        cds = CommonDataSource()
         nn =  self.__rnd.randint(0, 10) 
 
         dataSourceType = 'TANGO%s' % nn
@@ -244,8 +242,8 @@ class DataSourceTest(unittest.TestCase):
         tangoDeviceName = 'mydevice%s' %nn
         tangoMemberName = 'position%s' %nn
         tangoMemberType = 'attribute%s' %nn
-        tangoGroup = 'group%s' %nn
         tangoHost = 'haso.desy.de%s' %nn
+        tangoGroup = 'group%s' %nn
         tangoPort = '100%s' %nn
         tangoEncoding = 'UTF%s' %nn
 
@@ -256,6 +254,12 @@ class DataSourceTest(unittest.TestCase):
         for i in range(nn):
             dbParameters["param%s" % i] = "value%s" %i
 
+        peResult = "ds.result%s" %nn 
+        peInput =  "ds.source%s ds.source1%s ds.source2%s" %(nn,nn,nn)
+        peScript = "import math\n ds.result= sin(ds.x)"
+        peDataSources = {}
+        for i in range(nn):
+            peDataSources["param%s" % i] = "<datasource%s/>" %i
             
         cds.setState((dataSourceType,
                       doc,
@@ -271,6 +275,10 @@ class DataSourceTest(unittest.TestCase):
                       dbDataFormat,
                       dbQuery,
                       dbParameters,
+                      peResult,
+                      peInput,
+                      peScript,
+                      peDataSources,
                       dataSourceName
                       ))
         
@@ -292,6 +300,12 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.dbDataFormat, dbDataFormat)
         self.assertEqual(cds.dbQuery, dbQuery)
         self.assertEqual(cds.dbParameters, dbParameters)
+
+        self.assertEqual(cds.peResult, peResult)
+        self.assertEqual(cds.peInput, peInput)
+        self.assertEqual(cds.peScript, peScript)
+        self.assertEqual(cds.peDataSources, peDataSources)
+
 
         self.assertEqual(cds.externalSave, None)
         self.assertEqual(cds.externalStore, None)
@@ -329,6 +343,12 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.dbQuery, dbQuery)
         self.assertEqual(cds.dbParameters, dbParameters)
 
+        self.assertEqual(cds.peResult, peResult)
+        self.assertEqual(cds.peInput, peInput)
+        self.assertEqual(cds.peScript, peScript)
+        self.assertEqual(cds.peDataSources, peDataSources)
+
+
         self.assertEqual(cds.externalSave, None)
         self.assertEqual(cds.externalStore, None)
         self.assertEqual(cds.externalClose, None)
@@ -337,12 +357,8 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.applied, False)
         self.assertEqual(cds.ids, None)
         self.assertEqual(cds.tree, False)
-
-        cds.dialog.dbParam = dict(dbParameters)
-
+        
         cds.clear()
-
-        self.assertEqual(cds.dialog.dbParam, {})
 
         self.assertEqual(cds.applied, False)
         self.assertEqual(cds.ids, None)
@@ -372,6 +388,11 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.dbDataFormat, 'SCALAR')
         self.assertEqual(cds.dbQuery, "")
         self.assertEqual(cds.dbParameters, {})
+
+        self.assertEqual(cds.peResult, 'ds.result')
+        self.assertEqual(cds.peInput, '')
+        self.assertEqual(cds.peScript, '')
+        self.assertEqual(cds.peDataSources, {})
 
         self.assertEqual(cds.externalSave, None)
         self.assertEqual(cds.externalStore, None)
@@ -406,6 +427,11 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.dbQuery, dbQuery)
         self.assertEqual(cds.dbParameters, dbParameters)
 
+        self.assertEqual(cds.peResult, peResult)
+        self.assertEqual(cds.peInput, peInput)
+        self.assertEqual(cds.peScript, peScript)
+        self.assertEqual(cds.peDataSources, peDataSources)
+
         self.assertEqual(cds.externalSave, None)
         self.assertEqual(cds.externalStore, None)
         self.assertEqual(cds.externalClose, None)
@@ -415,7 +441,6 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.ids, nn)
         self.assertEqual(cds.tree, True)
         
-
 
 
 

@@ -155,6 +155,12 @@ class CommonDataSourceTest(unittest.TestCase):
         for i in range(nn):
             dbParameters["param%s" % i] = "value%s" %i
 
+        peResult = "ds.result%s" %nn 
+        peInput =  "ds.source%s ds.source1%s ds.source2%s" %(nn,nn,nn)
+        peScript = "import math\n ds.result= sin(ds.x)"
+        peDataSources = {}
+        for i in range(nn):
+            peDataSources["param%s" % i] = "<datasource%s/>" %i
             
         cds.setState((dataSourceType,
                       doc,
@@ -170,6 +176,10 @@ class CommonDataSourceTest(unittest.TestCase):
                       dbDataFormat,
                       dbQuery,
                       dbParameters,
+                      peResult,
+                      peInput,
+                      peScript,
+                      peDataSources,
                       dataSourceName
                       ))
         
@@ -191,6 +201,12 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.dbDataFormat, dbDataFormat)
         self.assertEqual(cds.dbQuery, dbQuery)
         self.assertEqual(cds.dbParameters, dbParameters)
+
+        self.assertEqual(cds.peResult, peResult)
+        self.assertEqual(cds.peInput, peInput)
+        self.assertEqual(cds.peScript, peScript)
+        self.assertEqual(cds.peDataSources, peDataSources)
+
 
         self.assertEqual(cds.externalSave, None)
         self.assertEqual(cds.externalStore, None)
@@ -227,6 +243,12 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.dbDataFormat, dbDataFormat)
         self.assertEqual(cds.dbQuery, dbQuery)
         self.assertEqual(cds.dbParameters, dbParameters)
+
+        self.assertEqual(cds.peResult, peResult)
+        self.assertEqual(cds.peInput, peInput)
+        self.assertEqual(cds.peScript, peScript)
+        self.assertEqual(cds.peDataSources, peDataSources)
+
 
         self.assertEqual(cds.externalSave, None)
         self.assertEqual(cds.externalStore, None)
@@ -268,6 +290,11 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.dbQuery, "")
         self.assertEqual(cds.dbParameters, {})
 
+        self.assertEqual(cds.peResult, 'ds.result')
+        self.assertEqual(cds.peInput, '')
+        self.assertEqual(cds.peScript, '')
+        self.assertEqual(cds.peDataSources, {})
+
         self.assertEqual(cds.externalSave, None)
         self.assertEqual(cds.externalStore, None)
         self.assertEqual(cds.externalClose, None)
@@ -300,6 +327,11 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.dbDataFormat, dbDataFormat)
         self.assertEqual(cds.dbQuery, dbQuery)
         self.assertEqual(cds.dbParameters, dbParameters)
+
+        self.assertEqual(cds.peResult, peResult)
+        self.assertEqual(cds.peInput, peInput)
+        self.assertEqual(cds.peScript, peScript)
+        self.assertEqual(cds.peDataSources, peDataSources)
 
         self.assertEqual(cds.externalSave, None)
         self.assertEqual(cds.externalStore, None)

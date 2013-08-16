@@ -48,7 +48,7 @@ class CommonDataSourceDlg(NodeDlg):
         self.dbParam = {}
 
         ## allowed subitems
-        self.subItems = ["record", "doc", "device", "database", "query", "datasource"]
+        self.subItems = ["record", "doc", "device", "database", "query", "datasource", "result"]
 
         ## user interface
         self.ui = Ui_DataSourceDlg()
@@ -397,11 +397,11 @@ class DataSourceMethods(object):
     # \brief It sets the form local variables
     def __updateFormPyEval(self):
         if self.__datasource.peResult is not None:
-            self.__dialog.ui.peReultLineEdit.setText(self.__datasource.peResult)
+            self.__dialog.ui.peResultLineEdit.setText(self.__datasource.peResult)
         if self.__datasource.peInput is not None:
             self.__dialog.ui.peInputLineEdit.setText(self.__datasource.peInput)
         if self.__datasource.peScript is not None:
-            self.__dialog.ui.peScripLineEdit.setText(self.__datasource.peScript)
+            self.__dialog.ui.peScriptTextEdit.setText(self.__datasource.peScript)
 
 
     ## updates the datasource self.__dialog
@@ -421,10 +421,10 @@ class DataSourceMethods(object):
         if self.__datasource.dataSourceName is not None:
             self.__dialog.ui.nameLineEdit.setText(self.__datasource.dataSourceName)
 
-        self.__updateFormClient(self)    
-        self.__updateFormTango(self)    
-        self.__updateFormDB(self)    
-        self.__updateFormPyEval(self)    
+        self.__updateFormClient()    
+        self.__updateFormTango()    
+        self.__updateFormDB()    
+        self.__updateFormPyEval()    
 
         self.__dialog.setFrames(self.__datasource.dataSourceType)
 
@@ -556,17 +556,19 @@ class DataSourceMethods(object):
                                                  if attributeMap.contains("name") else "")
 
         ds = self.__dialog.dts.getText(self.__dialog.node)    
-        dslist = unicode(text).strip().split() if unicode(text).strip() else []
-        dstags = self.__dialog.node.firstChildElement(QString("datasource"))           
-        for tg in dstags:
-            attributeMap = res.attributes()
-            name = unicode(attributeMap.namedItem("name").nodeValue() \
-                               if attributeMap.contains("name") else "")
-            if name.strip():
-                dslist.append(name.strip())
+        dslist = unicode(ds).strip().split() if unicode(ds).strip() else []
+        child = self.__dialog.node.firstChildElement(QString("datasource"))           
+        while not child.isNull(): 
+            if child.nodeName() == 'datasource':
+                attributeMap = child.attributes()
+                name = unicode(attributeMap.namedItem("name").nodeValue() \
+                                   if attributeMap.contains("name") else "")
+                if name.strip():
+                    dslist.append(name.strip())
+                    child = child.nextSiblingElement("datasource")    
             
         self.__datasource.peInput = " ".join(
-            "ds."+ (d[13:] if len(d)> 13 and d[:13] ="$datasources." else d) for d in dslist)
+            "ds."+ (d[13:] if (len(d)> 13 and d[:13] =="$datasources.") else d) for d in dslist)
 
 
 
@@ -659,6 +661,7 @@ class DataSourceMethods(object):
         for par in self.__dialog.dbParam.keys():
             self.__datasource.dbParameters[par] = self.__dialog.dbParam[par]
 
+
     ## copies  parameters from PYEVAL form to datasource instance
     # \brief It copies parameters from PYEVAL form to datasource instance
     def __fromFormPyEval(self):
@@ -692,15 +695,12 @@ class DataSourceMethods(object):
 
 
         self.__datasource.dataSourceType = sourceType
-
         self.__datasource.doc = unicode(self.__dialog.ui.docTextEdit.toPlainText()).strip()
 
         index = QModelIndex()
         if hasattr(self.__dialog,"view") and self.__dialog.view and self.__dialog.view.model():
             if hasattr(self.__dialog.view,"currentIndex"):
                 index = self.__dialog.view.currentIndex()
-
-
                 finalIndex = self.__dialog.view.model().createIndex(index.row(),2,index.parent().internalPointer())
                 self.__dialog.view.expand(index)    
 
@@ -731,6 +731,60 @@ class DataSourceMethods(object):
 
         return True    
 
+    ## creates CLIENT datasource node
+    # \param root root node 
+    # \param elem datasource node 
+    def __createClientNodes(self, root, elem):
+        record = root.createElement(QString("record"))
+        record.setAttribute(QString("name"), QString(self.__datasource.clientRecordName))
+        elem.appendChild(record)            
+
+
+    ## creates TANGO datasource node
+    # \param root root node 
+    # \param elem datasource node 
+    def __createTangoNodes(self, root, elem):
+        record = root.createElement(QString("record"))
+        record.setAttribute(QString("name"), QString(self.__datasource.tangoMemberName))
+        elem.appendChild(record)            
+
+        device = root.createElement(QString("device"))
+        device.setAttribute(QString("name"), QString(self.__datasource.tangoDeviceName))
+        device.setAttribute(QString("member"), QString(self.__datasource.tangoMemberType))
+        if self.__datasource.tangoHost:
+            device.setAttribute(QString("hostname"), QString(self.__datasource.tangoHost))
+        if self.__datasource.tangoPort:
+            device.setAttribute(QString("port"), QString(self.__datasource.tangoPort))
+        if self.__datasource.tangoEncoding:
+            device.setAttribute(QString("encoding"), QString(self.__datasource.tangoEncoding))
+        if self.__datasource.tangoGroup:
+            device.setAttribute(QString("group"), QString(self.__datasource.tangoGroup))
+        elem.appendChild(device)            
+
+
+    ## creates DB datasource node
+    # \param root root node 
+    # \param elem datasource node 
+    def __createDBNodes(self, root, elem):
+        db = root.createElement(QString("database"))
+        db.setAttribute(QString("dbtype"), QString(self.__datasource.dbType))
+        for par in self.__datasource.dbParameters.keys():
+            if par == 'Oracle DSN':
+                newText = root.createTextNode(QString(self.__datasource.dbParameters[par]))
+                db.appendChild(newText)
+            else:
+                db.setAttribute(QString(self.__idbmap[par]), QString(self.__datasource.dbParameters[par]))
+        elem.appendChild(db)            
+
+        query = root.createElement(QString("query"))
+        query.setAttribute(QString("format"), QString(self.__datasource.dbDataFormat))
+        if self.__datasource.dbQuery:
+            newText = root.createTextNode(QString(self.__datasource.dbQuery))
+            query.appendChild(newText)
+
+        elem.appendChild(query)            
+
+
 
     ## creates DOM datasource node
     # \param root root node 
@@ -744,46 +798,13 @@ class DataSourceMethods(object):
         else:
             print "name not defined"
         if self.__datasource.dataSourceType == 'CLIENT':
-            record = root.createElement(QString("record"))
-            record.setAttribute(QString("name"), QString(self.__datasource.clientRecordName))
-            elem.appendChild(record)            
+            self.__createClientNodes(root, elem)
         elif self.__datasource.dataSourceType == 'TANGO':
-            record = root.createElement(QString("record"))
-            record.setAttribute(QString("name"), QString(self.__datasource.tangoMemberName))
-            elem.appendChild(record)            
-
-            device = root.createElement(QString("device"))
-            device.setAttribute(QString("name"), QString(self.__datasource.tangoDeviceName))
-            device.setAttribute(QString("member"), QString(self.__datasource.tangoMemberType))
-            if self.__datasource.tangoHost:
-                device.setAttribute(QString("hostname"), QString(self.__datasource.tangoHost))
-            if self.__datasource.tangoPort:
-                device.setAttribute(QString("port"), QString(self.__datasource.tangoPort))
-            if self.__datasource.tangoEncoding:
-                device.setAttribute(QString("encoding"), QString(self.__datasource.tangoEncoding))
-            if self.__datasource.tangoGroup:
-                device.setAttribute(QString("group"), QString(self.__datasource.tangoGroup))
-            elem.appendChild(device)            
-            
+            self.__createTangoNodes(root, elem)
         elif self.__datasource.dataSourceType == 'DB':
-            db = root.createElement(QString("database"))
-            db.setAttribute(QString("dbtype"), QString(self.__datasource.dbType))
-            for par in self.__datasource.dbParameters.keys():
-                if par == 'Oracle DSN':
-                    newText = root.createTextNode(QString(self.__datasource.dbParameters[par]))
-                    db.appendChild(newText)
-                else:
-                    db.setAttribute(QString(self.__idbmap[par]), QString(self.__datasource.dbParameters[par]))
-            elem.appendChild(db)            
-
-            query = root.createElement(QString("query"))
-            query.setAttribute(QString("format"), QString(self.__datasource.dbDataFormat))
-            if self.__datasource.dbQuery:
-                newText = root.createTextNode(QString(self.__datasource.dbQuery))
-                query.appendChild(newText)
-
-            elem.appendChild(query)            
-
+            self.__createDBNodes(root, elem)
+        elif self.__datasource.dataSourceType == 'PYEVAL':
+            self.__createPyEvalNodes(root, elem)
         if(self.__datasource.doc):
             newDoc = root.createElement(QString("doc"))
             newText = root.createTextNode(QString(self.__datasource.doc))

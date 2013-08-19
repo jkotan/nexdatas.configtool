@@ -552,6 +552,8 @@ class DataSourceMethods(object):
         print "SET FROM"
         res = self.__dialog.node.firstChildElement(QString("result"))           
         text = self.__dialog.dts.getText(res)    
+        while len(text)>0 and text[0] =='\n':
+            text = text[1:]
         self.__datasource.peScript = unicode(text) if text else ""
         attributeMap = res.attributes()
         self.__datasource.peResult = unicode("ds." + attributeMap.namedItem("name").nodeValue() \
@@ -802,7 +804,10 @@ class DataSourceMethods(object):
         if rn:
             res.setAttribute(QString("name"), QString(rn[3:] if (len(rn) > 3 or rn[:3] == 'ds.' ) else rn))
         if self.__datasource.peScript:
-            script = root.createTextNode(QString(self.__datasource.peScript))
+            script = root.createTextNode(
+                QString(self.__datasource.peScript if (
+                        len(self.__datasource.peScript)>0 and self.__datasource.peScript[0] == '\n') else (
+                        "\n"+ self.__datasource.peScript)))
             res.appendChild(script)
         elem.appendChild(res)            
         if self.__datasource.peInput:

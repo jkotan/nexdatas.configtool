@@ -554,8 +554,8 @@ class DataSourceMethods(object):
         text = self.__dialog.dts.getText(res)    
         self.__datasource.peScript = unicode(text) if text else ""
         attributeMap = res.attributes()
-        self.__datasource.peResult = unicode(attributeMap.namedItem("name").nodeValue() \
-                                                 if attributeMap.contains("name") else "")
+        self.__datasource.peResult = unicode("ds." + attributeMap.namedItem("name").nodeValue() \
+                                                         if attributeMap.contains("name") else "")
 
         ds = self.__dialog.dts.getText(self.__dialog.node)    
         dslist = unicode(ds).strip().split() if unicode(ds).strip() else []
@@ -798,8 +798,9 @@ class DataSourceMethods(object):
     def __createPyEvalNodes(self, root, elem):
         print "CREATE node"
         res = root.createElement(QString("result"))
-        if self.__datasource.peResult:
-            res.setAttribute(QString("name"), QString(self.__datasource.peResult))
+        rn = str(self.__datasource.peResult).strip()
+        if rn:
+            res.setAttribute(QString("name"), QString(rn[3:] if (len(rn) > 3 or rn[:3] == 'ds.' ) else rn))
         if self.__datasource.peScript:
             script = root.createTextNode(QString(self.__datasource.peScript))
             res.appendChild(script)

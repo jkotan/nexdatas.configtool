@@ -1,5 +1,6 @@
-2013-XX-XX Jan Kotanski <jankotan@gmail.com>
-	* adding group for tango datasources
+2013-08-20 Jan Kotanski <jankotan@gmail.com>
+	* adding group for TANGO datasources
+	* adding PYEVAL datasource
 	* changing merger list
 	* tagged as v1.3.0
 

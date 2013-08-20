@@ -27,6 +27,7 @@ from PyQt4.QtGui import (QApplication, QFileDialog, QMessageBox, QTableWidgetIte
 from ui.ui_datasourcedlg import Ui_DataSourceDlg
 from PyQt4.QtXml import (QDomDocument, QDomNode)
 from NodeDlg import NodeDlg 
+from DomTools import DomTools
 import copy
 import gc
 
@@ -48,7 +49,7 @@ class CommonDataSourceDlg(NodeDlg):
         self.dbParam = {}
 
         ## allowed subitems
-        self.subItems = ["record", "doc", "device", "database", "query"]
+        self.subItems = ["record", "doc", "device", "database", "query", "datasource", "result"]
 
         ## user interface
         self.ui = Ui_DataSourceDlg()
@@ -80,6 +81,11 @@ class CommonDataSourceDlg(NodeDlg):
             self.ui.applyPushButton.setEnabled(enable)
             self.ui.savePushButton.setEnabled(enable)
             self.ui.storePushButton.setEnabled(enable)
+        elif text == 'PYEVAL':    
+            enable = True
+            self.ui.applyPushButton.setEnabled(enable)
+            self.ui.savePushButton.setEnabled(enable)
+            self.ui.storePushButton.setEnabled(enable)
         else:
             ## Additional non-supported frame
             enable = True
@@ -94,15 +100,23 @@ class CommonDataSourceDlg(NodeDlg):
             self.ui.clientFrame.show()
             self.ui.dbFrame.hide()
             self.ui.tangoFrame.hide()
+            self.ui.peFrame.hide()
         elif text == 'TANGO':
             self.ui.clientFrame.hide()
             self.ui.dbFrame.hide()
             self.ui.tangoFrame.show()
+            self.ui.peFrame.hide()
         elif text == 'DB':
             self.ui.clientFrame.hide()
             self.ui.dbFrame.show()
             self.ui.tangoFrame.hide()
+            self.ui.peFrame.hide()
             self.populateParameters()
+        elif text == 'PYEVAL':
+            self.ui.clientFrame.hide()
+            self.ui.dbFrame.hide()
+            self.ui.tangoFrame.hide()
+            self.ui.peFrame.show()
             
         self.updateUi(text)
 
@@ -317,27 +331,16 @@ class DataSourceMethods(object):
     def reset(self):
         self.updateForm()
 
-
-    ## updates the datasource self.__dialog
+    ## updates the CLIENT datasource self.__dialog
     # \brief It sets the form local variables
-    def updateForm(self):    
-        if not self.__dialog or not self.__datasource:
-            raise ParameterError, "updateForm parameters not defined"
-        if self.__datasource.doc is not None:
-            self.__dialog.ui.docTextEdit.setText(self.__datasource.doc)
-        if self.__datasource.dataSourceType is not None:
-            index = self.__dialog.ui.typeComboBox.findText(unicode(self.__datasource.dataSourceType))
-            if  index > -1 :
-                self.__dialog.ui.typeComboBox.setCurrentIndex(index)
-            else:
-                self.__datasource.dataSourceType = 'CLIENT'    
-    
-        if self.__datasource.dataSourceName is not None:
-            self.__dialog.ui.nameLineEdit.setText(self.__datasource.dataSourceName)
-
+    def __updateFormClient(self):
         if self.__datasource.clientRecordName is not None:
             self.__dialog.ui.cRecNameLineEdit.setText(self.__datasource.clientRecordName)
+    
 
+    ## updates the TANGO datasource self.__dialog
+    # \brief It sets the form local variables
+    def __updateFormTango(self):
         if self.__datasource.tangoDeviceName is not None:
             self.__dialog.ui.tDevNameLineEdit.setText(self.__datasource.tangoDeviceName)
         if self.__datasource.tangoMemberName is not None:
@@ -354,9 +357,13 @@ class DataSourceMethods(object):
             self.__dialog.ui.tPortLineEdit.setText(self.__datasource.tangoPort)
         if self.__datasource.tangoEncoding is not None:
             self.__dialog.ui.tEncodingLineEdit.setText(self.__datasource.tangoEncoding)
+        if self.__datasource.tangoGroup is not None:
+            self.__dialog.ui.tGroupLineEdit.setText(self.__datasource.tangoGroup)
 
 
-
+    ## updates the DB datasource self.__dialog
+    # \brief It sets the form local variables
+    def __updateFormDB(self):
         if self.__datasource.dbType  is not None:
             index = self.__dialog.ui.dTypeComboBox.findText(unicode(self.__datasource.dbType))
             if  index > -1 :
@@ -385,7 +392,43 @@ class DataSourceMethods(object):
             else:
                 self.__dialog.dbParam[unicode(par)]=self.__datasource.dbParameters[(unicode(par))]
         self.__dialog.populateParameters()
+
+
+    ## updates the PYEVAL datasource self.__dialog
+    # \brief It sets the form local variables
+    def __updateFormPyEval(self):
+        if self.__datasource.peResult is not None:
+            self.__dialog.ui.peResultLineEdit.setText(self.__datasource.peResult)
+        if self.__datasource.peInput is not None:
+            self.__dialog.ui.peInputLineEdit.setText(self.__datasource.peInput)
+        if self.__datasource.peScript is not None:
+            self.__dialog.ui.peScriptTextEdit.setText(self.__datasource.peScript)
+
+
+    ## updates the datasource self.__dialog
+    # \brief It sets the form local variables
+    def updateForm(self):    
+        if not self.__dialog or not self.__datasource:
+            raise ParameterError, "updateForm parameters not defined"
+
+        if self.__datasource.doc is not None:
+            self.__dialog.ui.docTextEdit.setText(self.__datasource.doc)
+        if self.__datasource.dataSourceType is not None:
+            index = self.__dialog.ui.typeComboBox.findText(unicode(self.__datasource.dataSourceType))
+            if  index > -1 :
+                self.__dialog.ui.typeComboBox.setCurrentIndex(index)
+            else:
+                self.__datasource.dataSourceType = 'CLIENT'    
+        if self.__datasource.dataSourceName is not None:
+            self.__dialog.ui.nameLineEdit.setText(self.__datasource.dataSourceName)
+
+        self.__updateFormClient()    
+        self.__updateFormTango()    
+        self.__updateFormDB()    
+        self.__updateFormPyEval()    
+
         self.__dialog.setFrames(self.__datasource.dataSourceType)
+
 
     
     ## sets the tree mode used in ComponentDlg without save/close buttons
@@ -406,7 +449,7 @@ class DataSourceMethods(object):
             self.__dialog.ui.setupUi(self.__dialog)
 
         self.updateForm()
-        self.__dialog.resize(460, 440)
+        self.__dialog.resize(460, 520)
 
         if not self.__datasource.tree :
             self.__dialog.disconnect(self.__dialog.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
@@ -417,7 +460,126 @@ class DataSourceMethods(object):
         self.__dialog.connectWidgets()
         self.__dialog.setFrames(self.__datasource.dataSourceType)
 
+
+    ## sets the CLIENT form from the DOM node
+    # \brief it sets the CLIENT form from the DOM node
+    def __setFromNodeClient(self):
+        record = self.__dialog.node.firstChildElement(QString("record"))           
+        if record.nodeName() != "record":
+            QMessageBox.warning(self.__dialog, "Internal error", 
+                                    "Missing <record> tag")
+        else:
+            attributeMap = record.attributes()
+            self.__datasource.clientRecordName = unicode(attributeMap.namedItem("name").nodeValue() \
+                                                            if attributeMap.contains("name") else "")
+                
+    ## sets the TANGO form from the DOM node
+    # \brief it sets the TANGO form from the DOM node
+    def __setFromNodeTango(self):
+        record = self.__dialog.node.firstChildElement(QString("record"))
+        if record.nodeName() != "record":
+            QMessageBox.warning(self.__dialog, "Internal error", 
+                                    "Missing <record> tag")
+        else:
+            attributeMap = record.attributes()
+            self.__datasource.tangoMemberName = unicode(attributeMap.namedItem("name").nodeValue() \
+                                                              if attributeMap.contains("name") else "")
+
+        device = self.__dialog.node.firstChildElement(QString("device"))
+        if device.nodeName() != "device":
+            QMessageBox.warning(self.__dialog, "Internal error", 
+                                    "Missing <device> tag")
+        else:
+            attributeMap = device.attributes()
+            self.__datasource.tangoDeviceName = unicode(attributeMap.namedItem("name").nodeValue() \
+                                                            if attributeMap.contains("name") else "")
+            self.__datasource.tangoMemberType = unicode(attributeMap.namedItem("member").nodeValue() \
+                                                            if attributeMap.contains("member") else "attribute")
+            self.__datasource.tangoHost = unicode(attributeMap.namedItem("hostname").nodeValue() \
+                                                      if attributeMap.contains("hostname") else "")
+            self.__datasource.tangoPort = unicode(attributeMap.namedItem("port").nodeValue() \
+                                                      if attributeMap.contains("port") else "")
+            self.__datasource.tangoEncoding = unicode(attributeMap.namedItem("encoding").nodeValue() \
+                                                          if attributeMap.contains("encoding") else "")
+            self.__datasource.tangoGroup = unicode(attributeMap.namedItem("group").nodeValue() \
+                                                       if attributeMap.contains("group") else "")
+
+    ## sets the DB form from the DOM node
+    # \brief it sets the DB form from the DOM node
+    def __setFromNodeDB(self):
+        database = self.__dialog.node.firstChildElement(QString("database"))           
+        if database.nodeName() != "database":
+            QMessageBox.warning(self.__dialog, "Internal error", 
+                                "Missing <database> tag")
+        else:
+            attributeMap = database.attributes()
+
+            for i in range(attributeMap.count()):
+                name = unicode(attributeMap.item(i).nodeName())
+                if name == 'dbtype':
+                    self.__datasource.dbType = unicode(attributeMap.item(i).nodeValue())
+                elif name in self.__dbmap:
+                    self.__datasource.dbParameters[self.__dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
+                    self.__dialog.dbParam[self.__dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
+                        
+        if not self.__datasource.dbType:
+            self.__datasource.dbType = 'MYSQL'
+        text = unicode(self.__dialog.dts.getText(database))
+        self.__datasource.dbParameters['Oracle DSN'] = unicode(text).strip() if text else ""
+        self.__dialog.dbParam['Oracle DSN'] = unicode(text).strip() if text else ""
+
+
+        query = self.__dialog.node.firstChildElement(QString("query"))
+        if query.nodeName() != "query":
+            QMessageBox.warning(self.__dialog, "Internal error", 
+                                    "Missing <query> tag")
+        else:
+            attributeMap = query.attributes()
+
+            self.__datasource.dbDataFormat = unicode(attributeMap.namedItem("format").nodeValue() \
+                                                           if attributeMap.contains("format") else "SCALAR")
+
+
+        text = unicode(self.__dialog.dts.getText(query))
+        self.__datasource.dbQuery = unicode(text).strip() if text else ""
+
+                                    
             
+
+    ## sets the PYEVAL form from the DOM node
+    # \brief it sets the PYEVAL form from the DOM node
+    def __setFromNodePyEval(self):
+        print "SET FROM"
+        res = self.__dialog.node.firstChildElement(QString("result"))           
+        text = self.__dialog.dts.getText(res)    
+        while len(text)>0 and text[0] =='\n':
+            text = text[1:]
+        self.__datasource.peScript = unicode(text) if text else ""
+        attributeMap = res.attributes()
+        self.__datasource.peResult = unicode("ds." + attributeMap.namedItem("name").nodeValue() \
+                                                         if attributeMap.contains("name") else "")
+
+        ds = self.__dialog.dts.getText(self.__dialog.node)    
+        dslist = unicode(ds).strip().split() if unicode(ds).strip() else []
+        self.__datasource.peDataSources = {}
+        child = self.__dialog.node.firstChildElement(QString("datasource"))           
+        while not child.isNull():
+            if child.nodeName() == 'datasource':
+                attributeMap = child.attributes()
+                name = unicode(attributeMap.namedItem("name").nodeValue() \
+                                   if attributeMap.contains("name") else "")
+                if name.strip():
+                    dslist.append(name.strip())
+                    doc = QDomDocument()
+                    doc.appendChild(doc.importNode(child,True))
+                    self.__datasource.peDataSources[name] = unicode(doc.toString(0))
+                    child = child.nextSiblingElement("datasource")    
+                    
+            
+        self.__datasource.peInput = " ".join(
+            "ds."+ (d[13:] if (len(d)> 13 and d[:13] =="$datasources.") else d) for d in dslist)
+
+
 
     ## sets the form from the DOM node
     # \param node DOM node
@@ -433,91 +595,18 @@ class DataSourceMethods(object):
         
 
         value = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
+        self.__datasource.dataSourceType = unicode(value)
+
         if attributeMap.contains("name"):
             self.__datasource.dataSourceName = attributeMap.namedItem("name").nodeValue()
-        
         if value == 'CLIENT':
-            self.__datasource.dataSourceType = unicode(value)
-
-            record = self.__dialog.node.firstChildElement(QString("record"))           
-            if record.nodeName() != "record":
-                QMessageBox.warning(self.__dialog, "Internal error", 
-                                    "Missing <record> tag")
-            else:
-                attributeMap = record.attributes()
-                self.__datasource.clientRecordName = unicode(attributeMap.namedItem("name").nodeValue() \
-                                                if attributeMap.contains("name") else "")
-                
-
-
+            self.__setFromNodeClient()
         elif value == 'TANGO':
-            self.__datasource.dataSourceType = unicode(value)
-
-            record = self.__dialog.node.firstChildElement(QString("record"))
-            if record.nodeName() != "record":
-                QMessageBox.warning(self.__dialog, "Internal error", 
-                                    "Missing <record> tag")
-            else:
-                attributeMap = record.attributes()
-                self.__datasource.tangoMemberName = unicode(attributeMap.namedItem("name").nodeValue() \
-                                                              if attributeMap.contains("name") else "")
-
-            device = self.__dialog.node.firstChildElement(QString("device"))
-            if device.nodeName() != "device":
-                QMessageBox.warning(self.__dialog, "Internal error", 
-                                    "Missing <device> tag")
-            else:
-                attributeMap = device.attributes()
-                self.__datasource.tangoDeviceName = unicode(attributeMap.namedItem("name").nodeValue() \
-                                                              if attributeMap.contains("name") else "")
-                self.__datasource.tangoMemberType = unicode(attributeMap.namedItem("member").nodeValue() \
-                                                              if attributeMap.contains("member") else "attribute")
-                self.__datasource.tangoHost = unicode(attributeMap.namedItem("hostname").nodeValue() \
-                                                        if attributeMap.contains("hostname") else "")
-                self.__datasource.tangoPort = unicode(attributeMap.namedItem("port").nodeValue() \
-                                                        if attributeMap.contains("port") else "")
-                self.__datasource.tangoEncoding = unicode(attributeMap.namedItem("encoding").nodeValue() \
-                                                            if attributeMap.contains("encoding") else "")
-
-                                    
+            self.__setFromNodeTango()
         elif value == 'DB':
-            self.__datasource.dataSourceType = unicode(value)
-            database = self.__dialog.node.firstChildElement(QString("database"))           
-            if database.nodeName() != "database":
-                QMessageBox.warning(self.__dialog, "Internal error", 
-                                    "Missing <database> tag")
-            else:
-                attributeMap = database.attributes()
-
-                for i in range(attributeMap.count()):
-                    name = unicode(attributeMap.item(i).nodeName())
-                    if name == 'dbtype':
-                        self.__datasource.dbType = unicode(attributeMap.item(i).nodeValue())
-                    elif name in self.__dbmap:
-                        self.__datasource.dbParameters[self.__dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
-                        self.__dialog.dbParam[self.__dbmap[name]] = unicode(attributeMap.item(i).nodeValue())
-                        
-            if not self.__datasource.dbType:
-                self.__datasource.dbType = 'MYSQL'
-            text = unicode(self.__dialog.dts.getText(database))
-            self.__datasource.dbParameters['Oracle DSN'] = unicode(text).strip() if text else ""
-            self.__dialog.dbParam['Oracle DSN'] = unicode(text).strip() if text else ""
-
-
-            query = self.__dialog.node.firstChildElement(QString("query"))
-            if query.nodeName() != "query":
-                QMessageBox.warning(self.__dialog, "Internal error", 
-                                    "Missing <query> tag")
-            else:
-                attributeMap = query.attributes()
-
-                self.__datasource.dbDataFormat = unicode(attributeMap.namedItem("format").nodeValue() \
-                                                           if attributeMap.contains("format") else "SCALAR")
-
-
-            text = unicode(self.__dialog.dts.getText(query))
-            self.__datasource.dbQuery = unicode(text).strip() if text else ""
-
+            self.__setFromNodeDB()
+        elif value == 'PYEVAL':
+            self.__setFromNodePyEval()
 
         doc = self.__dialog.node.firstChildElement(QString("doc"))           
         text = self.__dialog.dts.getText(doc)    
@@ -528,8 +617,73 @@ class DataSourceMethods(object):
 
 
 
+    ## copies  parameters from CLIENT form to datasource instance
+    # \brief It copies parameters from CLIENT form to datasource instance
+    def __fromFormClient(self):
+        recName = unicode(self.__dialog.ui.cRecNameLineEdit.text())
+
+        if not recName:
+            QMessageBox.warning(self.__dialog, "Empty record name", 
+                                "Please define the record name")
+            self.__dialog.ui.cRecNameLineEdit.setFocus()
+            return
+        self.__datasource.clientRecordName = recName
+    
+    ## copies  parameters from TANGO form to datasource instance
+    # \brief It copies parameters from TANGO form to datasource instance
+    def __fromFormTango(self):
+        devName = unicode(self.__dialog.ui.tDevNameLineEdit.text())
+        memName = unicode(self.__dialog.ui.tMemberNameLineEdit.text())
+        if not devName: 
+            QMessageBox.warning(self.__dialog, "Empty device name", 
+                                "Please define the device name")
+            self.__dialog.ui.tDevNameLineEdit.setFocus()
+            return
+        if not memName:
+            QMessageBox.warning(self.__dialog, "Empty member name", 
+                                "Please define the member name")
+            self.__dialog.ui.tMemberNameLineEdit.setFocus()
+            return
+        self.__datasource.tangoDeviceName = devName
+        self.__datasource.tangoMemberName = memName
+        self.__datasource.tangoMemberType = unicode(self.__dialog.ui.tMemberComboBox.currentText())
+        self.__datasource.tangoHost = unicode(self.__dialog.ui.tHostLineEdit.text())
+        self.__datasource.tangoPort = unicode(self.__dialog.ui.tPortLineEdit.text())
+        self.__datasource.tangoEncoding = unicode(self.__dialog.ui.tEncodingLineEdit.text())
+        self.__datasource.tangoGroup = unicode(self.__dialog.ui.tGroupLineEdit.text())
+                
+
+    ## copies  parameters from DB form to datasource instance
+    # \brief It copies parameters from DB form to datasource instance
+    def __fromFormDB(self):
+        query = unicode(self.__dialog.ui.dQueryLineEdit.text()).strip()
+        if not query:
+            QMessageBox.warning(self, "Empty query", 
+                                "Please define the DB query")
+            self.__datasource.dQueryLineEdit.setFocus()
+            return
+        self.__datasource.dbQuery = query
+        self.__datasource.dbType =  unicode(self.__dialog.ui.dTypeComboBox.currentText())
+        self.__datasource.dbDataFormat =  unicode(self.__dialog.ui.dFormatComboBox.currentText())
+
+        self.__datasource.dbParameters.clear()
+        for par in self.__dialog.dbParam.keys():
+            self.__datasource.dbParameters[par] = self.__dialog.dbParam[par]
 
 
+    ## copies  parameters from PYEVAL form to datasource instance
+    # \brief It copies parameters from PYEVAL form to datasource instance
+    def __fromFormPyEval(self):
+        self.__datasource.peInput = unicode(self.__dialog.ui.peInputLineEdit.text()).strip()
+        self.__datasource.peResult = unicode(self.__dialog.ui.peResultLineEdit.text()).strip()
+        script = unicode(self.__dialog.ui.peScriptTextEdit.toPlainText())
+        if not script:
+            QMessageBox.warning(self, "Empty script", 
+                                "Please define the PyEval script")
+            self.__datasource.dQueryLineEdit.setFocus()
+            return 
+        self.__datasource.peScript = script
+        
 
     ## accepts input text strings
     # \brief It copies the parameters and accept the self.__dialog
@@ -540,60 +694,22 @@ class DataSourceMethods(object):
         self.__datasource.dataSourceName = unicode(self.__dialog.ui.nameLineEdit.text())
 
         if sourceType == 'CLIENT':
-            recName = unicode(self.__dialog.ui.cRecNameLineEdit.text())
-
-            if not recName:
-                QMessageBox.warning(self.__dialog, "Empty record name", 
-                                    "Please define the record name")
-                self.__dialog.ui.cRecNameLineEdit.setFocus()
-                return
-            self.__datasource.clientRecordName = recName
+            self.__fromFormClient()
         elif sourceType == 'TANGO':
-            devName = unicode(self.__dialog.ui.tDevNameLineEdit.text())
-            memName = unicode(self.__dialog.ui.tMemberNameLineEdit.text())
-            if not devName: 
-                QMessageBox.warning(self.__dialog, "Empty device name", 
-                                    "Please define the device name")
-                self.__dialog.ui.tDevNameLineEdit.setFocus()
-                return
-            if not memName:
-                QMessageBox.warning(self.__dialog, "Empty member name", 
-                                    "Please define the member name")
-                self.__dialog.ui.tMemberNameLineEdit.setFocus()
-                return
-            self.__datasource.tangoDeviceName = devName
-            self.__datasource.tangoMemberName = memName
-            self.__datasource.tangoMemberType = unicode(self.__dialog.ui.tMemberComboBox.currentText())
-            self.__datasource.tangoHost = unicode(self.__dialog.ui.tHostLineEdit.text())
-            self.__datasource.tangoPort = unicode(self.__dialog.ui.tPortLineEdit.text())
-            self.__datasource.tangoEncoding = unicode(self.__dialog.ui.tEncodingLineEdit.text())
-                
+            self.__fromFormTango()
         elif sourceType == 'DB':
-            query = unicode(self.__dialog.ui.dQueryLineEdit.text()).strip()
-            if not query:
-                QMessageBox.warning(self, "Empty query", 
-                                    "Please define the DB query")
-                self.__datasource.dQueryLineEdit.setFocus()
-                return
-            self.__datasource.dbQuery = query
-            self.__datasource.dbType =  unicode(self.__dialog.ui.dTypeComboBox.currentText())
-            self.__datasource.dbDataFormat =  unicode(self.__dialog.ui.dFormatComboBox.currentText())
-
-            self.__datasource.dbParameters.clear()
-            for par in self.__dialog.dbParam.keys():
-                self.__datasource.dbParameters[par] = self.__dialog.dbParam[par]
+            self.__fromFormDB()
+        elif sourceType == 'PYEVAL':
+            self.__fromFormPyEval()
 
 
         self.__datasource.dataSourceType = sourceType
-
         self.__datasource.doc = unicode(self.__dialog.ui.docTextEdit.toPlainText()).strip()
 
         index = QModelIndex()
         if hasattr(self.__dialog,"view") and self.__dialog.view and self.__dialog.view.model():
             if hasattr(self.__dialog.view,"currentIndex"):
                 index = self.__dialog.view.currentIndex()
-
-
                 finalIndex = self.__dialog.view.model().createIndex(index.row(),2,index.parent().internalPointer())
                 self.__dialog.view.expand(index)    
 
@@ -624,6 +740,102 @@ class DataSourceMethods(object):
 
         return True    
 
+    ## creates CLIENT datasource node
+    # \param root root node 
+    # \param elem datasource node 
+    def __createClientNodes(self, root, elem):
+        record = root.createElement(QString("record"))
+        record.setAttribute(QString("name"), QString(self.__datasource.clientRecordName))
+        elem.appendChild(record)            
+
+
+    ## creates TANGO datasource node
+    # \param root root node 
+    # \param elem datasource node 
+    def __createTangoNodes(self, root, elem):
+        record = root.createElement(QString("record"))
+        record.setAttribute(QString("name"), QString(self.__datasource.tangoMemberName))
+        elem.appendChild(record)            
+
+        device = root.createElement(QString("device"))
+        device.setAttribute(QString("name"), QString(self.__datasource.tangoDeviceName))
+        device.setAttribute(QString("member"), QString(self.__datasource.tangoMemberType))
+        if self.__datasource.tangoHost:
+            device.setAttribute(QString("hostname"), QString(self.__datasource.tangoHost))
+        if self.__datasource.tangoPort:
+            device.setAttribute(QString("port"), QString(self.__datasource.tangoPort))
+        if self.__datasource.tangoEncoding:
+            device.setAttribute(QString("encoding"), QString(self.__datasource.tangoEncoding))
+        if self.__datasource.tangoGroup:
+            device.setAttribute(QString("group"), QString(self.__datasource.tangoGroup))
+        elem.appendChild(device)            
+
+
+    ## creates DB datasource node
+    # \param root root node 
+    # \param elem datasource node 
+    def __createDBNodes(self, root, elem):
+        db = root.createElement(QString("database"))
+        db.setAttribute(QString("dbtype"), QString(self.__datasource.dbType))
+        for par in self.__datasource.dbParameters.keys():
+            if par == 'Oracle DSN':
+                newText = root.createTextNode(QString(self.__datasource.dbParameters[par]))
+                db.appendChild(newText)
+            else:
+                db.setAttribute(QString(self.__idbmap[par]), QString(self.__datasource.dbParameters[par]))
+        elem.appendChild(db)            
+
+        query = root.createElement(QString("query"))
+        query.setAttribute(QString("format"), QString(self.__datasource.dbDataFormat))
+        if self.__datasource.dbQuery:
+            newText = root.createTextNode(QString(self.__datasource.dbQuery))
+            query.appendChild(newText)
+
+        elem.appendChild(query)            
+
+
+    ## creates PYEVAL datasource node
+    # \param root root node 
+    # \param elem datasource node 
+    def __createPyEvalNodes(self, root, elem):
+        print "CREATE node"
+        res = root.createElement(QString("result"))
+        rn = str(self.__datasource.peResult).strip()
+        if rn:
+            res.setAttribute(QString("name"), QString(rn[3:] if (len(rn) > 3 or rn[:3] == 'ds.' ) else rn))
+        if self.__datasource.peScript:
+            script = root.createTextNode(
+                QString(self.__datasource.peScript if (
+                        len(self.__datasource.peScript)>0 and self.__datasource.peScript[0] == '\n') else (
+                        "\n"+ self.__datasource.peScript)))
+            res.appendChild(script)
+        elem.appendChild(res)            
+        if self.__datasource.peInput:
+            dslist = unicode(self.__datasource.peInput).split()
+            newds = "" 
+            dts = DomTools()  
+            for d in dslist:
+                name = d[3:] if (len(d) > 3 or d[:3] == 'ds.' ) else d
+                if name in self.__datasource.peDataSources.keys():
+                    document = QDomDocument() 
+                    if not document.setContent(self.__datasource.peDataSources[name]):
+                        raise ValueError, "could not parse XML"  
+                    else:
+                        if self.__dialog and hasattr(self.__dialog,"root"):
+
+                            dsnode = dts.getFirstElement(
+                                document, "datasource")
+                            child = root.importNode(dsnode,True)
+                            elem.appendChild(child)
+
+                            pass
+                else :
+                    newds = "\n ".join([newds,"$datasources." + name])
+                
+            newText = root.createTextNode(QString(newds))
+            elem.appendChild(newText)
+
+
 
     ## creates DOM datasource node
     # \param root root node 
@@ -637,44 +849,13 @@ class DataSourceMethods(object):
         else:
             print "name not defined"
         if self.__datasource.dataSourceType == 'CLIENT':
-            record = root.createElement(QString("record"))
-            record.setAttribute(QString("name"), QString(self.__datasource.clientRecordName))
-            elem.appendChild(record)            
+            self.__createClientNodes(root, elem)
         elif self.__datasource.dataSourceType == 'TANGO':
-            record = root.createElement(QString("record"))
-            record.setAttribute(QString("name"), QString(self.__datasource.tangoMemberName))
-            elem.appendChild(record)            
-
-            device = root.createElement(QString("device"))
-            device.setAttribute(QString("name"), QString(self.__datasource.tangoDeviceName))
-            device.setAttribute(QString("member"), QString(self.__datasource.tangoMemberType))
-            if self.__datasource.tangoHost:
-                device.setAttribute(QString("hostname"), QString(self.__datasource.tangoHost))
-            if self.__datasource.tangoPort:
-                device.setAttribute(QString("port"), QString(self.__datasource.tangoPort))
-            if self.__datasource.tangoEncoding:
-                device.setAttribute(QString("encoding"), QString(self.__datasource.tangoEncoding))
-            elem.appendChild(device)            
-            
+            self.__createTangoNodes(root, elem)
         elif self.__datasource.dataSourceType == 'DB':
-            db = root.createElement(QString("database"))
-            db.setAttribute(QString("dbtype"), QString(self.__datasource.dbType))
-            for par in self.__datasource.dbParameters.keys():
-                if par == 'Oracle DSN':
-                    newText = root.createTextNode(QString(self.__datasource.dbParameters[par]))
-                    db.appendChild(newText)
-                else:
-                    db.setAttribute(QString(self.__idbmap[par]), QString(self.__datasource.dbParameters[par]))
-            elem.appendChild(db)            
-
-            query = root.createElement(QString("query"))
-            query.setAttribute(QString("format"), QString(self.__datasource.dbDataFormat))
-            if self.__datasource.dbQuery:
-                newText = root.createTextNode(QString(self.__datasource.dbQuery))
-                query.appendChild(newText)
-
-            elem.appendChild(query)            
-
+            self.__createDBNodes(root, elem)
+        elif self.__datasource.dataSourceType == 'PYEVAL':
+            self.__createPyEvalNodes(root, elem)
         if(self.__datasource.doc):
             newDoc = root.createElement(QString("doc"))
             newText = root.createTextNode(QString(self.__datasource.doc))
@@ -880,6 +1061,8 @@ class CommonDataSource(object):
         self.tangoPort = u''
         ## encoding for DevEncoded Tango types
         self.tangoEncoding = u''
+        ## group for Tango DataSources
+        self.tangoGroup = u''
 
         ## database type
         self.dbType = 'MYSQL'
@@ -889,6 +1072,15 @@ class CommonDataSource(object):
         self.dbQuery = ""
         ## database parameters
         self.dbParameters = {}
+
+        ## pyeval result variable
+        self.peResult = "ds.result"
+        ## pyeval datasource variables
+        self.peInput = ""
+        ## pyeval python script
+        self.peScript = ""
+        ## pyeval datasources
+        self.peDataSources = {}
 
         ## external save method
         self.externalSave = None
@@ -927,11 +1119,18 @@ class CommonDataSource(object):
         self.tangoHost = u''
         self.tangoPort = u''
         self.tangoEncoding = u''
+        self.tangoGroup = u''
 
         self.dbType = 'MYSQL'
         self.dbDataFormat = 'SCALAR'
         self.dbQuery = ""
         self.dbParameters = {}
+
+        self.peResult = "ds.result"
+        self.peInput = ""
+        self.peScript = ""
+        self.peDataSources = {}
+
 
 #        if self.dialog:
 #            self.dialog.dbParam = {}
@@ -942,6 +1141,7 @@ class CommonDataSource(object):
     # \returns state of the datasource in tuple
     def getState(self):
         dbParameters = copy.copy(self.dbParameters)
+        peDataSources = copy.copy(self.peDataSources)
 
         state = (self.dataSourceType,
                  self.doc,
@@ -952,10 +1152,15 @@ class CommonDataSource(object):
                  self.tangoHost,
                  self.tangoPort,
                  self.tangoEncoding,
+                 self.tangoGroup,
                  self.dbType,
                  self.dbDataFormat,
                  self.dbQuery,
                  dbParameters,
+                 self.peResult,
+                 self.peInput,
+                 self.peScript,
+                 peDataSources,
                  self.dataSourceName
                  )
         return state
@@ -976,13 +1181,19 @@ class CommonDataSource(object):
          self.tangoHost,
          self.tangoPort,
          self.tangoEncoding,
+         self.tangoGroup,
          self.dbType,
          self.dbDataFormat,
          self.dbQuery,
          dbParameters,
+         self.peResult,
+         self.peInput,
+         self.peScript,
+         peDataSources,
          self.dataSourceName
          ) = state
         self.dbParameters = copy.copy(dbParameters)
+        self.peDataSources = copy.copy(peDataSources)
 
 
 
@@ -1467,6 +1678,7 @@ if __name__ == "__main__":
     form.tangoHost = 'hasso.desy.de'
     form.tangoPort = '10000'
     form.tangoEncoding = 'LIMA2D'
+    form.tangoGroup = 'Coordinates'
 
     form.dataSourceType = 'DB'
     form.dbType = 'PGSQL'

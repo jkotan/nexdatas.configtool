@@ -912,7 +912,7 @@ class DataSourceOpen(Command):
                 else:    
  #               print "create"
                     self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit.dialog)
-                    self._subwindow.resize(440,480)
+                    self._subwindow.resize(440,520)
                     self._dsEdit.dialog.setSaveFocus()
                     self._dsEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
@@ -1481,7 +1481,7 @@ class DataSourceCopy(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,480)
+                self._subwindow.resize(440,520)
                 self._ds.instance.dialog.show()
                 
 
@@ -1513,7 +1513,7 @@ class DataSourceCopy(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,480)
+                self._subwindow.resize(440,520)
                 self._ds.instance.dialog.show()
             
             
@@ -1556,7 +1556,6 @@ class DataSourceCut(Command):
                     self._oldstate = self._ds.instance.getState() 
                 self._ds.instance.copyToClipboard()
                 self._ds.instance.clear()
-#                self._ds.instance.createNodes()
                 self._ds.instance.updateForm()
                 self._ds.instance.dialog.show()
             else:
@@ -1578,7 +1577,7 @@ class DataSourceCut(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,480)
+                self._subwindow.resize(440,520)
                 self._ds.instance.dialog.show()
                 
                 
@@ -1615,7 +1614,7 @@ class DataSourceCut(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,480)
+                self._subwindow.resize(440,520)
                 self._ds.instance.dialog.show()
             
         if hasattr(self._ds ,"id"):
@@ -1697,7 +1696,7 @@ class DataSourcePaste(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,480)
+                self._subwindow.resize(440,520)
                 self._ds.instance.dialog.show()
                                 
 
@@ -1732,7 +1731,7 @@ class DataSourcePaste(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,480)
+                self._subwindow.resize(440,520)
                 self._ds.instance.dialog.show()
             
             if hasattr(self._ds ,"id"):
@@ -1785,7 +1784,7 @@ class DataSourceApply(Command):
             if hasattr(self._ds.instance,"connectExternalActions"):     
                 self._ds.instance.connectExternalActions(**self.receiver.externalDSActions)
             self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-            self._subwindow.resize(440,480)
+            self._subwindow.resize(440,520)
             self._ds.instance.dialog.show()
 
     
@@ -1817,7 +1816,7 @@ class DataSourceApply(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,480)
+                self._subwindow.resize(440,520)
                 self._ds.instance.dialog.show()
     
                     
@@ -1857,7 +1856,7 @@ class DataSourceApply(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,480)
+                self._subwindow.resize(440,520)
 
             self._ds.instance.updateNode()
             if self._ds.instance.isDirty():
@@ -2256,14 +2255,19 @@ class ComponentTakeDataSources(Command):
             if self._cp.instance is not None:
                 datasources = self._cp.instance.getDataSources()
         
-                dialogs = self.receiver.mdi.subWindowList()
-                if dialogs:
-                    for dialog in dialogs:
-                        if isinstance(dialog, DataSourceDlg):
-                            self.receiver.mdi.setActiveSubWindow(dialog)
-                            self.receiver.mdi.closeActiveSubWindow()
+                if datasources:
+                    dialogs = self.receiver.mdi.subWindowList()
+                    if dialogs:
+                        for dialog in dialogs:
+                            if isinstance(dialog, DataSourceDlg):
+                                self.receiver.mdi.setActiveSubWindow(dialog)
+                                self.receiver.mdi.closeActiveSubWindow()
         
-                self.receiver.setDataSources(datasources, new = True)
+                    self.receiver.setDataSources(datasources, new = True)
+                else:
+                    QMessageBox.warning(self.receiver, "DataSource item not selected", 
+                                        "Please select one of the datasource items")            
+
 
         print "EXEC componentTakeDataSources"
 
@@ -2318,16 +2322,21 @@ class ComponentTakeDataSource(Command):
                 if self._cp.instance is not None:
 
                     datasource = self._cp.instance.getCurrentDataSource()
-                    dialogs = self.receiver.mdi.subWindowList()
-                    if dialogs:
-                        for dialog in dialogs:
-                            if isinstance(dialog, DataSourceDlg):
-                                self.receiver.mdi.setActiveSubWindow(dialog)
-                                self.receiver.mdi.closeActiveSubWindow()
+                    if datasource:            
+                        dialogs = self.receiver.mdi.subWindowList()
+                        if dialogs:
+                            for dialog in dialogs:
+                                if isinstance(dialog, DataSourceDlg):
+                                    self.receiver.mdi.setActiveSubWindow(dialog)
+                                    self.receiver.mdi.closeActiveSubWindow()
         
-                    self._ids = self.receiver.setDataSources(datasource, new = True)
-                    self._ds = self.receiver.sourceList.datasources[self._ids]
-                    self.receiver.sourceList.populateDataSources(self._ids)
+                        self._ids = self.receiver.setDataSources(datasource, new = True)
+                        self._ds = self.receiver.sourceList.datasources[self._ids]
+                        self.receiver.sourceList.populateDataSources(self._ids)
+                    else:
+                        QMessageBox.warning(self.receiver, "DataSource item not selected", 
+                                            "Please select one of the datasource items")            
+                        
         print "EXEC componentTakeDataSource"
 
     ## unexecutes the command
@@ -2579,7 +2588,7 @@ class DataSourceEdit(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,480)
+                self._subwindow.resize(440,520)
                 self._dsEdit.dialog.show()
                 #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
                     
@@ -3004,6 +3013,7 @@ class ComponentClear(ComponentItemCommand):
                 
                     newModel = ComponentModel(self._cp.instance.document, self._cp.instance._allAttributes)
                     self._cp.instance.view.setModel(newModel)
+                    self._cp.instance.connectView()
 
                     if hasattr(self._cp.instance,"connectExternalActions"):     
                         self._cp.instance.connectExternalActions(**self.receiver.externalCPActions) 

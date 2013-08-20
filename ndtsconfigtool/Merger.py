@@ -64,12 +64,12 @@ class Merger(QThread):
         ## DOM root node
         self._root = root
         ## tags which cannot have the same siblings
-        self._singles =['datasource', 'strategy', 'dimensions', 'definition',
-                       'record', 'device', 'query', 'database', 'door']
+        self._singles =['strategy', 'dimensions', 'definition',
+                       'record', 'device', 'query', 'database']
 
         ## allowed children of the given nodes
         self._children ={
-            "datasource":["record", "doc", "device", "database", "query", "door"],
+#            "datasource":["record", "doc", "device", "database", "query", "datasource","result"],
             "attribute":["datasource", "strategy", "enumeration", "doc", "dimensions"],
             "definition":["group", "field", "attribute", "link", "component", "doc", "symbols"],
             "dimensions":["dim", "doc"],
@@ -79,7 +79,7 @@ class Merger(QThread):
             }
 
         ## with unique text
-        self.uniqueText = ['field','attribute','query','strategy']
+        self.uniqueText = ['field','attribute','query','strategy','result']
 
         ## required attributes
         self._requiredAttr ={

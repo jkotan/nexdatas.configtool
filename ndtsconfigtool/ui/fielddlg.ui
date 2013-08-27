@@ -214,6 +214,16 @@
               </item>
               <item>
                <property name="text">
+                <string>NX_INT8</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>NX_INT16</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
                 <string>NX_INT32</string>
                </property>
               </item>
@@ -230,6 +240,16 @@
               <item>
                <property name="text">
                 <string>NX_FLOAT64</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>NX_UINT8</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>NX_UINT16</string>
                </property>
               </item>
               <item>

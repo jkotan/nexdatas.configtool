@@ -802,7 +802,7 @@ class DataSourceMethods(object):
         res = root.createElement(QString("result"))
         rn = str(self.__datasource.peResult).strip()
         if rn:
-            res.setAttribute(QString("name"), QString(rn[3:] if (len(rn) > 3 or rn[:3] == 'ds.' ) else rn))
+            res.setAttribute(QString("name"), QString(rn[3:] if (len(rn) > 3 and rn[:3] == 'ds.' ) else rn))
         if self.__datasource.peScript:
             script = root.createTextNode(
                 QString(self.__datasource.peScript if (
@@ -815,7 +815,7 @@ class DataSourceMethods(object):
             newds = "" 
             dts = DomTools()  
             for d in dslist:
-                name = d[3:] if (len(d) > 3 or d[:3] == 'ds.' ) else d
+                name = d[3:] if (len(d) > 3 and d[:3] == 'ds.' ) else d
                 if name in self.__datasource.peDataSources.keys():
                     document = QDomDocument() 
                     if not document.setContent(self.__datasource.peDataSources[name]):

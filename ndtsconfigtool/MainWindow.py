@@ -836,6 +836,7 @@ class MainWindow(QMainWindow):
             serverStoreComponentAction,
             serverStoreAllComponentsAction,
             serverDeleteComponentAction,
+            serverGetMandatoryComponentsAction,
             serverSetMandatoryComponentAction,
             serverUnsetMandatoryComponentAction,
             None,

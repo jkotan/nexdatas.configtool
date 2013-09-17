@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <definition>
   <datasource type="TANGO" name="pco.edge.01">
     <record name="Image"/>

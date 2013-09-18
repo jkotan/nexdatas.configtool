@@ -364,7 +364,6 @@ class MainWindow(QMainWindow):
             "&Apply Component Item", "componentApplyItem", commandArgs, ComponentApplyItem,
             "Ctrl+R", "componentsapplyitem", "Apply the component item")
 
-
         componentMoveUpItemAction = self.pool.createCommand(
             "&Move Up Component Item", "componentMoveUpItem", commandArgs, ComponentMoveUpItem,
             "Ctrl+[", "componentsmoveupitem", "Move up the component item")
@@ -952,7 +951,7 @@ class MainWindow(QMainWindow):
 
         self.externalDSActions = {
             "externalSave":self.dsourceSave, 
-            "externalApply":self.dsourceApply, 
+            "externalApply":self.dsourceApplyButton, 
             "externalClose":self.dsourceClose, 
             "externalStore":self.serverStoreDataSource}    
 
@@ -960,9 +959,9 @@ class MainWindow(QMainWindow):
         self.externalCPActions = {
             "externalSave":self.componentSave,
             "externalStore":self.serverStoreComponent,
-            "externalApply":self.componentApplyItem,
+            "externalApply":self.componentApplyItemButton,
             "externalClose":self.componentClose,
-            "externalDSLink":self.componentLinkDataSourceItem}
+            "externalDSLink":self.componentLinkDataSourceItemButton}
 
 
     ## stores the setting before finishing the application 
@@ -1278,6 +1277,27 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Undo")      
 
 
+    ## apply component item action executed by button
+    # \brief It applies the changes in the current component item executed by button
+    def componentApplyItemButton(self):
+        if self.mdi.activeSubWindow() and isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
+            widget  = self.mdi.activeSubWindow().widget()
+            self.pooling = False
+            if isinstance(widget, ComponentDlg):
+                if widget.component.idc is not None:
+
+                    if hasattr(self.componentList.currentListComponent(),"id"):
+                        if self.componentList.currentListComponent().id != widget.component.idc:
+                            self.componentList.populateComponents(widget.component.idc)
+
+                    self.pooling = True
+                    cmd = self.pool.getCommand('componentApplyItem').clone()
+                    cmd.execute()
+                    self.cmdStack.append(cmd)
+                    self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+                    self.pool.setDisabled("redo", True, "Can't Undo")      
+            self.pooling = True
+
     ## move-up component item action
     # \brief It moves the current component item up
     def componentMoveUpItem(self):
@@ -1306,6 +1326,28 @@ class MainWindow(QMainWindow):
         self.cmdStack.clear()
         self.pool.setDisabled("undo", True, "Can't Undo")   
         self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+    ## apply datasource item action executed by button
+    # \brief It applies the changes in the current datasource item  executed by button
+    def dsourceApplyButton(self):
+        if self.mdi.activeSubWindow() and \
+                isinstance(self.mdi.activeSubWindow().widget(),CommonDataSourceDlg):
+            widget  = self.mdi.activeSubWindow().widget()
+            self.pooling = False
+            if isinstance(widget, CommonDataSourceDlg):
+                if widget.datasource.ids is not None:
+                    if hasattr(self.sourceList.currentListDataSource(),"id"):
+                        if self.sourceList.currentListDataSource().id != widget.datasource.ids: 
+                            self.sourceList.populateDataSources(widget.datasource.ids)
+
+                    self.pooling = True
+                    cmd = self.pool.getCommand('dsourceApply').clone()
+                    cmd.execute()
+                    self.cmdStack.append(cmd)
+                    self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+                    self.pool.setDisabled("redo", True, "Can't Redo")      
+        self.pooling = True
 
 
     ## apply datasource item action
@@ -1618,6 +1660,8 @@ class MainWindow(QMainWindow):
 
 
 
+                
+
     ## new datasource component item action
     # \brief It adds a new datasource component item
     def componentNewDataSourceItem(self):
@@ -1720,6 +1764,29 @@ class MainWindow(QMainWindow):
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+
+    ## link datasource component item action
+    # \brief It adds the current datasource item into component tree
+    def componentLinkDataSourceItemButton(self):
+        if self.mdi.activeSubWindow() and isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
+            widget  = self.mdi.activeSubWindow().widget()
+            self.pooling = False
+            if isinstance(widget, ComponentDlg):
+                if widget.component.idc is not None:
+
+                    if hasattr(self.componentList.currentListComponent(),"id"):
+                        if self.componentList.currentListComponent().id != widget.component.idc:
+                            self.componentList.populateComponents(widget.component.idc)
+
+                    self.pooling = True
+                    cmd = self.pool.getCommand('componentLinkDataSourceItem').clone()
+                    cmd.execute()
+                    self.cmdStack.append(cmd)
+                    self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+                    self.pool.setDisabled("redo", True, "Can't Redo")      
+        self.pooling = True
 
 
 

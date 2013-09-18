@@ -1124,7 +1124,7 @@ class Component(object):
         if self._mergerdlg:
             self._mergerdlg.accept()
 
-            self._interruptMerger
+            self._interruptMerger()
 
             
     ## interrupts merging

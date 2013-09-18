@@ -1,3 +1,7 @@
+2013-09-18 Jan Kotanski <jankotan@gmail.com>
+	* fixing apply/save/store/link action executed by button
+	* tagged as v1.3.2
+
 2013-08-27 Jan Kotanski <jankotan@gmail.com>
 	* fixing quotas in PYEVAL datasource
 	* fixing datasource names in PYEVAL datasource

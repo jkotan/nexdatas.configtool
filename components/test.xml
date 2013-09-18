@@ -3,10 +3,6 @@
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
       <group type="NXsource" name="source">
-        <field units="m" type="NX_FLOAT" name="distance">
-          100.
-        <strategy mode="STEP"/>
-        </field>
         <field type="NX_CHAR" name="single_mysql_record_string">
           <dimensions rank="1">
             <dim value="1" index="1"/>
@@ -122,6 +118,10 @@
         </field>
         <field type="NX_CHAR" name="target_material">
           C
+        </field>
+        <field units="m" type="NX_FLOAT" name="distance">
+          100.
+        <strategy mode="STEP"/>
         </field>
       </group>
       <group type="NXcrystal" name="crystal">

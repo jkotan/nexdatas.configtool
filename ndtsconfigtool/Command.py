@@ -1124,6 +1124,10 @@ class ComponentEdit(Command):
 
 
 
+
+
+
+
 ## Command which saves with the current component in the file
 class ComponentSave(Command):
 

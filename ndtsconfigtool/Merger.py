@@ -53,8 +53,8 @@ class MergerDlg(QDialog):
 class Merger(QThread):
 
 
-#    def __del__(self):
-#        self.wait()
+    def __del__(self):
+        self.wait()
     
 
     ## constructor
@@ -133,7 +133,7 @@ class Merger(QThread):
     # \param elem1 first node element
     # \param elem2 secound node element
     # \returns True if the given elements are mergeable
-    def _areMergeable(self,elem1, elem2):
+    def _areMergeable(self, elem1, elem2):
 #        print "checking:" ,elem1.nodeName(), elem2.nodeName()
         if elem1.nodeName() != elem2.nodeName():
             return False

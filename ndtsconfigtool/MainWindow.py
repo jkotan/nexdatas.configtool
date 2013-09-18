@@ -950,15 +950,15 @@ class MainWindow(QMainWindow):
         
 
         self.externalDSActions = {
-            "externalSave":self.dsourceSave, 
+            "externalSave":self.dsourceSaveButton, 
             "externalApply":self.dsourceApplyButton, 
             "externalClose":self.dsourceClose, 
-            "externalStore":self.serverStoreDataSource}    
+            "externalStore":self.serverStoreDataSourceButton}    
 
 
         self.externalCPActions = {
-            "externalSave":self.componentSave,
-            "externalStore":self.serverStoreComponent,
+            "externalSave":self.componentSaveButton,
+            "externalStore":self.serverStoreComponentButton,
             "externalApply":self.componentApplyItemButton,
             "externalClose":self.componentClose,
             "externalDSLink":self.componentLinkDataSourceItemButton}
@@ -1225,6 +1225,12 @@ class MainWindow(QMainWindow):
         cmd.execute()
 
 
+    ## save component action executed by button
+    # \brief It saves the current component executed by button   
+    def componentSaveButton(self):
+        if self.updateComponentListItem():
+            self.componentSave()
+
     ## collect component action
     # \brief It stores in the configuration server or saves in the file the current component      
     def componentCollect(self):
@@ -1280,23 +1286,8 @@ class MainWindow(QMainWindow):
     ## apply component item action executed by button
     # \brief It applies the changes in the current component item executed by button
     def componentApplyItemButton(self):
-        if self.mdi.activeSubWindow() and isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
-            widget  = self.mdi.activeSubWindow().widget()
-            self.pooling = False
-            if isinstance(widget, ComponentDlg):
-                if widget.component.idc is not None:
-
-                    if hasattr(self.componentList.currentListComponent(),"id"):
-                        if self.componentList.currentListComponent().id != widget.component.idc:
-                            self.componentList.populateComponents(widget.component.idc)
-
-                    self.pooling = True
-                    cmd = self.pool.getCommand('componentApplyItem').clone()
-                    cmd.execute()
-                    self.cmdStack.append(cmd)
-                    self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-                    self.pool.setDisabled("redo", True, "Can't Undo")      
-            self.pooling = True
+        if self.updateComponentListItem():
+            self.componentApplyItem()
 
     ## move-up component item action
     # \brief It moves the current component item up
@@ -1327,12 +1318,12 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo", True, "Can't Undo")   
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
-
-    ## apply datasource item action executed by button
-    # \brief It applies the changes in the current datasource item  executed by button
-    def dsourceApplyButton(self):
-        if self.mdi.activeSubWindow() and \
-                isinstance(self.mdi.activeSubWindow().widget(),CommonDataSourceDlg):
+    ## update datasource list item according to open window
+    # \returns True if windows is open
+    def updateDataSourceListItem(self):
+        status = False
+        if self.mdi.activeSubWindow() \
+                and isinstance(self.mdi.activeSubWindow().widget(),CommonDataSourceDlg):
             widget  = self.mdi.activeSubWindow().widget()
             self.pooling = False
             if isinstance(widget, CommonDataSourceDlg):
@@ -1340,14 +1331,17 @@ class MainWindow(QMainWindow):
                     if hasattr(self.sourceList.currentListDataSource(),"id"):
                         if self.sourceList.currentListDataSource().id != widget.datasource.ids: 
                             self.sourceList.populateDataSources(widget.datasource.ids)
+                    status = True        
+            self.pooling = True
+        return status        
 
-                    self.pooling = True
-                    cmd = self.pool.getCommand('dsourceApply').clone()
-                    cmd.execute()
-                    self.cmdStack.append(cmd)
-                    self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-                    self.pool.setDisabled("redo", True, "Can't Redo")      
-        self.pooling = True
+
+
+    ## apply datasource item action executed by button
+    # \brief It applies the changes in the current datasource item  executed by button
+    def dsourceApplyButton(self):
+        if self.updateDataSourceListItem():
+            self.dsourceApply()
 
 
     ## apply datasource item action
@@ -1374,6 +1368,13 @@ class MainWindow(QMainWindow):
 
         cmd = self.pool.getCommand('dsourceSave').clone()
         cmd.execute()
+
+
+    ## save datasource item action executed by button
+    # \brief It saves the changes in the current datasource item executed by button
+    def dsourceSaveButton(self):
+        if self.updateDataSourceListItem():
+            self.dsourceSave()
 
 
 
@@ -1766,10 +1767,11 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
-
-    ## link datasource component item action
-    # \brief It adds the current datasource item into component tree
-    def componentLinkDataSourceItemButton(self):
+        
+    ## update component list item according to open window
+    # \returns True if windows is open
+    def updateComponentListItem(self):
+        status = False
         if self.mdi.activeSubWindow() and isinstance(self.mdi.activeSubWindow().widget(),ComponentDlg):
             widget  = self.mdi.activeSubWindow().widget()
             self.pooling = False
@@ -1779,14 +1781,16 @@ class MainWindow(QMainWindow):
                     if hasattr(self.componentList.currentListComponent(),"id"):
                         if self.componentList.currentListComponent().id != widget.component.idc:
                             self.componentList.populateComponents(widget.component.idc)
+                    status = True        
+            self.pooling = True
+        return status        
+            
 
-                    self.pooling = True
-                    cmd = self.pool.getCommand('componentLinkDataSourceItem').clone()
-                    cmd.execute()
-                    self.cmdStack.append(cmd)
-                    self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
-                    self.pool.setDisabled("redo", True, "Can't Redo")      
-        self.pooling = True
+    ## link datasource component item action
+    # \brief It adds the current datasource item into component tree
+    def componentLinkDataSourceItemButton(self):
+        if self.updateComponentListItem():
+            self.componentLinkDataSourceItem()
 
 
 
@@ -1856,6 +1860,13 @@ class MainWindow(QMainWindow):
         self.cmdStack.clear()
         self.pool.setDisabled("undo", True, "Can't Undo")   
         self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+    ## store server component action executed by button
+    # \brief It stores the current component in the configuration server executed by button
+    def serverStoreComponentButton(self):
+        if self.updateComponentListItem():
+            self.serverStoreComponent()
 
 
     ## store server component action
@@ -1952,6 +1963,14 @@ class MainWindow(QMainWindow):
 
         cmd = self.pool.getCommand('serverStoreDataSource').clone()
         cmd.execute()
+
+
+
+    ## store server datasource action executed by button
+    # \brief It stores the current datasource in the configuration server executed by button
+    def serverStoreDataSourceButton(self):
+        if self.updateDataSourceListItem():
+            self.serverStoreDataSource()
 
     ## store server all datasources action
     # \brief It stores all components in the configuration server

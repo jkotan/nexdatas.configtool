@@ -1,3 +1,7 @@
+2013-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* creating datasource factory
+	* tagged as v1.3.3
+
 2013-09-18 Jan Kotanski <jankotan@gmail.com>
 	* fixing apply/save/store/link action executed by button
 	* tagged as v1.3.2

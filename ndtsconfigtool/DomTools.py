@@ -26,6 +26,39 @@ from PyQt4.QtCore import (QString, SIGNAL, QModelIndex)
 ## abstract node dialog 
 class DomTools(object):
     
+
+
+    ## provides row number of the given node
+    # \param child child item
+    # \param node parent node        
+    # \returns row number
+    def getNodeRow(self, child, node):
+        row = 0
+        if node:
+            children = node.childNodes()
+            for i in range(children.count()):
+                ch = children.item(i)
+                if child == ch:
+                    break
+                row += 1
+            if row < children.count():
+                return row
+
+
+    ## provides node text for the given node
+    # \param node DOM node        
+    # \returns string with node texts
+    def getText(self, node):
+        text = QString()
+        if node:
+            child = node.firstChild()
+            while not child.isNull():
+                if child.nodeType() == QDomNode.TextNode:
+                    text += child.toText().data()
+                child = child.nextSibling()
+        return text    
+
+
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
@@ -72,35 +105,6 @@ class DomTools(object):
                 return row
 
 
-    ## provides row number of the given node
-    # \param child child item
-    # \param node parent node        
-    # \returns row number
-    def getNodeRow(self, child, node):
-        row = 0
-        if node:
-            children = node.childNodes()
-            for i in range(children.count()):
-                ch = children.item(i)
-                if child == ch:
-                    break
-                row += 1
-            if row < children.count():
-                return row
-
-
-    ## provides node text for the given node
-    # \param node DOM node        
-    # \returns string with node texts
-    def getText(self, node):
-        text = QString()
-        if node:
-            child = node.firstChild()
-            while not child.isNull():
-                if child.nodeType() == QDomNode.TextNode:
-                    text += child.toText().data()
-                child = child.nextSibling()
-        return text    
 
 
 

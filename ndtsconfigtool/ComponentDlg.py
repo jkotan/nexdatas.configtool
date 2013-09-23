@@ -133,7 +133,6 @@ class Component(object):
         self._componentFile = None
 
 
-
 #        ## item frame
 #        self.frame = None
         ## component actions

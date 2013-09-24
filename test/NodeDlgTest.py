@@ -37,6 +37,7 @@ from PyQt4.QtXml import QDomNode, QDomDocument
 
 from ndtsconfigtool.NodeDlg import NodeDlg
 from ndtsconfigtool.ComponentModel import ComponentModel
+from ndtsconfigtool.ComponentItem import ComponentItem
 
 from ndtsconfigtool.DomTools import DomTools
 
@@ -145,6 +146,7 @@ class TestView(object):
             self.kds[-1].setAttribute("type","mytype%s" %  n)
             self.kds[-1].setAttribute("units","myunits%s" %  n)
             self.qdn.appendChild(self.kds[-1]) 
+            print  self.kds[-1].nodeName(),self.kds[-1] 
             self.tkds.append(self.doc.createTextNode("\nText\n %s\n" %  n))
             self.kds[-1].appendChild(self.tkds[-1]) 
 
@@ -154,6 +156,8 @@ class TestView(object):
         self.testModel = ComponentModel(self.doc,self.allAttr)
 #        self.myindex = self.setIndex(0, 0, self.testModel.rootIndex)
         self.myindex = QModelIndex()
+
+
 
     def setIndex(self, row, column, parent):
         self.myindex = self.testModel.index( row, column, parent)
@@ -249,7 +253,6 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.ui, None)
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
-        self.assertTrue(isinstance(form.dts, DomTools))
         self.assertEqual(form.dsLabel, 'datasources')
 
         self.assertEqual(form.result(),0)
@@ -270,7 +273,6 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.ui, None)
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
-        self.assertTrue(isinstance(form.dts, DomTools))
 
         self.assertEqual(form.result(),0)
 
@@ -313,7 +315,6 @@ class NodeDlgTest(unittest.TestCase):
         self.assertTrue(isinstance(form.ui,Ui_NodeDlg))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
-        self.assertTrue(isinstance(form.dts, DomTools))
 
 
         self.assertEqual(form.result(),0)
@@ -552,7 +553,7 @@ class NodeDlgTest(unittest.TestCase):
         form.view = vw
         
         dts = TestTools()
-        form.dts = dts
+        self.dts = dts
         form.node =vw.qdn
 
         form.replaceText(di)
@@ -611,7 +612,7 @@ class NodeDlgTest(unittest.TestCase):
         form.view = None
         
         dts = TestTools()
-        form.dts = dts
+        self.dts = dts
         form.node =vw.qdn
 
         form.replaceText(di)
@@ -653,7 +654,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
         dts = TestTools()
-        form.dts = dts
+        self.dts = dts
         form.node =vw.qdn
 
         form.replaceText(di)
@@ -693,14 +694,14 @@ class NodeDlgTest(unittest.TestCase):
         form.view = vw
         
         dts = TestTools()
-        form.dts = dts
+        self.dts = dts
         form.node =vw.qdn
 
-        form.removeElement(ki.internalPointer(),di)
+        form.removeElement(ki.internalPointer().node ,di)
         
 
         self.assertEqual(dts.stack[0],"removeElement")
-        self.assertEqual(dts.stack[1],ki.internalPointer())
+        self.assertEqual(dts.stack[1],ki.internalPointer().node)
         self.assertEqual(dts.stack[2],di)
         self.assertEqual(dts.stack[3],vw.model())
 
@@ -709,7 +710,7 @@ class NodeDlgTest(unittest.TestCase):
         vw.testModel = None
 
 
-        form.removeElement(ki.internalPointer(),di)
+        form.removeElement(ki.internalPointer().node,di)
         self.assertEqual(dts.stack, [] )
 
 
@@ -753,38 +754,50 @@ class NodeDlgTest(unittest.TestCase):
 
         vw.myindex =  ki
 
-
+        print "WW", n, vw.nkids
         vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
         form.view = vw
         
-        dts = TestTools()
-        form.dts = dts
         form.node =vw.qdn
 
-        form.replaceElement(ki.internalPointer(),ki2.internalPointer(),di)
+        print "root", ri.internalPointer().node.nodeName()
+        print "di", di.internalPointer().node.nodeName(), di.internalPointer().node
+        print "di", ri.internalPointer().child(0).node.nodeName(),di.internalPointer().child(0).node
+        ci = di.internalPointer()
+        for i in range(vw.nkids):
+            ks =  ci.child(i)
+            print "N",i, ks.node.nodeName(), ks.node
+            
+        inkd = vw.doc.createElement("insertedkid")
+        form.replaceElement(ki.internalPointer().node, inkd, di)
         
 
-        self.assertEqual(dts.stack[0],"replaceElement")
-        self.assertEqual(dts.stack[1],ki.internalPointer())
-        self.assertEqual(dts.stack[2],ki2.internalPointer())
-        self.assertEqual(dts.stack[3],di)
-        self.assertEqual(dts.stack[4],vw.model())
+        print "root", ri.internalPointer().node.nodeName()
+        print "di", di.internalPointer().node.nodeName(), di.internalPointer().node
+        print "di", ri.internalPointer().child(0).node.nodeName(),di.internalPointer().child(0).node
+        for i in range(vw.nkids):
+            ks =  di.internalPointer().child(i)
+            print "N",i, ks.node.nodeName(), ks.node
 
-        dts.stack = []
+        k = n
+        ks = ci.child(k)
+        self.assertTrue(isinstance(ks, ComponentItem))
+        self.assertTrue(isinstance(ks.parent, ComponentItem))
+        self.assertEqual(ks.childNumber(),k)
+        self.assertEqual(ks.node.nodeName(), "insertedkid")
+        self.assertEqual(ks.node, inkd)
+        self.assertEqual(ks.parent.node, vw.qdn)
+        self.assertEqual(ks.parent, ci)
+
 
         vw.testModel = None
 
-        form.replaceElement(ki.internalPointer(),ki2.internalPointer(),di)
-        self.assertEqual(dts.stack, [] )
-
-
-
-        dts.stack = []
+#        self.assertTrue(not form.replaceElement(ki.internalPointer().node, inkd,di))
 
         form.view = None
 
-        form.replaceElement(ki.internalPointer(),ki2.internalPointer(),di)
-        self.assertEqual(dts.stack, [] )
+#        self.assertTrue(not form.replaceElement(ki.internalPointer(),ki2.internalPointer().node,di))
+
 
         self.assertEqual(form.result(),0)
 
@@ -811,40 +824,50 @@ class NodeDlgTest(unittest.TestCase):
         di = vw.model().index(0,0,ri)
         n = self.__rnd.randint(0, vw.nkids-1) 
         ki = vw.model().index(n,0,di)
-
+        
         vw.myindex =  ki
 
+        inkd = vw.doc.createElement("insertedkid")
 
         vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
         form.view = vw
-        
-        dts = TestTools()
-        form.dts = dts
-        form.node =vw.qdn
 
-        form.appendElement(ki.internalPointer(),di)
+        form.node = vw.qdn
         
 
-        self.assertEqual(dts.stack[0],"appendNode")
-        self.assertEqual(dts.stack[1],ki.internalPointer())
-        self.assertEqual(dts.stack[2],di)
-        self.assertEqual(dts.stack[3],vw.model())
+        self.assertTrue(not form.appendElement(inkd, QModelIndex()))
+        
+        self.assertTrue(vw.model().rowCount(),vw.nkids)
+        self.assertTrue(form.appendElement(inkd, di))
 
-        dts.stack = []
+        self.assertTrue(vw.model().rowCount(), vw.nkids+1)
+ 
+        k = vw.nkids
+        ci = di.internalPointer()
+        ks = ci.child(k)
+
+        self.assertTrue(isinstance(ks, ComponentItem))
+        self.assertTrue(isinstance(ks.parent, ComponentItem))
+        self.assertEqual(ks.childNumber(),k)
+        self.assertEqual(ks.node, inkd)
+        self.assertEqual(ks.parent.node, vw.qdn)
+        self.assertEqual(ks.node.nodeName(), "insertedkid")
+        self.assertEqual(ks.parent, ci)
+        
+
 
         vw.testModel = None
 
-        form.appendElement(ki.internalPointer(),di)
-        self.assertEqual(dts.stack, [] )
+        inkd2 = vw.doc.createElement("insertedkid")
+        self.assertTrue(not form.appendElement(inkd2, di))
+        ci = di.internalPointer()
+        
 
 
-
-        dts.stack = []
 
         form.view = None
 
-        form.appendElement(ki.internalPointer(),di)
-        self.assertEqual(dts.stack, [] )
+        self.assertTrue(not form.appendElement(ki.internalPointer().node,di))
 
         self.assertEqual(form.result(),0)
 

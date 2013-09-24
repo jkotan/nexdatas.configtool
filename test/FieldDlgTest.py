@@ -42,6 +42,7 @@ from ndtsconfigtool.NodeDlg import NodeDlg
 from ndtsconfigtool.DimensionsDlg import DimensionsDlg
 
 from ndtsconfigtool.ui.ui_fielddlg import Ui_FieldDlg
+from ndtsconfigtool.DomTools import DomTools
 
 
 ##  Qt-application
@@ -2723,12 +2724,12 @@ class FieldDlgTest(unittest.TestCase):
                 self.assertEqual(vl,form.attributes[str(nm)])
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -2796,12 +2797,12 @@ class FieldDlgTest(unittest.TestCase):
                 self.assertEqual(mdimensions[ind-1], vl)
             child = child.nextSibling()    
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -2909,12 +2910,12 @@ class FieldDlgTest(unittest.TestCase):
                 self.assertEqual(vl,form.attributes[str(nm)])
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -2982,12 +2983,12 @@ class FieldDlgTest(unittest.TestCase):
                 self.assertEqual(mdimensions[ind-1], vl)
             child = child.nextSibling()    
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -3095,12 +3096,12 @@ class FieldDlgTest(unittest.TestCase):
                 self.assertEqual(vl,form.attributes[str(nm)])
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -3194,11 +3195,11 @@ class FieldDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,mdoc)
         
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,mvalue)
 
@@ -3236,12 +3237,12 @@ class FieldDlgTest(unittest.TestCase):
                 self.assertEqual(vl,attrs[str(nm)])
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -3349,12 +3350,12 @@ class FieldDlgTest(unittest.TestCase):
                 self.assertEqual(vl,form.attributes[str(nm)])
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -3452,11 +3453,11 @@ class FieldDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
@@ -3578,12 +3579,12 @@ class FieldDlgTest(unittest.TestCase):
                 self.assertEqual(vl,form.attributes[str(nm)])
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -3681,11 +3682,11 @@ class FieldDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
@@ -3735,7 +3736,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertTrue(isinstance(form.ui, Ui_FieldDlg))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
-#        self.assertTrue(isinstance(form.dts, DomTools))
+#        self.assertTrue(isinstance(DomTools, DomTools))
 
         self.assertEqual(form.result(),0)
 
@@ -4125,11 +4126,11 @@ class FieldDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
@@ -4186,11 +4187,11 @@ class FieldDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
@@ -4349,11 +4350,11 @@ class FieldDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 

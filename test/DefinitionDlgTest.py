@@ -41,6 +41,7 @@ from ndtsconfigtool.AttributeDlg import AttributeDlg
 from ndtsconfigtool.NodeDlg import NodeDlg
 
 from ndtsconfigtool.ui.ui_definitiondlg import Ui_DefinitionDlg
+from ndtsconfigtool.DomTools import DomTools
 
 
 ##  Qt-application
@@ -1713,7 +1714,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,form.doc)
@@ -1754,7 +1755,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -1831,7 +1832,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,form.doc)
@@ -1872,7 +1873,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -1946,7 +1947,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,form.doc)
@@ -2022,7 +2023,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -2097,7 +2098,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,form.doc)
@@ -2173,7 +2174,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip())
 
@@ -2246,7 +2247,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,form.doc)
@@ -2322,7 +2323,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip())
 
@@ -2351,7 +2352,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertTrue(isinstance(form.ui, Ui_DefinitionDlg))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
-#        self.assertTrue(isinstance(form.dts, DomTools))
+#        self.assertTrue(isinstance(DomTools, DomTools))
 
         self.assertEqual(form.result(),0)
 

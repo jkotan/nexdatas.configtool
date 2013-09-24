@@ -42,6 +42,7 @@ from ndtsconfigtool.NodeDlg import NodeDlg
 from ndtsconfigtool.DimensionsDlg import DimensionsDlg
 
 from ndtsconfigtool.ui.ui_linkdlg import Ui_LinkDlg
+from ndtsconfigtool.DomTools import DomTools
 
 
 ##  Qt-application
@@ -1117,7 +1118,7 @@ class LinkDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -1146,7 +1147,7 @@ class LinkDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -1207,7 +1208,7 @@ class LinkDlgTest(unittest.TestCase):
         mdoc = "New text \nNew text"
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -1247,7 +1248,7 @@ class LinkDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -1322,7 +1323,7 @@ class LinkDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -1371,7 +1372,7 @@ class LinkDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,mdoc)
         
@@ -1389,7 +1390,7 @@ class LinkDlgTest(unittest.TestCase):
                 cnt += 1 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -1462,7 +1463,7 @@ class LinkDlgTest(unittest.TestCase):
                 cnt += 1 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -1517,7 +1518,7 @@ class LinkDlgTest(unittest.TestCase):
                 cnt += 1 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         
@@ -1589,7 +1590,7 @@ class LinkDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -1641,7 +1642,7 @@ class LinkDlgTest(unittest.TestCase):
                 cnt += 1 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         
@@ -1671,7 +1672,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
-#        self.assertTrue(isinstance(form.dts, DomTools))
+#        self.assertTrue(isinstance(DomTools, DomTools))
 
         self.assertEqual(form.result(),0)
 

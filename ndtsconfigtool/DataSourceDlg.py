@@ -1189,10 +1189,6 @@ class CommonDataSource(object):
         self.dataSourceName = u''
 
 
-        for cl in dsTypes.values():
-            for vr in cl.var.keys():
-                setattr(self, vr, cl.var[vr])
-
 
         ## external save method
         self.externalSave = None
@@ -1214,68 +1210,32 @@ class CommonDataSource(object):
         self.tree = False
         
 
+        ## creates variables dynamically
+        self.clear()
 
 
     ## clears the datasource content
     # \brief It sets the datasource variables to default values
     def clear(self):
-        self.dataSourceType = 'CLIENT'
-        self.dataSourceName = ''
-        self.doc = u''
-
-        self.clientRecordName = u''
-
-        self.tangoDeviceName = u''
-        self.tangoMemberName = u''
-        self.tangoMemberType = u''
-        self.tangoHost = u''
-        self.tangoPort = u''
-        self.tangoEncoding = u''
-        self.tangoGroup = u''
-
-        self.dbType = 'MYSQL'
-        self.dbDataFormat = 'SCALAR'
-        self.dbQuery = ""
-        self.dbParameters = {}
-
-        self.peResult = "ds.result"
-        self.peInput = ""
-        self.peScript = ""
-        self.peDataSources = {}
+        for cl in dsTypes.values():
+            for vr in cl.var.keys():
+                setattr(self, vr, cl.var[vr])
 
 
-#        if self.dialog:
-#            self.dialog.dbParam = {}
-        
         
 
     ## provides the state of the datasource dialog        
     # \returns state of the datasource in tuple
     def getState(self):
-        dbParameters = copy.copy(self.dbParameters)
-        peDataSources = copy.copy(self.peDataSources)
+        state = [self.dataSourceType,
+                 self.dataSourceName,
+                 self.doc]
 
-        state = (self.dataSourceType,
-                 self.doc,
-                 self.clientRecordName, 
-                 self.tangoDeviceName,
-                 self.tangoMemberName,
-                 self.tangoMemberType,
-                 self.tangoHost,
-                 self.tangoPort,
-                 self.tangoEncoding,
-                 self.tangoGroup,
-                 self.dbType,
-                 self.dbDataFormat,
-                 self.dbQuery,
-                 dbParameters,
-                 self.peResult,
-                 self.peInput,
-                 self.peScript,
-                 peDataSources,
-                 self.dataSourceName
-                 )
-        return state
+        for cl in dsTypes.values():
+            for vr in cl.var.keys():
+                vv = getattr(self, vr)
+                state.append(copy.copy(vv) if ((type(vv) is list) or (type(vv) is dict)) else vv)
+        return tuple(state)        
 
 
 
@@ -1283,30 +1243,16 @@ class CommonDataSource(object):
     # \brief note that ids, applied and tree are not in the state
     # \param state state datasource written in tuple 
     def setState(self, state):
+    
+        cnt = 3
+        (self.dataSourceType, self.dataSourceName, self.doc) = state[:cnt]
 
-        (self.dataSourceType,
-         self.doc,
-         self.clientRecordName, 
-         self.tangoDeviceName,
-         self.tangoMemberName,
-         self.tangoMemberType,
-         self.tangoHost,
-         self.tangoPort,
-         self.tangoEncoding,
-         self.tangoGroup,
-         self.dbType,
-         self.dbDataFormat,
-         self.dbQuery,
-         dbParameters,
-         self.peResult,
-         self.peInput,
-         self.peScript,
-         peDataSources,
-         self.dataSourceName
-         ) = state
-        self.dbParameters = copy.copy(dbParameters)
-        self.peDataSources = copy.copy(peDataSources)
-
+        for cl in dsTypes.values():
+            for vr in cl.var.keys():
+                setattr(self, vr, copy.copy(state[cnt]) \
+                            if ((type(state[cnt]) is list) or (type(state[cnt]) is dict)) \
+                            else state[cnt])
+                cnt += 1
 
 
 ## dialog defining datasource

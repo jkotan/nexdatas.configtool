@@ -345,7 +345,7 @@ class DBSource(object):
                         
         if not datasource.dbType:
             datasource.dbType = 'MYSQL'
-        text = unicode(self.main.dts.getText(database))
+        text = unicode(DomTools.getText(database))
         datasource.dbParameters['Oracle DSN'] = unicode(text).strip() if text else ""
         self.dbParam['Oracle DSN'] = unicode(text).strip() if text else ""
 
@@ -361,7 +361,7 @@ class DBSource(object):
                                                            if attributeMap.contains("format") else "SCALAR")
 
 
-        text = unicode(self.main.dts.getText(query))
+        text = unicode(DomTools.getText(query))
         datasource.dbQuery = unicode(text).strip() if text else ""
 
 
@@ -622,7 +622,7 @@ class PyEvalSource(object):
     # \param datasource class
     def setFromNode(self, datasource):
         res = self.main.node.firstChildElement(QString("result"))           
-        text = self.main.dts.getText(res)    
+        text = DomTools.getText(res)    
         while len(text)>0 and text[0] =='\n':
             text = text[1:]
         datasource.peScript = unicode(text) if text else ""
@@ -630,7 +630,7 @@ class PyEvalSource(object):
         datasource.peResult = unicode("ds." + attributeMap.namedItem("name").nodeValue() \
                                                          if attributeMap.contains("name") else "")
 
-        ds = self.main.dts.getText(self.main.node)    
+        ds = DomTools.getText(self.main.node)    
         dslist = unicode(ds).strip().split() if unicode(ds).strip() else []
         datasource.peDataSources = {}
         child = self.main.node.firstChildElement(QString("datasource"))           
@@ -685,7 +685,6 @@ class PyEvalSource(object):
         if datasource.peInput:
             dslist = unicode(datasource.peInput).split()
             newds = "" 
-            dts = DomTools()  
             for d in dslist:
                 name = d[3:] if (len(d) > 3 and d[:3] == 'ds.' ) else d
                 if name in datasource.peDataSources.keys():
@@ -695,7 +694,7 @@ class PyEvalSource(object):
                     else:
                         if self.__dialog and hasattr(self.__dialog,"root"):
 
-                            dsnode = dts.getFirstElement(
+                            dsnode = DomTools.getFirstElement(
                                 document, "datasource")
                             child = root.importNode(dsnode,True)
                             elem.appendChild(child)

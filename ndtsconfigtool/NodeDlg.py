@@ -53,9 +53,6 @@ class NodeDlg(QDialog):
         ## external apply action
         self.externalDSLink = None
 
-        ## DOM tools
-        self.dts = DomTools()
-
         ## datasource label for templated XML
         self.dsLabel = "datasources"
 
@@ -93,7 +90,7 @@ class NodeDlg(QDialog):
     # \param text string with text
     def replaceText(self, index, text = None):
         if self.view is not None and self.view.model() is not None: 
-            return self.dts.replaceText(self.node, index, self.view.model(), text)
+            return DomTools.replaceText(self.node, index, self.view.model(), text)
     
 
     ## removes node element
@@ -101,7 +98,7 @@ class NodeDlg(QDialog):
     # \param parent parent node index      
     def removeElement(self, element, parent):
         if self.view is not None and self.view.model() is not None: 
-            return self.dts.removeElement(element, parent, self.view.model())
+            return DomTools.removeElement(element, parent, self.view.model())
 
 
     ## replaces node element
@@ -110,7 +107,7 @@ class NodeDlg(QDialog):
     # \param parent parent node index
     def replaceElement(self, oldElement, newElement, parent):
         if self.view is not None and self.view.model() is not None: 
-            return self.dts.replaceElement(oldElement, newElement, parent, self.view.model())
+            return DomTools.replaceElement(oldElement, newElement, parent, self.view.model())
             
 
 
@@ -119,7 +116,7 @@ class NodeDlg(QDialog):
     # \param parent parent node index      
     def appendElement(self, newElement, parent):
         if self.view is not None and self.view.model() is not None: 
-            return self.dts.appendNode(newElement, parent, self.view.model())
+            return DomTools.appendNode(newElement, parent, self.view.model())
         return False     
 
             

@@ -262,7 +262,7 @@ class DataSourceMethods(object):
 
 
         doc = self.__dialog.node.firstChildElement(QString("doc"))           
-        text = self.__dialog.dts.getText(doc)    
+        text = DomTools.getText(doc)    
         self.__datasource.doc = unicode(text).strip() if text else ""
 
         
@@ -379,7 +379,7 @@ class DataSourceMethods(object):
         self.__dialog.node = self.__dialog.node.parentNode()   
         if self.__datasource.tree:
             if self.__dialog.view is not None and self.__dialog.view.model() is not None: 
-                self.__dialog.dts.replaceNode(oldDs, newDs, parent, self.__dialog.view.model())
+                DomTools.replaceNode(oldDs, newDs, parent, self.__dialog.view.model())
         else:
             self.__dialog.node.replaceChild(newDs, oldDs)
         self.__dialog.node = newDs
@@ -484,7 +484,7 @@ class DataSourceMethods(object):
         else:
             if self.__dialog and hasattr(self.__dialog,"root"):
                 self.__dialog.root = self.__datasource.document 
-                self.__dialog.node = self.__dialog.dts.getFirstElement(self.__datasource.document, 
+                self.__dialog.node = DomTools.getFirstElement(self.__datasource.document, 
                                                                    "datasource")
         if not self.__dialog.node:
             return
@@ -700,7 +700,7 @@ class DataSource(CommonDataSource):
                 if not self.document.setContent(fh):
                     raise ValueError, "could not parse XML"
 
-                ds = self.dialog.dts.getFirstElement(self.document, "datasource")
+                ds = DomTools.getFirstElement(self.document, "datasource")
                 if ds:
                     self.setFromNode(ds)
                 self.savedXML = self.document.toString(0)
@@ -741,7 +741,7 @@ class DataSource(CommonDataSource):
             if ds and ds.nodeName() =="datasource":
                 return xml
         
-        ds = self.dialog.dts.getFirstElement(olddoc, "datasource")           
+        ds = DomTools.getFirstElement(olddoc, "datasource")           
         
         newdoc = QDomDocument()
         processing = newdoc.createProcessingInstruction("xml", "version='1.0'") 
@@ -767,7 +767,7 @@ class DataSource(CommonDataSource):
             if self.dialog and hasattr(self.dialog,"root"):
                 self.dialog.root = self.document 
 
-        ds = self.dialog.dts.getFirstElement(self.document, "datasource")           
+        ds = DomTools.getFirstElement(self.document, "datasource")           
         if ds:
             self.setFromNode(ds)
             if new:

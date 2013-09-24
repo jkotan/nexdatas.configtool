@@ -29,6 +29,8 @@ import copy
 from AttributeDlg import AttributeDlg
 from NodeDlg import NodeDlg 
 
+from DomTools import DomTools
+
 ## dialog defining a definition tag
 class DefinitionDlg(NodeDlg):
     
@@ -147,7 +149,7 @@ class DefinitionDlg(NodeDlg):
                 self.__attributes[attrName] = unicode(attribute.nodeValue())
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self.dts.getText(doc)    
+        text = DomTools.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
              

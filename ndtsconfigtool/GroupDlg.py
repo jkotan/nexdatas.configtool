@@ -26,6 +26,7 @@ from ui.ui_groupdlg import Ui_GroupDlg
 
 from AttributeDlg import AttributeDlg
 from NodeDlg import NodeDlg 
+from DomTools import DomTools
 
 import copy
 
@@ -147,7 +148,7 @@ class GroupDlg(NodeDlg):
                 self.__attributes[attrName] = unicode(attribute.nodeValue())
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self.dts.getText(doc)    
+        text = DomTools.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
              
 

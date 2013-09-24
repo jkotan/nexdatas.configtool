@@ -29,6 +29,7 @@ from DimensionsDlg import DimensionsDlg
 import copy
 
 from Errors import CharacterError
+from DomTools import DomTools
 
 ## dialog defining an attribute
 class RichAttributeDlg(NodeDlg):
@@ -180,7 +181,7 @@ class RichAttributeDlg(NodeDlg):
         self.nexusType = unicode(attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else "")
 
 
-        text = self.dts.getText(self.node)    
+        text = DomTools.getText(self.node)    
         self.value = unicode(text).strip() if text else ""
 
 
@@ -233,7 +234,7 @@ class RichAttributeDlg(NodeDlg):
 
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self.dts.getText(doc)    
+        text = DomTools.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 

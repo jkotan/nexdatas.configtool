@@ -24,6 +24,7 @@ from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
 from ui.ui_strategydlg import Ui_StrategyDlg
 
 from NodeDlg import NodeDlg 
+from DomTools import DomTools
 
 ## dialog defining an attribute
 class StrategyDlg(NodeDlg):
@@ -207,11 +208,11 @@ class StrategyDlg(NodeDlg):
                 self.rate = rate    
 
 
-        text = self.dts.getText(self.node)    
+        text = DomTools.getText(self.node)    
         self.postrun = unicode(text).strip() if text else ""
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self.dts.getText(doc)    
+        text = DomTools.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 

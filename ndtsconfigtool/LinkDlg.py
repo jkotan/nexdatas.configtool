@@ -26,6 +26,7 @@ from ui.ui_linkdlg import Ui_LinkDlg
 
 from NodeDlg import NodeDlg 
 from Errors import CharacterError
+from DomTools import DomTools
 
 ## dialog defining a tag link 
 class LinkDlg(NodeDlg):
@@ -117,7 +118,7 @@ class LinkDlg(NodeDlg):
         self.target = unicode(attributeMap.namedItem("target").nodeValue() if attributeMap.contains("target") else "")
  
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self.dts.getText(doc)    
+        text = DomTools.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 

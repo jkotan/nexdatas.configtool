@@ -105,9 +105,6 @@ class Merger(QThread):
         ## selected node
         self.selectedNode = None
 
-        ## DOM tools
-        self.__dts = DomTools()
-
 
 
     ## fetches node ancestors int the tree
@@ -173,8 +170,8 @@ class Merger(QThread):
                 
 
         if tagName in self.uniqueText:
-            text1=unicode(self.__dts.getText(elem1)).strip()
-            text2=unicode(self.__dts.getText(elem2)).strip()         
+            text1=unicode(DomTools.getText(elem1)).strip()
+            text2=unicode(DomTools.getText(elem2)).strip()         
             ## TODO white spaces?
             if text1 != text2 and text1 and text2:
                 raise IncompatibleNodeError(

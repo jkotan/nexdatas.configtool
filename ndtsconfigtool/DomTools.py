@@ -188,18 +188,14 @@ class DomTools(object):
 
 
 
-    ## constructor
-    # \param parent patent instance
-    def __init__(self, parent=None):
-        pass
 
     ## provides the first element in the tree with the given name
     # \param node DOM node
     # \param name child name
     # \returns DOM child node
-    def getFirstElement(self, node, name):
+    @classmethod        
+    def getFirstElement(cls, node, name):
         if node:
-
             child = node.firstChild()
             if child:
                 while not child.isNull():
@@ -210,7 +206,7 @@ class DomTools(object):
             child = node.firstChild()
             if child:
                 while not child.isNull():
-                    elem = self.getFirstElement(child, name)
+                    elem = cls.getFirstElement(child, name)
                     if elem:
                         return elem
                     child = child.nextSibling()

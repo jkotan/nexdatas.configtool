@@ -32,7 +32,8 @@ class DomTools(object):
     # \param child child item
     # \param node parent node        
     # \returns row number
-    def getNodeRow(self, child, node):
+    @classmethod        
+    def getNodeRow(cls, child, node):
         row = 0
         if node:
             children = node.childNodes()
@@ -48,7 +49,8 @@ class DomTools(object):
     ## provides node text for the given node
     # \param node DOM node        
     # \returns string with node texts
-    def getText(self, node):
+    @classmethod        
+    def getText(cls, node):
         text = QString()
         if node:
             child = node.firstChild()
@@ -57,6 +59,133 @@ class DomTools(object):
                     text += child.toText().data()
                 child = child.nextSibling()
         return text    
+
+
+
+    ## provides row number of the given element
+    # \param element DOM element
+    # \param node DOM node
+    # \returns row number
+    @classmethod        
+    def __getElementRow(cls, element, node):
+        row = 0
+        if node:
+            children = node.childNodes()
+            for i in range(children.count()):
+                ch = children.item(i)
+                if ch.isElement() and  element == ch.toElement():
+                    break
+                row += 1
+            if row < children.count():
+                return row
+
+
+
+
+
+    ## replaces node text for the given node
+    # \param node parent DOM node        
+    # \param index of child text node
+    # \param model Component model            
+    # \param text string with text
+    @classmethod        
+    def replaceText(cls, node, index, model, text = None):
+        if node:
+            root = model.rootIndex.internalPointer().node
+            children = node.childNodes()
+            i = 0
+            j = 0
+            while i < children.count():
+                child = children.item(i)
+                if child.nodeType() == QDomNode.TextNode:
+                    if j==0 and text: 
+                        child.toText().setData(QString(text))
+                    else:
+                        child.toText().setData(QString(""))
+                    j += 1
+                i += 1
+
+            if j == 0 and text:
+                textNode = root.createTextNode(QString(text))
+                cls.appendNode(textNode, index, model)
+    
+
+    ## removes node
+    # \param node DOM node to remove
+    # \param parent parent node index  
+    # \param model Component model            
+    @classmethod        
+    def removeNode(cls, node, parent, model):
+        if not parent or not hasattr(parent,"internalPointer") \
+                or not hasattr(parent.internalPointer(),"node"):
+            return
+        row = cls.getNodeRow(node, parent.internalPointer().node)
+        if row is not None:
+            model.removeItem(row, parent)
+
+                
+    ## replaces node
+    # \param oldNode old DOM node 
+    # \param newNode new DOM node 
+    # \param parent parent node index
+    # \param model Component model            
+    @classmethod        
+    def replaceNode(cls, oldNode, newNode, parent, model):
+        if not parent or not hasattr(parent,"internalPointer") \
+                or not hasattr(parent.internalPointer(),"node"):
+            return
+        node = parent.internalPointer().node
+        row = cls.getNodeRow(oldNode, node)
+        if row is not None:
+            model.removeItem(row, parent)
+            if row  < node.childNodes().count():
+                model.insertItem(row, newNode, parent)
+            else:
+                model.appendItem(newNode, parent)
+
+    ## appends node
+    # \param node DOM node to append
+    # \param parent parent node index
+    # \param model Component model            
+    @classmethod        
+    def appendNode(cls, node, parent, model):
+        if model.appendItem(node, parent):
+            return True
+   
+
+    ## removes node element
+    # \param element DOM node element to remove
+    # \param parent parent node index      
+    # \param model Component model            
+    @classmethod        
+    def removeElement(cls, element, parent, model):
+        if not parent or not hasattr(parent,"internalPointer") \
+                or not hasattr(parent.internalPointer(),"node"):
+            return
+        row = cls.__getElementRow(element, parent.internalPointer().node)
+        if row is not None:
+            model.removeItem(row, parent)
+
+
+    ## replaces node element
+    # \param oldElement old DOM node element 
+    # \param newElement new DOM node element 
+    # \param parent parent node index
+    # \param model Component model            
+    @classmethod        
+    def replaceElement(cls, oldElement, newElement, parent, model):
+        if not parent or not hasattr(parent,"internalPointer") \
+                or not hasattr(parent.internalPointer(),"node"):
+            return
+        node = parent.internalPointer().node
+        row = cls.__getElementRow(oldElement, node)
+        if row is not None:
+            model.removeItem(row, parent)
+            if row < node.childNodes().count():
+                model.insertItem(row, newElement, parent)
+            else:
+                model.appendItem(newElement, parent)
+
 
 
     ## constructor
@@ -87,124 +216,6 @@ class DomTools(object):
                     child = child.nextSibling()
                 
                 
-
-    ## provides row number of the given element
-    # \param element DOM element
-    # \param node DOM node
-    # \returns row number
-    def __getElementRow(self, element, node):
-        row = 0
-        if node:
-            children = node.childNodes()
-            for i in range(children.count()):
-                ch = children.item(i)
-                if ch.isElement() and  element == ch.toElement():
-                    break
-                row += 1
-            if row < children.count():
-                return row
-
-
-
-
-
-    ## replaces node text for the given node
-    # \param node parent DOM node        
-    # \param index of child text node
-    # \param model Component model            
-    # \param text string with text
-    def replaceText(self, node, index, model, text = None):
-        if node:
-            root = model.rootIndex.internalPointer().node
-            children = node.childNodes()
-            i = 0
-            j = 0
-            while i < children.count():
-                child = children.item(i)
-                if child.nodeType() == QDomNode.TextNode:
-                    if j==0 and text: 
-                        child.toText().setData(QString(text))
-                    else:
-                        child.toText().setData(QString(""))
-                    j += 1
-                i += 1
-
-            if j == 0 and text:
-                textNode = root.createTextNode(QString(text))
-                self.appendNode(textNode, index, model)
-    
-
-    ## removes node
-    # \param node DOM node to remove
-    # \param parent parent node index  
-    # \param model Component model            
-    def removeNode(self, node, parent, model):
-        if not parent or not hasattr(parent,"internalPointer") \
-                or not hasattr(parent.internalPointer(),"node"):
-            return
-        row = self.getNodeRow(node, parent.internalPointer().node)
-        if row is not None:
-            model.removeItem(row, parent)
-
-                
-    ## replaces node
-    # \param oldNode old DOM node 
-    # \param newNode new DOM node 
-    # \param parent parent node index
-    # \param model Component model            
-    def replaceNode(self, oldNode, newNode, parent, model):
-        if not parent or not hasattr(parent,"internalPointer") \
-                or not hasattr(parent.internalPointer(),"node"):
-            return
-        node = parent.internalPointer().node
-        row = self.getNodeRow(oldNode, node)
-        if row is not None:
-            model.removeItem(row, parent)
-            if row  < node.childNodes().count():
-                model.insertItem(row, newNode, parent)
-            else:
-                model.appendItem(newNode, parent)
-
-    ## appends node
-    # \param node DOM node to append
-    # \param parent parent node index
-    # \param model Component model            
-    def appendNode(self, node, parent, model):
-        if model.appendItem(node, parent):
-            return True
-   
-
-    ## removes node element
-    # \param element DOM node element to remove
-    # \param parent parent node index      
-    # \param model Component model            
-    def removeElement(self, element, parent, model):
-        if not parent or not hasattr(parent,"internalPointer") \
-                or not hasattr(parent.internalPointer(),"node"):
-            return
-        row = self.__getElementRow(element, parent.internalPointer().node)
-        if row is not None:
-            model.removeItem(row, parent)
-
-
-    ## replaces node element
-    # \param oldElement old DOM node element 
-    # \param newElement new DOM node element 
-    # \param parent parent node index
-    # \param model Component model            
-    def replaceElement(self, oldElement, newElement, parent, model):
-        if not parent or not hasattr(parent,"internalPointer") \
-                or not hasattr(parent.internalPointer(),"node"):
-            return
-        node = parent.internalPointer().node
-        row = self.__getElementRow(oldElement, node)
-        if row is not None:
-            model.removeItem(row, parent)
-            if row < node.childNodes().count():
-                model.insertItem(row, newElement, parent)
-            else:
-                model.appendItem(newElement, parent)
-
 
 
 if __name__ == "__main__":

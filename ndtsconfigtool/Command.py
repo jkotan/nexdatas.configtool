@@ -28,8 +28,6 @@ from DataSourceDlg import (DataSource, DataSourceDlg, CommonDataSourceDlg)
 from ComponentDlg import (Component, ComponentDlg)
 from LabeledObject import LabeledObject
 
-import time
-import copy
 from ComponentModel import ComponentModel
 
 
@@ -62,10 +60,10 @@ class Command(object):
         pass
 
     ## reexecutes the command
-    # \brief It is an abstract member function to reimplement re-do execution of the derived command. In the current implementation it calls self.execute()
+    # \brief It is an abstract member function to reimplement re-do execution of the derived command. 
+    # In the current implementation it calls self.execute()
     def reexecute(self):
         return self.execute()
-
 
     ## clones the command
     # \brief It is an abstract member function to reimplement cloning of the derived command

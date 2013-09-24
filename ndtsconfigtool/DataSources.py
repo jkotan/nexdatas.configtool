@@ -65,7 +65,7 @@ class ClientSource(object):
         self.main = main
 
     ## checks if widget button should be enable
-    # \param given widget
+    # \returns if widget button should be enable
     def isEnable(self):
         return not self.ui.cRecNameLineEdit.text().isEmpty()
 
@@ -169,7 +169,7 @@ class DBSource(object):
 
 
     ## checks if widget button should be enable
-    # \param given widget
+    # \returns if widget button should be enable
     def isEnable(self):
         return not self.ui.dQueryLineEdit.text().isEmpty()
 
@@ -412,6 +412,7 @@ class TangoSource(object):
     ## allowed subitems
     subItems = ["device", "record", "doc"]
 
+    ## variables
     var = {
         ## Tango device name
         'tangoDeviceName':u'',
@@ -440,7 +441,7 @@ class TangoSource(object):
 
 
     ## checks if widget button should be enable
-    # \param given widget
+    # \returns if widget button should be enable
     def isEnable(self):
         return not self.ui.tDevNameLineEdit.text().isEmpty() and \
             not self.ui.tMemberNameLineEdit.text().isEmpty()
@@ -573,6 +574,7 @@ class PyEvalSource(object):
     ## allowed subitems
     subItems = ["datasource", "result", "doc"]
 
+    ## variables
     var = {
         ## pyeval result variable
         'peResult':"ds.result",
@@ -594,7 +596,7 @@ class PyEvalSource(object):
         self.main = main
 
     ## checks if widget button should be enable
-    # \param given widget
+    # \returns if widget button should be enable
     def isEnable(self):
         return True
 

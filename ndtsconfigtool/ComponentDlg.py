@@ -630,9 +630,12 @@ class Component(object):
         self.updateForm()
         self.connectView()
 
+    ## connects the view and model into resize and click command
     def connectView(self):
-        self.dialog.disconnect(self.view.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
-        self.dialog.connect(self.view.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
+        self.dialog.disconnect(self.view.selectionModel(), 
+                               SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
+        self.dialog.connect(self.view.selectionModel(), 
+                            SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
         self.dialog.disconnect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
         self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
         self.dialog.disconnect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)

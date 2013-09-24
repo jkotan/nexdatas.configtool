@@ -52,7 +52,7 @@ class MergerDlg(QDialog):
 ## merges the components
 class Merger(QThread):
 
-
+    ## destructor waiting for thread
     def __del__(self):
         self.wait()
     

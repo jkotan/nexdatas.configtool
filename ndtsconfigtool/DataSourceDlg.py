@@ -225,7 +225,7 @@ class DataSourceMethods(object):
             self.__dialog.ui.dsFrame.setLayout(layout)            
         
         self.updateForm()
-        self.__dialog.resize(460, 520)
+        self.__dialog.resize(460, 550)
 
         if not self.__datasource.tree :
             self.__dialog.disconnect(self.__dialog.ui.resetPushButton, SIGNAL("clicked()"), self.reset)

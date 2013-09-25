@@ -558,6 +558,8 @@ class NodeDlgTest(unittest.TestCase):
         form.node =vw.qdn
 
         print "XX4"
+        root = vw.model().rootIndex.internalPointer().node
+        print "XX4b"
         form.replaceText(di)
 
         print "XX5"

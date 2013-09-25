@@ -91,16 +91,11 @@ class DomTools(object):
     @classmethod        
     def replaceText(cls, node, index, model, text = None):
         if node:
-            print "n1"
             root = model.rootIndex.internalPointer().node
-            print "n2"
             children = node.childNodes()
-            print "n3"
             i = 0
             j = 0
             while i < children.count():
-                print "ni",i
-            
                 child = children.item(i)
                 if child.nodeType() == QDomNode.TextNode:
                     if j==0 and text: 
@@ -108,11 +103,9 @@ class DomTools(object):
                     else:
                         child.toText().setData(QString(""))
                     j += 1
-                    print "change"
                 i += 1
 
             if j == 0 and text:
-                print "append"
                 textNode = root.createTextNode(QString(text))
                 cls.appendNode(textNode, index, model)
     

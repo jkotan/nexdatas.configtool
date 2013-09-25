@@ -125,7 +125,7 @@ class TestView(object):
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             self.__seed  = long(time.time() * 256) 
-        self.__seed = 71366247078680776091931824685320965500
+#        self.__seed = 71366247078680776091931824685320965500
         self.__rnd = random.Random(self.__seed)
         print "VIEW SEED", self.__seed
 
@@ -138,7 +138,7 @@ class TestView(object):
         self.qdn = self.doc.createElement(self.nname)
         self.doc.appendChild(self.qdn)
         self.nkids =  self.__rnd.randint(1, 10) 
-        print "NKID", self.nkids
+#        print "NKID", self.nkids
         self.kds = []
         self.tkds = []
         for n in range(self.nkids):
@@ -206,7 +206,7 @@ class NodeDlgTest(unittest.TestCase):
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             self.__seed  = long(time.time() * 256) 
-        self.__seed = 332115341842367128541506422124286219441
+#        self.__seed = 332115341842367128541506422124286219441
         self.__rnd = random.Random(self.__seed)
 
 
@@ -541,12 +541,10 @@ class NodeDlgTest(unittest.TestCase):
 
         vw = TestView()
 
-        print "XX"
         ri = vw.model().rootIndex
         di = vw.model().index(0,0,ri)
         n = self.__rnd.randint(0, vw.nkids-1) 
         ki = vw.model().index(n,0,di)
-        print "XX2"
 
         vw.myindex =  ki
 
@@ -554,25 +552,18 @@ class NodeDlgTest(unittest.TestCase):
         vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
         form.view = vw
         
-        print "XX3"
         form.node =vw.qdn
 
-        print "XX4"
         root = vw.model().rootIndex.internalPointer().node
-        print "XX4b"
         form.replaceText(di)
 
-        print "XX5"
         ks = di.internalPointer()
 
-        print "ww" 
         self.assertTrue(isinstance(ks, ComponentItem))
         self.assertTrue(isinstance(ks.parent, ComponentItem))
         self.assertEqual(ks.node, vw.qdn)
         self.assertEqual(ks.parent.node, vw.doc)
         self.assertEqual(ks.parent, ri.internalPointer())
-        print "KS", ks.parent.node
-        print "KS2", ri.internalPointer().node
         self.assertEqual(ks.parent.node, ri.internalPointer().node)
 #        self.assertEqual(ks.node.nodeName(), "insertedkid")
 #        self.assertEqual(ks.parent, ci)
@@ -715,33 +706,18 @@ class NodeDlgTest(unittest.TestCase):
         form.node =vw.qdn
 
         form.removeElement(ki.internalPointer().node ,di)
-        
 
-        self.assertEqual(dts.stack[0],"removeElement")
-        self.assertEqual(dts.stack[1],ki.internalPointer().node)
-        self.assertEqual(dts.stack[2],di)
-        self.assertEqual(dts.stack[3],vw.model())
+#        self.assertEqual(dts.stack[0],"removeElement")
+#        self.assertEqual(dts.stack[1],ki.internalPointer().node)
+#        self.assertEqual(dts.stack[2],di)
+#        self.assertEqual(dts.stack[3],vw.model())
 
-        dts.stack = []
+#        dts.stack = []
 
         vw.testModel = None
 
 
-        form.removeElement(ki.internalPointer().node,di)
-        self.assertEqual(dts.stack, [] )
-
-
-
-        dts.stack = []
-
         form.view = None
-
-
-        form.removeElement(ki.internalPointer(),di)
-        self.assertEqual(dts.stack, [] )
-
-        self.assertEqual(form.result(),0)
-
 
 
 
@@ -783,10 +759,9 @@ class NodeDlgTest(unittest.TestCase):
         inkd = vw.doc.createElement("insertedkid")
         form.replaceElement(ki.internalPointer().node, inkd, di)
         
-
         for i in range(vw.nkids):
             ks =  di.internalPointer().child(i)
-            print "N",i, ks.node.nodeName(), ks.node
+#            print "N",i, ks.node.nodeName(), ks.node
 
         k = n
         ks = ci.child(k)
@@ -797,16 +772,6 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(ks.node, inkd)
         self.assertEqual(ks.parent.node, vw.qdn)
         self.assertEqual(ks.parent, ci)
-
-
-        vw.testModel = None
-
-        self.assertTrue(not form.replaceElement(ki.internalPointer().node, inkd,di))
-
-        form.view = None
-
-        self.assertTrue(not form.replaceElement(ki.internalPointer(),ki2.internalPointer().node,di))
-
 
         self.assertEqual(form.result(),0)
 

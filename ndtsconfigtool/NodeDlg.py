@@ -97,7 +97,7 @@ class NodeDlg(QDialog):
     # \param element DOM node element to remove
     # \param parent parent node index      
     def removeElement(self, element, parent):
-        if self.view is not None and self.view.model() is not None: 
+        if self.view is not None and self.view.model() is not None:  
             return DomTools.removeElement(element, parent, self.view.model())
 
 

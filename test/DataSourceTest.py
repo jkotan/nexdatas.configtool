@@ -126,7 +126,7 @@ class DataSourceTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_constructor(self):
+    def ttest_constructor(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         cds = DataSource()
@@ -175,7 +175,7 @@ class DataSourceTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_constructor_parent(self):
+    def ttest_constructor_parent(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
@@ -227,7 +227,7 @@ class DataSourceTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_set_get_clean_State(self):
+    def ttest_set_get_clean_State(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         cds = CommonDataSource()
@@ -446,7 +446,7 @@ class DataSourceTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def ttest_createDialog(self):
+    def tttest_createDialog(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None

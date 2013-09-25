@@ -89,7 +89,7 @@ class CommonDataSourceTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_constructor(self):
+    def ttest_constructor(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         cds = CommonDataSource()
@@ -128,7 +128,7 @@ class CommonDataSourceTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_set_get_clean_State(self):
+    def ttest_set_get_clean_State(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         cds = CommonDataSource()

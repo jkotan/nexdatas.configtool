@@ -125,7 +125,7 @@ class TestView(object):
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             self.__seed  = long(time.time() * 256) 
-         
+        self.__seed = 71366247078680776091931824685320965500
         self.__rnd = random.Random(self.__seed)
         print "VIEW SEED", self.__seed
 
@@ -138,6 +138,7 @@ class TestView(object):
         self.qdn = self.doc.createElement(self.nname)
         self.doc.appendChild(self.qdn)
         self.nkids =  self.__rnd.randint(1, 10) 
+        print "NKID", self.nkids
         self.kds = []
         self.tkds = []
         for n in range(self.nkids):
@@ -146,12 +147,11 @@ class TestView(object):
             self.kds[-1].setAttribute("type","mytype%s" %  n)
             self.kds[-1].setAttribute("units","myunits%s" %  n)
             self.qdn.appendChild(self.kds[-1]) 
-            print  self.kds[-1].nodeName(),self.kds[-1] 
             self.tkds.append(self.doc.createTextNode("\nText\n %s\n" %  n))
             self.kds[-1].appendChild(self.tkds[-1]) 
 
 #        print doc.toString()    
-            
+ 
         self.allAttr = False    
         self.testModel = ComponentModel(self.doc,self.allAttr)
 #        self.myindex = self.setIndex(0, 0, self.testModel.rootIndex)
@@ -206,7 +206,7 @@ class NodeDlgTest(unittest.TestCase):
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             self.__seed  = long(time.time() * 256) 
-         
+        self.__seed = 332115341842367128541506422124286219441
         self.__rnd = random.Random(self.__seed)
 
 
@@ -541,10 +541,12 @@ class NodeDlgTest(unittest.TestCase):
 
         vw = TestView()
 
+        print "XX"
         ri = vw.model().rootIndex
         di = vw.model().index(0,0,ri)
         n = self.__rnd.randint(0, vw.nkids-1) 
         ki = vw.model().index(n,0,di)
+        print "XX2"
 
         vw.myindex =  ki
 
@@ -552,31 +554,44 @@ class NodeDlgTest(unittest.TestCase):
         vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
         form.view = vw
         
-        dts = TestTools()
-        self.dts = dts
+        print "XX3"
         form.node =vw.qdn
 
+        print "XX4"
         form.replaceText(di)
+
+        print "XX5"
+        ks = di.internalPointer()
+
+        print "ww" 
+        self.assertTrue(isinstance(ks, ComponentItem))
+        self.assertTrue(isinstance(ks.parent, ComponentItem))
+        self.assertEqual(ks.node, vw.qdn)
+        self.assertEqual(ks.parent.node, vw.doc)
+        self.assertEqual(ks.parent, ri.internalPointer())
+        print "KS", ks.parent.node
+        print "KS2", ri.internalPointer().node
+        self.assertEqual(ks.parent.node, ri.internalPointer().node)
+#        self.assertEqual(ks.node.nodeName(), "insertedkid")
+#        self.assertEqual(ks.parent, ci)
         
 
-        self.assertEqual(dts.stack[0],"replaceText")
-        self.assertEqual(dts.stack[1],vw.qdn)
-        self.assertEqual(dts.stack[2],di)
-        self.assertEqual(dts.stack[3],vw.model())
-        self.assertEqual(dts.stack[4],None)
+#        self.assertEqual(dts.stack[0],"replaceText")
+#        self.assertEqual(dts.stack[1],vw.qdn)
+#        self.assertEqual(dts.stack[2],di)
+#        self.assertEqual(dts.stack[3],vw.model())
+#        self.assertEqual(dts.stack[4],None)
 
-
-        dts.stack = []
         
         text = "My Supper Text"
         form.replaceText(di,text)
         
 
-        self.assertEqual(dts.stack[0],"replaceText")
-        self.assertEqual(dts.stack[1],vw.qdn)
-        self.assertEqual(dts.stack[2],di)
-        self.assertEqual(dts.stack[3],vw.model())
-        self.assertEqual(dts.stack[4],text)
+#        self.assertEqual(dts.stack[0],"replaceText")
+#        self.assertEqual(dts.stack[1],vw.qdn)
+#        self.assertEqual(dts.stack[2],di)
+#        self.assertEqual(dts.stack[3],vw.model())
+#        self.assertEqual(dts.stack[4],text)
 
         self.assertEqual(form.result(),0)
 
@@ -754,27 +769,19 @@ class NodeDlgTest(unittest.TestCase):
 
         vw.myindex =  ki
 
-        print "WW", n, vw.nkids
         vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
         form.view = vw
         
         form.node =vw.qdn
 
-        print "root", ri.internalPointer().node.nodeName()
-        print "di", di.internalPointer().node.nodeName(), di.internalPointer().node
-        print "di", ri.internalPointer().child(0).node.nodeName(),di.internalPointer().child(0).node
         ci = di.internalPointer()
         for i in range(vw.nkids):
             ks =  ci.child(i)
-            print "N",i, ks.node.nodeName(), ks.node
             
         inkd = vw.doc.createElement("insertedkid")
         form.replaceElement(ki.internalPointer().node, inkd, di)
         
 
-        print "root", ri.internalPointer().node.nodeName()
-        print "di", di.internalPointer().node.nodeName(), di.internalPointer().node
-        print "di", ri.internalPointer().child(0).node.nodeName(),di.internalPointer().child(0).node
         for i in range(vw.nkids):
             ks =  di.internalPointer().child(i)
             print "N",i, ks.node.nodeName(), ks.node
@@ -792,11 +799,11 @@ class NodeDlgTest(unittest.TestCase):
 
         vw.testModel = None
 
-#        self.assertTrue(not form.replaceElement(ki.internalPointer().node, inkd,di))
+        self.assertTrue(not form.replaceElement(ki.internalPointer().node, inkd,di))
 
         form.view = None
 
-#        self.assertTrue(not form.replaceElement(ki.internalPointer(),ki2.internalPointer().node,di))
+        self.assertTrue(not form.replaceElement(ki.internalPointer(),ki2.internalPointer().node,di))
 
 
         self.assertEqual(form.result(),0)

@@ -190,6 +190,64 @@ class ComponentItemTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
+    def test_constructor_with_dom_nested_reverse(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        doc = QDomDocument()
+        nname = "definition"
+        qdn = doc.createElement(nname)
+        doc.appendChild(qdn)
+        nkids =  self.__rnd.randint(1, 10) 
+        kds = []
+        gkds = []
+        ngks = [ ]
+        
+        for n in range(nkids):
+            kds.append(doc.createElement("kid%s" %  n))
+            qdn.appendChild(kds[-1])
+            ngkids =  self.__rnd.randint(1, 10) 
+            gkds.append([])
+            ngks.append(ngkids)
+            for g in range(ngkids):
+                gkds[n].append(doc.createElement("grandkid%s" %  g))
+                kds[-1].appendChild(gkds[n][-1])
+            
+
+#        print doc.toString()
+                
+        ci = ComponentItem(qdn)
+
+        self.assertEqual(ci.parent, None)
+        self.assertEqual(ci.node, qdn)
+        self.assertEqual(ci.childNumber(),0)
+        self.assertEqual(ci.node.nodeName(), nname)
+        for k in reversed(range(nkids)):
+            ks = ci.child(k)
+            self.assertTrue(isinstance(ks, ComponentItem))
+            self.assertTrue(isinstance(ks.parent, ComponentItem))
+            self.assertEqual(ks.childNumber(),k)
+            self.assertEqual(ks.node, kds[k])
+            self.assertEqual(ks.parent.node, qdn)
+            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+            self.assertEqual(ks.parent, ci)
+            for g in range(ngks[k]):
+                self.assertTrue(isinstance(ks.child(g), ComponentItem))
+                self.assertTrue(isinstance(ks.child(g).parent, ComponentItem))
+                self.assertEqual(ks.child(g).childNumber(),g)
+                self.assertEqual(ks.child(g).node, gkds[k][g])
+                self.assertEqual(ks.child(g).parent.node, ks.node)
+                self.assertEqual(ks.child(g).node.nodeName(), "grandkid%s" %  g)
+                self.assertEqual(ks.child(g).parent, ks)
+            self.assertEqual(ks.child(ngks[k]),None)
+            self.assertEqual(ks.child(-1),None)
+        self.assertEqual(ci.child(nkids),None)
+        self.assertEqual(ci.child(-1),None)
+                
+
+
+
+    ## constructor test
+    # \brief It tests default settings
     def test_constructor_remove_kids(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  

@@ -207,7 +207,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_constructor(self):
+    def ttest_constructor(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = QMessageBox()
@@ -235,7 +235,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_constructor_accept_setFocus(self):
+    def ttest_constructor_accept_setFocus(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
@@ -323,7 +323,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_updateUi(self):
+    def ttest_updateUi(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
@@ -378,7 +378,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_setFrames(self):
+    def ttest_setFrames(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
@@ -482,7 +482,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_setFrames_signal(self):
+    def ttest_setFrames_signal(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
@@ -607,7 +607,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_cRecNameLineEdit_signal(self):
+    def ttest_cRecNameLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
@@ -639,7 +639,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_dQueryLineEdit_signal(self):
+    def ttest_dQueryLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
@@ -673,7 +673,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_tDevNameLineEdit_tMemberNameLineEdit_signal(self):
+    def ttest_tDevNameLineEdit_tMemberNameLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
@@ -744,7 +744,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_populateParameters(self):
+    def ttest_populateParameters(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
@@ -799,7 +799,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_populateParameters_addremoveParamter(self):
+    def ttest_populateParameters_addremoveParamter(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
@@ -910,7 +910,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_populateParameters_changeParamter(self):
+    def ttest_populateParameters_changeParamter(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
@@ -985,7 +985,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_populateParameters_changeParamter_value(self):
+    def ttest_populateParameters_changeParamter_value(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
@@ -1074,7 +1074,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_closeEvent(self):
+    def ttest_closeEvent(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None
@@ -1100,7 +1100,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def ttest_updateForm(self):
+    def tttest_updateForm(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         parent = None

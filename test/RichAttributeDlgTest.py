@@ -42,6 +42,7 @@ from ndtsconfigtool.NodeDlg import NodeDlg
 from ndtsconfigtool.DimensionsDlg import DimensionsDlg
 
 from ndtsconfigtool.ui.ui_richattributedlg import Ui_RichAttributeDlg
+from ndtsconfigtool.DomTools import DomTools
 
 
 ##  Qt-application
@@ -2023,12 +2024,12 @@ class RichAttributeDlgTest(unittest.TestCase):
                 cnt += 1 
 
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -2075,12 +2076,12 @@ class RichAttributeDlgTest(unittest.TestCase):
                 self.assertEqual(mdimensions[ind-1], vl)
             child = child.nextSibling()    
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -2163,12 +2164,12 @@ class RichAttributeDlgTest(unittest.TestCase):
         ntype = "newtype"
         mdoc = "New text \nNew text"
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -2227,12 +2228,12 @@ class RichAttributeDlgTest(unittest.TestCase):
                 self.assertEqual(mdimensions[ind-1], vl)
             child = child.nextSibling()    
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -2333,12 +2334,12 @@ class RichAttributeDlgTest(unittest.TestCase):
                 self.assertEqual(vl,form.nexusType)
                 cnt += 1 
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -2399,11 +2400,11 @@ class RichAttributeDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,mdoc)
         
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,mvalue)
 
@@ -2435,12 +2436,12 @@ class RichAttributeDlgTest(unittest.TestCase):
                 self.assertEqual(vl, ntype)
                 cnt += 1 
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -2536,12 +2537,12 @@ class RichAttributeDlgTest(unittest.TestCase):
                 self.assertEqual(vl,form.nexusType)
                 cnt += 1 
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -2606,11 +2607,11 @@ class RichAttributeDlgTest(unittest.TestCase):
                 cnt += 1 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
@@ -2722,12 +2723,12 @@ class RichAttributeDlgTest(unittest.TestCase):
                 self.assertEqual(vl,form.nexusType)
                 cnt += 1 
 
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
 
@@ -2792,11 +2793,11 @@ class RichAttributeDlgTest(unittest.TestCase):
                 cnt += 1 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
@@ -2846,7 +2847,7 @@ class RichAttributeDlgTest(unittest.TestCase):
         self.assertTrue(isinstance(form.ui, Ui_RichAttributeDlg))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
-#        self.assertTrue(isinstance(form.dts, DomTools))
+#        self.assertTrue(isinstance(DomTools, DomTools))
 
         self.assertEqual(form.result(),0)
 
@@ -3225,11 +3226,11 @@ class RichAttributeDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
@@ -3277,11 +3278,11 @@ class RichAttributeDlgTest(unittest.TestCase):
 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
@@ -3420,11 +3421,11 @@ class RichAttributeDlgTest(unittest.TestCase):
                 cnt += 1 
 
         mydoc = form.node.firstChildElement(QString("doc"))           
-        text = form.dts.getText(mydoc)    
+        text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         
-        vtext = form.dts.getText(qdn)    
+        vtext = DomTools.getText(qdn)    
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 

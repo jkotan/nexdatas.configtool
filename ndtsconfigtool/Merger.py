@@ -52,7 +52,7 @@ class MergerDlg(QDialog):
 ## merges the components
 class Merger(QThread):
 
-
+    ## destructor waiting for thread
     def __del__(self):
         self.wait()
     
@@ -104,9 +104,6 @@ class Merger(QThread):
         self.running = True
         ## selected node
         self.selectedNode = None
-
-        ## DOM tools
-        self.__dts = DomTools()
 
 
 
@@ -173,8 +170,8 @@ class Merger(QThread):
                 
 
         if tagName in self.uniqueText:
-            text1=unicode(self.__dts.getText(elem1)).strip()
-            text2=unicode(self.__dts.getText(elem2)).strip()         
+            text1=unicode(DomTools.getText(elem1)).strip()
+            text2=unicode(DomTools.getText(elem2)).strip()         
             ## TODO white spaces?
             if text1 != text2 and text1 and text2:
                 raise IncompatibleNodeError(

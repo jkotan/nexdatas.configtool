@@ -32,6 +32,7 @@ from DimensionsDlg import DimensionsDlg
 import copy
 
 from NodeDlg import NodeDlg 
+from DomTools import DomTools
 
 ## dialog defining a field tag
 class FieldDlg(NodeDlg):
@@ -203,7 +204,7 @@ class FieldDlg(NodeDlg):
         self.units = unicode(attributeMap.namedItem("units").nodeValue() \
                                  if attributeMap.contains("units") else "")
 
-        text = self.dts.getText(self.node)    
+        text = DomTools.getText(self.node)    
         self.value = unicode(text).strip() if text else ""
 
         self.attributes.clear()    
@@ -262,7 +263,7 @@ class FieldDlg(NodeDlg):
             self.rank = len(self.__dimensions)
 
         doc = self.node.firstChildElement(QString("doc"))           
-        text = self.dts.getText(doc)    
+        text = DomTools.getText(doc)    
         self.doc = unicode(text).strip() if text else ""
 
 

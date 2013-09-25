@@ -28,8 +28,6 @@ from DataSourceDlg import (DataSource, DataSourceDlg, CommonDataSourceDlg)
 from ComponentDlg import (Component, ComponentDlg)
 from LabeledObject import LabeledObject
 
-import time
-import copy
 from ComponentModel import ComponentModel
 
 
@@ -62,10 +60,10 @@ class Command(object):
         pass
 
     ## reexecutes the command
-    # \brief It is an abstract member function to reimplement re-do execution of the derived command. In the current implementation it calls self.execute()
+    # \brief It is an abstract member function to reimplement re-do execution of the derived command. 
+    # In the current implementation it calls self.execute()
     def reexecute(self):
         return self.execute()
-
 
     ## clones the command
     # \brief It is an abstract member function to reimplement cloning of the derived command
@@ -912,7 +910,7 @@ class DataSourceOpen(Command):
                 else:    
  #               print "create"
                     self._subwindow = self.receiver.mdi.addSubWindow(self._dsEdit.dialog)
-                    self._subwindow.resize(440,520)
+                    self._subwindow.resize(440,550)
                     self._dsEdit.dialog.setSaveFocus()
                     self._dsEdit.dialog.show()
                 #                self._cpEdit.dialog.setAttribute(Qt.WA_DeleteOnClose)
@@ -1485,7 +1483,7 @@ class DataSourceCopy(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,520)
+                self._subwindow.resize(440,550)
                 self._ds.instance.dialog.show()
                 
 
@@ -1517,7 +1515,7 @@ class DataSourceCopy(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,520)
+                self._subwindow.resize(440,550)
                 self._ds.instance.dialog.show()
             
             
@@ -1581,7 +1579,7 @@ class DataSourceCut(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,520)
+                self._subwindow.resize(440,550)
                 self._ds.instance.dialog.show()
                 
                 
@@ -1618,7 +1616,7 @@ class DataSourceCut(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,520)
+                self._subwindow.resize(440,550)
                 self._ds.instance.dialog.show()
             
         if hasattr(self._ds ,"id"):
@@ -1700,7 +1698,7 @@ class DataSourcePaste(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,520)
+                self._subwindow.resize(440,550)
                 self._ds.instance.dialog.show()
                                 
 
@@ -1735,7 +1733,7 @@ class DataSourcePaste(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,520)
+                self._subwindow.resize(440,550)
                 self._ds.instance.dialog.show()
             
             if hasattr(self._ds ,"id"):
@@ -1788,7 +1786,7 @@ class DataSourceApply(Command):
             if hasattr(self._ds.instance,"connectExternalActions"):     
                 self._ds.instance.connectExternalActions(**self.receiver.externalDSActions)
             self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-            self._subwindow.resize(440,520)
+            self._subwindow.resize(440,550)
             self._ds.instance.dialog.show()
 
     
@@ -1820,7 +1818,7 @@ class DataSourceApply(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,520)
+                self._subwindow.resize(440,550)
                 self._ds.instance.dialog.show()
     
                     
@@ -1860,7 +1858,7 @@ class DataSourceApply(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,520)
+                self._subwindow.resize(440,550)
 
             self._ds.instance.updateNode()
             if self._ds.instance.isDirty():
@@ -2592,7 +2590,7 @@ class DataSourceEdit(Command):
                      
                 self._ds.instance.reconnectSaveAction()
                 self._subwindow = self.receiver.mdi.addSubWindow(self._ds.instance.dialog)
-                self._subwindow.resize(440,520)
+                self._subwindow.resize(440,550)
                 self._dsEdit.dialog.show()
                 #                self._dsEdit.setAttribute(Qt.WA_DeleteOnClose)
                     

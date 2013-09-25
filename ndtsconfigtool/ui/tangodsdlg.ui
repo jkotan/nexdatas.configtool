@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TangoDsDlg</class>
+ <widget class="QWidget" name="TangoDsDlg">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>476</width>
+    <height>261</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0,0,0" rowminimumheight="0,0,0,0,0,0,0">
+     <item row="0" column="0">
+      <widget class="QLabel" name="tDevNameLabel">
+       <property name="text">
+        <string>Dev&amp;ice name:</string>
+       </property>
+       <property name="buddy">
+        <cstring>tDevNameLineEdit</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="tDevNameLineEdit"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="tMemberLabel">
+       <property name="text">
+        <string>&amp;Member type:</string>
+       </property>
+       <property name="buddy">
+        <cstring>tMemberComboBox</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="tMemberComboBox">
+       <item>
+        <property name="text">
+         <string>attribute</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>command</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>property</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="tMemberNameLabel">
+       <property name="text">
+        <string>Member &amp;name:</string>
+       </property>
+       <property name="buddy">
+        <cstring>tMemberNameLineEdit</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="tMemberNameLineEdit"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="tHostLabel">
+       <property name="text">
+        <string>Device &amp;host:</string>
+       </property>
+       <property name="buddy">
+        <cstring>tHostLineEdit</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="tHostLineEdit"/>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="tPortLabel">
+       <property name="text">
+        <string>Device &amp;port:</string>
+       </property>
+       <property name="buddy">
+        <cstring>tPortLineEdit</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="tPortLineEdit"/>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="tEncodingLabel">
+       <property name="text">
+        <string>&amp;Encoding:</string>
+       </property>
+       <property name="buddy">
+        <cstring>tEncodingLineEdit</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="tEncodingLineEdit"/>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="tGroupLabel">
+       <property name="text">
+        <string>&amp;Group:</string>
+       </property>
+       <property name="buddy">
+        <cstring>tGroupLineEdit</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLineEdit" name="tGroupLineEdit"/>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -60,8 +60,6 @@ class ComponentDlg(QDialog):
         ## user interface
         self.ui = Ui_ComponentDlg()
 
-        ## DOM tools
-        self.__dts = DomTools()
 
 
 
@@ -70,7 +68,7 @@ class ComponentDlg(QDialog):
     # \returns row number
     def getWidgetNodeRow(self, child):
         if self.ui and self.ui.widget:
-            return self.__dts.getNodeRow(child, self.ui.widget.node)
+            return DomTools.getNodeRow(child, self.ui.widget.node)
         else:
             print "Widget does not exist"
 
@@ -133,7 +131,6 @@ class Component(object):
         self._componentFile = None
 
 
-
 #        ## item frame
 #        self.frame = None
         ## component actions
@@ -183,9 +180,6 @@ class Component(object):
         ## tag counter
         self._tagCnt = 0
 
-        ## DOM tools
-        self.__dts = DomTools()
-
 
     ## checks if not saved
     # \returns True if it is not saved     
@@ -211,7 +205,7 @@ class Component(object):
         parent = None
         for child in ancestors:   
             if parent: 
-                row = self.__dts.getNodeRow(child, parent)
+                row = DomTools.getNodeRow(child, parent)
 
                 if row is None:
                     path = []
@@ -264,13 +258,13 @@ class Component(object):
         while pindex.isValid() and row is not None:
             child = index.internalPointer().node
             parent = pindex.internalPointer().node
-            row = self.__dts.getNodeRow(child, parent)
+            row = DomTools.getNodeRow(child, parent)
             path.insert(0, (row, unicode(child.nodeName())))
             index = pindex
             pindex = pindex.parent()
         
         child = index.internalPointer().node
-        row = self.__dts.getNodeRow(child, self.document)
+        row = DomTools.getNodeRow(child, self.document)
         path.insert(0, (row, unicode(child.nodeName())))
 
         return path
@@ -378,7 +372,7 @@ class Component(object):
                 return
             parentItem = parent.internalPointer()
             pnode = parentItem.node
-            row = self.__dts.getNodeRow(node, pnode)
+            row = DomTools.getNodeRow(node, pnode)
             if row is not None and row != 0:
                 self.view.model().removeItem(row, parent)
                 self.view.model().insertItem(row-1, node, parent)
@@ -395,7 +389,7 @@ class Component(object):
                 return
             parentItem = parent.internalPointer()
             pnode = parentItem.node
-            row = self.__dts.getNodeRow(node, pnode)
+            row = DomTools.getNodeRow(node, pnode)
             if row is not None and row  < pnode.childNodes().count()-1:
                 self.view.model().removeItem(row, parent)
                 if row  < pnode.childNodes().count()-1:
@@ -578,7 +572,7 @@ class Component(object):
             self.dialog.ui.widget.node = node.parentNode()
 
         if self.view is not None and self.view.model() is not None: 
-            self.__dts.removeNode(node, index.parent(), self.view.model())
+            DomTools.removeNode(node, index.parent(), self.view.model())
 
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
@@ -631,9 +625,12 @@ class Component(object):
         self.updateForm()
         self.connectView()
 
+    ## connects the view and model into resize and click command
     def connectView(self):
-        self.dialog.disconnect(self.view.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
-        self.dialog.connect(self.view.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
+        self.dialog.disconnect(self.view.selectionModel(), 
+                               SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
+        self.dialog.connect(self.view.selectionModel(), 
+                            SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
         self.dialog.disconnect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
         self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
         self.dialog.disconnect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)
@@ -999,7 +996,7 @@ class Component(object):
                     root = QDomDocument()
                     if not root.setContent(fh):
                         raise ValueError, "could not parse XML"
-                    ds = self.__dts.getFirstElement(root, "datasource")
+                    ds = DomTools.getFirstElement(root, "datasource")
 
                     if ds:
                         if  index.column() != 0:

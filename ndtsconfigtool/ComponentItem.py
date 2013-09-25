@@ -51,7 +51,9 @@ class ComponentItem(object):
             return self.__childItems[i]
         if i >= 0 and i < self.node.childNodes().count():
             childNode = self.node.childNodes().item(i)
+            print "II", i ,childNode.nodeName()
             for j in range(size, i+1):                
+                childNode = self.node.childNodes().item(j)
                 childItem = ComponentItem(childNode, self)
                 self.__childItems.append(childItem)
             return childItem

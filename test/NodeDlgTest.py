@@ -558,6 +558,7 @@ class NodeDlgTest(unittest.TestCase):
         form.replaceText(di)
 
         ks = di.internalPointer()
+        self.assertEqual(ks.node.childNodes().count(), vw.nkids)
 
         self.assertTrue(isinstance(ks, ComponentItem))
         self.assertTrue(isinstance(ks.parent, ComponentItem))
@@ -565,8 +566,8 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(ks.parent.node, vw.doc)
         self.assertEqual(ks.parent, ri.internalPointer())
         self.assertEqual(ks.parent.node, ri.internalPointer().node)
-#        self.assertEqual(ks.node.nodeName(), "insertedkid")
-#        self.assertEqual(ks.parent, ci)
+        self.assertEqual(ks.node.childNodes().count(), vw.nkids)
+
         
 
 #        self.assertEqual(dts.stack[0],"replaceText")
@@ -574,17 +575,26 @@ class NodeDlgTest(unittest.TestCase):
 #        self.assertEqual(dts.stack[2],di)
 #        self.assertEqual(dts.stack[3],vw.model())
 #        self.assertEqual(dts.stack[4],None)
+        ci = di.internalPointer()
+
 
         
         text = "My Supper Text"
         form.replaceText(di,text)
+
+        self.assertTrue(isinstance(ks, ComponentItem))
+        self.assertTrue(isinstance(ks.parent, ComponentItem))
+        self.assertEqual(ks.node, vw.qdn)
+        self.assertEqual(ks.parent.node, vw.doc)
+        self.assertEqual(ks.parent, ri.internalPointer())
+        self.assertEqual(ks.parent.node, ri.internalPointer().node)
+        self.assertEqual(ks.node.childNodes().count(), vw.nkids+1)
+        ts = ci.child(vw.nkids)
+        self.assertEqual(ts.node.nodeName(), "#text")
+        self.assertEqual(ts.node.toText().data(), text)
+        self.assertEqual(ts.parent, ks)
         
 
-#        self.assertEqual(dts.stack[0],"replaceText")
-#        self.assertEqual(dts.stack[1],vw.qdn)
-#        self.assertEqual(dts.stack[2],di)
-#        self.assertEqual(dts.stack[3],vw.model())
-#        self.assertEqual(dts.stack[4],text)
 
         self.assertEqual(form.result(),0)
 
@@ -619,14 +629,15 @@ class NodeDlgTest(unittest.TestCase):
 #        form.view = vw
         form.view = None
         
-        dts = TestTools()
-        self.dts = dts
         form.node =vw.qdn
 
+        ks = di.internalPointer()
+        self.assertEqual(ks.node.childNodes().count(), vw.nkids)
         form.replaceText(di)
         
+        ks = di.internalPointer()
+        self.assertEqual(ks.node.childNodes().count(), vw.nkids)
 
-        self.assertEqual(dts.stack, [] )
         
 
 
@@ -661,14 +672,15 @@ class NodeDlgTest(unittest.TestCase):
         form.view = vw
 
 
-        dts = TestTools()
-        self.dts = dts
         form.node =vw.qdn
 
+        ks = di.internalPointer()
+        self.assertEqual(ks.node.childNodes().count(), vw.nkids)
         form.replaceText(di)
+        ks = di.internalPointer()
+        self.assertEqual(ks.node.childNodes().count(), vw.nkids)
         
 
-        self.assertEqual(dts.stack, [] )
         
 
 
@@ -705,19 +717,50 @@ class NodeDlgTest(unittest.TestCase):
         self.dts = dts
         form.node =vw.qdn
 
+        ci = di.internalPointer()
+
+        for k in range(vw.nkids):
+                ks = ci.child(k)
+                self.assertTrue(isinstance(ks, ComponentItem))
+                self.assertTrue(isinstance(ks.parent, ComponentItem))
+                self.assertEqual(ks.childNumber(),k)
+                self.assertEqual(ks.node, vw.kds[k])
+                self.assertEqual(ks.parent.node, vw.qdn)
+                self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+                self.assertEqual(ks.parent, ci)
+                self.assertTrue(isinstance(ks.child(0), ComponentItem))
+                self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+                self.assertEqual(ks.child(0).childNumber(),0)
+                self.assertEqual(ks.child(0).node, vw.tkds[k])
+                self.assertEqual(ks.child(0).parent.node, ks.node)
+                self.assertEqual(ks.child(0).node.nodeName(), "#text")
+                self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+                self.assertEqual(ks.child(0).parent, ks)
+
         form.removeElement(ki.internalPointer().node ,di)
 
-#        self.assertEqual(dts.stack[0],"removeElement")
-#        self.assertEqual(dts.stack[1],ki.internalPointer().node)
-#        self.assertEqual(dts.stack[2],di)
-#        self.assertEqual(dts.stack[3],vw.model())
+        for kk in range(vw.nkids):
+            if kk < n or kk > n :
+                k = kk if kk < n else kk-1
+                ks = ci.child(k)
+                self.assertTrue(isinstance(ks, ComponentItem))
+                self.assertTrue(isinstance(ks.parent, ComponentItem))
+                self.assertEqual(ks.childNumber(),k)
+                self.assertEqual(ks.node.nodeName(), "kid%s" %  kk)
+                self.assertEqual(ks.node, vw.kds[kk])
+                self.assertEqual(ks.parent.node, vw.qdn)
+                self.assertEqual(ks.parent, ci)
+                self.assertTrue(isinstance(ks.child(0), ComponentItem))
+                self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+                self.assertEqual(ks.child(0).childNumber(),0)
+                self.assertEqual(ks.child(0).node, vw.tkds[kk])
+                self.assertEqual(ks.child(0).parent.node, ks.node)
+                self.assertEqual(ks.child(0).node.nodeName(), "#text")
+                self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % kk)
+                self.assertEqual(ks.child(0).parent, ks)
 
-#        dts.stack = []
-
-        vw.testModel = None
 
 
-        form.view = None
 
 
 
@@ -763,15 +806,36 @@ class NodeDlgTest(unittest.TestCase):
             ks =  di.internalPointer().child(i)
 #            print "N",i, ks.node.nodeName(), ks.node
 
-        k = n
-        ks = ci.child(k)
-        self.assertTrue(isinstance(ks, ComponentItem))
-        self.assertTrue(isinstance(ks.parent, ComponentItem))
-        self.assertEqual(ks.childNumber(),k)
-        self.assertEqual(ks.node.nodeName(), "insertedkid")
-        self.assertEqual(ks.node, inkd)
-        self.assertEqual(ks.parent.node, vw.qdn)
-        self.assertEqual(ks.parent, ci)
+
+        for k in range(vw.nkids):
+            if k == n:
+                ks = ci.child(k)
+                self.assertTrue(isinstance(ks, ComponentItem))
+                self.assertTrue(isinstance(ks.parent, ComponentItem))
+                self.assertEqual(ks.childNumber(),k)
+                self.assertEqual(ks.node.nodeName(), "insertedkid")
+                self.assertEqual(ks.node, inkd)
+                self.assertEqual(ks.parent.node, vw.qdn)
+                self.assertEqual(ks.parent, ci)
+            else:
+                ks = ci.child(k)
+                self.assertTrue(isinstance(ks, ComponentItem))
+                self.assertTrue(isinstance(ks.parent, ComponentItem))
+                self.assertEqual(ks.childNumber(),k)
+                self.assertEqual(ks.node, vw.kds[k])
+                self.assertEqual(ks.parent.node, vw.qdn)
+                self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+                self.assertEqual(ks.parent, ci)
+                self.assertTrue(isinstance(ks.child(0), ComponentItem))
+                self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+                self.assertEqual(ks.child(0).childNumber(),0)
+                self.assertEqual(ks.child(0).node, vw.tkds[k])
+                self.assertEqual(ks.child(0).parent.node, ks.node)
+                self.assertEqual(ks.child(0).node.nodeName(), "#text")
+                self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+                self.assertEqual(ks.child(0).parent, ks)
+
+
 
         self.assertEqual(form.result(),0)
 
@@ -816,9 +880,31 @@ class NodeDlgTest(unittest.TestCase):
 
         self.assertTrue(vw.model().rowCount(), vw.nkids+1)
  
-        k = vw.nkids
         ci = di.internalPointer()
+
+        for k in range(vw.nkids):
+            ks = ci.child(k)
+            self.assertTrue(isinstance(ks, ComponentItem))
+            self.assertTrue(isinstance(ks.parent, ComponentItem))
+            self.assertEqual(ks.childNumber(),k)
+            self.assertEqual(ks.node, vw.kds[k])
+            self.assertEqual(ks.parent.node, vw.qdn)
+            self.assertEqual(ks.node.nodeName(), "kid%s" %  k)
+            self.assertEqual(ks.parent, ci)
+            self.assertTrue(isinstance(ks.child(0), ComponentItem))
+            self.assertTrue(isinstance(ks.child(0).parent, ComponentItem))
+            self.assertEqual(ks.child(0).childNumber(),0)
+            self.assertEqual(ks.child(0).node, vw.tkds[k])
+            self.assertEqual(ks.child(0).parent.node, ks.node)
+            self.assertEqual(ks.child(0).node.nodeName(), "#text")
+            self.assertEqual(ks.child(0).node.toText().data(), '\nText\n %s\n' % k)
+            self.assertEqual(ks.child(0).parent, ks)
+
+
+
+        k = vw.nkids
         ks = ci.child(k)
+
 
         self.assertTrue(isinstance(ks, ComponentItem))
         self.assertTrue(isinstance(ks.parent, ComponentItem))

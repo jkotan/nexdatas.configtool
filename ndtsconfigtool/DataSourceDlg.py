@@ -19,27 +19,30 @@
 ## \file DataSourceDlg.py
 # Data Source dialog class
 
+""" Provides datasource widget """
+
 import re
 import os
-from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, Qt, QFileInfo, QFile, QIODevice, 
-                          QTextStream, QVariant)
-from PyQt4.QtGui import (QApplication, QFileDialog, QMessageBox, QTableWidgetItem, QWidget, QVBoxLayout)
-from PyQt4.QtXml import (QDomDocument, QDomNode)
-from NodeDlg import NodeDlg 
-from DomTools import DomTools
+from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, QFileInfo, QFile, 
+                          QIODevice, QTextStream)
+from PyQt4.QtGui import (QApplication, QFileDialog, QMessageBox, 
+                         QWidget, QVBoxLayout)
+from PyQt4.QtXml import (QDomDocument)
 
-from ui.ui_datasourcedlg import Ui_DataSourceDlg
-from ui.ui_clientdsdlg import Ui_ClientDsDlg
-from ui.ui_dbdsdlg import Ui_DBDsDlg
-from ui.ui_tangodsdlg import Ui_TangoDsDlg
-from ui.ui_pyevaldsdlg import Ui_PyEvalDsDlg
+from .NodeDlg import NodeDlg 
+from .DomTools import DomTools
+from .Errors import ParameterError
+from .DataSources import ClientSource, TangoSource, DBSource, PyEvalSource
+
+from .ui.ui_datasourcedlg import Ui_DataSourceDlg
+# from .ui.ui_clientdsdlg import Ui_ClientDsDlg
+# from .ui.ui_dbdsdlg import Ui_DBDsDlg
+# from .ui.ui_tangodsdlg import Ui_TangoDsDlg
+# from .ui.ui_pyevaldsdlg import Ui_PyEvalDsDlg
 
 
 import copy
-import gc
 
-from Errors import ParameterError
-from DataSources import ClientSource, TangoSource, DBSource, PyEvalSource
 
 ## available datasources
 dsTypes = {'CLIENT':ClientSource,
@@ -103,7 +106,7 @@ class CommonDataSourceDlg(NodeDlg):
 
     ## shows and hides frames according to typeComboBox
     # \param text the edited text   
-    def setFrames(self,text):
+    def setFrames(self, text):
         for k in self.qwg.keys():
             if text == k:
                 self.qwg[k].show()
@@ -118,8 +121,10 @@ class CommonDataSourceDlg(NodeDlg):
 
     ## connects the dialog actions 
     def connectWidgets(self):
-        self.disconnect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
-        self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
+        self.disconnect(self.ui.typeComboBox, 
+                        SIGNAL("currentIndexChanged(QString)"), self.setFrames)
+        self.connect(self.ui.typeComboBox, 
+                     SIGNAL("currentIndexChanged(QString)"), self.setFrames)
         for k in self.imp.keys():
             self.imp[k].connectWidgets()
 
@@ -161,7 +166,7 @@ class DataSourceMethods(object):
     # \brief It asks for the cancellation  and reject the changes
     def close(self):
         if QMessageBox.question(self.__dialog, "Close datasource",
-                                "Would you like to close the datasource?", 
+                                "Would you like to close the datasource?",
                                 QMessageBox.Yes | QMessageBox.No,
                                 QMessageBox.Yes ) == QMessageBox.No :
             return
@@ -184,13 +189,15 @@ class DataSourceMethods(object):
         if self.__datasource.doc is not None:
             self.__dialog.ui.docTextEdit.setText(self.__datasource.doc)
         if self.__datasource.dataSourceType is not None:
-            index = self.__dialog.ui.typeComboBox.findText(unicode(self.__datasource.dataSourceType))
+            index = self.__dialog.ui.typeComboBox.findText(
+                unicode(self.__datasource.dataSourceType))
             if  index > -1 :
                 self.__dialog.ui.typeComboBox.setCurrentIndex(index)
             else:
                 self.__datasource.dataSourceType = 'CLIENT'    
         if self.__datasource.dataSourceName is not None:
-            self.__dialog.ui.nameLineEdit.setText(self.__datasource.dataSourceName)
+            self.__dialog.ui.nameLineEdit.setText(
+                self.__datasource.dataSourceName)
 
 
         for k in self.__dialog.imp.keys():
@@ -214,7 +221,8 @@ class DataSourceMethods(object):
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
-        if self.__dialog and self.__dialog.ui and not hasattr(self.__dialog.ui,"resetPushButton"):
+        if self.__dialog and self.__dialog.ui \
+                and not hasattr(self.__dialog.ui,"resetPushButton"):
             self.__dialog.ui.setupUi(self.__dialog)
             layout = QVBoxLayout()
             for ds in self.__dialog.wg.keys():
@@ -228,11 +236,15 @@ class DataSourceMethods(object):
         self.__dialog.resize(460, 550)
 
         if not self.__datasource.tree :
-            self.__dialog.disconnect(self.__dialog.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
-            self.__dialog.connect(self.__dialog.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
+            self.__dialog.disconnect(self.__dialog.ui.resetPushButton, 
+                                     SIGNAL("clicked()"), self.reset)
+            self.__dialog.connect(self.__dialog.ui.resetPushButton, 
+                                  SIGNAL("clicked()"), self.reset)
         else:
-            self.__dialog.disconnect(self.__dialog.ui.resetPushButton, SIGNAL("clicked()"), self.__dialog.reset)
-            self.__dialog.connect(self.__dialog.ui.resetPushButton, SIGNAL("clicked()"), self.__dialog.reset)
+            self.__dialog.disconnect(self.__dialog.ui.resetPushButton, 
+                                     SIGNAL("clicked()"), self.__dialog.reset)
+            self.__dialog.connect(self.__dialog.ui.resetPushButton, 
+                                  SIGNAL("clicked()"), self.__dialog.reset)
         self.__dialog.connectWidgets()
         self.__dialog.setFrames(self.__datasource.dataSourceType)
 
@@ -246,16 +258,19 @@ class DataSourceMethods(object):
             self.__dialog.node = node
             if self.__dialog:
                 self.__dialog.node = node
-        if not self.__dialog.node or not hasattr(self.__dialog.node,"attributes"):
+        if not self.__dialog.node \
+                or not hasattr(self.__dialog.node,"attributes"):
             return
         attributeMap = self.__dialog.node.attributes()
         
 
-        value = attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else ""
+        value = attributeMap.namedItem("type").nodeValue() \
+            if attributeMap.contains("type") else ""
         self.__datasource.dataSourceType = unicode(value)
 
         if attributeMap.contains("name"):
-            self.__datasource.dataSourceName = attributeMap.namedItem("name").nodeValue()
+            self.__datasource.dataSourceName = \
+                attributeMap.namedItem("name").nodeValue()
             
         if value in self.__dialog.imp.keys():
             self.__dialog.imp[str(value)].setFromNode(self.__datasource)
@@ -273,19 +288,23 @@ class DataSourceMethods(object):
 
         self.__datasource.applied = False
         sourceType = unicode(self.__dialog.ui.typeComboBox.currentText())
-        self.__datasource.dataSourceName = unicode(self.__dialog.ui.nameLineEdit.text())
+        self.__datasource.dataSourceName = unicode(
+            self.__dialog.ui.nameLineEdit.text())
 
         if sourceType in self.__dialog.imp.keys():
             self.__dialog.imp[sourceType].fromForm(self.__datasource)
 
         self.__datasource.dataSourceType = sourceType
-        self.__datasource.doc = unicode(self.__dialog.ui.docTextEdit.toPlainText()).strip()
+        self.__datasource.doc = unicode(
+            self.__dialog.ui.docTextEdit.toPlainText()).strip()
 
         index = QModelIndex()
-        if hasattr(self.__dialog,"view") and self.__dialog.view and self.__dialog.view.model():
+        if hasattr(self.__dialog,"view") and self.__dialog.view \
+                and self.__dialog.view.model():
             if hasattr(self.__dialog.view,"currentIndex"):
                 index = self.__dialog.view.currentIndex()
-                finalIndex = self.__dialog.view.model().createIndex(index.row(),2,index.parent().internalPointer())
+                finalIndex = self.__dialog.view.model().createIndex(
+                    index.row(),2,index.parent().internalPointer())
                 self.__dialog.view.expand(index)    
 
 
@@ -301,11 +320,17 @@ class DataSourceMethods(object):
                 self.__dialog.view.setCurrentIndex(index)
                 self.__dialog.view.expand(index)
         
-            if hasattr(self.__dialog,"view")  and self.__dialog.view and self.__dialog.view.model():
-                self.__dialog.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index.parent(),index.parent())
+            if hasattr(self.__dialog,"view")  and self.__dialog.view \
+                    and self.__dialog.view.model():
+                self.__dialog.view.model().emit(
+                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                    index.parent(),index.parent())
                 if  index.column() != 0:
-                    index = self.__dialog.view.model().index(index.row(), 0, index.parent())
-                self.__dialog.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+                    index = self.__dialog.view.model().index(index.row(), 0, 
+                                                             index.parent())
+                self.__dialog.view.model().emit(
+                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                    index, finalIndex)
                 self.__dialog.view.expand(index)    
 
         if not self.__datasource.tree:
@@ -318,16 +343,19 @@ class DataSourceMethods(object):
 
     def __createDOMNodes(self, root):
         newDs = root.createElement(QString("datasource"))
-        elem=newDs.toElement()
+        elem = newDs.toElement()
 #        attributeMap = self.__datasource.newDs.attributes()
-        elem.setAttribute(QString("type"), QString(self.__datasource.dataSourceType))
+        elem.setAttribute(QString("type"), 
+                          QString(self.__datasource.dataSourceType))
         if self.__datasource.dataSourceName:
-            elem.setAttribute(QString("name"), QString(self.__datasource.dataSourceName))
+            elem.setAttribute(QString("name"), 
+                              QString(self.__datasource.dataSourceName))
         else:
             print "name not defined"
 
         if self.__datasource.dataSourceType in  self.__dialog.imp.keys():
-            self.__dialog.imp[str(self.__datasource.dataSourceType)].createNodes(self.__datasource, root, elem)
+            self.__dialog.imp[str(self.__datasource.dataSourceType)
+                              ].createNodes(self.__datasource, root, elem)
 
         if(self.__datasource.doc):
             newDoc = root.createElement(QString("doc"))
@@ -338,7 +366,8 @@ class DataSourceMethods(object):
         
 
     ## creates datasource node
-    # \param external True if it should be create on a local DOM root, i.e. in component tree
+    # \param external True if it should be create on a local DOM root, 
+    #        i.e. in component tree
     # \returns created DOM node   
     def createNodes(self, external = False):        
         if external:
@@ -378,8 +407,10 @@ class DataSourceMethods(object):
 
         self.__dialog.node = self.__dialog.node.parentNode()   
         if self.__datasource.tree:
-            if self.__dialog.view is not None and self.__dialog.view.model() is not None: 
-                DomTools.replaceNode(oldDs, newDs, parent, self.__dialog.view.model())
+            if self.__dialog.view is not None \
+                    and self.__dialog.view.model() is not None: 
+                DomTools.replaceNode(oldDs, newDs, parent, 
+                                     self.__dialog.view.model())
         else:
             self.__dialog.node.replaceChild(newDs, oldDs)
         self.__dialog.node = newDs
@@ -388,25 +419,33 @@ class DataSourceMethods(object):
     # \brief It reconnects the save action 
     def reconnectSaveAction(self):
         if self.__datasource.externalSave:
-            self.__dialog.disconnect(self.__dialog.ui.savePushButton, SIGNAL("clicked()"), 
-                                   self.__datasource.externalSave)
-            self.__dialog.connect(self.__dialog.ui.savePushButton, SIGNAL("clicked()"), 
-                                self.__datasource.externalSave)
+            self.__dialog.disconnect(self.__dialog.ui.savePushButton, 
+                                     SIGNAL("clicked()"), 
+                                     self.__datasource.externalSave)
+            self.__dialog.connect(self.__dialog.ui.savePushButton, 
+                                  SIGNAL("clicked()"), 
+                                  self.__datasource.externalSave)
         if self.__datasource.externalStore:
-            self.__dialog.disconnect(self.__dialog.ui.storePushButton, SIGNAL("clicked()"), 
-                                   self.__datasource.externalStore)
-            self.__dialog.connect(self.__dialog.ui.storePushButton, SIGNAL("clicked()"), 
-                                self.__datasource.externalStore)
+            self.__dialog.disconnect(self.__dialog.ui.storePushButton, 
+                                     SIGNAL("clicked()"), 
+                                     self.__datasource.externalStore)
+            self.__dialog.connect(self.__dialog.ui.storePushButton, 
+                                  SIGNAL("clicked()"), 
+                                  self.__datasource.externalStore)
         if self.__datasource.externalClose:
-            self.__dialog.disconnect(self.__dialog.ui.closePushButton, SIGNAL("clicked()"), 
-                                   self.__datasource.externalClose)
-            self.__dialog.connect(self.__dialog.ui.closePushButton, SIGNAL("clicked()"), 
-                                self.__datasource.externalClose)
+            self.__dialog.disconnect(self.__dialog.ui.closePushButton, 
+                                     SIGNAL("clicked()"), 
+                                     self.__datasource.externalClose)
+            self.__dialog.connect(self.__dialog.ui.closePushButton, 
+                                  SIGNAL("clicked()"), 
+                                  self.__datasource.externalClose)
         if self.__datasource.externalApply:
-            self.__dialog.disconnect(self.__dialog.ui.applyPushButton, SIGNAL("clicked()"), 
-                                   self.__datasource.externalApply)
-            self.__dialog.connect(self.__dialog.ui.applyPushButton, SIGNAL("clicked()"), 
-                                self.__datasource.externalApply)
+            self.__dialog.disconnect(self.__dialog.ui.applyPushButton, 
+                                     SIGNAL("clicked()"), 
+                                     self.__datasource.externalApply)
+            self.__dialog.connect(self.__dialog.ui.applyPushButton, 
+                                  SIGNAL("clicked()"), 
+                                  self.__datasource.externalApply)
 
 
     ## connects the save action and stores the apply action
@@ -417,27 +456,35 @@ class DataSourceMethods(object):
     def connectExternalActions(self, externalApply=None, externalSave=None,  
                                externalClose = None, externalStore=None):
         if externalSave and self.__datasource.externalSave is None:
-            self.__dialog.disconnect(self.__dialog.ui.savePushButton, SIGNAL("clicked()"), 
+            self.__dialog.disconnect(self.__dialog.ui.savePushButton, 
+                                     SIGNAL("clicked()"), 
                                      externalSave)
-            self.__dialog.connect(self.__dialog.ui.savePushButton, SIGNAL("clicked()"), 
+            self.__dialog.connect(self.__dialog.ui.savePushButton, 
+                                  SIGNAL("clicked()"), 
                                   externalSave)
             self.__datasource.externalSave = externalSave
         if externalStore and self.__datasource.externalStore is None:
-            self.__dialog.disconnect(self.__dialog.ui.storePushButton, SIGNAL("clicked()"), 
+            self.__dialog.disconnect(self.__dialog.ui.storePushButton, 
+                                     SIGNAL("clicked()"), 
                                      externalStore)
-            self.__dialog.connect(self.__dialog.ui.storePushButton, SIGNAL("clicked()"), 
+            self.__dialog.connect(self.__dialog.ui.storePushButton, 
+                                  SIGNAL("clicked()"), 
                                   externalStore)
             self.__datasource.externalStore = externalStore
         if externalClose and self.__datasource.externalClose is None:
-            self.__dialog.disconnect(self.__dialog.ui.closePushButton, SIGNAL("clicked()"), 
+            self.__dialog.disconnect(self.__dialog.ui.closePushButton, 
+                                     SIGNAL("clicked()"), 
                                      externalClose)
-            self.__dialog.connect(self.__dialog.ui.closePushButton, SIGNAL("clicked()"), 
+            self.__dialog.connect(self.__dialog.ui.closePushButton, 
+                                  SIGNAL("clicked()"), 
                                   externalClose)
             self.__datasource.externalClose = externalClose
         if externalApply and self.__datasource.externalApply is None:
-            self.__dialog.disconnect(self.__dialog.ui.applyPushButton, SIGNAL("clicked()"), 
+            self.__dialog.disconnect(self.__dialog.ui.applyPushButton, 
+                                     SIGNAL("clicked()"), 
                                      externalApply)
-            self.__dialog.connect(self.__dialog.ui.applyPushButton, SIGNAL("clicked()"), 
+            self.__dialog.connect(self.__dialog.ui.applyPushButton, 
+                                  SIGNAL("clicked()"), 
                                   externalApply)
             self.__datasource.externalApply = externalApply
 
@@ -450,12 +497,14 @@ class DataSourceMethods(object):
         self.__datasource.document = QDomDocument()
         ## defined in NodeDlg class
         self.__dialog.root = self.__datasource.document
-        processing = self.__dialog.root.createProcessingInstruction("xml", "version='1.0'") 
+        processing = self.__dialog.root.createProcessingInstruction(
+            "xml", "version='1.0'") 
         self.__dialog.root.appendChild(processing)
 
         definition = self.__dialog.root.createElement(QString("definition"))
         self.__dialog.root.appendChild(definition)
-        self.__dialog.node = self.__dialog.root.createElement(QString("datasource"))
+        self.__dialog.node = self.__dialog.root.createElement(
+            QString("datasource"))
         definition.appendChild(self.__dialog.node)            
         return self.__dialog.node
             
@@ -465,27 +514,28 @@ class DataSourceMethods(object):
     def copyToClipboard(self):
         dsNode = self.createNodes(True)
         doc = QDomDocument()
-        child = doc.importNode(dsNode,True)
+        child = doc.importNode(dsNode, True)
         doc.appendChild(child)
         text = unicode(doc.toString(0))
-        clipboard= QApplication.clipboard()
+        clipboard = QApplication.clipboard()
         clipboard.setText(text)
         
 
-    ## copies the datasource from the clipboard  to the current datasource dialog
+    ## copies the datasource from the clipboard to the current datasource dialog
     # \return status True on success
     def copyFromClipboard(self):
-        clipboard= QApplication.clipboard()
-        text=unicode(clipboard.text())
+        clipboard = QApplication.clipboard()
+        text = unicode(clipboard.text())
         self.__datasource.document = QDomDocument()
         self.__dialog.root = self.__datasource.document
-        if not self.__datasource.document.setContent(self.__datasource.repair(text)):
+        if not self.__datasource.document.setContent(
+            self.__datasource.repair(text)):
             raise ValueError, "could not parse XML"
         else:
             if self.__dialog and hasattr(self.__dialog,"root"):
                 self.__dialog.root = self.__datasource.document 
-                self.__dialog.node = DomTools.getFirstElement(self.__datasource.document, 
-                                                                   "datasource")
+                self.__dialog.node = DomTools.getFirstElement(
+                    self.__datasource.document, "datasource")
         if not self.__dialog.node:
             return
         self.setFromNode(self.__dialog.node)
@@ -493,7 +543,9 @@ class DataSourceMethods(object):
         return True
 
 
-
+## datasource variables   
+class Variables(object):
+    pass
 
 
         
@@ -564,7 +616,9 @@ class CommonDataSource(object):
         for cl in dsTypes.values():
             for vr in cl.var.keys():
                 vv = getattr(self, vr)
-                state.append(copy.copy(vv) if ((type(vv) is list) or (type(vv) is dict)) else vv)
+                state.append(
+                    copy.copy(vv) \
+                        if ((type(vv) is list) or (type(vv) is dict)) else vv)
         return tuple(state)        
 
 
@@ -579,9 +633,11 @@ class CommonDataSource(object):
 
         for cl in dsTypes.values():
             for vr in cl.var.keys():
-                setattr(self, vr, copy.copy(state[cnt]) \
-                            if ((type(state[cnt]) is list) or (type(state[cnt]) is dict)) \
-                            else state[cnt])
+                setattr(
+                    self, vr, copy.copy(state[cnt]) \
+                        if ((type(state[cnt]) is list) \
+                                or (type(state[cnt]) is dict)) \
+                        else state[cnt])
                 cnt += 1
 
 
@@ -712,7 +768,8 @@ class DataSource(CommonDataSource):
 
             except Exception, e:
                 QMessageBox.warning(self.dialog, "dialog not created", 
-                                    "Problems in creating a dialog %s :\n\n%s" %(self.name,unicode(e)))
+                                    "Problems in creating a dialog %s :\n\n%s" \
+                                        %(self.name,unicode(e)))
                 
         except (IOError, OSError, ValueError), e:
             error = "Failed to load: %s" % e
@@ -725,12 +782,14 @@ class DataSource(CommonDataSource):
         finally:                 
             if fh is not None:
                 fh.close()
-                return filename
+        if fh is not None:
+            return filename
 
     ## repairs xml datasources 
     # \param xml xml string
     # \returns repaired xml        
-    def repair(self, xml):
+    @classmethod        
+    def repair(cls, xml):
         olddoc = QDomDocument()
         if not olddoc.setContent(xml):
             raise ValueError, "could not parse XML"
@@ -744,13 +803,13 @@ class DataSource(CommonDataSource):
         ds = DomTools.getFirstElement(olddoc, "datasource")           
         
         newdoc = QDomDocument()
-        processing = newdoc.createProcessingInstruction("xml", "version='1.0'") 
+        processing = newdoc.createProcessingInstruction("xml", "version='1.0'")
         newdoc.appendChild(processing)
 
         definition = newdoc.createElement(QString("definition"))
         newdoc.appendChild(definition)
 
-        newds = newdoc.importNode(ds,True)
+        newds = newdoc.importNode(ds, True)
         definition.appendChild(newds)            
         return newdoc.toString(0)
 
@@ -758,7 +817,7 @@ class DataSource(CommonDataSource):
     ## sets datasources from xml string
     # \param xml xml string
     # \param new True if datasource is not saved
-    def set(self, xml,new = False):
+    def set(self, xml, new = False):
         self.document = QDomDocument()
         self.root = self.document
         if not self.document.setContent(self.repair(xml)):
@@ -778,7 +837,8 @@ class DataSource(CommonDataSource):
             self.createGUI()
         except Exception, e:
             QMessageBox.warning(self, "dialog not created", 
-                                "Problems in creating a dialog %s :\n\n%s" %(self.name,unicode(e)))
+                                "Problems in creating a dialog %s :\n\n%s" \
+                                    %(self.name,unicode(e)))
                 
 
     ## accepts and save input text strings
@@ -807,7 +867,7 @@ class DataSource(CommonDataSource):
                     + "Please try to use Save As command " \
                     + "or change the datasource directory"
                 print error
-                QMessageBox.warning(self.dialog, "Saving problem",  error )
+                QMessageBox.warning(self.dialog, "Saving problem",  error) 
 
             finally:
                 if fh is not None:
@@ -819,9 +879,10 @@ class DataSource(CommonDataSource):
     # \returns datasource name with its path 
     def getNewName(self):
         filename = unicode(
-            QFileDialog.getSaveFileName(self.dialog,"Save DataSource As ...",self.directory,
-                                        "XML files (*.xml);;HTML files (*.html);;"
-                                        "SVG files (*.svg);;User Interface files (*.ui)"))
+            QFileDialog.getSaveFileName(
+                self.dialog,"Save DataSource As ...",self.directory,
+                "XML files (*.xml);;HTML files (*.html);;"
+                "SVG files (*.svg);;User Interface files (*.ui)"))
         print "saving in %s"% (filename)
         return filename
 
@@ -909,7 +970,8 @@ class DataSource(CommonDataSource):
             return self.__methods.setFromNode(node)
 
     ## creates datasource node
-    # \param external True if it should be create on a local DOM root, i.e. in component tree
+    # \param external True if it should be create on a local DOM root, 
+    #        i.e. in component tree
     # \returns created DOM node   
     def createNodes(self, external = False):        
         if hasattr(self,"_DataSource__methods")  and self.__methods:
@@ -935,7 +997,7 @@ class DataSource(CommonDataSource):
     # \param externalClose close action
     # \param externalStore store action
     def connectExternalActions(self, externalApply=None, externalSave=None, 
-                               externalClose=None,externalStore=None):
+                               externalClose=None, externalStore=None):
         if hasattr(self,"_DataSource__methods")  and self.__methods:
             return self.__methods.connectExternalActions(
                 externalApply, externalSave, externalClose, externalStore)
@@ -956,7 +1018,8 @@ class DataSource(CommonDataSource):
             return self.__methods.copyToClipboard()
         
 
-    ## copies the datasource from the clipboard  to the current datasource dialog
+    ## copies the datasource from the clipboard to the current 
+    #  datasource dialog
     # \return status True on success
     def copyFromClipboard(self):
         if hasattr(self,"_DataSource__methods")  and self.__methods:
@@ -975,7 +1038,7 @@ class DataSourceDlg(CommonDataSourceDlg):
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
-        super(DataSourceDlg, self).__init__(None,parent)
+        super(DataSourceDlg, self).__init__(None, parent)
 
         ## datasource data
         self.datasource = CommonDataSource()
@@ -1038,9 +1101,11 @@ class DataSourceDlg(CommonDataSourceDlg):
     # \param externalSave save action 
     # \param externalClose close action 
     # \param externalStore store action 
-    def connectExternalActions(self, externalApply=None, externalSave=None, externalClose=None, externalStore=None):
+    def connectExternalActions(self, externalApply=None, externalSave=None, 
+                               externalClose=None, externalStore=None):
         if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
-            return self.__methods.connectExternalActions(externalApply, externalSave, externalClose, externalStore)
+            return self.__methods.connectExternalActions(
+                externalApply, externalSave, externalClose, externalStore)
 
 
 if __name__ == "__main__":

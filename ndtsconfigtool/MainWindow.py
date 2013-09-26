@@ -1121,7 +1121,7 @@ class MainWindow(QMainWindow):
     # \param new logical variable set to True if objects are not saved    
     def setDataSources(self, datasources, new = False):
         last = self.sourceList.setList(
-            datasources,self.externalDSActions, new)
+            datasources, self.externalDSActions, new)
         ids =  self.sourceList.datasources.itervalues().next().id \
             if len(self.sourceList.datasources) else None
 

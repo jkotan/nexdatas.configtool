@@ -21,8 +21,9 @@
 
 """ Provides datasource widget """
 
-import re
 import os
+import copy
+
 from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, QFileInfo, QFile, 
                           QIODevice, QTextStream)
 from PyQt4.QtGui import (QApplication, QFileDialog, QMessageBox, 
@@ -41,7 +42,6 @@ from .ui.ui_datasourcedlg import Ui_DataSourceDlg
 # from .ui.ui_pyevaldsdlg import Ui_PyEvalDsDlg
 
 
-import copy
 
 
 ## available datasources
@@ -396,8 +396,6 @@ class DataSourceMethods(object):
         newDs = self.createNodes(self.__datasource.tree)
         oldDs = self.__dialog.node
 
-        elem = oldDs.toElement()
-        
 
         if hasattr(index, "parent"):
             parent = index.parent()

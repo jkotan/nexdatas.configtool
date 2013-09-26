@@ -19,6 +19,7 @@
 ## \file Merger.py
 # Class for merging DOM component trees
 
+
 from PyQt4.QtXml import QDomNode
 
 
@@ -98,8 +99,8 @@ class Merger(QThread):
             "query":["format"]
             }
 
-        ## it contains an exeption instance when the exception was raised
-        self.exception = None
+        ## it contains an exception instance when the exception was raised
+        self.exception = ''
         ## it has to be set on False when we want to break merging
         self.running = True
         ## selected node

@@ -1356,7 +1356,7 @@ class Component(object):
             if string:
                 stream << string
             else:
-                raise ErrorValue, "Empty component"
+                raise ValueError, "Empty component"
     
             self.savedXML = self.get()
             #                print self.document.toString(2)

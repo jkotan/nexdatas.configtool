@@ -311,12 +311,6 @@ class ComponentList(QWidget):
 
 
 
-    ## accepts input text strings
-    # \brief It copies the group name and type from lineEdit widgets and accept the dialog
-    def accept(self):
-        
-        QWidget.accept(self)
-
 if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication

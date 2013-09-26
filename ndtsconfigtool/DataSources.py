@@ -692,7 +692,7 @@ class PyEvalSource(object):
                     if not document.setContent(datasource.peDataSources[name]):
                         raise ValueError, "could not parse XML"  
                     else:
-                        if self.__dialog and hasattr(self.__dialog,"root"):
+                        if self.main and hasattr(self.main,"root"):
 
                             dsnode = DomTools.getFirstElement(
                                 document, "datasource")

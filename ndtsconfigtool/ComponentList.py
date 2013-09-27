@@ -19,14 +19,17 @@
 ## \file ComponentList.py
 # Data component list class
 
-import re
-from PyQt4.QtCore import (SIGNAL, Qt, QString, QVariant)
-from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
-from ui.ui_componentlist import Ui_ComponentList
+
+""" component list widget """
+
 import os
 
-from ComponentDlg import Component
-from LabeledObject import LabeledObject
+from PyQt4.QtCore import (Qt, QString, QVariant)
+from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
+
+from .ui.ui_componentlist import Ui_ComponentList
+from .ComponentDlg import Component
+from .LabeledObject import LabeledObject
 
 
 ## dialog defining a group tag
@@ -60,7 +63,8 @@ class ComponentList(QWidget):
 
         self.ui.setupUi(self)
 
-        self.ui.componentListWidget.setEditTriggers(self.ui.componentListWidget.SelectedClicked)
+        self.ui.componentListWidget.setEditTriggers(
+            self.ui.componentListWidget.SelectedClicked)
 
 #        self.connect(self.ui.componentListWidget, 
 #                     SIGNAL("itemChanged(QListWidgetItem*)"),
@@ -76,8 +80,10 @@ class ComponentList(QWidget):
             return self._allAttributes
         self._allAttributes = True if status else False
         for k in self.components.keys():
-            if hasattr(self.components[k], "instance") and self.components[k].instance:
-                 self.components[k].instance.viewAttributes(self._allAttributes)
+            if hasattr(self.components[k], "instance") \
+                    and self.components[k].instance:
+                self.components[k].instance.viewAttributes(
+                    self._allAttributes)
             
 
     ## opens context Menu        
@@ -96,13 +102,15 @@ class ComponentList(QWidget):
     # \param actions tuple with actions 
     def setActions(self, actions):
         self.ui.componentListWidget.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.ui.componentListWidget.customContextMenuRequested.connect(self._openMenu)
+        self.ui.componentListWidget.customContextMenuRequested.connect(
+            self._openMenu)
         self._actions = actions
         
         
 
     ## adds an component    
-    #  \brief It runs the Component Dialog and fetches component name and value    
+    #  \brief It runs the Component Dialog and fetches component name 
+    #         and value    
     def addComponent(self, obj, flag = True):
 
         self.components[obj.id] = obj
@@ -120,7 +128,7 @@ class ComponentList(QWidget):
 
     ## removes the current component    
     #  \brief It removes the current component asking before about it
-    def removeComponent(self,obj = None, question = True):
+    def removeComponent(self, obj = None, question = True):
         if obj is not None:
             oid = obj.id
         else:
@@ -132,10 +140,12 @@ class ComponentList(QWidget):
             return
         if oid in self.components.keys():
             if question :
-                if QMessageBox.question(self, "Component - Close",
-                                        "Close the component: %s ".encode() %  (self.components[oid].name),
-                                        QMessageBox.Yes | QMessageBox.No,
-                                        QMessageBox.Yes ) == QMessageBox.No :
+                if QMessageBox.question(
+                    self, "Component - Close",
+                    "Close the component: %s ".encode() %  \
+                        (self.components[oid].name),
+                    QMessageBox.Yes | QMessageBox.No,
+                    QMessageBox.Yes ) == QMessageBox.No :
                     return
 
             self.components.pop(oid)
@@ -144,10 +154,12 @@ class ComponentList(QWidget):
         attr = self.currentListComponent()
         if attr is None:
             return
-        if QMessageBox.question(self, "Component - Remove",
-                                "Remove component: %s = \'%s\'".encode() %  (attr, self.components[unicode(attr)]),
-                                QMessageBox.Yes | QMessageBox.No,
-                                QMessageBox.Yes ) == QMessageBox.No :
+        if QMessageBox.question(
+            self, "Component - Remove",
+            "Remove component: %s = \'%s\'".encode() \
+                %  (attr, self.components[unicode(attr)]),
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.Yes ) == QMessageBox.No :
             return
         if unicode(attr) in self.components.keys():
             self.components.pop(unicode(attr))
@@ -155,7 +167,8 @@ class ComponentList(QWidget):
 
 
     ## changes the current value of the component        
-    # \brief It changes the current value of the component and informs the user that component names arenot editable
+    # \brief It changes the current value of the component and informs 
+    #        the user that component names arenot editable
     def listItemChanged(self, item, name = None):
         icp = self.currentListComponent().id
 
@@ -200,15 +213,19 @@ class ComponentList(QWidget):
                 item.setForeground(Qt.black)
 
             self.ui.componentListWidget.addItem(item)
-            if selectedComponent is not None and selectedComponent == self.components[cp].id:
+            if selectedComponent is not None \
+                    and selectedComponent == self.components[cp].id:
                 selected = item
                                
-            if self.components[cp].instance is not None and self.components[cp].instance.dialog is not None:
+            if self.components[cp].instance is not None \
+                    and self.components[cp].instance.dialog is not None:
                 try:
                     if dirty:
-                        self.components[cp].instance.dialog.setWindowTitle("%s [Component]*" %name)
+                        self.components[cp].instance.dialog.setWindowTitle(
+                            "%s [Component]*" %name)
                     else:
-                        self.components[cp].instance.dialog.setWindowTitle("%s [Component]" %name)
+                        self.components[cp].instance.dialog.setWindowTitle(
+                            "%s [Component]" %name)
                 except:
 #                    print "C++", self.components[cp].name
                     # C++ dialog was deleted
@@ -224,16 +241,20 @@ class ComponentList(QWidget):
     ## loads the component list from the given dictionary
     # \param itemActions actions of the context menu
     # \param externalActions dictionary with external actions
-    def loadList(self, itemActions, externalActions = {}):
+    def loadList(self, itemActions, externalActions = None):
+        actions = externalActions if externalActions else {}
         try:
-            dirList=[l for l in os.listdir(self.directory) if l.endswith(".xml")]
+            dirList = [l for l in os.listdir(self.directory) \
+                         if l.endswith(".xml")]
         except:
             try:
                 if os.path.exists(os.path.join(os.getcwd(),"components")):
-                    self.directory = os.path.abspath(os.path.join(os.getcwd(),"components"))
+                    self.directory = os.path.abspath(os.path.join(
+                            os.getcwd(),"components"))
                 else:
                     self.directory = os.getcwd()
-                dirList=[l for l in os.listdir(self.directory) if l.endswith(".xml")]
+                dirList = [l for l in os.listdir(self.directory) \
+                               if l.endswith(".xml")]
             except:
                 return
             
@@ -251,7 +272,7 @@ class ComponentList(QWidget):
 
             dlg.load()    
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**externalActions)    
+                dlg.connectExternalActions(**actions)    
 
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp
@@ -265,13 +286,13 @@ class ComponentList(QWidget):
     # \param components dictionary with the components, i.e. name:xml
     # \param itemActions actions of the tree context menu
     # \param externalActions dictionary with external actions
-    def setList(self, components,  itemActions, externalActions = {}):
-        try:
-            dirList=os.listdir(self.directory)
-        except:
+    def setList(self, components,  itemActions, externalActions = None):
+        actions = externalActions if externalActions else {}
+        if not os.path.isdir(self.directory):
             try:
                 if os.path.exists(os.path.join(os.getcwd(),"components")):
-                    self.directory = os.path.abspath(os.path.join(os.getcwd(),"components"))
+                    self.directory = os.path.abspath(
+                        os.path.join(os.getcwd(),"components"))
                 else:
                     self.directory = os.getcwd() 
             except:
@@ -298,7 +319,7 @@ class ComponentList(QWidget):
 
                 
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**externalActions)    
+                dlg.connectExternalActions(**actions)    
 
             cp = LabeledObject(name, dlg)
             self.components[id(cp)] =  cp
@@ -326,6 +347,6 @@ if __name__ == "__main__":
 
     if form.components:
         print "Other components:"
-        for k in form.components.keys():
-            print  " %s = '%s' " % (k, form.components[k])
+        for mk in form.components.keys():
+            print  " %s = '%s' " % (mk, form.components[mk])
     

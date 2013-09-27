@@ -104,7 +104,7 @@ from .Command import (
     )
 
 from .ConfigurationServer import (ConfigurationServer, PYTANGO_AVAILABLE)
-from .ndtsconfigtool import __version__
+from . import __version__
 
 ## main window class
 class MainWindow(QMainWindow):
@@ -2080,7 +2080,8 @@ class MainWindow(QMainWindow):
         self.cmdStack.append(cmd)
 
 
-        self.pool.setDisabled("undo", False, "Undo: ", self.cmdStack.getUndoName() )
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 

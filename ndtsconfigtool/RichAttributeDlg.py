@@ -19,17 +19,18 @@
 ## \file RichAttributeDlg.py
 # Rich Attribute dialog class
 
-import re
-from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
-from PyQt4.QtGui import QMessageBox
-from ui.ui_richattributedlg import  Ui_RichAttributeDlg
+""" attribute widget """
 
-from NodeDlg import NodeDlg 
-from DimensionsDlg import DimensionsDlg
 import copy
 
-from Errors import CharacterError
-from DomTools import DomTools
+from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
+from PyQt4.QtGui import QMessageBox
+
+from .ui.ui_richattributedlg import  Ui_RichAttributeDlg
+from .NodeDlg import NodeDlg 
+from .DimensionsDlg import DimensionsDlg
+from .Errors import CharacterError
+from .DomTools import DomTools
 
 ## dialog defining an attribute
 class RichAttributeDlg(NodeDlg):
@@ -57,7 +58,8 @@ class RichAttributeDlg(NodeDlg):
 
 
         ## allowed subitems
-        self.subItems = ["enumeration", "doc", "datasource", "strategy","dimensions"]
+        self.subItems = ["enumeration", "doc", "datasource", 
+                         "strategy", "dimensions"]
 
         ## user interface
         self.ui = Ui_RichAttributeDlg()
@@ -136,13 +138,13 @@ class RichAttributeDlg(NodeDlg):
             label = self.dimensions.__str__()
             self.ui.dimLabel.setText("%s" % label.replace('None','*'))
         elif self.rank > 0:
-            label = [None for r in range(self.rank)].__str__()
+            label = ([None]*self.rank).__str__()
             self.ui.dimLabel.setText("%s" % label.replace('None','*'))
         else:
             self.ui.dimLabel.setText("[]")
 
 
-        self._dimensions =[]
+        self._dimensions = []
         for dm in self.dimensions:
             self._dimensions.append(dm)
 
@@ -157,12 +159,18 @@ class RichAttributeDlg(NodeDlg):
 
         self._updateUi()
 
-#        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
-        self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.connect(
+            self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
 
-        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
-        self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self._currentIndexChanged)
-        self.connect(self.ui.dimPushButton, SIGNAL("clicked()"), self._changeDimensions)
+        self.connect(
+            self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), 
+            self._updateUi)
+        self.connect(
+            self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), 
+            self._currentIndexChanged)
+        self.connect(
+            self.ui.dimPushButton, SIGNAL("clicked()"), 
+            self._changeDimensions)
 
 
 
@@ -175,10 +183,11 @@ class RichAttributeDlg(NodeDlg):
         if not self.node:
             return
         attributeMap = self.node.attributes()
-        nNode = self.node.nodeName()
 
-        self.name = unicode(attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else "")
-        self.nexusType = unicode(attributeMap.namedItem("type").nodeValue() if attributeMap.contains("type") else "")
+        self.name = unicode(attributeMap.namedItem("name").nodeValue() \
+                                if attributeMap.contains("name") else "")
+        self.nexusType = unicode(attributeMap.namedItem("type").nodeValue() \
+                                     if attributeMap.contains("type") else "")
 
 
         text = DomTools.getText(self.node)    
@@ -201,8 +210,6 @@ class RichAttributeDlg(NodeDlg):
             self.rank = 0
         if self.rank > 0:
             child = dimens.firstChild()
-            maxIndex = 0
-            lengths = {}
             while not child.isNull():
                 if child.isElement() and child.nodeName() == "dim":
                     attributeMap = child.attributes()
@@ -210,13 +217,17 @@ class RichAttributeDlg(NodeDlg):
                     value = None
                     try:                        
                         if attributeMap.contains("index"):
-                            index = int(attributeMap.namedItem("index").nodeValue())
+                            index = int(attributeMap.namedItem(
+                                    "index").nodeValue())
                         if attributeMap.contains("value"):
-                            value = int(attributeMap.namedItem("value").nodeValue())
+                            value = int(attributeMap.namedItem(
+                                    "value").nodeValue())
                     except:
                         pass
-                    if index < 1: index = None
-                    if value < 1: value = None
+                    if index < 1: 
+                        index = None
+                    if value < 1: 
+                        value = None
                     if index is not None:
                         while len(self.dimensions)< index:
                             self.dimensions.append(None)
@@ -240,7 +251,8 @@ class RichAttributeDlg(NodeDlg):
 
 
     ## changing dimensions of the field
-    #  \brief It runs the Dimensions Dialog and fetches rank and dimensions from it
+    #  \brief It runs the Dimensions Dialog and fetches rank 
+    #         and dimensions from it
     def _changeDimensions(self):
         dform  = DimensionsDlg( self)
         dform.rank = self.rank
@@ -275,15 +287,18 @@ class RichAttributeDlg(NodeDlg):
 
 
     ## accepts input text strings
-    # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
+    # \brief It copies the attribute name and value from lineEdit widgets 
+    #        and accept the dialog
     def apply(self):
         name = unicode(self.ui.nameLineEdit.text())
 
         try:
             if 1 in [c in name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
-                raise CharacterError, ("Name contains one of forbidden characters") 
+                raise CharacterError, \
+                    ("Name contains one of forbidden characters") 
             if name[0] == '-':
-                raise CharacterError, ("The first character of Name is '-'") 
+                raise CharacterError, \
+                    ("The first character of Name is '-'") 
         except CharacterError, e:   
             QMessageBox.warning(self, "Character Error", unicode(e))
             return
@@ -295,12 +310,13 @@ class RichAttributeDlg(NodeDlg):
         if self.nexusType ==  'other ...':
             self.nexusType =  unicode(self.ui.typeLineEdit.text())
         elif self.nexusType ==  'None':    
-            self.nexusType =  u'';
+            self.nexusType =  u''
 
         self.doc = unicode(self.ui.docTextEdit.toPlainText())
 
         index = self.view.currentIndex()
-        finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
+        finalIndex = self.view.model().createIndex(
+            index.row(), 2, index.parent().internalPointer())
         self.view.expand(index)    
 
         self.dimensions = []
@@ -313,14 +329,15 @@ class RichAttributeDlg(NodeDlg):
             self.updateNode(index)
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+        self.view.model().emit(
+            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, finalIndex)
         self.view.expand(index)    
 
 
     ## updates the Node
     # \brief It sets node from the dialog variables
-    def updateNode(self,index=QModelIndex()):
-        elem=self.node.toElement()
+    def updateNode(self, index=QModelIndex()):
+        elem = self.node.toElement()
         mindex = self.view.currentIndex() if not index.isValid() else index   
 
 
@@ -347,19 +364,20 @@ class RichAttributeDlg(NodeDlg):
 
         dimens = self.node.firstChildElement(QString("dimensions"))           
         if not self.dimensions and dimens and dimens.nodeName() == "dimensions":
-            self.removeElement(dimens,mindex)
+            self.removeElement(dimens, mindex)
         elif self.dimensions:
             newDimens = self.root.createElement(QString("dimensions"))
             newDimens.setAttribute(QString("rank"), QString(unicode(self.rank)))
             dimDefined = True
-            for i in range(min(self.rank,len(self.dimensions))):
+            for i in range(min(self.rank, len(self.dimensions))):
                 if self.dimensions[i] is None:
                     dimDefined = False
             if dimDefined:
-                for i in range(min(self.rank,len(self.dimensions))):
+                for i in range(min(self.rank, len(self.dimensions))):
                     dim = self.root.createElement(QString("dim"))
                     dim.setAttribute(QString("index"), QString(unicode(i+1)))
-                    dim.setAttribute(QString("value"), QString(unicode(self.dimensions[i])))
+                    dim.setAttribute(QString("value"), 
+                                     QString(unicode(self.dimensions[i])))
                     newDimens.appendChild(dim)
                 
             if dimens and dimens.nodeName() == "dimensions" :
@@ -383,8 +401,10 @@ class RichAttributeDlg(NodeDlg):
             while not child.isNull():
                 if child.nodeName() == unicode(newElement.nodeName()):
                     QMessageBox.warning(
-                        self, "%s exists" % singles[str(newElement.nodeName())], 
-                        "To add a new %s please remove the old one" % newElement.nodeName())
+                        self, "%s exists" % singles[
+                            str(newElement.nodeName())], 
+                        "To add a new %s please remove the old one" \
+                            % newElement.nodeName())
                     return False
                 child = child.nextSibling()    
 

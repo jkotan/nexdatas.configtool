@@ -19,6 +19,8 @@
 ## \file Command.py
 # user commands of GUI application
 
+""" Component Designer commands """
+
 from PyQt4.QtGui import (QMessageBox, QFileDialog)
 from PyQt4.QtCore import (SIGNAL, QFileInfo)
 
@@ -409,7 +411,8 @@ class ServerSetMandatoryComponent(Command):
                 self.receiver.configServer.setMandatory(self._cp.name)
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver, "Error in setting the component as mandatory", 
+                    self.receiver, 
+                    "Error in setting the component as mandatory", 
                     unicode(e))
         print "EXEC serverSetMandatoryComponent"
 
@@ -1016,7 +1019,6 @@ class ComponentRemove(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._cp = None
-        self._wList = False
         self._subwindow = None
         
 
@@ -1028,9 +1030,11 @@ class ComponentRemove(Command):
             self.receiver.componentList.removeComponent(self._cp, False)
         else:
             self._cp = self.receiver.componentList.currentListComponent()
-            if self._cp is None:                
-                QMessageBox.warning(self.receiver, "Component not selected", 
-                                    "Please select one of the components")            
+            if self._cp is None:
+                QMessageBox.warning(
+                    self.receiver, 
+                    "Component not selected", 
+                    "Please select one of the components")
             else:
                 self.receiver.componentList.removeComponent(self._cp, True)
             
@@ -1038,7 +1042,6 @@ class ComponentRemove(Command):
             subwindow = self.receiver.subWindow(
                 self._cp.instance, self.receiver.mdi.subWindowList())
             if subwindow:
-                self._wList = True
                 self.receiver.mdi.setActiveSubWindow(subwindow)
                 self.receiver.mdi.closeActiveSubWindow()
             
@@ -1126,7 +1129,7 @@ class ComponentEdit(Command):
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is None:                
             QMessageBox.warning(self.receiver, "Component not selected", 
-                                "Please select one of the components")            
+                                "Please select one of the components")         
         else:
             if self._cp.instance is None:
                 #                self._cpEdit = FieldWg()  
@@ -1212,8 +1215,9 @@ class ComponentSave(Command):
         if self._cp is None:
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is None:
-            QMessageBox.warning(self.receiver, "Component not selected", 
-                                "Please select one of the components")            
+            QMessageBox.warning(
+                self.receiver, "Component not selected", 
+                "Please select one of the components")          
         else:
             if self._cp.instance is None:
                 #                self._cpEdit = FieldWg()  
@@ -1414,7 +1418,7 @@ class ComponentSaveAs(Command):
         self.directory = None
 
         self._cp = None
-        self._pathName = None
+        self._pathFile = None
         self._subwindow = None
         
 
@@ -1425,7 +1429,7 @@ class ComponentSaveAs(Command):
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is None:
             QMessageBox.warning(self.receiver, "Component not selected", 
-                                "Please select one of the components")            
+                                "Please select one of the components") 
         else:
             if self._cp.instance is not None:
                 self._pathFile = self._cp.instance.getNewName() 
@@ -1539,7 +1543,7 @@ class DataSourceCopy(Command):
             self._ds = self.receiver.sourceList.currentListDataSource()
         if self._ds is None:
             QMessageBox.warning(self.receiver, "DataSource not selected", 
-                                "Please select one of the datasources")            
+                                "Please select one of the datasources")
         if self._ds is not None and self._ds.instance is not None:
             if self._newstate is None:
                 if self._oldstate is None:
@@ -1644,7 +1648,7 @@ class DataSourceCut(Command):
             self._ds = self.receiver.sourceList.currentListDataSource()
         if self._ds is None:
             QMessageBox.warning(self.receiver, "DataSource not selected", 
-                                "Please select one of the datasources")            
+                                "Please select one of the datasources")
         if self._ds is not None and self._ds.instance is not None:
             if self._newstate is None:
                 if self._oldstate is None:
@@ -1759,7 +1763,7 @@ class DataSourcePaste(Command):
             self._ds = self.receiver.sourceList.currentListDataSource()
         if self._ds is None:
             QMessageBox.warning(self.receiver, "DataSource not selected", 
-                                "Please select one of the datasources")            
+                                "Please select one of the datasources")
         if self._ds is not None and self._ds.instance is not None:
             if self._newstate is None:
                 if self._oldstate is None:
@@ -1768,7 +1772,7 @@ class DataSourcePaste(Command):
                 if not self._ds.instance.copyFromClipboard():
                     QMessageBox.warning(
                         self.receiver, "Pasting item not possible", 
-                        "Probably clipboard does not contain datasource")            
+                        "Probably clipboard does not contain datasource")
                     
                 self._ds.instance.updateForm()
 #                self._ds.instance.updateNode()
@@ -1889,7 +1893,7 @@ class DataSourceApply(Command):
             self._ds = self.receiver.sourceList.currentListDataSource()
         if self._ds is None:
             QMessageBox.warning(self.receiver, "DataSource not selected", 
-                                "Please select one of the datasources")            
+                                "Please select one of the datasources")
         if self._ds.instance is None:
             #                self._dsEdit = FieldWg()  
             self._ds.instance  = DataSource()
@@ -1902,7 +1906,7 @@ class DataSourceApply(Command):
             self._ds.instance.dialog.setWindowTitle(
                 "%s [DataSource]*" % self._ds.name)
             
-            if hasattr(self._ds.instance, "connectExternalActions"):     
+            if hasattr(self._ds.instance, "connectExternalActions"):
                 self._ds.instance.connectExternalActions(
                     **self.receiver.externalDSActions)
             self._subwindow = self.receiver.mdi.addSubWindow(
@@ -1957,7 +1961,7 @@ class DataSourceApply(Command):
                 self.receiver.sourceList.populateDataSources()
         else:
             QMessageBox.warning(self.receiver, "DataSource not created", 
-                                "Please edit one of the datasources")            
+                                "Please edit one of the datasources")
             
         print "EXEC dsourceApply"
 
@@ -2223,7 +2227,7 @@ class DataSourceSaveAs(Command):
             self._ds = self.receiver.sourceList.currentListDataSource()
         if self._ds is None:
             QMessageBox.warning(self.receiver, "DataSource not selected", 
-                                "Please select one of the datasources")            
+                                "Please select one of the datasources")
         else:
             if self._ds.instance is None:
                 dsEdit = DataSource()
@@ -2393,7 +2397,7 @@ class ComponentTakeDataSources(Command):
             self._cp = self.receiver.componentList.currentListComponent()
         if self._cp is None:
             QMessageBox.warning(self.receiver, "Component not selected", 
-                                "Please select one of the components")            
+                                "Please select one of the components")
         else:
             if self._cp.instance is not None:
                 datasources = self._cp.instance.getDataSources()
@@ -2408,8 +2412,9 @@ class ComponentTakeDataSources(Command):
         
                     self.receiver.setDataSources(datasources, new = True)
                 else:
-                    QMessageBox.warning(self.receiver, "DataSource item not selected", 
-                                        "Please select one of the datasource items")            
+                    QMessageBox.warning(
+                        self.receiver, "DataSource item not selected", 
+                        "Please select one of the datasource items")            
 
 
         print "EXEC componentTakeDataSources"
@@ -2477,7 +2482,7 @@ class ComponentTakeDataSource(Command):
                     else:
                         QMessageBox.warning(
                             self.receiver, "DataSource item not selected", 
-                            "Please select one of the datasource items")            
+                            "Please select one of the datasource items")
                         
         print "EXEC componentTakeDataSource"
 
@@ -2704,7 +2709,7 @@ class DataSourceEdit(Command):
             self._ds = self.receiver.sourceList.currentListDataSource()
         if self._ds is None:
             QMessageBox.warning(self.receiver, "DataSource not selected", 
-                                "Please select one of the datasources")            
+                                "Please select one of the datasources")
         else:
             if self._ds.instance is None:
                 #                self._dsEdit = FieldWg()  
@@ -2782,7 +2787,6 @@ class DataSourceRemove(Command):
     def __init__(self, receiver, slot):
         Command.__init__(self, receiver, slot)
         self._ds = None
-        self._wList = False
         self._subwindow = None
         
     ## executes the command
@@ -2805,7 +2809,6 @@ class DataSourceRemove(Command):
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.mdi.subWindowList())
             if subwindow:
-                self._wList = True
                 self.receiver.mdi.setActiveSubWindow(subwindow)
                 self.receiver.mdi.closeActiveSubWindow()
             
@@ -3037,11 +3040,11 @@ class ComponentItemCommand(Command):
 
             else:
                 QMessageBox.warning(self.receiver, "Component not created", 
-                                    "Please edit one of the components")            
+                                    "Please edit one of the components")
                 
         else:
             QMessageBox.warning(self.receiver, "Component not selected", 
-                                "Please select one of the components")            
+                                "Please select one of the components")
 
     
     ## helps to construct the execute component item command as a post-executor
@@ -3118,7 +3121,8 @@ class ComponentItemCommand(Command):
         print "EXEC componentItemCommand"
 
     ## helps to construct the unexecute component item command 
-    # \brief It changes back the states of the current component to the old state
+    # \brief It changes back the states of the current component 
+    #        to the old state
     def unexecute(self):
         if self._cp is not None and self._oldstate is not None:
             self.receiver.componentList.components[
@@ -3128,7 +3132,7 @@ class ComponentItemCommand(Command):
             subwindow = self.receiver.subWindow(
                 self._cp.instance, self.receiver.mdi.subWindowList())
             if subwindow:
-                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.mdi.setActiveSubWindow(subwindow)
             else:    
                 if self._cp.instance is None:
                     self._cp.instance = Component()
@@ -3169,7 +3173,7 @@ class ComponentClear(ComponentItemCommand):
     # \param slot slot name of the receiver related to the command
     def __init__(self, receiver, slot):
         ComponentItemCommand.__init__(self, receiver, slot)
-
+        
 
 
     ## executes the command
@@ -3191,13 +3195,12 @@ class ComponentClear(ComponentItemCommand):
 
                 if hasattr(self._cp, "instance"):
                     if self._cp.instance in self.receiver.mdi.subWindowList():
-                        self._wList = True
                         self.receiver.mdi.setActiveSubWindow(self._cp.instance)
                     self._cp.instance.createHeader()            
                 
                     newModel = ComponentModel(
                         self._cp.instance.document, 
-                        self._cp.instance._allAttributes)
+                        self._cp.instance.getAttrFlag())
                     self._cp.instance.view.setModel(newModel)
                     self._cp.instance.connectView()
 
@@ -3585,7 +3588,7 @@ class ComponentNewItem(ComponentItemCommand):
                         QMessageBox.warning(
                             self.receiver, "Creating the %s Item not possible" \
                                 % self.itemName, 
-                            "Please select another tree or new item ")                                
+                            "Please select another tree or new item ")
             if self._child and self._index.isValid():
                 if self._index.isValid():
                     finalIndex = self._cp.instance.view.model().index(
@@ -3738,8 +3741,9 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
                     return
                 if not self._cp.instance.addDataSourceItem(dsNode):
                     QMessageBox.warning(
-                        self.receiver, "Adding the datasource item not possible", 
-                        "Please ensure that you have selected the proper items")            
+                        self.receiver, 
+                        "Adding the datasource item not possible", 
+                        "Please ensure that you have selected the proper items")
 
 
 
@@ -3774,13 +3778,15 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
-                if self._cp.instance is None or self._cp.instance.view is None \
+                if self._cp.instance is None \
+                        or self._cp.instance.view is None \
                         or self._cp.instance.view.model() is None:
                     self._oldstate = None
                     self._index = None
                     self._cp = None
-                    QMessageBox.warning(self.receiver, "Component Item not created", 
-                                        "Please edit one of the component Items")            
+                    QMessageBox.warning(
+                        self.receiver, "Component Item not created", 
+                        "Please edit one of the component Items")
                     return
 
                 ds = self.receiver.sourceList.currentListDataSource()
@@ -3788,8 +3794,9 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                     self._oldstate = None
                     self._index = None
                     self._cp = None
-                    QMessageBox.warning(self.receiver, "DataSource not selected", 
-                                        "Please select one of the datasources")            
+                    QMessageBox.warning(
+                        self.receiver, "DataSource not selected", 
+                        "Please select one of the datasources")
                     return
 
                 if ds.instance is None:
@@ -3807,7 +3814,7 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                     self._cp = None
                     QMessageBox.warning(
                         self.receiver, "DataSource wihtout name", 
-                        "Please define datasource name")            
+                        "Please define datasource name")
                     return
 
                     
@@ -3820,7 +3827,7 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                     self._cp = None
                     QMessageBox.warning(
                         self.receiver, "Component Item not created", 
-                        "Please edit one of the component Items")            
+                        "Please edit one of the component Items")
                     return
 
         
@@ -3837,8 +3844,6 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                         "Linking the datasource item not possible", 
                         "Please ensure that you have selected "\
                             "the proper items")            
-
-
 
         self.postExecute()
             

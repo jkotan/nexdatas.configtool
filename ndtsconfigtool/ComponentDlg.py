@@ -179,6 +179,10 @@ class Component(object):
         ## tag counter
         self._tagCnt = 0
 
+    ## provides attribute flag    
+    # \returns flag if all attributes have to be shown    
+    def getAttrFlag(self):
+        return self._allAttributes
 
     ## checks if not saved
     # \returns True if it is not saved     
@@ -1050,7 +1054,8 @@ class Component(object):
 
                         
                 self.view.model().emit(
-                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"), 
+                    index, index)
                 self.view.expand(index)
                 self._dsPath = dsFile
 

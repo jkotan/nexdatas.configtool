@@ -17,7 +17,9 @@
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndtsconfigtool nexdatas
 ## \file ConfigurationServer.py
-# Class for merging DOM component trees
+# Class for connecting to configuration server
+
+""" Provides connects to configuration server"""
 
 try:
     import PyTango
@@ -27,9 +29,9 @@ except ImportError, e:
     PYTANGO_AVAILABLE = False
     print "PyTango is not available: %s" % e
 
-
-from ConnectDlg import  ConnectDlg
 import time
+
+from .ConnectDlg import  ConnectDlg
 
 ## configuration server
 class ConfigurationServer(object):
@@ -40,7 +42,7 @@ class ConfigurationServer(object):
         self.device = None
 
         ## host name of tango device
-        self.host= None
+        self.host = None
 
         ## port of tango device
         self.port = None
@@ -82,11 +84,11 @@ class ConfigurationServer(object):
                 try:
                     if self._proxy.state() != PyTango.DevState.RUNNING:
                         found = True
-                except Exception,e:
+                except Exception:
                     
                     time.sleep(0.01)
                     found = False
-                cnt +=1
+                cnt += 1
 
 
             if found:    
@@ -220,8 +222,6 @@ class ConfigurationServer(object):
             if self._proxy.State() == PyTango.DevState.OPEN:
                 self._proxy.Close()
                 self.connected = False
-#            if self._proxy.State() == PyTango.DevState.RUNNING:
-#                print "Configuration server is still runnning therefore it cannot be closed."
                 
             
 ## test function
@@ -236,6 +236,7 @@ def test():
     cs.port = 10000
     cs.open() 
     cs.close()
+    app.exit()
 
 if __name__ == "__main__":
     test()

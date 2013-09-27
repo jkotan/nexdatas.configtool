@@ -19,20 +19,19 @@
 ## \file FieldDlg.py
 # Field dialog class
 
-import re
-from PyQt4.QtCore import (SIGNAL, QString, QVariant, Qt, QModelIndex)
-from PyQt4.QtGui import (QMessageBox, QTableWidgetItem)
-from ui.ui_fielddlg import Ui_FieldDlg
-from PyQt4.QtXml import (QDomDocument, QDomNode)
-
-
-from AttributeDlg import AttributeDlg
-from DimensionsDlg import DimensionsDlg
+""" field widget """
 
 import copy
 
-from NodeDlg import NodeDlg 
-from DomTools import DomTools
+from PyQt4.QtCore import (SIGNAL, QString, QVariant, Qt, QModelIndex)
+from PyQt4.QtGui import (QMessageBox, QTableWidgetItem)
+
+
+from .ui.ui_fielddlg import Ui_FieldDlg
+from .AttributeDlg import AttributeDlg
+from .DimensionsDlg import DimensionsDlg
+from .NodeDlg import NodeDlg 
+from .DomTools import DomTools
 
 ## dialog defining a field tag
 class FieldDlg(NodeDlg):
@@ -65,7 +64,8 @@ class FieldDlg(NodeDlg):
 
 
         ## allowed subitems
-        self.subItems = ["attribute", "datasource", "doc", "dimensions", "enumeration", "strategy"]
+        self.subItems = ["attribute", "datasource", "doc", "dimensions", 
+                         "enumeration", "strategy"]
         
         ## user interface
         self.ui = Ui_FieldDlg()
@@ -146,13 +146,13 @@ class FieldDlg(NodeDlg):
             label = self.dimensions.__str__()
             self.ui.dimLabel.setText("%s" % label.replace('None','*'))
         elif self.rank > 0:
-            label = [None for r in range(self.rank)].__str__()
+            label = ([None]*(self.rank)).__str__()
             self.ui.dimLabel.setText("%s" % label.replace('None','*'))
         else:    
             self.ui.dimLabel.setText("[]")
             
 
-        self.__dimensions =[]
+        self.__dimensions = []
         for dm in self.dimensions:
             self.__dimensions.append(dm)
 
@@ -175,13 +175,20 @@ class FieldDlg(NodeDlg):
 
         self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.ui.attributeTableWidget, 
-                     SIGNAL("itemChanged(QTableWidgetItem*)"), self.__tableItemChanged)
-        self.connect(self.ui.addPushButton, SIGNAL("clicked()"), self.__addAttribute)
-        self.connect(self.ui.removePushButton, SIGNAL("clicked()"), self.__removeAttribute)
-        self.connect(self.ui.dimPushButton, SIGNAL("clicked()"), self.__changeDimensions)
+                     SIGNAL("itemChanged(QTableWidgetItem*)"), 
+                     self.__tableItemChanged)
+        self.connect(self.ui.addPushButton, SIGNAL("clicked()"), 
+                     self.__addAttribute)
+        self.connect(self.ui.removePushButton, SIGNAL("clicked()"), 
+                     self.__removeAttribute)
+        self.connect(self.ui.dimPushButton, SIGNAL("clicked()"), 
+                     self.__changeDimensions)
 
-        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
-        self.connect(self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"), self.__currentIndexChanged)
+        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), 
+                     self.__updateUi)
+        self.connect(self.ui.typeComboBox, 
+                     SIGNAL("currentIndexChanged(QString)"), 
+                     self.__currentIndexChanged)
 
         self.populateAttributes()
 
@@ -195,7 +202,6 @@ class FieldDlg(NodeDlg):
         if not self.node:
             return
         attributeMap = self.node.attributes()
-        nNode = unicode(self.node.nodeName())
 
         self.name = unicode(attributeMap.namedItem("name").nodeValue() \
                                 if attributeMap.contains("name") else "")
@@ -212,7 +218,8 @@ class FieldDlg(NodeDlg):
         for i in range(attributeMap.count()):
             attribute = attributeMap.item(i)
             attrName = unicode(attribute.nodeName())
-            if attrName != "name" and attrName != "type" and attrName != "units":
+            if attrName != "name" and attrName != "type" \
+                    and attrName != "units":
                 self.attributes[attrName] = unicode(attribute.nodeValue())
                 self.__attributes[attrName] = unicode(attribute.nodeValue())
 
@@ -233,8 +240,6 @@ class FieldDlg(NodeDlg):
             self.rank = 0
         if self.rank > 0:
             child = dimens.firstChild()
-            maxIndex = 0
-            lengths = {}
             while not child.isNull():
                 if child.isElement() and child.nodeName() == "dim":
                     attributeMap = child.attributes()
@@ -242,13 +247,17 @@ class FieldDlg(NodeDlg):
                     value = None
                     try:                        
                         if attributeMap.contains("index"):
-                            index = int(attributeMap.namedItem("index").nodeValue())
+                            index = int(
+                                attributeMap.namedItem("index").nodeValue())
                         if attributeMap.contains("value"):
-                            value = int(attributeMap.namedItem("value").nodeValue())
+                            value = int(
+                                attributeMap.namedItem("value").nodeValue())
                     except:
                         pass
-                    if index < 1: index = None
-                    if value < 1: value = None
+                    if index < 1: 
+                        index = None
+                    if value < 1: 
+                        value = None
                     if index is not None:
                         while len(self.dimensions)< index:
                             self.dimensions.append(None)
@@ -274,19 +283,21 @@ class FieldDlg(NodeDlg):
     def __addAttribute(self):
         aform  = AttributeDlg()
         if aform.exec_():
-            name = aform.name
-            value = aform.value
             
             if not aform.name in self.__attributes.keys():
                 self.__attributes[aform.name] = aform.value
                 self.populateAttributes(aform.name)
             else:
-                QMessageBox.warning(self, "Attribute name exists", "To change the attribute value, please edit the value in the attribute table")
-                
+                QMessageBox.warning(
+                    self, "Attribute name exists", 
+                    "To change the attribute value, "\
+                        "please edit the value in the attribute table")
+                    
 
 
     ## changing dimensions of the field
-    #  \brief It runs the Dimensions Dialog and fetches rank and dimensions from it
+    #  \brief It runs the Dimensions Dialog and fetches rank 
+    #         and dimensions from it
     def __changeDimensions(self):
         dform  = DimensionsDlg( self)
         dform.rank = self.rank
@@ -295,7 +306,7 @@ class FieldDlg(NodeDlg):
         if dform.exec_():
             self.rank = dform.rank
             if self.rank:
-                self.__dimensions = [ln for ln in dform.lengths]
+                self.__dimensions = [dm for dm in dform.lengths]
             else:    
                 self.__dimensions = []
             label = self.__dimensions.__str__()
@@ -307,7 +318,8 @@ class FieldDlg(NodeDlg):
     ## takes a name of the current attribute
     # \returns name of the current attribute            
     def __currentTableAttribute(self):
-        item = self.ui.attributeTableWidget.item(self.ui.attributeTableWidget.currentRow(), 0)
+        item = self.ui.attributeTableWidget.item(
+            self.ui.attributeTableWidget.currentRow(), 0)
         if item is None:
             return None
         return item.data(Qt.UserRole).toString()
@@ -319,17 +331,20 @@ class FieldDlg(NodeDlg):
         attr = self.__currentTableAttribute()
         if attr is None:
             return
-        if QMessageBox.question(self, "Attribute - Remove",
-                                "Remove attribute: %s = \'%s\'".encode() %  (attr, self.__attributes[unicode(attr)]),
-                                QMessageBox.Yes | QMessageBox.No,
-                                QMessageBox.Yes ) == QMessageBox.No :
+        if QMessageBox.question(
+            self, "Attribute - Remove",
+            "Remove attribute: %s = \'%s\'".encode() %  (
+                attr, self.__attributes[unicode(attr)]),
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.Yes ) == QMessageBox.No :
             return
         if unicode(attr) in self.__attributes.keys():
             self.__attributes.pop(unicode(attr))
             self.populateAttributes()
 
     ## changes the current value of the attribute        
-    # \brief It changes the current value of the attribute and informs the user that attribute names arenot editable
+    # \brief It changes the current value of the attribute and informs 
+    #        the user that attribute names arenot editable
     def __tableItemChanged(self, item):
         attr = self.__currentTableAttribute()
         if unicode(attr)  not in self.__attributes.keys():
@@ -338,7 +353,10 @@ class FieldDlg(NodeDlg):
         if column == 1:
             self.__attributes[unicode(attr)] = unicode(item.text())
         if column == 0:
-            QMessageBox.warning(self, "Attribute name is not editable", "To change the attribute name, please remove the attribute and add the new one")
+            QMessageBox.warning(
+                self, "Attribute name is not editable", 
+                "To change the attribute name, "\
+                    "please remove the attribute and add the new one")
         self.populateAttributes()
 
     ## fills in the attribute table      
@@ -361,7 +379,8 @@ class FieldDlg(NodeDlg):
                 selected = item2
         self.ui.attributeTableWidget.setSortingEnabled(True)
         self.ui.attributeTableWidget.resizeColumnsToContents()
-        self.ui.attributeTableWidget.horizontalHeader().setStretchLastSection(True)
+        self.ui.attributeTableWidget.horizontalHeader().\
+            setStretchLastSection(True)
         if selected is not None:
             selected.setSelected(True)
             self.ui.attributeTableWidget.setCurrentItem(selected)
@@ -397,8 +416,10 @@ class FieldDlg(NodeDlg):
             while not child.isNull():
                 if child.nodeName() == unicode(newElement.nodeName()):
                     QMessageBox.warning(
-                        self, "%s exists" % singles[str(newElement.nodeName())], 
-                        "To add a new %s please remove the old one" % newElement.nodeName())
+                        self, 
+                        "%s exists" % singles[str(newElement.nodeName())],
+                        "To add a new %s please remove the old one" \
+                            % newElement.nodeName())
                     return False
                 child = child.nextSibling()    
 
@@ -408,7 +429,8 @@ class FieldDlg(NodeDlg):
         
 
     ## applys input text strings
-    # \brief It copies the field name and type from lineEdit widgets and apply the dialog
+    # \brief It copies the field name and type from lineEdit widgets 
+    #        and apply the dialog
     def apply(self):
         self.name = unicode(self.ui.nameLineEdit.text())
         self.units = unicode(self.ui.unitsLineEdit.text())
@@ -419,14 +441,15 @@ class FieldDlg(NodeDlg):
         if self.nexusType ==  'other ...':
             self.nexusType =  unicode(self.ui.typeLineEdit.text())
         elif self.nexusType ==  'None':    
-            self.nexusType =  u'';
+            self.nexusType =  u''
 
 
 
         self.doc = unicode(self.ui.docTextEdit.toPlainText())
 
         index = self.view.currentIndex()
-        finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
+        finalIndex = self.view.model().createIndex(
+            index.row(), 2, index.parent().internalPointer())
 
         self.view.expand(index)    
 
@@ -444,14 +467,16 @@ class FieldDlg(NodeDlg):
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         self.view.expand(index)    
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                               index,finalIndex)
+        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                               index, index)
 
         
     ## updates the Node
     # \brief It sets node from the dialog variables
-    def updateNode(self,index=QModelIndex()):
-        elem=self.node.toElement()
+    def updateNode(self, index=QModelIndex()):
+        elem = self.node.toElement()
 
         mindex = self.view.currentIndex() if not index.isValid() else index   
 
@@ -485,20 +510,22 @@ class FieldDlg(NodeDlg):
                 self.appendElement(newDoc, mindex)
 
         dimens = self.node.firstChildElement(QString("dimensions"))           
-        if not self.dimensions and dimens and dimens.nodeName() == "dimensions":
-            self.removeElement(dimens,mindex)
+        if not self.dimensions and dimens \
+                and dimens.nodeName() == "dimensions":
+            self.removeElement(dimens, mindex)
         elif self.dimensions:
             newDimens = self.root.createElement(QString("dimensions"))
             newDimens.setAttribute(QString("rank"), QString(unicode(self.rank)))
             dimDefined = True
-            for i in range(min(self.rank,len(self.dimensions))):
+            for i in range(min(self.rank, len(self.dimensions))):
                 if self.dimensions[i] is None:
                     dimDefined = False
             if dimDefined:
-                for i in range(min(self.rank,len(self.dimensions))):
+                for i in range(min(self.rank, len(self.dimensions))):
                     dim = self.root.createElement(QString("dim"))
                     dim.setAttribute(QString("index"), QString(unicode(i+1)))
-                    dim.setAttribute(QString("value"), QString(unicode(self.dimensions[i])))
+                    dim.setAttribute(QString("value"), 
+                                     QString(unicode(self.dimensions[i])))
                     newDimens.appendChild(dim)
                 
             if dimens and dimens.nodeName() == "dimensions" :
@@ -518,11 +545,12 @@ if __name__ == "__main__":
     form.name = 'distance'
     form.nexusType = 'NX_FLOAT'
     form.units = 'cm'
-    form.attributes = {"signal":"1","long_name":"source detector distance", "interpretation":"spectrum"}
+    form.attributes = {"signal":"1", "long_name":"source detector distance",
+                       "interpretation":"spectrum"}
     form.doc = """Distance between the source and the mca detector.
 It should be defined by client."""
     form.dimensions = [3]
-    form.value ="1.23,3.43,4.23"
+    form.value = "1.23,3.43,4.23"
     form.createGUI()
     form.show()
     app.exec_()
@@ -542,8 +570,8 @@ It should be defined by client."""
         print " rank = %s" % ( form.rank )
     if form.dimensions:
         print "Dimensions:"
-        for row, ln in enumerate(form.dimensions):
-            print  " %s: %s " % (row+1, ln)
+        for mrow, mln in enumerate(form.dimensions):
+            print  " %s: %s " % (mrow+1, mln)
             
     if form.doc:
         print "Doc: \n%s" % form.doc

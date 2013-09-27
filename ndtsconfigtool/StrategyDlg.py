@@ -19,12 +19,13 @@
 ## \file StrategyDlg.py
 # Strategy dialog class
 
-import re
-from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
-from ui.ui_strategydlg import Ui_StrategyDlg
+""" strategy widget """
 
-from NodeDlg import NodeDlg 
-from DomTools import DomTools
+from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
+
+from .ui.ui_strategydlg import Ui_StrategyDlg
+from .NodeDlg import NodeDlg 
+from .DomTools import DomTools
 
 ## dialog defining an attribute
 class StrategyDlg(NodeDlg):
@@ -52,7 +53,7 @@ class StrategyDlg(NodeDlg):
         self.shuffle = True
 
         ## allowed subitems
-        self.subItems=[ "doc"]
+        self.subItems = ["doc"]
 
         ## writing can fail 
         self.canfail = False
@@ -106,8 +107,10 @@ class StrategyDlg(NodeDlg):
 
 #        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(self.ui.modeComboBox, SIGNAL("currentIndexChanged(QString)"), self.setFrames)
-        self.connect(self.ui.compressionCheckBox, SIGNAL("stateChanged(int)"), self.setCompression)
+        self.connect(self.ui.modeComboBox, 
+                     SIGNAL("currentIndexChanged(QString)"), self.setFrames)
+        self.connect(self.ui.compressionCheckBox, 
+                     SIGNAL("stateChanged(int)"), self.setCompression)
 
         self.setCompression(self.ui.compressionCheckBox.isChecked())
 
@@ -183,21 +186,27 @@ class StrategyDlg(NodeDlg):
             return
         attributeMap = self.node.attributes()
 
-        self.trigger = attributeMap.namedItem("trigger").nodeValue() if attributeMap.contains("trigger") else ""
-        self.grows = attributeMap.namedItem("grows").nodeValue() if attributeMap.contains("grows") else ""
-        self.mode = attributeMap.namedItem("mode").nodeValue() if attributeMap.contains("mode") else ""
+        self.trigger = attributeMap.namedItem("trigger").nodeValue() \
+            if attributeMap.contains("trigger") else ""
+        self.grows = attributeMap.namedItem("grows").nodeValue() \
+            if attributeMap.contains("grows") else ""
+        self.mode = attributeMap.namedItem("mode").nodeValue() \
+            if attributeMap.contains("mode") else ""
 
         if attributeMap.contains("canfail"):
             self.canfail = \
-                False if str(attributeMap.namedItem("canfail").nodeValue()).upper() == "FALSE"  else True
+                False if str(attributeMap.namedItem("canfail").nodeValue()
+                             ).upper() == "FALSE"  else True
 
         if attributeMap.contains("compression"):
             self.compression = \
-                False if str(attributeMap.namedItem("compression").nodeValue()).upper() == "FALSE"  else True
+                False if str(attributeMap.namedItem("compression").nodeValue()
+                             ).upper() == "FALSE"  else True
 
             if attributeMap.contains("shuffle"):
                 self.shuffle = \
-                    False if str(attributeMap.namedItem("shuffle").nodeValue()).upper() == "FALSE"  else True
+                    False if str(attributeMap.namedItem("shuffle").nodeValue()
+                                 ).upper() == "FALSE"  else True
 
             if attributeMap.contains("rate"):
                 rate = int(attributeMap.namedItem("rate").nodeValue())
@@ -219,7 +228,8 @@ class StrategyDlg(NodeDlg):
 
 
     ## accepts input text strings
-    # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
+    # \brief It copies the attribute name and value from 
+    #        lineEdit widgets and accept the dialog
     def apply(self):
 
         self.trigger = ''
@@ -231,7 +241,7 @@ class StrategyDlg(NodeDlg):
             self.trigger = unicode(self.ui.triggerLineEdit.text())
             grows = int(self.ui.growsSpinBox.value())
             if grows > 0:
-                self.grows= str(grows)
+                self.grows = str(grows)
         if self.mode ==  'POSTRUN':
             self.postrun = unicode(self.ui.postLineEdit.text())
 
@@ -246,28 +256,31 @@ class StrategyDlg(NodeDlg):
         self.doc = unicode(self.ui.docTextEdit.toPlainText())
 
         index = self.view.currentIndex()
-        finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
+        finalIndex = self.view.model().createIndex(
+            index.row(), 2, index.parent().internalPointer())
 
 
         self.view.expand(index)    
         if self.node  and self.root and self.node.isElement():
             self.updateNode(index)
         if  index.column() != 0:
-            index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+            index = self.view.model().index(
+                index.row(), 0, index.parent())
+        self.view.model().emit(SIGNAL(
+                "dataChanged(QModelIndex,QModelIndex)"), index, finalIndex)
         self.view.expand(index)    
 
 
 
     ## updates the Node
     # \brief It sets node from the dialog variables
-    def updateNode(self,index=QModelIndex()):
-        elem=self.node.toElement()
+    def updateNode(self, index=QModelIndex()):
+        elem = self.node.toElement()
 
         mindex = self.view.currentIndex() if not index.isValid() else index   
 
         attributeMap = self.node.attributes()
-        for i in range(attributeMap.count()):
+        for _ in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         elem.setAttribute(QString("mode"), QString(self.mode))
 
@@ -280,7 +293,8 @@ class StrategyDlg(NodeDlg):
             elem.setAttribute(QString("canfail"), QString("true"))
         if self.compression:
             elem.setAttribute(QString("compression"), QString("true"))
-            elem.setAttribute(QString("shuffle"), QString("true") if self.shuffle else "false" )
+            elem.setAttribute(QString("shuffle"), QString("true") \
+                                  if self.shuffle else "false" )
             elem.setAttribute(QString("rate"), QString(str(self.rate)))
 
         self.replaceText(mindex, unicode(self.postrun))

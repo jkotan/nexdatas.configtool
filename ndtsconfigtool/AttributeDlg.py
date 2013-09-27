@@ -19,12 +19,13 @@
 ## \file AttributeDlg.py
 # Attribute dialog class
 
-import re
+""" attribute dialog """
+
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import (QDialog, QDialogButtonBox, QMessageBox)
-from ui.ui_attributedlg import Ui_AttributeDlg
 
-from Errors import CharacterError
+from .ui.ui_attributedlg import Ui_AttributeDlg
+from .Errors import CharacterError
 
 ## dialog defining a tag attribute 
 class AttributeDlg(QDialog):
@@ -45,7 +46,8 @@ class AttributeDlg(QDialog):
         
         self.__updateUi()
 
-        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
+        self.connect(self.ui.nameLineEdit, 
+                     SIGNAL("textEdited(QString)"), self.__updateUi)
 
 
     ## updates attribute user interface
@@ -57,17 +59,19 @@ class AttributeDlg(QDialog):
 
 
     ## accepts input text strings
-    # \brief It copies the attribute name and value from lineEdit widgets and accept the dialog
+    # \brief It copies the attribute name and value from lineEdit widgets 
+    #        and accept the dialog
     def accept(self):
         name = unicode(self.ui.nameLineEdit.text())
         
         try:
             if 1 in [c in name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
-                raise CharacterError, ("Name contains one of forbidden characters") 
+                raise CharacterError, \
+                    ("Name contains one of forbidden characters")
             if len(name) == 0:
                 raise CharacterError, ("Empty Name") 
             if name[0] == '-':
-                raise CharacterError, ("The first character of Name is '-'") 
+                raise CharacterError, ("The first character of Name is '-'")
 
         except CharacterError, e:   
             QMessageBox.warning(self, "Character Error", unicode(e))

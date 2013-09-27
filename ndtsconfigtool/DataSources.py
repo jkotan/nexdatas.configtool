@@ -166,7 +166,10 @@ class DBSource(object):
                      } 
         self.__idbmap = dict(zip(self.__dbmap.values(), self.__dbmap.keys()))
         
-
+    ## clears widget parameters
+    def clear(self):
+        self.dbParam = {}
+        
 
     ## checks if widget button should be enable
     # \returns if widget button should be enable

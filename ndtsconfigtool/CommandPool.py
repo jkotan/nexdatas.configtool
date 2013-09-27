@@ -19,6 +19,8 @@
 ## \file CommandPool.py
 # user pool commands of GUI application
 
+""" pool with commands """
+
 from PyQt4.QtGui import  (QAction, QIcon) 
 from PyQt4.QtCore import (QString, SIGNAL)
 
@@ -121,8 +123,9 @@ class CommandPool(object):
     # \param checkable if command/action checkable
     # \param signal action signal   
     # \returns the action instance
-    def createCommand(self, text, name, args, command=None,  shortcut=None, icon=None,
-                     tip=None, checkable=False, signal="triggered()"):
+    def createCommand(self, text, name, args, command=None,  
+                      shortcut=None, icon=None,
+                      tip=None, checkable=False, signal="triggered()"):
         action = QAction(text, self._origin)
         if icon is not None:
             action.setIcon(QIcon(":/%s.png" % unicode(icon).strip()))
@@ -204,5 +207,4 @@ class CommandPool(object):
         
 
 if __name__ == "__main__":   
-
-    import sys
+    pass

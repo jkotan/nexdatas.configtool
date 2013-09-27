@@ -19,10 +19,12 @@
 ## \file DimensionsDlg.py
 # Dimensions dialog class
 
-import re
+""" dimensions widget """
+
 from PyQt4.QtCore import (SIGNAL, Qt, QVariant)
 from PyQt4.QtGui import (QTableWidgetItem, QMessageBox, QDialog)
-from ui.ui_dimensionsdlg import Ui_DimensionsDlg
+
+from .ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
 
 ## dialog defining a dimensions tag
@@ -54,7 +56,7 @@ class DimensionsDlg(QDialog):
                 self.rank = int(self.rank)
                 for i, ln in enumerate(self.lengths):    
                     if ln:
-                        self.lengths[i]=int(ln)
+                        self.lengths[i] = int(ln)
                         if self.lengths[i] < 1:
                             self.lengths[i] = None
                     else:        
@@ -71,14 +73,16 @@ class DimensionsDlg(QDialog):
         
         self.ui.rankSpinBox.setValue(self.rank)    
 
-        self.connect(self.ui.dimTableWidget, SIGNAL("itemChanged(QTableWidgetItem*)"),
+        self.connect(self.ui.dimTableWidget, 
+                     SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.__tableItemChanged)
 
         self.ui.dimTableWidget.setSortingEnabled(False)
         self.__populateLengths()
         self.ui.rankSpinBox.setFocus()
 
-        self.connect(self.ui.rankSpinBox, SIGNAL("valueChanged(int)"), self.__valueChanged)
+        self.connect(self.ui.rankSpinBox, 
+                     SIGNAL("valueChanged(int)"), self.__valueChanged)
 
                 
     ## takes a name of the current dim
@@ -106,14 +110,15 @@ class DimensionsDlg(QDialog):
                 else:
                     self.lengths[row] = None
             except:
-                QMessageBox.warning(self, "Value Error", "Wrong value of the edited length")
+                QMessageBox.warning(
+                    self, "Value Error", "Wrong value of the edited length")
                 
         self.__populateLengths()
 
 
     ## calls updateUi when the name text is changing
     # \param text the edited text   
-    def __valueChanged(self, text):
+    def __valueChanged(self):
         self.rank = int(self.ui.rankSpinBox.value())
         self.__populateLengths(self.rank-1)
 
@@ -131,7 +136,8 @@ class DimensionsDlg(QDialog):
         headers = ["Length"]
         self.ui.dimTableWidget.setColumnCount(len(headers))
         self.ui.dimTableWidget.setHorizontalHeaderLabels(headers)	
-        self.ui.dimTableWidget.setVerticalHeaderLabels( [unicode(l+1) for l in range(self.rank)] )	
+        self.ui.dimTableWidget.setVerticalHeaderLabels( 
+            [unicode(l+1) for l in range(self.rank)] )	
         for row, ln in enumerate(self.lengths):
             if ln:
                 item = QTableWidgetItem(unicode(ln))
@@ -142,7 +148,7 @@ class DimensionsDlg(QDialog):
                 selected = item
             self.ui.dimTableWidget.setItem(row, 0, item)
         self.ui.dimTableWidget.resizeColumnsToContents()
-        self.ui.dimTableWidget.horizontalHeader().setStretchLastSection(True);
+        self.ui.dimTableWidget.horizontalHeader().setStretchLastSection(True)
         if selected is not None:
             selected.setSelected(True)
             self.ui.dimTableWidget.setCurrentItem(selected)
@@ -152,7 +158,8 @@ class DimensionsDlg(QDialog):
 
 
     ## accepts input text strings
-    # \brief It copies the dimensions name and type from lineEdit widgets and accept the dialog
+    # \brief It copies the dimensions name and type from lineEdit widgets 
+    #        and accept the dialog
     def accept(self):
         while len(self.lengths) > self.rank:
             self.lengths.pop()
@@ -167,8 +174,8 @@ if __name__ == "__main__":
     ## dimensions form
     form = DimensionsDlg()
     form.rank = 2
-    form.lengths = [25,27]
-#    form.lengths = [None,3]
+    form.lengths = [25, 27]
+#    form.lengths = [None, 3]
     form.createGUI()
     form.show()
     app.exec_()
@@ -178,8 +185,8 @@ if __name__ == "__main__":
             print "Dimensions: rank = %s" % ( form.rank )
         if form.lengths:
             print "Lengths:"
-            for row, ln in enumerate(form.lengths):
-                print  " %s: %s " % (row+1, ln)
+            for mrow, mln in enumerate(form.lengths):
+                print  " %s: %s " % (mrow+1, mln)
         if form.doc:
             print "Doc: \n%s" % form.doc
     

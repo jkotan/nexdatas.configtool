@@ -19,15 +19,17 @@
 ## \file Merger.py
 # Class for merging DOM component trees
 
+""" merger of different configuration trees """
+
 
 from PyQt4.QtXml import QDomNode
 
 
-from PyQt4.QtCore import QString, QThread, SIGNAL
-from PyQt4.QtGui import QDialog, QWidget, QLabel, QVBoxLayout, QPushButton
+from PyQt4.QtCore import QThread, SIGNAL
+from PyQt4.QtGui import QDialog, QLabel, QVBoxLayout, QPushButton
 
-from Errors import IncompatibleNodeError
-from DomTools import DomTools
+from .Errors import IncompatibleNodeError
+from .DomTools import DomTools
 
 
         
@@ -37,6 +39,9 @@ class MergerDlg(QDialog):
     # \param parent dialog
     def __init__(self,  parent=None):
         super(MergerDlg, self).__init__(parent)
+
+        ## interrupt button
+        self.interruptButton = None
 
     ## creates GUI
     # \brief It creates dialog with a merging label 
@@ -65,25 +70,28 @@ class Merger(QThread):
         ## DOM root node
         self._root = root
         ## tags which cannot have the same siblings
-        self._singles =['strategy', 'dimensions', 'definition',
-                       'record', 'device', 'query', 'database']
+        self._singles = ['strategy', 'dimensions', 'definition',
+                         'record', 'device', 'query', 'database']
 
         ## allowed children of the given nodes
-        self._children ={
-#            "datasource":["record", "doc", "device", "database", "query", "datasource","result"],
-            "attribute":["datasource", "strategy", "enumeration", "doc", "dimensions"],
-            "definition":["group", "field", "attribute", "link", "component", "doc", "symbols"],
+        self._children = {
+            "attribute":["datasource", "strategy", "enumeration", "doc", 
+                         "dimensions"],
+            "definition":["group", "field", "attribute", "link", "component", 
+                          "doc", "symbols"],
             "dimensions":["dim", "doc"],
-            "field":["attribute", "datasource", "doc", "dimensions", "enumeration", "strategy"],
-            "group":["group", "field", "attribute", "link", "component", "doc"],
+            "field":["attribute", "datasource", "doc", "dimensions", 
+                     "enumeration", "strategy"],
+            "group":["group", "field", "attribute", "link", "component", 
+                     "doc"],
             "link":["doc"]
             }
 
         ## with unique text
-        self.uniqueText = ['field','attribute','query','strategy','result']
+        self.uniqueText = ['field', 'attribute', 'query', 'strategy', 'result']
 
         ## required attributes
-        self._requiredAttr ={
+        self._requiredAttr = {
             "attribute":["name"],
             "definition":[],
             "dimensions":["rank"],
@@ -100,7 +108,7 @@ class Merger(QThread):
             }
 
         ## it contains an exception instance when the exception was raised
-        self.exception = ''
+        self.exception = None
         ## it has to be set on False when we want to break merging
         self.running = True
         ## selected node
@@ -149,31 +157,36 @@ class Merger(QThread):
 
         if name1 != name2 and name1 and name2:
             if tagName in self._singles: 
-                raise IncompatibleNodeError("Incompatible element attributes  %s: " % unicode(tags),
-                                            [elem1, elem2])
+                raise IncompatibleNodeError(
+                    "Incompatible element attributes  %s: " % unicode(tags),
+                    [elem1, elem2])
             return False
 
         for i1 in range(attr1.count()):
             at1 = attr1.item(i1)
             for i2 in range(attr2.count()):
                 at2 = attr2.item(i2)
-                if at1.nodeName() == at2.nodeName() and at1.nodeValue() != at2.nodeValue():
+                if at1.nodeName() == at2.nodeName() and \
+                        at1.nodeValue() != at2.nodeValue():
                     status = False
                     tags.append((unicode(self._getAncestors(at1)),
-                                 unicode(at1.nodeValue()) , unicode(at2.nodeValue())))
+                                 unicode(at1.nodeValue()) , 
+                                 unicode(at2.nodeValue())))
 
                     
             
 
-        if not status  and (tagName in self._singles or (name1 and name1 == name2)): 
-            raise IncompatibleNodeError("Incompatible element attributes  %s: " % unicode(tags),
-                                        [elem1, elem2])
+        if not status  and (tagName in self._singles \
+                                or (name1 and name1 == name2)): 
+            raise IncompatibleNodeError(
+                "Incompatible element attributes  %s: " % unicode(tags),
+                [elem1, elem2])
                 
 
         if tagName in self.uniqueText:
-            text1=unicode(DomTools.getText(elem1)).strip()
-            text2=unicode(DomTools.getText(elem2)).strip()         
-            ## TODO white spaces?
+            text1 = unicode(DomTools.getText(elem1)).strip()
+            text2 = unicode(DomTools.getText(elem2)).strip()         
+
             if text1 != text2 and text1 and text2:
                 raise IncompatibleNodeError(
                     "Incompatible \n%s element value\n%s \n%s "  \
@@ -187,15 +200,13 @@ class Merger(QThread):
     ## merges the given node elements
     # \param elem1 first node element
     # \param elem2 secound node element
-    def _mergeNodes(self,elem1, elem2):
-        tagName = elem1.nodeName()
-        attr1 = elem1.attributes()
+    def _mergeNodes(self, elem1, elem2):
         attr2 = elem2.attributes()
         texts = []
 
         for i2 in range(attr2.count()):
             at2 = attr2.item(i2)
-            elem1.setAttribute(at2.nodeName(),at2.nodeValue())
+            elem1.setAttribute(at2.nodeName(), at2.nodeValue())
         
             
         child1 = elem1.firstChild()
@@ -236,16 +247,19 @@ class Merger(QThread):
                 if attr1.contains("name") else ""
             if elem1.nodeName() in self._requiredAttr.keys():
                 for at1 in self._requiredAttr[unicode(elem1.nodeName())]:
-                    if not attr1.contains(at1) or not unicode(attr1.namedItem(at1).nodeValue()).strip():
+                    if not attr1.contains(at1) \
+                            or not unicode(attr1.namedItem(at1).nodeValue()
+                                           ).strip():
                         message = "Not defined %s attribute of %s%s " \
-                            % (at1, unicode(elem1.nodeName()), (":"+ unicode(name1)) if unicode(name1).strip() else  " ")
+                            % (at1, unicode(elem1.nodeName()), 
+                               (":"+ unicode(name1)) \
+                                   if unicode(name1).strip() else  " ")
                         raise IncompatibleNodeError(message, [elem1])
         
 
     ## merge all children of the given DOM node
     # \param node the given DOM node
     def _mergeChildren(self, node):
-        status = False
         if node:
             self._hasAttributes(node)
 
@@ -263,7 +277,7 @@ class Merger(QThread):
                     if child1 != child2:
                         elem2 = child2.toElement()
                         if elem1 is not None and elem2 is not None:
-                            if self._areMergeable(elem1,elem2):
+                            if self._areMergeable(elem1, elem2):
                                 self._mergeNodes(elem1, elem2)
                                 nchildren -= 1
                                 c2 -= 1
@@ -274,20 +288,22 @@ class Merger(QThread):
             elem = node.toElement()
             nName = unicode(elem.nodeName()) if elem else ""
 
-            if elem and nName =='query':
+            if elem and nName == 'query':
                 if not unicode(elem.text()).strip():
                     raise IncompatibleNodeError(
-                        "Empty content of the query tag: %s" % (self._getAncestors(elem)),
+                        "Empty content of the query tag: %s" \
+                            % (self._getAncestors(elem)),
                         [elem])
             
             if child:
                 while not child.isNull() and self.running:
                     if nName and nName in self._children.keys():
                         childElem = child.toElement()
-                        cName = unicode(childElem.nodeName()) if childElem  else ""
+                        cName = unicode(childElem.nodeName()) \
+                            if childElem else ""
                         if cName and cName not in self._children[nName]:
                             raise IncompatibleNodeError(
-                                "Not allowed <%s> child of \n < %s > \n parent"  \
+                                "Not allowed <%s> child of \n < %s > \n parent"\
                                     % (cName, self._getAncestors(elem)),
                                 [childElem])
                                 
@@ -298,7 +314,8 @@ class Merger(QThread):
         
 
     ## runs thread
-    # \brief It runs the mergeChildren with the root node and catches the exceptions if needed
+    # \brief It runs the mergeChildren with the root node and catches 
+    #        the exceptions if needed
     def run(self):
         if self._root:
             try:
@@ -316,4 +333,4 @@ class Merger(QThread):
 
            
 if __name__ == "__main__":
-    import sys
+    pass

@@ -644,9 +644,9 @@ class Component(object):
     # \param externalClose close action
     # \param externalStore store action
     # \param externalDSLink dsource link action
-    def connectExternalActions(self, externalApply=None , externalSave=None
-                               , externalClose = None , externalStore=None, 
-                               externalDSLink = None  ):
+    def connectExternalActions(self, externalApply=None , externalSave=None,
+                               externalClose = None, externalStore=None, 
+                               externalDSLink = None):
         if externalSave and self.externalSave is None:
             self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                          externalSave)
@@ -747,7 +747,9 @@ class Component(object):
             self.dialog.ui.widget.setFromNode(node)
             self.dialog.ui.widget.createGUI()
             if hasattr(self.dialog.ui.widget,"connectExternalActions"):
-                self.dialog.ui.widget.connectExternalActions(self.externalApply, self.externalDSLink)
+                self.dialog.ui.widget.connectExternalActions(
+                    externalApply=self.externalApply, 
+                    externalDSLink=self.externalDSLink)
             if hasattr(self.dialog.ui.widget,"treeMode"):
                 self.dialog.ui.widget.treeMode()
             self.dialog.ui.widget.view = self.view

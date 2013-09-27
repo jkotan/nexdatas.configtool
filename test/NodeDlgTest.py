@@ -358,7 +358,7 @@ class NodeDlgTest(unittest.TestCase):
 #        form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
-        self.assertEqual(form.connectExternalActions(None,self.myAction),None)
+        self.assertEqual(form.connectExternalActions(externalDSLink=self.myAction),None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -386,7 +386,9 @@ class NodeDlgTest(unittest.TestCase):
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction,self.myAction2),None)
+        self.assertEqual(form.connectExternalActions(
+                self.myAction,
+                externalDSLink=self.myAction2),None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)

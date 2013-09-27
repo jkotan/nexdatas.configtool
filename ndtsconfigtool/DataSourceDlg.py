@@ -451,8 +451,10 @@ class DataSourceMethods(object):
     # \param externalSave save action
     # \param externalClose close action
     # \param externalStore store action
-    def connectExternalActions(self, externalApply=None, externalSave=None,  
-                               externalClose = None, externalStore=None):
+    # \param externalDSLink dsource link action
+    def connectExternalActions(self, externalApply=None , externalSave=None,
+                               externalClose = None, externalStore=None, 
+                               externalDSLink = None):
         if externalSave and self.__datasource.externalSave is None:
             self.__dialog.disconnect(self.__dialog.ui.savePushButton, 
                                      SIGNAL("clicked()"), 
@@ -994,8 +996,10 @@ class DataSource(CommonDataSource):
     # \param externalSave save action
     # \param externalClose close action
     # \param externalStore store action
-    def connectExternalActions(self, externalApply=None, externalSave=None, 
-                               externalClose=None, externalStore=None):
+    # \param externalDSLink dsource link action
+    def connectExternalActions(self, externalApply=None , externalSave=None,
+                               externalClose = None, externalStore=None, 
+                               externalDSLink = None):
         if hasattr(self,"_DataSource__methods")  and self.__methods:
             return self.__methods.connectExternalActions(
                 externalApply, externalSave, externalClose, externalStore)
@@ -1096,14 +1100,17 @@ class DataSourceDlg(CommonDataSourceDlg):
 
     ## connects the save action and stores the apply action
     # \param externalApply apply action
-    # \param externalSave save action 
-    # \param externalClose close action 
-    # \param externalStore store action 
-    def connectExternalActions(self, externalApply=None, externalSave=None, 
-                               externalClose=None, externalStore=None):
+    # \param externalSave save action
+    # \param externalClose close action
+    # \param externalStore store action
+    # \param externalDSLink dsource link action
+    def connectExternalActions(self, externalApply=None , externalSave=None,
+                               externalClose = None, externalStore=None, 
+                               externalDSLink = None):
         if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
             return self.__methods.connectExternalActions(
-                externalApply, externalSave, externalClose, externalStore)
+                externalApply, externalSave, 
+                externalClose, externalStore)
 
 
 if __name__ == "__main__":

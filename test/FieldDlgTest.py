@@ -3849,7 +3849,7 @@ class FieldDlgTest(unittest.TestCase):
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
-        self.assertEqual(form.connectExternalActions(None,self.myAction),None)
+        self.assertEqual(form.connectExternalActions(externalDSLink=self.myAction),None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -3935,7 +3935,7 @@ class FieldDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.nameLineEdit, "namename")
 
         form.show()
-        self.assertEqual(form.connectExternalActions(None,self.myAction),None)
+        self.assertEqual(form.connectExternalActions(externalDSLink=self.myAction),None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)

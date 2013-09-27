@@ -19,6 +19,8 @@
 ## \file ComponentItem.py
 # dom item
 
+""" DOM item for component model"""
+
 ## dialog defining a tag link 
 class ComponentItem(object):
     
@@ -65,7 +67,7 @@ class ComponentItem(object):
         if position < 0 or position + count > self.node.childNodes().count():
             return False
         
-        for i in range(count):
+        for _ in range(count):
             if position < len(self.__childItems):
                 self.__childItems.pop(position)
 
@@ -92,7 +94,6 @@ class ComponentItem(object):
 
 
 if __name__ == "__main__":
-    import sys
 
     from PyQt4.QtXml import QDomNode
 

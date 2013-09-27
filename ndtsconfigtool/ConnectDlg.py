@@ -19,10 +19,12 @@
 ## \file ConnectDlg.py
 # Connect dialog class
 
-import re
+""" server connect widget """
+
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import (QDialog, QMessageBox)
-from ui.ui_connectdlg import Ui_ConnectDlg
+
+from .ui.ui_connectdlg import Ui_ConnectDlg
 
 ## dialog defining a tag connect 
 class ConnectDlg(QDialog):
@@ -50,9 +52,12 @@ class ConnectDlg(QDialog):
         self.__updateUi()
 
 
-        self.connect(self.ui.connectPushButton, SIGNAL("clicked()"), self.accept)
-        self.connect(self.ui.cancelPushButton, SIGNAL("clicked()"), self.reject)
-        self.connect(self.ui.deviceLineEdit, SIGNAL("textEdited(QString)"), self.__updateUi)
+        self.connect(self.ui.connectPushButton, SIGNAL("clicked()"), 
+                     self.accept)
+        self.connect(self.ui.cancelPushButton, SIGNAL("clicked()"), 
+                     self.reject)
+        self.connect(self.ui.deviceLineEdit, 
+                     SIGNAL("textEdited(QString)"), self.__updateUi)
 
         
 
@@ -75,7 +80,8 @@ class ConnectDlg(QDialog):
 
 
     ## accepts input text strings
-    # \brief It copies the connect name and value from lineEdit widgets and accept the dialog
+    # \brief It copies the connect name and value from lineEdit 
+    #        widgets and accept the dialog
     def accept(self):
         device = unicode(self.ui.deviceLineEdit.text()).strip()
         if not device: 
@@ -126,5 +132,6 @@ if __name__ == "__main__":
 
     if form.result():
         if form.device:
-            print "Connect: %s , %s , %s" % ( form.device, form.host, form.port )
+            print "Connect: %s , %s , %s" % \
+                ( form.device, form.host, form.port )
     

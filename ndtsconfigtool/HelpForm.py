@@ -19,13 +19,14 @@
 ## \file HelpForm.py
 # Detail help for Component Designer
 
+""" help widget """
+
 
 
 from PyQt4.QtCore import (QUrl, Qt, SIGNAL, SLOT)
 from PyQt4.QtGui import (QAction, QApplication, QDialog, QIcon,
-        QKeySequence, QLabel, QTextBrowser, QToolBar, QVBoxLayout, QFrame)
+        QKeySequence, QLabel, QTextBrowser, QToolBar, QVBoxLayout)
 
-from qrc import qrc_resources
 
 ## detail help
 class HelpForm(QDialog):
@@ -43,9 +44,12 @@ class HelpForm(QDialog):
         self.createGUI()
         self.createActions()
 
-        self.textBrowser.home()
-
-
+        ## help tool bar
+        self.toolBar = None
+        ## help text Browser
+        self.textBrowser = None
+        ## main label of the help
+        self.pageLabel = None
 
     ##  creates GUI
     # \brief It create dialogs for help dialog

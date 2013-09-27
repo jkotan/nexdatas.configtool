@@ -19,14 +19,15 @@
 ## \file LinkDlg.py
 # Link dialog class
 
-import re
+""" link widget """
+
 from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
 from PyQt4.QtGui import (QMessageBox)
-from ui.ui_linkdlg import Ui_LinkDlg
 
-from NodeDlg import NodeDlg 
-from Errors import CharacterError
-from DomTools import DomTools
+from .ui.ui_linkdlg import Ui_LinkDlg
+from .NodeDlg import NodeDlg 
+from .Errors import CharacterError
+from .DomTools import DomTools
 
 ## dialog defining a tag link 
 class LinkDlg(NodeDlg):
@@ -44,7 +45,7 @@ class LinkDlg(NodeDlg):
         self.doc = u''
 
         ## allowed subitems
-        self.subItems=[ "doc"]
+        self.subItems = ["doc"]
 
         ## user interface
         self.ui = Ui_LinkDlg()
@@ -74,8 +75,11 @@ class LinkDlg(NodeDlg):
         self._updateUi()
 
 
-        self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), self._updateUi)
+        self.connect(
+            self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.connect(
+            self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), 
+            self._updateUi)
 
 
     ## provides the state of the link dialog        
@@ -112,10 +116,13 @@ class LinkDlg(NodeDlg):
         if not self.node:
             return
         attributeMap = self.node.attributes()
-        nNode = unicode(self.node.nodeName())
 
-        self.name = unicode(attributeMap.namedItem("name").nodeValue() if attributeMap.contains("name") else "")
-        self.target = unicode(attributeMap.namedItem("target").nodeValue() if attributeMap.contains("target") else "")
+        self.name = unicode(
+            attributeMap.namedItem("name").nodeValue() \
+                if attributeMap.contains("name") else "")
+        self.target = unicode(
+            attributeMap.namedItem("target").nodeValue() \
+                if attributeMap.contains("target") else "")
  
         doc = self.node.firstChildElement(QString("doc"))           
         text = DomTools.getText(doc)    
@@ -132,15 +139,18 @@ class LinkDlg(NodeDlg):
 
 
     ## accepts input text strings
-    # \brief It copies the link name and target from lineEdit widgets and accept the dialog
+    # \brief It copies the link name and target from lineEdit widgets 
+    #        and accept the dialog
     def apply(self):
         name = unicode(self.ui.nameLineEdit.text())
         
         try:
             if 1 in [c in name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
-                raise CharacterError, ("Name contains one of forbidden characters") 
+                raise CharacterError, \
+                    ("Name contains one of forbidden characters") 
             if name[0] == '-':
-                raise CharacterError, ("The first character of Name is '-'") 
+                raise CharacterError, \
+                    ("The first character of Name is '-'") 
 
         except CharacterError, e:   
             QMessageBox.warning(self, "Character Error", unicode(e))
@@ -151,7 +161,8 @@ class LinkDlg(NodeDlg):
         self.doc = unicode(self.ui.docTextEdit.toPlainText())
 
         index = self.view.currentIndex()
-        finalIndex = self.view.model().createIndex(index.row(),2,index.parent().internalPointer())
+        finalIndex = self.view.model().createIndex(
+            index.row(), 2, index.parent().internalPointer())
         self.view.expand(index)    
 
         if self.node  and self.root and self.node.isElement():
@@ -159,19 +170,20 @@ class LinkDlg(NodeDlg):
                     
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,finalIndex)
+        self.view.model().emit(
+            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, finalIndex)
         self.view.expand(index)    
 
 
     ## updates the Node
     # \brief It sets node from the dialog variables
-    def updateNode(self,index=QModelIndex()):
-        elem=self.node.toElement()
+    def updateNode(self, index=QModelIndex()):
+        elem = self.node.toElement()
         mindex = self.view.currentIndex() if not index.isValid() else index   
 
 
         attributeMap = self.node.attributes()
-        for i in range(attributeMap.count()):
+        for _ in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         if self.name:    
             elem.setAttribute(QString("name"), QString(self.name))

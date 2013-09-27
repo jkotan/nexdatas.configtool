@@ -19,9 +19,11 @@
 ## \file DomTools.py
 # Abstract Node dialog class
 
-from PyQt4.QtGui import QDialog
+"""  DOM parser and tree view tools"""
+
 from PyQt4.QtXml import QDomNode
-from PyQt4.QtCore import (QString, SIGNAL, QModelIndex)
+from PyQt4.QtCore import QString
+
 
 ## abstract node dialog 
 class DomTools(object):
@@ -98,7 +100,7 @@ class DomTools(object):
             while i < children.count():
                 child = children.item(i)
                 if child.nodeType() == QDomNode.TextNode:
-                    if j==0 and text: 
+                    if j == 0 and text: 
                         child.toText().setData(QString(text))
                     else:
                         child.toText().setData(QString(""))
@@ -215,5 +217,5 @@ class DomTools(object):
 
 
 if __name__ == "__main__":
-    import sys
+    pass
     

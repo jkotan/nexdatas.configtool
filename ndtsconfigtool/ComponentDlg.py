@@ -19,30 +19,27 @@
 ## \file ComponentDlg.py
 # component classes 
 
-from PyQt4.QtCore import (SIGNAL, SLOT, QModelIndex, QString, Qt, QFileInfo, QFile, QIODevice, 
-                          QTextStream)
-from PyQt4.QtGui import (QDialog, QWidget, QGridLayout, QApplication, QMenu, QFileDialog,
-                         QMessageBox, QMdiSubWindow )
-from PyQt4.QtXml import (QDomDocument, QDomNode, QXmlDefaultHandler,
-                         QXmlInputSource, QXmlSimpleReader)
-
-from ui.ui_componentdlg import Ui_ComponentDlg
-from FieldDlg import FieldDlg 
-from GroupDlg import GroupDlg 
-from LinkDlg import LinkDlg 
-from RichAttributeDlg import RichAttributeDlg 
-from DataSourceDlg import DataSourceDlg 
-from DimensionsDlg import DimensionsDlg
-from StrategyDlg import StrategyDlg
-from DefinitionDlg import DefinitionDlg
-
-from Merger import Merger, MergerDlg, IncompatibleNodeError
+""" component widget """
 
 import os
-import time 
 
-from ComponentModel import ComponentModel
-from DomTools import DomTools
+from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, Qt, 
+                          QFileInfo, QFile, QIODevice, QTextStream)
+from PyQt4.QtGui import (QDialog, QWidget, QGridLayout, QApplication, 
+                         QMenu, QFileDialog, QMessageBox)
+from PyQt4.QtXml import (QDomDocument)
+
+from .ui.ui_componentdlg import Ui_ComponentDlg
+from .FieldDlg import FieldDlg 
+from .GroupDlg import GroupDlg 
+from .LinkDlg import LinkDlg 
+from .RichAttributeDlg import RichAttributeDlg 
+from .DataSourceDlg import DataSourceDlg 
+from .StrategyDlg import StrategyDlg
+from .DefinitionDlg import DefinitionDlg
+from .Merger import Merger, MergerDlg, IncompatibleNodeError
+from .ComponentModel import ComponentModel
+from .DomTools import DomTools
 
 
 
@@ -83,7 +80,7 @@ class ComponentDlg(QDialog):
     ## closes the window and cleans the dialog label
     # \param event closing event
     def closeEvent(self, event):
-        super(ComponentDlg,self).closeEvent(event)
+        super(ComponentDlg, self).closeEvent(event)
         self.component.dialog = None
         event.accept()    
 
@@ -119,12 +116,14 @@ class Component(object):
         self.document = None        
 
         if os.path.exists(os.path.join(os.getcwd(),"components")):
-            self._xmlPath = os.path.abspath(os.path.join(os.getcwd(),"components"))
+            self._xmlPath = os.path.abspath(os.path.join(
+                    os.getcwd(), "components"))
         else:
             self._xmlPath =  os.getcwd() 
 
         if os.path.exists(os.path.join(os.getcwd(),"datasources")):
-            self._dsPath = os.path.abspath(os.path.join(os.getcwd(),"datasources"))
+            self._dsPath = os.path.abspath(os.path.join(
+                    os.getcwd(), "datasources"))
         else:
             self._dsPath =  os.getcwd() 
             
@@ -149,13 +148,13 @@ class Component(object):
 
         ## item class shown in the frame
         self._tagClasses = {"field":FieldDlg, 
-                           "group":GroupDlg, 
-                           "definition":DefinitionDlg, 
-                           "attribute":RichAttributeDlg,
-                           "link":LinkDlg,
-                           "datasource":DataSourceDlg,
-                           "strategy":StrategyDlg
-                           }
+                            "group":GroupDlg, 
+                            "definition":DefinitionDlg, 
+                            "attribute":RichAttributeDlg,
+                            "link":LinkDlg,
+                            "datasource":DataSourceDlg,
+                            "strategy":StrategyDlg
+                            }
 
         ## current component tag
         self._currentTag = None
@@ -180,6 +179,10 @@ class Component(object):
         ## tag counter
         self._tagCnt = 0
 
+    ## provides attribute flag    
+    # \returns flag if all attributes have to be shown    
+    def getAttrFlag(self):
+        return self._allAttributes
 
     ## checks if not saved
     # \returns True if it is not saved     
@@ -193,12 +196,14 @@ class Component(object):
     ## provides the path of component tree for a given node
     # \param node DOM node
     # \returns path represented as a list with elements: (row number, node name)
-    def _getPathFromNode(self, node):
+    @classmethod
+    def _getPathFromNode(cls, node):
         ancestors = [node]
         path = [] 
 
-        while unicode(ancestors[0].parentNode().nodeName()).strip() != '#document' and \
-                unicode(ancestors[0].parentNode().nodeName()).strip() != '':
+        while unicode(
+            ancestors[0].parentNode().nodeName()).strip() != '#document' and \
+            unicode(ancestors[0].parentNode().nodeName()).strip() != '':
             ancestors.insert(0, ancestors[0].parentNode())
         ancestors.insert(0, ancestors[0].parentNode())
         
@@ -247,7 +252,8 @@ class Component(object):
 
 
     ## provides the path of component tree for the current component tree item
-    # \returns path represented as a list with elements: (row number, node name)
+    # \returns path represented as a list with elements: 
+    #          (row number, node name)
     def _getPath(self):
         index = self.currentIndex()
         pindex = index.parent()
@@ -279,23 +285,23 @@ class Component(object):
 
 
     ## provides  index of the component item defined by the path
-    # \param path path represented as a list with elements: (row number, node name)
+    # \param path path represented as a list with elements: 
+    #        (row number, node name)
     # \returns component item index        
     def _getIndex(self, path):
         if not path or not self.view or not self.dialog:
             return QModelIndex()
         index = self.view.model().rootIndex
         self.view.expand(index)
-        item = index.internalPointer()
         for step in path:
             index = self.view.model().index(step[0], 0, index) 
             self.view.expand(index)
-            item = index.internalPointer()
         return index    
             
 
     ## selectes item defined by path in component tree      
-    # \param path path represented as a list with elements: (row number, node name)
+    # \param path path represented as a list with elements: 
+    #        (row number, node name)
     def _selectItem(self, path):
         index = self._getIndex(path)
         
@@ -308,7 +314,7 @@ class Component(object):
     # \returns tuple with (xml string, path)        
     def getState(self):
         path = self._getPath()
-        return (self.document.toString(0),path)
+        return (self.document.toString(0), path)
 
 
     ## sets the state of the component dialog        
@@ -327,11 +333,10 @@ class Component(object):
     ## updates the component dialog
     # \brief It creates model and frame item    
     def updateForm(self):
-        self.dialog.ui.splitter.setStretchFactor(0,1)
-        self.dialog.ui.splitter.setStretchFactor(1,1)
+        self.dialog.ui.splitter.setStretchFactor(0, 1)
+        self.dialog.ui.splitter.setStretchFactor(1, 1)
         
-        model = ComponentModel(self.document,self._allAttributes,self.dialog)
-#        model = ComponentModel(QDomDocument(),self._allAttributes,self.dialog)
+        model = ComponentModel(self.document, self._allAttributes, self.dialog)
         self.view.setModel(model)
         self.connectView()
         
@@ -345,7 +350,8 @@ class Component(object):
     ## applies component item
     # \brief it checks if item widget exists and calls apply of the item widget
     def applyItem(self):
-        if not self.view or not self.view.model() or not self.dialog or not self.dialog.ui or not self.dialog.ui.widget:
+        if not self.view or not self.view.model() or not self.dialog \
+                or not self.dialog.ui or not self.dialog.ui.widget:
             return
         if not hasattr(self.dialog.ui.widget,'apply'):
             return
@@ -367,7 +373,8 @@ class Component(object):
     # \param parent parent node index
     # \returns the new row number if changed otherwise None                 
     def _moveNodeUp(self, node, parent):
-        if self.view is not None  and self.dialog is not None and self.view.model() is not None: 
+        if self.view is not None  and self.dialog is not None \
+                and self.view.model() is not None: 
             if not parent.isValid():
                 return
             parentItem = parent.internalPointer()
@@ -384,7 +391,8 @@ class Component(object):
     # \param parent parent node index
     # \returns the new row number if changed otherwise None                 
     def _moveNodeDown(self, node, parent):
-        if self.view is not None and self.dialog is not None and self.view.model() is not None: 
+        if self.view is not None and self.dialog is not None \
+                and self.view.model() is not None: 
             if not parent.isValid():
                 return
             parentItem = parent.internalPointer()
@@ -417,8 +425,10 @@ class Component(object):
         if row is not None: 
             index = self.view.model().index(row, 0, parent)
             self.view.setCurrentIndex(index)
-            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
-            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), parent,parent)
+            self.view.model().emit(
+                SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+            self.view.model().emit(
+                SIGNAL("dataChanged(QModelIndex,QModelIndex)"), parent, parent)
             return row
 
 
@@ -440,8 +450,10 @@ class Component(object):
         if row is not None: 
             index = self.view.model().index(row, 0, parent)
             self.view.setCurrentIndex(index)
-            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
-            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), parent,parent)
+            self.view.model().emit(
+                SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+            self.view.model().emit(
+                SIGNAL("dataChanged(QModelIndex,QModelIndex)"), parent, parent)
             return row
 
 
@@ -449,9 +461,10 @@ class Component(object):
     ## converts DOM node to XML string
     # \param component DOM node
     # \returns XML string
-    def _nodeToString(self, node):
+    @classmethod
+    def _nodeToString(cls, node):
         doc = QDomDocument()
-        child = doc.importNode(node,True)
+        child = doc.importNode(node, True)
         doc.appendChild(child)
         return unicode(doc.toString(0))
 
@@ -476,7 +489,8 @@ class Component(object):
     def pasteItem(self):
         print "pasting item"
         
-        if not self.view or not self.dialog or not self.view.model() or not self.dialog.ui or not self.dialog.ui.widget \
+        if not self.view or not self.dialog or not self.view.model() \
+                or not self.dialog.ui or not self.dialog.ui.widget \
                 or not hasattr(self.dialog.ui.widget,"subItems") :
             ## Message
             return
@@ -511,7 +525,8 @@ class Component(object):
             index = self.view.model().index(index.row(), 0, index.parent())
         self.dialog.ui.widget.appendElement(clipNode, index)        
 
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.model().emit(
+            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         
         self.view.expand(index)
         return True
@@ -524,9 +539,11 @@ class Component(object):
     def addItem(self, name):
         if not name in self._tagClasses.keys():
             return
-        if not self.view or not self.dialog or not self.view.model() or not self.dialog.ui or not self.dialog.ui.widget:
+        if not self.view or not self.dialog or not self.view.model() \
+                or not self.dialog.ui or not self.dialog.ui.widget:
             return
-        if not hasattr(self.dialog.ui.widget,'subItems') or  name not in self.dialog.ui.widget.subItems:
+        if not hasattr(self.dialog.ui.widget,'subItems') \
+                or name not in self.dialog.ui.widget.subItems:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -538,7 +555,8 @@ class Component(object):
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         status = self.dialog.ui.widget.appendElement(child, index)
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+        self.view.model().emit(
+            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         self.view.expand(index)
         if status:
             return child
@@ -550,7 +568,8 @@ class Component(object):
         
         if not self.view or not self.view.model() :
             return
-        dialog = True if self.dialog and self.dialog.ui and self.dialog.ui.widget else False
+        dialog = True if self.dialog and self.dialog.ui \
+            and self.dialog.ui.widget else False
         index = self.view.currentIndex()
         sel = index.internalPointer()
         if not sel or not index.isValid():
@@ -558,12 +577,6 @@ class Component(object):
 
         node = sel.node
 
-        attributeMap = node.attributes()
-        name = ""
-        if attributeMap.contains("name"):
-            name = attributeMap.namedItem("name").nodeValue()
-
-        
         clipboard = QApplication.clipboard()
         clipboard.setText(self._nodeToString(node))
         
@@ -576,10 +589,12 @@ class Component(object):
 
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.model().emit(
+            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         if index.parent().isValid():
-            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
-                            index.parent(),index.parent())
+            self.view.model().emit(
+                SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                index.parent(), index.parent())
             
             index = self.view.currentIndex()
             self.tagClicked(index)
@@ -594,7 +609,8 @@ class Component(object):
     ## copies the currenct component tree item if possible
     # \returns True on success
     def copySelectedItem(self):
-        if not self.view or not self.dialog or not self.view.model() or not self.dialog.ui or not self.dialog.ui.widget:
+        if not self.view or not self.dialog or not self.view.model() \
+                or not self.dialog.ui or not self.dialog.ui.widget:
             return
         index = self.view.currentIndex()
         sel = index.internalPointer()
@@ -603,12 +619,6 @@ class Component(object):
 
         node = sel.node
 
-        attributeMap = node.attributes()
-        name = ""
-        if attributeMap.contains("name"):
-            name = attributeMap.namedItem("name").nodeValue()
-
-        
         clipboard = QApplication.clipboard()
         clipboard.setText(self._nodeToString(node))
         return True    
@@ -627,14 +637,26 @@ class Component(object):
 
     ## connects the view and model into resize and click command
     def connectView(self):
-        self.dialog.disconnect(self.view.selectionModel(), 
-                               SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
-        self.dialog.connect(self.view.selectionModel(), 
-                            SIGNAL("currentChanged(QModelIndex,QModelIndex)"), self.tagClicked)  
-        self.dialog.disconnect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
-        self.dialog.connect(self.view, SIGNAL("expanded(QModelIndex)"), self._resizeColumns)
-        self.dialog.disconnect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)
-        self.dialog.connect(self.view, SIGNAL("collapsed(QModelIndex)"), self._resizeColumns)
+        self.dialog.disconnect(
+            self.view.selectionModel(), 
+            SIGNAL("currentChanged(QModelIndex,QModelIndex)"), 
+            self.tagClicked)  
+        self.dialog.connect(
+            self.view.selectionModel(), 
+            SIGNAL("currentChanged(QModelIndex,QModelIndex)"), 
+            self.tagClicked)  
+        self.dialog.disconnect(
+            self.view, SIGNAL("expanded(QModelIndex)"), 
+            self._resizeColumns)
+        self.dialog.connect(
+            self.view, SIGNAL("expanded(QModelIndex)"), 
+            self._resizeColumns)
+        self.dialog.disconnect(
+            self.view, SIGNAL("collapsed(QModelIndex)"), 
+            self._resizeColumns)
+        self.dialog.connect(
+            self.view, SIGNAL("collapsed(QModelIndex)"), 
+            self._resizeColumns)
 
 
 
@@ -644,20 +666,23 @@ class Component(object):
     # \param externalClose close action
     # \param externalStore store action
     # \param externalDSLink dsource link action
-    def connectExternalActions(self, externalApply=None , externalSave=None
-                               , externalClose = None , externalStore=None, 
-                               externalDSLink = None  ):
+    def connectExternalActions(self, externalApply=None , externalSave=None,
+                               externalClose = None, externalStore=None, 
+                               externalDSLink = None):
         if externalSave and self.externalSave is None:
-            self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
-                         externalSave)
+            self.dialog.connect(
+                self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
+                externalSave)
             self.externalSave = externalSave
         if externalStore and self.externalStore is None:
-            self.dialog.connect(self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
-                         externalStore)
+            self.dialog.connect(
+                self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
+                externalStore)
             self.externalStore = externalStore
         if externalClose and self.externalClose is None:
-            self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
-                         externalClose)
+            self.dialog.connect(
+                self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
+                externalClose)
             self.externalClose = externalClose
         if externalApply and self.externalApply is None:
             self.externalApply = externalApply
@@ -671,20 +696,26 @@ class Component(object):
     def reconnectSaveAction(self):
         self.connectView()
         if self.externalSave:
-            self.dialog.disconnect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
-                         self.externalSave)
-            self.dialog.connect(self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
-                         self.externalSave)
+            self.dialog.disconnect(
+                self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
+                self.externalSave)
+            self.dialog.connect(
+                self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
+                self.externalSave)
         if self.externalStore:
-            self.dialog.disconnect(self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
-                         self.externalStore)
-            self.dialog.connect(self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
-                         self.externalStore)
+            self.dialog.disconnect(
+                self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
+                self.externalStore)
+            self.dialog.connect(
+                self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
+                self.externalStore)
         if self.externalClose:
-            self.dialog.disconnect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
-                         self.externalClose)
-            self.dialog.connect(self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
-                         self.externalClose)
+            self.dialog.disconnect(
+                self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
+                self.externalClose)
+            self.dialog.connect(
+                self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
+                self.externalClose)
 
 
     ## switches between all attributes in the try or only type attribute
@@ -694,16 +725,17 @@ class Component(object):
             return
         self._allAttributes = status
         if hasattr(self,"view") and self.dialog:
-             cNode = self._getCurrentNode()
-             model = self.view.model()   
-             model.setAttributeView(self._allAttributes)
+            cNode = self._getCurrentNode()
+            model = self.view.model()   
+            model.setAttributeView(self._allAttributes)
 #             self.view.reset()
-             newModel = ComponentModel(self.document, self._allAttributes ,self.dialog)
-             self.view.setModel(newModel)
-             self.connectView()
-             self._hideFrame()
-             if cNode:
-                 self._showNodes([cNode])
+            newModel = ComponentModel(
+                self.document, self._allAttributes, self.dialog)
+            self.view.setModel(newModel)
+            self.connectView()
+            self._hideFrame()
+            if cNode:
+                self._showNodes([cNode])
 
 
     ## sets selected component item in the item frame
@@ -720,11 +752,7 @@ class Component(object):
             return
 
         node = item.node
-        attributeMap = node.attributes()
         nNode = node.nodeName()
-        name = None
-        if attributeMap.contains("name"):
-            name = attributeMap.namedItem("name").nodeValue()
 
         if not self.dialog.ui:
             print "Dialog does not exist"
@@ -747,7 +775,9 @@ class Component(object):
             self.dialog.ui.widget.setFromNode(node)
             self.dialog.ui.widget.createGUI()
             if hasattr(self.dialog.ui.widget,"connectExternalActions"):
-                self.dialog.ui.widget.connectExternalActions(self.externalApply, self.externalDSLink)
+                self.dialog.ui.widget.connectExternalActions(
+                    externalApply=self.externalApply, 
+                    externalDSLink=self.externalDSLink)
             if hasattr(self.dialog.ui.widget,"treeMode"):
                 self.dialog.ui.widget.treeMode()
             self.dialog.ui.widget.view = self.view
@@ -782,9 +812,9 @@ class Component(object):
     ## sets up context menu
     # \param actions list of the context menu actions
     def addContextMenu(self, actions):
-         self.view.setContextMenuPolicy(Qt.CustomContextMenu)
-         self.view.customContextMenuRequested.connect(self._openMenu)
-         self._actions = actions
+        self.view.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.view.customContextMenuRequested.connect(self._openMenu)
+        self._actions = actions
 
     ## resizes column size after tree item expansion     
     # \param index index of the expanded item
@@ -817,16 +847,17 @@ class Component(object):
 
     ## loads the component from the file 
     # \param filePath xml file name with full path    
-    def load(self,filePath = None):
+    def load(self, filePath = None):
         
         if not filePath:
             if not self.name:
                 self._componentFile = unicode(QFileDialog.getOpenFileName(
-                        self.dialog,"Open File",self._xmlPath,
+                        self.dialog,"Open File", self._xmlPath,
                         "XML files (*.xml);;HTML files (*.html);;"
                         "SVG files (*.svg);;User Interface files (*.ui)"))
             else:
-                self._componentFile = os.path.join(self.directory, self.name + ".xml") 
+                self._componentFile = os.path.join(
+                    self.directory, self.name + ".xml") 
         else:
             self._componentFile = filePath
         if self._componentFile:
@@ -843,8 +874,9 @@ class Component(object):
                     self.savedXML = self.get()
                     return self._componentFile
                 else:
-                    QMessageBox.warning(self.dialog, "Cannot open the file", 
-                                        "Cannot open the file: %s" % (self._componentFile))
+                    QMessageBox.warning(
+                        self.dialog, "Cannot open the file", 
+                        "Cannot open the file: %s" % (self._componentFile))
 
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
@@ -860,7 +892,8 @@ class Component(object):
     ## sets component from XML string and reset component file name
     # \param xml XML string               
     def set(self, xml):
-        self._componentFile = os.path.join(self.directory, self.name + ".xml") 
+        self._componentFile = os.path.join(
+            self.directory, self.name + ".xml") 
         self._loadFromString(xml)
         self._xmlPath = self._componentFile
         self.savedXML = self.get()
@@ -876,22 +909,24 @@ class Component(object):
             raise ValueError, "could not parse XML"
         children = self.document.childNodes()
 
-        j=0
-        for i in range(children.count()):
+        j = 0
+        for _ in range(children.count()):
             ch = children.item(j)
-            if str(ch.nodeName()).strip() in ['xml', 'xml-stylesheet', "#comment"] :
+            if str(ch.nodeName()).strip() in \
+                    ['xml', 'xml-stylesheet', "#comment"]:
                 self.document.removeChild(ch)
             else:
                 j += 1
         if self.dialog and self.dialog.ui:
-            newModel = ComponentModel(self.document,self._allAttributes, self.dialog)
+            newModel = ComponentModel(
+                self.document, self._allAttributes, self.dialog)
             self.view.setModel(newModel)
             self.connectView()
         
 
     ## loads the component item from the xml file 
     # \param filePath xml file name with full path    
-    def loadComponentItem(self,filePath = None):
+    def loadComponentItem(self, filePath = None):
         
         if not self.view or not self.dialog or not self.view.model() \
                 or not self.dialog.ui or not self.dialog.ui.widget \
@@ -906,10 +941,11 @@ class Component(object):
         node = sel.node
 
         if not filePath:
-                itemFile = unicode(
-                    QFileDialog.getOpenFileName(self.dialog, "Open File",self._xmlPath,
-                                                "XML files (*.xml);;HTML files (*.html);;"
-                                                "SVG files (*.svg);;User Interface files (*.ui)"))
+            itemFile = unicode(
+                QFileDialog.getOpenFileName(
+                    self.dialog, "Open File", self._xmlPath,
+                    "XML files (*.xml);;HTML files (*.html);;"
+                    "SVG files (*.svg);;User Interface files (*.ui)"))
         else:
             itemFile = filePath
 
@@ -921,16 +957,18 @@ class Component(object):
                     root = QDomDocument()
                     if not root.setContent(fh):
                         raise ValueError, "could not parse XML"
-                    definition = root.firstChildElement(QString("definition"))           
+                    definition = root.firstChildElement(QString("definition"))
                     if definition.nodeName() != "definition":
-                        QMessageBox.warning(self.dialog, "Corrupted SubComponent", 
-                                            "Component %s without <definition> tag" % itemFile)
+                        QMessageBox.warning(
+                            self.dialog, "Corrupted SubComponent", 
+                            "Component %s without <definition> tag" % itemFile)
                         return
                     child = definition.firstChild()
                     self.dialog.ui.widget.node = node
 
                     if  index.column() != 0:
-                        index = self.view.model().index(index.row(), 0, index.parent())
+                        index = self.view.model().index(
+                            index.row(), 0, index.parent())
                     while not child.isNull():
                         child2 = self.document.importNode(child, True)
                         self.dialog.ui.widget.appendElement(child2, index)
@@ -938,7 +976,9 @@ class Component(object):
                         child = child.nextSibling()
 
                         
-                self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+                self.view.model().emit(
+                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"), 
+                    index, index)
                 self.view.expand(index)
                     
 
@@ -958,7 +998,7 @@ class Component(object):
 
     ## loads the datasource item from the xml file 
     # \param filePath xml file name with full path    
-    def loadDataSourceItem(self,filePath = None):
+    def loadDataSourceItem(self, filePath = None):
         print "Loading DataSource"
 
         
@@ -970,8 +1010,9 @@ class Component(object):
         child = self.dialog.ui.widget.node.firstChild()
         while not child.isNull():
             if child.nodeName() == 'datasource':
-                QMessageBox.warning(self.dialog, "DataSource exists", 
-                                   "To add a new datasource please remove the old one")
+                QMessageBox.warning(
+                    self.dialog, "DataSource exists", 
+                    "To add a new datasource please remove the old one")
                 return
             child = child.nextSibling()    
                 
@@ -983,10 +1024,11 @@ class Component(object):
         node = sel.node
 
         if not filePath:
-                dsFile = unicode(
-                    QFileDialog.getOpenFileName(self.dialog, "Open File",self._dsPath,
-                                                "XML files (*.xml);;HTML files (*.html);;"
-                                                "SVG files (*.svg);;User Interface files (*.ui)"))
+            dsFile = unicode(
+                QFileDialog.getOpenFileName(
+                    self.dialog, "Open File", self._dsPath,
+                    "XML files (*.xml);;HTML files (*.html);;"
+                    "SVG files (*.svg);;User Interface files (*.ui)"))
         else:
             dsFile = filePath
         if dsFile:
@@ -1000,16 +1042,20 @@ class Component(object):
 
                     if ds:
                         if  index.column() != 0:
-                            index = self.view.model().index(index.row(), 0, index.parent())
+                            index = self.view.model().index(
+                                index.row(), 0, index.parent())
                         self.dialog.ui.widget.node = node
                         ds2 = self.document.importNode(ds, True)
                         self.dialog.ui.widget.appendElement(ds2, index)
                     else:
-                            QMessageBox.warning(self.dialog, "Corrupted DataSource ", 
-                                                "Missing <datasource> tag in %s" % dsFile)
+                        QMessageBox.warning(
+                            self.dialog, "Corrupted DataSource ", 
+                            "Missing <datasource> tag in %s" % dsFile)
 
                         
-                self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+                self.view.model().emit(
+                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"), 
+                    index, index)
                 self.view.expand(index)
                 self._dsPath = dsFile
 
@@ -1040,8 +1086,9 @@ class Component(object):
         child = self.dialog.ui.widget.node.firstChild()
         while not child.isNull():
             if child.nodeName() == 'datasource':
-                QMessageBox.warning(self.dialog, "DataSource exists", 
-                                    "To add a new datasource please remove the old one")
+                QMessageBox.warning(
+                    self.dialog, "DataSource exists", 
+                    "To add a new datasource please remove the old one")
                 return
             child = child.nextSibling()    
                 
@@ -1064,7 +1111,8 @@ class Component(object):
             index = self.view.model().index(index.row(), 0, index.parent())
         self.dialog.ui.widget.appendElement(dsNode2, index)
         
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.model().emit(
+            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         self.view.expand(index)
         return True
 
@@ -1084,8 +1132,9 @@ class Component(object):
         child = self.dialog.ui.widget.node.firstChild()
         while not child.isNull():
             if child.nodeName() == 'datasource':
-                QMessageBox.warning(self.dialog, "DataSource exists", 
-                                    "To link a new datasource please remove the old one")
+                QMessageBox.warning(
+                    self.dialog, "DataSource exists", 
+                    "To link a new datasource please remove the old one")
                 return
             child = child.nextSibling()    
                 
@@ -1098,18 +1147,17 @@ class Component(object):
         if not sel:
             return
 
-        node = sel.node
         
 
         
         if hasattr(self.dialog.ui.widget,"linkDataSource"):
             self.dialog.ui.widget.linkDataSource(dsName)
             
-#        dsNode2 = self.document.importNode(dsNode, True)
         if  index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+        self.view.model().emit(
+            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         self.view.expand(index)
         return True
 
@@ -1138,11 +1186,15 @@ class Component(object):
 
         self._mergerdlg = MergerDlg(self.dialog)
         self._mergerdlg.createGUI()
-        self.dialog.connect(self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
-        self.dialog.connect(self._mergerdlg.interruptButton, SIGNAL("clicked()"), self._interruptMerger)
+        self.dialog.connect(
+            self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
+        self.dialog.connect(
+            self._mergerdlg.interruptButton, SIGNAL("clicked()"), 
+            self._interruptMerger)
 
         try:
-            if self.view and self.dialog and self.dialog.ui and self.view.model():
+            if self.view and self.dialog and self.dialog.ui \
+                    and self.view.model():
                 dialog = True
         except:
             pass
@@ -1152,7 +1204,8 @@ class Component(object):
             return
         try:
             self._merger = Merger(self.document)
-            self.dialog.connect(self._merger, SIGNAL("finished"), self._closeMergerDlg)
+            self.dialog.connect(
+                self._merger, SIGNAL("finished"), self._closeMergerDlg)
                     
             cNode = self._getCurrentNode()
             if cNode:
@@ -1161,7 +1214,8 @@ class Component(object):
             document = self.document
             self.document = QDomDocument()
             if dialog:
-                newModel = ComponentModel(self.document, self._allAttributes, self.dialog)
+                newModel = ComponentModel(
+                    self.document, self._allAttributes, self.dialog)
                 self.view.setModel(newModel)
                 self.view.reset()
                 self._hideFrame()
@@ -1177,12 +1231,13 @@ class Component(object):
             self._closeMergerDlg()
 
  
-            if self._merger and self._merger.exception:
+            if self._merger and self._merger.exception is not None:
                 raise self._merger.exception
 
             self._merged = True
             if dialog:
-                newModel = ComponentModel(document, self._allAttributes ,self.dialog)
+                newModel = ComponentModel(
+                    document, self._allAttributes, self.dialog)
             self.document = document
             if dialog:
                 self.view.setModel(newModel)
@@ -1190,7 +1245,8 @@ class Component(object):
                 self.connectView()
 
                 self.connectView()    
-                if hasattr(self._merger, "selectedNode") and self._merger.selectedNode: 
+                if hasattr(self._merger, "selectedNode") \
+                        and self._merger.selectedNode: 
                     self._showNodes([self._merger.selectedNode])
 
 
@@ -1201,7 +1257,8 @@ class Component(object):
             self._merger = None
             self._merged = False
             if dialog:
-                newModel = ComponentModel(document, self._allAttributes, self.dialog)
+                newModel = ComponentModel(
+                    document, self._allAttributes, self.dialog)
             self.document = document
             if dialog:
                 self.view.setModel(newModel)
@@ -1210,13 +1267,16 @@ class Component(object):
                 if hasattr(e, "nodes") and e.nodes: 
                     self._showNodes(e.nodes)
             if dialog:    
-                QMessageBox.warning(self.dialog, "Merging problem",
-                                    "Error in %s Merging: %s" % (unicode(self.name), unicode(e.value)) )
+                QMessageBox.warning(
+                    self.dialog, "Merging problem",
+                    "Error in %s Merging: %s" % (
+                        unicode(self.name), unicode(e.value)) )
         except  Exception, e:    
             print "Exception: %s" % unicode(e)
             self._merged = False
             if dialog:
-                newModel = ComponentModel(document, self._allAttributes, self.dialog)
+                newModel = ComponentModel(
+                    document, self._allAttributes, self.dialog)
                 self.document = document
                 self.view.setModel(newModel)
                 self._hideFrame()
@@ -1252,7 +1312,8 @@ class Component(object):
         definition = self.document.createElement(QString("definition"))
         self.document.appendChild(definition)
         if self.dialog and self.dialog.ui:
-            newModel = ComponentModel(self.document, self._allAttributes, self.dialog)
+            newModel = ComponentModel(
+                self.document, self._allAttributes, self.dialog)
             self.view.setModel(newModel)
             self.connectView()
         self._hideFrame()
@@ -1272,7 +1333,7 @@ class Component(object):
                     if attr.contains("name"):
                         name = unicode(attr.namedItem("name").nodeValue())
                     else:
-                        self._tagCnt +=1
+                        self._tagCnt += 1
                         name = "__datasource__%s" % self._tagCnt
                     ds[name] = self._nodeToString(child)
                     
@@ -1312,7 +1373,6 @@ class Component(object):
             return ds
                         
         node = sel.node
-        xml  = self._nodeToString(node)
 
         attr = node.attributes()
         if attr.contains("name"):
@@ -1328,7 +1388,8 @@ class Component(object):
     # \returns xml string    
     def get(self, indent=0):
         if hasattr(self.document,"toString"):
-            processing = self.document.createProcessingInstruction("xml", "version='1.0'") 
+            processing = self.document.createProcessingInstruction(
+                "xml", "version='1.0'") 
             self.document.insertBefore(processing, self.document.firstChild())
             string = unicode(self.document.toString(indent))
             self.document.removeChild(processing)
@@ -1356,12 +1417,13 @@ class Component(object):
             if string:
                 stream << string
             else:
-                raise ErrorValue, "Empty component"
+                raise ValueError, "Empty component"
     
             self.savedXML = self.get()
             #                print self.document.toString(2)
         except (IOError, OSError, ValueError), e:
-            error = "Failed to save: %s Please try to use Save as or change the component directory" % e
+            error = "Failed to save: %s Please try to use Save as "\
+                "or change the component directory" % e
             QMessageBox.warning(self.dialog, "Saving problem",
                                 error )
             print error
@@ -1374,9 +1436,10 @@ class Component(object):
     # asks if component should be removed from the component list
     # \brief It is called on removing  the component from the list
     def _close(self):
-        if QMessageBox.question(self.dialog, "Close component",
-                                "Would you like to close the component ?", 
-                                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
+        if QMessageBox.question(
+            self.dialog, "Close component",
+            "Would you like to close the component ?", 
+            QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
         self.dialog.reject()
 
@@ -1388,9 +1451,10 @@ class Component(object):
             self.setName(self.name, self.directory)
 
         self._componentFile = unicode(
-            QFileDialog.getSaveFileName(self.dialog,"Save Component As ...",self._componentFile,
-                                        "XML files (*.xml);;HTML files (*.html);;"
-                                        "SVG files (*.svg);;User Interface files (*.ui)"))
+            QFileDialog.getSaveFileName(
+                self.dialog,"Save Component As ...", self._componentFile,
+                "XML files (*.xml);;HTML files (*.html);;"
+                "SVG files (*.svg);;User Interface files (*.ui)"))
         return self._componentFile
         
 

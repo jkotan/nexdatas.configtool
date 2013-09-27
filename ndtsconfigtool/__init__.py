@@ -19,6 +19,11 @@
 ## \file ndtsconfigtool/__init__.py
 # package constructor
 
-## version of the application
-__version__ = "1.3.3"
+""" --- Component Designer -- 
+GUI configuration tool for creating input files for Tango Data Writer 
+"""
 
+## version of the application
+__version__ = "1.3.4"
+
+ 

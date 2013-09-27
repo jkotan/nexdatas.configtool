@@ -19,11 +19,12 @@
 ## \file NodeDlg.py
 # Abstract Node dialog class
 
-from PyQt4.QtGui import QDialog
-from PyQt4.QtXml import QDomNode
-from PyQt4.QtCore import (QString, SIGNAL, QModelIndex)
+""" abstract Node widget """
 
-from DomTools import DomTools
+from PyQt4.QtGui import QDialog
+from PyQt4.QtCore import (SIGNAL, QModelIndex)
+
+from .DomTools import DomTools
 
 ## abstract node dialog 
 class NodeDlg(QDialog):
@@ -56,17 +57,25 @@ class NodeDlg(QDialog):
         ## datasource label for templated XML
         self.dsLabel = "datasources"
 
-    ## connects the given apply action
-    # \param externalApply apply action   
-    # \param externalDSLink datasource link action   
-    def connectExternalActions(self,  externalApply=None, externalDSLink=None):
+    ## connects the save action and stores the apply action
+    # \param externalApply apply action
+    # \param externalSave save action
+    # \param externalClose close action
+    # \param externalStore store action
+    # \param externalDSLink dsource link action
+    def connectExternalActions(self, externalApply=None , externalSave=None,
+                               externalClose = None, externalStore=None, 
+                               externalDSLink = None):
         if externalApply and self.externalApply is None and self.ui and \
                 hasattr(self.ui,"applyPushButton") and self.ui.applyPushButton:
-            self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), externalApply)
+            self.connect(
+                self.ui.applyPushButton, SIGNAL("clicked()"), externalApply)
             self.externalApply = externalApply
         if externalDSLink and self.externalDSLink is None and self.ui and \
-                hasattr(self.ui,"linkDSPushButton") and self.ui.linkDSPushButton:
-            self.connect(self.ui.linkDSPushButton, SIGNAL("clicked()"), externalDSLink)
+                hasattr(self.ui,"linkDSPushButton") \
+                and self.ui.linkDSPushButton:
+            self.connect(
+                self.ui.linkDSPushButton, SIGNAL("clicked()"), externalDSLink)
             self.externalDSLink = externalDSLink
 
         
@@ -80,7 +89,8 @@ class NodeDlg(QDialog):
         if self.view:
             if  index.column() != 0:
                 index = self.view.model().index(index.row(), 0, index.parent())
-            self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),index,index)
+            self.view.model().emit(
+                SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
 
                 
         
@@ -90,7 +100,8 @@ class NodeDlg(QDialog):
     # \param text string with text
     def replaceText(self, index, text = None):
         if self.view is not None and self.view.model() is not None: 
-            return DomTools.replaceText(self.node, index, self.view.model(), text)
+            return DomTools.replaceText(
+                self.node, index, self.view.model(), text)
     
 
     ## removes node element
@@ -98,7 +109,8 @@ class NodeDlg(QDialog):
     # \param parent parent node index      
     def removeElement(self, element, parent):
         if self.view is not None and self.view.model() is not None:  
-            return DomTools.removeElement(element, parent, self.view.model())
+            return DomTools.removeElement(
+                element, parent, self.view.model())
 
 
     ## replaces node element
@@ -107,7 +119,8 @@ class NodeDlg(QDialog):
     # \param parent parent node index
     def replaceElement(self, oldElement, newElement, parent):
         if self.view is not None and self.view.model() is not None: 
-            return DomTools.replaceElement(oldElement, newElement, parent, self.view.model())
+            return DomTools.replaceElement(
+                oldElement, newElement, parent, self.view.model())
             
 
 
@@ -116,7 +129,8 @@ class NodeDlg(QDialog):
     # \param parent parent node index      
     def appendElement(self, newElement, parent):
         if self.view is not None and self.view.model() is not None: 
-            return DomTools.appendNode(newElement, parent, self.view.model())
+            return DomTools.appendNode(
+                newElement, parent, self.view.model())
         return False     
 
             
@@ -146,5 +160,5 @@ class NodeDlg(QDialog):
 
 
 if __name__ == "__main__":
-    import sys
+    pass
     

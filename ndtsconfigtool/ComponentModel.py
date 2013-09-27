@@ -19,14 +19,13 @@
 ## \file ComponentModel.py
 # component classes 
 
-from PyQt4.QtCore import (QAbstractItemModel, QVariant, Qt, QModelIndex, QStringList, QString)
-#from PyQt4.QtGui import 
-from PyQt4.QtXml import (QDomDocument, QDomNode, QXmlDefaultHandler,
-                         QXmlInputSource, QXmlSimpleReader)
-import gc
-        
-import os
-from ComponentItem import ComponentItem
+""" component model for tree view """
+
+from PyQt4.QtCore import (QAbstractItemModel, QVariant, Qt, QModelIndex, 
+                          QStringList, QString)
+from PyQt4.QtXml import QDomNode
+
+from . ComponentItem import ComponentItem
 
 ## model for component tree
 class ComponentModel(QAbstractItemModel):
@@ -50,7 +49,8 @@ class ComponentModel(QAbstractItemModel):
     # \param section integer index of the table column 
     # \param orientation orientation of the header
     # \param role access type of the header data
-    # \returns header data defined for the given index and formated according to the role    
+    # \returns header data defined for the given index and formated according
+    #          to the role    
     def headerData(self, section, orientation, role=Qt.DisplayRole):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole :
             if section == 0 :
@@ -75,7 +75,8 @@ class ComponentModel(QAbstractItemModel):
     ## provides read access to the model data
     # \param index of the model item         
     # \param role access type of the data
-    # \returns data defined for the given index and formated according to the role    
+    # \returns data defined for the given index and formated according 
+    #          to the role    
     def data(self, index, role = Qt.DisplayRole):
         if not index.isValid() :
             return QVariant()
@@ -103,11 +104,13 @@ class ComponentModel(QAbstractItemModel):
                 attributes = QStringList()
                 for i in range(attributeMap.count()):
                     attribute = attributeMap.item(i)
-                    attributes.append(attribute.nodeName() + "=\"" +attribute.nodeValue() + "\"")
+                    attributes.append(attribute.nodeName() + "=\"" 
+                                      + attribute.nodeValue() + "\"")
                 return QVariant(attributes.join(" ") + "  ")
             else:
-                return QVariant((attributeMap.namedItem("type").nodeValue() + "  ") 
-                                if attributeMap.contains("type") else QString("  "))
+                return QVariant(
+                    (attributeMap.namedItem("type").nodeValue() + "  ") \
+                        if attributeMap.contains("type") else QString("  "))
                  
         elif index.column() == 2:
             return QVariant(node.nodeValue().split("\n").join(" "))
@@ -118,11 +121,12 @@ class ComponentModel(QAbstractItemModel):
 
     ## provides flag of the model item    
     # \param index of the model item         
-    # \returns flag defined for the given index and formated according to the role    
+    # \returns flag defined for the given index and formated according 
+    #          to the role
     def flags(self, index):
         if not index.isValid():
             return Qt.ItemIsEnabled
-        return Qt.ItemFlags(QAbstractItemModel.flags(self,index) |
+        return Qt.ItemFlags(QAbstractItemModel.flags(self, index) |
                             Qt.ItemIsEnabled | Qt.ItemIsSelectable )
 
     
@@ -159,7 +163,6 @@ class ComponentModel(QAbstractItemModel):
 
         childItem = child.internalPointer()
 
-        ## TODO when it is performed
         if not hasattr(childItem, "parent"):
             return QModelIndex()            
         
@@ -195,7 +198,8 @@ class ComponentModel(QAbstractItemModel):
 
     ## provides number of the model columns
     # \param parent parent index
-    # \returns 3 which corresponds to component tag tree, tag attributes, tag values
+    # \returns 3 which corresponds to component tag tree, tag attributes, 
+    #          tag values
     def columnCount(self, parent = QModelIndex()):
         return 3
     
@@ -213,7 +217,8 @@ class ComponentModel(QAbstractItemModel):
         self.beginInsertRows(parent, position, position)
 
         pIndex = self.index(position, 0, parent)
-        previous = pIndex.internalPointer().node if pIndex.isValid() else QDomNode()
+        previous = pIndex.internalPointer().node if pIndex.isValid() \
+            else QDomNode()
         item.node.insertBefore(node, previous)
 #
         status = item.insertChildren(position, 1)
@@ -235,7 +240,8 @@ class ComponentModel(QAbstractItemModel):
         self.beginInsertRows(parent, position, position)
 
         pIndex = self.index(position, 0, parent)
-        previous = pIndex.internalPointer().node if pIndex.isValid() else QDomNode()
+        previous = pIndex.internalPointer().node \
+            if pIndex.isValid() else QDomNode()
         item.node.insertAfter(node, previous)
 #
         status = item.insertChildren(position, 1)
@@ -265,9 +271,4 @@ class ComponentModel(QAbstractItemModel):
 
 
 if __name__ == "__main__":
-    import sys
-
-    
-    
-
-#  LocalWords:  os
+    pass

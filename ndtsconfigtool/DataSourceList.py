@@ -19,15 +19,16 @@
 ## \file DataSourceList.py
 # Data source list class
 
-import re
-from PyQt4.QtCore import (SIGNAL, Qt, QString, QVariant)
-from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
-from ui.ui_datasourcelist import  Ui_DataSourceList
-from DataSourceDlg import DataSource
+""" datasource list widget """
+
 import os 
 
+from PyQt4.QtCore import (Qt, QString, QVariant)
+from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
 
-from LabeledObject import LabeledObject
+from .ui.ui_datasourcelist import  Ui_DataSourceList
+from .DataSourceDlg import DataSource
+from .LabeledObject import LabeledObject
 
 
 ## dialog defining a group tag
@@ -55,7 +56,8 @@ class DataSourceList(QWidget):
     def createGUI(self):
 
         self.ui.setupUi(self)
-        self.ui.sourceListWidget.setEditTriggers(self.ui.sourceListWidget.SelectedClicked)
+        self.ui.sourceListWidget.setEditTriggers(
+            self.ui.sourceListWidget.SelectedClicked)
 
         self.populateDataSources()
 
@@ -78,24 +80,29 @@ class DataSourceList(QWidget):
     # \param actions tuple with actions 
     def setActions(self, actions):
         self.ui.sourceListWidget.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.ui.sourceListWidget.customContextMenuRequested.connect(self._openMenu)
+        self.ui.sourceListWidget.customContextMenuRequested.connect(
+            self._openMenu)
         self._actions = actions
         
             
 
     ## loads the datasource list from the given dictionary
     # \param externalActions dictionary with external actions
-    def loadList(self, externalActions = {}):
+    def loadList(self, externalActions = None):
+        actions = externalActions if externalActions else {}
         try:
-            dirList=[l for l in  os.listdir(self.directory) if l.endswith(".ds.xml")]
+            dirList = [l for l in  os.listdir(self.directory) \
+                           if l.endswith(".ds.xml")]
         except:
             try:
                 if os.path.exists(os.path.join(os.getcwd(),"datasources")):
-                    self.directory = os.path.abspath(os.path.join(os.getcwd(),"datasources"))
+                    self.directory = os.path.abspath(
+                        os.path.join(os.getcwd(),"datasources"))
                 else:
                     self.directory = os.getcwd()
 
-                dirList=[l for l in  os.listdir(self.directory) if l.endswith(".ds.xml")]
+                dirList = [l for l in  os.listdir(self.directory) \
+                               if l.endswith(".ds.xml")]
             except:
                 return
 
@@ -114,7 +121,7 @@ class DataSourceList(QWidget):
 
             
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**externalActions)    
+                dlg.connectExternalActions(**actions)    
             
             ds = LabeledObject(name, dlg)
             self.datasources[id(ds)] =  ds
@@ -128,13 +135,14 @@ class DataSourceList(QWidget):
     # \param datasources dictionary with the datasources, i.e. name:xml
     # \param externalActions dictionary with external actions
     # \param new logical variableset to True if datasource is not saved
-    def setList(self, datasources, externalActions = {}, new = False):
-        try:
-            dirList=os.listdir(self.directory)
-        except:
+    def setList(self, datasources, externalActions = None, new = False):
+        actions = externalActions if externalActions else {}
+
+        if not os.path.isdir(self.directory):
             try:
                 if os.path.exists(os.path.join(os.getcwd(),"datasources")):
-                    self.directory = os.path.abspath(os.path.join(os.getcwd(),"datasources"))
+                    self.directory = os.path.abspath(
+                        os.path.join(os.getcwd(),"datasources"))
                 else:
                     self.directory = os.getcwd()
             except:
@@ -143,8 +151,9 @@ class DataSourceList(QWidget):
         ids = None    
         for dsname in datasources.keys():
 
-            name =  "".join(x.replace('/','_').replace('\\','_').replace(':','_') \
-                                for x in dsname if (x.isalnum() or x in ["/","\\",":","_"]))
+            name =  "".join(
+                x.replace('/','_').replace('\\','_').replace(':','_') \
+                    for x in dsname if (x.isalnum() or x in ["/","\\",":","_"]))
             dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
@@ -153,19 +162,21 @@ class DataSourceList(QWidget):
                 if str(datasources[dsname]).strip():
                     dlg.set(datasources[dsname], new)    
                 else:
-                    QMessageBox.warning(self, "DataSource cannot be loaded",
-                                        "DataSource %s without content" % dsname)
+                    QMessageBox.warning(
+                        self, "DataSource cannot be loaded",
+                        "DataSource %s without content" % dsname)
                     dlg.createGUI()
             except:
-                QMessageBox.warning(self, "DataSource cannot be loaded",
-                                    "DataSource %s cannot be loaded" % dsname),
+                QMessageBox.warning(self, 
+                                    "DataSource cannot be loaded",
+                                    "DataSource %s cannot be loaded" % dsname)
                 dlg.createGUI()
                             
                 
             dlg.dataSourceName = dsname
 
             if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**externalActions)    
+                dlg.connectExternalActions(**actions)    
             
             ds = LabeledObject(name, dlg)
             if new:
@@ -181,7 +192,8 @@ class DataSourceList(QWidget):
         return ids    
 
     ## adds an datasource    
-    #  \brief It runs the DataSource Dialog and fetches datasource name and value    
+    #  \brief It runs the DataSource Dialog and fetches datasource 
+    #         name and value    
     def addDataSource(self, obj, flag = True):
         self.datasources[obj.id] = obj
 
@@ -212,10 +224,12 @@ class DataSourceList(QWidget):
             return
         if oid in self.datasources.keys():
             if question :
-                if QMessageBox.question(self, "DataSource - Close",
-                                        "Close datasource: %s ".encode() %  (self.datasources[oid].name),
-                                        QMessageBox.Yes | QMessageBox.No,
-                                        QMessageBox.Yes ) == QMessageBox.No :
+                if QMessageBox.question(
+                    self, "DataSource - Close",
+                    "Close datasource: %s ".encode() \
+                        %  (self.datasources[oid].name),
+                    QMessageBox.Yes | QMessageBox.No,
+                    QMessageBox.Yes ) == QMessageBox.No :
                     return
 
             self.datasources.pop(oid)
@@ -225,7 +239,8 @@ class DataSourceList(QWidget):
 
 
     ## changes the current value of the datasource        
-    # \brief It changes the current value of the datasource and informs the user that datasource names arenot editable
+    # \brief It changes the current value of the datasource and informs 
+    #        the user that datasource names arenot editable
     def listItemChanged(self, item , name = None):
         ids =  self.currentListDataSource().id 
         if ids in self.datasources.keys():
@@ -269,16 +284,20 @@ class DataSourceList(QWidget):
 
 
             self.ui.sourceListWidget.addItem(item)
-            if selectedDataSource is not None and selectedDataSource == self.datasources[ds].id:
+            if selectedDataSource is not None \
+                    and selectedDataSource == self.datasources[ds].id:
                 selected = item
 
 
-            if self.datasources[ds].instance is not None and self.datasources[ds].instance.dialog is not None:
+            if self.datasources[ds].instance is not None \
+                    and self.datasources[ds].instance.dialog is not None:
                 try:
                     if  dirty:
-                        self.datasources[ds].instance.dialog.setWindowTitle("%s [DataSource]*" %name)
+                        self.datasources[ds].instance.dialog.\
+                            setWindowTitle("%s [DataSource]*" %name)
                     else:
-                        self.datasources[ds].instance.dialog.setWindowTitle("%s [DataSource]" %name)
+                        self.datasources[ds].instance.dialog.\
+                            setWindowTitle("%s [DataSource]" %name)
                 except:
 #                    print "C++", self.datasources[ds].name
                     self.datasources[ds].instance.dialog = None
@@ -293,10 +312,6 @@ class DataSourceList(QWidget):
 
 
 
-    ## accepts input text strings
-    # \brief It copies the group name and type from lineEdit widgets and accept the dialog
-    def accept(self):
-        QWidget.accept(self)
 
 if __name__ == "__main__":
     import sys

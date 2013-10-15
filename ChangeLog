@@ -1,4 +1,4 @@
-2013-XX-XX Jan Kotanski <jankotan@gmail.com>
+2013-09-27 Jan Kotanski <jankotan@gmail.com>
 	* fixes for creating Nodes of PYEVAL
 	* making connectExternalActions arguments unique
 	* tagged as v1.3.4

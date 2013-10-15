@@ -36,10 +36,6 @@ from .Errors import ParameterError
 from .DataSources import ClientSource, TangoSource, DBSource, PyEvalSource
 
 from .ui.ui_datasourcedlg import Ui_DataSourceDlg
-# from .ui.ui_clientdsdlg import Ui_ClientDsDlg
-# from .ui.ui_dbdsdlg import Ui_DBDsDlg
-# from .ui.ui_tangodsdlg import Ui_TangoDsDlg
-# from .ui.ui_pyevaldsdlg import Ui_PyEvalDsDlg
 
 
 
@@ -50,6 +46,16 @@ dsTypes = {'CLIENT':ClientSource,
            'DB':DBSource,
            'PYEVAL':PyEvalSource
            }
+
+## load user datasources
+# \param dsJSON json string with user datasources
+def appendUserDataSource(self, dsJSON):
+    for dk in dsJSON.keys():
+        pkl = dsJSON[dk].split(".")
+        dec =  __import__(".".join(pkl[:-1]), 
+                          globals(), locals(), pkl[-1])  
+        dsTypes[dk] = getattr(dec, pkl[-1])
+    
 
 
 ## dialog defining commmon datasource

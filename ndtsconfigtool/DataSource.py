@@ -19,25 +19,21 @@
 ## \file DataSourceDlg.py
 # Data Source data class
 
-""" Provides datasource widget """
+""" Provides datasource widget data"""
 
 import os
 import copy
 
-from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, QFileInfo, QFile, 
+from PyQt4.QtCore import (QModelIndex, QString, QFileInfo, QFile, 
                           QIODevice, QTextStream)
 from PyQt4.QtGui import (QApplication, QFileDialog, QMessageBox, 
-                         QWidget, QVBoxLayout)
+                         QWidget)
 from PyQt4.QtXml import (QDomDocument)
 
 from .NodeDlg import NodeDlg 
 from .DomTools import DomTools
-from .Errors import ParameterError
-from .DataSources import ClientSource, TangoSource, DBSource, PyEvalSource
-import DataSourceDlg 
+from . import DataSourceDlg 
 from .DataSourceMethods import DataSourceMethods
-
-from .ui.ui_datasourcedlg import Ui_DataSourceDlg
 
 
 
@@ -538,23 +534,23 @@ if __name__ == "__main__":
     ## the first datasource form
     form = DataSource(w)
 
-    form.dataSourceType = 'CLIENT'
-    form.clientRecordName = 'counter1'
-    form.doc = 'The first client counter  '
+#    form.dataSourceType = 'CLIENT'
+#    form.clientRecordName = 'counter1'
+#    form.doc = 'The first client counter  '
 
-    form.dataSourceType = 'TANGO'
-    form.tangoDeviceName = 'p09/motor/exp.01'
-    form.tangoMemberName = 'Position'
-    form.tangoMemberType = 'attribute'
-    form.tangoHost = 'hasso.desy.de'
-    form.tangoPort = '10000'
-    form.tangoEncoding = 'LIMA2D'
-    form.tangoGroup = 'Coordinates'
+#    form.dataSourceType = 'TANGO'
+#    form.tangoDeviceName = 'p09/motor/exp.01'
+#    form.tangoMemberName = 'Position'
+#    form.tangoMemberType = 'attribute'
+#    form.tangoHost = 'hasso.desy.de'
+#    form.tangoPort = '10000'
+#    form.tangoEncoding = 'LIMA2D'
+#    form.tangoGroup = 'Coordinates'
 
-    form.dataSourceType = 'DB'
-    form.dbType = 'PGSQL'
-    form.dbDataFormat = 'SPECTRUM'
-#    form.dbParameters = {'DB name':'tango', 'DB user':'tangouser'}
+#    form.dataSourceType = 'DB'
+#    form.dbType = 'PGSQL'
+#    form.dbDataFormat = 'SPECTRUM'
+##    form.dbParameters = {'DB name':'tango', 'DB user':'tangouser'}
 
     form.createGUI()
 

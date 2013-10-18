@@ -25,7 +25,7 @@ from PyQt4.QtGui import (QMessageBox, QFileDialog)
 from PyQt4.QtCore import (SIGNAL, QFileInfo)
 
 from .DataSourceDlg import (DataSourceDlg, CommonDataSourceDlg)
-import DataSource
+from . import DataSource
 from .ComponentDlg import (Component, ComponentDlg)
 from .LabeledObject import LabeledObject
 from .ComponentModel import ComponentModel

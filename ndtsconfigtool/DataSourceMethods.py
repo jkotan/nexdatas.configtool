@@ -19,21 +19,16 @@
 ## \file DataSourceMethod.py
 # Data Source method class
 
-""" Provides datasource widget """
+""" Provides datasource widget methods """
 
-import os
-import copy
 
-from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, QFileInfo, QFile, 
-                          QIODevice, QTextStream)
-from PyQt4.QtGui import (QApplication, QFileDialog, QMessageBox, 
+from PyQt4.QtCore import (SIGNAL, QModelIndex, QString)
+from PyQt4.QtGui import (QApplication, QMessageBox, 
                          QWidget, QVBoxLayout)
 from PyQt4.QtXml import (QDomDocument)
 
-from .NodeDlg import NodeDlg 
 from .DomTools import DomTools
 from .Errors import ParameterError
-from .DataSources import ClientSource, TangoSource, DBSource, PyEvalSource
 
 
 

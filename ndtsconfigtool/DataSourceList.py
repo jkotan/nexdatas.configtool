@@ -27,7 +27,7 @@ from PyQt4.QtCore import (Qt, QString, QVariant)
 from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
 
 from .ui.ui_datasourcelist import  Ui_DataSourceList
-import DataSource
+from . import DataSource
 from .LabeledObject import LabeledObject
 
 

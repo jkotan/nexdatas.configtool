@@ -21,21 +21,12 @@
 
 """ Provides datasource widget """
 
-import os
-import copy
-
-from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, QFileInfo, QFile, 
-                          QIODevice, QTextStream)
-from PyQt4.QtGui import (QApplication, QFileDialog, QMessageBox, 
-                         QWidget, QVBoxLayout)
-from PyQt4.QtXml import (QDomDocument)
+from PyQt4.QtCore import (SIGNAL, QModelIndex)
+from PyQt4.QtGui import QApplication
 
 from .NodeDlg import NodeDlg 
-from .DomTools import DomTools
-from .Errors import ParameterError
 from .DataSources import ClientSource, TangoSource, DBSource, PyEvalSource
 from .DataSourceMethods import DataSourceMethods
-import DataSource 
 
 from .ui.ui_datasourcedlg import Ui_DataSourceDlg
 
@@ -51,7 +42,7 @@ dsTypes = {'CLIENT':ClientSource,
 
 ## load user datasources
 # \param dsJSON json string with user datasources
-def appendUserDataSource(self, dsJSON):
+def appendUserDataSource(dsJSON):
     for dk in dsJSON.keys():
         pkl = dsJSON[dk].split(".")
         dec =  __import__(".".join(pkl[:-1]), 
@@ -160,8 +151,10 @@ class DataSourceDlg(CommonDataSourceDlg):
     def __init__(self, parent=None):
         super(DataSourceDlg, self).__init__(None, parent)
 
+        from .DataSource import CommonDataSource
+
         ## datasource data
-        self.datasource = DataSource.CommonDataSource()
+        self.datasource = CommonDataSource()
         ## datasource methods
         self.__methods = DataSourceMethods(self, self.datasource)
         
@@ -235,18 +228,20 @@ class DataSourceDlg(CommonDataSourceDlg):
 
 if __name__ == "__main__":
     import sys
-
+    from PyQt4.QtGui import QWidget 
     ## Qt application
     app = QApplication(sys.argv)
 
     ## the second datasource form
+    
+    w = QWidget()
+    w.show()
     form2 = DataSourceDlg(w)
     form2.createGUI()
     form2.treeMode(True)
 
     form2.show()
 
-    form.dialog.show()
 
 
     app.exec_()

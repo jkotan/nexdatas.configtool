@@ -24,8 +24,8 @@
 from PyQt4.QtGui import (QMessageBox, QFileDialog)
 from PyQt4.QtCore import (SIGNAL, QFileInfo)
 
-from .DataSourceDlg import (DataSource, DataSourceDlg, 
-                            CommonDataSourceDlg)
+from .DataSourceDlg import (DataSourceDlg, CommonDataSourceDlg)
+import DataSource
 from .ComponentDlg import (Component, ComponentDlg)
 from .LabeledObject import LabeledObject
 from .ComponentModel import ComponentModel
@@ -946,7 +946,7 @@ class DataSourceOpen(Command):
             else:    
                 self._ds.instance = None
 
-            self._dsEdit = DataSource()
+            self._dsEdit = DataSource.DataSource()
             self._dsEdit.ids = self._ds.id
             self._dsEdit.directory = self.receiver.sourceList.directory
             if self._fpath:
@@ -1896,7 +1896,7 @@ class DataSourceApply(Command):
                                 "Please select one of the datasources")
         if self._ds.instance is None:
             #                self._dsEdit = FieldWg()  
-            self._ds.instance  = DataSource()
+            self._ds.instance  = DataSource.DataSource()
             self._ds.instance.ids = self._ds.id
             self._ds.instance.directory = self.receiver.sourceList.directory
             self._ds.instance.name = self.receiver.sourceList.datasources[
@@ -2039,7 +2039,7 @@ class DataSourceSaveAll(Command):
         for ids in self.receiver.sourceList.datasources.keys():
             ds = self.receiver.sourceList.datasources[ids]
             if ds.instance is None:
-                dsEdit = DataSource()
+                dsEdit = DataSource.DataSource()
                 dsEdit.ids = ds.id
                 dsEdit.directory = self.receiver.sourceList.directory
                 dsEdit.name = self.receiver.sourceList.datasources[ds.id].name
@@ -2089,7 +2089,7 @@ class ServerStoreAllDataSources(Command):
         for ids in self.receiver.sourceList.datasources.keys():
             ds = self.receiver.sourceList.datasources[ids]
             if ds.instance is None:
-                dsEdit = DataSource()
+                dsEdit = DataSource.DataSource()
                 dsEdit.ids = ds.id
                 dsEdit.directory = self.receiver.sourceList.directory
                 dsEdit.name = self.receiver.sourceList.datasources[ds.id].name
@@ -2163,7 +2163,7 @@ class DataSourceSave(Command):
 
         if self._ds is not None and hasattr(self._ds, "instance"):
             if self._ds.instance is None:
-                dsEdit = DataSource()
+                dsEdit = DataSource.DataSource()
                 dsEdit.ids = self._ds.id
                 dsEdit.directory = self.receiver.sourceList.directory
                 dsEdit.name = self.receiver.sourceList.datasources[
@@ -2230,7 +2230,7 @@ class DataSourceSaveAs(Command):
                                 "Please select one of the datasources")
         else:
             if self._ds.instance is None:
-                dsEdit = DataSource()
+                dsEdit = DataSource.DataSource()
                 dsEdit.ids = self._ds.id
                 dsEdit.directory = self.receiver.sourceList.directory
                 dsEdit.name = self.receiver.sourceList.datasources[
@@ -2713,7 +2713,7 @@ class DataSourceEdit(Command):
         else:
             if self._ds.instance is None:
                 #                self._dsEdit = FieldWg()  
-                self._dsEdit = DataSource()
+                self._dsEdit = DataSource.DataSource()
                 
                 self._dsEdit.ids = self._ds.id
                 self._dsEdit.directory = self.receiver.sourceList.directory
@@ -3704,7 +3704,7 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
                     return
 
                 if ds.instance is None:
-                    dsEdit = DataSource()
+                    dsEdit = DataSource.DataSource()
                     dsEdit.ids = ds.id
                     dsEdit.directory = self.receiver.sourceList.directory
                     dsEdit.name = self.receiver.sourceList.datasources[
@@ -3800,7 +3800,7 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                     return
 
                 if ds.instance is None:
-                    dsEdit = DataSource()
+                    dsEdit = DataSource.DataSource()
                     dsEdit.ids = ds.id
                     dsEdit.directory = self.receiver.sourceList.directory
                     dsEdit.name = self.receiver.sourceList.datasources[

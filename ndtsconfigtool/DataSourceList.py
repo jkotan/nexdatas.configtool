@@ -27,14 +27,14 @@ from PyQt4.QtCore import (Qt, QString, QVariant)
 from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
 
 from .ui.ui_datasourcelist import  Ui_DataSourceList
-from .DataSourceDlg import DataSource
+import DataSource
 from .LabeledObject import LabeledObject
 
 
 ## dialog defining a group tag
 class DataSourceList(QWidget):
     
-    ## constructor
+    ## constructorCom
     # \param directory datasource directory
     # \param parent patent instance
     def __init__(self, directory, parent=None):
@@ -114,7 +114,7 @@ class DataSourceList(QWidget):
             else:
                 name = fname
                 
-            dlg = DataSource()
+            dlg = DataSource.DataSource()
             dlg.directory = self.directory
             dlg.name = name
             dlg.load()    
@@ -154,7 +154,7 @@ class DataSourceList(QWidget):
             name =  "".join(
                 x.replace('/','_').replace('\\','_').replace(':','_') \
                     for x in dsname if (x.isalnum() or x in ["/","\\",":","_"]))
-            dlg = DataSource()
+            dlg = DataSource.DataSource()
             dlg.directory = self.directory
             dlg.name = name
 

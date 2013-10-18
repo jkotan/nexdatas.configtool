@@ -1,3 +1,7 @@
+2013-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* adding parents to widgets
+	* tagged as v1.3.5
+
 2013-09-27 Jan Kotanski <jankotan@gmail.com>
 	* fixes for creating Nodes of PYEVAL
 	* making connectExternalActions arguments unique

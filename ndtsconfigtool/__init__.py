@@ -24,6 +24,6 @@ GUI configuration tool for creating input files for Tango Data Writer
 """
 
 ## version of the application
-__version__ = "1.3.4"
+__version__ = "1.3.5"
 
  

@@ -1232,7 +1232,7 @@ class Component(object):
 
  
             if self._merger and self._merger.exception is not None:
-                raise self._merger.exception
+                raise self._merger.exception   
 
             self._merged = True
             if dialog:

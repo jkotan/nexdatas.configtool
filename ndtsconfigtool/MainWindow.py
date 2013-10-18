@@ -251,10 +251,10 @@ class MainWindow(QMainWindow):
         self.compDockWidget.setAllowedAreas(
             Qt.LeftDockWidgetArea |  Qt.RightDockWidgetArea)
 
-        self.sourceList = DataSourceList(self.dsDirectory)
+        self.sourceList = DataSourceList(self.dsDirectory, self)
         self.sourceList.createGUI()
 
-        self.componentList = ComponentList(self.cpDirectory)
+        self.componentList = ComponentList(self.cpDirectory, self)
         self.componentList.createGUI()
 
         dockSplitter = QSplitter(Qt.Vertical)

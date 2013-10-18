@@ -34,7 +34,7 @@ from .LabeledObject import LabeledObject
 ## dialog defining a group tag
 class DataSourceList(QWidget):
     
-    ## constructor
+    ## constructorCom
     # \param directory datasource directory
     # \param parent patent instance
     def __init__(self, directory, parent=None):

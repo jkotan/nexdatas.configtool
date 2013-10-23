@@ -42,7 +42,7 @@ from .ComponentDlg import ComponentDlg
 
 from .HelpForm import HelpForm
 
-from .Command import (
+from .ServerCommands import (
     ServerConnect,
     ServerFetchComponents,
     ServerStoreComponent,
@@ -55,34 +55,45 @@ from .Command import (
     ServerStoreDataSource,
     ServerStoreAllDataSources,
     ServerDeleteDataSource,
-    ServerClose,
-    ComponentNew,
+    ServerClose)
+
+from .FileCommands import (
     ComponentOpen,
     DataSourceOpen,
-    ComponentRemove,
-    ComponentEdit,
     ComponentSave,
     ComponentSaveAll,
     ComponentSaveAs,
     ComponentChangeDirectory,
+    DataSourceSaveAll,
+    DataSourceSave,
+    DataSourceSaveAs,
+    ComponentReloadList,
+    DataSourceReloadList,
+    DataSourceChangeDirectory
+    )
+
+from .ListCommands import (
+    ComponentNew,
+    ComponentRemove,
+    ComponentListChanged,
+    DataSourceNew,
+    DataSourceRemove,
+    DataSourceListChanged,
+    CloseApplication
+    )
+from .EditCommands import (
+    ComponentEdit,
     DataSourceCopy,
     DataSourceCut,
     DataSourcePaste,
     DataSourceApply,
-    DataSourceSaveAll,
-    DataSourceSave,
-    DataSourceSaveAs,
-    DataSourceChangeDirectory,
-    ComponentReloadList,
-    DataSourceReloadList,
-    ComponentListChanged,
-    DataSourceNew,
     DataSourceEdit,
-    DataSourceRemove,
-    DataSourceListChanged,
-    CloseApplication,
     UndoCommand,
     RedoCommand,
+    ComponentTakeDataSources,
+    ComponentTakeDataSource
+    )
+from .ItemCommands import (
     ComponentClear,
     ComponentLoadComponentItem,
     ComponentRemoveItem,
@@ -96,8 +107,6 @@ from .Command import (
     ComponentLoadDataSourceItem,
     ComponentAddDataSourceItem,
     ComponentLinkDataSourceItem,
-    ComponentTakeDataSources,
-    ComponentTakeDataSource,
     ComponentApplyItem,
     ComponentMoveUpItem,
     ComponentMoveDownItem

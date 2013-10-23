@@ -28,7 +28,7 @@ from PyQt4.QtCore import (Qt, QString, QVariant)
 from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
 
 from .ui.ui_componentlist import Ui_ComponentList
-from .ComponentDlg import Component
+from .Component import Component
 from .LabeledObject import LabeledObject
 
 

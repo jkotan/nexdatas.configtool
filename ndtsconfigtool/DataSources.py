@@ -41,7 +41,7 @@ class ClientSource(object):
     ## variables
     var = {
         ## client record name
-        "clientRecordName":u''}
+        "recordName":u''}
 
     ## constructor
     ## \param main datasource dialog
@@ -76,8 +76,8 @@ class ClientSource(object):
     ## updates datasource ui 
     # \param datasource class
     def updateForm(self, datasource):
-        if datasource.clientRecordName is not None:
-            self.ui.cRecNameLineEdit.setText(datasource.clientRecordName)
+        if datasource.var['CLIENT'].recordName is not None:
+            self.ui.cRecNameLineEdit.setText(datasource.var['CLIENT'].recordName)
         
 
 
@@ -90,7 +90,7 @@ class ClientSource(object):
                                     "Missing <record> tag")
         else:
             attributeMap = record.attributes()
-            datasource.clientRecordName = unicode(
+            datasource.var['CLIENT'].recordName = unicode(
                 attributeMap.namedItem("name").nodeValue() \
                     if attributeMap.contains("name") else "")
         
@@ -105,7 +105,7 @@ class ClientSource(object):
                                 "Please define the record name")
             self.ui.cRecNameLineEdit.setFocus()
             return
-        datasource.clientRecordName = recName
+        datasource.var['CLIENT'].recordName = recName
 
 
 
@@ -116,7 +116,7 @@ class ClientSource(object):
     def createNodes(self, datasource, root, elem):
         record = root.createElement(QString("record"))
         record.setAttribute(
-            QString("name"), QString(datasource.clientRecordName))
+            QString("name"), QString(datasource.var['CLIENT'].recordName))
         elem.appendChild(record)            
 
         
@@ -129,13 +129,13 @@ class DBSource(object):
     ## variables
     var = {
        ## database type
-        'dbType':'MYSQL',
+        'dbtype':'MYSQL',
         ## database format
-        'dbDataFormat':'SCALAR',
+        'dataFormat':'SCALAR',
         ## database query
-        'dbQuery':"",
+        'query':"",
         ## database parameters
-        'dbParameters':{}}
+        'parameters':{}}
 
     ## constructor
     ## \param main datasource dialog
@@ -319,36 +319,36 @@ class DBSource(object):
     ## updates datasource ui 
     # \param datasource class
     def updateForm(self, datasource):
-        if datasource.dbType  is not None:
+        if datasource.var['DB'].dbtype  is not None:
             index = self.ui.dTypeComboBox.findText(
-                unicode(datasource.dbType))
+                unicode(datasource.var['DB'].dbtype))
             if  index > -1 :
                 self.ui.dTypeComboBox.setCurrentIndex(index)
             else:
-                datasource.dbType = 'MYSQL'    
-        if datasource.dbDataFormat is not None:
+                datasource.var['DB'].dbtype = 'MYSQL'    
+        if datasource.var['DB'].dataFormat is not None:
             index = self.ui.dFormatComboBox.findText(
-                unicode(datasource.dbDataFormat))
+                unicode(datasource.var['DB'].dataFormat))
             if  index > -1 :
                 self.ui.dFormatComboBox.setCurrentIndex(index)
             else:
-                datasource.dbDataFormat = 'SCALAR'    
+                datasource.var['DB'].dataFormat = 'SCALAR'    
         
-        if datasource.dbQuery is not None:        
-            self.ui.dQueryLineEdit.setText(datasource.dbQuery)
+        if datasource.var['DB'].query is not None:        
+            self.ui.dQueryLineEdit.setText(datasource.var['DB'].query)
                 
         
         self.dbParam = {}
-        for par in datasource.dbParameters.keys():
+        for par in datasource.var['DB'].parameters.keys():
             index = self.ui.dParamComboBox.findText(unicode(par))
             if  index < 0 :
                 QMessageBox.warning(
                     self.main, "Unregistered parameter", 
                     "Unknown parameter %s = '%s' will be removed." 
-                    % (par, datasource.dbParameters[unicode(par)]) )
-                datasource.dbParameters.pop(unicode(par))
+                    % (par, datasource.var['DB'].parameters[unicode(par)]) )
+                datasource.var['DB'].parameters.pop(unicode(par))
             else:
-                self.dbParam[unicode(par)]=datasource.dbParameters[
+                self.dbParam[unicode(par)]=datasource.var['DB'].parameters[
                     (unicode(par))]
         self.populateParameters()
 
@@ -366,18 +366,18 @@ class DBSource(object):
             for i in range(attributeMap.count()):
                 name = unicode(attributeMap.item(i).nodeName())
                 if name == 'dbtype':
-                    datasource.dbType = unicode(
+                    datasource.var['DB'].dbtype = unicode(
                         attributeMap.item(i).nodeValue())
                 elif name in self.__dbmap:
-                    datasource.dbParameters[self.__dbmap[name]] = \
+                    datasource.var['DB'].parameters[self.__dbmap[name]] = \
                         unicode(attributeMap.item(i).nodeValue())
                     self.dbParam[self.__dbmap[name]] = unicode(
                         attributeMap.item(i).nodeValue())
                         
-        if not datasource.dbType:
-            datasource.dbType = 'MYSQL'
+        if not datasource.var['DB'].dbtype:
+            datasource.var['DB'].dbtype = 'MYSQL'
         text = unicode(DomTools.getText(database))
-        datasource.dbParameters['Oracle DSN'] = unicode(text).strip() \
+        datasource.var['DB'].parameters['Oracle DSN'] = unicode(text).strip() \
             if text else ""
         self.dbParam['Oracle DSN'] = unicode(text).strip() \
             if text else ""
@@ -390,13 +390,13 @@ class DBSource(object):
         else:
             attributeMap = query.attributes()
 
-            datasource.dbDataFormat = unicode(
+            datasource.var['DB'].dataFormat = unicode(
                 attributeMap.namedItem("format").nodeValue() \
                     if attributeMap.contains("format") else "SCALAR")
 
 
         text = unicode(DomTools.getText(query))
-        datasource.dbQuery = unicode(text).strip() if text else ""
+        datasource.var['DB'].query = unicode(text).strip() if text else ""
 
 
     ## copies parameters from form to datasource instance
@@ -408,13 +408,13 @@ class DBSource(object):
                                 "Please define the DB query")
             self.ui.dQueryLineEdit.setFocus()
             return
-        datasource.dbQuery = query
-        datasource.dbType =  unicode(self.ui.dTypeComboBox.currentText())
-        datasource.dbDataFormat = unicode(self.ui.dFormatComboBox.currentText())
+        datasource.var['DB'].query = query
+        datasource.var['DB'].dbtype =  unicode(self.ui.dTypeComboBox.currentText())
+        datasource.var['DB'].dataFormat = unicode(self.ui.dFormatComboBox.currentText())
 
-        datasource.dbParameters.clear()
+        datasource.var['DB'].parameters.clear()
         for par in self.dbParam.keys():
-            datasource.dbParameters[par] = self.dbParam[par]
+            datasource.var['DB'].parameters[par] = self.dbParam[par]
 
 
     ## creates datasource nodes
@@ -423,22 +423,22 @@ class DBSource(object):
     # \param elem datasource node 
     def createNodes(self, datasource, root, elem):
         db = root.createElement(QString("database"))
-        db.setAttribute(QString("dbtype"), QString(datasource.dbType))
-        for par in datasource.dbParameters.keys():
+        db.setAttribute(QString("dbtype"), QString(datasource.var['DB'].dbtype))
+        for par in datasource.var['DB'].parameters.keys():
             if par == 'Oracle DSN':
                 newText = root.createTextNode(
-                    QString(datasource.dbParameters[par]))
+                    QString(datasource.var['DB'].parameters[par]))
                 db.appendChild(newText)
             else:
                 db.setAttribute(QString(self.__idbmap[par]), 
-                                QString(datasource.dbParameters[par]))
+                                QString(datasource.var['DB'].parameters[par]))
         elem.appendChild(db)            
 
         query = root.createElement(QString("query"))
         query.setAttribute(QString("format"), 
-                           QString(datasource.dbDataFormat))
-        if datasource.dbQuery:
-            newText = root.createTextNode(QString(datasource.dbQuery))
+                           QString(datasource.var['DB'].dataFormat))
+        if datasource.var['DB'].query:
+            newText = root.createTextNode(QString(datasource.var['DB'].query))
             query.appendChild(newText)
 
         elem.appendChild(query)            
@@ -452,19 +452,19 @@ class TangoSource(object):
     ## variables
     var = {
         ## Tango device name
-        'tangoDeviceName':u'',
+        'deviceName':u'',
         ## Tango member name
-        'tangoMemberName':u'',
+        'memberName':u'',
         ## Tango member name
-        'tangoMemberType':u'',
+        'memberType':u'',
         ## Tango host name
-        'tangoHost':u'',
+        'host':u'',
         ## Tango host name
-        'tangoPort':u'',
+        'port':u'',
         ## encoding for DevEncoded Tango types
-        'tangoEncoding':u'',
+        'encoding':u'',
         ## group for Tango DataSources
-        'tangoGroup':u''
+        'group':u''
         }
 
     ## \param main datasource dialog
@@ -488,25 +488,25 @@ class TangoSource(object):
     ## updates datasource ui 
     # \param datasource class
     def updateForm(self, datasource):
-        if datasource.tangoDeviceName is not None:
-            self.ui.tDevNameLineEdit.setText(datasource.tangoDeviceName)
-        if datasource.tangoMemberName is not None:
-            self.ui.tMemberNameLineEdit.setText(datasource.tangoMemberName)
-        if datasource.tangoMemberType is not None:
+        if datasource.var['TANGO'].deviceName is not None:
+            self.ui.tDevNameLineEdit.setText(datasource.var['TANGO'].deviceName)
+        if datasource.var['TANGO'].memberName is not None:
+            self.ui.tMemberNameLineEdit.setText(datasource.var['TANGO'].memberName)
+        if datasource.var['TANGO'].memberType is not None:
             index = self.ui.tMemberComboBox.findText(
-                unicode(datasource.tangoMemberType))
+                unicode(datasource.var['TANGO'].memberType))
             if  index > -1 :
                 self.ui.tMemberComboBox.setCurrentIndex(index)
             else:
-                datasource.tangoMemberType = 'attribute'    
-        if datasource.tangoHost is not None:
-            self.ui.tHostLineEdit.setText(datasource.tangoHost)
-        if datasource.tangoPort is not None:
-            self.ui.tPortLineEdit.setText(datasource.tangoPort)
-        if datasource.tangoEncoding is not None:
-            self.ui.tEncodingLineEdit.setText(datasource.tangoEncoding)
-        if datasource.tangoGroup is not None:
-            self.ui.tGroupLineEdit.setText(datasource.tangoGroup)
+                datasource.var['TANGO'].memberType = 'attribute'    
+        if datasource.var['TANGO'].host is not None:
+            self.ui.tHostLineEdit.setText(datasource.var['TANGO'].host)
+        if datasource.var['TANGO'].port is not None:
+            self.ui.tPortLineEdit.setText(datasource.var['TANGO'].port)
+        if datasource.var['TANGO'].encoding is not None:
+            self.ui.tEncodingLineEdit.setText(datasource.var['TANGO'].encoding)
+        if datasource.var['TANGO'].group is not None:
+            self.ui.tGroupLineEdit.setText(datasource.var['TANGO'].group)
 
 
 
@@ -548,7 +548,7 @@ class TangoSource(object):
                                     "Missing <record> tag")
         else:
             attributeMap = record.attributes()
-            datasource.tangoMemberName = unicode(
+            datasource.var['TANGO'].memberName = unicode(
                 attributeMap.namedItem("name").nodeValue() \
                     if attributeMap.contains("name") else "")
 
@@ -558,22 +558,22 @@ class TangoSource(object):
                                     "Missing <device> tag")
         else:
             attributeMap = device.attributes()
-            datasource.tangoDeviceName = unicode(
+            datasource.var['TANGO'].deviceName = unicode(
                 attributeMap.namedItem("name").nodeValue() \
                     if attributeMap.contains("name") else "")
-            datasource.tangoMemberType = unicode(
+            datasource.var['TANGO'].memberType = unicode(
                 attributeMap.namedItem("member").nodeValue() \
                     if attributeMap.contains("member") else "attribute")
-            datasource.tangoHost = unicode(
+            datasource.var['TANGO'].host = unicode(
                 attributeMap.namedItem("hostname").nodeValue() \
                     if attributeMap.contains("hostname") else "")
-            datasource.tangoPort = unicode(
+            datasource.var['TANGO'].port = unicode(
                 attributeMap.namedItem("port").nodeValue() \
                     if attributeMap.contains("port") else "")
-            datasource.tangoEncoding = unicode(
+            datasource.var['TANGO'].encoding = unicode(
                 attributeMap.namedItem("encoding").nodeValue() \
                     if attributeMap.contains("encoding") else "")
-            datasource.tangoGroup = unicode(
+            datasource.var['TANGO'].group = unicode(
                 attributeMap.namedItem("group").nodeValue() \
                     if attributeMap.contains("group") else "")
 
@@ -592,14 +592,14 @@ class TangoSource(object):
                                 "Please define the member name")
             self.ui.tMemberNameLineEdit.setFocus()
             return
-        datasource.tangoDeviceName = devName
-        datasource.tangoMemberName = memName
-        datasource.tangoMemberType = unicode(
+        datasource.var['TANGO'].deviceName = devName
+        datasource.var['TANGO'].memberName = memName
+        datasource.var['TANGO'].memberType = unicode(
             self.ui.tMemberComboBox.currentText())
-        datasource.tangoHost = unicode(self.ui.tHostLineEdit.text())
-        datasource.tangoPort = unicode(self.ui.tPortLineEdit.text())
-        datasource.tangoEncoding = unicode(self.ui.tEncodingLineEdit.text())
-        datasource.tangoGroup = unicode(self.ui.tGroupLineEdit.text())
+        datasource.var['TANGO'].host = unicode(self.ui.tHostLineEdit.text())
+        datasource.var['TANGO'].port = unicode(self.ui.tPortLineEdit.text())
+        datasource.var['TANGO'].encoding = unicode(self.ui.tEncodingLineEdit.text())
+        datasource.var['TANGO'].group = unicode(self.ui.tGroupLineEdit.text())
 
 
     ## creates datasource nodes
@@ -609,26 +609,26 @@ class TangoSource(object):
     def createNodes(self, datasource, root, elem):
         record = root.createElement(QString("record"))
         record.setAttribute(QString("name"), 
-                            QString(datasource.tangoMemberName))
+                            QString(datasource.var['TANGO'].memberName))
         elem.appendChild(record)            
 
         device = root.createElement(QString("device"))
         device.setAttribute(QString("name"), 
-                            QString(datasource.tangoDeviceName))
+                            QString(datasource.var['TANGO'].deviceName))
         device.setAttribute(QString("member"), 
-                            QString(datasource.tangoMemberType))
-        if datasource.tangoHost:
+                            QString(datasource.var['TANGO'].memberType))
+        if datasource.var['TANGO'].host:
             device.setAttribute(QString("hostname"), 
-                                QString(datasource.tangoHost))
-        if datasource.tangoPort:
+                                QString(datasource.var['TANGO'].host))
+        if datasource.var['TANGO'].port:
             device.setAttribute(QString("port"), 
-                                QString(datasource.tangoPort))
-        if datasource.tangoEncoding:
+                                QString(datasource.var['TANGO'].port))
+        if datasource.var['TANGO'].encoding:
             device.setAttribute(QString("encoding"), 
-                                QString(datasource.tangoEncoding))
-        if datasource.tangoGroup:
+                                QString(datasource.var['TANGO'].encoding))
+        if datasource.var['TANGO'].group:
             device.setAttribute(QString("group"), 
-                                QString(datasource.tangoGroup))
+                                QString(datasource.var['TANGO'].group))
         elem.appendChild(device)            
 
 
@@ -640,13 +640,13 @@ class PyEvalSource(object):
     ## variables
     var = {
         ## pyeval result variable
-        'peResult':"ds.result",
+        'result':"ds.result",
         ## pyeval datasource variables
-        'peInput':"",
+        'input':"",
         ## pyeval python script
-        'peScript':"",
+        'script':"",
         ## pyeval datasources
-        'peDataSources':{}
+        'dataSources':{}
         }
 
     ## \param main datasource dialog
@@ -672,12 +672,12 @@ class PyEvalSource(object):
     ## updates datasource ui 
     # \param datasource class
     def updateForm(self, datasource):
-        if datasource.peResult is not None:
-            self.ui.peResultLineEdit.setText(datasource.peResult)
-        if datasource.peInput is not None:
-            self.ui.peInputLineEdit.setText(datasource.peInput)
-        if datasource.peScript is not None:
-            self.ui.peScriptTextEdit.setText(datasource.peScript)
+        if datasource.var['PYEVAL'].result is not None:
+            self.ui.peResultLineEdit.setText(datasource.var['PYEVAL'].result)
+        if datasource.var['PYEVAL'].input is not None:
+            self.ui.peInputLineEdit.setText(datasource.var['PYEVAL'].input)
+        if datasource.var['PYEVAL'].script is not None:
+            self.ui.peScriptTextEdit.setText(datasource.var['PYEVAL'].script)
 
 
 
@@ -688,16 +688,16 @@ class PyEvalSource(object):
         text = DomTools.getText(res)    
         while len(text)>0 and text[0] =='\n':
             text = text[1:]
-        datasource.peScript = unicode(text) if text else ""
+        datasource.var['PYEVAL'].script = unicode(text) if text else ""
         attributeMap = res.attributes()
-        datasource.peResult = unicode(
+        datasource.var['PYEVAL'].result = unicode(
             "ds." + attributeMap.namedItem("name").nodeValue() \
                 if attributeMap.contains("name") else "")
 
         ds = DomTools.getText(self.main.node)    
         dslist = unicode(ds).strip().split() \
             if unicode(ds).strip() else []
-        datasource.peDataSources = {}
+        datasource.var['PYEVAL'].dataSources = {}
         child = self.main.node.firstChildElement(
             QString("datasource"))           
         while not child.isNull():
@@ -711,11 +711,11 @@ class PyEvalSource(object):
                     doc = QDomDocument()
                     doc.appendChild(
                         doc.importNode(child, True))
-                    datasource.peDataSources[name] = unicode(doc.toString(0))
+                    datasource.var['PYEVAL'].dataSources[name] = unicode(doc.toString(0))
                     child = child.nextSiblingElement("datasource")    
                     
             
-        datasource.peInput = " ".join(
+        datasource.var['PYEVAL'].input = " ".join(
             "ds."+ (d[13:] if (len(d)> 13 and d[:13] =="$datasources.") 
                     else d) for d in dslist)
 
@@ -723,15 +723,17 @@ class PyEvalSource(object):
     ## copies parameters from form to datasource instance
     # \param datasource class
     def fromForm(self, datasource):
-        datasource.peInput = unicode(self.ui.peInputLineEdit.text()).strip()
-        datasource.peResult = unicode(self.ui.peResultLineEdit.text()).strip()
+        datasource.var['PYEVAL'].input = \
+            unicode(self.ui.peInputLineEdit.text()).strip()
+        datasource.var['PYEVAL'].result = \
+            unicode(self.ui.peResultLineEdit.text()).strip()
         script = unicode(self.ui.peScriptTextEdit.toPlainText())
         if not script:
             QMessageBox.warning(self.main, "Empty script", 
                                 "Please define the PyEval script")
             self.ui.dQueryLineEdit.setFocus()
             return 
-        datasource.peScript = script
+        datasource.var['PYEVAL'].script = script
 
 
 
@@ -741,28 +743,28 @@ class PyEvalSource(object):
     # \param elem datasource node 
     def createNodes(self, datasource, root, elem):
         res = root.createElement(QString("result"))
-        rn = str(datasource.peResult).strip()
+        rn = str(datasource.var['PYEVAL'].result).strip()
         if rn:
             res.setAttribute(
                 QString("name"), 
                 QString(rn[3:] if (len(rn) > 3 and rn[:3] == 'ds.' ) else rn))
-        if datasource.peScript:
+        if datasource.var['PYEVAL'].script:
             script = root.createTextNode(
                 QString(
-                    datasource.peScript if (
-                        len(datasource.peScript)>0 and \
-                            datasource.peScript[0] == '\n') else (
-                        "\n"+ datasource.peScript)))
+                    datasource.var['PYEVAL'].script if (
+                        len(datasource.var['PYEVAL'].script)>0 and \
+                            datasource.var['PYEVAL'].script[0] == '\n') else (
+                        "\n"+ datasource.var['PYEVAL'].script)))
             res.appendChild(script)
         elem.appendChild(res)            
-        if datasource.peInput:
-            dslist = unicode(datasource.peInput).split()
+        if datasource.var['PYEVAL'].input:
+            dslist = unicode(datasource.var['PYEVAL'].input).split()
             newds = "" 
             for d in dslist:
                 name = d[3:] if (len(d) > 3 and d[:3] == 'ds.' ) else d
-                if name in datasource.peDataSources.keys():
+                if name in datasource.var['PYEVAL'].dataSources.keys():
                     document = QDomDocument() 
-                    if not document.setContent(datasource.peDataSources[name]):
+                    if not document.setContent(datasource.var['PYEVAL'].dataSources[name]):
                         raise ValueError, "could not parse XML"  
                     else:
                         if self.main and hasattr(self.main,"root"):

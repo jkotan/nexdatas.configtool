@@ -36,7 +36,8 @@ from . import DataSourceDlg
 from .DataSourceMethods import DataSourceMethods
 
 
-
+class Variables(object):
+    pass
 
 ## dialog defining datasource
 class CommonDataSource(object):
@@ -44,9 +45,6 @@ class CommonDataSource(object):
     ## constructor
     def __init__(self):
         
-#        ## datasource dialog parent
-#        self.parent = parent
-
         ## data source type
         self.dataSourceType = 'CLIENT'
         ## attribute doc
@@ -79,17 +77,21 @@ class CommonDataSource(object):
         ## if datasource in the component tree
         self.tree = False
         
+        ## datasource variables
+        self.var = {}
 
         ## creates variables dynamically
         self.clear()
 
 
+
     ## clears the datasource content
     # \brief It sets the datasource variables to default values
     def clear(self):
-        for cl in DataSourceDlg.dsTypes.values():
+        for ds,cl in DataSourceDlg.dsTypes.items():
+            self.var[ds] = Variables()
             for vr in cl.var.keys():
-                setattr(self, vr, cl.var[vr])
+                setattr(self.var[ds], vr, cl.var[vr])
 
 
         
@@ -101,9 +103,9 @@ class CommonDataSource(object):
                  self.dataSourceName,
                  self.doc]
 
-        for cl in DataSourceDlg.dsTypes.values():
+        for ds,cl in DataSourceDlg.dsTypes.items():
             for vr in cl.var.keys():
-                vv = getattr(self, vr)
+                vv = getattr(self.var[ds], vr)
                 state.append(
                     copy.copy(vv) \
                         if ((type(vv) is list) or (type(vv) is dict)) else vv)
@@ -119,10 +121,10 @@ class CommonDataSource(object):
         cnt = 3
         (self.dataSourceType, self.dataSourceName, self.doc) = state[:cnt]
 
-        for cl in DataSourceDlg.dsTypes.values():
+        for ds,cl in DataSourceDlg.dsTypes.items():
             for vr in cl.var.keys():
                 setattr(
-                    self, vr, copy.copy(state[cnt]) \
+                    self.var[ds], vr, copy.copy(state[cnt]) \
                         if ((type(state[cnt]) is list) \
                                 or (type(state[cnt]) is dict)) \
                         else state[cnt])

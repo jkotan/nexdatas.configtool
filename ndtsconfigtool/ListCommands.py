@@ -51,21 +51,21 @@ class ComponentNew(Command):
         else:    
             self._comp.instance = None
         
-        self.receiver.componentList.addComponent(self._comp)
+        self.receiver.main.componentList.addComponent(self._comp)
         print "EXEC componentNew"
         
     ## unexecutes the command
     # \brief It removes the new component
     def unexecute(self):
         if self._comp is not None:
-            self.receiver.componentList.removeComponent(self._comp, False)
+            self.receiver.main.componentList.removeComponent(self._comp, False)
 
             if hasattr(self._comp,'instance') and self._comp.instance:
-                subwindow = self.receiver.subWindow(
-                    self._comp.instance, self.receiver.mdi.subWindowList())
+                subwindow = self.receiver.main.subWindow(
+                    self._comp.instance, self.receiver.main.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.mdi.setActiveSubWindow(subwindow) 
-                    self.receiver.mdi.closeActiveSubWindow() 
+                    self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.main.mdi.closeActiveSubWindow() 
             
         print "UNDO componentNew"
 
@@ -94,23 +94,23 @@ class ComponentRemove(Command):
     def execute(self):
         
         if self._cp is not None:
-            self.receiver.componentList.removeComponent(self._cp, False)
+            self.receiver.main.componentList.removeComponent(self._cp, False)
         else:
-            self._cp = self.receiver.componentList.currentListComponent()
+            self._cp = self.receiver.main.componentList.currentListComponent()
             if self._cp is None:
                 QMessageBox.warning(
-                    self.receiver, 
+                    self.receiver.main, 
                     "Component not selected", 
                     "Please select one of the components")
             else:
-                self.receiver.componentList.removeComponent(self._cp, True)
+                self.receiver.main.componentList.removeComponent(self._cp, True)
             
         if hasattr(self._cp, "instance"):
-            subwindow = self.receiver.subWindow(
-                self._cp.instance, self.receiver.mdi.subWindowList())
+            subwindow = self.receiver.main.subWindow(
+                self._cp.instance, self.receiver.main.mdi.subWindowList())
             if subwindow:
-                self.receiver.mdi.setActiveSubWindow(subwindow)
-                self.receiver.mdi.closeActiveSubWindow()
+                self.receiver.main.mdi.setActiveSubWindow(subwindow)
+                self.receiver.main.mdi.closeActiveSubWindow()
             
             
         print "EXEC componentRemove"
@@ -121,28 +121,30 @@ class ComponentRemove(Command):
     def unexecute(self):
         if self._cp is not None:
 
-            self.receiver.componentList.addComponent(self._cp, False)
+            self.receiver.main.componentList.addComponent(self._cp, False)
             if self._cp.instance is None:
                 self._cp.instance = Component()
                 self._cp.instance.idc = self._cp.id
                 self._cp.instance.directory = \
-                    self.receiver.componentList.directory
-                self._cp.instance.name = self.receiver.componentList.components[
+                    self.receiver.main.componentList.directory
+                self._cp.instance.name = \
+                    self.receiver.main.componentList.components[
                     self._cp.id].name
 
 
             self._cp.instance.createGUI()
-            self._cp.instance.addContextMenu(self.receiver.contextMenuActions)
+            self._cp.instance.addContextMenu(
+                self.receiver.main.contextMenuActions)
 
-            subwindow = self.receiver.subWindow(
-                self._cp.instance, self.receiver.mdi.subWindowList())
+            subwindow = self.receiver.main.subWindow(
+                self._cp.instance, self.receiver.main.mdi.subWindowList())
             if subwindow:
-                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
                 self._cp.instance.dialog.setSaveFocus()
             else:    
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
-                self._subwindow = self.receiver.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.mdi.addSubWindow(
                     self._cp.instance.dialog)
                 self._subwindow.resize(680, 560)
                 self._cp.instance.dialog.setSaveFocus()
@@ -152,14 +154,14 @@ class ComponentRemove(Command):
 
             if hasattr(self._cp.instance, "connectExternalActions"):     
                 self._cp.instance.connectExternalActions(
-                    **self.receiver.externalCPActions)
+                    **self.receiver.main.externalCPActions)
 
 
 
         if hasattr(self._cp, "id"):
-            self.receiver.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateComponents(self._cp.id)
         else:
-            self.receiver.componentList.populateComponents()
+            self.receiver.main.componentList.populateComponents()
 
                     
 
@@ -206,24 +208,25 @@ class ComponentListChanged(Command):
                 self.name = unicode(self.item.text())
             if self._cp is None:
                 self._cp, self._oldName = \
-                    self.receiver.componentList.listItemChanged(
+                    self.receiver.main.componentList.listItemChanged(
                     self.item, self.name)
             else:
                 self._cp.name = self.name
                 
-            self.receiver.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateComponents(self._cp.id)
             if self._cp.instance is not None:
                 self._oldDirectory = self._cp.instance.directory 
                 self._cp.instance.setName(self.name, self.directory)
             else:
-                self._oldDirectory =  self.receiver.componentList.directory 
+                self._oldDirectory = \
+                    self.receiver.main.componentList.directory 
 
 
-        cp = self.receiver.componentList.currentListComponent()
+        cp = self.receiver.main.componentList.currentListComponent()
         if hasattr(cp, "id"):
-            self.receiver.componentList.populateComponents(cp.id)
+            self.receiver.main.componentList.populateComponents(cp.id)
         else:
-            self.receiver.componentList.populateComponents()
+            self.receiver.main.componentList.populateComponents()
               
         print "EXEC componentChanged"
 
@@ -233,15 +236,15 @@ class ComponentListChanged(Command):
     def unexecute(self):
         if self._cp is not None:
             self._cp.name = self._oldName 
-            self.receiver.componentList.addComponent(self._cp, False)
+            self.receiver.main.componentList.addComponent(self._cp, False)
             if self._cp.instance is not None:
                 self._cp.instance.setName(self._oldName, self._oldDirectory)
 
-        cp = self.receiver.componentList.currentListComponent()
+        cp = self.receiver.main.componentList.currentListComponent()
         if hasattr(cp, "id"):
-            self.receiver.componentList.populateComponents(cp.id)
+            self.receiver.main.componentList.populateComponents(cp.id)
         else:
-            self.receiver.componentList.populateComponents()
+            self.receiver.main.componentList.populateComponents()
 
         print "UNDO componentChanged"
 
@@ -270,23 +273,23 @@ class DataSourceNew(Command):
             self._ds = LabeledObject("", None)
         else:
             self._ds.instance = None
-        self.receiver.sourceList.addDataSource(self._ds)
+        self.receiver.main.sourceList.addDataSource(self._ds)
         print "EXEC dsourceNew"
 
     ## unexecutes the command
     # \brief It removes the added datasource
     def unexecute(self):
         if self._ds is not None:
-            self.receiver.sourceList.removeDataSource(self._ds, False)
+            self.receiver.main.sourceList.removeDataSource(self._ds, False)
 
 
             if hasattr(self._ds,'instance'):
                 subwindow = \
-                    self.receiver.subWindow(
-                    self._ds.instance, self.receiver.mdi.subWindowList())
+                    self.receiver.main.subWindow(
+                    self._ds.instance, self.receiver.main.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.mdi.setActiveSubWindow(subwindow) 
-                    self.receiver.mdi.closeActiveSubWindow() 
+                    self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.main.mdi.closeActiveSubWindow() 
 
         print "UNDO dsourceNew"
 
@@ -316,23 +319,23 @@ class DataSourceRemove(Command):
     def execute(self):
         
         if self._ds is not None:
-            self.receiver.sourceList.removeDataSource(self._ds, False)
+            self.receiver.main.sourceList.removeDataSource(self._ds, False)
         else:
-            self._ds = self.receiver.sourceList.currentListDataSource()
+            self._ds = self.receiver.main.sourceList.currentListDataSource()
             if self._ds is None:
                 QMessageBox.warning(
-                    self.receiver, "DataSource not selected", 
+                    self.receiver.main, "DataSource not selected", 
                     "Please select one of the datasources")            
             else:
-                self.receiver.sourceList.removeDataSource(self._ds, True)
+                self.receiver.main.sourceList.removeDataSource(self._ds, True)
             
 
         if hasattr(self._ds, "instance"):
-            subwindow = self.receiver.subWindow(
-                self._ds.instance, self.receiver.mdi.subWindowList())
+            subwindow = self.receiver.main.subWindow(
+                self._ds.instance, self.receiver.main.mdi.subWindowList())
             if subwindow:
-                self.receiver.mdi.setActiveSubWindow(subwindow)
-                self.receiver.mdi.closeActiveSubWindow()
+                self.receiver.main.mdi.setActiveSubWindow(subwindow)
+                self.receiver.main.mdi.closeActiveSubWindow()
             
             
         print "EXEC dsourceRemove"
@@ -342,18 +345,18 @@ class DataSourceRemove(Command):
     def unexecute(self):
         if self._ds is not None:
 
-            self.receiver.sourceList.addDataSource(self._ds, False)
+            self.receiver.main.sourceList.addDataSource(self._ds, False)
 
             self._ds.instance.createGUI()
 
-            subwindow = self.receiver.subWindow(
-                self._ds.instance, self.receiver.mdi.subWindowList())
+            subwindow = self.receiver.main.subWindow(
+                self._ds.instance, self.receiver.main.mdi.subWindowList())
             if subwindow:
-                self.receiver.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.dialog.setSaveFocus()
             else:    
                 self._ds.instance.createDialog()
-                self._subwindow = self.receiver.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(680, 560)
                 self._ds.instance.dialog.setSaveFocus()
@@ -399,23 +402,23 @@ class DataSourceListChanged(Command):
                 self.name = unicode(self.item.text())
             if self._ds is None:
                 self._ds, self._oldName = \
-                    self.receiver.sourceList.listItemChanged(
+                    self.receiver.main.sourceList.listItemChanged(
                     self.item, self.name)
             else:
                 self._ds.name = self.name
              
-            self.receiver.sourceList.populateDataSources(self._ds.id)
+            self.receiver.main.sourceList.populateDataSources(self._ds.id)
             if self._ds.instance is not None:
                 self._oldDirectory = self._ds.instance.directory 
                 self._ds.instance.setName(self.name, self.directory)
             else:
-                self._oldDirectory = self.receiver.sourceList.directory 
+                self._oldDirectory = self.receiver.main.sourceList.directory 
 
-        ds = self.receiver.sourceList.currentListDataSource()
+        ds = self.receiver.main.sourceList.currentListDataSource()
         if hasattr(ds, "id"):
-            self.receiver.sourceList.populateDataSources(ds.id)
+            self.receiver.main.sourceList.populateDataSources(ds.id)
         else:
-            self.receiver.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateDataSources()
 
         print "EXEC dsourceChanged"
 
@@ -424,17 +427,17 @@ class DataSourceListChanged(Command):
     def unexecute(self):
         if self._ds is not None:
             self._ds.name = self._oldName 
-            self.receiver.sourceList.addDataSource(self._ds, False)
+            self.receiver.main.sourceList.addDataSource(self._ds, False)
             if self._ds.instance is not None:
                 self._ds.instance.setName(
                     self._oldName, self._oldDirectory)
 
 
-        ds = self.receiver.sourceList.currentListDataSource()
+        ds = self.receiver.main.sourceList.currentListDataSource()
         if hasattr(ds, "id"):
-            self.receiver.sourceList.populateDataSources(ds.id)
+            self.receiver.main.sourceList.populateDataSources(ds.id)
         else:
-            self.receiver.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateDataSources()
 
         print "UNDO dsourceChanged"
 
@@ -461,8 +464,8 @@ class CloseApplication(Command):
     ## executes the command
     # \brief It is performed during closing the Component Designer
     def execute(self):
-        if hasattr(self.receiver,'mdi'):
-            self.receiver.close()
+        if hasattr(self.receiver.main,'mdi'):
+            self.receiver.main.close()
             print "EXEC closeApp"
 
     ## executes the command

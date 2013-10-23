@@ -81,6 +81,7 @@ from .ListCommands import (
     DataSourceListChanged,
     CloseApplication
     )
+
 from .EditCommands import (
     ComponentEdit,
     DataSourceCopy,
@@ -93,6 +94,7 @@ from .EditCommands import (
     ComponentTakeDataSources,
     ComponentTakeDataSource
     )
+
 from .ItemCommands import (
     ComponentClear,
     ComponentLoadComponentItem,
@@ -127,37 +129,36 @@ class MainWindow(QMainWindow):
         ## component tree menu under mouse cursor
         self.contextMenuActions = None
 
+
         ## slots for DataSource widget buttons
         self.externalDSActions = {}
+        ## datasource list menu under mouse cursor
+        self.dsourceListMenuActions = None
+        ## datasource directory
+        self.dsDirectory = ""
+        ## list of datasources
+        self.sourceList =  None
+        ## datasource directory label
+        self.dsDirLabel = None
+
 
         ## slots for Component widget buttons
         self.externalCPActions = {}
-
         ## component list menu under mouse cursor
         self.componentListMenuActions = None
-
-        ## datasource list menu under mouse cursor
-        self.dsourceListMenuActions = None
-
-
-        ## datasource directory
-        self.dsDirectory = ""
         ## component directory
         self.cpDirectory = ""
-
-        ## list of datasources
-        self.sourceList =  None
         ## list of components
         self.componentList =    None
+        ## component directory label
+        self.cpDirLabel = None
+
 
         ## dock with components and datasources
         self.compDockWidget = None
 
-        ## component directory label
-        self.cpDirLabel = None
-        ## datasource directory label
-        self.dsDirLabel = None
-
+        ## receiver main application
+        self.main = self
         
         ## multi window workspace
         self.mdi = None
@@ -176,31 +177,14 @@ class MainWindow(QMainWindow):
         self.windows = {}
 
         settings = QSettings()
-        dsdir = unicode(settings.value("DataSources/directory").toString())
-        if dsdir:
-            self.dsDirectory = os.path.abspath(dsdir)
-        else:
-            if os.path.exists(os.path.join(os.getcwd(),"datasources")):
-                self.dsDirectory = os.path.abspath(
-                    os.path.join(os.getcwd(),"datasources"))
-            else:
-                self.dsDirectory = os.getcwd()
-                
-            
-        cpdir = unicode(settings.value("Components/directory").toString())    
-        if cpdir:
-            self.cpDirectory = os.path.abspath(cpdir)
-        else:
-            if os.path.exists(os.path.join(os.getcwd(),"components")):
-                self.cpDirectory = os.path.abspath(
-                    os.path.join(os.getcwd(),"components"))
-            else:
-                self.cpDirectory = os.getcwd()
 
-        self.createGUI()
+        self.dsDirectory = self.setDirectory(
+            settings, "DataSources/directory", "datasources")    
+        self.cpDirectory = self.setDirectory(
+            settings, "Components/directory", "components")    
 
-            
 
+        self.createGUI()            
         self.createActions()
 
         if self.componentList:
@@ -218,18 +202,59 @@ class MainWindow(QMainWindow):
         self.restoreState(
             settings.value("MainWindow/State").toByteArray())
 
-
         if PYTANGO_AVAILABLE:
-            self.configServer = ConfigurationServer()
-            self.configServer.device = unicode(
-                settings.value("ConfigServer/device").toString())
-            self.configServer.host = unicode(
-                settings.value("ConfigServer/host").toString())
-            port = str(settings.value("ConfigServer/port").toString())
-            if port:
-                self.configServer.port = int(port)
+            self.setupServer(settings)
+
+        status = self.createStatusBar()        
+        self.updateWindowMenu()
+        status.showMessage("Ready", 5000)
+
+        self.setWindowTitle("NDTS Component Designer")
+
+
+
+    ## setups direcconfiguration server
+    # \param settings application QSettings object
+    # \param name setting variable name
+    # \param default defualt value    
+    # \returns set directory    
+    @classmethod    
+    def setDirectory(cls, settings, name, default):
+        directory = ""
+        dsdir = unicode(settings.value(name).toString())
+        if dsdir:
+            directory = os.path.abspath(dsdir)
+        else:
+            if os.path.exists(os.path.join(os.getcwd(), default)):
+                directory = os.path.abspath(
+                    os.path.join(os.getcwd(), default))
+            else:
+                directory = os.getcwd()
+        return directory        
             
 
+
+    ## setups configuration server
+    # \param settings application QSettings object
+    def setupServer(self, settings):
+        self.configServer = ConfigurationServer()
+        self.configServer.device = unicode(
+            settings.value("ConfigServer/device").toString())
+        self.configServer.host = unicode(
+            settings.value("ConfigServer/host").toString())
+        port = str(settings.value("ConfigServer/port").toString())
+        if port:
+            self.configServer.port = int(port)
+
+
+    ## updates directories in status bar
+    def updateStatusBar(self):
+        self.cpDirLabel.setText("CP: %s" % (self.cpDirectory))
+        self.dsDirLabel.setText("DS: %s" % (self.dsDirectory))
+
+    ## creates status bar    
+    # \returns status bar    
+    def createStatusBar(self):    
         status = self.statusBar()
         status.setSizeGripEnabled(False)
         self.cpDirLabel = QLabel("CP: %s" % (self.cpDirectory))
@@ -239,16 +264,7 @@ class MainWindow(QMainWindow):
         status.addWidget(QLabel(""), 4)
         status.addWidget(self.cpDirLabel, 4)
         status.addWidget(self.dsDirLabel, 4)
-        self.updateWindowMenu()
-        status.showMessage("Ready", 5000)
-
-        self.setWindowTitle("NDTS Component Designer")
-
-    ## updates directories in status bar
-    def updateStatusBar(self):
-        self.cpDirLabel.setText("CP: %s" % (self.cpDirectory))
-        self.dsDirLabel.setText("DS: %s" % (self.dsDirectory))
-        
+        return status
 
     ##  creates GUI
     # \brief It create dialogs for the main window application
@@ -1036,6 +1052,7 @@ class MainWindow(QMainWindow):
             "externalClose":self.componentClose,
             "externalDSLink":self.componentLinkDataSourceItemButton}
 
+    
 
     ## stores the setting before finishing the application 
     # \param event Qt event   
@@ -1143,11 +1160,6 @@ class MainWindow(QMainWindow):
                               QVariant(self.configServer.port))
             self.configServer.close()
 
-#        files = QStringList()
-#        for instance in self.mdi.subWindowList():
-#            if not instance.filename.startsWith("Unnamed"):
-#                files.append(instance.filename)
-#        settings.setValue("CurrentFiles", QVariant(files))
         self.mdi.closeAllSubWindows()
 
 

@@ -77,7 +77,8 @@ class ClientSource(object):
     # \param datasource class
     def updateForm(self, datasource):
         if datasource.var['CLIENT'].recordName is not None:
-            self.ui.cRecNameLineEdit.setText(datasource.var['CLIENT'].recordName)
+            self.ui.cRecNameLineEdit.setText(
+                datasource.var['CLIENT'].recordName)
         
 
 
@@ -409,8 +410,10 @@ class DBSource(object):
             self.ui.dQueryLineEdit.setFocus()
             return
         datasource.var['DB'].query = query
-        datasource.var['DB'].dbtype =  unicode(self.ui.dTypeComboBox.currentText())
-        datasource.var['DB'].dataFormat = unicode(self.ui.dFormatComboBox.currentText())
+        datasource.var['DB'].dbtype =  unicode(
+            self.ui.dTypeComboBox.currentText())
+        datasource.var['DB'].dataFormat = unicode(
+            self.ui.dFormatComboBox.currentText())
 
         datasource.var['DB'].parameters.clear()
         for par in self.dbParam.keys():
@@ -491,7 +494,8 @@ class TangoSource(object):
         if datasource.var['TANGO'].deviceName is not None:
             self.ui.tDevNameLineEdit.setText(datasource.var['TANGO'].deviceName)
         if datasource.var['TANGO'].memberName is not None:
-            self.ui.tMemberNameLineEdit.setText(datasource.var['TANGO'].memberName)
+            self.ui.tMemberNameLineEdit.setText(
+                datasource.var['TANGO'].memberName)
         if datasource.var['TANGO'].memberType is not None:
             index = self.ui.tMemberComboBox.findText(
                 unicode(datasource.var['TANGO'].memberType))
@@ -598,7 +602,8 @@ class TangoSource(object):
             self.ui.tMemberComboBox.currentText())
         datasource.var['TANGO'].host = unicode(self.ui.tHostLineEdit.text())
         datasource.var['TANGO'].port = unicode(self.ui.tPortLineEdit.text())
-        datasource.var['TANGO'].encoding = unicode(self.ui.tEncodingLineEdit.text())
+        datasource.var['TANGO'].encoding = unicode(
+            self.ui.tEncodingLineEdit.text())
         datasource.var['TANGO'].group = unicode(self.ui.tGroupLineEdit.text())
 
 
@@ -711,7 +716,8 @@ class PyEvalSource(object):
                     doc = QDomDocument()
                     doc.appendChild(
                         doc.importNode(child, True))
-                    datasource.var['PYEVAL'].dataSources[name] = unicode(doc.toString(0))
+                    datasource.var['PYEVAL'].dataSources[name] = unicode(
+                        doc.toString(0))
                     child = child.nextSiblingElement("datasource")    
                     
             
@@ -764,7 +770,8 @@ class PyEvalSource(object):
                 name = d[3:] if (len(d) > 3 and d[:3] == 'ds.' ) else d
                 if name in datasource.var['PYEVAL'].dataSources.keys():
                     document = QDomDocument() 
-                    if not document.setContent(datasource.var['PYEVAL'].dataSources[name]):
+                    if not document.setContent(
+                        datasource.var['PYEVAL'].dataSources[name]):
                         raise ValueError, "could not parse XML"  
                     else:
                         if self.main and hasattr(self.main,"root"):

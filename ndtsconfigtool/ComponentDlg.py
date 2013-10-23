@@ -770,7 +770,8 @@ class Component(object):
 
             self.dialog.ui.frame.hide()
             self._frameLayout.removeWidget(self.dialog.ui.widget)
-            self.dialog.ui.widget = self._tagClasses[unicode(nNode)](self.dialog)
+            self.dialog.ui.widget = self._tagClasses[
+                unicode(nNode)](self.dialog)
             self.dialog.ui.widget.root = self.document
             self.dialog.ui.widget.setFromNode(node)
             self.dialog.ui.widget.createGUI()

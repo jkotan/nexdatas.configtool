@@ -88,7 +88,7 @@ class CommonDataSource(object):
     ## clears the datasource content
     # \brief It sets the datasource variables to default values
     def clear(self):
-        for ds,cl in DataSourceDlg.dsTypes.items():
+        for ds, cl in DataSourceDlg.dsTypes.items():
             self.var[ds] = Variables()
             for vr in cl.var.keys():
                 setattr(self.var[ds], vr, cl.var[vr])
@@ -103,7 +103,7 @@ class CommonDataSource(object):
                  self.dataSourceName,
                  self.doc]
 
-        for ds,cl in DataSourceDlg.dsTypes.items():
+        for ds, cl in DataSourceDlg.dsTypes.items():
             for vr in cl.var.keys():
                 vv = getattr(self.var[ds], vr)
                 state.append(
@@ -121,7 +121,7 @@ class CommonDataSource(object):
         cnt = 3
         (self.dataSourceType, self.dataSourceName, self.doc) = state[:cnt]
 
-        for ds,cl in DataSourceDlg.dsTypes.items():
+        for ds, cl in DataSourceDlg.dsTypes.items():
             for vr in cl.var.keys():
                 setattr(
                     self.var[ds], vr, copy.copy(state[cnt]) \

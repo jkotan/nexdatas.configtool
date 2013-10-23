@@ -31,7 +31,7 @@ import time
 
 from PyQt4.QtGui import (QApplication)
 
-from ndtsconfigtool.DataSourceDlg import CommonDataSource
+from ndtsconfigtool.DataSource import CommonDataSource
 from ndtsconfigtool.NodeDlg import NodeDlg
 
 ##  Qt-application

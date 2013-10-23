@@ -35,7 +35,9 @@ from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString, QModelI
 from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
 
 
-from ndtsconfigtool.DataSourceDlg import DataSourceDlg, CommonDataSource, CommonDataSourceDlg, DataSourceMethods
+from ndtsconfigtool.DataSourceDlg import DataSourceDlg, CommonDataSourceDlg
+from ndtsconfigtool.DataSourceMethods import DataSourceMethods
+from ndtsconfigtool.DataSource import CommonDataSource
 from ndtsconfigtool.ComponentModel import ComponentModel
 from ndtsconfigtool.AttributeDlg import AttributeDlg
 from ndtsconfigtool.NodeDlg import NodeDlg

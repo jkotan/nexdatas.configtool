@@ -34,12 +34,12 @@ from .LabeledObject import LabeledObject
 ## dialog defining a group tag
 class ElementList(QWidget):
     
-    ## constructorCom
+    ## constructor
     # \param directory datasource directory
     # \param parent patent instance
     def __init__(self, directory, parent=None):
         super(ElementList, self).__init__(parent)
-         ## directWory from which components are loaded by default
+         ## directory from which components are loaded by default
         self.directory = directory
         
         ## group elements
@@ -55,7 +55,7 @@ class ElementList(QWidget):
         self.title = "Elements"
         ## singular name
         self.clName = "Element"
-        ## element name
+        ## class name
         self.name = "elements"
 
     ##  creates GUI
@@ -94,110 +94,6 @@ class ElementList(QWidget):
         
             
 
-    ## loads the element list from the given dictionary
-    # \param externalActions dictionary with external actions
-    def loadList(self, externalActions = None):
-        actions = externalActions if externalActions else {}
-        try:
-            dirList = [l for l in  os.listdir(self.directory) \
-                           if l.endswith(".ds.xml")]
-        except:
-            try:
-                if os.path.exists(os.path.join(os.getcwd(),self.name)):
-                    self.directory = os.path.abspath(
-                        os.path.join(os.getcwd(),self.name))
-                else:
-                    self.directory = os.getcwd()
-
-                dirList = [l for l in  os.listdir(self.directory) \
-                               if l.endswith(".ds.xml")]
-            except:
-                return
-
-        for fname in dirList:
-            if fname[-4:] == '.xml':
-                name = fname[:-4]
-                if name[-3:] == '.ds':
-                    name = name[:-3]
-            else:
-                name = fname
-                
-            dlg = DataSource()
-            dlg.directory = self.directory
-            dlg.name = name
-            dlg.load()    
-
-            
-            if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**actions)    
-            
-            ds = LabeledObject(name, dlg)
-            self.elements[id(ds)] =  ds
-            if ds.instance is not None:
-                ds.instance.id = ds.id
-            print name
-
-
-
-    ## sets the elements
-    # \param elements dictionary with the elements, i.e. name:xml
-    # \param externalActions dictionary with external actions
-    # \param new logical variableset to True if element is not saved
-    def setList(self, elements, externalActions = None, new = False):
-        actions = externalActions if externalActions else {}
-
-        if not os.path.isdir(self.directory):
-            try:
-                if os.path.exists(os.path.join(os.getcwd(),self.name)):
-                    self.directory = os.path.abspath(
-                        os.path.join(os.getcwd(),self.name))
-                else:
-                    self.directory = os.getcwd()
-            except:
-                return
-            
-        ide = None    
-        for dsname in elements.keys():
-
-            name =  "".join(
-                x.replace('/','_').replace('\\','_').replace(':','_') \
-                    for x in dsname if (x.isalnum() or x in ["/","\\",":","_"]))
-            dlg = DataSource()
-            dlg.directory = self.directory
-            dlg.name = name
-
-            try:
-                if str(elements[dsname]).strip():
-                    dlg.set(elements[dsname], new)    
-                else:
-                    QMessageBox.warning(
-                        self, "%s cannot be loaded" % self.clName,
-                        "%s %s without content" % (self.clName, dsname))
-                    dlg.createGUI()
-            except:
-                QMessageBox.warning(
-                    self, "%s cannot be loaded" % self.clName,
-                    "%s %s cannot be loaded" % (self.clName, dsname))
-                dlg.createGUI()
-                            
-                
-            dlg.dataSourceName = dsname
-
-            if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**actions)    
-            
-            ds = LabeledObject(name, dlg)
-            if new:
-                ds.savedName = ""
-
-            ide = id(ds)
-            self.elements[ide] =  ds
-            if ds.instance is not None:
-                ds.instance.id = ds.id
-                if new:
-                    ds.instance.applied =  True
-            print name
-        return ide    
 
     ## adds an element    
     #  \brief It runs the Element Dialog and fetches element 

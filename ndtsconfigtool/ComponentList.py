@@ -60,21 +60,8 @@ class ComponentList(ElementList):
         self.title = "Components"
         ## element name
         self.name = "components"
-        ## element name
+        ## class name
         self.clName = "Component"
-
-    ##  creates GUI
-    # \brief It calls setupUi and  connects signals and slots    
-    def createGUI(self):
-
-        self.ui.setupUi(self)
-
-        self.ui.elementTabWidget.setTabText(0,self.title)
-        self.ui.elementListWidget.setEditTriggers(
-            self.ui.elementListWidget.SelectedClicked)
-
-
-        self.populateElements()
 
 
     ## switches between all attributes in the try or only type attribute
@@ -90,70 +77,11 @@ class ComponentList(ElementList):
                     self._allAttributes)
             
 
-    ## opens context Menu        
-    # \param position in the element list
-    def _openMenu(self, position):
-        menu = QMenu()
-        for action in self._actions:
-            if action is None:
-                menu.addSeparator()
-            else:
-                menu.addAction(action)
-        menu.exec_(self.ui.elementListWidget.viewport().mapToGlobal(position))
-
-
-    ## sets context menu actions for the element list
-    # \param actions tuple with actions 
-    def setActions(self, actions):
-        self.ui.elementListWidget.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.ui.elementListWidget.customContextMenuRequested.connect(
-            self._openMenu)
-        self._actions = actions
-        
-        
-
-    ## adds an element    
-    #  \brief It runs the Element Dialog and fetches element name 
-    #         and value    
-    def addElement(self, obj, flag = True):
-
-        self.elements[obj.id] = obj
-        self.populateElements(obj.id, flag)
-                
-                
-    ## takes a name of the current element
-    # \returns name of the current element            
-    def currentListElement(self):
-        item = self.ui.elementListWidget.currentItem()
-        if item is None:
-            return None    
-        return self.elements[item.data(Qt.UserRole).toLongLong()[0]] 
-
 
     ## removes the current element    
     #  \brief It removes the current element asking before about it
     def removeElement(self, obj = None, question = True):
-        if obj is not None:
-            oid = obj.id
-        else:
-            cds = self.currentListElement()
-            if cds is None:
-                return
-            oid = cds.id
-        if oid is None:
-            return
-        if oid in self.elements.keys():
-            if question :
-                if QMessageBox.question(
-                    self, "%s - Close" % self.clName,
-                    "Close %s: %s ".encode() \
-                        % (self.clName, self.elements[oid].name),
-                    QMessageBox.Yes | QMessageBox.No,
-                    QMessageBox.Yes ) == QMessageBox.No :
-                    return
-
-            self.elements.pop(oid)
-            self.populateElements()
+        super(ComponentList, self).remove(obj, question)
 
         attr = self.currentListElement()
         if attr is None:
@@ -168,75 +96,6 @@ class ComponentList(ElementList):
         if unicode(attr) in self.elements.keys():
             self.elements.pop(unicode(attr))
             self.populateElements()
-
-
-    ## changes the current value of the element        
-    # \brief It changes the current value of the element and informs 
-    #        the user that element names arenot editable
-    def listItemChanged(self, item, name = None):
-        ide = self.currentListElement().id
-
-        if ide in self.elements.keys():
-            old = self.elements[ide] 
-            oname = self.elements[ide].name
-            if name is None:
-                self.elements[ide].name = unicode(item.text())
-            else:
-                self.elements[ide].name = name
-            self.populateElements()
-            return old, oname
-
-
-    ## fills in the element list
-    # \param selectedElement selected element    
-    # \param edit flag if edit the selected item
-    def populateElements(self, selectedElement = None, edit = False):
-        selected = None
-        self.ui.elementListWidget.clear()
-        
-        slist = [(self.elements[key].name, key) 
-                 for key in self.elements.keys()]
-        slist.sort()
-        
-        for name, el in slist:
-            item  = QListWidgetItem(QString("%s" % name))
-            item.setData(Qt.UserRole, QVariant(self.elements[el].id))
-            item.setFlags(item.flags() | Qt.ItemIsEditable)
-            dirty = False
-            if hasattr(self.elements[el],"isDirty") \
-                    and self.elements[el].isDirty():
-                dirty = True
-            if self.elements[el].instance is not None:
-                if hasattr(self.elements[el].instance,"isDirty") \
-                        and self.elements[el].instance.isDirty():
-                    dirty = True
-            if dirty:
-                item.setForeground(Qt.red) 
-            else:
-                item.setForeground(Qt.black)
-
-            self.ui.elementListWidget.addItem(item)
-            if selectedElement is not None \
-                    and selectedElement == self.elements[el].id:
-                selected = item
-                               
-            if self.elements[el].instance is not None \
-                    and self.elements[el].instance.dialog is not None:
-                try:
-                    if dirty:
-                        self.elements[el].instance.dialog.setWindowTitle(
-                            "%s [%s]*" % (name, self.clName))
-                    else:
-                        self.elements[el].instance.dialog.setWindowTitle(
-                            "%s [%s]" % (name, self.clName))
-                except:
-#                    print "C++", self.elements[el].name
-                    self.elements[el].instance.dialog =  None
-        if selected is not None:
-            selected.setSelected(True)
-            self.ui.elementListWidget.setCurrentItem(selected)
-            if edit:
-                self.ui.elementListWidget.editItem(selected)
 
 
             
@@ -276,10 +135,10 @@ class ComponentList(ElementList):
             if hasattr(dlg,"connectExternalActions"):     
                 dlg.connectExternalActions(**actions)    
 
-            cp = LabeledObject(name, dlg)
-            self.elements[id(cp)] =  cp
-            if cp.instance is not None:
-                cp.instance.id = cp.id
+            el = LabeledObject(name, dlg)
+            self.elements[id(el)] =  el
+            if el.instance is not None:
+                el.instance.id = el.id
             print name
             
 
@@ -301,32 +160,34 @@ class ComponentList(ElementList):
                 ## todo
                 return
             
-        for name in elements.keys():
+        for elname in elements.keys():
                 
             dlg = Component()
             dlg.directory = self.directory
-            dlg.name = name
+            dlg.name = elname
             dlg.createGUI()
             dlg.addContextMenu(itemActions)
             try:
-                if str(elements[name]).strip():
-                    dlg.set(elements[name])    
+                if str(elements[elname]).strip():
+                    dlg.set(elements[elname])    
                 else:    
                     dlg.createHeader()
-                    QMessageBox.warning(self, "Element cannot be loaded",
-                                        "Element %s without content" % name)
+                    QMessageBox.warning(
+                        self, "%s cannot be loaded" % self.clName,
+                        "%s %s without content" % (self.clName, elname))
             except:
-                QMessageBox.warning(self, "Component cannot be loaded",
-                                    "Component %s cannot be loaded" % name)
+                QMessageBox.warning(
+                    self, "%s cannot be loaded" % self.clName,
+                    "%s %s cannot be loaded" % (self.clName, elname))
 
                 
             if hasattr(dlg,"connectExternalActions"):     
                 dlg.connectExternalActions(**actions)    
 
-            cp = LabeledObject(name, dlg)
-            self.elements[id(cp)] =  cp
-            if cp.instance is not None:
-                cp.instance.id = cp.id
+            el = LabeledObject(elname, dlg)
+            self.elements[id(el)] =  el
+            if el.instance is not None:
+                el.instance.id = el.id
             print name
             
 

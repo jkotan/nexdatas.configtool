@@ -35,12 +35,13 @@ from .ElementList import ElementList
 ## dialog defining a group tag
 class DataSourceList(ElementList):
     
-    ## constructorCom
-    # \param directory datasource directory
+    ## constructor
+    # \param directory element directory
     # \param parent patent instance
     def __init__(self, directory, parent=None):
         super(DataSourceList, self).__init__(parent)
-         ## directWory from which components are loaded by default
+
+        ## directory from which elements are loaded by default
         self.directory = directory
         
         ## group elements
@@ -54,44 +55,12 @@ class DataSourceList(ElementList):
 
         ## widget title
         self.title = "DataSources"
-        ## singular name
-        self.clName = "DataSource"
         ## element name
         self.name = "datasources"
-
-    ##  creates GUI
-    # \brief It calls setupUi and  connects signals and slots    
-    def createGUI(self):
-
-        self.ui.setupUi(self)
-        self.ui.elementTabWidget.setTabText(0,self.title)
-        self.ui.elementListWidget.setEditTriggers(
-            self.ui.elementListWidget.SelectedClicked)
-
-        self.populateElements()
+        ## class name
+        self.clName = "DataSource"
 
 
-
-
-    ## opens context Menu        
-    # \param position in the element list
-    def _openMenu(self, position):
-        menu = QMenu()
-        for action in self._actions:
-            if action is None:
-                menu.addSeparator()
-            else:
-                menu.addAction(action)
-        menu.exec_(self.ui.elementListWidget.viewport().mapToGlobal(position))
-
-
-    ## sets context menu actions for the element list
-    # \param actions tuple with actions 
-    def setActions(self, actions):
-        self.ui.elementListWidget.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.ui.elementListWidget.customContextMenuRequested.connect(
-            self._openMenu)
-        self._actions = actions
         
             
 
@@ -132,10 +101,10 @@ class DataSourceList(ElementList):
             if hasattr(dlg,"connectExternalActions"):     
                 dlg.connectExternalActions(**actions)    
             
-            ds = LabeledObject(name, dlg)
-            self.elements[id(ds)] =  ds
-            if ds.instance is not None:
-                ds.instance.id = ds.id
+            el = LabeledObject(name, dlg)
+            self.elements[id(el)] =  el
+            if el.instance is not None:
+                el.instance.id = el.id
             print name
 
 
@@ -158,166 +127,47 @@ class DataSourceList(ElementList):
                 return
             
         ide = None    
-        for dsname in elements.keys():
+        for elname in elements.keys():
 
             name =  "".join(
                 x.replace('/','_').replace('\\','_').replace(':','_') \
-                    for x in dsname if (x.isalnum() or x in ["/","\\",":","_"]))
+                    for x in elname if (x.isalnum() or x in ["/","\\",":","_"]))
             dlg = DataSource()
             dlg.directory = self.directory
             dlg.name = name
 
             try:
-                if str(elements[dsname]).strip():
-                    dlg.set(elements[dsname], new)    
+                if str(elements[elname]).strip():
+                    dlg.set(elements[elname], new)    
                 else:
                     QMessageBox.warning(
                         self, "%s cannot be loaded" % self.clName,
-                        "%s %s without content" % (self.clName, dsname))
+                        "%s %s without content" % (self.clName, elname))
                     dlg.createGUI()
             except:
                 QMessageBox.warning(
                     self, "%s cannot be loaded" % self.clName,
-                    "%s %s cannot be loaded" % (self.clName, dsname))
+                    "%s %s cannot be loaded" % (self.clName, elname))
                 dlg.createGUI()
                             
                 
-            dlg.dataSourceName = dsname
+            dlg.dataSourceName = elname
 
             if hasattr(dlg,"connectExternalActions"):     
                 dlg.connectExternalActions(**actions)    
             
-            ds = LabeledObject(name, dlg)
+            el = LabeledObject(name, dlg)
             if new:
-                ds.savedName = ""
+                el.savedName = ""
 
-            ide = id(ds)
-            self.elements[ide] =  ds
-            if ds.instance is not None:
-                ds.instance.id = ds.id
+            ide = id(el)
+            self.elements[ide] =  el
+            if el.instance is not None:
+                el.instance.id = el.id
                 if new:
-                    ds.instance.applied =  True
+                    el.instance.applied =  True
             print name
         return ide    
-
-    ## adds an element    
-    #  \brief It runs the Element Dialog and fetches element name
-    #         and value    
-    def addElement(self, obj, flag = True):
-        self.elements[obj.id] = obj
-
-        self.populateElements(obj.id, flag)
-                
-                
-    ## takes a name of the current element
-    # \returns name of the current element            
-    def currentListElement(self):
-        item = self.ui.elementListWidget.currentItem()
-        if item is None:
-            return None
-        return self.elements[item.data(Qt.UserRole).toLongLong()[0]] 
-
-
-    ## removes the current element    
-    #  \brief It removes the current element asking before about it
-    def removeElement(self, obj = None, question = True):
-        
-        if obj is not None:
-            oid = obj.id
-        else:    
-            cds = self.currentListElement()
-            if cds is None:
-                return
-            oid = cds.id
-        if oid is None:
-            return
-        if oid in self.elements.keys():
-            if question :
-                if QMessageBox.question(
-                    self, "%s - Close" % self.clName,
-                    "Close %s: %s ".encode() \
-                        %  (self.clName, self.elements[oid].name),
-                    QMessageBox.Yes | QMessageBox.No,
-                    QMessageBox.Yes ) == QMessageBox.No :
-                    return
-
-            self.elements.pop(oid)
-            self.populateElements()
-            
-
-
-
-    ## changes the current value of the element        
-    # \brief It changes the current value of the element and informs 
-    #        the user that element names arenot editable
-    def listItemChanged(self, item, name = None):
-        ide =  self.currentListElement().id 
-        if ide in self.elements.keys():
-            old = self.elements[ide]
-            oname = self.elements[ide].name
-            if name is None:
-                self.elements[ide].name = unicode(item.text())
-            else:
-                self.elements[ide].name = name
-            self.populateElements()
-            return old, oname
-
-
-    ## fills in the element list      
-    # \param selectedElement selected element    
-    # \param edit flag if edit the selected item
-    def populateElements(self, selectedElement = None, edit = False):
-        selected = None
-        self.ui.elementListWidget.clear()
-
-        slist = [(self.elements[key].name, key) 
-                 for key in self.elements.keys()]
-        slist.sort()
-
-        for name, el in slist:
-            item = QListWidgetItem(QString("%s" % name))
-            item.setData(Qt.UserRole, QVariant(self.elements[el].id))
-            item.setFlags(item.flags() | Qt.ItemIsEditable)
-            dirty = False
-            if hasattr(self.elements[el],"isDirty") \
-                    and self.elements[el].isDirty():
-                dirty = True
-            if self.elements[el].instance is not None:
-                if hasattr(self.elements[el].instance,"isDirty") \
-                        and self.elements[el].instance.isDirty():
-                    dirty = True
-            if dirty:
-                item.setForeground(Qt.red) 
-            else:
-                item.setForeground(Qt.black)
-
-
-            self.ui.elementListWidget.addItem(item)
-            if selectedElement is not None \
-                    and selectedElement == self.elements[el].id:
-                selected = item
-
-
-            if self.elements[el].instance is not None \
-                    and self.elements[el].instance.dialog is not None:
-                try:
-                    if  dirty:
-                        self.elements[el].instance.dialog.\
-                            setWindowTitle("%s [%s]*" % (name, self.clName))
-                    else:
-                        self.elements[el].instance.dialog.\
-                            setWindowTitle("%s [%s]" % (name, self.clName))
-                except:
-#                    print "C++", self.elements[el].name
-                    self.elements[el].instance.dialog = None
-
-        if selected is not None:
-            selected.setSelected(True)
-            self.ui.elementListWidget.setCurrentItem(selected)
-            if edit:
-                self.ui.elementListWidget.editItem(selected)
-
-            
 
 
 

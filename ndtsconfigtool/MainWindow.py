@@ -1243,9 +1243,10 @@ class MainWindow(QMainWindow):
     # \brief It loads the component list from the default directory
     def loadComponents(self):
 #        self.componentList.elements = {}
+        print "COMPONENT"
         self.componentList.loadList(
-            self.contextMenuActions,
             self.externalCPActions, 
+            self.contextMenuActions
             )
         ide =  self.componentList.elements.itervalues().next().id \
             if len(self.componentList.elements) else None

@@ -23,13 +23,12 @@
 
 import os 
 
-from PyQt4.QtCore import (Qt, QString, QVariant)
-from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
+from PyQt4.QtGui import QMessageBox
 
 from .ui.ui_elementlist import Ui_ElementList
 from .DataSource import DataSource
-from .LabeledObject import LabeledObject
 from .ElementList import ElementList
+from .LabeledObject import LabeledObject
 
 
 ## dialog defining a group tag
@@ -59,53 +58,34 @@ class DataSourceList(ElementList):
         self.name = "datasources"
         ## class name
         self.clName = "DataSource"
-
-
+        ## extention
+        self.extention = ".ds.xml"
         
-            
 
-    ## loads the element list from the given dictionary
-    # \param externalActions dictionary with external actions
-    def loadList(self, externalActions = None):
-        actions = externalActions if externalActions else {}
-        try:
-            dirList = [l for l in  os.listdir(self.directory) \
-                           if l.endswith(".ds.xml")]
-        except:
-            try:
-                if os.path.exists(os.path.join(os.getcwd(),self.name)):
-                    self.directory = os.path.abspath(
-                        os.path.join(os.getcwd(),self.name))
-                else:
-                    self.directory = os.getcwd()
+    ## retrives element name from file name
+    # \param fname filename
+    # \returns element name        
+    @classmethod
+    def nameFromFile(cls, fname):
+        if fname[-4:] == '.xml':
+            name = fname[:-4]
+            if name[-3:] == '.ds':
+                name = name[:-3]
+        else:
+            name = fname
+        return name    
 
-                dirList = [l for l in  os.listdir(self.directory) \
-                               if l.endswith(".ds.xml")]
-            except:
-                return
 
-        for fname in dirList:
-            if fname[-4:] == '.xml':
-                name = fname[:-4]
-                if name[-3:] == '.ds':
-                    name = name[:-3]
-            else:
-                name = fname
-                
-            dlg = DataSource()
-            dlg.directory = self.directory
-            dlg.name = name
-            dlg.load()    
+    ## creates Element 
+    # \param element name
+    # \returns element instance
+    def createElement(self, name):
+        dlg = DataSource()
+        dlg.directory = self.directory
+        dlg.name = name
+        dlg.createGUI()
+        return dlg
 
-            
-            if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**actions)    
-            
-            el = LabeledObject(name, dlg)
-            self.elements[id(el)] =  el
-            if el.instance is not None:
-                el.instance.id = el.id
-            print name
 
 
 
@@ -118,9 +98,9 @@ class DataSourceList(ElementList):
 
         if not os.path.isdir(self.directory):
             try:
-                if os.path.exists(os.path.join(os.getcwd(),self.name)):
+                if os.path.exists(os.path.join(os.getcwd(), self.name)):
                     self.directory = os.path.abspath(
-                        os.path.join(os.getcwd(),self.name))
+                        os.path.join(os.getcwd(), self.name))
                 else:
                     self.directory = os.getcwd()
             except:

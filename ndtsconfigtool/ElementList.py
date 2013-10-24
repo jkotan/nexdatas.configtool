@@ -20,16 +20,13 @@
 # Data source list class
 
 """ datasource list widget """
-
-import os 
+import os
 
 from PyQt4.QtCore import (Qt, QString, QVariant)
 from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
 
 from .ui.ui_elementlist import Ui_ElementList
-from .DataSource import DataSource
 from .LabeledObject import LabeledObject
-
 
 ## dialog defining a group tag
 class ElementList(QWidget):
@@ -63,7 +60,7 @@ class ElementList(QWidget):
     def createGUI(self):
 
         self.ui.setupUi(self)
-        self.ui.elementTabWidget.setTabText(0,self.title)
+        self.ui.elementTabWidget.setTabText(0, self.title)
         self.ui.elementListWidget.setEditTriggers(
             self.ui.elementListWidget.SelectedClicked)
 
@@ -213,7 +210,43 @@ class ElementList(QWidget):
                 self.ui.elementListWidget.editItem(selected)
 
             
+    ## loads the element list from the given dictionary
+    # \param externalActions dictionary with external actions
+    # \param itemActions actions of the context menu
+    def loadList(self, externalActions = None, itemActions=None):
+        try:
+            dirList = [l for l in  os.listdir(self.directory) \
+                           if l.endswith(self.extention)]
+        except:
+            try:
+                if os.path.exists(os.path.join(os.getcwd(), self.name)):
+                    self.directory = os.path.abspath(
+                        os.path.join(os.getcwd(), self.name))
+                else:
+                    self.directory = os.getcwd()
 
+                dirList = [l for l in  os.listdir(self.directory) \
+                               if l.endswith(self.extention)]
+            except:
+                return
+
+        for fname in dirList:
+            name = self.nameFromFile(fname)
+            dlg = self.createElement(name)
+            dlg.load()    
+            if hasattr(dlg, "addContextMenu"):
+                dlg.addContextMenu(itemActions)
+
+            actions = externalActions if externalActions else {}
+            if hasattr(dlg,"connectExternalActions"):     
+                dlg.connectExternalActions(**actions)    
+            
+            el = LabeledObject(name, dlg)
+            self.elements[id(el)] =  el
+            if el.instance is not None:
+                el.instance.id = el.id
+            print name
+            
 
 
 

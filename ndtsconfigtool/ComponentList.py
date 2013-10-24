@@ -24,8 +24,7 @@
 
 import os
 
-from PyQt4.QtCore import (Qt, QString, QVariant)
-from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
+from PyQt4.QtGui import QMessageBox
 
 from .ui.ui_elementlist import Ui_ElementList
 from .Component import Component
@@ -62,6 +61,8 @@ class ComponentList(ElementList):
         self.name = "components"
         ## class name
         self.clName = "Component"
+        ## extention
+        self.extention = ".xml"
 
 
     ## switches between all attributes in the try or only type attribute
@@ -97,67 +98,43 @@ class ComponentList(ElementList):
             self.elements.pop(unicode(attr))
             self.populateElements()
 
+    ## retrives element name from file name
+    # \param fname filename
+    # \returns element name        
+    @classmethod
+    def nameFromFile(cls, fname):
+        if fname[-4:] == '.xml':
+            name = fname[:-4]
+        else:
+            name = fname
+        return name        
 
-            
-    ## loads the element list from the given dictionary
-    # \param itemActions actions of the context menu
-    # \param externalActions dictionary with external actions
-    def loadList(self, itemActions, externalActions = None):
-        actions = externalActions if externalActions else {}
-        try:
-            dirList = [l for l in os.listdir(self.directory) \
-                         if l.endswith(".xml")]
-        except:
-            try:
-                if os.path.exists(os.path.join(os.getcwd(),self.name)):
-                    self.directory = os.path.abspath(os.path.join(
-                            os.getcwd(),self.name))
-                else:
-                    self.directory = os.getcwd()
-                dirList = [l for l in os.listdir(self.directory) \
-                               if l.endswith(".xml")]
-            except:
-                return
-            
-        for fname in dirList:
-            if fname[-4:] == '.xml':
-                name = fname[:-4]
-            else:
-                name = fname
-                
-            dlg = Component()
-            dlg.directory = self.directory
-            dlg.name = name
-            dlg.createGUI()
-            dlg.addContextMenu(itemActions)
+    ## creates Element 
+    # \param element name
+    # \returns element instance
+    def createElement(self, name):
+        dlg = Component()
+        dlg.directory = self.directory
+        dlg.name = name
+        dlg.createGUI()
+        return dlg
 
-            dlg.load()    
-            if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**actions)    
-
-            el = LabeledObject(name, dlg)
-            self.elements[id(el)] =  el
-            if el.instance is not None:
-                el.instance.id = el.id
-            print name
             
 
 
     ## sets the elements
     # \param elements dictionary with the elements, i.e. name:xml
-    # \param itemActions actions of the tree context menu
     # \param externalActions dictionary with external actions
     def setList(self, elements,  itemActions, externalActions = None):
         actions = externalActions if externalActions else {}
         if not os.path.isdir(self.directory):
             try:
-                if os.path.exists(os.path.join(os.getcwd(),self.name)):
+                if os.path.exists(os.path.join(os.getcwd(), self.name)):
                     self.directory = os.path.abspath(
-                        os.path.join(os.getcwd(),self.name))
+                        os.path.join(os.getcwd(), self.name))
                 else:
                     self.directory = os.getcwd() 
             except:
-                ## todo
                 return
             
         for elname in elements.keys():
@@ -188,7 +165,7 @@ class ComponentList(ElementList):
             self.elements[id(el)] =  el
             if el.instance is not None:
                 el.instance.id = el.id
-            print name
+            print elname
             
 
 

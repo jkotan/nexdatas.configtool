@@ -51,14 +51,14 @@ class ComponentNew(Command):
         else:    
             self._comp.instance = None
         
-        self.receiver.main.componentList.addComponent(self._comp)
+        self.receiver.main.componentList.addElement(self._comp)
         print "EXEC componentNew"
         
     ## unexecutes the command
     # \brief It removes the new component
     def unexecute(self):
         if self._comp is not None:
-            self.receiver.main.componentList.removeComponent(self._comp, False)
+            self.receiver.main.componentList.removeElement(self._comp, False)
 
             if hasattr(self._comp,'instance') and self._comp.instance:
                 subwindow = self.receiver.main.subWindow(
@@ -94,16 +94,16 @@ class ComponentRemove(Command):
     def execute(self):
         
         if self._cp is not None:
-            self.receiver.main.componentList.removeComponent(self._cp, False)
+            self.receiver.main.componentList.removeElement(self._cp, False)
         else:
-            self._cp = self.receiver.main.componentList.currentListComponent()
+            self._cp = self.receiver.main.componentList.currentListElement()
             if self._cp is None:
                 QMessageBox.warning(
                     self.receiver.main, 
                     "Component not selected", 
                     "Please select one of the components")
             else:
-                self.receiver.main.componentList.removeComponent(self._cp, True)
+                self.receiver.main.componentList.removeElement(self._cp, True)
             
         if hasattr(self._cp, "instance"):
             subwindow = self.receiver.main.subWindow(
@@ -121,14 +121,14 @@ class ComponentRemove(Command):
     def unexecute(self):
         if self._cp is not None:
 
-            self.receiver.main.componentList.addComponent(self._cp, False)
+            self.receiver.main.componentList.addElement(self._cp, False)
             if self._cp.instance is None:
                 self._cp.instance = Component()
-                self._cp.instance.idc = self._cp.id
+                self._cp.instance.id = self._cp.id
                 self._cp.instance.directory = \
                     self.receiver.main.componentList.directory
                 self._cp.instance.name = \
-                    self.receiver.main.componentList.components[
+                    self.receiver.main.componentList.elements[
                     self._cp.id].name
 
 
@@ -159,9 +159,9 @@ class ComponentRemove(Command):
 
 
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
 
                     
 
@@ -213,7 +213,7 @@ class ComponentListChanged(Command):
             else:
                 self._cp.name = self.name
                 
-            self.receiver.main.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateElements(self._cp.id)
             if self._cp.instance is not None:
                 self._oldDirectory = self._cp.instance.directory 
                 self._cp.instance.setName(self.name, self.directory)
@@ -222,11 +222,11 @@ class ComponentListChanged(Command):
                     self.receiver.main.componentList.directory 
 
 
-        cp = self.receiver.main.componentList.currentListComponent()
+        cp = self.receiver.main.componentList.currentListElement()
         if hasattr(cp, "id"):
-            self.receiver.main.componentList.populateComponents(cp.id)
+            self.receiver.main.componentList.populateElements(cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
               
         print "EXEC componentChanged"
 
@@ -236,15 +236,15 @@ class ComponentListChanged(Command):
     def unexecute(self):
         if self._cp is not None:
             self._cp.name = self._oldName 
-            self.receiver.main.componentList.addComponent(self._cp, False)
+            self.receiver.main.componentList.addElement(self._cp, False)
             if self._cp.instance is not None:
                 self._cp.instance.setName(self._oldName, self._oldDirectory)
 
-        cp = self.receiver.main.componentList.currentListComponent()
+        cp = self.receiver.main.componentList.currentListElement()
         if hasattr(cp, "id"):
-            self.receiver.main.componentList.populateComponents(cp.id)
+            self.receiver.main.componentList.populateElements(cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
 
         print "UNDO componentChanged"
 
@@ -273,14 +273,14 @@ class DataSourceNew(Command):
             self._ds = LabeledObject("", None)
         else:
             self._ds.instance = None
-        self.receiver.main.sourceList.addDataSource(self._ds)
+        self.receiver.main.sourceList.addElement(self._ds)
         print "EXEC dsourceNew"
 
     ## unexecutes the command
     # \brief It removes the added datasource
     def unexecute(self):
         if self._ds is not None:
-            self.receiver.main.sourceList.removeDataSource(self._ds, False)
+            self.receiver.main.sourceList.removeElement(self._ds, False)
 
 
             if hasattr(self._ds,'instance'):
@@ -319,15 +319,15 @@ class DataSourceRemove(Command):
     def execute(self):
         
         if self._ds is not None:
-            self.receiver.main.sourceList.removeDataSource(self._ds, False)
+            self.receiver.main.sourceList.removeElement(self._ds, False)
         else:
-            self._ds = self.receiver.main.sourceList.currentListDataSource()
+            self._ds = self.receiver.main.sourceList.currentListElement()
             if self._ds is None:
                 QMessageBox.warning(
                     self.receiver.main, "DataSource not selected", 
                     "Please select one of the datasources")            
             else:
-                self.receiver.main.sourceList.removeDataSource(self._ds, True)
+                self.receiver.main.sourceList.removeElement(self._ds, True)
             
 
         if hasattr(self._ds, "instance"):
@@ -345,7 +345,7 @@ class DataSourceRemove(Command):
     def unexecute(self):
         if self._ds is not None:
 
-            self.receiver.main.sourceList.addDataSource(self._ds, False)
+            self.receiver.main.sourceList.addElement(self._ds, False)
 
             self._ds.instance.createGUI()
 
@@ -407,18 +407,18 @@ class DataSourceListChanged(Command):
             else:
                 self._ds.name = self.name
              
-            self.receiver.main.sourceList.populateDataSources(self._ds.id)
+            self.receiver.main.sourceList.populateElements(self._ds.id)
             if self._ds.instance is not None:
                 self._oldDirectory = self._ds.instance.directory 
                 self._ds.instance.setName(self.name, self.directory)
             else:
                 self._oldDirectory = self.receiver.main.sourceList.directory 
 
-        ds = self.receiver.main.sourceList.currentListDataSource()
+        ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds, "id"):
-            self.receiver.main.sourceList.populateDataSources(ds.id)
+            self.receiver.main.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateElements()
 
         print "EXEC dsourceChanged"
 
@@ -427,17 +427,17 @@ class DataSourceListChanged(Command):
     def unexecute(self):
         if self._ds is not None:
             self._ds.name = self._oldName 
-            self.receiver.main.sourceList.addDataSource(self._ds, False)
+            self.receiver.main.sourceList.addElement(self._ds, False)
             if self._ds.instance is not None:
                 self._ds.instance.setName(
                     self._oldName, self._oldDirectory)
 
 
-        ds = self.receiver.main.sourceList.currentListDataSource()
+        ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds, "id"):
-            self.receiver.main.sourceList.populateDataSources(ds.id)
+            self.receiver.main.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateElements()
 
         print "UNDO dsourceChanged"
 

@@ -54,7 +54,7 @@ class Component(object):
         ## component view
         self.view = None
         ## component id
-        self.idc = None
+        self.id = None
         ## component name
         self.name = ""
         ## component dialog

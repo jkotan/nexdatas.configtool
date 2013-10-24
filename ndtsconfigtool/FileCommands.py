@@ -59,7 +59,7 @@ class ComponentOpen(Command):
                 self._cp.instance = None
 
             self._cpEdit = Component()
-            self._cpEdit.idc = self._cp.id
+            self._cpEdit.id = self._cp.id
             self._cpEdit.directory = self.receiver.main.componentList.directory
             self._cpEdit.createGUI()
             self._cpEdit.addContextMenu(self.receiver.main.contextMenuActions)
@@ -77,7 +77,7 @@ class ComponentOpen(Command):
                 self._cp.name = self._cpEdit.name  
                 self._cp.instance = self._cpEdit
             
-                self.receiver.main.componentList.addComponent(self._cp, False)
+                self.receiver.main.componentList.addElement(self._cp, False)
                 self._cpEdit.dialog.setWindowTitle(
                     "%s [Component]" % self._cp.name)
 
@@ -110,7 +110,7 @@ class ComponentOpen(Command):
                         self.receiver.main.mdi.setActiveSubWindow(subwindow) 
                         self.receiver.main.mdi.closeActiveSubWindow() 
 
-                self.receiver.main.componentList.removeComponent(
+                self.receiver.main.componentList.removeElement(
                     self._cp, False)
                 self._cp.instance = None
 
@@ -150,7 +150,7 @@ class DataSourceOpen(Command):
                 self._ds.instance = None
 
             self._dsEdit = DataSource.DataSource()
-            self._dsEdit.ids = self._ds.id
+            self._dsEdit.id = self._ds.id
             self._dsEdit.directory = self.receiver.main.sourceList.directory
             if self._fpath:
                 path = self._dsEdit.load(self._fpath)
@@ -164,7 +164,7 @@ class DataSourceOpen(Command):
                 self._ds.name = self._dsEdit.name  
                 self._ds.instance = self._dsEdit
             
-                self.receiver.main.sourceList.addDataSource(self._ds, False)
+                self.receiver.main.sourceList.addElement(self._ds, False)
 
                 self._dsEdit.dialog.setWindowTitle(
                     "%s [DataSource]" % self._ds.name)
@@ -202,7 +202,7 @@ class DataSourceOpen(Command):
                         self.receiver.main.mdi.setActiveSubWindow(subwindow) 
                         self.receiver.main.mdi.closeActiveSubWindow() 
 
-                self.receiver.main.sourceList.removeDataSource(self._ds, False)
+                self.receiver.main.sourceList.removeElement(self._ds, False)
                 self._ds.instance = None
             
         print "UNDO dsourceOpen"
@@ -235,7 +235,7 @@ class ComponentSave(Command):
     # \brief It saves with the current component in the file
     def execute(self):
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListComponent()
+            self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is None:
             QMessageBox.warning(
                 self.receiver.main, "Component not selected", 
@@ -244,10 +244,10 @@ class ComponentSave(Command):
             if self._cp.instance is None:
                 #                self._cpEdit = FieldWg()  
                 self._cpEdit = Component()
-                self._cpEdit.idc = self._cp.id
+                self._cpEdit.id = self._cp.id
                 self._cpEdit.directory = \
                     self.receiver.main.componentList.directory
-                self._cpEdit.name = self.receiver.main.componentList.components[
+                self._cpEdit.name = self.receiver.main.componentList.elements[
                     self._cp.id].name
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(
@@ -279,9 +279,9 @@ class ComponentSave(Command):
             if self._cpEdit.save():
                 self._cp.savedName = self._cp.name
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
 
         print "EXEC componentSave"
 
@@ -290,9 +290,9 @@ class ComponentSave(Command):
     # \brief It populates the component list
     def unexecute(self):
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
         print "UNDO componentSave"
 
 
@@ -317,15 +317,15 @@ class ComponentSaveAll(Command):
     # \brief It saves all components in the file
     def execute(self):
             
-        for icp in self.receiver.main.componentList.components.keys():
-            cp = self.receiver.main.componentList.components[icp]
+        for icp in self.receiver.main.componentList.elements.keys():
+            cp = self.receiver.main.componentList.elements[icp]
             if cp.instance is None:
                 #                self._cpEdit = FieldWg()  
                 cpEdit = Component()
-                cpEdit.idc = cp.id
+                cpEdit.id = cp.id
                 cpEdit.directory = self.receiver.main.componentList.directory
                 cpEdit.name = \
-                    self.receiver.main.componentList.components[cp.id].name
+                    self.receiver.main.componentList.elements[cp.id].name
                 cpEdit.createGUI()
                 cpEdit.addContextMenu(self.receiver.main.contextMenuActions)
                 cpEdit.createHeader()
@@ -378,7 +378,7 @@ class ComponentSaveAs(Command):
     # \brief It saves the current components in the file with a different name
     def execute(self):
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListComponent()
+            self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is None:
             QMessageBox.warning(self.receiver.main, "Component not selected", 
                                 "Please select one of the components") 
@@ -392,18 +392,18 @@ class ComponentSaveAs(Command):
                 self.directory = unicode(fi.dir().path())
 
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
         print "EXEC componentSaveAs"
 
     ## unexecutes the command
     # \brief It populates the Component list
     def unexecute(self):
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
         print "UNDO componentSaveAs"
 
 
@@ -452,7 +452,7 @@ class ComponentChangeDirectory(Command):
 
 
 
-        self.receiver.main.componentList.components = {} 
+        self.receiver.main.componentList.elements = {} 
         self.receiver.main.cpDirectory = path
         self.receiver.main.updateStatusBar()
         self.receiver.main.componentList.directory = path
@@ -490,25 +490,25 @@ class DataSourceSaveAll(Command):
     # \brief It saves all the datasources in files
     def execute(self):
             
-        for ids in self.receiver.main.sourceList.datasources.keys():
-            ds = self.receiver.main.sourceList.datasources[ids]
+        for ids in self.receiver.main.sourceList.elements.keys():
+            ds = self.receiver.main.sourceList.elements[ids]
             if ds.instance is None:
                 dsEdit = DataSource.DataSource()
-                dsEdit.ids = ds.id
+                dsEdit.id = ds.id
                 dsEdit.directory = self.receiver.main.sourceList.directory
                 dsEdit.name = \
-                    self.receiver.main.sourceList.datasources[ds.id].name
+                    self.receiver.main.sourceList.elements[ds.id].name
                 ds.instance = dsEdit 
 
             if ds.instance is not None: 
                 if ds.instance.save():
                     ds.savedName = ds.name
 
-        ds = self.receiver.main.sourceList.currentListDataSource()
+        ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateDataSources(ds.id)
+            self.receiver.main.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateElements()
 
 
         print "EXEC dsourceSaveAll"
@@ -540,7 +540,7 @@ class DataSourceSave(Command):
     # \brief It saves the current datasource in files
     def execute(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListDataSource()
+            self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
             QMessageBox.warning(
                 self.receiver.main, "DataSource not selected", 
@@ -549,9 +549,9 @@ class DataSourceSave(Command):
         if self._ds is not None and hasattr(self._ds, "instance"):
             if self._ds.instance is None:
                 dsEdit = DataSource.DataSource()
-                dsEdit.ids = self._ds.id
+                dsEdit.id = self._ds.id
                 dsEdit.directory = self.receiver.main.sourceList.directory
-                dsEdit.name = self.receiver.main.sourceList.datasources[
+                dsEdit.name = self.receiver.main.sourceList.elements[
                     self._ds.id].name
                 self._ds.instance = dsEdit 
 
@@ -559,22 +559,22 @@ class DataSourceSave(Command):
                 self._ds.savedName = self._ds.name
 
 
-        ds = self.receiver.main.sourceList.currentListDataSource()
+        ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateDataSources(ds.id)
+            self.receiver.main.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateElements()
             
         print "EXEC dsourceSave"
 
     ## unexecutes the command
     # \brief It populates the datasource list
     def unexecute(self):
-        ds = self.receiver.main.sourceList.currentListDataSource()
+        ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateDataSources(ds.id)
+            self.receiver.main.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateElements()
         print "UNDO dsourceSave"
 
 
@@ -609,16 +609,16 @@ class DataSourceSaveAs(Command):
     # \brief It saves the current datasource in files with a different name
     def execute(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListDataSource()
+            self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
             QMessageBox.warning(self.receiver.main, "DataSource not selected", 
                                 "Please select one of the datasources")
         else:
             if self._ds.instance is None:
                 dsEdit = DataSource.DataSource()
-                dsEdit.ids = self._ds.id
+                dsEdit.id = self._ds.id
                 dsEdit.directory = self.receiver.main.sourceList.directory
-                dsEdit.name = self.receiver.main.sourceList.datasources[
+                dsEdit.name = self.receiver.main.sourceList.elements[
                     self._ds.id].name
                 self._ds.instance = dsEdit 
             
@@ -690,7 +690,7 @@ class DataSourceChangeDirectory(Command):
 
 
 
-        self.receiver.main.sourceList.datasources = {} 
+        self.receiver.main.sourceList.elements = {} 
         self.receiver.main.dsDirectory = path
         self.receiver.main.updateStatusBar()
         self.receiver.main.sourceList.directory = path
@@ -744,7 +744,7 @@ class ComponentReloadList(Command):
                     self.receiver.main.mdi.setActiveSubWindow(subwindow)
                     self.receiver.main.mdi.closeActiveSubWindow()
 
-        self.receiver.main.componentList.components = {} 
+        self.receiver.main.componentList.elements = {} 
         self.receiver.main.loadComponents()
 
         print "EXEC componentReloadList"
@@ -795,7 +795,7 @@ class DataSourceReloadList(Command):
                     self.receiver.main.mdi.setActiveSubWindow(subwindow)
                     self.receiver.main.mdi.closeActiveSubWindow()
                     
-        self.receiver.main.sourceList.datasources = {} 
+        self.receiver.main.sourceList.elements = {} 
         self.receiver.main.loadDataSources()
 
         print "EXEC dsourceReloadList"

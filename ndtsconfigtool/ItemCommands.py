@@ -50,7 +50,7 @@ class ComponentItemCommand(Command):
     # \brief It stores the old states of the current component
     def preExecute(self):
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListComponent()
+            self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is not None:
             if self._oldstate is None and hasattr(self._cp, "instance") \
                     and hasattr(self._cp.instance, "setState"):
@@ -74,11 +74,11 @@ class ComponentItemCommand(Command):
         if self._cp is not None:
             if self._cp.instance is None:
                 self._cp.instance = Component()
-                self._cp.instance.idc = self._cp.id
+                self._cp.instance.id = self._cp.id
                 self._cp.instance.directory = \
                     self.receiver.main.componentList.directory
                 self._cp.instance.name = \
-                    self.receiver.main.componentList.components[
+                    self.receiver.main.componentList.elements[
                     self._cp.id].name
 
             if self._newstate is None and hasattr(
@@ -86,9 +86,9 @@ class ComponentItemCommand(Command):
                 self._newstate = self._cp.instance.getState() 
             else:
                 if hasattr(
-                    self.receiver.main.componentList.components[
+                    self.receiver.main.componentList.elements[
                         self._cp.id].instance, "setState"): 
-                    self.receiver.main.componentList.components[
+                    self.receiver.main.componentList.elements[
                         self._cp.id].instance.setState(self._newstate)
 
 
@@ -125,9 +125,9 @@ class ComponentItemCommand(Command):
 
 
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
 
         
     ## executes the command
@@ -145,7 +145,7 @@ class ComponentItemCommand(Command):
     #        to the old state
     def unexecute(self):
         if self._cp is not None and self._oldstate is not None:
-            self.receiver.main.componentList.components[
+            self.receiver.main.componentList.elements[
                 self._cp.id].instance.setState(self._oldstate)
             
 
@@ -156,11 +156,11 @@ class ComponentItemCommand(Command):
             else:    
                 if self._cp.instance is None:
                     self._cp.instance = Component()
-                    self._cp.instance.idc = self._cp.id
+                    self._cp.instance.id = self._cp.id
                     self._cp.instance.directory = \
                         self.receiver.main.componentList.directory
                     self._cp.instance.name = \
-                        self.receiver.main.componentList.components[
+                        self.receiver.main.componentList.elements[
                         self._cp.id].name
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
@@ -171,9 +171,9 @@ class ComponentItemCommand(Command):
                 self._cp.instance.dialog.show()
         self._cp.instance.reconnectSaveAction()
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
 
         print "UNDO componentItemComponent"
 
@@ -704,7 +704,7 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
                         "Please edit one of the component Items")            
                     return
 
-                ds = self.receiver.main.sourceList.currentListDataSource()
+                ds = self.receiver.main.sourceList.currentListElement()
                 if ds is None:
                     self._oldstate = None
                     self._index = None
@@ -716,9 +716,9 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
 
                 if ds.instance is None:
                     dsEdit = DataSource.DataSource()
-                    dsEdit.ids = ds.id
+                    dsEdit.id = ds.id
                     dsEdit.directory = self.receiver.main.sourceList.directory
-                    dsEdit.name = self.receiver.main.sourceList.datasources[
+                    dsEdit.name = self.receiver.main.sourceList.elements[
                         ds.id].name
                     ds.instance = dsEdit 
                 else:
@@ -797,7 +797,7 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                         "Please edit one of the component Items")
                     return
 
-                ds = self.receiver.main.sourceList.currentListDataSource()
+                ds = self.receiver.main.sourceList.currentListElement()
                 if ds is None:
                     self._oldstate = None
                     self._index = None
@@ -809,9 +809,9 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
 
                 if ds.instance is None:
                     dsEdit = DataSource.DataSource()
-                    dsEdit.ids = ds.id
+                    dsEdit.id = ds.id
                     dsEdit.directory = self.receiver.main.sourceList.directory
-                    dsEdit.name = self.receiver.main.sourceList.datasources[
+                    dsEdit.name = self.receiver.main.sourceList.elements[
                         ds.id].name
                     ds.instance = dsEdit 
                 else:

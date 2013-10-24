@@ -16,32 +16,30 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndtsconfigtool nexdatas
-## \file ComponentList.py
-# Data component list class
+## \file ElementList.py
+# Data source list class
 
+""" datasource list widget """
 
-""" component list widget """
-
-import os
+import os 
 
 from PyQt4.QtCore import (Qt, QString, QVariant)
 from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
 
 from .ui.ui_elementlist import Ui_ElementList
-from .Component import Component
+from .DataSource import DataSource
 from .LabeledObject import LabeledObject
-from .ElementList import ElementList
+
 
 ## dialog defining a group tag
-class ComponentList(ElementList):
+class ElementList(QWidget):
     
-    ## constructor
-    # \param directory element directory
+    ## constructorCom
+    # \param directory datasource directory
     # \param parent patent instance
     def __init__(self, directory, parent=None):
-        super(ComponentList, self).__init__(parent)
-
-        ## directory from which elements are loaded by default
+        super(ElementList, self).__init__(parent)
+         ## directWory from which components are loaded by default
         self.directory = directory
         
         ## group elements
@@ -49,46 +47,30 @@ class ComponentList(ElementList):
 
         ## actions
         self._actions = []
-        
-        ## show all attribures or only the type attribute
-        self._allAttributes = False
 
         ## user interface
         self.ui = Ui_ElementList()
-        
+
         ## widget title
-        self.title = "Components"
+        self.title = "Elements"
+        ## singular name
+        self.clName = "Element"
         ## element name
-        self.name = "components"
-        ## element name
-        self.clName = "Component"
+        self.name = "elements"
 
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
 
         self.ui.setupUi(self)
-
         self.ui.elementTabWidget.setTabText(0,self.title)
         self.ui.elementListWidget.setEditTriggers(
             self.ui.elementListWidget.SelectedClicked)
 
-
         self.populateElements()
 
 
-    ## switches between all attributes in the try or only type attribute
-    # \param status all attributes are shown if True
-    def viewAttributes(self, status = None):
-        if status is None:
-            return self._allAttributes
-        self._allAttributes = True if status else False
-        for k in self.elements.keys():
-            if hasattr(self.elements[k], "instance") \
-                    and self.elements[k].instance:
-                self.elements[k].instance.viewAttributes(
-                    self._allAttributes)
-            
+
 
     ## opens context Menu        
     # \param position in the element list
@@ -110,14 +92,119 @@ class ComponentList(ElementList):
             self._openMenu)
         self._actions = actions
         
-        
+            
+
+    ## loads the element list from the given dictionary
+    # \param externalActions dictionary with external actions
+    def loadList(self, externalActions = None):
+        actions = externalActions if externalActions else {}
+        try:
+            dirList = [l for l in  os.listdir(self.directory) \
+                           if l.endswith(".ds.xml")]
+        except:
+            try:
+                if os.path.exists(os.path.join(os.getcwd(),self.name)):
+                    self.directory = os.path.abspath(
+                        os.path.join(os.getcwd(),self.name))
+                else:
+                    self.directory = os.getcwd()
+
+                dirList = [l for l in  os.listdir(self.directory) \
+                               if l.endswith(".ds.xml")]
+            except:
+                return
+
+        for fname in dirList:
+            if fname[-4:] == '.xml':
+                name = fname[:-4]
+                if name[-3:] == '.ds':
+                    name = name[:-3]
+            else:
+                name = fname
+                
+            dlg = DataSource()
+            dlg.directory = self.directory
+            dlg.name = name
+            dlg.load()    
+
+            
+            if hasattr(dlg,"connectExternalActions"):     
+                dlg.connectExternalActions(**actions)    
+            
+            ds = LabeledObject(name, dlg)
+            self.elements[id(ds)] =  ds
+            if ds.instance is not None:
+                ds.instance.id = ds.id
+            print name
+
+
+
+    ## sets the elements
+    # \param elements dictionary with the elements, i.e. name:xml
+    # \param externalActions dictionary with external actions
+    # \param new logical variableset to True if element is not saved
+    def setList(self, elements, externalActions = None, new = False):
+        actions = externalActions if externalActions else {}
+
+        if not os.path.isdir(self.directory):
+            try:
+                if os.path.exists(os.path.join(os.getcwd(),self.name)):
+                    self.directory = os.path.abspath(
+                        os.path.join(os.getcwd(),self.name))
+                else:
+                    self.directory = os.getcwd()
+            except:
+                return
+            
+        ide = None    
+        for dsname in elements.keys():
+
+            name =  "".join(
+                x.replace('/','_').replace('\\','_').replace(':','_') \
+                    for x in dsname if (x.isalnum() or x in ["/","\\",":","_"]))
+            dlg = DataSource()
+            dlg.directory = self.directory
+            dlg.name = name
+
+            try:
+                if str(elements[dsname]).strip():
+                    dlg.set(elements[dsname], new)    
+                else:
+                    QMessageBox.warning(
+                        self, "%s cannot be loaded" % self.clName,
+                        "%s %s without content" % (self.clName, dsname))
+                    dlg.createGUI()
+            except:
+                QMessageBox.warning(
+                    self, "%s cannot be loaded" % self.clName,
+                    "%s %s cannot be loaded" % (self.clName, dsname))
+                dlg.createGUI()
+                            
+                
+            dlg.dataSourceName = dsname
+
+            if hasattr(dlg,"connectExternalActions"):     
+                dlg.connectExternalActions(**actions)    
+            
+            ds = LabeledObject(name, dlg)
+            if new:
+                ds.savedName = ""
+
+            ide = id(ds)
+            self.elements[ide] =  ds
+            if ds.instance is not None:
+                ds.instance.id = ds.id
+                if new:
+                    ds.instance.applied =  True
+            print name
+        return ide    
 
     ## adds an element    
-    #  \brief It runs the Element Dialog and fetches element name 
-    #         and value    
+    #  \brief It runs the Element Dialog and fetches element 
+    #         name and value    
     def addElement(self, obj, flag = True):
-
         self.elements[obj.id] = obj
+
         self.populateElements(obj.id, flag)
                 
                 
@@ -126,16 +213,17 @@ class ComponentList(ElementList):
     def currentListElement(self):
         item = self.ui.elementListWidget.currentItem()
         if item is None:
-            return None    
+            return None
         return self.elements[item.data(Qt.UserRole).toLongLong()[0]] 
 
 
     ## removes the current element    
     #  \brief It removes the current element asking before about it
     def removeElement(self, obj = None, question = True):
+        
         if obj is not None:
             oid = obj.id
-        else:
+        else:    
             cds = self.currentListElement()
             if cds is None:
                 return
@@ -147,37 +235,24 @@ class ComponentList(ElementList):
                 if QMessageBox.question(
                     self, "%s - Close" % self.clName,
                     "Close %s: %s ".encode() \
-                        % (self.clName, self.elements[oid].name),
+                        %  (self.clName, self.elements[oid].name),
                     QMessageBox.Yes | QMessageBox.No,
                     QMessageBox.Yes ) == QMessageBox.No :
                     return
 
             self.elements.pop(oid)
             self.populateElements()
+            
 
-        attr = self.currentListElement()
-        if attr is None:
-            return
-        if QMessageBox.question(
-            self, "%s - Remove" % self.clName,
-            "Remove %s: %s = \'%s\'".encode() \
-                %  (self.clName, attr, self.elements[unicode(attr)]),
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.Yes ) == QMessageBox.No :
-            return
-        if unicode(attr) in self.elements.keys():
-            self.elements.pop(unicode(attr))
-            self.populateElements()
 
 
     ## changes the current value of the element        
     # \brief It changes the current value of the element and informs 
     #        the user that element names arenot editable
     def listItemChanged(self, item, name = None):
-        ide = self.currentListElement().id
-
+        ide =  self.currentListElement().id 
         if ide in self.elements.keys():
-            old = self.elements[ide] 
+            old = self.elements[ide]
             oname = self.elements[ide].name
             if name is None:
                 self.elements[ide].name = unicode(item.text())
@@ -187,19 +262,19 @@ class ComponentList(ElementList):
             return old, oname
 
 
-    ## fills in the element list
+    ## fills in the element list      
     # \param selectedElement selected element    
     # \param edit flag if edit the selected item
     def populateElements(self, selectedElement = None, edit = False):
         selected = None
         self.ui.elementListWidget.clear()
-        
+
         slist = [(self.elements[key].name, key) 
                  for key in self.elements.keys()]
         slist.sort()
-        
+
         for name, el in slist:
-            item  = QListWidgetItem(QString("%s" % name))
+            item = QListWidgetItem(QString("%s" % name))
             item.setData(Qt.UserRole, QVariant(self.elements[el].id))
             item.setFlags(item.flags() | Qt.ItemIsEditable)
             dirty = False
@@ -215,121 +290,33 @@ class ComponentList(ElementList):
             else:
                 item.setForeground(Qt.black)
 
+
             self.ui.elementListWidget.addItem(item)
             if selectedElement is not None \
                     and selectedElement == self.elements[el].id:
                 selected = item
-                               
+
+
             if self.elements[el].instance is not None \
                     and self.elements[el].instance.dialog is not None:
                 try:
-                    if dirty:
-                        self.elements[el].instance.dialog.setWindowTitle(
-                            "%s [%s]*" % (name, self.clName))
+                    if  dirty:
+                        self.elements[el].instance.dialog.\
+                            setWindowTitle("%s [%s]*" % (name, self.clName))
                     else:
-                        self.elements[el].instance.dialog.setWindowTitle(
-                            "%s [%s]" % (name, self.clName))
+                        self.elements[el].instance.dialog.\
+                            setWindowTitle("%s [%s]" % (name, self.clName))
                 except:
 #                    print "C++", self.elements[el].name
-                    self.elements[el].instance.dialog =  None
+                    self.elements[el].instance.dialog = None
+
         if selected is not None:
             selected.setSelected(True)
             self.ui.elementListWidget.setCurrentItem(selected)
             if edit:
                 self.ui.elementListWidget.editItem(selected)
 
-
             
-    ## loads the element list from the given dictionary
-    # \param itemActions actions of the context menu
-    # \param externalActions dictionary with external actions
-    def loadList(self, itemActions, externalActions = None):
-        actions = externalActions if externalActions else {}
-        try:
-            dirList = [l for l in os.listdir(self.directory) \
-                         if l.endswith(".xml")]
-        except:
-            try:
-                if os.path.exists(os.path.join(os.getcwd(),self.name)):
-                    self.directory = os.path.abspath(os.path.join(
-                            os.getcwd(),self.name))
-                else:
-                    self.directory = os.getcwd()
-                dirList = [l for l in os.listdir(self.directory) \
-                               if l.endswith(".xml")]
-            except:
-                return
-            
-        for fname in dirList:
-            if fname[-4:] == '.xml':
-                name = fname[:-4]
-            else:
-                name = fname
-                
-            dlg = Component()
-            dlg.directory = self.directory
-            dlg.name = name
-            dlg.createGUI()
-            dlg.addContextMenu(itemActions)
-
-            dlg.load()    
-            if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**actions)    
-
-            cp = LabeledObject(name, dlg)
-            self.elements[id(cp)] =  cp
-            if cp.instance is not None:
-                cp.instance.id = cp.id
-            print name
-            
-
-
-    ## sets the elements
-    # \param elements dictionary with the elements, i.e. name:xml
-    # \param itemActions actions of the tree context menu
-    # \param externalActions dictionary with external actions
-    def setList(self, elements,  itemActions, externalActions = None):
-        actions = externalActions if externalActions else {}
-        if not os.path.isdir(self.directory):
-            try:
-                if os.path.exists(os.path.join(os.getcwd(),self.name)):
-                    self.directory = os.path.abspath(
-                        os.path.join(os.getcwd(),self.name))
-                else:
-                    self.directory = os.getcwd() 
-            except:
-                ## todo
-                return
-            
-        for name in elements.keys():
-                
-            dlg = Component()
-            dlg.directory = self.directory
-            dlg.name = name
-            dlg.createGUI()
-            dlg.addContextMenu(itemActions)
-            try:
-                if str(elements[name]).strip():
-                    dlg.set(elements[name])    
-                else:    
-                    dlg.createHeader()
-                    QMessageBox.warning(self, "Element cannot be loaded",
-                                        "Element %s without content" % name)
-            except:
-                QMessageBox.warning(self, "Component cannot be loaded",
-                                    "Component %s cannot be loaded" % name)
-
-                
-            if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**actions)    
-
-            cp = LabeledObject(name, dlg)
-            self.elements[id(cp)] =  cp
-            if cp.instance is not None:
-                cp.instance.id = cp.id
-            print name
-            
-
 
 
 
@@ -341,14 +328,15 @@ if __name__ == "__main__":
     ## Qt application
     app = QApplication(sys.argv)
     ## group form
-    form = ComponentList("../components")
+    form = ElementList("../datasources")
+#    form.elements={"title":"Test run 1", "run_cycle":"2012-1"}
     form.createGUI()
     form.show()
     app.exec_()
 
 
     if form.elements:
-        print "Other components:"
-        for mk in form.elements.keys():
-            print  " %s = '%s' " % (mk, form.elements[mk])
+        print "Other datasources:"
+        for k in form.elements.keys():
+            print  " %s = '%s' " % (k, form.elements[k])
     

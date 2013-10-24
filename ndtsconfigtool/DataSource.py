@@ -71,7 +71,7 @@ class CommonDataSource(object):
         self.applied = False
 
         ## datasource id
-        self.ids = None
+        self.id = None
 
         
         ## if datasource in the component tree

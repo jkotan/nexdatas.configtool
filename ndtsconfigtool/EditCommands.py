@@ -52,7 +52,7 @@ class ComponentEdit(Command):
     # \brief It opens dialog with the current component 
     def execute(self):
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListComponent()
+            self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is None:                
             QMessageBox.warning(self.receiver.main, "Component not selected", 
                                 "Please select one of the components")         
@@ -60,10 +60,10 @@ class ComponentEdit(Command):
             if self._cp.instance is None:
                 #                self._cpEdit = FieldWg()  
                 self._cpEdit = Component()
-                self._cpEdit.idc = self._cp.id
+                self._cpEdit.id = self._cp.id
                 self._cpEdit.directory = \
                     self.receiver.main.componentList.directory
-                self._cpEdit.name = self.receiver.main.componentList.components[
+                self._cpEdit.name = self.receiver.main.componentList.elements[
                     self._cp.id].name
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(
@@ -143,7 +143,7 @@ class DataSourceCopy(Command):
     # \brief It copies the current datasource into the clipboard
     def execute(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListDataSource()
+            self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
             QMessageBox.warning(self.receiver.main, "DataSource not selected", 
                                 "Please select one of the datasources")
@@ -153,7 +153,7 @@ class DataSourceCopy(Command):
                     self._oldstate = self._ds.instance.getState() 
                 self._ds.instance.copyToClipboard()
             else:
-                self.receiver.main.sourceList.datasources[
+                self.receiver.main.sourceList.elements[
                     self._ds.id].instance.setState(self._newstate)
                 self._ds.instance.updateForm()
 
@@ -190,9 +190,9 @@ class DataSourceCopy(Command):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and self._ds.instance is not None:
         
-            self.receiver.main.sourceList.datasources[
+            self.receiver.main.sourceList.elements[
                 self._ds.id].instance.setState(self._oldstate)
-            self.receiver.main.sourceList.datasources[
+            self.receiver.main.sourceList.elements[
                 self._ds.id].instance.updateForm()
 
 
@@ -248,7 +248,7 @@ class DataSourceCut(Command):
     # \brief It moves the current datasource into the clipboard
     def execute(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListDataSource()
+            self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
             QMessageBox.warning(self.receiver.main, "DataSource not selected", 
                                 "Please select one of the datasources")
@@ -261,7 +261,7 @@ class DataSourceCut(Command):
                 self._ds.instance.updateForm()
                 self._ds.instance.dialog.show()
             else:
-                self.receiver.main.sourceList.datasources[
+                self.receiver.main.sourceList.elements[
                     self._ds.id].instance.setState(self._newstate)
                 self._ds.instance.updateForm()
 
@@ -290,9 +290,9 @@ class DataSourceCut(Command):
 
             self._newstate = self._ds.instance.getState() 
         if hasattr(self._ds , "id"):
-            self.receiver.main.sourceList.populateDataSources(self._ds.id)
+            self.receiver.main.sourceList.populateElements(self._ds.id)
         else:
-            self.receiver.main.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateElements()
             
         print "EXEC dsourceCut"
 
@@ -302,9 +302,9 @@ class DataSourceCut(Command):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and self._ds.instance is not None:
         
-            self.receiver.main.sourceList.datasources[
+            self.receiver.main.sourceList.elements[
                 self._ds.id].instance.setState(self._oldstate)
-            self.receiver.main.sourceList.datasources[
+            self.receiver.main.sourceList.elements[
                 self._ds.id].instance.updateForm()
 
             subwindow = self.receiver.main.subWindow(
@@ -329,9 +329,9 @@ class DataSourceCut(Command):
                 self._ds.instance.dialog.show()
             
         if hasattr(self._ds , "id"):
-            self.receiver.main.sourceList.populateDataSources(self._ds.id)
+            self.receiver.main.sourceList.populateElements(self._ds.id)
         else:
-            self.receiver.main.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateElements()
             
         print "UNDO dsourceCut"
         
@@ -363,7 +363,7 @@ class DataSourcePaste(Command):
     # \brief It pastes the current datasource from the clipboard
     def execute(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListDataSource()
+            self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
             QMessageBox.warning(self.receiver.main, "DataSource not selected", 
                                 "Please select one of the datasources")
@@ -385,14 +385,14 @@ class DataSourcePaste(Command):
 #                self._ds.instance.updateForm()
                 self._ds.instance.dialog.show()
             else:
-                self.receiver.main.sourceList.datasources[
+                self.receiver.main.sourceList.elements[
                     self._ds.id].instance.setState(self._newstate)
                 self._ds.instance.updateForm()
 #                self._ds.instance.updateNode()
 
             self._newstate = self._ds.instance.getState() 
 
-            self.receiver.main.sourceList.datasources[
+            self.receiver.main.sourceList.elements[
                 self._ds.id].instance.setState(self._oldstate)
             self._ds.instance.updateNode()
 
@@ -421,9 +421,9 @@ class DataSourcePaste(Command):
 
             
             if hasattr(self._ds , "id"):
-                self.receiver.main.sourceList.populateDataSources(self._ds.id)
+                self.receiver.main.sourceList.populateElements(self._ds.id)
             else:
-                self.receiver.main.sourceList.populateDataSources()
+                self.receiver.main.sourceList.populateElements()
         print "EXEC dsourcePaste"
 
     ## unexecutes the command
@@ -432,9 +432,9 @@ class DataSourcePaste(Command):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and  self._ds.instance is not None:
         
-            self.receiver.main.sourceList.datasources[
+            self.receiver.main.sourceList.elements[
                 self._ds.id].instance.setState(self._oldstate)
-            self.receiver.main.sourceList.datasources[
+            self.receiver.main.sourceList.elements[
                 self._ds.id].instance.updateForm()
 
 
@@ -460,9 +460,9 @@ class DataSourcePaste(Command):
                 self._ds.instance.dialog.show()
             
             if hasattr(self._ds , "id"):
-                self.receiver.main.sourceList.populateDataSources(self._ds.id)
+                self.receiver.main.sourceList.populateElements(self._ds.id)
             else:
-                self.receiver.main.sourceList.populateDataSources()
+                self.receiver.main.sourceList.populateElements()
             
         print "UNDO dsourcePaste"
         
@@ -493,17 +493,17 @@ class DataSourceApply(Command):
     # \brief It applies the changes from the form for the current datasource  
     def execute(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListDataSource()
+            self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
             QMessageBox.warning(self.receiver.main, "DataSource not selected", 
                                 "Please select one of the datasources")
         if self._ds.instance is None:
             #                self._dsEdit = FieldWg()  
             self._ds.instance  = DataSource.DataSource()
-            self._ds.instance.ids = self._ds.id
+            self._ds.instance.id = self._ds.id
             self._ds.instance.directory = \
                 self.receiver.main.sourceList.directory
-            self._ds.instance.name = self.receiver.main.sourceList.datasources[
+            self._ds.instance.name = self.receiver.main.sourceList.elements[
                 self._ds.id].name
         if not self._ds.instance.dialog:
             self._ds.instance.createDialog()
@@ -524,7 +524,7 @@ class DataSourceApply(Command):
                 if self._oldstate is None:
                     self._oldstate = self._ds.instance.getState() 
             else:
-                self.receiver.main.sourceList.datasources[
+                self.receiver.main.sourceList.elements[
                     self._ds.id].instance.setState(
                     self._newstate)
                 if not hasattr(self._ds.instance.dialog.ui, "docTextEdit"):
@@ -560,9 +560,9 @@ class DataSourceApply(Command):
             
             
             if hasattr(self._ds , "id"):
-                self.receiver.main.sourceList.populateDataSources(self._ds.id)
+                self.receiver.main.sourceList.populateElements(self._ds.id)
             else:
-                self.receiver.main.sourceList.populateDataSources()
+                self.receiver.main.sourceList.populateElements()
         else:
             QMessageBox.warning(self.receiver.main, "DataSource not created", 
                                 "Please edit one of the datasources")
@@ -576,21 +576,21 @@ class DataSourceApply(Command):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and  self._ds.instance is not None:
         
-            self.receiver.main.sourceList.datasources[
+            self.receiver.main.sourceList.elements[
                 self._ds.id].instance.setState(self._oldstate)
 
             subwindow = self.receiver.main.subWindow(
                 self._ds.instance, self.receiver.main.mdi.subWindowList())
             if subwindow:
                 self.receiver.main.mdi.setActiveSubWindow(subwindow) 
-                self.receiver.main.sourceList.datasources[
+                self.receiver.main.sourceList.elements[
                     self._ds.id].instance.updateForm()
                 self._ds.instance.reconnectSaveAction()
                 
             else:    
                 self._ds.instance.createDialog()
 
-                self.receiver.main.sourceList.datasources[
+                self.receiver.main.sourceList.elements[
                     self._ds.id].instance.updateForm()
                      
                 self._ds.instance.reconnectSaveAction()
@@ -608,9 +608,9 @@ class DataSourceApply(Command):
             self._ds.instance.dialog.show()
     
             if hasattr(self._ds , "id"):
-                self.receiver.main.sourceList.populateDataSources(self._ds.id)
+                self.receiver.main.sourceList.populateElements(self._ds.id)
             else:
-                self.receiver.main.sourceList.populateDataSources()
+                self.receiver.main.sourceList.populateElements()
             
             
         print "UNDO dsourceApply"
@@ -644,7 +644,7 @@ class ComponentTakeDataSources(Command):
     def execute(self):
 
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListComponent()
+            self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is None:
             QMessageBox.warning(self.receiver.main, "Component not selected", 
                                 "Please select one of the components")
@@ -704,17 +704,17 @@ class ComponentTakeDataSource(Command):
 
         if not self._lids:
             self._lids = \
-                self.receiver.main.sourceList.datasources.\
+                self.receiver.main.sourceList.elements.\
                 itervalues().next().id \
-                if len(self.receiver.main.sourceList.datasources) else None
+                if len(self.receiver.main.sourceList.elements) else None
         if self._ids and self._ds:       
-            self.receiver.main.sourceList.addDataSource(self._ds)
-            self.receiver.main.sourceList.populateDataSources(self._ids)
+            self.receiver.main.sourceList.addElement(self._ds)
+            self.receiver.main.sourceList.populateElements(self._ids)
           
         else:    
             if self._cp is None:
                 self._cp = \
-                    self.receiver.main.componentList.currentListComponent()
+                    self.receiver.main.componentList.currentListElement()
             if self._cp is not None:
                 if self._cp.instance is not None:
 
@@ -732,8 +732,8 @@ class ComponentTakeDataSource(Command):
                         self._ids = self.receiver.main.setDataSources(
                             datasource, new = True)
                         self._ds = \
-                            self.receiver.main.sourceList.datasources[self._ids]
-                        self.receiver.main.sourceList.populateDataSources(
+                            self.receiver.main.sourceList.elements[self._ids]
+                        self.receiver.main.sourceList.populateElements(
                             self._ids)
                     else:
                         QMessageBox.warning(
@@ -748,7 +748,7 @@ class ComponentTakeDataSource(Command):
         print "UNDO componentTakeDataSource"
         
 
-        self.receiver.main.sourceList.removeDataSource(self._ds, False)
+        self.receiver.main.sourceList.removeElement(self._ds, False)
         if hasattr(self._ds,'instance'):
             subwindow = self.receiver.main.subWindow(
                 self._ds.instance, 
@@ -758,7 +758,7 @@ class ComponentTakeDataSource(Command):
                 self.receiver.main.mdi.closeActiveSubWindow() 
 
 
-        self.receiver.main.sourceList.populateDataSources(self._lids)
+        self.receiver.main.sourceList.populateElements(self._lids)
 
     ## clones the command
     # \returns clone of the current instance
@@ -786,7 +786,7 @@ class DataSourceEdit(Command):
     # \brief It opens the dialog with the current datasource
     def execute(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListDataSource()
+            self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
             QMessageBox.warning(self.receiver.main, "DataSource not selected", 
                                 "Please select one of the datasources")
@@ -795,9 +795,9 @@ class DataSourceEdit(Command):
                 #                self._dsEdit = FieldWg()  
                 self._dsEdit = DataSource.DataSource()
                 
-                self._dsEdit.ids = self._ds.id
+                self._dsEdit.id = self._ds.id
                 self._dsEdit.directory = self.receiver.main.sourceList.directory
-                self._dsEdit.name = self.receiver.main.sourceList.datasources[
+                self._dsEdit.name = self.receiver.main.sourceList.elements[
                     self._ds.id].name
                 self._dsEdit.createDialog()
                 self._dsEdit.dialog.setWindowTitle( 

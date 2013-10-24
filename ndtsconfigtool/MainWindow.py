@@ -330,12 +330,12 @@ class MainWindow(QMainWindow):
        
         self.pool.createTask(
             "dsourceChanged", commandArgs, DataSourceListChanged,
-            self.sourceList.ui.sourceListWidget, 
+            self.sourceList.ui.elementListWidget, 
             "itemChanged(QListWidgetItem*)")
         
         self.pool.createTask(
             "componentChanged", commandArgs, ComponentListChanged,
-            self.componentList.ui.componentListWidget, 
+            self.componentList.ui.elementListWidget, 
             "itemChanged(QListWidgetItem*)")
 
 
@@ -344,21 +344,21 @@ class MainWindow(QMainWindow):
             self.mdiWindowActivated)
 
 
-#        self.connect(self.sourceList.ui.sourceListWidget, 
+#        self.connect(self.sourceList.ui.elementListWidget, 
 #                     SIGNAL("itemClicked(QListWidgetItem*)"), 
 #                     self.dsourceEdit)
 
-#        self.connect(self.componentList.ui.componentListWidget, 
+#        self.connect(self.componentList.ui.elementListWidget, 
 #                     SIGNAL("itemClicked(QListWidgetItem*)"), 
 #                     self.componentEdit)
 
 
-        self.connect(self.componentList.ui.componentListWidget, 
+        self.connect(self.componentList.ui.elementListWidget, 
                      SIGNAL("itemDoubleClicked(QListWidgetItem*)"), 
                      self.componentEdit)
 
 
-        self.connect(self.sourceList.ui.sourceListWidget, 
+        self.connect(self.sourceList.ui.elementListWidget, 
                      SIGNAL("itemDoubleClicked(QListWidgetItem*)"), 
                      self.dsourceEdit)
 
@@ -1059,8 +1059,8 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         failures = []
         status = None
-        for k in self.componentList.components.keys():
-            cp = self.componentList.components[k]
+        for k in self.componentList.elements.keys():
+            cp = self.componentList.elements[k]
             if (hasattr(cp,"isDirty") and cp.isDirty()) or \
                     (hasattr(cp,"instance") \
                          and hasattr(cp.instance,"isDirty") \
@@ -1077,15 +1077,15 @@ class MainWindow(QMainWindow):
                     
                 if status == QMessageBox.Yes or status == QMessageBox.YesToAll:
                     try:
-                        cid = self.componentList.currentListComponent()
-                        self.componentList.populateComponents(cp.id)
+                        cid = self.componentList.currentListElement()
+                        self.componentList.populateElements(cp.id)
                         self.componentEdit()
                         cp.instance.merge()
                         if not cp.instance.save():
-                            self.componentList.populateComponents(cid)
+                            self.componentList.populateElements(cid)
                             event.ignore()
                             return
-                        self.componentList.populateComponents(cid)
+                        self.componentList.populateElements(cid)
                         
                     except IOError, e:
                         failures.append(unicode(e))
@@ -1096,8 +1096,8 @@ class MainWindow(QMainWindow):
 
 
         status = None
-        for k in self.sourceList.datasources.keys():
-            ds = self.sourceList.datasources[k]
+        for k in self.sourceList.elements.keys():
+            ds = self.sourceList.elements[k]
             if (hasattr(ds,"isDirty") and ds.isDirty()) or \
                     (hasattr(ds,"instance") \
                          and hasattr(ds.instance,"isDirty") \
@@ -1114,14 +1114,14 @@ class MainWindow(QMainWindow):
                 
                 if status == QMessageBox.Yes or status == QMessageBox.YesToAll:
                     try:
-                        sid = self.sourceList.currentListDataSource()
-                        self.sourceList.populateDataSources(ds.id)
+                        sid = self.sourceList.currentListElement()
+                        self.sourceList.populateElements(ds.id)
                         self.dsourceEdit()
                         if not ds.instance.save():
-                            self.sourceList.populateDataSources(sid)
+                            self.sourceList.populateElements(sid)
                             event.ignore()
                             return
-                        self.sourceList.populateDataSources(sid)
+                        self.sourceList.populateElements(sid)
 
 
 
@@ -1204,10 +1204,10 @@ class MainWindow(QMainWindow):
     # \brief It loads the datasource list from the default directory
     def loadDataSources(self):
         self.sourceList.loadList(self.externalDSActions)
-        ids =  self.sourceList.datasources.itervalues().next().id \
-            if len(self.sourceList.datasources) else None
+        ide =  self.sourceList.elements.itervalues().next().id \
+            if len(self.sourceList.elements) else None
 
-        self.sourceList.populateDataSources(ids)
+        self.sourceList.populateElements(ide)
 
 
     ## sets the datasource list from dictionary
@@ -1216,10 +1216,10 @@ class MainWindow(QMainWindow):
     def setDataSources(self, datasources, new = False):
         last = self.sourceList.setList(
             datasources, self.externalDSActions, new)
-        ids =  self.sourceList.datasources.itervalues().next().id \
-            if len(self.sourceList.datasources) else None
+        ide =  self.sourceList.elements.itervalues().next().id \
+            if len(self.sourceList.elements) else None
 
-        self.sourceList.populateDataSources(ids)
+        self.sourceList.populateElements(ide)
         return last
         
     
@@ -1232,25 +1232,25 @@ class MainWindow(QMainWindow):
             self.contextMenuActions,
             self.externalCPActions 
            )
-        idc =  self.componentList.components.itervalues().next().id \
-            if len(self.componentList.components) else None
+        ide =  self.componentList.elements.itervalues().next().id \
+            if len(self.componentList.elements) else None
 
-        self.componentList.populateComponents(idc)
+        self.componentList.populateElements(ide)
 
 
 
     ## loads the component list
     # \brief It loads the component list from the default directory
     def loadComponents(self):
-#        self.componentList.components = {}
+#        self.componentList.elements = {}
         self.componentList.loadList(
             self.contextMenuActions,
             self.externalCPActions, 
             )
-        idc =  self.componentList.components.itervalues().next().id \
-            if len(self.componentList.components) else None
+        ide =  self.componentList.elements.itervalues().next().id \
+            if len(self.componentList.elements) else None
 
-        self.componentList.populateComponents(idc)
+        self.componentList.populateElements(ide)
         
 
     ## adds actions to target
@@ -1420,12 +1420,12 @@ class MainWindow(QMainWindow):
             widget  = self.mdi.activeSubWindow().widget()
             self.pooling = False
             if isinstance(widget, CommonDataSourceDlg):
-                if widget.datasource.ids is not None:
-                    if hasattr(self.sourceList.currentListDataSource(), "id"):
-                        if self.sourceList.currentListDataSource().id \
-                                != widget.datasource.ids: 
-                            self.sourceList.populateDataSources(
-                                widget.datasource.ids)
+                if widget.datasource.id is not None:
+                    if hasattr(self.sourceList.currentListElement(), "id"):
+                        if self.sourceList.currentListElement().id \
+                                != widget.datasource.id: 
+                            self.sourceList.populateElements(
+                                widget.datasource.id)
                     status = True        
             self.pooling = True
         return status        
@@ -1891,13 +1891,13 @@ class MainWindow(QMainWindow):
             widget  = self.mdi.activeSubWindow().widget()
             self.pooling = False
             if isinstance(widget, ComponentDlg):
-                if widget.component.idc is not None:
+                if widget.component.id is not None:
 
-                    if hasattr(self.componentList.currentListComponent(),"id"):
-                        if self.componentList.currentListComponent().id \
-                                != widget.component.idc:
-                            self.componentList.populateComponents(
-                                widget.component.idc)
+                    if hasattr(self.componentList.currentListElement(),"id"):
+                        if self.componentList.currentListElement().id \
+                                != widget.component.id:
+                            self.componentList.populateElements(
+                                widget.component.id)
                     status = True        
             self.pooling = True
         return status        
@@ -2114,19 +2114,19 @@ class MainWindow(QMainWindow):
         widget = subwindow.widget() if hasattr(subwindow, "widget") else None
         self.pooling = False
         if isinstance(widget, CommonDataSourceDlg):
-            if widget.datasource.ids is not None:
-                if hasattr(self.sourceList.currentListDataSource(),"id"):
-                    if self.sourceList.currentListDataSource().id \
-                            != widget.datasource.ids: 
-                        self.sourceList.populateDataSources(
-                            widget.datasource.ids)
+            if widget.datasource.id is not None:
+                if hasattr(self.sourceList.currentListElement(),"id"):
+                    if self.sourceList.currentListElement().id \
+                            != widget.datasource.id: 
+                        self.sourceList.populateElements(
+                            widget.datasource.id)
         elif isinstance(widget, ComponentDlg):
-            if widget.component.idc is not None:
-                if hasattr(self.componentList.currentListComponent(),"id"):
-                    if self.componentList.currentListComponent().id \
-                            != widget.component.idc:
-                        self.componentList.populateComponents(
-                            widget.component.idc)
+            if widget.component.id is not None:
+                if hasattr(self.componentList.currentListElement(),"id"):
+                    if self.componentList.currentListElement().id \
+                            != widget.component.id:
+                        self.componentList.populateElements(
+                            widget.component.id)
         self.pooling = True
 
     ## component change action
@@ -2267,13 +2267,13 @@ class MainWindow(QMainWindow):
     ## restores all windows
     # \brief It restores all windows in MDI
     def gotoComponentList(self):
-        self.componentList.ui.componentListWidget.setFocus()
+        self.componentList.ui.elementListWidget.setFocus()
 
   
   ## restores all windows
     # \brief It restores all windows in MDI
     def gotoDataSourceList(self):
-        self.sourceList.ui.sourceListWidget.setFocus()
+        self.sourceList.ui.elementListWidget.setFocus()
 
 
     ## restores all windows

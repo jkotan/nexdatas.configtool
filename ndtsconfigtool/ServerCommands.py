@@ -119,7 +119,7 @@ class ServerFetchComponents(Command):
                     self.receiver.main.mdi.setActiveSubWindow(subwindow)
                     self.receiver.main.mdi.closeActiveSubWindow()
 
-        self.receiver.main.componentList.components = {} 
+        self.receiver.main.componentList.elements = {} 
 
         if self.receiver.main.configServer:
             try:
@@ -172,16 +172,16 @@ class ServerStoreComponent(Command):
     # \brief It stores the current component in the configuration server
     def execute(self):       
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListComponent()
+            self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is not None:
             if self._cp.instance is None:
                 #                self._cpEdit = FieldWg()  
                 self._cpEdit = Component()
-                self._cpEdit.idc = self._cp.id
+                self._cpEdit.id = self._cp.id
                 self._cpEdit.directory = \
                     self.receiver.main.componentList.directory
                 self._cpEdit.name = \
-                    self.receiver.main.componentList.components[
+                    self.receiver.main.componentList.elements[
                     self._cp.id].name
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(
@@ -247,9 +247,9 @@ class ServerStoreComponent(Command):
                                     "Error in storing the component", 
                                     unicode(e))
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
 
             
         print "EXEC serverStoreComponent"
@@ -258,9 +258,9 @@ class ServerStoreComponent(Command):
     # \brief It populates only the component list
     def unexecute(self):
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
         print "UNDO serverStoreComponent"
 
     ## clones the command
@@ -288,7 +288,7 @@ class ServerDeleteComponent(Command):
     # \brief It deletes the current component from the configuration server
     def execute(self):       
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListComponent()
+            self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is not None:
 
             try:
@@ -315,7 +315,7 @@ class ServerDeleteComponent(Command):
                     unicode(e))
 
         cid = self._cp.id if hasattr(self._cp, "id") else None
-        self.receiver.main.componentList.populateComponents(cid)
+        self.receiver.main.componentList.populateElements(cid)
 
             
         print "EXEC serverDeleteComponent"
@@ -324,9 +324,9 @@ class ServerDeleteComponent(Command):
     # \brief It populates only the component list
     def unexecute(self):
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateComponents(self._cp.id)
+            self.receiver.main.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
         print "UNDO serverDeleteComponent"
 
     ## clones the command
@@ -354,7 +354,7 @@ class ServerSetMandatoryComponent(Command):
     #        as mandatory
     def execute(self):       
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListComponent()
+            self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is not None:
             try:
                 if not self.receiver.main.configServer.connected:
@@ -461,7 +461,7 @@ class ServerUnsetMandatoryComponent(Command):
     def execute(self):       
         if self._cp is None:
             self._cp = \
-                self.receiver.main.componentList.currentListComponent()
+                self.receiver.main.componentList.currentListElement()
         if self._cp is not None:
             try:
                 if not self.receiver.main.configServer.connected:
@@ -525,7 +525,7 @@ class ServerFetchDataSources(Command):
                     self.receiver.main.mdi.setActiveSubWindow(subwindow)
                     self.receiver.main.mdi.closeActiveSubWindow()
                     
-        self.receiver.main.sourceList.datasources = {} 
+        self.receiver.main.sourceList.elements = {} 
 
 
         if self.receiver.main.configServer:
@@ -578,7 +578,7 @@ class ServerStoreDataSource(Command):
     # \brief It fetches the datasources from the configuration server
     def execute(self):       
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListDataSource()
+            self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is not None and hasattr(self._ds, "instance"):
             try:
                 xml = self._ds.instance.get()    
@@ -611,22 +611,22 @@ class ServerStoreDataSource(Command):
                     "Error in datasource storing", unicode(e))
             
 
-        ds = self.receiver.main.sourceList.currentListDataSource()
+        ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateDataSources(ds.id)
+            self.receiver.main.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateElements()
             
         print "EXEC serverStoreDataSource"
 
     ## unexecutes the command
     # \brief It populates the datasource list
     def unexecute(self):
-        ds = self.receiver.main.sourceList.currentListDataSource()
+        ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateDataSources(ds.id)
+            self.receiver.main.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateElements()
         print "UNDO serverStoreDataSource"
 
     ## clones the command
@@ -648,7 +648,7 @@ class ServerDeleteDataSource(Command):
     # \brief It deletes the current datasource in the configuration server
     def execute(self):       
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListDataSource()
+            self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is not None:
             try:
                 if hasattr(self._ds, "instance"):
@@ -678,21 +678,21 @@ class ServerDeleteDataSource(Command):
                     "Error in datasource deleting", unicode(e))
             
 
-        ds = self.receiver.main.sourceList.currentListDataSource()
+        ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateDataSources(ds.id)
+            self.receiver.main.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateElements()
         print "EXEC serverDeleteDataSource"
 
     ## unexecutes the command
     # \brief It populates the datasource list
     def unexecute(self):
-        ds = self.receiver.main.sourceList.currentListDataSource()
+        ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateDataSources(ds.id)
+            self.receiver.main.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateElements()
         print "UNDO serverDeleteDataSource"
 
     ## clones the command
@@ -772,14 +772,14 @@ class ServerStoreAllComponents(Command):
     # \brief It saves all components in the file
     def execute(self):
             
-        for icp in self.receiver.main.componentList.components.keys():
-            cp = self.receiver.main.componentList.components[icp]
+        for icp in self.receiver.main.componentList.elements.keys():
+            cp = self.receiver.main.componentList.elements[icp]
             if cp.instance is None:
                 #                self._cpEdit = FieldWg()  
                 cpEdit = Component()
-                cpEdit.idc = cp.id
+                cpEdit.id = cp.id
                 cpEdit.directory = self.receiver.main.componentList.directory
-                cpEdit.name = self.receiver.main.componentList.components[
+                cpEdit.name = self.receiver.main.componentList.elements[
                     cp.id].name
                 cpEdit.createGUI()
                 cpEdit.addContextMenu(self.receiver.main.contextMenuActions)
@@ -811,9 +811,9 @@ class ServerStoreAllComponents(Command):
                     self.receiver.main, "Error in storing the component", 
                     unicode(e))
         if hasattr(cp, "id"):
-            self.receiver.main.componentList.populateComponents(cp.id)
+            self.receiver.main.componentList.populateElements(cp.id)
         else:
-            self.receiver.main.componentList.populateComponents()
+            self.receiver.main.componentList.populateElements()
 
 
         print "EXEC componentStoreAll"
@@ -845,14 +845,14 @@ class ServerStoreAllDataSources(Command):
     # \brief It saves all the datasources in files
     def execute(self):
             
-        for ids in self.receiver.main.sourceList.datasources.keys():
-            ds = self.receiver.main.sourceList.datasources[ids]
+        for ids in self.receiver.main.sourceList.elements.keys():
+            ds = self.receiver.main.sourceList.elements[ids]
             if ds.instance is None:
                 dsEdit = DataSource.DataSource()
-                dsEdit.ids = ds.id
+                dsEdit.id = ds.id
                 dsEdit.directory = self.receiver.main.sourceList.directory
                 dsEdit.name = \
-                    self.receiver.main.sourceList.datasources[ds.id].name
+                    self.receiver.main.sourceList.elements[ds.id].name
                 ds.instance = dsEdit 
             print "Store", ds.instance.name
 
@@ -884,11 +884,11 @@ class ServerStoreAllDataSources(Command):
                     unicode(e))
 
 
-        ds = self.receiver.main.sourceList.currentListDataSource()
+        ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateDataSources(ds.id)
+            self.receiver.main.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateDataSources()
+            self.receiver.main.sourceList.populateElements()
 
 
         print "EXEC dsourceStoreAll"

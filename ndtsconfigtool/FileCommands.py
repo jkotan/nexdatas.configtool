@@ -438,7 +438,7 @@ class ComponentChangeDirectory(Command):
 
         path = unicode(QFileDialog.getExistingDirectory(
                 self.receiver.main, "Open Directory",
-                self.receiver.main.cpDirectory,
+                self.receiver.main.componentList.directory,
                 QFileDialog.ShowDirsOnly or QFileDialog.DontResolveSymlinks))
 
         if not path:
@@ -453,9 +453,8 @@ class ComponentChangeDirectory(Command):
 
 
         self.receiver.main.componentList.elements = {} 
-        self.receiver.main.cpDirectory = path
-        self.receiver.main.updateStatusBar()
         self.receiver.main.componentList.directory = path
+        self.receiver.main.updateStatusBar()
 
         self.receiver.main.loadComponents()
 
@@ -675,7 +674,7 @@ class DataSourceChangeDirectory(Command):
 
         path = unicode(QFileDialog.getExistingDirectory(
                 self.receiver.main, "Open Directory",
-                self.receiver.main.dsDirectory,
+                self.receiver.main.sourceList.directory,
                 QFileDialog.ShowDirsOnly or QFileDialog.DontResolveSymlinks))
 
         if not path:
@@ -691,9 +690,8 @@ class DataSourceChangeDirectory(Command):
 
 
         self.receiver.main.sourceList.elements = {} 
-        self.receiver.main.dsDirectory = path
-        self.receiver.main.updateStatusBar()
         self.receiver.main.sourceList.directory = path
+        self.receiver.main.updateStatusBar()
 
         self.receiver.main.loadDataSources()
 

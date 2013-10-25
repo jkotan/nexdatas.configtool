@@ -134,8 +134,6 @@ class MainWindow(QMainWindow):
         self.externalDSActions = {}
         ## datasource list menu under mouse cursor
         self.dsourceListMenuActions = None
-        ## datasource directory
-        self.dsDirectory = ""
         ## list of datasources
         self.sourceList =  None
         ## datasource directory label
@@ -146,8 +144,6 @@ class MainWindow(QMainWindow):
         self.externalCPActions = {}
         ## component list menu under mouse cursor
         self.componentListMenuActions = None
-        ## component directory
-        self.cpDirectory = ""
         ## list of components
         self.componentList =    None
         ## component directory label
@@ -178,13 +174,13 @@ class MainWindow(QMainWindow):
 
         settings = QSettings()
 
-        self.dsDirectory = self.setDirectory(
+        dsDirectory = self.setDirectory(
             settings, "DataSources/directory", "datasources")    
-        self.cpDirectory = self.setDirectory(
+        cpDirectory = self.setDirectory(
             settings, "Components/directory", "components")    
 
 
-        self.createGUI()            
+        self.createGUI(dsDirectory, cpDirectory)            
         self.createActions()
 
         if self.componentList:
@@ -211,6 +207,40 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("NDTS Component Designer")
 
+    ##  creates GUI
+    # \brief It create dialogs for the main window application
+    # \param dsDirectory datasource directory    
+    # \param cpDirectory component directory    
+    def createGUI(self, dsDirectory, cpDirectory):
+        self.compDockWidget = QDockWidget(self)
+        self.compDockWidget.setWindowTitle("Collections")
+#        self.compDockWidget = QDockWidget("",self)
+        self.compDockWidget.setObjectName("CompDockWidget")
+        self.compDockWidget.setAllowedAreas(
+            Qt.LeftDockWidgetArea |  Qt.RightDockWidgetArea)
+
+        self.sourceList = DataSourceList(dsDirectory, self)
+        self.sourceList.createGUI()
+
+        self.componentList = ComponentList(cpDirectory, self)
+        self.componentList.createGUI()
+
+        dockSplitter = QSplitter(Qt.Vertical)
+        dockSplitter.addWidget(self.componentList)
+        dockSplitter.addWidget(self.sourceList)
+        dockSplitter.setStretchFactor(0, 2)
+        dockSplitter.setStretchFactor(1, 1)
+        self.compDockWidget.setWidget(dockSplitter)
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.compDockWidget)
+
+        self.mdi = QMdiArea()
+
+
+        self.mdi.setOption(QMdiArea.DontMaximizeSubWindowOnActivation)
+        self.mdi.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded ) 
+        self.mdi.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded ) 
+
+        self.setCentralWidget(self.mdi)
 
 
     ## setups direcconfiguration server
@@ -249,55 +279,23 @@ class MainWindow(QMainWindow):
 
     ## updates directories in status bar
     def updateStatusBar(self):
-        self.cpDirLabel.setText("CP: %s" % (self.cpDirectory))
-        self.dsDirLabel.setText("DS: %s" % (self.dsDirectory))
+        self.cpDirLabel.setText("CP: %s" % (self.componentList.directory))
+        self.dsDirLabel.setText("DS: %s" % (self.sourceList.directory))
 
     ## creates status bar    
     # \returns status bar    
     def createStatusBar(self):    
         status = self.statusBar()
         status.setSizeGripEnabled(False)
-        self.cpDirLabel = QLabel("CP: %s" % (self.cpDirectory))
+        self.cpDirLabel = QLabel("CP: %s" % (self.componentList.directory))
         self.cpDirLabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
-        self.dsDirLabel = QLabel("DS: %s" % (self.dsDirectory))
+        self.dsDirLabel = QLabel("DS: %s" % (self.sourceList.directory))
         self.dsDirLabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
         status.addWidget(QLabel(""), 4)
         status.addWidget(self.cpDirLabel, 4)
         status.addWidget(self.dsDirLabel, 4)
         return status
 
-    ##  creates GUI
-    # \brief It create dialogs for the main window application
-    def createGUI(self):
-        self.compDockWidget = QDockWidget(self)
-        self.compDockWidget.setWindowTitle("Collections")
-#        self.compDockWidget = QDockWidget("",self)
-        self.compDockWidget.setObjectName("CompDockWidget")
-        self.compDockWidget.setAllowedAreas(
-            Qt.LeftDockWidgetArea |  Qt.RightDockWidgetArea)
-
-        self.sourceList = DataSourceList(self.dsDirectory, self)
-        self.sourceList.createGUI()
-
-        self.componentList = ComponentList(self.cpDirectory, self)
-        self.componentList.createGUI()
-
-        dockSplitter = QSplitter(Qt.Vertical)
-        dockSplitter.addWidget(self.componentList)
-        dockSplitter.addWidget(self.sourceList)
-        dockSplitter.setStretchFactor(0, 2)
-        dockSplitter.setStretchFactor(1, 1)
-        self.compDockWidget.setWidget(dockSplitter)
-        self.addDockWidget(Qt.LeftDockWidgetArea, self.compDockWidget)
-
-        self.mdi = QMdiArea()
-
-
-        self.mdi.setOption(QMdiArea.DontMaximizeSubWindowOnActivation)
-        self.mdi.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded ) 
-        self.mdi.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded ) 
-
-        self.setCentralWidget(self.mdi)
 
 
 
@@ -1147,9 +1145,9 @@ class MainWindow(QMainWindow):
         settings.setValue("MainWindow/State",
                           QVariant(self.saveState()))
         settings.setValue("DataSources/directory",
-                          QVariant(os.path.abspath(self.dsDirectory)))
+                          QVariant(os.path.abspath(self.sourceList.directory)))
         settings.setValue("Components/directory",
-                          QVariant(os.path.abspath(self.cpDirectory)))
+                          QVariant(os.path.abspath(self.componentList.directory)))
 
         if self.configServer:
             settings.setValue("ConfigServer/device",

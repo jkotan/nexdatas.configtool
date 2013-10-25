@@ -21,14 +21,10 @@
 
 """ datasource list widget """
 
-import os 
-
-from PyQt4.QtGui import QMessageBox
 
 from .ui.ui_elementlist import Ui_ElementList
 from .DataSource import DataSource
 from .ElementList import ElementList
-from .LabeledObject import LabeledObject
 
 
 ## dialog defining a group tag

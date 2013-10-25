@@ -22,13 +22,11 @@
 
 """ component list widget """
 
-import os
 
 from PyQt4.QtGui import QMessageBox
 
 from .ui.ui_elementlist import Ui_ElementList
 from .Component import Component
-from .LabeledObject import LabeledObject
 from .ElementList import ElementList
 
 ## dialog defining a group tag

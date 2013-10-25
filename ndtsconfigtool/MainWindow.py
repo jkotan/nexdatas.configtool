@@ -1140,14 +1140,18 @@ class MainWindow(QMainWindow):
             event.ignore()
             return
         settings = QSettings()
-        settings.setValue("MainWindow/Geometry",
-                          QVariant(self.saveGeometry()))
-        settings.setValue("MainWindow/State",
-                          QVariant(self.saveState()))
-        settings.setValue("DataSources/directory",
-                          QVariant(os.path.abspath(self.sourceList.directory)))
-        settings.setValue("Components/directory",
-                          QVariant(os.path.abspath(self.componentList.directory)))
+        settings.setValue(
+            "MainWindow/Geometry",
+            QVariant(self.saveGeometry()))
+        settings.setValue(
+            "MainWindow/State",
+            QVariant(self.saveState()))
+        settings.setValue(
+            "DataSources/directory",
+            QVariant(os.path.abspath(self.sourceList.directory)))
+        settings.setValue(
+            "Components/directory",
+            QVariant(os.path.abspath(self.componentList.directory)))
 
         if self.configServer:
             settings.setValue("ConfigServer/device",

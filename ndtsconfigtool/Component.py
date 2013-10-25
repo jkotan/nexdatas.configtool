@@ -826,7 +826,8 @@ class Component(object):
 
     ## sets component from XML string and reset component file name
     # \param xml XML string               
-    def set(self, xml):
+    # \param new logical variableset to True if element is not saved
+    def set(self, xml, new = False):
         self._componentFile = os.path.join(
             self.directory, self.name + ".xml") 
         self._loadFromString(xml)

@@ -87,67 +87,17 @@ class DataSourceList(ElementList):
         return dlg
 
 
+    ## replaces name special characters by underscore
+    # \param name give name
+    # \returns replaced element            
+    @classmethod            
+    def dashName(cls, name):
+        res =  "".join(
+            x.replace('/','_').replace('\\','_').replace(':','_') \
+                for x in name if (x.isalnum() or x in ["/","\\",":","_"]))
+        return res 
 
 
-    ## sets the elements
-    # \param elements dictionary with the elements, i.e. name:xml
-    # \param externalActions dictionary with external actions
-    # \param new logical variableset to True if element is not saved
-    def setList(self, elements, externalActions = None, new = False):
-        actions = externalActions if externalActions else {}
-
-        if not os.path.isdir(self.directory):
-            try:
-                if os.path.exists(os.path.join(os.getcwd(), self.name)):
-                    self.directory = os.path.abspath(
-                        os.path.join(os.getcwd(), self.name))
-                else:
-                    self.directory = os.getcwd()
-            except:
-                return
-            
-        ide = None    
-        for elname in elements.keys():
-
-            name =  "".join(
-                x.replace('/','_').replace('\\','_').replace(':','_') \
-                    for x in elname if (x.isalnum() or x in ["/","\\",":","_"]))
-            dlg = DataSource()
-            dlg.directory = self.directory
-            dlg.name = name
-
-            try:
-                if str(elements[elname]).strip():
-                    dlg.set(elements[elname], new)    
-                else:
-                    QMessageBox.warning(
-                        self, "%s cannot be loaded" % self.clName,
-                        "%s %s without content" % (self.clName, elname))
-                    dlg.createGUI()
-            except:
-                QMessageBox.warning(
-                    self, "%s cannot be loaded" % self.clName,
-                    "%s %s cannot be loaded" % (self.clName, elname))
-                dlg.createGUI()
-                            
-                
-            dlg.dataSourceName = elname
-
-            if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**actions)    
-            
-            el = LabeledObject(name, dlg)
-            if new:
-                el.savedName = ""
-
-            ide = id(el)
-            self.elements[ide] =  el
-            if el.instance is not None:
-                el.instance.id = el.id
-                if new:
-                    el.instance.applied =  True
-            print name
-        return ide    
 
 
 

@@ -78,7 +78,6 @@ class ComponentList(ElementList):
                     self._allAttributes)
             
 
-
     ## removes the current element    
     #  \brief It removes the current element asking before about it
     def removeElement(self, obj = None, question = True):
@@ -97,6 +96,7 @@ class ComponentList(ElementList):
         if unicode(attr) in self.elements.keys():
             self.elements.pop(unicode(attr))
             self.populateElements()
+
 
     ## retrives element name from file name
     # \param fname filename
@@ -119,53 +119,6 @@ class ComponentList(ElementList):
         dlg.createGUI()
         return dlg
 
-            
-
-
-    ## sets the elements
-    # \param elements dictionary with the elements, i.e. name:xml
-    # \param externalActions dictionary with external actions
-    def setList(self, elements,  itemActions, externalActions = None):
-        actions = externalActions if externalActions else {}
-        if not os.path.isdir(self.directory):
-            try:
-                if os.path.exists(os.path.join(os.getcwd(), self.name)):
-                    self.directory = os.path.abspath(
-                        os.path.join(os.getcwd(), self.name))
-                else:
-                    self.directory = os.getcwd() 
-            except:
-                return
-            
-        for elname in elements.keys():
-                
-            dlg = Component()
-            dlg.directory = self.directory
-            dlg.name = elname
-            dlg.createGUI()
-            dlg.addContextMenu(itemActions)
-            try:
-                if str(elements[elname]).strip():
-                    dlg.set(elements[elname])    
-                else:    
-                    dlg.createHeader()
-                    QMessageBox.warning(
-                        self, "%s cannot be loaded" % self.clName,
-                        "%s %s without content" % (self.clName, elname))
-            except:
-                QMessageBox.warning(
-                    self, "%s cannot be loaded" % self.clName,
-                    "%s %s cannot be loaded" % (self.clName, elname))
-
-                
-            if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**actions)    
-
-            el = LabeledObject(elname, dlg)
-            self.elements[id(el)] =  el
-            if el.instance is not None:
-                el.instance.id = el.id
-            print elname
             
 
 

@@ -1215,7 +1215,10 @@ class MainWindow(QMainWindow):
     # \param new logical variable set to True if objects are not saved    
     def setDataSources(self, datasources, new = False):
         last = self.sourceList.setList(
-            datasources, self.externalDSActions, new)
+            datasources, 
+            self.externalDSActions, 
+            None, 
+            new)
         ide =  self.sourceList.elements.itervalues().next().id \
             if len(self.sourceList.elements) else None
 
@@ -1229,8 +1232,8 @@ class MainWindow(QMainWindow):
     def setComponents(self, components):
         self.componentList.setList(
             components, 
-            self.contextMenuActions,
-            self.externalCPActions 
+            self.externalCPActions, 
+            self.contextMenuActions
            )
         ide =  self.componentList.elements.itervalues().next().id \
             if len(self.componentList.elements) else None

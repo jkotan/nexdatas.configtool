@@ -209,6 +209,75 @@ class ElementList(QWidget):
             if edit:
                 self.ui.elementListWidget.editItem(selected)
 
+
+    ## sets the elements
+    # \param elements dictionary with the elements, i.e. name:xml
+    # \param externalActions dictionary with external actions
+    # \param itemActions actions of the context menu
+    # \param new logical variableset to True if element is not saved
+    def setList(self, elements, externalActions = None, 
+                itemActions = None, new = False):
+        if not os.path.isdir(self.directory):
+            try:
+                if os.path.exists(os.path.join(os.getcwd(), self.name)):
+                    self.directory = os.path.abspath(
+                        os.path.join(os.getcwd(), self.name))
+                else:
+                    self.directory = os.getcwd() 
+            except:
+                return
+            
+        ide = None    
+        for elname in elements.keys():
+                
+            name = self.dashName(elname)
+            dlg = self.createElement(name)    
+            try:
+                if str(elements[elname]).strip():
+                    dlg.set(elements[elname], new)    
+                else:    
+                    if hasattr(dlg, "createHeader"):
+                        dlg.createHeader()
+                    QMessageBox.warning(
+                        self, "%s cannot be loaded" % self.clName,
+                        "%s %s without content" % (self.clName, elname))
+            except:
+                QMessageBox.warning(
+                    self, "%s cannot be loaded" % self.clName,
+                    "%s %s cannot be loaded" % (self.clName, elname))
+
+            if hasattr(dlg, "dataSourceName"):    
+                dlg.dataSourceName = elname
+
+            if hasattr(dlg, "addContextMenu"):    
+                dlg.addContextMenu(itemActions)
+                
+            if hasattr(dlg,"connectExternalActions"):     
+                actions = externalActions if externalActions else {}
+                dlg.connectExternalActions(**actions)    
+
+            el = LabeledObject(name, dlg)
+            if new:
+                el.savedName = ""
+
+            ide = id(el)
+            self.elements[ide] =  el
+            if el.instance is not None:
+                el.instance.id = el.id
+                if new:
+                    el.instance.applied =  True
+            print name
+        return ide 
+
+
+
+    ## replaces name special characters by underscore
+    # \param name give name
+    # \returns replaced element            
+    @classmethod            
+    def dashName(cls, name):
+        return name 
+
             
     ## loads the element list from the given dictionary
     # \param externalActions dictionary with external actions

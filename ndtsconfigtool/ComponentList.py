@@ -36,23 +36,11 @@ class ComponentList(ElementList):
     # \param directory element directory
     # \param parent patent instance
     def __init__(self, directory, parent=None):
-        super(ComponentList, self).__init__(parent)
+        super(ComponentList, self).__init__(directory, parent)
 
-        ## directory from which elements are loaded by default
-        self.directory = directory
-        
-        ## group elements
-        self.elements = {}
-
-        ## actions
-        self._actions = []
-        
         ## show all attribures or only the type attribute
         self._allAttributes = False
 
-        ## user interface
-        self.ui = Ui_ElementList()
-        
         ## widget title
         self.title = "Components"
         ## element name

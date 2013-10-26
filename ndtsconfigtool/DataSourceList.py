@@ -34,19 +34,7 @@ class DataSourceList(ElementList):
     # \param directory element directory
     # \param parent patent instance
     def __init__(self, directory, parent=None):
-        super(DataSourceList, self).__init__(parent)
-
-        ## directory from which elements are loaded by default
-        self.directory = directory
-        
-        ## group elements
-        self.elements = {}
-
-        ## actions
-        self._actions = []
-
-        ## user interface
-        self.ui = Ui_ElementList()
+        super(DataSourceList, self).__init__(directory, parent)
 
         ## widget title
         self.title = "DataSources"

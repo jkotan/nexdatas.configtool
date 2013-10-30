@@ -67,7 +67,7 @@ class ComponentList(ElementList):
     ## removes the current element    
     #  \brief It removes the current element asking before about it
     def removeElement(self, obj = None, question = True):
-        super(ComponentList, self).remove(obj, question)
+        super(ComponentList, self).removeElement(obj, question)
 
         attr = self.currentListElement()
         if attr is None:

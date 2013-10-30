@@ -166,9 +166,6 @@ class MainWindow(QMainWindow):
         ## configuration server
         self.configServer = None
         
-        ## if pooling applicable
-        self.pooling = True
-
         ## dictionary with window actions
         self.windows = {}
 
@@ -304,7 +301,6 @@ class MainWindow(QMainWindow):
     def createActions(self):
         self.pool = CommandPool(self)
         self.cmdStack = CommandStack(30)
-        self.pooling = True
 
 
         commandArgs = {'receiver':self}
@@ -1288,14 +1284,12 @@ class MainWindow(QMainWindow):
     ## remove datasource action
     # \brief It removes the current datasource      
     def dsourceRemove(self):
-        self.pooling = False
         cmd = self.pool.getCommand('dsourceRemove').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
-        self.pooling = True
 
 
     ## edit component action
@@ -1420,11 +1414,10 @@ class MainWindow(QMainWindow):
     # \returns True if windows is open
     def updateDataSourceListItem(self):
         status = False
-        if self.mdi.activeSubWindow() \
-                and isinstance(self.mdi.activeSubWindow().widget(),
-                               CommonDataSourceDlg):
-            widget  = self.mdi.activeSubWindow().widget()
-            self.pooling = False
+        if self.mdi.activeSubWindow() and isinstance(
+            self.mdi.activeSubWindow().widget(),
+            CommonDataSourceDlg):
+            widget = self.mdi.activeSubWindow().widget()
             if isinstance(widget, CommonDataSourceDlg):
                 if widget.datasource.id is not None:
                     if hasattr(self.sourceList.currentListElement(), "id"):
@@ -1433,7 +1426,6 @@ class MainWindow(QMainWindow):
                             self.sourceList.populateElements(
                                 widget.datasource.id)
                     status = True        
-            self.pooling = True
         return status        
 
 
@@ -1895,7 +1887,6 @@ class MainWindow(QMainWindow):
         if self.mdi.activeSubWindow() and isinstance(
             self.mdi.activeSubWindow().widget(), ComponentDlg):
             widget  = self.mdi.activeSubWindow().widget()
-            self.pooling = False
             if isinstance(widget, ComponentDlg):
                 if widget.component.id is not None:
 
@@ -1905,7 +1896,6 @@ class MainWindow(QMainWindow):
                             self.componentList.populateElements(
                                 widget.component.id)
                     status = True        
-            self.pooling = True
         return status        
             
 
@@ -1933,14 +1923,12 @@ class MainWindow(QMainWindow):
     ## remove component action
     # \brief It removes from the component list the current component
     def componentRemove(self):
-        self.pooling = False
         cmd = self.pool.getCommand('componentRemove').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
-        self.pooling = True
 
 
     ## edit datasource action
@@ -2118,7 +2106,6 @@ class MainWindow(QMainWindow):
     # \param subwindow selected subwindow
     def mdiWindowActivated(self, subwindow):
         widget = subwindow.widget() if hasattr(subwindow, "widget") else None
-        self.pooling = False
         if isinstance(widget, CommonDataSourceDlg):
             if widget.datasource.id is not None:
                 if hasattr(self.sourceList.currentListElement(),"id"):
@@ -2133,7 +2120,6 @@ class MainWindow(QMainWindow):
                             != widget.component.id:
                         self.componentList.populateElements(
                             widget.component.id)
-        self.pooling = True
 
     ## component change action
     # \param item new selected item on the component list
@@ -2163,33 +2149,28 @@ class MainWindow(QMainWindow):
     ## open component action
     # \brief It opens component from the file
     def componentOpen(self):
-        self.pooling = False
         cmd = self.pool.getCommand('componentOpen').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
-        self.pooling = True
 
 
     ## open datasource action
     # \brief It opens datasource from the file
     def dsourceOpen(self):
-        self.pooling = False
         cmd = self.pool.getCommand('dsourceOpen').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
-        self.pooling = True
 
 
     ## undo action
     # \brief It unexecutes the last command
     def undo(self):
-        self.pooling = False
         cmd = self.pool.getCommand('undo').clone()
         cmd.execute()
 
@@ -2207,12 +2188,10 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", False, "Redo: ", 
                               self.cmdStack.getRedoName() )   
 
-        self.pooling = True
 
     ## redo action
     # \brief It reexecutes the last undexecuted command
     def redo(self):
-        self.pooling = False
         cmd = self.pool.getCommand('redo').clone()
         cmd.execute()
 
@@ -2229,7 +2208,6 @@ class MainWindow(QMainWindow):
                                   self.cmdStack.getRedoName() )    
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )   
-        self.pooling = True
 
     ## close application action
     # \brief It closes the main application

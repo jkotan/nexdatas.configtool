@@ -111,13 +111,13 @@ class ServerFetchComponents(Command):
             return
 
         
-        subwindows = self.receiver.main.mdi.subWindowList()
+        subwindows = self.receiver.main.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 dialog = subwindow.widget()
                 if isinstance(dialog, ComponentDlg):
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.mdi.closeActiveSubWindow()
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.main.ui.mdi.closeActiveSubWindow()
 
         self.receiver.main.componentList.elements = {} 
 
@@ -199,9 +199,9 @@ class ServerStoreComponent(Command):
 
                 
             subwindow = self.receiver.main.subWindow(
-                self._cpEdit, self.receiver.main.mdi.subWindowList())
+                self._cpEdit, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
             else:    
                 self._cpEdit.createGUI()
 
@@ -215,7 +215,7 @@ class ServerStoreComponent(Command):
                         "%s [Component]" % self._cp.name)
                      
                 self._cpEdit.reconnectSaveAction()
-                subwindow = self.receiver.main.mdi.addSubWindow(
+                subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._cpEdit.dialog)
                 subwindow.resize(680, 560)
                 self._cpEdit.dialog.show()
@@ -517,13 +517,13 @@ class ServerFetchDataSources(Command):
             return
 
 
-        subwindows = self.receiver.main.mdi.subWindowList()
+        subwindows = self.receiver.main.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 dialog = subwindow.widget()
                 if isinstance(dialog, CommonDataSourceDlg):
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.mdi.closeActiveSubWindow()
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.main.ui.mdi.closeActiveSubWindow()
                     
         self.receiver.main.sourceList.elements = {} 
 

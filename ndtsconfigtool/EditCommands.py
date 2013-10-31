@@ -81,9 +81,9 @@ class ComponentEdit(Command):
 
 
             subwindow = self.receiver.main.subWindow(
-                self._cpEdit, self.receiver.main.mdi.subWindowList())
+                self._cpEdit, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._cpEdit.reconnectSaveAction()
             else:    
                 self._cpEdit.createGUI()
@@ -98,7 +98,7 @@ class ComponentEdit(Command):
                         "%s [Component]" % self._cp.name)
                      
                 self._cpEdit.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._cpEdit.dialog)
                 self._subwindow.resize(680, 560)
                 self._cpEdit.dialog.show()
@@ -159,9 +159,9 @@ class DataSourceCopy(Command):
 
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -174,7 +174,7 @@ class DataSourceCopy(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -197,9 +197,9 @@ class DataSourceCopy(Command):
 
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -212,7 +212,7 @@ class DataSourceCopy(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -266,9 +266,9 @@ class DataSourceCut(Command):
                 self._ds.instance.updateForm()
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -281,7 +281,7 @@ class DataSourceCut(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -308,9 +308,9 @@ class DataSourceCut(Command):
                 self._ds.id].instance.updateForm()
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -323,7 +323,7 @@ class DataSourceCut(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -398,9 +398,9 @@ class DataSourcePaste(Command):
 
             
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createDialog()
@@ -413,7 +413,7 @@ class DataSourcePaste(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -439,9 +439,9 @@ class DataSourcePaste(Command):
 
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -454,7 +454,7 @@ class DataSourcePaste(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -513,7 +513,7 @@ class DataSourceApply(Command):
             if hasattr(self._ds.instance, "connectExternalActions"):
                 self._ds.instance.connectExternalActions(
                     **self.receiver.main.externalDSActions)
-            self._subwindow = self.receiver.main.mdi.addSubWindow(
+            self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                 self._ds.instance.dialog)
             self._subwindow.resize(440, 550)
             self._ds.instance.dialog.show()
@@ -534,9 +534,9 @@ class DataSourceApply(Command):
 
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction()
             else:    
                 self._ds.instance.createGUI()
@@ -549,7 +549,7 @@ class DataSourceApply(Command):
                         "%s [Component]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -580,9 +580,9 @@ class DataSourceApply(Command):
                 self._ds.id].instance.setState(self._oldstate)
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self.receiver.main.sourceList.elements[
                     self._ds.id].instance.updateForm()
                 self._ds.instance.reconnectSaveAction()
@@ -594,7 +594,7 @@ class DataSourceApply(Command):
                     self._ds.id].instance.updateForm()
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
 
@@ -653,13 +653,13 @@ class ComponentTakeDataSources(Command):
                 datasources = self._cp.instance.getDataSources()
         
                 if datasources:
-                    dialogs = self.receiver.main.mdi.subWindowList()
+                    dialogs = self.receiver.main.ui.mdi.subWindowList()
                     if dialogs:
                         for dialog in dialogs:
                             if isinstance(dialog, DataSourceDlg):
-                                self.receiver.main.mdi.setActiveSubWindow(
+                                self.receiver.main.ui.mdi.setActiveSubWindow(
                                     dialog)
-                                self.receiver.main.mdi.closeActiveSubWindow()
+                                self.receiver.main.ui.mdi.closeActiveSubWindow()
         
                     self.receiver.main.setDataSources(datasources, new = True)
                 else:
@@ -720,13 +720,13 @@ class ComponentTakeDataSource(Command):
 
                     datasource = self._cp.instance.getCurrentDataSource()
                     if datasource:            
-                        dialogs = self.receiver.main.mdi.subWindowList()
+                        dialogs = self.receiver.main.ui.mdi.subWindowList()
                         if dialogs:
                             for dialog in dialogs:
                                 if isinstance(dialog, DataSourceDlg):
-                                    self.receiver.main.mdi.setActiveSubWindow(
+                                    self.receiver.main.ui.mdi.setActiveSubWindow(
                                         dialog)
-                                    self.receiver.main.mdi\
+                                    self.receiver.main.ui.mdi\
                                         .closeActiveSubWindow()
         
                         self._ids = self.receiver.main.setDataSources(
@@ -752,10 +752,10 @@ class ComponentTakeDataSource(Command):
         if hasattr(self._ds,'instance'):
             subwindow = self.receiver.main.subWindow(
                 self._ds.instance, 
-                self.receiver.main.mdi.subWindowList())
+                self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
-                self.receiver.main.mdi.closeActiveSubWindow() 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.closeActiveSubWindow() 
 
 
         self.receiver.main.sourceList.populateElements(self._lids)
@@ -815,9 +815,9 @@ class DataSourceEdit(Command):
                     **self.receiver.main.externalDSActions)
 
             subwindow = self.receiver.main.subWindow(
-                self._dsEdit, self.receiver.main.mdi.subWindowList())
+                self._dsEdit, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 if self._ds.instance.dialog is None:
@@ -831,7 +831,7 @@ class DataSourceEdit(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._dsEdit.dialog.show()

@@ -52,7 +52,7 @@ class ComponentOpen(Command):
     ## executes the command
     # \brief It loads an existing component from the file
     def execute(self):
-        if hasattr(self.receiver.main,'mdi'):
+        if hasattr(self.receiver.main.ui,'mdi'):
             if self._cp is None:
                 self._cp = LabeledObject("", None)
             else:    
@@ -82,12 +82,12 @@ class ComponentOpen(Command):
                     "%s [Component]" % self._cp.name)
 
                 subwindow = self.receiver.main.subWindow(
-                    self._cp.instance, self.receiver.main.mdi.subWindowList())
+                    self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                     self._cp.instance.dialog.setSaveFocus()
                 else:    
-                    self._subwindow = self.receiver.main.mdi.addSubWindow(
+                    self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                         self._cpEdit.dialog)
                     self._subwindow.resize(680, 560)
                     self._cpEdit.dialog.setSaveFocus()
@@ -105,10 +105,10 @@ class ComponentOpen(Command):
 
                 if hasattr(self._cp,'instance') and self._cp.instance:
                     subwindow = self.receiver.main.subWindow(
-                        self._cpEdit, self.receiver.main.mdi.subWindowList())
+                        self._cpEdit, self.receiver.main.ui.mdi.subWindowList())
                     if subwindow:
-                        self.receiver.main.mdi.setActiveSubWindow(subwindow) 
-                        self.receiver.main.mdi.closeActiveSubWindow() 
+                        self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                        self.receiver.main.ui.mdi.closeActiveSubWindow() 
 
                 self.receiver.main.componentList.removeElement(
                     self._cp, False)
@@ -143,7 +143,7 @@ class DataSourceOpen(Command):
     ## executes the command
     # \brief It loads an existing datasource from the file
     def execute(self):
-        if hasattr(self.receiver.main,'mdi'):
+        if hasattr(self.receiver.main.ui,'mdi'):
             if self._ds is None:
                 self._ds = LabeledObject("", None)
             else:    
@@ -170,13 +170,13 @@ class DataSourceOpen(Command):
                     "%s [DataSource]" % self._ds.name)
 
                 subwindow = self.receiver.main.subWindow(
-                    self._ds.instance, self.receiver.main.mdi.subWindowList())
+                    self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                     self._ds.instance.dialog.setSaveFocus()
                 else:    
  #               print "create"
-                    self._subwindow = self.receiver.main.mdi.addSubWindow(
+                    self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                         self._dsEdit.dialog)
                     self._subwindow.resize(440, 550)
                     self._dsEdit.dialog.setSaveFocus()
@@ -197,10 +197,10 @@ class DataSourceOpen(Command):
                 if hasattr(self._ds,'instance'):
                     subwindow = self.receiver.main.subWindow(
                         self._ds.instance, 
-                        self.receiver.main.mdi.subWindowList())
+                        self.receiver.main.ui.mdi.subWindowList())
                     if subwindow:
-                        self.receiver.main.mdi.setActiveSubWindow(subwindow) 
-                        self.receiver.main.mdi.closeActiveSubWindow() 
+                        self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                        self.receiver.main.ui.mdi.closeActiveSubWindow() 
 
                 self.receiver.main.sourceList.removeElement(self._ds, False)
                 self._ds.instance = None
@@ -266,11 +266,11 @@ class ComponentSave(Command):
 
 
             subwindow = self.receiver.main.subWindow(
-                self._cpEdit, self.receiver.main.mdi.subWindowList())
+                self._cpEdit, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
             else:    
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._cpEdit.dialog)
                 self._subwindow.resize(680, 560)
                 self._cpEdit.dialog.show()
@@ -443,12 +443,12 @@ class ComponentChangeDirectory(Command):
 
         if not path:
             return
-        subwindows = self.receiver.main.mdi.subWindowList()
+        subwindows = self.receiver.main.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), ComponentDlg):
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.mdi.closeActiveSubWindow()
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.main.ui.mdi.closeActiveSubWindow()
 
 
 
@@ -680,12 +680,12 @@ class DataSourceChangeDirectory(Command):
         if not path:
             return
 
-        subwindows = self.receiver.main.mdi.subWindowList()
+        subwindows = self.receiver.main.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), CommonDataSourceDlg):
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.mdi.closeActiveSubWindow()
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.main.ui.mdi.closeActiveSubWindow()
 
 
 
@@ -735,12 +735,12 @@ class ComponentReloadList(Command):
             return
 
         
-        subwindows = self.receiver.main.mdi.subWindowList()
+        subwindows = self.receiver.main.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), ComponentDlg):
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.mdi.closeActiveSubWindow()
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.main.ui.mdi.closeActiveSubWindow()
 
         self.receiver.main.componentList.elements = {} 
         self.receiver.main.loadComponents()
@@ -786,12 +786,12 @@ class DataSourceReloadList(Command):
             return
 
 
-        subwindows = self.receiver.main.mdi.subWindowList()
+        subwindows = self.receiver.main.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), CommonDataSourceDlg):
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.mdi.closeActiveSubWindow()
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.main.ui.mdi.closeActiveSubWindow()
                     
         self.receiver.main.sourceList.elements = {} 
         self.receiver.main.loadDataSources()

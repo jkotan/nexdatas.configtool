@@ -26,6 +26,7 @@ from PyQt4.QtGui import (QApplication, QIcon)
 
 import ndtsconfigtool     
 from ndtsconfigtool.MainWindow import MainWindow
+from ndtsconfigtool.qrc import qrc_resources
 
 
 if __name__ == "__main__":

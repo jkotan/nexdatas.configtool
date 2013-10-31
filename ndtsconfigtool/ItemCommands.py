@@ -94,10 +94,10 @@ class ComponentItemCommand(Command):
 
 
                 subwindow = self.receiver.main.subWindow(
-                    self._cp.instance, self.receiver.main.mdi.subWindowList())
+                    self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
 
                 if subwindow:
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                     self._cp.instance.reconnectSaveAction()
                 else:    
                     self._cp.instance.createGUI()
@@ -112,7 +112,7 @@ class ComponentItemCommand(Command):
                             "%s [Component]" % self._cp.name)
                      
                     self._cp.instance.reconnectSaveAction()
-                    self._subwindow = self.receiver.main.mdi.addSubWindow(
+                    self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                         self._cp.instance.dialog)
                     self._subwindow.resize(680, 560)
 
@@ -150,9 +150,9 @@ class ComponentItemCommand(Command):
             
 
             subwindow = self.receiver.main.subWindow(
-                self._cp.instance, self.receiver.main.mdi.subWindowList())
+                self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow)
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
             else:    
                 if self._cp.instance is None:
                     self._cp.instance = Component()
@@ -164,7 +164,7 @@ class ComponentItemCommand(Command):
                         self._cp.id].name
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._cp.instance.dialog)
                 self._subwindow.resize(680, 560)
 
@@ -213,9 +213,9 @@ class ComponentClear(ComponentItemCommand):
 
 
                 if hasattr(self._cp, "instance"):
-                    if self._cp.instance in self.receiver.main.mdi\
+                    if self._cp.instance in self.receiver.main.ui.mdi\
                             .subWindowList():
-                        self.receiver.main.mdi.setActiveSubWindow(
+                        self.receiver.main.ui.mdi.setActiveSubWindow(
                             self._cp.instance)
                     self._cp.instance.createHeader()            
                 

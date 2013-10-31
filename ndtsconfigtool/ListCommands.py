@@ -62,10 +62,10 @@ class ComponentNew(Command):
 
             if hasattr(self._comp,'instance') and self._comp.instance:
                 subwindow = self.receiver.main.subWindow(
-                    self._comp.instance, self.receiver.main.mdi.subWindowList())
+                    self._comp.instance, self.receiver.main.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow) 
-                    self.receiver.main.mdi.closeActiveSubWindow() 
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.main.ui.mdi.closeActiveSubWindow() 
             
         print "UNDO componentNew"
 
@@ -107,10 +107,10 @@ class ComponentRemove(Command):
             
         if hasattr(self._cp, "instance"):
             subwindow = self.receiver.main.subWindow(
-                self._cp.instance, self.receiver.main.mdi.subWindowList())
+                self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                self.receiver.main.mdi.closeActiveSubWindow()
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.main.ui.mdi.closeActiveSubWindow()
             
             
         print "EXEC componentRemove"
@@ -137,14 +137,14 @@ class ComponentRemove(Command):
                 self.receiver.main.contextMenuActions)
 
             subwindow = self.receiver.main.subWindow(
-                self._cp.instance, self.receiver.main.mdi.subWindowList())
+                self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._cp.instance.dialog.setSaveFocus()
             else:    
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._cp.instance.dialog)
                 self._subwindow.resize(680, 560)
                 self._cp.instance.dialog.setSaveFocus()
@@ -286,10 +286,10 @@ class DataSourceNew(Command):
             if hasattr(self._ds,'instance'):
                 subwindow = \
                     self.receiver.main.subWindow(
-                    self._ds.instance, self.receiver.main.mdi.subWindowList())
+                    self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow) 
-                    self.receiver.main.mdi.closeActiveSubWindow() 
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.main.ui.mdi.closeActiveSubWindow() 
 
         print "UNDO dsourceNew"
 
@@ -332,10 +332,10 @@ class DataSourceRemove(Command):
 
         if hasattr(self._ds, "instance"):
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                self.receiver.main.mdi.closeActiveSubWindow()
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.main.ui.mdi.closeActiveSubWindow()
             
             
         print "EXEC dsourceRemove"
@@ -350,13 +350,13 @@ class DataSourceRemove(Command):
             self._ds.instance.createGUI()
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.dialog.setSaveFocus()
             else:    
                 self._ds.instance.createDialog()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(680, 560)
                 self._ds.instance.dialog.setSaveFocus()
@@ -464,7 +464,7 @@ class CloseApplication(Command):
     ## executes the command
     # \brief It is performed during closing the Component Designer
     def execute(self):
-        if hasattr(self.receiver.main,'mdi'):
+        if hasattr(self.receiver.main.ui,'mdi'):
             self.receiver.main.close()
             print "EXEC closeApp"
 

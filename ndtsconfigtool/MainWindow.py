@@ -262,6 +262,7 @@ class MainWindow(QMainWindow):
         self.cpDirLabel.setText("CP: %s" % (self.componentList.directory))
         self.dsDirLabel.setText("DS: %s" % (self.sourceList.directory))
 
+
     ## creates status bar    
     # \returns status bar    
     def createStatusBar(self):    
@@ -279,6 +280,33 @@ class MainWindow(QMainWindow):
 
 
 
+    ## creates action
+    # \param text string shown in menu
+    # \param slot action slot 
+    # \param shortcut key short-cut
+    # \param icon qrc_resource icon name
+    # \param tip text for status bar and text hint
+    # \param checkable if command/action checkable
+    # \param signal action signal   
+    # \returns the action instance
+    def _createAction(self, text, slot=None, shortcut=None, icon=None,
+                     tip=None, checkable=False, signal="triggered()"):
+        action = QAction(text, self)
+        if icon is not None:
+            action.setIcon(QIcon(":/%s.png"% unicode(icon).strip()))
+        if shortcut is not None:
+            action.setShortcut(shortcut)
+        if tip is not None:
+            action.setToolTip(tip)
+            action.setStatusTip(tip)
+        if slot is not None:
+            self.connect(action, SIGNAL(signal), slot)
+        if checkable:
+            action.setCheckable(True)
+        return action
+
+
+
     ## creates actions
     # \brief It creates actions and sets the command pool and stack
     def createActions(self):
@@ -288,78 +316,24 @@ class MainWindow(QMainWindow):
 
         commandArgs = {'receiver':self}
 
-        dsourceNewAction = self.pool.createCommand(
-            "&New DataSource", "dsourceNew",  commandArgs, 
-            DataSourceNew,"Ctrl+Shift+N", "dsourceadd", 
-            "Create a new data source") 
-
-        dsourceRemoveAction = self.pool.createCommand(
-            "&Remove DataSource", "dsourceRemove",  commandArgs, 
-            DataSourceRemove,"Ctrl+Shift+P", "dsourceremove", 
-            "Close the data source")
-
-        dsourceEditAction =  self.pool.createCommand(
-            "&Edit DataSource", "dsourceEdit",  commandArgs, 
-            DataSourceEdit,
-            "Ctrl+Shift+E", 
-            "dsourceedit", "Edit the data source")
-
-       
-        self.pool.createTask(
-            "dsourceChanged", commandArgs, DataSourceListChanged,
-            self.sourceList.ui.elementListWidget, 
-            "itemChanged(QListWidgetItem*)")
-        
-        self.pool.createTask(
-            "componentChanged", commandArgs, ComponentListChanged,
-            self.componentList.ui.elementListWidget, 
-            "itemChanged(QListWidgetItem*)")
-
-
-        self.connect(
-            self.ui.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"), 
-            self.mdiWindowActivated)
-
-
-#        self.connect(self.sourceList.ui.elementListWidget, 
-#                     SIGNAL("itemClicked(QListWidgetItem*)"), 
-#                     self.dsourceEdit)
-
-#        self.connect(self.componentList.ui.elementListWidget, 
-#                     SIGNAL("itemClicked(QListWidgetItem*)"), 
-#                     self.componentEdit)
-
-
-        self.connect(self.componentList.ui.elementListWidget, 
-                     SIGNAL("itemDoubleClicked(QListWidgetItem*)"), 
-                     self.componentEdit)
-
-
-        self.connect(self.sourceList.ui.elementListWidget, 
-                     SIGNAL("itemDoubleClicked(QListWidgetItem*)"), 
-                     self.dsourceEdit)
-
-
-        
+        # File
 
         componentNewAction = self.pool.createCommand(
             "&New", "componentNew", commandArgs, ComponentNew,
             QKeySequence.New, "componentnew", "Create a new component")
 
-        componentEditAction = self.pool.createCommand(
-            "&Edit Component", "componentEdit", commandArgs, ComponentEdit,
-            "Ctrl+E", "componentedit", "Edit the component")
+        dsourceNewAction = self.pool.createCommand(
+            "&New DataSource", "dsourceNew",  commandArgs, 
+            DataSourceNew, "Ctrl+Shift+N", "dsourceadd", 
+            "Create a new data source") 
 
-        componentClearAction = self.pool.createCommand(
-            "Clear Component Items", "componentClear", commandArgs, 
-            ComponentClear,
-            "", "componentclear", "Removes all component items")
-
-
-        componentSaveAsAction = self.pool.createCommand(
-            "Save &As...", "componentSaveAs", commandArgs, 
-            ComponentSaveAs,
-            "", "componentsaveas", "Write the component into a file as ...")
+        componentOpenAction = self.pool.createCommand(
+            "&Load...", "componentOpen", commandArgs, ComponentOpen,
+            QKeySequence.Open, "componentopen", "Load an existing component")
+        
+        dsourceOpenAction = self.pool.createCommand(
+            "&Load DataSource...", "dsourceOpen", commandArgs, DataSourceOpen,
+            "Ctrl+Shift+O", "dsourceopen", "Load an existing data source")
 
 
 
@@ -368,38 +342,14 @@ class MainWindow(QMainWindow):
             QKeySequence.Save, "componentsave", 
             "Write the component into a file")
 
-
-        componentSaveAllAction = self.pool.createCommand(
-            "Save All", "componentSaveAll", commandArgs, ComponentSaveAll,
-            "", "componentsaveall", "Write all components into files")
-
-        componentApplyItemAction = self.pool.createCommand(
-            "&Apply Component Item", "componentApplyItem", commandArgs, 
-            ComponentApplyItem,
-            "Ctrl+R", "componentsapplyitem", "Apply the component item")
-
-        componentMoveUpItemAction = self.pool.createCommand(
-            "&Move Up Component Item", "componentMoveUpItem", commandArgs, 
-            ComponentMoveUpItem,
-            "Ctrl+[", "componentsmoveupitem", "Move up the component item")
-
-
-        componentMoveDownItemAction = self.pool.createCommand(
-            "&Move Down Component Item", "componentMoveDownItem", commandArgs, 
-            ComponentMoveDownItem,
-            "Ctrl+]", "componentsmovedownitem", "Move down the component item")
-
-
-        dsourceApplyAction = self.pool.createCommand(
-            "Apply DataSource", "dsourceApply", commandArgs, DataSourceApply,
-            "Ctrl+Shift+R", "dsourceapply", "Apply the data source")
-
-
         dsourceSaveAction = self.pool.createCommand(
             "&Save DataSource", "dsourceSave", commandArgs, DataSourceSave,
             "Ctrl+Shift+S", "dsourcesave", "Write the data source into a file")
 
-
+        componentSaveAsAction = self.pool.createCommand(
+            "Save &As...", "componentSaveAs", commandArgs, 
+            ComponentSaveAs,
+            "", "componentsaveas", "Write the component into a file as ...")
 
         dsourceSaveAsAction = self.pool.createCommand(
             "Save DataSource &As...", "dsourceSaveAs", commandArgs, 
@@ -407,33 +357,118 @@ class MainWindow(QMainWindow):
             "", "dsourcesaveas", 
             "Write the data source  in a file as ...")
 
+        componentSaveAllAction = self.pool.createCommand(
+            "Save All", "componentSaveAll", commandArgs, ComponentSaveAll,
+            "", "componentsaveall", "Write all components into files")
+
+        
         dsourceSaveAllAction = self.pool.createCommand(
             "Save All DataSources", "dsourceSaveAll", commandArgs, 
             DataSourceSaveAll,
             "", "dsourcessaveall", "Write all data sources in files")
 
 
-        dsourceCopyAction = self.pool.createCommand(
-            "Copy DataSource", "dsourceCopy", 
-            commandArgs, DataSourceCopy,
-            "", "copy", "Copy the data source")
+
+        componentRemoveAction = self.pool.createCommand(
+            "&Remove", "componentRemove", commandArgs, ComponentRemove,
+            "Ctrl+P", "componentremove", "Close the component")
+
+        dsourceRemoveAction = self.pool.createCommand(
+            "&Remove DataSource", "dsourceRemove",  commandArgs, 
+            DataSourceRemove, "Ctrl+Shift+P", "dsourceremove", 
+            "Close the data source")
 
 
-        dsourceCutAction = self.pool.createCommand(
-            "Cut DataSource", "dsourceCut", 
-            commandArgs, DataSourceCut,
-            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Delete),
-#            "", 
-            "cut", "Cut the data source")
+
+        dsourceReloadListAction = self.pool.createCommand(
+            "Reload DataSource List", "dsourceReloadList", 
+            commandArgs, DataSourceReloadList,
+            "", "dsourcereloadlist", "Reload the data-source list")
+
+        componentReloadListAction = self.pool.createCommand(
+            "Reload List", "componentReloadList", 
+            commandArgs, ComponentReloadList,
+            "", "componentreloadlist", "Reload the component list")
+
+        componentChangeDirectoryAction = self.pool.createCommand(
+            "Change Directory...", "componentChangeDirectory", commandArgs, 
+            ComponentChangeDirectory,
+            "", "componentrechangedirectory", 
+            "Change the component list directory")
+
+        dsourceChangeDirectoryAction = self.pool.createCommand(
+            "Change DataSource Directory...", "dsourceChangeDirectory", 
+            commandArgs, DataSourceChangeDirectory,
+            "", "dsourcerechangedirectory", 
+            "Change the data-source list directory")
 
 
-        dsourcePasteAction = self.pool.createCommand(
-            "Paste DataSource", "dsourcePaste", 
-            commandArgs, DataSourcePaste,
-            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Insert),
-#            "", 
-            "paste", "Paste the data source")
-        
+
+        fileQuitAction = self.pool.createCommand(
+            "&Quit", "closeApp", commandArgs, CloseApplication, 
+            "Ctrl+Q", "filequit", "Close the application")
+
+
+
+        fileMenu = self.menuBar().addMenu("&File")    
+        self._addActions(fileMenu, (                 
+                componentNewAction, 
+                dsourceNewAction,
+                componentOpenAction, 
+                dsourceOpenAction, 
+                None, 
+                componentSaveAction, 
+                dsourceSaveAction,
+                componentSaveAsAction,
+                dsourceSaveAsAction,
+                componentSaveAllAction, 
+                dsourceSaveAllAction,
+                None,
+                componentRemoveAction,
+                dsourceRemoveAction,
+                None,
+                componentReloadListAction,
+                dsourceReloadListAction,
+                componentChangeDirectoryAction,
+                dsourceChangeDirectoryAction,
+                None, 
+                fileQuitAction))
+
+
+
+
+        # Edit
+
+        undoAction = self.pool.createCommand(
+            "&Undo", "undo",  commandArgs, UndoCommand, 
+            "Ctrl+Z", "undo", "Can't Undo")
+        redoAction = self.pool.createCommand(
+            "&Redo", "redo",  commandArgs, RedoCommand,
+            "Ctrl+Y", "redo", "Can't Redo")
+
+        undoAction.setDisabled(True)
+        redoAction.setDisabled(True)
+
+        cutItemAction = self.pool.createCommand(
+            "C&ut Item", "cutItem", commandArgs, CutItem,
+            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
+#            "Ctrl+X",
+            "cut", "Cut the item")
+
+
+        copyItemAction = self.pool.createCommand(
+            "&Copy Item", "copyItem", commandArgs, CopyItem,
+            QKeySequence(Qt.CTRL + Qt.SHIFT  + Qt.Key_C),
+#            "Ctrl+C", 
+            "copy", "Copy the item")
+
+
+        pasteItemAction = self.pool.createCommand(
+            "&Paste Item", "pasteItem", commandArgs, PasteItem,
+            QKeySequence(Qt.CTRL +  Qt.SHIFT  + Qt.Key_V),
+#            "Ctrl+V", 
+            "paste", "Paste the item")
+
 
         componentRemoveItemAction = self.pool.createCommand(
             "Cut Component Item", "componentRemoveItem", commandArgs, 
@@ -463,43 +498,112 @@ class MainWindow(QMainWindow):
 
 
 
-
-        cutItemAction = self.pool.createCommand(
-            "C&ut Item", "cutItem", commandArgs, CutItem,
-            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
-#            "Ctrl+X",
-            "cut", "Cut the item")
+        dsourceCopyAction = self.pool.createCommand(
+            "Copy DataSource", "dsourceCopy", 
+            commandArgs, DataSourceCopy,
+            "", "copy", "Copy the data source")
 
 
-        copyItemAction = self.pool.createCommand(
-            "&Copy Item", "copyItem", commandArgs, CopyItem,
-            QKeySequence(Qt.CTRL + Qt.SHIFT  + Qt.Key_C),
-#            "Ctrl+C", 
-            "copy", "Copy the item")
+        dsourceCutAction = self.pool.createCommand(
+            "Cut DataSource", "dsourceCut", 
+            commandArgs, DataSourceCut,
+            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Delete),
+#            "", 
+            "cut", "Cut the data source")
 
 
-        pasteItemAction = self.pool.createCommand(
-            "&Paste Item", "pasteItem", commandArgs, PasteItem,
-            QKeySequence(Qt.CTRL +  Qt.SHIFT  + Qt.Key_V),
-#            "Ctrl+V", 
-            "paste", "Paste the item")
+        dsourcePasteAction = self.pool.createCommand(
+            "Paste DataSource", "dsourcePaste", 
+            commandArgs, DataSourcePaste,
+            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Insert),
+#            "", 
+            "paste", "Paste the data source")
         
+
+
+
+
+
+        componentEditAction = self.pool.createCommand(
+            "&Edit Component", "componentEdit", commandArgs, ComponentEdit,
+            "Ctrl+E", "componentedit", "Edit the component")
+
+        componentTakeDataSourceAction = self.pool.createCommand(
+            "Take DataSource Item " , "componentTakeDataSource", 
+            commandArgs, ComponentTakeDataSource,
+            "Ctrl+G",
+            "componenttakedatasource", 
+            "Take the currnet data sources from the component")
+
+        componentTakeDataSourcesAction = self.pool.createCommand(
+            "Take DataSources " , "componentTakeDataSources", 
+            commandArgs, ComponentTakeDataSources,
+            "",
+            "componenttakedatasource", 
+            "Take data sources from the component")
+
+
+
+
+
+        dsourceEditAction =  self.pool.createCommand(
+            "&Edit DataSource", "dsourceEdit",  commandArgs, 
+            DataSourceEdit,
+            "Ctrl+Shift+E", 
+            "dsourceedit", "Edit the data source")
+
+        dsourceApplyAction = self.pool.createCommand(
+            "Apply DataSource", "dsourceApply", commandArgs, DataSourceApply,
+            "Ctrl+Shift+R", "dsourceapply", "Apply the data source")
+
+
+
+        editMenu = self.menuBar().addMenu("&Edit")
+        self._addActions(editMenu, (
+                undoAction,redoAction,
+                None,
+                cutItemAction, 
+                copyItemAction,
+                pasteItemAction,
+                None,
+                componentRemoveItemAction, 
+                componentCopyItemAction,
+                componentPasteItemAction, 
+                None,
+                dsourceCutAction,
+                dsourceCopyAction,
+                dsourcePasteAction,
+                None,
+                componentEditAction, 
+                componentTakeDataSourceAction,
+                componentTakeDataSourcesAction,
+                None,
+                dsourceEditAction, 
+                dsourceApplyAction
+                ))
+
+        # Items
+
 
         componentNewGroupAction = self.pool.createCommand(
             "New &Group Item", "componentNewGroupItem", commandArgs, 
             ComponentNewItem,
             "", "componentnewitem", "Add a new component group item")
 
+        componentNewFieldAction = self.pool.createCommand(
+            "New &Field Item", "componentNewFieldItem", commandArgs, 
+            ComponentNewItem,
+            "", "componentnewitem", "Add a new  component field item")
+
         componentNewStrategyAction = self.pool.createCommand(
             "New &Strategy Item", "componentNewStrategyItem", commandArgs, 
             ComponentNewItem,
             "", "componentnewitem", "Add a new component strategy item")
 
-
-        componentNewFieldAction = self.pool.createCommand(
-            "New &Field Item", "componentNewFieldItem", commandArgs, 
+        componentNewDataSourceAction = self.pool.createCommand(
+            "New &DataSource Item", "componentNewDataSourceItem", commandArgs,
             ComponentNewItem,
-            "", "componentnewitem", "Add a new  component field item")
+            "", "componentnewitem", "Add a new component data source item")
 
         componentNewAttributeAction = self.pool.createCommand(
             "New A&ttribute Item", "componentNewAttributeItem", commandArgs, 
@@ -512,10 +616,8 @@ class MainWindow(QMainWindow):
             "", "componentnewitem", "Add a new  component link item")
         
 
-        componentNewDataSourceAction = self.pool.createCommand(
-            "New &DataSource Item", "componentNewDataSourceItem", commandArgs,
-            ComponentNewItem,
-            "", "componentnewitem", "Add a new component data source item")
+
+
 
 
         componentLoadComponentAction = self.pool.createCommand(
@@ -532,6 +634,9 @@ class MainWindow(QMainWindow):
             "Load an existing data source from the file")
 
 
+
+
+
         componentAddDataSourceAction = self.pool.createCommand(
             "Add DataSource Item", "componentAddDataSourceItem", 
             commandArgs, ComponentAddDataSourceItem,
@@ -546,89 +651,83 @@ class MainWindow(QMainWindow):
             "componentlinkitem", "Link the data source from the list")
 
 
-        componentTakeDataSourceAction = self.pool.createCommand(
-            "Take DataSource Item " , "componentTakeDataSource", 
-            commandArgs, ComponentTakeDataSource,
-            "Ctrl+G",
-            "componenttakedatasource", 
-            "Take the currnet data sources from the component")
+
+
+
+        componentMoveUpItemAction = self.pool.createCommand(
+            "&Move Up Component Item", "componentMoveUpItem", commandArgs, 
+            ComponentMoveUpItem,
+            "Ctrl+[", "componentsmoveupitem", "Move up the component item")
+
+
+        componentMoveDownItemAction = self.pool.createCommand(
+            "&Move Down Component Item", "componentMoveDownItem", commandArgs, 
+            ComponentMoveDownItem,
+            "Ctrl+]", "componentsmovedownitem", "Move down the component item")
 
 
 
 
-        componentTakeDataSourcesAction = self.pool.createCommand(
-            "Take DataSources " , "componentTakeDataSources", 
-            commandArgs, ComponentTakeDataSources,
-            "",
-            "componenttakedatasource", 
-            "Take data sources from the component")
-
-
+       
         componentMergeAction = self.pool.createCommand(
             "Merge Component Items", "componentMerge", commandArgs, 
             ComponentMerge,
             "Ctrl+M", "componentmerge", "Merge the component items")
-        
 
-        componentChangeDirectoryAction = self.pool.createCommand(
-            "Change Directory...", "componentChangeDirectory", commandArgs, 
-            ComponentChangeDirectory,
-            "", "componentrechangedirectory", 
-            "Change the component list directory")
+        componentApplyItemAction = self.pool.createCommand(
+            "&Apply Component Item", "componentApplyItem", commandArgs, 
+            ComponentApplyItem,
+            "Ctrl+R", "componentsapplyitem", "Apply the component item")
 
 
 
-        dsourceChangeDirectoryAction = self.pool.createCommand(
-            "Change DataSource Directory...", "dsourceChangeDirectory", 
-            commandArgs, DataSourceChangeDirectory,
-            "", "dsourcerechangedirectory", 
-            "Change the data-source list directory")
+
+        componentClearAction = self.pool.createCommand(
+            "Clear Component Items", "componentClear", commandArgs, 
+            ComponentClear,
+            "", "componentclear", "Removes all component items")
 
 
         
-        componentReloadListAction = self.pool.createCommand(
-            "Reload List", "componentReloadList", 
-            commandArgs, ComponentReloadList,
-            "", "componentreloadlist", "Reload the component list")
+
+        componentsMenu = self.menuBar().addMenu("C&omponent Items")    
+        self._addActions(componentsMenu, ( 
+                componentNewGroupAction, 
+                componentNewFieldAction, 
+                componentNewStrategyAction, 
+                componentNewDataSourceAction,
+                componentNewAttributeAction, 
+                componentNewLinkAction,
+                None, 
+                componentLoadComponentAction, 
+                componentLoadDataSourceAction,
+                None,
+                componentAddDataSourceAction,
+                componentLinkDataSourceAction,
+                None,
+                componentMoveUpItemAction,
+                componentMoveDownItemAction,
+                None,
+                componentMergeAction,
+                componentApplyItemAction,
+                None,
+                componentClearAction
+                ))
 
 
-        dsourceReloadListAction = self.pool.createCommand(
-            "Reload DataSource List", "dsourceReloadList", 
-            commandArgs, DataSourceReloadList,
-            "", "dsourcereloadlist", "Reload the data-source list")
-
-        dsourceOpenAction = self.pool.createCommand(
-            "&Load DataSource...", "dsourceOpen", commandArgs, DataSourceOpen,
-            "Ctrl+Shift+O", "dsourceopen", "Load an existing data source")
-
-
-        componentOpenAction = self.pool.createCommand(
-            "&Load...", "componentOpen", commandArgs, ComponentOpen,
-            QKeySequence.Open, "componentopen", "Load an existing component")
-        
-        componentRemoveAction = self.pool.createCommand(
-            "&Remove", "componentRemove", commandArgs, ComponentRemove,
-            "Ctrl+P", "componentremove", "Close the component")
-
-
-
-
+        # server
 
         serverConnectAction = self.pool.createCommand(
             "&Connect ...", "serverConnect", commandArgs, ServerConnect,
             "Ctrl+T", "serverconnect", 
             "Connect to the configuration server")
 
+
+
         serverFetchComponentsAction = self.pool.createCommand(
             "&Fetch Components", "serverFetchComponents", 
             commandArgs, ServerFetchComponents,
             "Ctrl+F", "serverfetchdatasources", 
-            "Fetch datasources from the configuration server")
-
-        serverFetchDataSourcesAction = self.pool.createCommand(
-            "&Fetch DataSources", "serverFetchDataSources", 
-            commandArgs, ServerFetchDataSources,
-            "Ctrl+Shift+F", "serverfetchdatasources", 
             "Fetch datasources from the configuration server")
 
         serverStoreComponentAction = self.pool.createCommand(
@@ -643,6 +742,20 @@ class MainWindow(QMainWindow):
             "", "serverstoreallcomponents", 
             "Store all components in the configuration server")
 
+        serverDeleteComponentAction = self.pool.createCommand(
+            "&Delete Component", "serverDeleteComponent", commandArgs, 
+            ServerDeleteComponent,
+            "", "serverdeletedatasource", 
+            "Delete datalsource from the configuration server")
+
+
+
+        serverFetchDataSourcesAction = self.pool.createCommand(
+            "&Fetch DataSources", "serverFetchDataSources", 
+            commandArgs, ServerFetchDataSources,
+            "Ctrl+Shift+F", "serverfetchdatasources", 
+            "Fetch datasources from the configuration server")
+
         serverStoreDataSourceAction = self.pool.createCommand(
             "&Store Datasource", "serverStoreDataSource", 
             commandArgs, ServerStoreDataSource,
@@ -655,17 +768,13 @@ class MainWindow(QMainWindow):
             "", "serverstorealldatasources", 
             "Store all datasources in the configuration server")
 
-        serverDeleteComponentAction = self.pool.createCommand(
-            "&Delete Component", "serverDeleteComponent", commandArgs, 
-            ServerDeleteComponent,
-            "", "serverdeletedatasource", 
-            "Delete datalsource from the configuration server")
-
         serverDeleteDataSourceAction = self.pool.createCommand(
             "&Delete Datasource", "serverDeleteDataSource", 
             commandArgs, ServerDeleteDataSource,
             "", "serverdeletedatasource", 
             "Delete datasource from the configuration server")
+
+
 
         serverSetMandatoryComponentAction = self.pool.createCommand(
             "Set Component Mandatory", "serverSetMandatoryComponent", 
@@ -685,12 +794,13 @@ class MainWindow(QMainWindow):
             "", "serverunsetmandatory", 
             "Unset the component as mandatory on the configuration server")
 
+
+
         serverCloseAction = self.pool.createCommand(
             "C&lose", "serverClose", commandArgs, ServerClose,
             "Ctrl+L", "serverclose", 
             "Close connection to the configuration server")
 
-        
         if not PYTANGO_AVAILABLE:
             serverConnectAction.setDisabled(True)
 
@@ -708,22 +818,43 @@ class MainWindow(QMainWindow):
         serverCloseAction.setDisabled(True)
 
 
+        serverMenu = self.menuBar().addMenu("&Server") 
+        self._addActions(serverMenu, (
+                serverConnectAction,None,
+                serverFetchComponentsAction,
+                serverStoreComponentAction,
+                serverStoreAllComponentsAction,
+                serverDeleteComponentAction,
+                None,
+                serverFetchDataSourcesAction,
+                serverStoreDataSourceAction,
+                serverStoreAllDataSourcesAction,
+                serverDeleteDataSourceAction,
+                None,
+                serverGetMandatoryComponentsAction,
+                serverSetMandatoryComponentAction,
+                serverUnsetMandatoryComponentAction,
+                None,
+                serverCloseAction
+                ))
 
-        fileQuitAction = self.pool.createCommand(
-            "&Quit", "closeApp", commandArgs, CloseApplication, 
-            "Ctrl+Q", "filequit", "Close the application")
+        # View
 
-        undoAction = self.pool.createCommand(
-            "&Undo", "undo",  commandArgs, UndoCommand, 
-            "Ctrl+Z", "undo", "Can't Undo")
-        redoAction = self.pool.createCommand(
-            "&Redo", "redo",  commandArgs, RedoCommand,
-            "Ctrl+Y", "redo", "Can't Redo")
+        viewDockAction = self.ui.compDockWidget.toggleViewAction()
+        viewDockAction.setToolTip("Show/Hide the dock lists")
+        viewDockAction.setStatusTip("Show/Hide the dock lists")
 
-        undoAction.setDisabled(True)
-        redoAction.setDisabled(True)
+        viewAllAttributesAction = self._createAction(
+            "&All Attributes", self.viewAllAttributes, "",
+            tip = "Go to the component list", checkable=True)
 
 
+        viewMenu = self.menuBar().addMenu("&View")
+        self._addActions(viewMenu, 
+                         (viewDockAction, viewAllAttributesAction))
+
+
+        # Windows
 
         self.windows["NextAction"] = self._createAction(
             "&Next", self.ui.mdi.activateNextSubWindow, 
@@ -756,21 +887,18 @@ class MainWindow(QMainWindow):
             "&DataSource List", self.gotoDataSourceList, "Ctrl+>",
             tip = "Go to the component list" )
 
-        viewAllAttributesAction = self._createAction(
-            "&All Attributes", self.viewAllAttributes, "",
-            tip = "Go to the component list", checkable=True)
-
-
-
-
-
-        viewDockAction = self.ui.compDockWidget.toggleViewAction()
-        viewDockAction.setToolTip("Show/Hide the dock lists")
-        viewDockAction.setStatusTip("Show/Hide the dock lists")
 
         self.windows["Mapper"] = QSignalMapper(self)
         self.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
                      self.ui.mdi, SLOT("setActiveWindow(QMdiSubWindow*)"))
+
+
+        self.windows["Menu"] = self.menuBar().addMenu("&Window")
+        self.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
+                     self.updateWindowMenu)
+
+        
+        # help
 
         helpAboutAction = self._createAction(
             "&About Component Designer",
@@ -780,80 +908,42 @@ class MainWindow(QMainWindow):
             "Component Desigener &Help", self.helpHelp,
             QKeySequence.HelpContents, icon = "help", tip = "Detail help")
 
-        fileMenu = self.menuBar().addMenu("&File")    
-        self._addActions(fileMenu, (                 
-                componentNewAction, 
-                dsourceNewAction,
-                componentOpenAction, 
-                dsourceOpenAction, 
-                None, 
-                componentSaveAction, 
-                dsourceSaveAction,
-                componentSaveAsAction,
-                dsourceSaveAsAction,
-                componentSaveAllAction, 
-                dsourceSaveAllAction,
-                None,
-                componentRemoveAction,
-                dsourceRemoveAction,
-                None,
-                componentReloadListAction,
-                dsourceReloadListAction,
-                componentChangeDirectoryAction,
-                dsourceChangeDirectoryAction,
-                None, 
-                fileQuitAction))
+
+        self.menuBar().addSeparator()
+
+        helpMenu = self.menuBar().addMenu("&Help") 
+        self._addActions(helpMenu, (helpHelpAction, helpAboutAction ))
+        
+
+        # tasks
+     
+        self.pool.createTask(
+            "dsourceChanged", commandArgs, DataSourceListChanged,
+            self.sourceList.ui.elementListWidget, 
+            "itemChanged(QListWidgetItem*)")
+        
+        self.pool.createTask(
+            "componentChanged", commandArgs, ComponentListChanged,
+            self.componentList.ui.elementListWidget, 
+            "itemChanged(QListWidgetItem*)")
 
 
-                                          
+        # signals
 
-        editMenu = self.menuBar().addMenu("&Edit")
-        self._addActions(editMenu, (
-                undoAction,redoAction,
-                None,
-                cutItemAction, 
-                copyItemAction,
-                pasteItemAction,
-                None,
-                componentRemoveItemAction, 
-                componentCopyItemAction,
-                componentPasteItemAction, 
-                None,
-                dsourceCutAction,
-                dsourceCopyAction,
-                dsourcePasteAction,
-                None,
-                componentEditAction, 
-                componentTakeDataSourceAction,
-                componentTakeDataSourcesAction,
-                None,
-                dsourceEditAction, 
-                dsourceApplyAction
-                ))
+        self.connect(
+            self.ui.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"), 
+            self.mdiWindowActivated)
 
-        componentsMenu = self.menuBar().addMenu("C&omponent Items")    
-        self._addActions(componentsMenu, ( 
-                componentNewGroupAction, 
-                componentNewFieldAction, 
-                componentNewStrategyAction, 
-                componentNewDataSourceAction,
-                componentNewAttributeAction, 
-                componentNewLinkAction,
-                None, 
-                componentLoadComponentAction, 
-                componentLoadDataSourceAction,
-                None,
-                componentAddDataSourceAction,
-                componentLinkDataSourceAction,
-                None,
-                componentMoveUpItemAction,
-                componentMoveDownItemAction,
-                None,
-                componentMergeAction,
-                componentApplyItemAction,
-                None,
-                componentClearAction
-                ))
+        self.connect(self.componentList.ui.elementListWidget, 
+                     SIGNAL("itemDoubleClicked(QListWidgetItem*)"), 
+                     self.componentEdit)
+
+        self.connect(self.sourceList.ui.elementListWidget, 
+                     SIGNAL("itemDoubleClicked(QListWidgetItem*)"), 
+                     self.dsourceEdit)
+
+
+        ## Component context menu
 
         self.ui.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.contextMenuActions =  ( 
@@ -884,7 +974,7 @@ class MainWindow(QMainWindow):
             componentClearAction
             ) 
         
-
+        ## Component list menu
         self.componentListMenuActions =  ( 
             componentNewAction, 
             componentOpenAction, 
@@ -911,6 +1001,7 @@ class MainWindow(QMainWindow):
             ) 
 
 
+        ## DataSource list menu
         self.dsourceListMenuActions =  ( 
             dsourceNewAction,
             dsourceOpenAction, 
@@ -933,40 +1024,8 @@ class MainWindow(QMainWindow):
         
 
 
-        serverMenu = self.menuBar().addMenu("&Server") 
-        self._addActions(serverMenu, (
-                serverConnectAction,None,
-                serverFetchComponentsAction,
-                serverStoreComponentAction,
-                serverStoreAllComponentsAction,
-                serverDeleteComponentAction,
-                None,
-                serverFetchDataSourcesAction,
-                serverStoreDataSourceAction,
-                serverStoreAllDataSourcesAction,
-                serverDeleteDataSourceAction,
-                None,
-                serverGetMandatoryComponentsAction,
-                serverSetMandatoryComponentAction,
-                serverUnsetMandatoryComponentAction,
-                None,
-                serverCloseAction
-                ))
 
-
-        viewMenu = self.menuBar().addMenu("&View")
-        self._addActions(viewMenu, 
-                         (viewDockAction, viewAllAttributesAction))
-
-        self.windows["Menu"] = self.menuBar().addMenu("&Window")
-        self.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
-                     self.updateWindowMenu)
-
-        self.menuBar().addSeparator()
-
-        helpMenu = self.menuBar().addMenu("&Help") 
-        self._addActions(helpMenu, (helpHelpAction, helpAboutAction ))
-        
+        # component tool bar
 
         componentToolbar = self.addToolBar("Component")
         componentToolbar.setObjectName("ComponentToolbar")
@@ -981,6 +1040,8 @@ class MainWindow(QMainWindow):
                 componentRemoveAction
                 ))
 
+        # edit tool bar
+
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolbar")
         self._addActions(editToolbar, (
@@ -989,6 +1050,7 @@ class MainWindow(QMainWindow):
                 undoAction, redoAction,
                 ))
 
+        # datasource tool bar
 
         dsourceToolbar = self.addToolBar("DataSource")
         dsourceToolbar.setObjectName("DataSourceToolbar")
@@ -1000,6 +1062,7 @@ class MainWindow(QMainWindow):
                 dsourceRemoveAction
                 ))
 
+        # server tool bar
 
         serverToolbar = self.addToolBar("ServerToolbar")
         serverToolbar.setObjectName("ServerToolbar")
@@ -1008,6 +1071,8 @@ class MainWindow(QMainWindow):
                 serverCloseAction
                 ))
 
+        # help tool bar
+
         helpToolbar = self.addToolBar("HelpToolbar")
         helpToolbar.setObjectName("HelpToolbar")
         self._addActions(helpToolbar, (
@@ -1015,6 +1080,7 @@ class MainWindow(QMainWindow):
                 ))
         
 
+        # datasource widget actions
         self.externalDSActions = {
             "externalSave":self.dsourceSaveButton, 
             "externalApply":self.dsourceApplyButton, 
@@ -1022,6 +1088,7 @@ class MainWindow(QMainWindow):
             "externalStore":self.serverStoreDataSourceButton}    
 
 
+        # component widget actions
         self.externalCPActions = {
             "externalSave":self.componentSaveButton,
             "externalStore":self.serverStoreComponentButton,
@@ -1251,6 +1318,17 @@ class MainWindow(QMainWindow):
             else:
                 target.addAction(action)
 
+    # File            
+
+    ## new component action
+    # \brief It creates a new component
+    def componentNew(self):
+        cmd = self.pool.getCommand('componentNew').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     ## new datasource action
     # \brief It creates a new datasource      
@@ -1263,6 +1341,38 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")   
 
 
+    ## open component action
+    # \brief It opens component from the file
+    def componentOpen(self):
+        cmd = self.pool.getCommand('componentOpen').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+    ## open datasource action
+    # \brief It opens datasource from the file
+    def dsourceOpen(self):
+        cmd = self.pool.getCommand('dsourceOpen').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+
+
+    ## remove component action
+    # \brief It removes from the component list the current component
+    def componentRemove(self):
+        cmd = self.pool.getCommand('componentRemove').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
 
     ## remove datasource action
     # \brief It removes the current datasource      
@@ -1275,21 +1385,6 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
-    ## edit component action
-    # \brief It opens a dialog with the current component
-    def componentEdit(self):
-        cmd = self.pool.getCommand('componentEdit').clone()
-        cmd.execute()
-
-    ## clear component action
-    # \brief It clears the current component      
-    def componentClear(self):
-        cmd = self.pool.getCommand('componentClear').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     ## save component action
@@ -1312,124 +1407,6 @@ class MainWindow(QMainWindow):
     def componentSaveButton(self):
         if self.updateComponentListItem():
             self.componentSave()
-
-
-    ## change component directory action
-    # \brief It changes the default component directory
-    def componentChangeDirectory(self):
-        cmd = self.pool.getCommand('componentChangeDirectory').clone()
-        cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
-    ## change datasource directory action
-    # \brief It changes the default datasource directory
-    def dsourceChangeDirectory(self):
-        cmd = self.pool.getCommand('dsourceChangeDirectory').clone()
-        cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
-    ## reload component list
-    # \brief It changes the default component directory and reload components
-    def componentReloadList(self):
-        cmd = self.pool.getCommand('componentReloadList').clone()
-        cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
-    ## apply component item action
-    # \brief It applies the changes in the current component item 
-    def componentApplyItem(self):
-        cmd = self.pool.getCommand('componentApplyItem').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Undo")      
-
-
-    ## apply component item action executed by button
-    # \brief It applies the changes in the current component item 
-    #        executed by button
-    def componentApplyItemButton(self):
-        if self.updateComponentListItem():
-            self.componentApplyItem()
-
-    ## move-up component item action
-    # \brief It moves the current component item up
-    def componentMoveUpItem(self):
-        cmd = self.pool.getCommand('componentMoveUpItem').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Undo")      
-
-
-    ## move-down component item action
-    # \brief It moves the current component item down
-    def componentMoveDownItem(self):
-        cmd = self.pool.getCommand('componentMoveDownItem').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Undo")      
-
-
-    ## reload datasource list
-    # \brief It changes the default datasource directory and reload datasources
-    def dsourceReloadList(self):
-        cmd = self.pool.getCommand('dsourceReloadList').clone()
-        cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-    ## update datasource list item according to open window
-    # \returns True if windows is open
-    def updateDataSourceListItem(self):
-        status = False
-        if self.ui.mdi.activeSubWindow() and isinstance(
-            self.ui.mdi.activeSubWindow().widget(),
-            CommonDataSourceDlg):
-            widget = self.ui.mdi.activeSubWindow().widget()
-            if isinstance(widget, CommonDataSourceDlg):
-                if widget.datasource.id is not None:
-                    if hasattr(self.sourceList.currentListElement(), "id"):
-                        if self.sourceList.currentListElement().id \
-                                != widget.datasource.id: 
-                            self.sourceList.populateElements(
-                                widget.datasource.id)
-                    status = True        
-        return status        
-
-
-
-    ## apply datasource item action executed by button
-    # \brief It applies the changes in the current datasource item  
-    #        executed by button
-    def dsourceApplyButton(self):
-        if self.updateDataSourceListItem():
-            self.dsourceApply()
-
-
-    ## apply datasource item action
-    # \brief It applies the changes in the current datasource item 
-    def dsourceApply(self):
-        cmd = self.pool.getCommand('dsourceApply').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
     ## save datasource item action
@@ -1455,6 +1432,35 @@ class MainWindow(QMainWindow):
     def dsourceSaveButton(self):
         if self.updateDataSourceListItem():
             self.dsourceSave()
+
+
+    ## save component item as action
+    # \brief It saves the changes in the current component item with a new name
+    def componentSaveAs(self):
+        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
+        cmd = self.pool.getCommand('componentMerge').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+        cmdSA = self.pool.getCommand('componentSaveAs').clone()
+        cmdSA.execute()
+
+        cmd = self.pool.getCommand('componentChanged').clone()
+        cmd.directory = cmdSA.directory
+        cmd.name = cmdSA.name
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+        cmd = self.pool.getCommand('componentSave').clone()
+        cmd.execute()
 
 
 
@@ -1490,46 +1496,6 @@ class MainWindow(QMainWindow):
         cmd.execute()
 
 
-    ## save all datasource item action
-    # \brief It saves the changes in all datasources item
-    def dsourceSaveAll(self):
-        cmd = self.pool.getCommand('dsourceSaveAll').clone()
-        cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
-    ## save component item as action
-    # \brief It saves the changes in the current component item with a new name
-    def componentSaveAs(self):
-        cmd = self.pool.getCommand('componentEdit').clone()
-        cmd.execute()
-        cmd = self.pool.getCommand('componentMerge').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-        cmdSA = self.pool.getCommand('componentSaveAs').clone()
-        cmdSA.execute()
-
-        cmd = self.pool.getCommand('componentChanged').clone()
-        cmd.directory = cmdSA.directory
-        cmd.name = cmdSA.name
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
-        cmd = self.pool.getCommand('componentSave').clone()
-        cmd.execute()
-
-
-
     ## save all components item action
     # \brief It saves the changes in all components item
     def componentSaveAll(self):
@@ -1540,6 +1506,135 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
+
+    ## save all datasource item action
+    # \brief It saves the changes in all datasources item
+    def dsourceSaveAll(self):
+        cmd = self.pool.getCommand('dsourceSaveAll').clone()
+        cmd.execute()
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+
+
+
+
+    ## change component directory action
+    # \brief It changes the default component directory
+    def componentChangeDirectory(self):
+        cmd = self.pool.getCommand('componentChangeDirectory').clone()
+        cmd.execute()
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+    ## change datasource directory action
+    # \brief It changes the default datasource directory
+    def dsourceChangeDirectory(self):
+        cmd = self.pool.getCommand('dsourceChangeDirectory').clone()
+        cmd.execute()
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+    ## reload component list
+    # \brief It changes the default component directory and reload components
+    def componentReloadList(self):
+        cmd = self.pool.getCommand('componentReloadList').clone()
+        cmd.execute()
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+    ## reload datasource list
+    # \brief It changes the default datasource directory and reload datasources
+    def dsourceReloadList(self):
+        cmd = self.pool.getCommand('dsourceReloadList').clone()
+        cmd.execute()
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+    ## close application action
+    # \brief It closes the main application
+    def closeApp(self):
+        cmd = self.pool.getCommand('closeApp').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+    # edit    
+
+
+
+
+    ## edit component action
+    # \brief It opens a dialog with the current component
+    def componentEdit(self):
+        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
+
+    ## edit datasource action
+    # \brief It opens a dialog with the current datasource      
+    def dsourceEdit(self):
+        cmd = self.pool.getCommand('dsourceEdit').clone()
+        cmd.execute()
+
+
+
+    ## undo action
+    # \brief It unexecutes the last command
+    def undo(self):
+        cmd = self.pool.getCommand('undo').clone()
+        cmd.execute()
+
+        ucmd = self.cmdStack.undo()
+        if hasattr(ucmd,'unexecute'):
+            ucmd.unexecute()
+        else:
+            print "Undo not possible"
+
+        if self.cmdStack.isEmpty():
+            self.pool.setDisabled("undo", True, "Can't Undo")   
+        else:
+            self.pool.setDisabled("undo", False, "Undo: ", 
+                                  self.cmdStack.getUndoName() )   
+        self.pool.setDisabled("redo", False, "Redo: ", 
+                              self.cmdStack.getRedoName() )   
+
+
+    ## redo action
+    # \brief It reexecutes the last undexecuted command
+    def redo(self):
+        cmd = self.pool.getCommand('redo').clone()
+        cmd.execute()
+
+        rucmd = self.cmdStack.redo()
+        if hasattr(rucmd,'reexecute'):
+            rucmd.reexecute()
+        else:
+            print "Redo not possible"
+
+        if self.cmdStack.isFinal():
+            self.pool.setDisabled("redo", True, "Can't Redo")   
+        else:
+            self.pool.setDisabled("redo", False, "Redo: ", 
+                                  self.cmdStack.getRedoName() )    
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )   
+
+    ## copy component item action
+    # \brief It copies the  current component item into the clipboard
+    def componentCopyItem(self):
+        cmd = self.pool.getCommand('componentCopyItem').clone()
+        cmd.execute()
 
     ## remove component item action
     # \brief It removes the current component item and copies it 
@@ -1552,7 +1647,6 @@ class MainWindow(QMainWindow):
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
-
     ## paste component item action
     # \brief It pastes the component item from the clipboard
     def componentPasteItem(self):
@@ -1564,11 +1658,6 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
         
-    ## copy component item action
-    # \brief It copies the  current component item into the clipboard
-    def componentCopyItem(self):
-        cmd = self.pool.getCommand('componentCopyItem').clone()
-        cmd.execute()
 
 
     ## copy datasource item action
@@ -1667,6 +1756,68 @@ class MainWindow(QMainWindow):
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+
+    ## take datasources 
+    # \brief It takes datasources from the current component
+    def componentTakeDataSources(self):
+        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
+        cmd = self.pool.getCommand('componentTakeDataSources').clone()
+        cmd.execute()
+        self.cmdStack.clear()
+        self.pool.setDisabled("undo", True, "Can't Undo")   
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+
+    ## take datasources 
+    # \brief It takes datasources from the current component
+    def componentTakeDataSource(self):
+        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd.execute()
+        cmd = self.pool.getCommand('componentTakeDataSource').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+#        cmd = self.pool.getCommand('dsourceEdit').clone()
+#        cmd.execute()
+
+#        cmd = self.pool.getCommand('dsourceApply').clone()
+#        cmd.execute()
+#        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+    ## apply datasource item action executed by button
+    # \brief It applies the changes in the current datasource item  
+    #        executed by button
+    def dsourceApplyButton(self):
+        if self.updateDataSourceListItem():
+            self.dsourceApply()
+
+
+    ## apply datasource item action
+    # \brief It applies the changes in the current datasource item 
+    def dsourceApply(self):
+        cmd = self.pool.getCommand('dsourceApply').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+
+
+    # Item 
+
+
+
+
+
 
 
 
@@ -1804,39 +1955,6 @@ class MainWindow(QMainWindow):
 
 
 
-
-    ## take datasources 
-    # \brief It takes datasources from the current component
-    def componentTakeDataSources(self):
-        cmd = self.pool.getCommand('componentEdit').clone()
-        cmd.execute()
-        cmd = self.pool.getCommand('componentTakeDataSources').clone()
-        cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
-
-    ## take datasources 
-    # \brief It takes datasources from the current component
-    def componentTakeDataSource(self):
-        cmd = self.pool.getCommand('componentEdit').clone()
-        cmd.execute()
-        cmd = self.pool.getCommand('componentTakeDataSource').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-#        cmd = self.pool.getCommand('dsourceEdit').clone()
-#        cmd.execute()
-
-#        cmd = self.pool.getCommand('dsourceApply').clone()
-#        cmd.execute()
-#        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
     ## add datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentAddDataSourceItem(self):
@@ -1863,30 +1981,60 @@ class MainWindow(QMainWindow):
 
 
         
-    ## update component list item according to open window
-    # \returns True if windows is open
-    def updateComponentListItem(self):
-        status = False
-        if self.ui.mdi.activeSubWindow() and isinstance(
-            self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
-            widget  = self.ui.mdi.activeSubWindow().widget()
-            if isinstance(widget, ComponentDlg):
-                if widget.component.id is not None:
-
-                    if hasattr(self.componentList.currentListElement(),"id"):
-                        if self.componentList.currentListElement().id \
-                                != widget.component.id:
-                            self.componentList.populateElements(
-                                widget.component.id)
-                    status = True        
-        return status        
-            
-
     ## link datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentLinkDataSourceItemButton(self):
         if self.updateComponentListItem():
             self.componentLinkDataSourceItem()
+
+
+
+    ## move-up component item action
+    # \brief It moves the current component item up
+    def componentMoveUpItem(self):
+        cmd = self.pool.getCommand('componentMoveUpItem').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Undo")      
+
+
+    ## move-down component item action
+    # \brief It moves the current component item down
+    def componentMoveDownItem(self):
+        cmd = self.pool.getCommand('componentMoveDownItem').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Undo")      
+
+
+
+
+
+    ## apply component item action
+    # \brief It applies the changes in the current component item 
+    def componentApplyItem(self):
+        cmd = self.pool.getCommand('componentApplyItem').clone()
+        cmd.execute()
+        self.cmdStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.cmdStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Undo")      
+
+
+    ## apply component item action executed by button
+    # \brief It applies the changes in the current component item 
+    #        executed by button
+    def componentApplyItemButton(self):
+        if self.updateComponentListItem():
+            self.componentApplyItem()
+
+
+
+
 
 
 
@@ -1903,36 +2051,23 @@ class MainWindow(QMainWindow):
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
-    ## remove component action
-    # \brief It removes from the component list the current component
-    def componentRemove(self):
-        cmd = self.pool.getCommand('componentRemove').clone()
+
+    ## clear component action
+    # \brief It clears the current component      
+    def componentClear(self):
+        cmd = self.pool.getCommand('componentClear').clone()
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
-
-    ## edit datasource action
-    # \brief It opens a dialog with the current datasource      
-    def dsourceEdit(self):
-        cmd = self.pool.getCommand('dsourceEdit').clone()
-        cmd.execute()
+    
 
 
-    ## datasource change action
-    # \param item new selected item ond the datasource list
-    def dsourceChanged(self, item):
-        cmd = self.pool.getCommand('dsourceEdit').clone()
-        cmd.execute()
-        cmd = self.pool.getCommand('dsourceChanged').clone()
-        cmd.item = item
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+
+   # server
+
 
     ## connect server action
     # \brief It connects to configuration server
@@ -2082,27 +2217,47 @@ class MainWindow(QMainWindow):
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
+   # lists
 
 
-    ## activated window action, i.e. it changes the current position 
-    #  of the component and datasource lists 
-    # \param subwindow selected subwindow
-    def mdiWindowActivated(self, subwindow):
-        widget = subwindow.widget() if hasattr(subwindow, "widget") else None
-        if isinstance(widget, CommonDataSourceDlg):
-            if widget.datasource.id is not None:
-                if hasattr(self.sourceList.currentListElement(),"id"):
-                    if self.sourceList.currentListElement().id \
-                            != widget.datasource.id: 
-                        self.sourceList.populateElements(
-                            widget.datasource.id)
-        elif isinstance(widget, ComponentDlg):
-            if widget.component.id is not None:
-                if hasattr(self.componentList.currentListElement(),"id"):
-                    if self.componentList.currentListElement().id \
-                            != widget.component.id:
-                        self.componentList.populateElements(
-                            widget.component.id)
+    ## update datasource list item according to open window
+    # \returns True if windows is open
+    def updateDataSourceListItem(self):
+        status = False
+        if self.ui.mdi.activeSubWindow() and isinstance(
+            self.ui.mdi.activeSubWindow().widget(),
+            CommonDataSourceDlg):
+            widget = self.ui.mdi.activeSubWindow().widget()
+            if isinstance(widget, CommonDataSourceDlg):
+                if widget.datasource.id is not None:
+                    if hasattr(self.sourceList.currentListElement(), "id"):
+                        if self.sourceList.currentListElement().id \
+                                != widget.datasource.id: 
+                            self.sourceList.populateElements(
+                                widget.datasource.id)
+                    status = True        
+        return status        
+
+
+    ## update component list item according to open window
+    # \returns True if windows is open
+    def updateComponentListItem(self):
+        status = False
+        if self.ui.mdi.activeSubWindow() and isinstance(
+            self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+            widget  = self.ui.mdi.activeSubWindow().widget()
+            if isinstance(widget, ComponentDlg):
+                if widget.component.id is not None:
+
+                    if hasattr(self.componentList.currentListElement(),"id"):
+                        if self.componentList.currentListElement().id \
+                                != widget.component.id:
+                            self.componentList.populateElements(
+                                widget.component.id)
+                    status = True        
+        return status        
+            
+
 
     ## component change action
     # \param item new selected item on the component list
@@ -2117,118 +2272,18 @@ class MainWindow(QMainWindow):
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
-
-
-    ## new component action
-    # \brief It creates a new component
-    def componentNew(self):
-        cmd = self.pool.getCommand('componentNew').clone()
+    ## datasource change action
+    # \param item new selected item ond the datasource list
+    def dsourceChanged(self, item):
+        cmd = self.pool.getCommand('dsourceEdit').clone()
+        cmd.execute()
+        cmd = self.pool.getCommand('dsourceChanged').clone()
+        cmd.item = item
         cmd.execute()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
-
-    ## open component action
-    # \brief It opens component from the file
-    def componentOpen(self):
-        cmd = self.pool.getCommand('componentOpen').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
-    ## open datasource action
-    # \brief It opens datasource from the file
-    def dsourceOpen(self):
-        cmd = self.pool.getCommand('dsourceOpen').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
-    ## undo action
-    # \brief It unexecutes the last command
-    def undo(self):
-        cmd = self.pool.getCommand('undo').clone()
-        cmd.execute()
-
-        ucmd = self.cmdStack.undo()
-        if hasattr(ucmd,'unexecute'):
-            ucmd.unexecute()
-        else:
-            print "Undo not possible"
-
-        if self.cmdStack.isEmpty():
-            self.pool.setDisabled("undo", True, "Can't Undo")   
-        else:
-            self.pool.setDisabled("undo", False, "Undo: ", 
-                                  self.cmdStack.getUndoName() )   
-        self.pool.setDisabled("redo", False, "Redo: ", 
-                              self.cmdStack.getRedoName() )   
-
-
-    ## redo action
-    # \brief It reexecutes the last undexecuted command
-    def redo(self):
-        cmd = self.pool.getCommand('redo').clone()
-        cmd.execute()
-
-        rucmd = self.cmdStack.redo()
-        if hasattr(rucmd,'reexecute'):
-            rucmd.reexecute()
-        else:
-            print "Redo not possible"
-
-        if self.cmdStack.isFinal():
-            self.pool.setDisabled("redo", True, "Can't Redo")   
-        else:
-            self.pool.setDisabled("redo", False, "Redo: ", 
-                                  self.cmdStack.getRedoName() )    
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )   
-
-    ## close application action
-    # \brief It closes the main application
-    def closeApp(self):
-        cmd = self.pool.getCommand('closeApp').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
-
-    ## creates action
-    # \param text string shown in menu
-    # \param slot action slot 
-    # \param shortcut key short-cut
-    # \param icon qrc_resource icon name
-    # \param tip text for status bar and text hint
-    # \param checkable if command/action checkable
-    # \param signal action signal   
-    # \returns the action instance
-    def _createAction(self, text, slot=None, shortcut=None, icon=None,
-                     tip=None, checkable=False, signal="triggered()"):
-        action = QAction(text, self)
-        if icon is not None:
-            action.setIcon(QIcon(":/%s.png"% unicode(icon).strip()))
-        if shortcut is not None:
-            action.setShortcut(shortcut)
-        if tip is not None:
-            action.setToolTip(tip)
-            action.setStatusTip(tip)
-        if slot is not None:
-            self.connect(action, SIGNAL(signal), slot)
-        if checkable:
-            action.setCheckable(True)
-        return action
-
 
 
     ## restores all windows
@@ -2243,83 +2298,7 @@ class MainWindow(QMainWindow):
         self.sourceList.ui.elementListWidget.setFocus()
 
 
-    ## restores all windows
-    # \brief It restores all windows in MDI
-    def windowRestoreAll(self):
-        for dialog in self.ui.mdi.subWindowList():
-            dialog.showNormal()
-
-
-    ## minimizes all windows
-    # \brief It minimizes all windows in MDI
-    def windowMinimizeAll(self):
-        for dialog in self.ui.mdi.subWindowList():
-            dialog.showMinimized()
-
-
-    ## shows help about
-    # \brief It shows message box with help about
-    def helpAbout(self):
-        QMessageBox.about(self, "About Component Designer",
-                """<b>Component Designer</b> v %s
-                <p>Copyright &copy; 2012-2013 DESY, GNU GENERAL PUBLIC LICENSE
-                <p>This application can be used to create
-                XML configuration file for the Nexus Data Writer.
-                <p>Python %s - Qt %s - PyQt %s on %s""" % (
-                unicode(__version__), 
-                unicode(platform.python_version()),
-                unicode(QT_VERSION_STR), 
-                unicode(PYQT_VERSION_STR),
-                unicode(platform.system())))
-
-
-
-    ## shows the detail help 
-    # \brief It shows the detail help from help directory
-    def helpHelp(self):
-        form = HelpForm("index.html", self)
-        form.show()
-
-
-    ## shows all attributes in the tree
-    # \brief switch between all attributes in the tree or only type attribute
-    def viewAllAttributes(self):
-        self.componentList.viewAttributes(
-            not self.componentList.viewAttributes())
-        
-    ## provides subwindow defined by instance
-    # \param instance given instance
-    # \param subwindows list of subwindows
-    # \returns required subwindow
-    @classmethod    
-    def subWindow(cls, instance, subwindows):
-        swin = None
-        for sw in subwindows:
-            if hasattr(sw,"widget"):
-                if hasattr(sw.widget(),"component")\
-                        and  sw.widget().component == instance:
-                    swin = sw
-                    break
-                elif hasattr(sw.widget(),"datasource")\
-                        and  sw.widget().datasource == instance:
-                    swin = sw
-                    break
-        return swin
-
-
-    ## provides subwindow defined by widget
-    # \param widget given widget
-    # \param subwindows list of subwindows
-    # \returns required subwindow
-    @classmethod    
-    def widgetSubWindow(cls, widget, subwindows):
-        swin = None
-        for sw in subwindows:
-            if hasattr(sw,"widget") and sw.widget() == widget:
-                swin = sw
-                break
-        return swin
-        
+    # mdi
 
     ## closes the current window
     # \brief Is closes the current datasource window
@@ -2355,6 +2334,126 @@ class MainWindow(QMainWindow):
             self.ui.mdi.setActiveSubWindow(subwindow)
             self.ui.mdi.closeActiveSubWindow()
         
+    # windows
+
+    ## activated window action, i.e. it changes the current position 
+    #  of the component and datasource lists 
+    # \param subwindow selected subwindow
+    def mdiWindowActivated(self, subwindow):
+        widget = subwindow.widget() if hasattr(subwindow, "widget") else None
+        if isinstance(widget, CommonDataSourceDlg):
+            if widget.datasource.id is not None:
+                if hasattr(self.sourceList.currentListElement(),"id"):
+                    if self.sourceList.currentListElement().id \
+                            != widget.datasource.id: 
+                        self.sourceList.populateElements(
+                            widget.datasource.id)
+        elif isinstance(widget, ComponentDlg):
+            if widget.component.id is not None:
+                if hasattr(self.componentList.currentListElement(),"id"):
+                    if self.componentList.currentListElement().id \
+                            != widget.component.id:
+                        self.componentList.populateElements(
+                            widget.component.id)
+
+
+
+
+
+
+
+    ## restores all windows
+    # \brief It restores all windows in MDI
+    def windowRestoreAll(self):
+        for dialog in self.ui.mdi.subWindowList():
+            dialog.showNormal()
+
+
+    ## minimizes all windows
+    # \brief It minimizes all windows in MDI
+    def windowMinimizeAll(self):
+        for dialog in self.ui.mdi.subWindowList():
+            dialog.showMinimized()
+
+
+
+
+
+    # view
+
+    ## shows all attributes in the tree
+    # \brief switch between all attributes in the tree or only type attribute
+    def viewAllAttributes(self):
+        self.componentList.viewAttributes(
+            not self.componentList.viewAttributes())
+
+
+
+
+
+    # help
+
+    ## shows help about
+    # \brief It shows message box with help about
+    def helpAbout(self):
+        QMessageBox.about(self, "About Component Designer",
+                """<b>Component Designer</b> v %s
+                <p>Copyright &copy; 2012-2013 DESY, GNU GENERAL PUBLIC LICENSE
+                <p>This application can be used to create
+                XML configuration file for the Nexus Data Writer.
+                <p>Python %s - Qt %s - PyQt %s on %s""" % (
+                unicode(__version__), 
+                unicode(platform.python_version()),
+                unicode(QT_VERSION_STR), 
+                unicode(PYQT_VERSION_STR),
+                unicode(platform.system())))
+
+
+
+    ## shows the detail help 
+    # \brief It shows the detail help from help directory
+    def helpHelp(self):
+        form = HelpForm("index.html", self)
+        form.show()
+
+
+
+
+        
+    ## provides subwindow defined by instance
+    # \param instance given instance
+    # \param subwindows list of subwindows
+    # \returns required subwindow
+    @classmethod    
+    def subWindow(cls, instance, subwindows):
+        swin = None
+        for sw in subwindows:
+            if hasattr(sw,"widget"):
+                if hasattr(sw.widget(),"component")\
+                        and  sw.widget().component == instance:
+                    swin = sw
+                    break
+                elif hasattr(sw.widget(),"datasource")\
+                        and  sw.widget().datasource == instance:
+                    swin = sw
+                    break
+        return swin
+
+
+    ## provides subwindow defined by widget
+    # \param widget given widget
+    # \param subwindows list of subwindows
+    # \returns required subwindow
+    @classmethod    
+    def widgetSubWindow(cls, widget, subwindows):
+        swin = None
+        for sw in subwindows:
+            if hasattr(sw,"widget") and sw.widget() == widget:
+                swin = sw
+                break
+        return swin
+        
+
     ## updates the window menu
     # \brief It updates the window menu with the open windows
     def updateWindowMenu(self):
@@ -2394,6 +2493,5 @@ class MainWindow(QMainWindow):
                          self.windows["Mapper"], SLOT("map()"))
             self.windows["Mapper"].setMapping(action, dialog)
             i += 1
-
 
 

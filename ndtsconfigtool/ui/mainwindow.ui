@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>597</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,6 +42,33 @@
      <height>25</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionNewDataSource"/>
+    <addaction name="actionLoad"/>
+    <addaction name="actionLoadDataSource"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveDataSource"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="actionSaveDataSourceAs"/>
+    <addaction name="actionSaveAll"/>
+    <addaction name="actionSaveAllDataSources"/>
+    <addaction name="separator"/>
+    <addaction name="actionRemove"/>
+    <addaction name="actionCloseDataSource"/>
+    <addaction name="separator"/>
+    <addaction name="actionReloadList"/>
+    <addaction name="actionReloadDataSourceList"/>
+    <addaction name="actionChangeDirectory"/>
+    <addaction name="actionChangeDataSourceDirectory"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <addaction name="menu_File"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="compDockWidget">
@@ -67,11 +94,115 @@
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
+       <property name="handleWidth">
+        <number>6</number>
+       </property>
       </widget>
      </item>
     </layout>
    </widget>
   </widget>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/componentnew.png</normaloff>:/componentnew.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new component</string>
+   </property>
+  </action>
+  <action name="actionNewDataSource">
+   <property name="text">
+    <string>&amp;New DataSource</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new data source</string>
+   </property>
+  </action>
+  <action name="actionLoad">
+   <property name="text">
+    <string>&amp;Load ...</string>
+   </property>
+   <property name="toolTip">
+    <string>Load an existing data source</string>
+   </property>
+  </action>
+  <action name="actionLoadDataSource">
+   <property name="text">
+    <string>&amp;Load DataSource ...</string>
+   </property>
+   <property name="toolTip">
+    <string>Load an existing data source</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+  </action>
+  <action name="actionSaveDataSource">
+   <property name="text">
+    <string>&amp;Save DataSource</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>Save &amp;As ...</string>
+   </property>
+  </action>
+  <action name="actionSaveDataSourceAs">
+   <property name="text">
+    <string>Save DataSource &amp;As</string>
+   </property>
+  </action>
+  <action name="actionSaveAll">
+   <property name="text">
+    <string>Save All</string>
+   </property>
+  </action>
+  <action name="actionSaveAllDataSources">
+   <property name="text">
+    <string>Save All DataSources</string>
+   </property>
+  </action>
+  <action name="actionRemove">
+   <property name="text">
+    <string>Cl&amp;ose</string>
+   </property>
+  </action>
+  <action name="actionCloseDataSource">
+   <property name="text">
+    <string>Cl&amp;ose DataSource</string>
+   </property>
+  </action>
+  <action name="actionReloadList">
+   <property name="text">
+    <string>Reload List</string>
+   </property>
+  </action>
+  <action name="actionReloadDataSourceList">
+   <property name="text">
+    <string>Reload DataSource List</string>
+   </property>
+  </action>
+  <action name="actionChangeDirectory">
+   <property name="text">
+    <string>Change Directory ...</string>
+   </property>
+  </action>
+  <action name="actionChangeDataSourceDirectory">
+   <property name="text">
+    <string>Change DataSource Directory ...</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

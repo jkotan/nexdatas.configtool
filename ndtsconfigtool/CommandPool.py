@@ -149,6 +149,10 @@ class CommandPool(object):
 
 
 
+
+
+
+
     ## creates the required task
     # \param name name of the action member function, i.e. command label
     # \param args parameters of the command constructor

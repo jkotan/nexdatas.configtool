@@ -1096,15 +1096,16 @@ class MainWindow(QMainWindow):
             "externalClose":self.componentClose,
             "externalDSLink":self.componentLinkDataSourceItemButton}
 
-    
 
-    ## stores the setting before finishing the application 
+    ## stores the list element before finishing the application 
     # \param event Qt event   
-    def closeEvent(self, event):
-        failures = []
+    # \param elementList element list
+    # \param failures a list of errors
+    # \returns True if not canceled    
+    def __closeList(self, event, elementList, failures):
         status = None
-        for k in self.componentList.elements.keys():
-            cp = self.componentList.elements[k]
+        for k in elementList.elements.keys():
+            cp = elementList.elements[k]
             if (hasattr(cp,"isDirty") and cp.isDirty()) or \
                     (hasattr(cp,"instance") \
                          and hasattr(cp.instance,"isDirty") \
@@ -1112,24 +1113,24 @@ class MainWindow(QMainWindow):
                 if status != QMessageBox.YesToAll \
                         and status != QMessageBox.NoToAll :
                     status = QMessageBox.question(
-                        self, "Component - Save",
-                        "Do you want to save the component: %s".encode() \
-                            %  (cp.name),
+                        self, "%s - Save" % elementList.clName,
+                        "Do you want to save %s: %s".encode() \
+                            %  (elementList.clName, cp.name),
                         QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel \
                             | QMessageBox.YesToAll| QMessageBox.NoToAll,
                         QMessageBox.Yes)
                     
                 if status == QMessageBox.Yes or status == QMessageBox.YesToAll:
                     try:
-                        cid = self.componentList.currentListElement()
-                        self.componentList.populateElements(cp.id)
+                        cid = elementList.currentListElement()
+                        elementList.populateElements(cp.id)
                         self.componentEdit()
                         cp.instance.merge()
                         if not cp.instance.save():
-                            self.componentList.populateElements(cid)
+                            elementList.populateElements(cid)
                             event.ignore()
                             return
-                        self.componentList.populateElements(cid)
+                        elementList.populateElements(cid)
                         
                     except IOError, e:
                         failures.append(unicode(e))
@@ -1137,54 +1138,10 @@ class MainWindow(QMainWindow):
                 elif status == QMessageBox.Cancel:
                     event.ignore()
                     return
+        return True
 
-
-        status = None
-        for k in self.sourceList.elements.keys():
-            ds = self.sourceList.elements[k]
-            if (hasattr(ds,"isDirty") and ds.isDirty()) or \
-                    (hasattr(ds,"instance") \
-                         and hasattr(ds.instance,"isDirty") \
-                         and ds.instance.isDirty()):
-                if status != QMessageBox.YesToAll \
-                        and status != QMessageBox.NoToAll:
-                    status = QMessageBox.question(
-                        self, "DataSource - Save",
-                        "Do you want to save the datasource: %s".encode() \
-                            %  (ds.name),
-                        QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel \
-                            | QMessageBox.YesToAll |  QMessageBox.NoToAll,
-                        QMessageBox.Yes)
-                
-                if status == QMessageBox.Yes or status == QMessageBox.YesToAll:
-                    try:
-                        sid = self.sourceList.currentListElement()
-                        self.sourceList.populateElements(ds.id)
-                        self.dsourceEdit()
-                        if not ds.instance.save():
-                            self.sourceList.populateElements(sid)
-                            event.ignore()
-                            return
-                        self.sourceList.populateElements(sid)
-
-
-
-                    except IOError, e:
-                        failures.append(unicode(e))
-                        
-                elif status == QMessageBox.Cancel:
-                    event.ignore()
-                    return
-
-
-        if (failures and
-            QMessageBox.warning(
-                self, "NDTS Component Designer -- Save Error",
-                "Failed to save%s\nQuit anyway?"  \
-                    % unicode("\n\t".join(failures)),
-                QMessageBox.Yes|QMessageBox.No) == QMessageBox.No):
-            event.ignore()
-            return
+    ## Stores settings in QSettings object
+    def __storeSettings(self):
         settings = QSettings()
         settings.setValue(
             "MainWindow/Geometry",
@@ -1208,6 +1165,26 @@ class MainWindow(QMainWindow):
                               QVariant(self.configServer.port))
             self.configServer.close()
 
+        
+
+    ## stores the setting before finishing the application 
+    # \param event Qt event   
+    def closeEvent(self, event):
+        failures = []
+        if not self.__closeList(event, self.componentList, failures):
+            return
+        if not self.__closeList(event, self.sourceList, failures):
+            return
+        if (failures and
+            QMessageBox.warning(
+                self, "NDTS Component Designer -- Save Error",
+                "Failed to save%s\nQuit anyway?"  \
+                    % unicode("\n\t".join(failures)),
+                QMessageBox.Yes|QMessageBox.No) == QMessageBox.No):
+            event.ignore()
+            return
+
+        self.__storeSettings()
         self.ui.mdi.closeAllSubWindows()
 
 

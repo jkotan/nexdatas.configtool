@@ -28,7 +28,7 @@ class Command(object):
     ## constructor
     # \param receiver command receiver
     # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
+    def __init__(self, receiver, slot=None):
         ## command receiver
         self.receiver = receiver
         ## command slot name 
@@ -58,6 +58,12 @@ class Command(object):
     # In the current implementation it calls self.execute()
     def reexecute(self):
         return self.execute()
+
+    def undo(self):
+        return self.unexecute()
+
+    def redo(self):
+        return self.reexecute()
 
     ## clones the command
     # \brief It is an abstract member function to reimplement cloning 

@@ -21,7 +21,7 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox, QFileDialog)
+from PyQt4.QtGui import (QMessageBox, QFileDialog, QUndoCommand)
 from PyQt4.QtCore import (QFileInfo)
 
 from .DataSourceDlg import CommonDataSourceDlg
@@ -37,13 +37,15 @@ from .Command import Command
 
 
 ## Command which loads an existing component from the file
-class ComponentOpen(Command):
+class ComponentOpen(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cpEdit = None
         self._cp = None
         self._fpath = None
@@ -127,13 +129,15 @@ class ComponentOpen(Command):
 
 
 ## Command which loads an existing datasource from the file
-class DataSourceOpen(Command):
+class DataSourceOpen(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._dsEdit = None
         self._ds = None
         self._fpath = None
@@ -220,13 +224,15 @@ class DataSourceOpen(Command):
 
 
 ## Command which saves with the current component in the file
-class ComponentSave(Command):
+class ComponentSave(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
         self._cpEdit = None
         self._subwindow = None
@@ -304,13 +310,14 @@ class ComponentSave(Command):
 
 
 ## Command which saves all components in the file
-class ComponentSaveAll(Command):
+class ComponentSaveAll(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        self.receiver = receiver
         
         
     ## executes the command
@@ -357,13 +364,15 @@ class ComponentSaveAll(Command):
 
 
 ## Command which saves the current components in the file with a different name
-class ComponentSaveAs(Command):
+class ComponentSaveAs(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         ## new name of component
         self.name = None
         ## directory of the component file
@@ -415,13 +424,15 @@ class ComponentSaveAs(Command):
 
 
 ## Command which changes the current component file directory
-class ComponentChangeDirectory(Command):
+class ComponentChangeDirectory(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
         
     ## executes the command
@@ -476,13 +487,15 @@ class ComponentChangeDirectory(Command):
 
 
 ## Command which saves all the datasources in files
-class DataSourceSaveAll(Command):
+class DataSourceSaveAll(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
         
     ## executes the command
@@ -529,9 +542,14 @@ class DataSourceSaveAll(Command):
 
 
 ## Command which saves the current datasource in files
-class DataSourceSave(Command):
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+class DataSourceSave(QUndoCommand):
+    ## constructor
+    # \param receiver command receiver
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         
         
@@ -588,13 +606,15 @@ class DataSourceSave(Command):
 
 
 ## Command which saves the current datasource in files with a different name
-class DataSourceSaveAs(Command):
+class DataSourceSaveAs(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         ## new datasource name
         self.name = None
         ## new file directory
@@ -651,13 +671,15 @@ class DataSourceSaveAs(Command):
 
 
 ## Command which changes the current file directory with datasources
-class DataSourceChangeDirectory(Command):
+class DataSourceChangeDirectory(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
         
     ## executes the command
@@ -713,13 +735,15 @@ class DataSourceChangeDirectory(Command):
 
 ## Command which reloads the components from the current component directory 
 #  into the component list
-class ComponentReloadList(Command):
+class ComponentReloadList(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
         
     ## executes the command
@@ -764,13 +788,15 @@ class ComponentReloadList(Command):
 
 ## Command which reloads the datasources from the current datasource directory 
 #  into the datasource list
-class DataSourceReloadList(Command):
+class DataSourceReloadList(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
         
     ## executes the command

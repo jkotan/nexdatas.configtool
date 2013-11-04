@@ -50,13 +50,11 @@ class EditSlots(object):
         "actionEditComponent":[
             "&Edit Component", "componentEdit",
             "Ctrl+E", "componentedit", "Edit the component"],
-
         "actionTakeDataSourceItem":[
             "Take DataSource Item " , "componentTakeDataSource", 
             "Ctrl+G",
             "componenttakedatasource", 
             "Take the currnet data sources from the component"],
-
         "actionTakeDataSources":[
             "Take DataSources " , "componentTakeDataSources", 
             "",
@@ -93,7 +91,6 @@ class EditSlots(object):
         self.undoStack.clear()
 
 
-
     ## take datasources 
     # \brief It takes datasources from the current component
     def componentTakeDataSource(self):
@@ -103,19 +100,18 @@ class EditSlots(object):
         self.undoStack.push(cmd)
 
 
-
     ## edit component action
     # \brief It opens a dialog with the current component
     def componentEdit(self):
         cmd = ComponentEdit(self.main)
         cmd.redo()
 
+
     ## edit datasource action
     # \brief It opens a dialog with the current datasource      
     def dsourceEdit(self):
         cmd = DataSourceEdit(self.main)
         cmd.redo()
-        
 
         
     ## apply datasource item action executed by button
@@ -133,13 +129,11 @@ class EditSlots(object):
         self.undoStack.push(cmd)
 
 
-
     ## copy datasource item action
     # \brief It copies the  current datasource item into the clipboard
     def dsourceCopy(self):
         cmd = DataSourceCopy(self.main)
         cmd.redo()
-
 
 
     ## cuts datasource item action
@@ -148,7 +142,6 @@ class EditSlots(object):
     def dsourceCut(self):
         cmd = DataSourceCut(self.main)
         self.undoStack.push(cmd)
-
 
 
     ## paste datasource item action

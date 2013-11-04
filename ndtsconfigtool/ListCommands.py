@@ -21,11 +21,10 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import (QMessageBox,QUndoCommand)
 
 from .Component import Component
 from .LabeledObject import LabeledObject
-from .Command import Command
 
 
 
@@ -33,13 +32,15 @@ from .Command import Command
 
 
 ## Command which creates a new component
-class ComponentNew(Command):
+class ComponentNew(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._comp = None
 
     ## executes the command
@@ -69,22 +70,20 @@ class ComponentNew(Command):
             
         print "UNDO componentNew"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentNew(self.receiver, self.slot) 
 
 
 
 
 ## Command which removes the current component from the component list
-class ComponentRemove(Command):
+class ComponentRemove(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
         self._subwindow = None
         
@@ -162,32 +161,21 @@ class ComponentRemove(Command):
             self.receiver.main.componentList.populateElements(self._cp.id)
         else:
             self.receiver.main.componentList.populateElements()
-
-                    
-
-
-
         print "UNDO componentRemove"
 
 
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentRemove(self.receiver, self.slot) 
-
-
-
-
 ## Command which changes the current component in the list
-class ComponentListChanged(Command):
+class ComponentListChanged(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         ## new item
         self.item = None
         ## new directory
@@ -249,21 +237,19 @@ class ComponentListChanged(Command):
         print "UNDO componentChanged"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentListChanged(self.receiver, self.slot) 
     
 
 
 ## Command which creates a new datasource
-class DataSourceNew(Command):
+class DataSourceNew(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         
     ## executes the command
@@ -294,23 +280,21 @@ class DataSourceNew(Command):
         print "UNDO dsourceNew"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceNew(self.receiver, self.slot) 
 
 
 
 
 
 ## Command which removes the current datasource from the datasource list
-class DataSourceRemove(Command):
+class DataSourceRemove(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         self._subwindow = None
         
@@ -366,21 +350,19 @@ class DataSourceRemove(Command):
         print "UNDO dsourceRemove"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceRemove(self.receiver, self.slot) 
 
 
 
 ## Command which performs change of  the current datasource 
-class DataSourceListChanged(Command):
+class DataSourceListChanged(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         ## new item
         self.item = None
         ## new datasource name
@@ -443,23 +425,21 @@ class DataSourceListChanged(Command):
 
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceListChanged(self.receiver, self.slot) 
     
 
 
 
 
 ## Command which is performed during closing the Component Designer
-class CloseApplication(Command):
+class CloseApplication(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
 
     ## executes the command
     # \brief It is performed during closing the Component Designer
@@ -472,12 +452,6 @@ class CloseApplication(Command):
     # \brief It does nothing
     def undo(self):
         print "UNDO closeApp"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return CloseApplication(self.receiver, self.slot) 
 
 
 

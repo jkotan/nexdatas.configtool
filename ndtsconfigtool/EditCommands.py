@@ -114,15 +114,6 @@ class ComponentEdit(QUndoCommand):
         print "UNDO componentEdit"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentEdit(self.receiver, self.slot) 
-
-
-
-
-
 
 
 
@@ -223,15 +214,6 @@ class DataSourceCopy(QUndoCommand):
             
         print "UNDO dsourceCopy"
         
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceCopy(self.receiver, self.slot) 
-        
-
-
-
 
 ## Command which moves the current datasource into the clipboard
 class DataSourceCut(QUndoCommand):
@@ -340,13 +322,6 @@ class DataSourceCut(QUndoCommand):
             
         print "UNDO dsourceCut"
         
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceCut(self.receiver, self.slot) 
-        
-
 
 
 
@@ -473,14 +448,6 @@ class DataSourcePaste(QUndoCommand):
             
         print "UNDO dsourcePaste"
         
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourcePaste(self.receiver, self.slot) 
-        
-
-
 
 ## Command which applies the changes from the form for the current datasource 
 class DataSourceApply(QUndoCommand):
@@ -625,13 +592,6 @@ class DataSourceApply(QUndoCommand):
         print "UNDO dsourceApply"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceApply(self.receiver, self.slot) 
-
-
-
 
 
 
@@ -685,13 +645,6 @@ class ComponentTakeDataSources(QUndoCommand):
     # \brief It does nothing
     def undo(self):
         print "UNDO componentTakeDataSources"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentTakeDataSources(self.receiver, self.slot) 
-
 
 
 
@@ -773,13 +726,6 @@ class ComponentTakeDataSource(QUndoCommand):
 
         self.receiver.main.sourceList.populateElements(self._lids)
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentTakeDataSource(self.receiver, self.slot) 
-
-
-
 
 
 ## Command which opens the dialog with the current datasource
@@ -860,12 +806,6 @@ class DataSourceEdit(QUndoCommand):
     # \brief It does nothing
     def undo(self):
         print "UNDO dsourceEdit"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceEdit(self.receiver, self.slot) 
 
 
 

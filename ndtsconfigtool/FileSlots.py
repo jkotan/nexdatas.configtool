@@ -41,8 +41,11 @@ from .FileCommands import (
     )
 
 from .EditCommands import (
-    ComponentEdit
+    ComponentEdit,
+    DataSourceEdit,
+    DataSourceApply
     )
+
 
 from .ItemCommands import (
     ComponentMerge
@@ -133,10 +136,6 @@ class FileSlots(object):
             self.componentSave()
 
 
-
- 
-
-
     ## save datasource item action
     # \brief It saves the changes in the current datasource item 
     def dsourceSave(self):
@@ -172,9 +171,6 @@ class FileSlots(object):
         self.undoStack.push(cmd)
         cmd = ComponentSave(self.main)
         cmd.redo()
-
-
-
 
 
     ## save datasource item as action
@@ -227,12 +223,14 @@ class FileSlots(object):
         cmd.redo()
         self.undoStack.clear()
 
+
     ## reload component list
     # \brief It changes the default component directory and reload components
     def componentReloadList(self):
         cmd = ComponentReloadList(self.main)
         cmd.redo()
         self.undoStack.clear()
+
 
     ## reload datasource list
     # \brief It changes the default datasource directory and reload datasources

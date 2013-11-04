@@ -35,7 +35,6 @@ from PyQt4.QtGui import (
 
 from .ui.ui_mainwindow import Ui_MainWindow
 
-from .CommandPool import (CommandPool, CommandStack)
 from .DataSourceList import DataSourceList
 from .ComponentList import ComponentList
 from .DataSourceDlg import CommonDataSourceDlg
@@ -90,10 +89,8 @@ class MainWindow(QMainWindow):
         ## receiver main application
         self.main = self
         
-        ## pool with commands
-        self.pool = None
         ## stack with used commands
-        self.cmdStack = None
+        self.undoStack = None
 
         ## user interface
         self.ui = Ui_MainWindow()
@@ -305,8 +302,6 @@ class MainWindow(QMainWindow):
         self.undoStack = QUndoStack(self)
 
         self.createUndoRedoActions()
-        self.pool = CommandPool(self)
-        self.cmdStack = CommandStack(30)
         
         self.slots["File"] = FileSlots(self)
         self.slots["List"] = ListSlots(self)

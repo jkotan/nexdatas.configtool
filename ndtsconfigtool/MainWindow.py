@@ -619,18 +619,18 @@ class MainWindow(QMainWindow):
     ## disables/enable the server actions
     # \param status True for disable
     def disableServer(self, status):
-        self.pool.setDisabled("serverFetchComponents", status)
-        self.pool.setDisabled("serverStoreComponent", status)
-        self.pool.setDisabled("serverStoreAllComponents", status)
-        self.pool.setDisabled("serverDeleteComponent", status)
-        self.pool.setDisabled("serverGetMandatoryComponents", status)
-        self.pool.setDisabled("serverSetMandatoryComponent", status)
-        self.pool.setDisabled("serverUnsetMandatoryComponent", status)
-        self.pool.setDisabled("serverFetchDataSources", status)
-        self.pool.setDisabled("serverStoreDataSource", status)
-        self.pool.setDisabled("serverStoreAllDataSources", status)
-        self.pool.setDisabled("serverDeleteDataSource", status)
-        self.pool.setDisabled("serverClose", status)
+        self.ui.actionFetchComponentsServer.setDisabled(status)
+        self.ui.actionStoreComponentServer.setDisabled(status)
+        self.ui.actionStoreAllComponentsServer.setDisabled(status)
+        self.ui.actionDeleteComponentServer.setDisabled(status)
+        self.ui.actionGetMandatoryComponentsServer.setDisabled(status)
+        self.ui.actionSetComponentMandatoryServer.setDisabled(status)
+        self.ui.actionUnsetComponentMandatoryServer.setDisabled(status)
+        self.ui.actionFetchDataSourcesServer.setDisabled(status)
+        self.ui.actionStoreDataSourceServer.setDisabled(status)
+        self.ui.actionStoreAllDataSourcesServer.setDisabled(status)
+        self.ui.actionDeleteDataSourceServer.setDisabled(status)
+        self.ui.actionCloseServer.setDisabled(status)
         
 
         if self.configServer and self.configServer.device:

@@ -34,6 +34,11 @@ from .ListCommands import (
     CloseApplication
     )
 
+from .EditCommands import (
+    ComponentEdit,
+    DataSourceEdit
+    )
+
 
 ## stack with the application commands
 class ListSlots(object):
@@ -132,20 +137,6 @@ class ListSlots(object):
         cmd.item = item
         self.undoStack.push(cmd)
 
-
-    ## remove component action
-    # \brief It removes from the component list the current component
-    def componentRemove(self):
-        cmd = ComponentRemove(self.main)
-        self.undoStack.push(cmd)
-
-
-
-    ## remove datasource action
-    # \brief It removes the current datasource      
-    def dsourceRemove(self):
-        cmd = DataSourceRemove(self.main)
-        self.undoStack.push(cmd)
 
 
 if __name__ == "__main__":   

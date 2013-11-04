@@ -51,6 +51,11 @@ from .ItemCommands import (
     ComponentMerge
     )
 
+from .ListCommands import (
+    ComponentListChanged,
+    DataSourceListChanged
+    )
+
 
 ## stack with the application commands
 class FileSlots(object):

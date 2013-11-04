@@ -37,12 +37,8 @@ class HelpForm(QDialog):
     def __init__(self, page, parent=None):
         super(HelpForm, self).__init__(parent)
 
-#        self.setAttribute(Qt.WA_DeleteOnClose)
-#        self.setAttribute(Qt.WA_GroupLeader)
-
-        self._page = page
-        self.createGUI()
-        self.createActions()
+        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setAttribute(Qt.WA_GroupLeader)
 
         ## help tool bar
         self.toolBar = None
@@ -50,6 +46,11 @@ class HelpForm(QDialog):
         self.textBrowser = None
         ## main label of the help
         self.pageLabel = None
+
+        self._page = page
+        self.createGUI()
+        self.createActions()
+
 
     ##  creates GUI
     # \brief It create dialogs for help dialog
@@ -86,7 +87,6 @@ class HelpForm(QDialog):
 
         ## main label of the help
         self.pageLabel = QLabel("Main Menu",self)
-        print "create Label", self.pageLabel
 
         self.toolBar.addAction(backAction)
         self.toolBar.addAction(forwardAction)
@@ -113,13 +113,11 @@ class HelpForm(QDialog):
         self.connect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
             self.updatePageTitle)
 
-        print "create Label2", self.pageLabel, self
 
 
     ## updates the title page
     # \brief It resets the pageLabel withg the document title
     def updatePageTitle(self):
-        print "create Label3", self.pageLabel, self
         self.pageLabel.setText(
             "<p><b><i><font color='#0066ee' font size = 4>" +
             "&nbsp;&nbsp;" + self.textBrowser.documentTitle() 

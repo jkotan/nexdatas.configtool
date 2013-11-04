@@ -21,8 +21,6 @@
 
 """ Server slots """
 
-from PyQt4.QtGui import  (QAction, QIcon, QKeySequence) 
-from PyQt4.QtCore import (QString, SIGNAL, Qt)
 
 from .ServerCommands import (
     ServerConnect,
@@ -190,7 +188,7 @@ class ServerSlots(object):
     ## get mandatory components action
     # \brief It fetches mandatory components
     def serverGetMandatoryComponents(self):
-        cmd = ServerGetMandatoryComponent(self.main)
+        cmd = ServerGetMandatoryComponents(self.main)
         cmd.redo()
 
 

@@ -21,8 +21,8 @@
 
 """ Edit slots """
 
-from PyQt4.QtGui import  (QAction, QIcon, QKeySequence) 
-from PyQt4.QtCore import (QString, SIGNAL, Qt)
+from PyQt4.QtGui import QKeySequence 
+from PyQt4.QtCore import Qt
 
 
 from .EditCommands import (

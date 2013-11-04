@@ -83,7 +83,8 @@ class ComponentOpen(QUndoCommand):
                     "%s [Component]" % self._cp.name)
 
                 subwindow = self.receiver.main.subWindow(
-                    self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
+                    self._cp.instance, 
+                    self.receiver.main.ui.mdi.subWindowList())
                 if subwindow:
                     self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                     self._cp.instance.dialog.setSaveFocus()
@@ -173,7 +174,8 @@ class DataSourceOpen(QUndoCommand):
                     "%s [DataSource]" % self._ds.name)
 
                 subwindow = self.receiver.main.subWindow(
-                    self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
+                    self._ds.instance, 
+                    self.receiver.main.ui.mdi.subWindowList())
                 if subwindow:
                     self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                     self._ds.instance.dialog.setSaveFocus()

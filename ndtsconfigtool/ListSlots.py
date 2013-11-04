@@ -21,8 +21,7 @@
 
 """ List slots """
 
-from PyQt4.QtGui import  (QAction, QIcon, QKeySequence) 
-from PyQt4.QtCore import (QString, SIGNAL)
+from PyQt4.QtGui import QKeySequence
 
 from .ListCommands import (
     ComponentNew,
@@ -68,10 +67,9 @@ class ListSlots(object):
                 "&Quit", "closeApp", 
                 "Ctrl+Q", "filequit", "Close the application"],
 
-
             }
 
-        tasks = [
+        self.tasks = [
             [ "dsourceChanged",
               self.main.sourceList.ui.elementListWidget, 
               "itemChanged(QListWidgetItem*)"],

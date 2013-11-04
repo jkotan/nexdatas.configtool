@@ -160,6 +160,8 @@ class ServerStoreComponent(QUndoCommand):
         QUndoCommand.__init__(self, parent)
         ## main window
         self.receiver = receiver
+        self._cp = None
+        self._cpEdit = None
 
     ## executes the command
     # \brief It stores the current component in the configuration server
@@ -268,6 +270,7 @@ class ServerDeleteComponent(QUndoCommand):
         QUndoCommand.__init__(self, parent)
         ## main window
         self.receiver = receiver
+        self._cp = None
         
 
     ## executes the command
@@ -328,6 +331,7 @@ class ServerSetMandatoryComponent(QUndoCommand):
         QUndoCommand.__init__(self, parent)
         ## main window
         self.receiver = receiver
+        self._cp = None
         
         
 
@@ -359,11 +363,6 @@ class ServerSetMandatoryComponent(QUndoCommand):
                     "Error in setting the component as mandatory", 
                     unicode(e))
         print "EXEC serverSetMandatoryComponent"
-
-    ## unexecutes the command
-    # \brief It does nothing    
-    def undo(self):
-        print "UNDO serverSetMandatoryComponent"
 
 
 
@@ -408,11 +407,6 @@ class ServerGetMandatoryComponents(QUndoCommand):
                 "Error in getting the mandatory components", 
                 unicode(e))
         print "EXEC serverGetMandatoryComponent"
-
-    ## unexecutes the command
-    # \brief It does nothing    
-    def undo(self):
-        print "UNDO serverGetMandatoryComponent"
 
 
 

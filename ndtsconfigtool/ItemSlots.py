@@ -21,8 +21,8 @@
 
 """ Item slots """
 
-from PyQt4.QtGui import  (QAction, QIcon, QKeySequence) 
-from PyQt4.QtCore import (QString, SIGNAL, Qt)
+from PyQt4.QtGui import  (QKeySequence,QMessageBox) 
+from PyQt4.QtCore import (Qt)
 
 
 from .ItemCommands import (
@@ -48,6 +48,10 @@ from .ItemCommands import (
 from .EditCommands import (
     ComponentEdit
     )
+
+from .DataSourceDlg import CommonDataSourceDlg
+from .ComponentDlg import ComponentDlg
+
 
 ## stack with the application commands
 class ItemSlots(object):
@@ -224,7 +228,8 @@ class ItemSlots(object):
     ## new group component item action
     # \brief It adds a new group component item
     def componentNewGroupItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), 
+                      ComponentDlg):
             cmd = ComponentNewItem(self.main)
             cmd.itemName = 'group' 
             self.undoStack.push(cmd)
@@ -236,7 +241,8 @@ class ItemSlots(object):
     ## new group component item action
     # \brief It adds a new group component item
     def componentNewStrategyItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), 
+                      ComponentDlg):
             cmd = ComponentNewItem(self.main)
             cmd.itemName = 'strategy' 
             self.undoStack.push(cmd)
@@ -248,7 +254,8 @@ class ItemSlots(object):
     ## new field component item action
     # \brief It adds a new field component item
     def componentNewFieldItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), 
+                      ComponentDlg):
             cmd = ComponentNewItem(self.main)
             cmd.itemName = 'field' 
             self.undoStack.push(cmd)
@@ -260,7 +267,8 @@ class ItemSlots(object):
     ## new attribute component item action
     # \brief It adds a new attribute component item 
     def componentNewAttributeItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), 
+                      ComponentDlg):
             cmd = ComponentNewItem(self.main)
             cmd.itemName = 'attribute' 
             self.undoStack.push(cmd)
@@ -272,7 +280,8 @@ class ItemSlots(object):
     ## new link component item action
     # \brief It adds a new link component item
     def componentNewLinkItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), 
+                      ComponentDlg):
             cmd = ComponentNewItem(self.main)
             cmd.itemName = 'link' 
             self.undoStack.push(cmd)
@@ -301,7 +310,8 @@ class ItemSlots(object):
     ## load sub-component item action
     # \brief It loads a sub-component item from a file
     def componentLoadComponentItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), 
+                      ComponentDlg):
             cmd = ComponentLoadComponentItem(self.main)
             self.undoStack.push(cmd)
         else:

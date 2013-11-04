@@ -21,8 +21,7 @@
 
 """ File slots """
 
-from PyQt4.QtGui import  (QAction, QIcon, QKeySequence) 
-from PyQt4.QtCore import (QString, SIGNAL)
+from PyQt4.QtGui import QKeySequence
 
 
 from .FileCommands import (
@@ -69,20 +68,24 @@ class FileSlots(object):
         self.actions = {
             "actionLoad":[
                 "&Load...", "componentOpen",
-                QKeySequence.Open, "componentopen", "Load an existing component"],
+                QKeySequence.Open, "componentopen", 
+                "Load an existing component"],
             "actionLoadDataSource":[
                 "&Load DataSource...", "dsourceOpen",
-                "Ctrl+Shift+O", "dsourceopen", "Load an existing data source"],
+                "Ctrl+Shift+O", "dsourceopen", 
+                "Load an existing data source"],
             "actionSave":[
                 "&Save", "componentSave",
                 QKeySequence.Save, "componentsave", 
                 "Write the component into a file"],
             "actionSaveDataSource":[
                 "&Save DataSource", "dsourceSave",
-                "Ctrl+Shift+S", "dsourcesave", "Write the data source into a file"],
+                "Ctrl+Shift+S", "dsourcesave", 
+                "Write the data source into a file"],
             "actionSaveAs":[
                 "Save &As...", "componentSaveAs",
-                "", "componentsaveas", "Write the component into a file as ..."],
+                "", "componentsaveas", 
+                "Write the component into a file as ..."],
             "actionSaveDataSourceAs":[
                 "Save DataSource &As...", "dsourceSaveAs",
                 "", "dsourcesaveas", 

@@ -21,7 +21,7 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox,QUndoCommand)
+from PyQt4.QtGui import (QMessageBox, QUndoCommand)
 
 from .Component import Component
 from .LabeledObject import LabeledObject
@@ -63,7 +63,8 @@ class ComponentNew(QUndoCommand):
 
             if hasattr(self._comp,'instance') and self._comp.instance:
                 subwindow = self.receiver.main.subWindow(
-                    self._comp.instance, self.receiver.main.ui.mdi.subWindowList())
+                    self._comp.instance, 
+                    self.receiver.main.ui.mdi.subWindowList())
                 if subwindow:
                     self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                     self.receiver.main.ui.mdi.closeActiveSubWindow() 
@@ -272,7 +273,8 @@ class DataSourceNew(QUndoCommand):
             if hasattr(self._ds,'instance'):
                 subwindow = \
                     self.receiver.main.subWindow(
-                    self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
+                    self._ds.instance, 
+                    self.receiver.main.ui.mdi.subWindowList())
                 if subwindow:
                     self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                     self.receiver.main.ui.mdi.closeActiveSubWindow() 
@@ -448,10 +450,6 @@ class CloseApplication(QUndoCommand):
             self.receiver.main.close()
             print "EXEC closeApp"
 
-    ## executes the command
-    # \brief It does nothing
-    def undo(self):
-        print "UNDO closeApp"
 
 
 

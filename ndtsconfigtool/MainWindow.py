@@ -22,13 +22,12 @@
 """ main window application dialog """
 
 import os
-import platform
 
 from PyQt4.QtCore import (
     SIGNAL, SLOT, QSettings, Qt,  QSignalMapper, 
     QVariant)
 from PyQt4.QtGui import (
-    QMainWindow, QDockWidget, QSplitter, QMdiArea,
+    QMainWindow, 
     QAction, QKeySequence, QMessageBox, QIcon, 
     QLabel, QFrame,
     QUndoGroup, QUndoStack)
@@ -40,7 +39,6 @@ from .ComponentList import ComponentList
 from .DataSourceDlg import CommonDataSourceDlg
 from .ComponentDlg import ComponentDlg
 
-from .HelpForm import HelpForm
 from .FileSlots import FileSlots
 from .ListSlots import ListSlots
 from .EditSlots import EditSlots
@@ -91,6 +89,8 @@ class MainWindow(QMainWindow):
         
         ## stack with used commands
         self.undoStack = None
+        ## group of command stacks
+        self.undoGroup = None
 
         ## user interface
         self.ui = Ui_MainWindow()
@@ -507,7 +507,8 @@ class MainWindow(QMainWindow):
             "externalSave":self.slots["File"].dsourceSaveButton, 
             "externalApply":self.slots["Edit"].dsourceApplyButton, 
             "externalClose":self.dsourceClose, 
-            "externalStore":self.slots["Server"].serverStoreDataSourceButton}    
+            "externalStore":self.slots["Server"].\
+                serverStoreDataSourceButton}    
 
 
         # component widget actions
@@ -516,7 +517,8 @@ class MainWindow(QMainWindow):
             "externalStore":self.slots["Server"].serverStoreComponentButton,
             "externalApply":self.slots["Item"].componentApplyItemButton,
             "externalClose":self.componentClose,
-            "externalDSLink":self.slots["Item"].componentLinkDataSourceItemButton}
+            "externalDSLink":self.slots["Item"].\
+                componentLinkDataSourceItemButton}
 
 
     ## stores the list element before finishing the application 

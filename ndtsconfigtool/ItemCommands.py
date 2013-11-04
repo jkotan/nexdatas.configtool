@@ -27,7 +27,6 @@ from PyQt4.QtCore import SIGNAL
 from . import DataSource
 from .Component import Component
 from .ComponentModel import ComponentModel
-from .Command import Command
 from .EditCommands import (DataSourceCut, DataSourceCopy, DataSourcePaste)
 
 
@@ -381,8 +380,8 @@ class CutItem(ComponentItemCommand):
         ## type of the cutting item with values: component of datasource
         self.type = None
 
-        self._ds = DataSourceCut(receiver, slot)
-        self._cp = ComponentRemoveItem(receiver, slot)
+        self._ds = DataSourceCut(receiver, parent)
+        self._cp = ComponentRemoveItem(receiver, parent)
 
     ## executes the command
     # \brief It moves the current, i.e. datasource or component item, 
@@ -422,8 +421,8 @@ class CopyItem(ComponentItemCommand):
         ## type of the coping item with values: component of datasource
         self.type = None
 
-        self._ds = DataSourceCopy(receiver, slot)
-        self._cp = ComponentCopyItem(receiver, slot)
+        self._ds = DataSourceCopy(receiver, parent)
+        self._cp = ComponentCopyItem(receiver, parent)
 
 
     ## executes the command
@@ -462,8 +461,8 @@ class PasteItem(QUndoCommand):
         self.receiver = receiver 
         self.type = None
 
-        self._ds = DataSourcePaste(receiver, slot)
-        self._cp = ComponentPasteItem(receiver, slot)
+        self._ds = DataSourcePaste(receiver, parent)
+        self._cp = ComponentPasteItem(receiver, parent)
 
     ## executes the command
     # \brief It pastes the current item from the clipboard into 
@@ -507,12 +506,6 @@ class ComponentMerge(ComponentItemCommand):
         self.postExecute()
         print "EXEC componentMerge"
 
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentMerge(self.receiver, self.slot) 
 
 
 

@@ -72,7 +72,7 @@ class MainWindow(QMainWindow):
         ## datasource list menu under mouse cursor
         self.dsourceListMenuActions = None
         ## list of datasources
-        self.sourceList =  None
+        self.sourceList = None
         ## datasource directory label
         self.dsDirLabel = None
 
@@ -82,7 +82,7 @@ class MainWindow(QMainWindow):
         ## component list menu under mouse cursor
         self.componentListMenuActions = None
         ## list of components
-        self.componentList =    None
+        self.componentList = None
         ## component directory label
         self.cpDirLabel = None
 
@@ -268,6 +268,7 @@ class MainWindow(QMainWindow):
             action.setCheckable(True)
         return action
 
+
     def setActions(self, slots):
         for ac, pars in slots.actions.items():
             action = getattr(self.ui, ac)
@@ -317,9 +318,6 @@ class MainWindow(QMainWindow):
         for sl in self.slots.values():
             self.setActions(sl)
             self.setTasks(sl)
-            
-
-        commandArgs = {'receiver':self}
 
         # server
 

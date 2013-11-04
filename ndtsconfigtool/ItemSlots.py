@@ -45,6 +45,9 @@ from .ItemCommands import (
     )
 
 
+from .EditCommands import (
+    ComponentEdit
+    )
 
 ## stack with the application commands
 class ItemSlots(object):
@@ -139,29 +142,22 @@ class ItemSlots(object):
     ## copy component item action
     # \brief It copies the  current component item into the clipboard
     def componentCopyItem(self):
-        cmd = self.pool.getCommand('componentCopyItem').clone()
+        cmd = ComponentCopyItem(self.main)
         cmd.redo()
-
+        
     ## remove component item action
     # \brief It removes the current component item and copies it 
     #        into the clipboard
     def componentRemoveItem(self):
-        cmd = self.pool.getCommand('componentRemoveItem').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = ComponentRemoveItem(self.main)
+        self.undoStack.push(cmd)
+
 
     ## paste component item action
     # \brief It pastes the component item from the clipboard
     def componentPasteItem(self):
-        cmd = self.pool.getCommand('componentPasteItem').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = ComponentPasteItem(self.main)
+        self.undoStack.push(cmd)
 
         
 
@@ -169,12 +165,12 @@ class ItemSlots(object):
     ## copy item action
     # \brief It copies the current item into the clipboard
     def copyItem(self):
-        cmd = self.pool.getCommand('copyItem').clone()
-        if self.ui.mdi.activeSubWindow() and isinstance(
-            self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+        cmd = CopyItem(self.main)
+        if self.main.ui.mdi.activeSubWindow() and isinstance(
+            self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             cmd.type = "component"
-        elif self.ui.mdi.activeSubWindow() and isinstance(
-            self.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
+        elif self.main.ui.mdi.activeSubWindow() and isinstance(
+            self.main.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self, "Item not selected", 
@@ -188,12 +184,12 @@ class ItemSlots(object):
     ## cuts item action
     # \brief It removes the current item and copies it into the clipboard
     def cutItem(self):
-        cmd = self.pool.getCommand('cutItem').clone()
-        if self.ui.mdi.activeSubWindow() and isinstance(
-            self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+        cmd = CutItem(self.main)
+        if self.main.ui.mdi.activeSubWindow() and isinstance(
+            self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             cmd.type = "component"
-        elif self.ui.mdi.activeSubWindow() and isinstance(
-            self.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
+        elif self.main.ui.mdi.activeSubWindow() and isinstance(
+            self.main.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self, "Item not selected", 
@@ -201,45 +197,26 @@ class ItemSlots(object):
             cmd.type = None
 
             return
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        self.undoStack.push(cmd)
 
 
 
     ## paste item action
     # \brief It pastes the item from the clipboard
     def pasteItem(self):
-        cmd = self.pool.getCommand('pasteItem').clone()
-        if self.ui.mdi.activeSubWindow() and isinstance(
-            self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+        cmd = PasteItem(self.main)
+        if self.main.ui.mdi.activeSubWindow() and isinstance(
+            self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             cmd.type = "component"
-        elif self.ui.mdi.activeSubWindow() and isinstance(
-            self.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
+        elif self.main.ui.mdi.activeSubWindow() and isinstance(
+            self.main.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self, "Item not selected", 
                                 "Please select one of the items")            
             cmd.type = None
             return
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
-
-
-
-
-    # Item 
-
-
-
-
+        self.undoStack.push(cmd)
 
 
 
@@ -247,14 +224,10 @@ class ItemSlots(object):
     ## new group component item action
     # \brief It adds a new group component item
     def componentNewGroupItem(self):
-        if isinstance(self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
-            cmd = self.pool.getCommand('componentNewGroupItem').clone()
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+            cmd = ComponentNewItem(self.main)
             cmd.itemName = 'group' 
-            cmd.redo()
-            self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False, "Undo: ", 
-                                  self.cmdStack.getUndoName() )
-            self.pool.setDisabled("redo", True, "Can't Redo")      
+            self.undoStack.push(cmd)
         else:
             QMessageBox.warning(self, "Component not created", 
                                 "Please edit one of the components")            
@@ -263,14 +236,10 @@ class ItemSlots(object):
     ## new group component item action
     # \brief It adds a new group component item
     def componentNewStrategyItem(self):
-        if isinstance(self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
-            cmd = self.pool.getCommand('componentNewStrategyItem').clone()
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+            cmd = ComponentNewItem(self.main)
             cmd.itemName = 'strategy' 
-            cmd.redo()
-            self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False, "Undo: ", 
-                                  self.cmdStack.getUndoName() )
-            self.pool.setDisabled("redo", True, "Can't Redo")      
+            self.undoStack.push(cmd)
         else:
             QMessageBox.warning(self, "Component not created", 
                                 "Please edit one of the components")            
@@ -279,14 +248,10 @@ class ItemSlots(object):
     ## new field component item action
     # \brief It adds a new field component item
     def componentNewFieldItem(self):
-        if isinstance(self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
-            cmd = self.pool.getCommand('componentNewFieldItem').clone()
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+            cmd = ComponentNewItem(self.main)
             cmd.itemName = 'field' 
-            cmd.redo()
-            self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False, "Undo: ", 
-                                  self.cmdStack.getUndoName() )
-            self.pool.setDisabled("redo", True, "Can't Redo")      
+            self.undoStack.push(cmd)
         else:
             QMessageBox.warning(self, "Component not created", 
                                 "Please edit one of the components")            
@@ -295,14 +260,10 @@ class ItemSlots(object):
     ## new attribute component item action
     # \brief It adds a new attribute component item 
     def componentNewAttributeItem(self):
-        if isinstance(self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
-            cmd = self.pool.getCommand('componentNewAttributeItem').clone()
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+            cmd = ComponentNewItem(self.main)
             cmd.itemName = 'attribute' 
-            cmd.redo()
-            self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False, "Undo: ", 
-                                  self.cmdStack.getUndoName() )
-            self.pool.setDisabled("redo", True, "Can't Redo")      
+            self.undoStack.push(cmd)
         else:
             QMessageBox.warning(self, "Component not created", 
                                 "Please edit one of the components")            
@@ -311,14 +272,10 @@ class ItemSlots(object):
     ## new link component item action
     # \brief It adds a new link component item
     def componentNewLinkItem(self):
-        if isinstance(self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
-            cmd = self.pool.getCommand('componentNewLinkItem').clone()
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+            cmd = ComponentNewItem(self.main)
             cmd.itemName = 'link' 
-            cmd.redo()
-            self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False, "Undo: ", 
-                                  self.cmdStack.getUndoName() )
-            self.pool.setDisabled("redo", True, "Can't Redo")      
+            self.undoStack.push(cmd)
         else:
             QMessageBox.warning(self, "Component not created", 
                                 "Please edit one of the components")            
@@ -330,15 +287,11 @@ class ItemSlots(object):
     ## new datasource component item action
     # \brief It adds a new datasource component item
     def componentNewDataSourceItem(self):
-        if isinstance(self.ui.mdi.activeSubWindow().widget(),
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(),
                       ComponentDlg):
-            cmd = self.pool.getCommand('componentNewDataSourceItem').clone()
+            cmd = ComponentNewItem(self.main)
             cmd.itemName = 'datasource' 
-            cmd.redo()
-            self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False, "Undo: ", 
-                                  self.cmdStack.getUndoName() )
-            self.pool.setDisabled("redo", True, "Can't Redo")      
+            self.undoStack.push(cmd)
         else:
             QMessageBox.warning(self, "Component not created", 
                                 "Please edit one of the components")            
@@ -348,13 +301,9 @@ class ItemSlots(object):
     ## load sub-component item action
     # \brief It loads a sub-component item from a file
     def componentLoadComponentItem(self):
-        if isinstance(self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
-            cmd = self.pool.getCommand('componentLoadComponentItem').clone()
-            cmd.redo()
-            self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False, "Undo: ", 
-                                  self.cmdStack.getUndoName() )
-            self.pool.setDisabled("redo", True, "Can't Redo")      
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+            cmd = ComponentLoadComponentItem(self.main)
+            self.undoStack.push(cmd)
         else:
             QMessageBox.warning(self, "Component not created", 
                                 "Please edit one of the components")            
@@ -364,14 +313,10 @@ class ItemSlots(object):
     ## load datasource component item action
     # \brief It loads a datasource component item from a file
     def componentLoadDataSourceItem(self):
-        if isinstance(self.ui.mdi.activeSubWindow().widget(),
+        if isinstance(self.main.ui.mdi.activeSubWindow().widget(),
                       ComponentDlg):
-            cmd = self.pool.getCommand('componentLoadDataSourceItem').clone()
-            cmd.redo()
-            self.cmdStack.append(cmd)
-            self.pool.setDisabled("undo", False, "Undo: ", 
-                                  self.cmdStack.getUndoName() )
-            self.pool.setDisabled("redo", True, "Can't Redo")      
+            cmd = ComponentLoadDataSourceItem(self.main)
+            self.undoStack.push(cmd)
         else:
             QMessageBox.warning(self, "Component not created", 
                                 "Please edit one of the components")            
@@ -381,78 +326,52 @@ class ItemSlots(object):
     ## add datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentAddDataSourceItem(self):
-#        cmd = self.pool.getCommand('dsourceEdit').clone()
-#        cmd.redo()
-        cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = ComponentAddDataSourceItem(self.main)
+        self.undoStack.push(cmd)
 
 
 
     ## link datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentLinkDataSourceItem(self):
-        cmd = self.pool.getCommand('componentLinkDataSourceItem').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = ComponentLinkDataSourceItem(self.main)
+        self.undoStack.push(cmd)
 
 
         
     ## link datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentLinkDataSourceItemButton(self):
-        if self.updateComponentListItem():
+        if self.main.updateComponentListItem():
             self.componentLinkDataSourceItem()
-
-
 
     ## move-up component item action
     # \brief It moves the current component item up
     def componentMoveUpItem(self):
-        cmd = self.pool.getCommand('componentMoveUpItem').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Undo")      
+        cmd = ComponentMoveUpItem(self.main)
+        self.undoStack.push(cmd)
 
 
     ## move-down component item action
     # \brief It moves the current component item down
     def componentMoveDownItem(self):
-        cmd = self.pool.getCommand('componentMoveDownItem').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Undo")      
-
-
+        cmd = ComponentMoveDownItem(self.main)
+        self.undoStack.push(cmd)
 
 
 
     ## apply component item action
     # \brief It applies the changes in the current component item 
     def componentApplyItem(self):
-        cmd = self.pool.getCommand('componentApplyItem').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Undo")      
+        cmd = ComponentApplyItem(self.main)
+        self.undoStack.push(cmd)
 
 
     ## apply component item action executed by button
     # \brief It applies the changes in the current component item 
     #        executed by button
     def componentApplyItemButton(self):
-        if self.updateComponentListItem():
+        if self.main.updateComponentListItem():
             self.componentApplyItem()
 
 
@@ -465,25 +384,17 @@ class ItemSlots(object):
     ## merge component action
     # \brief It merges the current component
     def componentMerge(self):
-        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd = ComponentEdit(self.main)
         cmd.redo()
-        cmd = self.pool.getCommand('componentMerge').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = ComponentMerge(self.main)
+        self.undoStack.push(cmd)
 
 
     ## clear component action
     # \brief It clears the current component      
     def componentClear(self):
-        cmd = self.pool.getCommand('componentClear').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = ComponentClear(self.main)
+        self.undoStack.push(cmd)
 
 
 

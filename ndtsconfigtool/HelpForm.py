@@ -86,7 +86,7 @@ class HelpForm(QDialog):
         homeAction.setShortcut("Home")
 
         ## main label of the help
-        self.pageLabel = QLabel("Main Menu",self)
+        self.pageLabel = QLabel(self)
 
         self.toolBar.addAction(backAction)
         self.toolBar.addAction(forwardAction)
@@ -113,6 +113,7 @@ class HelpForm(QDialog):
         self.connect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
             self.updatePageTitle)
 
+        self.updatePageTitle()
 
 
     ## updates the title page

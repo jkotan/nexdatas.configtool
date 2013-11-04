@@ -690,7 +690,8 @@ class ComponentTakeDataSource(QUndoCommand):
                         if dialogs:
                             for dialog in dialogs:
                                 if isinstance(dialog, DataSourceDlg):
-                                    self.receiver.main.ui.mdi.setActiveSubWindow(
+                                    self.receiver.main.ui.mdi.\
+                                        setActiveSubWindow(
                                         dialog)
                                     self.receiver.main.ui.mdi\
                                         .closeActiveSubWindow()
@@ -802,10 +803,6 @@ class DataSourceEdit(QUndoCommand):
             
         print "EXEC dsourceEdit"
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def undo(self):
-        print "UNDO dsourceEdit"
 
 
 

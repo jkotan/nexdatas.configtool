@@ -25,7 +25,6 @@
 
 from PyQt4.QtGui import QMessageBox
 
-from .ui.ui_elementlist import Ui_ElementList
 from .Component import Component
 from .ElementList import ElementList
 

@@ -21,7 +21,7 @@
 
 """ Item slots """
 
-from PyQt4.QtGui import  (QKeySequence,QMessageBox) 
+from PyQt4.QtGui import (QKeySequence, QMessageBox) 
 from PyQt4.QtCore import (Qt)
 
 

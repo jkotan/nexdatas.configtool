@@ -120,12 +120,6 @@ class ComponentOpen(QUndoCommand):
             
         print "UNDO componentOpen"
 
-#    ## clones the command
-#    # \returns clone of the current instance
-#    def clone(self):
-#        return ComponentOpen(self.receiver, self.slot) 
-
-
 
 
 ## Command which loads an existing datasource from the file
@@ -212,10 +206,6 @@ class DataSourceOpen(QUndoCommand):
             
         print "UNDO dsourceOpen"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceOpen(self.receiver, self.slot) 
 
 
 
@@ -303,10 +293,6 @@ class ComponentSave(QUndoCommand):
         print "UNDO componentSave"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentSave(self.receiver, self.slot) 
 
 
 
@@ -345,18 +331,6 @@ class ComponentSaveAll(QUndoCommand):
                 cp.instance.save()    
 
         print "EXEC componentSaveAll"
-
-
-    ## unexecutes the command
-    # \brief It does nothing
-    def undo(self):
-        print "UNDO componentSaveAll"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentSaveAll(self.receiver, self.slot) 
 
 
 
@@ -417,11 +391,6 @@ class ComponentSaveAs(QUndoCommand):
         print "UNDO componentSaveAs"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentSaveAs(self.receiver, self.slot) 
-
 
 
 ## Command which changes the current component file directory
@@ -472,19 +441,6 @@ class ComponentChangeDirectory(QUndoCommand):
 
         print "EXEC componentChangeDirectory"
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def undo(self):
-        print "UNDO componentChangeDirectory"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentChangeDirectory(self.receiver, self.slot) 
-
-
-
 
 
 ## Command which saves all the datasources in files
@@ -525,19 +481,6 @@ class DataSourceSaveAll(QUndoCommand):
 
 
         print "EXEC dsourceSaveAll"
-
-    ## executes the command
-    # \brief It does nothing
-    def undo(self):
-        print "UNDO dsourceSaveAll"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceSaveAll(self.receiver, self.slot) 
-
-
 
 
 
@@ -596,12 +539,6 @@ class DataSourceSave(QUndoCommand):
         print "UNDO dsourceSave"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceSave(self.receiver, self.slot) 
-
-
 
 
 
@@ -657,18 +594,6 @@ class DataSourceSaveAs(QUndoCommand):
             
         print "EXEC dsourceSaveAs"
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def undo(self):
-        print "UNDO dsourceSaveAs"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceSaveAs(self.receiver, self.slot) 
-
-
 
 
 ## Command which changes the current file directory with datasources
@@ -720,17 +645,6 @@ class DataSourceChangeDirectory(QUndoCommand):
 
         print "EXEC dsourceChangeDirectory"
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def undo(self):
-        print "UNDO dsourceChangeDirectory"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceChangeDirectory(self.receiver, self.slot)
-
 
 
 
@@ -773,18 +687,6 @@ class ComponentReloadList(QUndoCommand):
         print "EXEC componentReloadList"
 
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def undo(self):
-        print "UNDO componentReloadList"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentReloadList(self.receiver, self.slot) 
-
-
 
 
 ## Command which reloads the datasources from the current datasource directory 
@@ -825,19 +727,6 @@ class DataSourceReloadList(QUndoCommand):
 
         print "EXEC dsourceReloadList"
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def undo(self):
-        print "UNDO dsourceReloadList"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceReloadList(self.receiver, self.slot) 
-
-
-        
 
 if __name__ == "__main__":
     pass

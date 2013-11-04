@@ -95,7 +95,8 @@ class ComponentItemCommand(QUndoCommand):
 
 
                 subwindow = self.receiver.main.subWindow(
-                    self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
+                    self._cp.instance, 
+                    self.receiver.main.ui.mdi.subWindowList())
 
                 if subwindow:
                     self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 

@@ -90,7 +90,7 @@ class EditSlots(object):
         cmd.redo()
         cmd = ComponentTakeDataSources(self.main)
         cmd.redo()
-        self.cmdStack.clear()
+        self.undoStack.clear()
 
 
 
@@ -100,7 +100,7 @@ class EditSlots(object):
         cmd = ComponentEdit(self.main)
         cmd.redo()
         cmd = ComponentTakeDataSource(self.main)
-        self.cmdStack.push(cmd)
+        self.undoStack.push(cmd)
 
 
 
@@ -122,7 +122,7 @@ class EditSlots(object):
     # \brief It applies the changes in the current datasource item  
     #        executed by button
     def dsourceApplyButton(self):
-        if self.updateDataSourceListItem():
+        if self.main.updateDataSourceListItem():
             self.dsourceApply()
 
 
@@ -130,7 +130,7 @@ class EditSlots(object):
     # \brief It applies the changes in the current datasource item 
     def dsourceApply(self):
         cmd = DataSourceApply(self.main)
-        self.cmdStack.push(cmd)
+        self.undoStack.push(cmd)
 
 
 
@@ -147,7 +147,7 @@ class EditSlots(object):
     #        into the clipboard
     def dsourceCut(self):
         cmd = DataSourceCut(self.main)
-        self.cmdStack.push(cmd)
+        self.undoStack.push(cmd)
 
 
 
@@ -155,7 +155,7 @@ class EditSlots(object):
     # \brief It pastes the datasource item from the clipboard
     def dsourcePaste(self):
         cmd = DataSourcePaste(self.main)
-        self.cmdStack.push(cmd)
+        self.undoStack.push(cmd)
 
 
 if __name__ == "__main__":   

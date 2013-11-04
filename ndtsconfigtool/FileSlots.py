@@ -152,7 +152,7 @@ class FileSlots(object):
     # \brief It saves the changes in the current datasource item executed 
     #        by button
     def dsourceSaveButton(self):
-        if self.updateDataSourceListItem():
+        if self.main.updateDataSourceListItem():
             self.dsourceSave()
 
 

@@ -340,14 +340,14 @@ class MainWindow(QMainWindow):
         viewDockAction.setToolTip("Show/Hide the dock lists")
         viewDockAction.setStatusTip("Show/Hide the dock lists")
 
-        viewAllAttributesAction = self._createAction(
+        viewAllAttributesAction = self.__setAction(
+            self.ui.actionAllAttributesView,
             "&All Attributes", self.viewAllAttributes, "",
             tip = "Go to the component list", checkable=True)
 
+        self.ui.menuView.insertAction(self.ui.menuView.actions()[0],
+                                      viewDockAction)
 
- #       viewMenu = self.menuBar().addMenu("&View")
- #       self._addActions(viewMenu, 
- #                        (viewDockAction, viewAllAttributesAction))
 
 
         # Windows

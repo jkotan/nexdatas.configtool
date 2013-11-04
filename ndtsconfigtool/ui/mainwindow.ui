@@ -143,7 +143,6 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <addaction name="actionCollectionsView"/>
     <addaction name="actionAllAttributesView"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
@@ -607,14 +606,6 @@
   <action name="actionCloseServer">
    <property name="text">
     <string>Cl&amp;ose</string>
-   </property>
-  </action>
-  <action name="actionCollectionsView">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;Collections</string>
    </property>
   </action>
   <action name="actionAllAttributesView">

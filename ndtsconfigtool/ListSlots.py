@@ -84,10 +84,10 @@ class ListSlots(object):
     # \brief It removes from the component list the current component
     def componentRemove(self):
         cmd = DataSourceOpen(self.main)
-        cmd.execute()
+        cmd.redo()
         self.undoStack.push(cmd)
         cmd = self.pool.getCommand('componentRemove').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -99,7 +99,7 @@ class ListSlots(object):
     # \brief It removes the current datasource      
     def dsourceRemove(self):
         cmd = self.pool.getCommand('dsourceRemove').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -112,7 +112,7 @@ class ListSlots(object):
     # \brief It creates a new component
     def componentNew(self):
         cmd = self.pool.getCommand('componentNew').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -122,7 +122,7 @@ class ListSlots(object):
     # \brief It creates a new datasource      
     def dsourceNew(self):
         cmd = self.pool.getCommand('dsourceNew').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -134,7 +134,7 @@ class ListSlots(object):
     # \brief It closes the main application
     def closeApp(self):
         cmd = self.pool.getCommand('closeApp').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -149,10 +149,10 @@ class ListSlots(object):
     # \param item new selected item on the component list
     def componentChanged(self, item): 
         cmd = self.pool.getCommand('componentEdit').clone()
-        cmd.execute()
+        cmd.redo()
         cmd = self.pool.getCommand('componentChanged').clone()
         cmd.item = item
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -162,14 +162,34 @@ class ListSlots(object):
     # \param item new selected item ond the datasource list
     def dsourceChanged(self, item):
         cmd = self.pool.getCommand('dsourceEdit').clone()
-        cmd.execute()
+        cmd.redo()
         cmd = self.pool.getCommand('dsourceChanged').clone()
         cmd.item = item
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
+
+
+
+    ## remove component action
+    # \brief It removes from the component list the current component
+    def componentRemove(self):
+        cmd = self.pool.getCommand('componentRemove').clone()
+        self.undoStack.push(cmd)
+
+
+
+    ## remove datasource action
+    # \brief It removes the current datasource      
+    def dsourceRemove(self):
+        cmd = self.pool.getCommand('dsourceRemove').clone()
+        self.undoStack.append(cmd)
+        self.pool.setDisabled("undo", False, "Undo: ", 
+                              self.undoStack.getUndoName() )
+        self.pool.setDisabled("redo", True, "Can't Redo")      
+
 
 if __name__ == "__main__":   
     pass

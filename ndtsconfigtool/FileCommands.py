@@ -53,7 +53,7 @@ class ComponentOpen(QUndoCommand):
 
     ## executes the command
     # \brief It loads an existing component from the file
-    def execute(self):
+    def redo(self):
         if hasattr(self.receiver.main.ui,'mdi'):
             if self._cp is None:
                 self._cp = LabeledObject("", None)
@@ -101,7 +101,7 @@ class ComponentOpen(QUndoCommand):
 
     ## unexecutes the command
     # \brief It removes the loaded component from the component list
-    def unexecute(self):
+    def undo(self):
         if hasattr(self._cp, "instance"):
             if self._fpath:
 
@@ -120,10 +120,10 @@ class ComponentOpen(QUndoCommand):
             
         print "UNDO componentOpen"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentOpen(self.receiver, self.slot) 
+#    ## clones the command
+#    # \returns clone of the current instance
+#    def clone(self):
+#        return ComponentOpen(self.receiver, self.slot) 
 
 
 
@@ -146,7 +146,7 @@ class DataSourceOpen(QUndoCommand):
         
     ## executes the command
     # \brief It loads an existing datasource from the file
-    def execute(self):
+    def redo(self):
         if hasattr(self.receiver.main.ui,'mdi'):
             if self._ds is None:
                 self._ds = LabeledObject("", None)
@@ -194,7 +194,7 @@ class DataSourceOpen(QUndoCommand):
 
     ## unexecutes the command
     # \brief It removes the loaded datasource from the datasource list
-    def unexecute(self):
+    def undo(self):
         if hasattr(self._ds, "instance"):
             if self._fpath:
 
@@ -239,7 +239,7 @@ class ComponentSave(QUndoCommand):
         
     ## executes the command
     # \brief It saves with the current component in the file
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is None:
@@ -294,7 +294,7 @@ class ComponentSave(QUndoCommand):
 
     ## unexecutes the command
     # \brief It populates the component list
-    def unexecute(self):
+    def undo(self):
         if hasattr(self._cp, "id"):
             self.receiver.main.componentList.populateElements(self._cp.id)
         else:
@@ -322,7 +322,7 @@ class ComponentSaveAll(QUndoCommand):
         
     ## executes the command
     # \brief It saves all components in the file
-    def execute(self):
+    def redo(self):
             
         for icp in self.receiver.main.componentList.elements.keys():
             cp = self.receiver.main.componentList.elements[icp]
@@ -348,7 +348,7 @@ class ComponentSaveAll(QUndoCommand):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO componentSaveAll"
 
 
@@ -385,7 +385,7 @@ class ComponentSaveAs(QUndoCommand):
 
     ## executes the command
     # \brief It saves the current components in the file with a different name
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is None:
@@ -408,7 +408,7 @@ class ComponentSaveAs(QUndoCommand):
 
     ## unexecutes the command
     # \brief It populates the Component list
-    def unexecute(self):
+    def undo(self):
         if hasattr(self._cp, "id"):
             self.receiver.main.componentList.populateElements(self._cp.id)
         else:
@@ -437,7 +437,7 @@ class ComponentChangeDirectory(QUndoCommand):
         
     ## executes the command
     # \brief It changes the current component file directory
-    def execute(self):
+    def redo(self):
         if QMessageBox.question(
             self.receiver.main, "Component - Change Directory",
             ("All unsaved components will be lost. "\
@@ -473,7 +473,7 @@ class ComponentChangeDirectory(QUndoCommand):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO componentChangeDirectory"
 
 
@@ -500,7 +500,7 @@ class DataSourceSaveAll(QUndoCommand):
         
     ## executes the command
     # \brief It saves all the datasources in files
-    def execute(self):
+    def redo(self):
             
         for ids in self.receiver.main.sourceList.elements.keys():
             ds = self.receiver.main.sourceList.elements[ids]
@@ -527,7 +527,7 @@ class DataSourceSaveAll(QUndoCommand):
 
     ## executes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO dsourceSaveAll"
 
 
@@ -555,7 +555,7 @@ class DataSourceSave(QUndoCommand):
         
     ## executes the command
     # \brief It saves the current datasource in files
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -586,7 +586,7 @@ class DataSourceSave(QUndoCommand):
 
     ## unexecutes the command
     # \brief It populates the datasource list
-    def unexecute(self):
+    def undo(self):
         ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
             self.receiver.main.sourceList.populateElements(ds.id)
@@ -626,7 +626,7 @@ class DataSourceSaveAs(QUndoCommand):
 
     ## executes the command
     # \brief It saves the current datasource in files with a different name
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -658,7 +658,7 @@ class DataSourceSaveAs(QUndoCommand):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO dsourceSaveAs"
 
 
@@ -684,7 +684,7 @@ class DataSourceChangeDirectory(QUndoCommand):
         
     ## executes the command
     # \brief It changes the current file directory with datasources
-    def execute(self):
+    def redo(self):
         if QMessageBox.question(
             self.receiver.main, "DataSource - Change Directory",
             ("All unsaved datasources will be lost. "\
@@ -721,7 +721,7 @@ class DataSourceChangeDirectory(QUndoCommand):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO dsourceChangeDirectory"
 
 
@@ -749,7 +749,7 @@ class ComponentReloadList(QUndoCommand):
     ## executes the command
     # \brief It reloads the components from the current component directory 
     #        into the component list
-    def execute(self):
+    def redo(self):
         if QMessageBox.question(
             self.receiver.main, "Component - Reload List",
             ("All unsaved components will be lost. " \
@@ -774,7 +774,7 @@ class ComponentReloadList(QUndoCommand):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO componentReloadList"
 
 
@@ -802,7 +802,7 @@ class DataSourceReloadList(QUndoCommand):
     ## executes the command
     # \brief It reloads the datasources from the current datasource directory 
     #        into the datasource list
-    def execute(self):
+    def redo(self):
         if QMessageBox.question(
             self.receiver.main, "DataSource - Reload List",
             ("All unsaved datasources will be lost. "\
@@ -826,7 +826,7 @@ class DataSourceReloadList(QUndoCommand):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO dsourceReloadList"
 
 

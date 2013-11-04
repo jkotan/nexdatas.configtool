@@ -89,9 +89,9 @@ class EditSlots(object):
     # \brief It takes datasources from the current component
     def componentTakeDataSources(self):
         cmd = self.pool.getCommand('componentEdit').clone()
-        cmd.execute()
+        cmd.redo()
         cmd = self.pool.getCommand('componentTakeDataSources').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.clear()
         self.pool.setDisabled("undo", True, "Can't Undo")   
         self.pool.setDisabled("redo", True, "Can't Redo")      
@@ -102,15 +102,15 @@ class EditSlots(object):
     # \brief It takes datasources from the current component
     def componentTakeDataSource(self):
         cmd = self.pool.getCommand('componentEdit').clone()
-        cmd.execute()
+        cmd.redo()
         cmd = self.pool.getCommand('componentTakeDataSource').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
 #        cmd = self.pool.getCommand('dsourceEdit').clone()
-#        cmd.execute()
+#        cmd.redo()
 
 #        cmd = self.pool.getCommand('dsourceApply').clone()
-#        cmd.execute()
+#        cmd.redo()
 #        self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -124,13 +124,13 @@ class EditSlots(object):
     # \brief It opens a dialog with the current component
     def componentEdit(self):
         cmd = self.pool.getCommand('componentEdit').clone()
-        cmd.execute()
+        cmd.redo()
 
     ## edit datasource action
     # \brief It opens a dialog with the current datasource      
     def dsourceEdit(self):
         cmd = self.pool.getCommand('dsourceEdit').clone()
-        cmd.execute()
+        cmd.redo()
         
 
         
@@ -146,7 +146,7 @@ class EditSlots(object):
     # \brief It applies the changes in the current datasource item 
     def dsourceApply(self):
         cmd = self.pool.getCommand('dsourceApply').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -159,7 +159,7 @@ class EditSlots(object):
     # \brief It copies the  current datasource item into the clipboard
     def dsourceCopy(self):
         cmd = self.pool.getCommand('dsourceCopy').clone()
-        cmd.execute()
+        cmd.redo()
 
 
 
@@ -168,7 +168,7 @@ class EditSlots(object):
     #        into the clipboard
     def dsourceCut(self):
         cmd = self.pool.getCommand('dsourceCut').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -180,7 +180,7 @@ class EditSlots(object):
     # \brief It pastes the datasource item from the clipboard
     def dsourcePaste(self):
         cmd = self.pool.getCommand('dsourcePaste').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )

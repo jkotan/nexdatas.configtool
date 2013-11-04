@@ -43,7 +43,7 @@ class ServerConnect(Command):
 
     ## executes the command
     # \brief It perform connection to the configuration server
-    def execute(self):       
+    def redo(self):       
         if self.receiver.main.configServer:
             try:
                 if self._oldstate is None:
@@ -67,7 +67,7 @@ class ServerConnect(Command):
     ## unexecutes the command
     # \brief It undo connection to the configuration server, 
     #        i.e. it close the connection to the server
-    def unexecute(self):
+    def undo(self):
         if self.receiver.main.configServer:
             try:
                 self.receiver.main.configServer.close()
@@ -100,7 +100,7 @@ class ServerFetchComponents(Command):
 
     ## executes the command
     # \brief It fetches the components from the configuration server
-    def execute(self):       
+    def redo(self):       
         if QMessageBox.question(
             self.receiver.main, 
             "Component - Reload List from Configuration server",
@@ -147,7 +147,7 @@ class ServerFetchComponents(Command):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO serverFetchComponents"
 
     ## clones the command
@@ -170,7 +170,7 @@ class ServerStoreComponent(Command):
 
     ## executes the command
     # \brief It stores the current component in the configuration server
-    def execute(self):       
+    def redo(self):       
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is not None:
@@ -256,7 +256,7 @@ class ServerStoreComponent(Command):
 
     ## unexecutes the command
     # \brief It populates only the component list
-    def unexecute(self):
+    def undo(self):
         if hasattr(self._cp, "id"):
             self.receiver.main.componentList.populateElements(self._cp.id)
         else:
@@ -286,7 +286,7 @@ class ServerDeleteComponent(Command):
 
     ## executes the command
     # \brief It deletes the current component from the configuration server
-    def execute(self):       
+    def redo(self):       
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is not None:
@@ -322,7 +322,7 @@ class ServerDeleteComponent(Command):
 
     ## unexecutes the command
     # \brief It populates only the component list
-    def unexecute(self):
+    def undo(self):
         if hasattr(self._cp, "id"):
             self.receiver.main.componentList.populateElements(self._cp.id)
         else:
@@ -352,7 +352,7 @@ class ServerSetMandatoryComponent(Command):
     ## executes the command
     # \brief It sets on the configuration server the current component 
     #        as mandatory
-    def execute(self):       
+    def redo(self):       
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is not None:
@@ -380,7 +380,7 @@ class ServerSetMandatoryComponent(Command):
 
     ## unexecutes the command
     # \brief It does nothing    
-    def unexecute(self):
+    def undo(self):
         print "UNDO serverSetMandatoryComponent"
 
     ## clones the command
@@ -404,7 +404,7 @@ class ServerGetMandatoryComponents(Command):
     ## executes the command
     # \brief It fetches a list of the mandatory components from 
     #        the configuration server
-    def execute(self):       
+    def redo(self):       
         try:
             if not self.receiver.main.configServer.connected:
                 QMessageBox.information(
@@ -432,7 +432,7 @@ class ServerGetMandatoryComponents(Command):
 
     ## unexecutes the command
     # \brief It does nothing    
-    def unexecute(self):
+    def undo(self):
         print "UNDO serverGetMandatoryComponent"
 
     ## clones the command
@@ -458,7 +458,7 @@ class ServerUnsetMandatoryComponent(Command):
     ## executes the command
     # \brief It sets on the configuration server the current component 
     #        as not mandatory
-    def execute(self):       
+    def redo(self):       
         if self._cp is None:
             self._cp = \
                 self.receiver.main.componentList.currentListElement()
@@ -488,7 +488,7 @@ class ServerUnsetMandatoryComponent(Command):
 
     ## unexecutes the command
     # \brief It does nothing    
-    def unexecute(self):
+    def undo(self):
         print "UNDO serverUnsetMandatoryComponent"
 
     ## clones the command
@@ -505,7 +505,7 @@ class ServerFetchDataSources(Command):
 
     ## executes the command
     # \brief It fetches the datasources from the configuration server
-    def execute(self):       
+    def redo(self):       
 
         if QMessageBox.question(
             self.receiver.main, 
@@ -554,7 +554,7 @@ class ServerFetchDataSources(Command):
 
     ## unexecutes the command
     # \brief It does nothing    
-    def unexecute(self):
+    def undo(self):
         print "UNDO serverFetchDataSources"
 
     ## clones the command
@@ -576,7 +576,7 @@ class ServerStoreDataSource(Command):
 
     ## executes the command
     # \brief It fetches the datasources from the configuration server
-    def execute(self):       
+    def redo(self):       
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is not None and hasattr(self._ds, "instance"):
@@ -621,7 +621,7 @@ class ServerStoreDataSource(Command):
 
     ## unexecutes the command
     # \brief It populates the datasource list
-    def unexecute(self):
+    def undo(self):
         ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
             self.receiver.main.sourceList.populateElements(ds.id)
@@ -646,7 +646,7 @@ class ServerDeleteDataSource(Command):
 
     ## executes the command
     # \brief It deletes the current datasource in the configuration server
-    def execute(self):       
+    def redo(self):       
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is not None:
@@ -687,7 +687,7 @@ class ServerDeleteDataSource(Command):
 
     ## unexecutes the command
     # \brief It populates the datasource list
-    def unexecute(self):
+    def undo(self):
         ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
             self.receiver.main.sourceList.populateElements(ds.id)
@@ -714,7 +714,7 @@ class ServerClose(Command):
 
     ## executes the command
     # \brief It closes connection to the configuration server
-    def execute(self):       
+    def redo(self):       
         if self.receiver.main.configServer:
             self.receiver.main.configServer.close()
 
@@ -735,7 +735,7 @@ class ServerClose(Command):
 
     ## unexecutes the command
     # \brief It reopen the connection to the configuration server
-    def unexecute(self):
+    def undo(self):
         if self.receiver.main.configServer:
             try:
                 if  self._state is None:   
@@ -770,7 +770,7 @@ class ServerStoreAllComponents(Command):
         
     ## executes the command
     # \brief It saves all components in the file
-    def execute(self):
+    def redo(self):
             
         for icp in self.receiver.main.componentList.elements.keys():
             cp = self.receiver.main.componentList.elements[icp]
@@ -821,7 +821,7 @@ class ServerStoreAllComponents(Command):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO componentStoreAll"
 
 
@@ -843,7 +843,7 @@ class ServerStoreAllDataSources(Command):
         
     ## executes the command
     # \brief It saves all the datasources in files
-    def execute(self):
+    def redo(self):
             
         for ids in self.receiver.main.sourceList.elements.keys():
             ds = self.receiver.main.sourceList.elements[ids]
@@ -895,7 +895,7 @@ class ServerStoreAllDataSources(Command):
 
     ## executes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO dsourceStoreAll"
 
 

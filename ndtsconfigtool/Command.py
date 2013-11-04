@@ -21,6 +21,7 @@
 
 """ Component Designer commands """
 
+from PyQt4.QtGui import (QUndoCommand)
 
 ## abstract command 
 class Command(object):
@@ -43,27 +44,15 @@ class Command(object):
     ## executes the command
     # \brief It is an abstract member function to reimplement execution 
     #        of the derived command
-    def execute(self):
+    def redo(self):
         pass
 
     ## unexecutes the command
     # \brief It is an abstract member function to reimplement un-do execution 
     #        of the derived command
-    def unexecute(self):
+    def undo(self):
         pass
 
-    ## reexecutes the command
-    # \brief It is an abstract member function to reimplement re-do execution 
-    #        of the derived command. 
-    # In the current implementation it calls self.execute()
-    def reexecute(self):
-        return self.execute()
-
-    def undo(self):
-        return self.unexecute()
-
-    def redo(self):
-        return self.reexecute()
 
     ## clones the command
     # \brief It is an abstract member function to reimplement cloning 

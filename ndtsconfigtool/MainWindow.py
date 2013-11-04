@@ -184,7 +184,6 @@ class MainWindow(QMainWindow):
         return directory        
             
 
-
     ## setups configuration server
     # \param settings application QSettings object
     def setupServer(self, settings):
@@ -217,8 +216,6 @@ class MainWindow(QMainWindow):
         status.addWidget(self.cpDirLabel, 4)
         status.addWidget(self.dsDirLabel, 4)
         return status
-
-
 
 
     ## creates action
@@ -323,26 +320,6 @@ class MainWindow(QMainWindow):
             
 
         commandArgs = {'receiver':self}
-
-        # File
-
-
-        # Edit
-
-#        undoAction = self.pool.createCommand(
-#            "&Undo", "undo",  commandArgs, UndoCommand, 
-#            "Ctrl+Z", "undo", "Can't Undo")
-#        redoAction = self.pool.createCommand(
-#            "&Redo", "redo",  commandArgs, RedoCommand,
-#            "Ctrl+Y", "redo", "Can't Redo")
-
-
-#        undoAction.setDisabled(True)
-#        redoAction.setDisabled(True)
-
-        
-
-
 
         # server
 
@@ -753,11 +730,11 @@ class MainWindow(QMainWindow):
     # \brief It unexecutes the last command
     def undo(self):
         cmd = self.pool.getCommand('undo').clone()
-        cmd.execute()
+        cmd.redo()
 
         ucmd = self.cmdStack.undo()
         if hasattr(ucmd,'unexecute'):
-            ucmd.unexecute()
+            ucmd.undo()
         else:
             print "Undo not possible"
 
@@ -774,11 +751,11 @@ class MainWindow(QMainWindow):
     # \brief It reexecutes the last undexecuted command
     def redo(self):
         cmd = self.pool.getCommand('redo').clone()
-        cmd.execute()
+        cmd.redo()
 
         rucmd = self.cmdStack.redo()
         if hasattr(rucmd,'reexecute'):
-            rucmd.reexecute()
+            rucmd.redo()
         else:
             print "Redo not possible"
 

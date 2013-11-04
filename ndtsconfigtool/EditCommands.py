@@ -50,7 +50,7 @@ class ComponentEdit(Command):
         
     ## executes the command
     # \brief It opens dialog with the current component 
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is None:                
@@ -109,7 +109,7 @@ class ComponentEdit(Command):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO componentEdit"
 
 
@@ -141,7 +141,7 @@ class DataSourceCopy(Command):
         
     ## executes the command
     # \brief It copies the current datasource into the clipboard
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -186,7 +186,7 @@ class DataSourceCopy(Command):
 
     ## unexecutes the command
     # \brief It updates state of datasource to the old state
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and self._ds.instance is not None:
         
@@ -246,7 +246,7 @@ class DataSourceCut(Command):
         
     ## executes the command
     # \brief It moves the current datasource into the clipboard
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -298,7 +298,7 @@ class DataSourceCut(Command):
 
     ## unexecutes the command
     # \brief It copy back the removed datasource
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and self._ds.instance is not None:
         
@@ -361,7 +361,7 @@ class DataSourcePaste(Command):
         
     ## executes the command
     # \brief It pastes the current datasource from the clipboard
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -428,7 +428,7 @@ class DataSourcePaste(Command):
 
     ## unexecutes the command
     # \brief It remove the pasted datasource
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and  self._ds.instance is not None:
         
@@ -491,7 +491,7 @@ class DataSourceApply(Command):
         
     ## executes the command
     # \brief It applies the changes from the form for the current datasource  
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -572,7 +572,7 @@ class DataSourceApply(Command):
 
     ## unexecutes the command
     # \brief It recovers the old state of the current datasource
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and  self._ds.instance is not None:
         
@@ -641,7 +641,7 @@ class ComponentTakeDataSources(Command):
     ## executes the command
     # \brief It reloads the datasources from the current datasource directory 
     #        into the datasource list
-    def execute(self):
+    def redo(self):
 
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
@@ -672,7 +672,7 @@ class ComponentTakeDataSources(Command):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO componentTakeDataSources"
 
 
@@ -700,7 +700,7 @@ class ComponentTakeDataSource(Command):
     ## executes the command
     # \brief It reloads the datasources from the current datasource directory 
     #        into the datasource list
-    def execute(self):
+    def redo(self):
 
         if not self._lids:
             self._lids = \
@@ -744,7 +744,7 @@ class ComponentTakeDataSource(Command):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO componentTakeDataSource"
         
 
@@ -784,7 +784,7 @@ class DataSourceEdit(Command):
         
     ## executes the command
     # \brief It opens the dialog with the current datasource
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -843,7 +843,7 @@ class DataSourceEdit(Command):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO dsourceEdit"
 
 
@@ -868,12 +868,12 @@ class UndoCommand(Command):
 
     ## executes the command
     # \brief It does nothing
-    def execute(self):
+    def redo(self):
         print "EXEC undo"
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         pass
 
 
@@ -895,12 +895,12 @@ class RedoCommand(Command):
 
     ## executes the command
     # \brief It does nothing
-    def execute(self):
+    def redo(self):
         print "EXEC redo"
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         pass
 
 

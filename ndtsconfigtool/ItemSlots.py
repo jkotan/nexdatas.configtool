@@ -140,14 +140,14 @@ class ItemSlots(object):
     # \brief It copies the  current component item into the clipboard
     def componentCopyItem(self):
         cmd = self.pool.getCommand('componentCopyItem').clone()
-        cmd.execute()
+        cmd.redo()
 
     ## remove component item action
     # \brief It removes the current component item and copies it 
     #        into the clipboard
     def componentRemoveItem(self):
         cmd = self.pool.getCommand('componentRemoveItem').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -157,7 +157,7 @@ class ItemSlots(object):
     # \brief It pastes the component item from the clipboard
     def componentPasteItem(self):
         cmd = self.pool.getCommand('componentPasteItem').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -181,7 +181,7 @@ class ItemSlots(object):
                                 "Please select one of the items")            
             cmd.type = None
             return
-        cmd.execute()
+        cmd.redo()
 
 
 
@@ -201,7 +201,7 @@ class ItemSlots(object):
             cmd.type = None
 
             return
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -224,7 +224,7 @@ class ItemSlots(object):
                                 "Please select one of the items")            
             cmd.type = None
             return
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -250,7 +250,7 @@ class ItemSlots(object):
         if isinstance(self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             cmd = self.pool.getCommand('componentNewGroupItem').clone()
             cmd.itemName = 'group' 
-            cmd.execute()
+            cmd.redo()
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", 
                                   self.cmdStack.getUndoName() )
@@ -266,7 +266,7 @@ class ItemSlots(object):
         if isinstance(self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             cmd = self.pool.getCommand('componentNewStrategyItem').clone()
             cmd.itemName = 'strategy' 
-            cmd.execute()
+            cmd.redo()
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", 
                                   self.cmdStack.getUndoName() )
@@ -282,7 +282,7 @@ class ItemSlots(object):
         if isinstance(self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             cmd = self.pool.getCommand('componentNewFieldItem').clone()
             cmd.itemName = 'field' 
-            cmd.execute()
+            cmd.redo()
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", 
                                   self.cmdStack.getUndoName() )
@@ -298,7 +298,7 @@ class ItemSlots(object):
         if isinstance(self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             cmd = self.pool.getCommand('componentNewAttributeItem').clone()
             cmd.itemName = 'attribute' 
-            cmd.execute()
+            cmd.redo()
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", 
                                   self.cmdStack.getUndoName() )
@@ -314,7 +314,7 @@ class ItemSlots(object):
         if isinstance(self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             cmd = self.pool.getCommand('componentNewLinkItem').clone()
             cmd.itemName = 'link' 
-            cmd.execute()
+            cmd.redo()
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", 
                                   self.cmdStack.getUndoName() )
@@ -334,7 +334,7 @@ class ItemSlots(object):
                       ComponentDlg):
             cmd = self.pool.getCommand('componentNewDataSourceItem').clone()
             cmd.itemName = 'datasource' 
-            cmd.execute()
+            cmd.redo()
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", 
                                   self.cmdStack.getUndoName() )
@@ -350,7 +350,7 @@ class ItemSlots(object):
     def componentLoadComponentItem(self):
         if isinstance(self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             cmd = self.pool.getCommand('componentLoadComponentItem').clone()
-            cmd.execute()
+            cmd.redo()
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", 
                                   self.cmdStack.getUndoName() )
@@ -367,7 +367,7 @@ class ItemSlots(object):
         if isinstance(self.ui.mdi.activeSubWindow().widget(),
                       ComponentDlg):
             cmd = self.pool.getCommand('componentLoadDataSourceItem').clone()
-            cmd.execute()
+            cmd.redo()
             self.cmdStack.append(cmd)
             self.pool.setDisabled("undo", False, "Undo: ", 
                                   self.cmdStack.getUndoName() )
@@ -382,9 +382,9 @@ class ItemSlots(object):
     # \brief It adds the current datasource item into component tree
     def componentAddDataSourceItem(self):
 #        cmd = self.pool.getCommand('dsourceEdit').clone()
-#        cmd.execute()
+#        cmd.redo()
         cmd = self.pool.getCommand('componentAddDataSourceItem').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -396,7 +396,7 @@ class ItemSlots(object):
     # \brief It adds the current datasource item into component tree
     def componentLinkDataSourceItem(self):
         cmd = self.pool.getCommand('componentLinkDataSourceItem').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -416,7 +416,7 @@ class ItemSlots(object):
     # \brief It moves the current component item up
     def componentMoveUpItem(self):
         cmd = self.pool.getCommand('componentMoveUpItem').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -427,7 +427,7 @@ class ItemSlots(object):
     # \brief It moves the current component item down
     def componentMoveDownItem(self):
         cmd = self.pool.getCommand('componentMoveDownItem').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -441,7 +441,7 @@ class ItemSlots(object):
     # \brief It applies the changes in the current component item 
     def componentApplyItem(self):
         cmd = self.pool.getCommand('componentApplyItem').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -466,9 +466,9 @@ class ItemSlots(object):
     # \brief It merges the current component
     def componentMerge(self):
         cmd = self.pool.getCommand('componentEdit').clone()
-        cmd.execute()
+        cmd.redo()
         cmd = self.pool.getCommand('componentMerge').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
@@ -479,7 +479,7 @@ class ItemSlots(object):
     # \brief It clears the current component      
     def componentClear(self):
         cmd = self.pool.getCommand('componentClear').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )

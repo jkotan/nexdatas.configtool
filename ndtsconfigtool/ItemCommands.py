@@ -132,7 +132,7 @@ class ComponentItemCommand(Command):
         
     ## executes the command
     # \brief It execute pre- and post- executors
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
     
@@ -143,7 +143,7 @@ class ComponentItemCommand(Command):
     ## helps to construct the unexecute component item command 
     # \brief It changes back the states of the current component 
     #        to the old state
-    def unexecute(self):
+    def undo(self):
         if self._cp is not None and self._oldstate is not None:
             self.receiver.main.componentList.elements[
                 self._cp.id].instance.setState(self._oldstate)
@@ -197,7 +197,7 @@ class ComponentClear(ComponentItemCommand):
 
     ## executes the command
     # \brief It clears the whole current component
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:                
@@ -259,7 +259,7 @@ class ComponentLoadComponentItem(ComponentItemCommand):
     ## executes the command
     # \brief It loads sub-components into the current component 
     #        tree from the file
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -300,7 +300,7 @@ class ComponentRemoveItem(ComponentItemCommand):
         
     ## executes the command
     # \brief It moves the current component item into the clipboard
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -335,7 +335,7 @@ class ComponentCopyItem(ComponentItemCommand):
         
     ## executes the command
     # \brief It copies the current component item into the clipboard
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -371,7 +371,7 @@ class ComponentPasteItem(ComponentItemCommand):
     ## executes the command
     # \brief It pastes the component item from the clipboard into 
     #        the current component tree
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -415,19 +415,19 @@ class CutItem(ComponentItemCommand):
     ## executes the command
     # \brief It moves the current, i.e. datasource or component item, 
     #        into the clipboard
-    def execute(self):
+    def redo(self):
         if self.type == 'component':
-            self._cp.execute()
+            self._cp.redo()
         elif self.type == 'datasource':
-            self._ds.execute()
+            self._ds.redo()
 
     ## unexecutes the command
     # \brief It adds back the current, i.e. datasource or component item
-    def unexecute(self):
+    def undo(self):
         if self.type == 'component':
-            self._cp.unexecute()
+            self._cp.undo()
         elif self.type == 'datasource':
-            self._ds.unexecute()
+            self._ds.undo()
         
 
 
@@ -460,20 +460,20 @@ class CopyItem(ComponentItemCommand):
     ## executes the command
     # \brief It copies the current item, i.e. datasource or component item, 
     #        into the clipboard
-    def execute(self):
+    def redo(self):
         if self.type == 'component':
-            self._cp.execute()
+            self._cp.redo()
         elif self.type == 'datasource':
-            self._ds.execute()
+            self._ds.redo()
 
 
     ## unexecutes the command
     # \brief It unexecutes copy commands for datasources or components
-    def unexecute(self):
+    def undo(self):
         if self.type == 'component':
-            self._cp.unexecute()
+            self._cp.undo()
         elif self.type == 'datasource':
-            self._ds.unexecute()
+            self._ds.undo()
         
 
 
@@ -500,19 +500,19 @@ class PasteItem(Command):
     # \brief It pastes the current item from the clipboard into 
     #        the current dialog, i.e. the current datasource or 
     #        the current component item tree
-    def execute(self):
+    def redo(self):
         if self.type == 'component':
-            self._cp.execute()
+            self._cp.redo()
         elif self.type == 'datasource':
-            self._ds.execute()
+            self._ds.redo()
 
     ## unexecutes the command
     # \brief It unexecutes paste commands for datasources or components
-    def unexecute(self):
+    def undo(self):
         if self.type == 'component':
-            self._cp.unexecute()
+            self._cp.undo()
         elif self.type == 'datasource':
-            self._ds.unexecute()
+            self._ds.undo()
         
 
 
@@ -536,7 +536,7 @@ class ComponentMerge(ComponentItemCommand):
         
     ## executes the command
     # \brief It merges the current component
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:                
@@ -570,7 +570,7 @@ class ComponentNewItem(ComponentItemCommand):
 
     ## executes the command
     # \brief It creates a new item in the current component tree
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -647,7 +647,7 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
 
     ## executes the command
     # \brief It loads a datasource from a file into the current component tree
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -690,7 +690,7 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
         
     ## executes the command
     # \brief It adds the current datasource into the current component tree
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -782,7 +782,7 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
         
     ## executes the command
     # \brief It links the current datasource into the current component tree
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -877,7 +877,7 @@ class ComponentApplyItem(ComponentItemCommand):
     ## executes the command
     # \brief It applies the changes from the form for 
     #        the current component item
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -918,7 +918,7 @@ class ComponentMoveUpItem(ComponentItemCommand):
         
     ## executes the command
     # \brief It applies the changes from the form for the current component item
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -960,7 +960,7 @@ class ComponentMoveDownItem(ComponentItemCommand):
         
     ## executes the command
     # \brief It applies the changes from the form for the current component item
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:

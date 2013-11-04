@@ -44,7 +44,7 @@ class ComponentNew(Command):
 
     ## executes the command
     # \brief It creates a new component
-    def execute(self):       
+    def redo(self):       
             
         if self._comp is None:
             self._comp = LabeledObject("", None)
@@ -56,7 +56,7 @@ class ComponentNew(Command):
         
     ## unexecutes the command
     # \brief It removes the new component
-    def unexecute(self):
+    def undo(self):
         if self._comp is not None:
             self.receiver.main.componentList.removeElement(self._comp, False)
 
@@ -91,7 +91,7 @@ class ComponentRemove(Command):
 
     ## executes the command
     # \brief It removes the current component from the component list
-    def execute(self):
+    def redo(self):
         
         if self._cp is not None:
             self.receiver.main.componentList.removeElement(self._cp, False)
@@ -118,7 +118,7 @@ class ComponentRemove(Command):
 
     ## unexecutes the command
     # \brief It reloads the removed component from the component list
-    def unexecute(self):
+    def undo(self):
         if self._cp is not None:
 
             self.receiver.main.componentList.addElement(self._cp, False)
@@ -202,7 +202,7 @@ class ComponentListChanged(Command):
 
     ## executes the command
     # \brief It changes the current component in the list
-    def execute(self):
+    def redo(self):
         if self.item is not None or self.name is not None:
             if self.name is None:
                 self.name = unicode(self.item.text())
@@ -233,7 +233,7 @@ class ComponentListChanged(Command):
 
     ## unexecutes the command
     # \brief It changes back the current component in the list
-    def unexecute(self):
+    def undo(self):
         if self._cp is not None:
             self._cp.name = self._oldName 
             self.receiver.main.componentList.addElement(self._cp, False)
@@ -268,7 +268,7 @@ class DataSourceNew(Command):
         
     ## executes the command
     # \brief It creates a new datasource
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = LabeledObject("", None)
         else:
@@ -278,7 +278,7 @@ class DataSourceNew(Command):
 
     ## unexecutes the command
     # \brief It removes the added datasource
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None:
             self.receiver.main.sourceList.removeElement(self._ds, False)
 
@@ -316,7 +316,7 @@ class DataSourceRemove(Command):
         
     ## executes the command
     # \brief It removes the current datasource from the datasource list
-    def execute(self):
+    def redo(self):
         
         if self._ds is not None:
             self.receiver.main.sourceList.removeElement(self._ds, False)
@@ -342,7 +342,7 @@ class DataSourceRemove(Command):
 
     ## unexecutes the command
     # \brief It adds the removes datasource into the datasource list
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None:
 
             self.receiver.main.sourceList.addElement(self._ds, False)
@@ -396,7 +396,7 @@ class DataSourceListChanged(Command):
         
     ## executes the command
     # \brief It performs change of  the current datasource 
-    def execute(self):
+    def redo(self):
         if self.item is not None or self.name is not None:
             if self.name is None:
                 self.name = unicode(self.item.text())
@@ -424,7 +424,7 @@ class DataSourceListChanged(Command):
 
     ## unexecutes the command
     # \brief It changes back the current datasource 
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None:
             self._ds.name = self._oldName 
             self.receiver.main.sourceList.addElement(self._ds, False)
@@ -463,14 +463,14 @@ class CloseApplication(Command):
 
     ## executes the command
     # \brief It is performed during closing the Component Designer
-    def execute(self):
+    def redo(self):
         if hasattr(self.receiver.main.ui,'mdi'):
             self.receiver.main.close()
             print "EXEC closeApp"
 
     ## executes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO closeApp"
 
 

@@ -85,13 +85,6 @@ class FileSlots(object):
             "actionSaveAllDataSources":[
                 "Save All DataSources", "dsourceSaveAll",
                 "", "dsourcessaveall", "Write all data sources in files"],
-            "actionClose":[
-                "&Remove", "componentRemove",
-                "Ctrl+P", "componentremove", "Close the component"],
-            "actionCloseDataSource":[
-                "&Remove DataSource", "dsourceRemove",
-                "Ctrl+Shift+P", "dsourceremove", 
-                "Close the data source"],
             "actionReloadDataSourceList":[
                 "Reload DataSource List", "dsourceReloadList", 
                 "", "dsourcereloadlist", "Reload the data-source list"],
@@ -109,22 +102,16 @@ class FileSlots(object):
             }
 
 
-        
-
-
-
     ## open component action
     # \brief It opens component from the file
     def componentOpen(self):        
         cmd = ComponentOpen(self.main)
-        cmd.execute()
         self.undoStack.push(cmd)
 
     ## open datasource action
     # \brief It opens datasource from the file
     def dsourceOpen(self):
         cmd = DataSourceOpen(self.main)
-        cmd.execute()
         self.undoStack.push(cmd)
 
 
@@ -132,12 +119,11 @@ class FileSlots(object):
     # \brief It saves the current component      
     def componentSave(self):
         cmd = ComponentEdit(self.main)
-        cmd.execute()
+        cmd.redo()
         cmd = ComponentMerge(self.main)
-        cmd.execute()
         self.undoStack.push(cmd)
         cmd = ComponentSave(self.main)
-        cmd.execute()
+        cmd.redo()
 
 
     ## save component action executed by button
@@ -148,47 +134,18 @@ class FileSlots(object):
 
 
 
-
-    ## remove component action
-    # \brief It removes from the component list the current component
-    def componentRemove(self):
-        cmd = self.pool.getCommand('componentRemove').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
-
-    ## remove datasource action
-    # \brief It removes the current datasource      
-    def dsourceRemove(self):
-        cmd = self.pool.getCommand('dsourceRemove').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
  
 
 
     ## save datasource item action
     # \brief It saves the changes in the current datasource item 
     def dsourceSave(self):
-        cmd = self.pool.getCommand('dsourceEdit').clone()
-        cmd.execute()
-
-        cmd = self.pool.getCommand('dsourceApply').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-        cmd = self.pool.getCommand('dsourceSave').clone()
-        cmd.execute()
+        cmd = DataSourceEdit(self.main)
+        cmd.redo()
+        cmd = DataSourceApply(self.main)
+        self.undoStack.push(cmd)
+        cmd = DataSourceSave(self.main)
+        cmd.redo()
 
 
     ## save datasource item action executed by button
@@ -202,30 +159,19 @@ class FileSlots(object):
     ## save component item as action
     # \brief It saves the changes in the current component item with a new name
     def componentSaveAs(self):
-        cmd = self.pool.getCommand('componentEdit').clone()
-        cmd.execute()
-        cmd = self.pool.getCommand('componentMerge').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = ComponentEdit(self.main)
+        cmd.redo()
+        cmd = ComponentMerge(self.main)
+        self.undoStack.push(cmd)
+        cmdSA = ComponentSaveAs(self.main)
+        cmdSA.redo()
 
-        cmdSA = self.pool.getCommand('componentSaveAs').clone()
-        cmdSA.execute()
-
-        cmd = self.pool.getCommand('componentChanged').clone()
+        cmd = ComponentListChanged(self.main)
         cmd.directory = cmdSA.directory
         cmd.name = cmdSA.name
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
-        cmd = self.pool.getCommand('componentSave').clone()
-        cmd.execute()
+        self.undoStack.push(cmd)
+        cmd = ComponentSave(self.main)
+        cmd.redo()
 
 
 
@@ -235,90 +181,65 @@ class FileSlots(object):
     # \brief It saves the changes in the current datasource item with 
     #        a new name
     def dsourceSaveAs(self):
-        cmd = self.pool.getCommand('dsourceEdit').clone()
-        cmd.execute()
+        cmd = DataSourceEdit(self.main)
+        cmd.redo()
+        cmd = DataSourceApply(self.main)
+        self.undoStack.push(cmd)
+        cmdSA = DataSourceSaveAs(self.main)
+        cmdSA.redo()
 
-        cmd = self.pool.getCommand('dsourceApply').clone()
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-        cmdSA = self.pool.getCommand('dsourceSaveAs').clone()
-        cmdSA.execute()
-
-        cmd = self.pool.getCommand('dsourceChanged').clone()
+        cmd = DataSourceListChanged(self.main)
         cmd.directory = cmdSA.directory
         cmd.name = cmdSA.name
-        cmd.execute()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-        cmd = self.pool.getCommand('dsourceSave').clone()
-        cmd.execute()
+        self.undoStack.push(cmd)
+        cmd = DataSourceSave(self.main)
+        cmd.redo()
 
 
     ## save all components item action
     # \brief It saves the changes in all components item
     def componentSaveAll(self):
-        cmd = self.pool.getCommand('componentSaveAll').clone()
-        cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
+        cmd = ComponentSaveAll(self.main)
+        cmd.redo()
+        self.undoStack.clear()
 
 
     ## save all datasource item action
     # \brief It saves the changes in all datasources item
     def dsourceSaveAll(self):
-        cmd = self.pool.getCommand('dsourceSaveAll').clone()
-        cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = DataSourceSaveAll(self.main)
+        cmd.redo()
+        self.undoStack.clear()
 
 
     ## change component directory action
     # \brief It changes the default component directory
     def componentChangeDirectory(self):
-        cmd = self.pool.getCommand('componentChangeDirectory').clone()
-        cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = ComponentChangeDirectory(self.main)
+        cmd.redo()
+        self.undoStack.clear()
 
 
     ## change datasource directory action
     # \brief It changes the default datasource directory
     def dsourceChangeDirectory(self):
-        cmd = self.pool.getCommand('dsourceChangeDirectory').clone()
-        cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
+        cmd = DataSourceChangeDirectory(self.main)
+        cmd.redo()
+        self.undoStack.clear()
 
     ## reload component list
     # \brief It changes the default component directory and reload components
     def componentReloadList(self):
-        cmd = self.pool.getCommand('componentReloadList').clone()
-        cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = ComponentReloadList(self.main)
+        cmd.redo()
+        self.undoStack.clear()
 
     ## reload datasource list
     # \brief It changes the default datasource directory and reload datasources
     def dsourceReloadList(self):
-        cmd = self.pool.getCommand('dsourceReloadList').clone()
-        cmd.execute()
-        self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = DataSourceReloadList(self.main)
+        cmd.redo()
+        self.undoStack.clear()
 
 
         

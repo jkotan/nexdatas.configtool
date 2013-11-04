@@ -130,7 +130,7 @@ class ServerSlots(object):
     # \brief It connects to configuration server
     def serverConnect(self):
         cmd = self.pool.getCommand('serverConnect').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
 
         self.pool.setDisabled("undo", False, "Undo: ", 
@@ -142,7 +142,7 @@ class ServerSlots(object):
     # \brief It fetches components from the configuration server
     def serverFetchComponents(self):
         cmd = self.pool.getCommand('serverFetchComponents').clone()
-        cmd.execute()
+        cmd.redo()
 
         self.cmdStack.clear()
         self.pool.setDisabled("undo", True, "Can't Undo")   
@@ -161,22 +161,22 @@ class ServerSlots(object):
     # \brief It stores the current component in the configuration server
     def serverStoreComponent(self):
         cmd = self.pool.getCommand('componentEdit').clone()
-        cmd.execute()
+        cmd.redo()
         cmd = self.pool.getCommand('componentMerge').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
         cmd = self.pool.getCommand('serverStoreComponent').clone()
-        cmd.execute()
+        cmd.redo()
 
 
     ## store server all components action
     # \brief It stores all components in the configuration server
     def serverStoreAllComponents(self):
         cmd = self.pool.getCommand('serverStoreAllComponents').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.clear()
         self.pool.setDisabled("undo", True, "Can't Undo")   
         self.pool.setDisabled("redo", True, "Can't Redo")      
@@ -185,34 +185,34 @@ class ServerSlots(object):
     # \brief It deletes the current component from the configuration server
     def serverDeleteComponent(self):
         cmd = self.pool.getCommand('serverDeleteComponent').clone()
-        cmd.execute()
+        cmd.redo()
 
 
     ## set component mandatory action
     # \brief It sets the current component as mandatory
     def serverSetMandatoryComponent(self):
         cmd = self.pool.getCommand('serverSetMandatoryComponent').clone()
-        cmd.execute()
+        cmd.redo()
 
 
     ## get mandatory components action
     # \brief It fetches mandatory components
     def serverGetMandatoryComponents(self):
         cmd = self.pool.getCommand('serverGetMandatoryComponents').clone()
-        cmd.execute()
+        cmd.redo()
 
 
     ## unset component mandatory action
     # \brief It unsets the current component as mandatory
     def serverUnsetMandatoryComponent(self):
         cmd = self.pool.getCommand('serverUnsetMandatoryComponent').clone()
-        cmd.execute()
+        cmd.redo()
 
     ## fetch server datasources action
     # \brief It fetches datasources from the configuration server
     def serverFetchDataSources(self):
         cmd = self.pool.getCommand('serverFetchDataSources').clone()
-        cmd.execute()
+        cmd.redo()
 
         self.cmdStack.clear()
         self.pool.setDisabled("undo", True, "Can't Undo")   
@@ -223,16 +223,16 @@ class ServerSlots(object):
     # \brief It stores the current datasource in the configuration server
     def serverStoreDataSource(self):
         cmd = self.pool.getCommand('dsourceEdit').clone()
-        cmd.execute()
+        cmd.redo()
         cmd = self.pool.getCommand('dsourceApply').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )
         self.pool.setDisabled("redo", True, "Can't Redo")      
 
         cmd = self.pool.getCommand('serverStoreDataSource').clone()
-        cmd.execute()
+        cmd.redo()
 
 
 
@@ -247,7 +247,7 @@ class ServerSlots(object):
     # \brief It stores all components in the configuration server
     def serverStoreAllDataSources(self):
         cmd = self.pool.getCommand('serverStoreAllDataSources').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.clear()
         self.pool.setDisabled("undo", True, "Can't Undo")   
         self.pool.setDisabled("redo", True, "Can't Redo")      
@@ -257,16 +257,16 @@ class ServerSlots(object):
     # \brief It deletes the current datasource from the configuration server
     def serverDeleteDataSource(self):
         cmd = self.pool.getCommand('dsourceEdit').clone()
-        cmd.execute()
+        cmd.redo()
         cmd = self.pool.getCommand('serverDeleteDataSource').clone()
-        cmd.execute()
+        cmd.redo()
 
 
     ## close server action
     # \brief It closes the configuration server
     def serverClose(self):
         cmd = self.pool.getCommand('serverClose').clone()
-        cmd.execute()
+        cmd.redo()
         self.cmdStack.append(cmd)
 
 

@@ -37,8 +37,8 @@ class HelpForm(QDialog):
     def __init__(self, page, parent=None):
         super(HelpForm, self).__init__(parent)
 
-        self.setAttribute(Qt.WA_DeleteOnClose)
-        self.setAttribute(Qt.WA_GroupLeader)
+#        self.setAttribute(Qt.WA_DeleteOnClose)
+#        self.setAttribute(Qt.WA_GroupLeader)
 
         self._page = page
         self.createGUI()
@@ -55,15 +55,15 @@ class HelpForm(QDialog):
     # \brief It create dialogs for help dialog
     def createGUI(self):   
         ## help tool bar
-        self.toolBar = QToolBar()
+        self.toolBar = QToolBar(self)
         ## help text Browser
-        self.textBrowser = QTextBrowser()
+        self.textBrowser = QTextBrowser(self)
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.toolBar)
-        layout.addWidget(self.textBrowser, 1)
+        self.layout = QVBoxLayout(self)
+        self.layout.addWidget(self.toolBar)
+        self.layout.addWidget(self.textBrowser, 1)
 
-        self.setLayout(layout)
+        self.setLayout(self.layout)
         self.textBrowser.setSearchPaths([":/help"])
         self.textBrowser.setSource(QUrl(self._page))
         self.resize(660, 700)
@@ -85,7 +85,8 @@ class HelpForm(QDialog):
         homeAction.setShortcut("Home")
 
         ## main label of the help
-        self.pageLabel = QLabel()
+        self.pageLabel = QLabel("Main Menu",self)
+        print "create Label", self.pageLabel
 
         self.toolBar.addAction(backAction)
         self.toolBar.addAction(forwardAction)
@@ -112,11 +113,13 @@ class HelpForm(QDialog):
         self.connect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
             self.updatePageTitle)
 
+        print "create Label2", self.pageLabel, self
 
 
     ## updates the title page
     # \brief It resets the pageLabel withg the document title
     def updatePageTitle(self):
+        print "create Label3", self.pageLabel, self
         self.pageLabel.setText(
             "<p><b><i><font color='#0066ee' font size = 4>" +
             "&nbsp;&nbsp;" + self.textBrowser.documentTitle() 
@@ -126,6 +129,7 @@ class HelpForm(QDialog):
 
 if __name__ == "__main__":
     import sys
+    from ndtsconfigtool.qrc import qrc_resources
     ## application instance
     app = QApplication(sys.argv)
     ## help form

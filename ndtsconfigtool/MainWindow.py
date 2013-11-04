@@ -26,7 +26,7 @@ import platform
 
 from PyQt4.QtCore import (
     SIGNAL, SLOT, QSettings, Qt,  QSignalMapper, 
-    QVariant, QT_VERSION_STR, PYQT_VERSION_STR)
+    QVariant)
 from PyQt4.QtGui import (
     QMainWindow, QDockWidget, QSplitter, QMdiArea,
     QAction, QKeySequence, QMessageBox, QIcon, 
@@ -47,12 +47,12 @@ from .ListSlots import ListSlots
 from .EditSlots import EditSlots
 from .ItemSlots import ItemSlots
 from .ServerSlots import ServerSlots
+from .HelpSlots import HelpSlots
 
 
 
 
 from .ConfigurationServer import (ConfigurationServer, PYTANGO_AVAILABLE)
-from . import __version__
 
 ## main window class
 class MainWindow(QMainWindow):
@@ -315,6 +315,7 @@ class MainWindow(QMainWindow):
         self.slots["Edit"] = EditSlots(self)
         self.slots["Item"] = ItemSlots(self)
         self.slots["Server"] = ServerSlots(self)
+        self.slots["Help"] = HelpSlots(self)
 
         for sl in self.slots.values():
             self.setActions(sl)
@@ -424,16 +425,6 @@ class MainWindow(QMainWindow):
 #                     self.updateWindowMenu)
 
         
-        # help
-
-        helpAboutAction = self._createAction(
-            "&About Component Designer",
-            self.helpAbout, icon = "icon",tip = "About Component Designer")
-
-        helpHelpAction = self._createAction(
-            "Component Desigener &Help", self.helpHelp,
-            QKeySequence.HelpContents, icon = "help", tip = "Detail help")
-
 
 #        self.menuBar().addSeparator()
 
@@ -758,9 +749,6 @@ class MainWindow(QMainWindow):
 
     # File            
 
-
-
-
     ## undo action
     # \brief It unexecutes the last command
     def undo(self):
@@ -801,10 +789,6 @@ class MainWindow(QMainWindow):
                                   self.cmdStack.getRedoName() )    
         self.pool.setDisabled("undo", False, "Undo: ", 
                               self.cmdStack.getUndoName() )   
-
-    
-
-
 
    # lists
 
@@ -921,11 +905,6 @@ class MainWindow(QMainWindow):
                             widget.component.id)
 
 
-
-
-
-
-
     ## restores all windows
     # \brief It restores all windows in MDI
     def windowRestoreAll(self):
@@ -938,11 +917,6 @@ class MainWindow(QMainWindow):
     def windowMinimizeAll(self):
         for dialog in self.ui.mdi.subWindowList():
             dialog.showMinimized()
-
-
-
-
-
     # view
 
     ## shows all attributes in the tree
@@ -950,38 +924,6 @@ class MainWindow(QMainWindow):
     def viewAllAttributes(self):
         self.componentList.viewAttributes(
             not self.componentList.viewAttributes())
-
-
-
-
-
-    # help
-
-    ## shows help about
-    # \brief It shows message box with help about
-    def helpAbout(self):
-        QMessageBox.about(self, "About Component Designer",
-                """<b>Component Designer</b> v %s
-                <p>Copyright &copy; 2012-2013 DESY, GNU GENERAL PUBLIC LICENSE
-                <p>This application can be used to create
-                XML configuration file for the Nexus Data Writer.
-                <p>Python %s - Qt %s - PyQt %s on %s""" % (
-                unicode(__version__), 
-                unicode(platform.python_version()),
-                unicode(QT_VERSION_STR), 
-                unicode(PYQT_VERSION_STR),
-                unicode(platform.system())))
-
-
-
-    ## shows the detail help 
-    # \brief It shows the detail help from help directory
-    def helpHelp(self):
-        form = HelpForm("index.html", self)
-        form.show()
-
-
-
 
         
     ## provides subwindow defined by instance
@@ -1057,5 +999,4 @@ class MainWindow(QMainWindow):
                          self.windows["Mapper"], SLOT("map()"))
             self.windows["Mapper"].setMapping(action, dialog)
             i += 1
-
 

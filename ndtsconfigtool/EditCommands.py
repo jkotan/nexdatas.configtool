@@ -21,12 +21,11 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import (QMessageBox, QUndoCommand)
 
 from .DataSourceDlg import DataSourceDlg
 from . import DataSource
 from .Component import Component
-from .Command import Command
 
 
 
@@ -36,13 +35,15 @@ from .Command import Command
 
 
 ## Command which opens dialog with the current component 
-class ComponentEdit(Command):
+class ComponentEdit(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
         self._cpEdit = None
         self._subwindow = None
@@ -126,13 +127,15 @@ class ComponentEdit(Command):
 
 
 ## Command which copies the current datasource into the clipboard
-class DataSourceCopy(Command):
+class DataSourceCopy(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         self._oldstate = None
         self._newstate = None
@@ -231,13 +234,15 @@ class DataSourceCopy(Command):
 
 
 ## Command which moves the current datasource into the clipboard
-class DataSourceCut(Command):
+class DataSourceCut(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         self._oldstate = None
         self._newstate = None
@@ -346,13 +351,15 @@ class DataSourceCut(Command):
 
 
 ## Command which pastes the current datasource from the clipboard
-class DataSourcePaste(Command):
+class DataSourcePaste(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         self._oldstate = None
         self._newstate = None
@@ -476,13 +483,15 @@ class DataSourcePaste(Command):
 
 
 ## Command which applies the changes from the form for the current datasource 
-class DataSourceApply(Command):
+class DataSourceApply(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         self._oldstate = None
         self._newstate = None
@@ -628,13 +637,15 @@ class DataSourceApply(Command):
 
 
 ## Command which takes the datasources from the current component
-class ComponentTakeDataSources(Command):
+class ComponentTakeDataSources(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
        
 
@@ -685,13 +696,15 @@ class ComponentTakeDataSources(Command):
 
 
 ## Command which takes the datasources from the current component
-class ComponentTakeDataSource(Command):
+class ComponentTakeDataSource(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
         self._ids = None
         self._ds = None
@@ -770,13 +783,15 @@ class ComponentTakeDataSource(Command):
 
 
 ## Command which opens the dialog with the current datasource
-class DataSourceEdit(Command):
+class DataSourceEdit(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         self._dsEdit = None
         self._subwindow = None
@@ -856,60 +871,6 @@ class DataSourceEdit(Command):
 
 
 
-## Empty undo command. It is no need to implement it 
-class UndoCommand(Command):
-
-    ## constructor
-    # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
-
-
-    ## executes the command
-    # \brief It does nothing
-    def redo(self):
-        print "EXEC undo"
-
-    ## unexecutes the command
-    # \brief It does nothing
-    def undo(self):
-        pass
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return UndoCommand(self.receiver, self.slot) 
-
-
-
-## Empty undo command. It is no need to implement it 
-class RedoCommand(Command):
-
-    ## constructor
-    # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
-
-    ## executes the command
-    # \brief It does nothing
-    def redo(self):
-        print "EXEC redo"
-
-    ## unexecutes the command
-    # \brief It does nothing
-    def undo(self):
-        pass
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return RedoCommand(self.receiver, self.slot) 
-
-        
 
 if __name__ == "__main__":
     pass

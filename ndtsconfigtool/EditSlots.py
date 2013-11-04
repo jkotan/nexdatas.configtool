@@ -32,8 +32,6 @@ from .EditCommands import (
     DataSourcePaste,
     DataSourceApply,
     DataSourceEdit,
-    UndoCommand,
-    RedoCommand,
     ComponentTakeDataSources,
     ComponentTakeDataSource
     )
@@ -88,48 +86,34 @@ class EditSlots(object):
     ## take datasources 
     # \brief It takes datasources from the current component
     def componentTakeDataSources(self):
-        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd = ComponentEdit(self.main)
         cmd.redo()
-        cmd = self.pool.getCommand('componentTakeDataSources').clone()
+        cmd = ComponentTakeDataSources(self.main)
         cmd.redo()
         self.cmdStack.clear()
-        self.pool.setDisabled("undo", True, "Can't Undo")   
-        self.pool.setDisabled("redo", True, "Can't Redo")      
 
 
 
     ## take datasources 
     # \brief It takes datasources from the current component
     def componentTakeDataSource(self):
-        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd = ComponentEdit(self.main)
         cmd.redo()
-        cmd = self.pool.getCommand('componentTakeDataSource').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-#        cmd = self.pool.getCommand('dsourceEdit').clone()
-#        cmd.redo()
-
-#        cmd = self.pool.getCommand('dsourceApply').clone()
-#        cmd.redo()
-#        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
-
+        cmd = ComponentTakeDataSource(self.main)
+        self.cmdStack.push(cmd)
 
 
 
     ## edit component action
     # \brief It opens a dialog with the current component
     def componentEdit(self):
-        cmd = self.pool.getCommand('componentEdit').clone()
+        cmd = ComponentEdit(self.main)
         cmd.redo()
 
     ## edit datasource action
     # \brief It opens a dialog with the current datasource      
     def dsourceEdit(self):
-        cmd = self.pool.getCommand('dsourceEdit').clone()
+        cmd = DataSourceEdit(self.main)
         cmd.redo()
         
 
@@ -145,20 +129,15 @@ class EditSlots(object):
     ## apply datasource item action
     # \brief It applies the changes in the current datasource item 
     def dsourceApply(self):
-        cmd = self.pool.getCommand('dsourceApply').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
-
+        cmd = DataSourceApply(self.main)
+        self.cmdStack.push(cmd)
 
 
 
     ## copy datasource item action
     # \brief It copies the  current datasource item into the clipboard
     def dsourceCopy(self):
-        cmd = self.pool.getCommand('dsourceCopy').clone()
+        cmd = DataSourceCopy(self.main)
         cmd.redo()
 
 
@@ -167,24 +146,16 @@ class EditSlots(object):
     # \brief It removes the current datasources item and copies it 
     #        into the clipboard
     def dsourceCut(self):
-        cmd = self.pool.getCommand('dsourceCut').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = DataSourceCut(self.main)
+        self.cmdStack.push(cmd)
 
 
 
     ## paste datasource item action
     # \brief It pastes the datasource item from the clipboard
     def dsourcePaste(self):
-        cmd = self.pool.getCommand('dsourcePaste').clone()
-        cmd.redo()
-        self.cmdStack.append(cmd)
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )
-        self.pool.setDisabled("redo", True, "Can't Redo")      
+        cmd = DataSourcePaste(self.main)
+        self.cmdStack.push(cmd)
 
 
 if __name__ == "__main__":   

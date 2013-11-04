@@ -29,7 +29,6 @@ from . import DataSource
 from .ComponentDlg import ComponentDlg
 from .Component import Component
 from .LabeledObject import LabeledObject
-from .Command import Command
 
 
 

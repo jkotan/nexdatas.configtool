@@ -726,47 +726,6 @@ class MainWindow(QMainWindow):
 
     # File            
 
-    ## undo action
-    # \brief It unexecutes the last command
-    def undo(self):
-        cmd = self.pool.getCommand('undo').clone()
-        cmd.redo()
-
-        ucmd = self.cmdStack.undo()
-        if hasattr(ucmd,'unexecute'):
-            ucmd.undo()
-        else:
-            print "Undo not possible"
-
-        if self.cmdStack.isEmpty():
-            self.pool.setDisabled("undo", True, "Can't Undo")   
-        else:
-            self.pool.setDisabled("undo", False, "Undo: ", 
-                                  self.cmdStack.getUndoName() )   
-        self.pool.setDisabled("redo", False, "Redo: ", 
-                              self.cmdStack.getRedoName() )   
-
-
-    ## redo action
-    # \brief It reexecutes the last undexecuted command
-    def redo(self):
-        cmd = self.pool.getCommand('redo').clone()
-        cmd.redo()
-
-        rucmd = self.cmdStack.redo()
-        if hasattr(rucmd,'reexecute'):
-            rucmd.redo()
-        else:
-            print "Redo not possible"
-
-        if self.cmdStack.isFinal():
-            self.pool.setDisabled("redo", True, "Can't Redo")   
-        else:
-            self.pool.setDisabled("redo", False, "Redo: ", 
-                                  self.cmdStack.getRedoName() )    
-        self.pool.setDisabled("undo", False, "Undo: ", 
-                              self.cmdStack.getUndoName() )   
-
    # lists
 
 

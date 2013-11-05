@@ -59,10 +59,8 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-
         ## component tree menu under mouse cursor
         self.contextMenuActions = None
-
 
         ## slots for DataSource widget buttons
         self.externalDSActions = {}
@@ -72,7 +70,6 @@ class MainWindow(QMainWindow):
         self.sourceList = None
         ## datasource directory label
         self.dsDirLabel = None
-
 
         ## slots for Component widget buttons
         self.externalCPActions = {}
@@ -95,13 +92,10 @@ class MainWindow(QMainWindow):
         ## configuration server
         self.configServer = None
         
-
-
         ## action slots
         self.slots = {}
 
         settings = QSettings()
-
         dsDirectory = self.__setDirectory(
             settings, "DataSources/directory", "datasources")    
         cpDirectory = self.__setDirectory(
@@ -113,12 +107,10 @@ class MainWindow(QMainWindow):
 
         if self.componentList:
             self.componentList.setActions(self.componentListMenuActions)
-
         if self.sourceList:
             self.sourceList.setActions(self.dsourceListMenuActions)
 
         self.loadDataSources()
-
         self.loadComponents()
 
         self.restoreGeometry(

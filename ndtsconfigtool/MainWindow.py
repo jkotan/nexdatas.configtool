@@ -105,9 +105,9 @@ class MainWindow(QMainWindow):
 
         settings = QSettings()
 
-        dsDirectory = self.setDirectory(
+        dsDirectory = self.__setDirectory(
             settings, "DataSources/directory", "datasources")    
-        cpDirectory = self.setDirectory(
+        cpDirectory = self.__setDirectory(
             settings, "Components/directory", "components")    
 
 
@@ -164,7 +164,7 @@ class MainWindow(QMainWindow):
     # \param default defualt value    
     # \returns set directory    
     @classmethod    
-    def setDirectory(cls, settings, name, default):
+    def __setDirectory(cls, settings, name, default):
         directory = ""
         dsdir = unicode(settings.value(name).toString())
         if dsdir:
@@ -238,7 +238,7 @@ class MainWindow(QMainWindow):
         return action
 
 
-    def setActions(self, slots):
+    def __setActions(self, slots):
         for ac, pars in slots.actions.items():
             action = getattr(self.ui, ac)
             self.__setAction(
@@ -247,7 +247,7 @@ class MainWindow(QMainWindow):
                 pars[2],pars[3],pars[4])
 
 
-    def setTasks(self, slots):
+    def __setTasks(self, slots):
         if hasattr(slots, "tasks"):
             for pars in slots.tasks:
                 self.connect(pars[1], SIGNAL(pars[2]), 
@@ -284,18 +284,15 @@ class MainWindow(QMainWindow):
         self.slots["Windows"] = WindowsSlots(self)
 
         for sl in self.slots.values():
-            self.setActions(sl)
-            self.setTasks(sl)
+            self.__setActions(sl)
+            self.__setTasks(sl)
 
         self.slots["Windows"].updateWindowMenu()
-
-        # server
 
         if not PYTANGO_AVAILABLE:
             self.ui.actionConnectServer.setDisabled(True)
         self.disableServer(True)
 
-        # View
 
         viewDockAction = self.ui.compDockWidget.toggleViewAction()
         viewDockAction.setToolTip("Show/Hide the dock lists")
@@ -679,15 +676,3 @@ class MainWindow(QMainWindow):
         return swin
 
 
-    ## provides subwindow defined by widget
-    # \param widget given widget
-    # \param subwindows list of subwindows
-    # \returns required subwindow
-    @classmethod    
-    def widgetSubWindow(cls, widget, subwindows):
-        swin = None
-        for sw in subwindows:
-            if hasattr(sw,"widget") and sw.widget() == widget:
-                swin = sw
-                break
-        return swin

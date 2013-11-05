@@ -140,31 +140,35 @@ class WindowsSlots(object):
     def gotoDataSourceList(self):
         self.main.sourceList.ui.elementListWidget.setFocus()
 
+
     ## activates the next subwindow
     def activateNextSubWindow(self):
         self.main.ui.mdi.activateNextSubWindow()
+
 
     ## activates the previous subwindow
     def activatePreviousSubWindow(self):
         self.main.ui.mdi.activatePreviousSubWindow()
 
+
     ## cascades the subwindows
     def cascadeSubWindows(self):
         self.main.ui.mdi.cascadeSubWindows()
 
+
     ## tiles the subwindows
     def tileSubWindows(self):
         self.main.ui.mdi.tileSubWindows()
+
  
     ## closes all subwindows
     def closeAllSubWindows(self):
         self.main.ui.mdi.closeAllSubWindows()
 
+
     ## closes the active subwindow
     def closeActiveSubWindow(self):
         self.main.ui.mdi.closeActiveSubWindow()
-
-
         
 
     ## updates the window menu
@@ -206,6 +210,7 @@ class WindowsSlots(object):
                          self.windows["Mapper"], SLOT("map()"))
             self.windows["Mapper"].setMapping(action, dialog)
             i += 1
+
 
     ## adds actions to target
     # \param target action target

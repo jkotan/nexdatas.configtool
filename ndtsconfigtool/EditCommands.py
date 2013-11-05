@@ -53,9 +53,9 @@ class ComponentEdit(QUndoCommand):
     # \brief It opens dialog with the current component 
     def redo(self):
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListElement()
+            self._cp = self.receiver.componentList.currentListElement()
         if self._cp is None:                
-            QMessageBox.warning(self.receiver.main, "Component not selected", 
+            QMessageBox.warning(self.receiver, "Component not selected", 
                                 "Please select one of the components")         
         else:
             if self._cp.instance is None:
@@ -63,12 +63,12 @@ class ComponentEdit(QUndoCommand):
                 self._cpEdit = Component()
                 self._cpEdit.id = self._cp.id
                 self._cpEdit.directory = \
-                    self.receiver.main.componentList.directory
-                self._cpEdit.name = self.receiver.main.componentList.elements[
+                    self.receiver.componentList.directory
+                self._cpEdit.name = self.receiver.componentList.elements[
                     self._cp.id].name
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(
-                    self.receiver.main.contextMenuActions)
+                    self.receiver.contextMenuActions)
                 self._cpEdit.createHeader()
                 self._cpEdit.dialog.setWindowTitle(
                     "%s [Component]*" % self._cp.name)
@@ -78,19 +78,19 @@ class ComponentEdit(QUndoCommand):
 
             if hasattr(self._cpEdit, "connectExternalActions"):     
                 self._cpEdit.connectExternalActions(
-                    **self.receiver.main.externalCPActions)
+                    **self.receiver.externalCPActions)
 
 
-            subwindow = self.receiver.main.subWindow(
-                self._cpEdit, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._cpEdit, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                 self._cpEdit.reconnectSaveAction()
             else:    
                 self._cpEdit.createGUI()
 
                 self._cpEdit.addContextMenu(
-                    self.receiver.main.contextMenuActions)
+                    self.receiver.contextMenuActions)
                 if self._cpEdit.isDirty():
                     self._cpEdit.dialog.setWindowTitle(
                         "%s [Component]*" % self._cp.name)
@@ -99,7 +99,7 @@ class ComponentEdit(QUndoCommand):
                         "%s [Component]" % self._cp.name)
                      
                 self._cpEdit.reconnectSaveAction()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._cpEdit.dialog)
                 self._subwindow.resize(680, 560)
                 self._cpEdit.dialog.show()
@@ -137,9 +137,9 @@ class DataSourceCopy(QUndoCommand):
     # \brief It copies the current datasource into the clipboard
     def redo(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListElement()
+            self._ds = self.receiver.sourceList.currentListElement()
         if self._ds is None:
-            QMessageBox.warning(self.receiver.main, "DataSource not selected", 
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")
         if self._ds is not None and self._ds.instance is not None:
             if self._newstate is None:
@@ -147,15 +147,15 @@ class DataSourceCopy(QUndoCommand):
                     self._oldstate = self._ds.instance.getState() 
                 self._ds.instance.copyToClipboard()
             else:
-                self.receiver.main.sourceList.elements[
+                self.receiver.sourceList.elements[
                     self._ds.id].instance.setState(self._newstate)
                 self._ds.instance.updateForm()
 
 
-            subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -168,7 +168,7 @@ class DataSourceCopy(QUndoCommand):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -184,16 +184,16 @@ class DataSourceCopy(QUndoCommand):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and self._ds.instance is not None:
         
-            self.receiver.main.sourceList.elements[
+            self.receiver.sourceList.elements[
                 self._ds.id].instance.setState(self._oldstate)
-            self.receiver.main.sourceList.elements[
+            self.receiver.sourceList.elements[
                 self._ds.id].instance.updateForm()
 
 
-            subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -206,7 +206,7 @@ class DataSourceCopy(QUndoCommand):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -235,9 +235,9 @@ class DataSourceCut(QUndoCommand):
     # \brief It moves the current datasource into the clipboard
     def redo(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListElement()
+            self._ds = self.receiver.sourceList.currentListElement()
         if self._ds is None:
-            QMessageBox.warning(self.receiver.main, "DataSource not selected", 
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")
         if self._ds is not None and self._ds.instance is not None:
             if self._newstate is None:
@@ -248,14 +248,14 @@ class DataSourceCut(QUndoCommand):
                 self._ds.instance.updateForm()
                 self._ds.instance.dialog.show()
             else:
-                self.receiver.main.sourceList.elements[
+                self.receiver.sourceList.elements[
                     self._ds.id].instance.setState(self._newstate)
                 self._ds.instance.updateForm()
 
-            subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -268,7 +268,7 @@ class DataSourceCut(QUndoCommand):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -277,9 +277,9 @@ class DataSourceCut(QUndoCommand):
 
             self._newstate = self._ds.instance.getState() 
         if hasattr(self._ds , "id"):
-            self.receiver.main.sourceList.populateElements(self._ds.id)
+            self.receiver.sourceList.populateElements(self._ds.id)
         else:
-            self.receiver.main.sourceList.populateElements()
+            self.receiver.sourceList.populateElements()
             
         print "EXEC dsourceCut"
 
@@ -289,15 +289,15 @@ class DataSourceCut(QUndoCommand):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and self._ds.instance is not None:
         
-            self.receiver.main.sourceList.elements[
+            self.receiver.sourceList.elements[
                 self._ds.id].instance.setState(self._oldstate)
-            self.receiver.main.sourceList.elements[
+            self.receiver.sourceList.elements[
                 self._ds.id].instance.updateForm()
 
-            subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -310,15 +310,15 @@ class DataSourceCut(QUndoCommand):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
             
         if hasattr(self._ds , "id"):
-            self.receiver.main.sourceList.populateElements(self._ds.id)
+            self.receiver.sourceList.populateElements(self._ds.id)
         else:
-            self.receiver.main.sourceList.populateElements()
+            self.receiver.sourceList.populateElements()
             
         print "UNDO dsourceCut"
         
@@ -345,9 +345,9 @@ class DataSourcePaste(QUndoCommand):
     # \brief It pastes the current datasource from the clipboard
     def redo(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListElement()
+            self._ds = self.receiver.sourceList.currentListElement()
         if self._ds is None:
-            QMessageBox.warning(self.receiver.main, "DataSource not selected", 
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")
         if self._ds is not None and self._ds.instance is not None:
             if self._newstate is None:
@@ -356,7 +356,7 @@ class DataSourcePaste(QUndoCommand):
                 self._ds.instance.clear()
                 if not self._ds.instance.copyFromClipboard():
                     QMessageBox.warning(
-                        self.receiver.main, "Pasting item not possible", 
+                        self.receiver, "Pasting item not possible", 
                         "Probably clipboard does not contain datasource")
                     
                 self._ds.instance.updateForm()
@@ -367,22 +367,22 @@ class DataSourcePaste(QUndoCommand):
 #                self._ds.instance.updateForm()
                 self._ds.instance.dialog.show()
             else:
-                self.receiver.main.sourceList.elements[
+                self.receiver.sourceList.elements[
                     self._ds.id].instance.setState(self._newstate)
                 self._ds.instance.updateForm()
 #                self._ds.instance.updateNode()
 
             self._newstate = self._ds.instance.getState() 
 
-            self.receiver.main.sourceList.elements[
+            self.receiver.sourceList.elements[
                 self._ds.id].instance.setState(self._oldstate)
             self._ds.instance.updateNode()
 
             
-            subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createDialog()
@@ -395,7 +395,7 @@ class DataSourcePaste(QUndoCommand):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -403,9 +403,9 @@ class DataSourcePaste(QUndoCommand):
 
             
             if hasattr(self._ds , "id"):
-                self.receiver.main.sourceList.populateElements(self._ds.id)
+                self.receiver.sourceList.populateElements(self._ds.id)
             else:
-                self.receiver.main.sourceList.populateElements()
+                self.receiver.sourceList.populateElements()
         print "EXEC dsourcePaste"
 
     ## unexecutes the command
@@ -414,16 +414,16 @@ class DataSourcePaste(QUndoCommand):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and  self._ds.instance is not None:
         
-            self.receiver.main.sourceList.elements[
+            self.receiver.sourceList.elements[
                 self._ds.id].instance.setState(self._oldstate)
-            self.receiver.main.sourceList.elements[
+            self.receiver.sourceList.elements[
                 self._ds.id].instance.updateForm()
 
 
-            subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -436,15 +436,15 @@ class DataSourcePaste(QUndoCommand):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
             
             if hasattr(self._ds , "id"):
-                self.receiver.main.sourceList.populateElements(self._ds.id)
+                self.receiver.sourceList.populateElements(self._ds.id)
             else:
-                self.receiver.main.sourceList.populateElements()
+                self.receiver.sourceList.populateElements()
             
         print "UNDO dsourcePaste"
         
@@ -469,17 +469,17 @@ class DataSourceApply(QUndoCommand):
     # \brief It applies the changes from the form for the current datasource  
     def redo(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListElement()
+            self._ds = self.receiver.sourceList.currentListElement()
         if self._ds is None:
-            QMessageBox.warning(self.receiver.main, "DataSource not selected", 
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")
         if self._ds.instance is None:
             #                self._dsEdit = FieldWg()  
             self._ds.instance  = DataSource.DataSource()
             self._ds.instance.id = self._ds.id
             self._ds.instance.directory = \
-                self.receiver.main.sourceList.directory
-            self._ds.instance.name = self.receiver.main.sourceList.elements[
+                self.receiver.sourceList.directory
+            self._ds.instance.name = self.receiver.sourceList.elements[
                 self._ds.id].name
         if not self._ds.instance.dialog:
             self._ds.instance.createDialog()
@@ -488,8 +488,8 @@ class DataSourceApply(QUndoCommand):
             
             if hasattr(self._ds.instance, "connectExternalActions"):
                 self._ds.instance.connectExternalActions(
-                    **self.receiver.main.externalDSActions)
-            self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                    **self.receiver.externalDSActions)
+            self._subwindow = self.receiver.ui.mdi.addSubWindow(
                 self._ds.instance.dialog)
             self._subwindow.resize(440, 550)
             self._ds.instance.dialog.show()
@@ -500,7 +500,7 @@ class DataSourceApply(QUndoCommand):
                 if self._oldstate is None:
                     self._oldstate = self._ds.instance.getState() 
             else:
-                self.receiver.main.sourceList.elements[
+                self.receiver.sourceList.elements[
                     self._ds.id].instance.setState(
                     self._newstate)
                 if not hasattr(self._ds.instance.dialog.ui, "docTextEdit"):
@@ -509,10 +509,10 @@ class DataSourceApply(QUndoCommand):
                 
 
 
-            subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction()
             else:    
                 self._ds.instance.createGUI()
@@ -525,7 +525,7 @@ class DataSourceApply(QUndoCommand):
                         "%s [Component]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -536,11 +536,11 @@ class DataSourceApply(QUndoCommand):
             
             
             if hasattr(self._ds , "id"):
-                self.receiver.main.sourceList.populateElements(self._ds.id)
+                self.receiver.sourceList.populateElements(self._ds.id)
             else:
-                self.receiver.main.sourceList.populateElements()
+                self.receiver.sourceList.populateElements()
         else:
-            QMessageBox.warning(self.receiver.main, "DataSource not created", 
+            QMessageBox.warning(self.receiver, "DataSource not created", 
                                 "Please edit one of the datasources")
             
         print "EXEC dsourceApply"
@@ -552,25 +552,25 @@ class DataSourceApply(QUndoCommand):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and  self._ds.instance is not None:
         
-            self.receiver.main.sourceList.elements[
+            self.receiver.sourceList.elements[
                 self._ds.id].instance.setState(self._oldstate)
 
-            subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
-                self.receiver.main.sourceList.elements[
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.sourceList.elements[
                     self._ds.id].instance.updateForm()
                 self._ds.instance.reconnectSaveAction()
                 
             else:    
                 self._ds.instance.createDialog()
 
-                self.receiver.main.sourceList.elements[
+                self.receiver.sourceList.elements[
                     self._ds.id].instance.updateForm()
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
 
@@ -584,9 +584,9 @@ class DataSourceApply(QUndoCommand):
             self._ds.instance.dialog.show()
     
             if hasattr(self._ds , "id"):
-                self.receiver.main.sourceList.populateElements(self._ds.id)
+                self.receiver.sourceList.populateElements(self._ds.id)
             else:
-                self.receiver.main.sourceList.populateElements()
+                self.receiver.sourceList.populateElements()
             
             
         print "UNDO dsourceApply"
@@ -615,27 +615,27 @@ class ComponentTakeDataSources(QUndoCommand):
     def redo(self):
 
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListElement()
+            self._cp = self.receiver.componentList.currentListElement()
         if self._cp is None:
-            QMessageBox.warning(self.receiver.main, "Component not selected", 
+            QMessageBox.warning(self.receiver, "Component not selected", 
                                 "Please select one of the components")
         else:
             if self._cp.instance is not None:
                 datasources = self._cp.instance.getDataSources()
         
                 if datasources:
-                    dialogs = self.receiver.main.ui.mdi.subWindowList()
+                    dialogs = self.receiver.ui.mdi.subWindowList()
                     if dialogs:
                         for dialog in dialogs:
                             if isinstance(dialog, DataSourceDlg):
-                                self.receiver.main.ui.mdi.setActiveSubWindow(
+                                self.receiver.ui.mdi.setActiveSubWindow(
                                     dialog)
-                                self.receiver.main.ui.mdi.closeActiveSubWindow()
+                                self.receiver.ui.mdi.closeActiveSubWindow()
         
-                    self.receiver.main.setDataSources(datasources, new = True)
+                    self.receiver.setDataSources(datasources, new = True)
                 else:
                     QMessageBox.warning(
-                        self.receiver.main, "DataSource item not selected", 
+                        self.receiver, "DataSource item not selected", 
                         "Please select one of the datasource items")            
 
 
@@ -670,41 +670,41 @@ class ComponentTakeDataSource(QUndoCommand):
 
         if not self._lids:
             self._lids = \
-                self.receiver.main.sourceList.elements.\
+                self.receiver.sourceList.elements.\
                 itervalues().next().id \
-                if len(self.receiver.main.sourceList.elements) else None
+                if len(self.receiver.sourceList.elements) else None
         if self._ids and self._ds:       
-            self.receiver.main.sourceList.addElement(self._ds)
-            self.receiver.main.sourceList.populateElements(self._ids)
+            self.receiver.sourceList.addElement(self._ds)
+            self.receiver.sourceList.populateElements(self._ids)
           
         else:    
             if self._cp is None:
                 self._cp = \
-                    self.receiver.main.componentList.currentListElement()
+                    self.receiver.componentList.currentListElement()
             if self._cp is not None:
                 if self._cp.instance is not None:
 
                     datasource = self._cp.instance.getCurrentDataSource()
                     if datasource:            
-                        dialogs = self.receiver.main.ui.mdi.subWindowList()
+                        dialogs = self.receiver.ui.mdi.subWindowList()
                         if dialogs:
                             for dialog in dialogs:
                                 if isinstance(dialog, DataSourceDlg):
-                                    self.receiver.main.ui.mdi.\
+                                    self.receiver.ui.mdi.\
                                         setActiveSubWindow(
                                         dialog)
-                                    self.receiver.main.ui.mdi\
+                                    self.receiver.ui.mdi\
                                         .closeActiveSubWindow()
         
-                        self._ids = self.receiver.main.setDataSources(
+                        self._ids = self.receiver.setDataSources(
                             datasource, new = True)
                         self._ds = \
-                            self.receiver.main.sourceList.elements[self._ids]
-                        self.receiver.main.sourceList.populateElements(
+                            self.receiver.sourceList.elements[self._ids]
+                        self.receiver.sourceList.populateElements(
                             self._ids)
                     else:
                         QMessageBox.warning(
-                            self.receiver.main, "DataSource item not selected", 
+                            self.receiver, "DataSource item not selected", 
                             "Please select one of the datasource items")
                         
         print "EXEC componentTakeDataSource"
@@ -715,17 +715,17 @@ class ComponentTakeDataSource(QUndoCommand):
         print "UNDO componentTakeDataSource"
         
 
-        self.receiver.main.sourceList.removeElement(self._ds, False)
+        self.receiver.sourceList.removeElement(self._ds, False)
         if hasattr(self._ds,'instance'):
-            subwindow = self.receiver.main.subWindow(
+            subwindow = self.receiver.subWindow(
                 self._ds.instance, 
-                self.receiver.main.ui.mdi.subWindowList())
+                self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
-                self.receiver.main.ui.mdi.closeActiveSubWindow() 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.closeActiveSubWindow() 
 
 
-        self.receiver.main.sourceList.populateElements(self._lids)
+        self.receiver.sourceList.populateElements(self._lids)
 
 
 
@@ -748,9 +748,9 @@ class DataSourceEdit(QUndoCommand):
     # \brief It opens the dialog with the current datasource
     def redo(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListElement()
+            self._ds = self.receiver.sourceList.currentListElement()
         if self._ds is None:
-            QMessageBox.warning(self.receiver.main, "DataSource not selected", 
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")
         else:
             if self._ds.instance is None:
@@ -758,8 +758,8 @@ class DataSourceEdit(QUndoCommand):
                 self._dsEdit = DataSource.DataSource()
                 
                 self._dsEdit.id = self._ds.id
-                self._dsEdit.directory = self.receiver.main.sourceList.directory
-                self._dsEdit.name = self.receiver.main.sourceList.elements[
+                self._dsEdit.directory = self.receiver.sourceList.directory
+                self._dsEdit.name = self.receiver.sourceList.elements[
                     self._ds.id].name
                 self._dsEdit.createDialog()
                 self._dsEdit.dialog.setWindowTitle( 
@@ -774,12 +774,12 @@ class DataSourceEdit(QUndoCommand):
                 
             if hasattr(self._dsEdit, "connectExternalActions"):     
                 self._dsEdit.connectExternalActions(
-                    **self.receiver.main.externalDSActions)
+                    **self.receiver.externalDSActions)
 
-            subwindow = self.receiver.main.subWindow(
-                self._dsEdit, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._dsEdit, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 if self._ds.instance.dialog is None:
@@ -793,7 +793,7 @@ class DataSourceEdit(QUndoCommand):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._dsEdit.dialog.show()

@@ -45,21 +45,21 @@ class ServerConnect(QUndoCommand):
     ## executes the command
     # \brief It perform connection to the configuration server
     def redo(self):       
-        if self.receiver.main.configServer:
+        if self.receiver.configServer:
             try:
                 if self._oldstate is None:
-                    self._oldstate = self.receiver.main.configServer.getState()
+                    self._oldstate = self.receiver.configServer.getState()
                 if  self._state is None:   
-                    self.receiver.main.configServer.open()
-                    self._state = self.receiver.main.configServer.getState()
+                    self.receiver.configServer.open()
+                    self._state = self.receiver.configServer.getState()
                 else:
-                    self.receiver.main.configServer.setState(self._state)
-                    self.receiver.main.configServer.connect()
+                    self.receiver.configServer.setState(self._state)
+                    self.receiver.configServer.connect()
                     
-                self.receiver.main.disableServer(False)
+                self.receiver.disableServer(False)
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, 
+                    self.receiver, 
                     "Error in connecting to Configuration Server", 
                     unicode(e))
     
@@ -69,15 +69,15 @@ class ServerConnect(QUndoCommand):
     # \brief It undo connection to the configuration server, 
     #        i.e. it close the connection to the server
     def undo(self):
-        if self.receiver.main.configServer:
+        if self.receiver.configServer:
             try:
-                self.receiver.main.configServer.close()
+                self.receiver.configServer.close()
                 if self._oldstate is None:
-                    self.receiver.main.configServer.setState(self._oldstate)
-                self.receiver.main.disableServer(True)
+                    self.receiver.configServer.setState(self._oldstate)
+                self.receiver.disableServer(True)
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, 
+                    self.receiver, 
                     "Error in Closing Configuration Server Connection", 
                     unicode(e))
 
@@ -101,7 +101,7 @@ class ServerFetchComponents(QUndoCommand):
     # \brief It fetches the components from the configuration server
     def redo(self):       
         if QMessageBox.question(
-            self.receiver.main, 
+            self.receiver, 
             "Component - Reload List from Configuration server",
             ("All unsaved components will be lost. "\
                  "Would you like to proceed ?").encode(),
@@ -110,36 +110,36 @@ class ServerFetchComponents(QUndoCommand):
             return
 
         
-        subwindows = self.receiver.main.ui.mdi.subWindowList()
+        subwindows = self.receiver.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 dialog = subwindow.widget()
                 if isinstance(dialog, ComponentDlg):
-                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.ui.mdi.closeActiveSubWindow()
+                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.ui.mdi.closeActiveSubWindow()
 
-        self.receiver.main.componentList.elements = {} 
+        self.receiver.componentList.elements = {} 
 
-        if self.receiver.main.configServer:
+        if self.receiver.configServer:
             try:
-                if not self.receiver.main.configServer.connected:
+                if not self.receiver.configServer.connected:
                     QMessageBox.information(
-                        self.receiver.main, 
+                        self.receiver, 
                         "Connecting to Configuration Server", 
                         "Connecting to %s on %s:%s" % (
-                            self.receiver.main.configServer.device,
-                            self.receiver.main.configServer.host,
-                            self.receiver.main.configServer.port
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
                             )
                         )
 
-                self.receiver.main.configServer.connect()
-                self.receiver.main.disableServer(False)
-                cdict = self.receiver.main.configServer.fetchComponents()
-                self.receiver.main.setComponents(cdict)
+                self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
+                cdict = self.receiver.configServer.fetchComponents()
+                self.receiver.setComponents(cdict)
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, 
+                    self.receiver, 
                     "Error in fetching components", unicode(e))
     
         print "EXEC serverFetchComponents"
@@ -167,20 +167,20 @@ class ServerStoreComponent(QUndoCommand):
     # \brief It stores the current component in the configuration server
     def redo(self):       
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListElement()
+            self._cp = self.receiver.componentList.currentListElement()
         if self._cp is not None:
             if self._cp.instance is None:
                 #                self._cpEdit = FieldWg()  
                 self._cpEdit = Component()
                 self._cpEdit.id = self._cp.id
                 self._cpEdit.directory = \
-                    self.receiver.main.componentList.directory
+                    self.receiver.componentList.directory
                 self._cpEdit.name = \
-                    self.receiver.main.componentList.elements[
+                    self.receiver.componentList.elements[
                     self._cp.id].name
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(
-                    self.receiver.main.contextMenuActions)
+                    self.receiver.contextMenuActions)
                 self._cpEdit.createHeader()
                 self._cpEdit.dialog.setWindowTitle(
                     "%s [Component]" % self._cp.name)
@@ -189,19 +189,19 @@ class ServerStoreComponent(QUndoCommand):
                 
             if hasattr(self._cpEdit, "connectExternalActions"):     
                 self._cpEdit.connectExternalActions(
-                    **self.receiver.main.externalCPActions)      
+                    **self.receiver.externalCPActions)      
 
 
                 
-            subwindow = self.receiver.main.subWindow(
-                self._cpEdit, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._cpEdit, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
             else:    
                 self._cpEdit.createGUI()
 
                 self._cpEdit.addContextMenu(
-                    self.receiver.main.contextMenuActions)
+                    self.receiver.contextMenuActions)
                 if self._cpEdit.isDirty():
                     self._cpEdit.dialog.setWindowTitle(
                         "%s [Component]*" % self._cp.name)
@@ -210,7 +210,7 @@ class ServerStoreComponent(QUndoCommand):
                         "%s [Component]" % self._cp.name)
                      
                 self._cpEdit.reconnectSaveAction()
-                subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._cpEdit.dialog)
                 subwindow.resize(680, 560)
                 self._cpEdit.dialog.show()
@@ -218,33 +218,33 @@ class ServerStoreComponent(QUndoCommand):
                     
             try:
                 xml = self._cpEdit.get()    
-                if not self.receiver.main.configServer.connected:
+                if not self.receiver.configServer.connected:
                     if QMessageBox.question(
-                        self.receiver.main, 
+                        self.receiver, 
                         "Connecting to Configuration Server", 
                         "Connecting to %s on %s:%s" % (
-                            self.receiver.main.configServer.device,
-                            self.receiver.main.configServer.host,
-                            self.receiver.main.configServer.port
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
                             ),
                         QMessageBox.Yes | QMessageBox.No,
                         QMessageBox.Yes) == QMessageBox.No :
                         raise Exception("Server not connected")
 
-                self.receiver.main.configServer.connect()
-                self.receiver.main.disableServer(False)
-                self.receiver.main.configServer.storeComponent(
+                self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
+                self.receiver.configServer.storeComponent(
                     self._cpEdit.name, xml)
                 self._cpEdit.savedXML = xml
                 self._cp.savedName = self._cp.name
             except Exception, e:
-                QMessageBox.warning(self.receiver.main, 
+                QMessageBox.warning(self.receiver, 
                                     "Error in storing the component", 
                                     unicode(e))
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateElements(self._cp.id)
+            self.receiver.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
 
             
         print "EXEC serverStoreComponent"
@@ -253,9 +253,9 @@ class ServerStoreComponent(QUndoCommand):
     # \brief It populates only the component list
     def undo(self):
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateElements(self._cp.id)
+            self.receiver.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
         print "UNDO serverStoreComponent"
 
 
@@ -277,34 +277,34 @@ class ServerDeleteComponent(QUndoCommand):
     # \brief It deletes the current component from the configuration server
     def redo(self):       
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListElement()
+            self._cp = self.receiver.componentList.currentListElement()
         if self._cp is not None:
 
             try:
-                if not self.receiver.main.configServer.connected:
+                if not self.receiver.configServer.connected:
                     QMessageBox.information(
-                        self.receiver.main, 
+                        self.receiver, 
                         "Connecting to Configuration Server", 
                         "Connecting to %s on %s:%s" % (
-                            self.receiver.main.configServer.device,
-                            self.receiver.main.configServer.host,
-                            self.receiver.main.configServer.port
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
                             )
                         )
 
-                self.receiver.main.configServer.connect()
-                self.receiver.main.disableServer(False)
-                self.receiver.main.configServer.deleteComponent(self._cp.name)
+                self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
+                self.receiver.configServer.deleteComponent(self._cp.name)
                 self._cp.savedName = ""
                 if hasattr(self._cp, "instance"):
                     self._cp.instance.savedXML = ""
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, "Error in deleting the component", 
+                    self.receiver, "Error in deleting the component", 
                     unicode(e))
 
         cid = self._cp.id if hasattr(self._cp, "id") else None
-        self.receiver.main.componentList.populateElements(cid)
+        self.receiver.componentList.populateElements(cid)
 
             
         print "EXEC serverDeleteComponent"
@@ -313,9 +313,9 @@ class ServerDeleteComponent(QUndoCommand):
     # \brief It populates only the component list
     def undo(self):
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateElements(self._cp.id)
+            self.receiver.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
         print "UNDO serverDeleteComponent"
 
 
@@ -340,26 +340,26 @@ class ServerSetMandatoryComponent(QUndoCommand):
     #        as mandatory
     def redo(self):       
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListElement()
+            self._cp = self.receiver.componentList.currentListElement()
         if self._cp is not None:
             try:
-                if not self.receiver.main.configServer.connected:
+                if not self.receiver.configServer.connected:
                     QMessageBox.information(
-                        self.receiver.main, 
+                        self.receiver, 
                         "Connecting to Configuration Server", 
                         "Connecting to %s on %s:%s" % (
-                            self.receiver.main.configServer.device,
-                            self.receiver.main.configServer.host,
-                            self.receiver.main.configServer.port
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
                             )
                         )
 
-                self.receiver.main.configServer.connect()
-                self.receiver.main.disableServer(False)
-                self.receiver.main.configServer.setMandatory(self._cp.name)
+                self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
+                self.receiver.configServer.setMandatory(self._cp.name)
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, 
+                    self.receiver, 
                     "Error in setting the component as mandatory", 
                     unicode(e))
         print "EXEC serverSetMandatoryComponent"
@@ -384,26 +384,26 @@ class ServerGetMandatoryComponents(QUndoCommand):
     #        the configuration server
     def redo(self):       
         try:
-            if not self.receiver.main.configServer.connected:
+            if not self.receiver.configServer.connected:
                 QMessageBox.information(
-                    self.receiver.main, 
+                    self.receiver, 
                     "Connecting to Configuration Server", 
                     "Connecting to %s on %s:%s" % (
-                        self.receiver.main.configServer.device,
-                        self.receiver.main.configServer.host,
-                        self.receiver.main.configServer.port
+                        self.receiver.configServer.device,
+                        self.receiver.configServer.host,
+                        self.receiver.configServer.port
                         )
                     )
 
-            self.receiver.main.configServer.connect()
-            self.receiver.main.disableServer(False)
-            mandatory = self.receiver.main.configServer.getMandatory()
+            self.receiver.configServer.connect()
+            self.receiver.disableServer(False)
+            mandatory = self.receiver.configServer.getMandatory()
             QMessageBox.information(
-                self.receiver.main, "Mandatory", 
+                self.receiver, "Mandatory", 
                 "Mandatory Components: \n %s" % unicode(mandatory)) 
         except Exception, e:
             QMessageBox.warning(
-                self.receiver.main, 
+                self.receiver, 
                 "Error in getting the mandatory components", 
                 unicode(e))
         print "EXEC serverGetMandatoryComponent"
@@ -430,27 +430,27 @@ class ServerUnsetMandatoryComponent(QUndoCommand):
     def redo(self):       
         if self._cp is None:
             self._cp = \
-                self.receiver.main.componentList.currentListElement()
+                self.receiver.componentList.currentListElement()
         if self._cp is not None:
             try:
-                if not self.receiver.main.configServer.connected:
+                if not self.receiver.configServer.connected:
                     QMessageBox.information(
-                        self.receiver.main, 
+                        self.receiver, 
                         "Connecting to Configuration Server", 
                         "Connecting to %s on %s:%s" % (
-                            self.receiver.main.configServer.device,
-                            self.receiver.main.configServer.host,
-                            self.receiver.main.configServer.port
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
                             )
                         )
 
-                self.receiver.main.configServer.connect()
-                self.receiver.main.disableServer(False)
-                self.receiver.main.configServer.unsetMandatory(
+                self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
+                self.receiver.configServer.unsetMandatory(
                     self._cp.name)
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, 
+                    self.receiver, 
                     "Error in setting the component as mandatory", 
                     unicode(e))
         print "EXEC serverUnsetMandatoryComponent"
@@ -477,7 +477,7 @@ class ServerFetchDataSources(QUndoCommand):
     def redo(self):       
 
         if QMessageBox.question(
-            self.receiver.main, 
+            self.receiver, 
             "DataSource - Reload List from Configuration Server",
             ("All unsaved datasources will be lost. "\
                  "Would you like to proceed ?").encode(),
@@ -486,36 +486,36 @@ class ServerFetchDataSources(QUndoCommand):
             return
 
 
-        subwindows = self.receiver.main.ui.mdi.subWindowList()
+        subwindows = self.receiver.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 dialog = subwindow.widget()
                 if isinstance(dialog, CommonDataSourceDlg):
-                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.ui.mdi.closeActiveSubWindow()
+                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.ui.mdi.closeActiveSubWindow()
                     
-        self.receiver.main.sourceList.elements = {} 
+        self.receiver.sourceList.elements = {} 
 
 
-        if self.receiver.main.configServer:
+        if self.receiver.configServer:
             try:
-                if not self.receiver.main.configServer.connected:
+                if not self.receiver.configServer.connected:
                     QMessageBox.information(
-                        self.receiver.main, 
+                        self.receiver, 
                         "Connecting to Configuration Server", 
                         "Connecting to %s on %s:%s" % (
-                            self.receiver.main.configServer.device,
-                            self.receiver.main.configServer.host,
-                            self.receiver.main.configServer.port
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
                             )
                         )
-                self.receiver.main.configServer.connect()
-                self.receiver.main.disableServer(False)
-                cdict = self.receiver.main.configServer.fetchDataSources()
-                self.receiver.main.setDataSources(cdict)
+                self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
+                cdict = self.receiver.configServer.fetchDataSources()
+                self.receiver.setDataSources(cdict)
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, 
+                    self.receiver, 
                     "Error in fetching datasources", unicode(e))
     
 
@@ -544,55 +544,55 @@ class ServerStoreDataSource(QUndoCommand):
     # \brief It fetches the datasources from the configuration server
     def redo(self):       
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListElement()
+            self._ds = self.receiver.sourceList.currentListElement()
         if self._ds is not None and hasattr(self._ds, "instance"):
             try:
                 xml = self._ds.instance.get()    
-                if not self.receiver.main.configServer.connected:
+                if not self.receiver.configServer.connected:
                     if QMessageBox.question(
-                        self.receiver.main, 
+                        self.receiver, 
                         "Connecting to Configuration Server", 
                         "Connecting to %s on %s:%s" % (
-                            self.receiver.main.configServer.device,
-                            self.receiver.main.configServer.host,
-                            self.receiver.main.configServer.port
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
                             ),
                         QMessageBox.Yes | QMessageBox.No,
                         QMessageBox.Yes) == QMessageBox.No :
                         raise Exception("Server not connected")
 
-                self.receiver.main.configServer.connect()
-                self.receiver.main.disableServer(False)
+                self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
                 if self._ds.instance.name:
-                    self.receiver.main.configServer.storeDataSource(
+                    self.receiver.configServer.storeDataSource(
                         self._ds.instance.dataSourceName, xml)
                 else:
-                    self.receiver.main.configServer.storeDataSource(
+                    self.receiver.configServer.storeDataSource(
                         self._ds.instance.name, xml)
                 self._ds.instance.savedXML = xml
                 self._ds.savedName = self._ds.name
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, 
+                    self.receiver, 
                     "Error in datasource storing", unicode(e))
             
 
-        ds = self.receiver.main.sourceList.currentListElement()
+        ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateElements(ds.id)
+            self.receiver.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateElements()
+            self.receiver.sourceList.populateElements()
             
         print "EXEC serverStoreDataSource"
 
     ## unexecutes the command
     # \brief It populates the datasource list
     def undo(self):
-        ds = self.receiver.main.sourceList.currentListElement()
+        ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateElements(ds.id)
+            self.receiver.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateElements()
+            self.receiver.sourceList.populateElements()
         print "UNDO serverStoreDataSource"
 
 
@@ -612,7 +612,7 @@ class ServerDeleteDataSource(QUndoCommand):
     # \brief It deletes the current datasource in the configuration server
     def redo(self):       
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListElement()
+            self._ds = self.receiver.sourceList.currentListElement()
         if self._ds is not None:
             try:
                 if hasattr(self._ds, "instance"):
@@ -620,43 +620,43 @@ class ServerDeleteDataSource(QUndoCommand):
                     name = self._ds.instance.dataSourceName 
                     if name is None:
                         name = ""
-                    if not self.receiver.main.configServer.connected:
+                    if not self.receiver.configServer.connected:
                         QMessageBox.information(
-                            self.receiver.main, 
+                            self.receiver, 
                             "Connecting to Configuration Server", 
                             "Connecting to %s on %s:%s" % (
-                                self.receiver.main.configServer.device,
-                                self.receiver.main.configServer.host,
-                                self.receiver.main.configServer.port
+                                self.receiver.configServer.device,
+                                self.receiver.configServer.host,
+                                self.receiver.configServer.port
                                 )
                             )
 
-                    self.receiver.main.configServer.connect()
-                    self.receiver.main.disableServer(False)
-                    self.receiver.main.configServer.deleteDataSource(name)
+                    self.receiver.configServer.connect()
+                    self.receiver.disableServer(False)
+                    self.receiver.configServer.deleteDataSource(name)
                     self._ds.savedName = ""
 
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, 
+                    self.receiver, 
                     "Error in datasource deleting", unicode(e))
             
 
-        ds = self.receiver.main.sourceList.currentListElement()
+        ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateElements(ds.id)
+            self.receiver.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateElements()
+            self.receiver.sourceList.populateElements()
         print "EXEC serverDeleteDataSource"
 
     ## unexecutes the command
     # \brief It populates the datasource list
     def undo(self):
-        ds = self.receiver.main.sourceList.currentListElement()
+        ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateElements(ds.id)
+            self.receiver.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateElements()
+            self.receiver.sourceList.populateElements()
         print "UNDO serverDeleteDataSource"
 
 
@@ -676,19 +676,19 @@ class ServerClose(QUndoCommand):
     ## executes the command
     # \brief It closes connection to the configuration server
     def redo(self):       
-        if self.receiver.main.configServer:
-            self.receiver.main.configServer.close()
+        if self.receiver.configServer:
+            self.receiver.configServer.close()
 
 
-        if self.receiver.main.configServer:
+        if self.receiver.configServer:
             try:
                 if self._state is None:
-                    self._state = self.receiver.main.configServer.getState()
-                self.receiver.main.configServer.close()
-                self.receiver.main.disableServer(True)
+                    self._state = self.receiver.configServer.getState()
+                self.receiver.configServer.close()
+                self.receiver.disableServer(True)
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, 
+                    self.receiver, 
                     "Error in closing connection to Configuration Server", 
                     unicode(e))
     
@@ -697,17 +697,17 @@ class ServerClose(QUndoCommand):
     ## unexecutes the command
     # \brief It reopen the connection to the configuration server
     def undo(self):
-        if self.receiver.main.configServer:
+        if self.receiver.configServer:
             try:
                 if  self._state is None:   
-                    self.receiver.main.configServer.open()
+                    self.receiver.configServer.open()
                 else:
-                    self.receiver.main.configServer.setState(self._state)
-                    self.receiver.main.configServer.connect()
-                self.receiver.main.disableServer(False)
+                    self.receiver.configServer.setState(self._state)
+                    self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, 
+                    self.receiver, 
                     "Error in connecting to Configuration Server", 
                     unicode(e))
         print "UNDO serverClose"
@@ -730,17 +730,17 @@ class ServerStoreAllComponents(QUndoCommand):
     # \brief It saves all components in the file
     def redo(self):
             
-        for icp in self.receiver.main.componentList.elements.keys():
-            cp = self.receiver.main.componentList.elements[icp]
+        for icp in self.receiver.componentList.elements.keys():
+            cp = self.receiver.componentList.elements[icp]
             if cp.instance is None:
                 #                self._cpEdit = FieldWg()  
                 cpEdit = Component()
                 cpEdit.id = cp.id
-                cpEdit.directory = self.receiver.main.componentList.directory
-                cpEdit.name = self.receiver.main.componentList.elements[
+                cpEdit.directory = self.receiver.componentList.directory
+                cpEdit.name = self.receiver.componentList.elements[
                     cp.id].name
                 cpEdit.createGUI()
-                cpEdit.addContextMenu(self.receiver.main.contextMenuActions)
+                cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 cpEdit.createHeader()
                 cpEdit.dialog.setWindowTitle("%s [Component]" % cp.name)
                 cp.instance = cpEdit
@@ -748,30 +748,30 @@ class ServerStoreAllComponents(QUndoCommand):
             try:
                 cp.instance.merge()    
                 xml = cp.instance.get()    
-                if not self.receiver.main.configServer.connected:
+                if not self.receiver.configServer.connected:
                     QMessageBox.information(
-                        self.receiver.main, 
+                        self.receiver, 
                         "Connecting to Configuration Server", 
                         "Connecting to %s on %s:%s" % (
-                            self.receiver.main.configServer.device,
-                            self.receiver.main.configServer.host,
-                            self.receiver.main.configServer.port
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
                             )
                         )
-                self.receiver.main.configServer.connect()
-                self.receiver.main.disableServer(False)
-                self.receiver.main.configServer.storeComponent(
+                self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
+                self.receiver.configServer.storeComponent(
                     cp.instance.name, xml)
                 cp.instance.savedXML = xml
                 cp.savedName = cp.name
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, "Error in storing the component", 
+                    self.receiver, "Error in storing the component", 
                     unicode(e))
         if hasattr(cp, "id"):
-            self.receiver.main.componentList.populateElements(cp.id)
+            self.receiver.componentList.populateElements(cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
 
 
         print "EXEC componentStoreAll"
@@ -800,50 +800,50 @@ class ServerStoreAllDataSources(QUndoCommand):
     # \brief It saves all the datasources in files
     def redo(self):
             
-        for ids in self.receiver.main.sourceList.elements.keys():
-            ds = self.receiver.main.sourceList.elements[ids]
+        for ids in self.receiver.sourceList.elements.keys():
+            ds = self.receiver.sourceList.elements[ids]
             if ds.instance is None:
                 dsEdit = DataSource.DataSource()
                 dsEdit.id = ds.id
-                dsEdit.directory = self.receiver.main.sourceList.directory
+                dsEdit.directory = self.receiver.sourceList.directory
                 dsEdit.name = \
-                    self.receiver.main.sourceList.elements[ds.id].name
+                    self.receiver.sourceList.elements[ds.id].name
                 ds.instance = dsEdit 
             print "Store", ds.instance.name
 
             try:
                 xml = ds.instance.get()    
-                if not self.receiver.main.configServer.connected:
+                if not self.receiver.configServer.connected:
                     QMessageBox.information(
-                        self.receiver.main, 
+                        self.receiver, 
                         "Connecting to Configuration Server", 
                         "Connecting to %s on %s:%s" % (
-                            self.receiver.main.configServer.device,
-                            self.receiver.main.configServer.host,
-                            self.receiver.main.configServer.port
+                            self.receiver.configServer.device,
+                            self.receiver.configServer.host,
+                            self.receiver.configServer.port
                             )
                         )
-                self.receiver.main.configServer.connect()
-                self.receiver.main.disableServer(False)
+                self.receiver.configServer.connect()
+                self.receiver.disableServer(False)
                 if ds.instance.name:
-                    self.receiver.main.configServer.storeDataSource(
+                    self.receiver.configServer.storeDataSource(
                         ds.instance.dataSourceName, xml)
                 else:
-                    self.receiver.main.configServer.storeDataSource(
+                    self.receiver.configServer.storeDataSource(
                         ds.instance.name, xml)
                 ds.instance.savedXML = xml
                 ds.savedName = ds.name
             except Exception, e:
                 QMessageBox.warning(
-                    self.receiver.main, "Error in datasource storing", 
+                    self.receiver, "Error in datasource storing", 
                     unicode(e))
 
 
-        ds = self.receiver.main.sourceList.currentListElement()
+        ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateElements(ds.id)
+            self.receiver.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateElements()
+            self.receiver.sourceList.populateElements()
 
 
         print "EXEC dsourceStoreAll"

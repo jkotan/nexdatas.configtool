@@ -27,7 +27,7 @@ from PyQt4.QtCore import (
     SIGNAL, QSettings, Qt, QVariant)
 from PyQt4.QtGui import (
     QMainWindow, 
-    QAction, QMessageBox, QIcon, 
+    QMessageBox, QIcon, 
     QLabel, QFrame,
     QUndoGroup, QUndoStack)
 
@@ -84,9 +84,6 @@ class MainWindow(QMainWindow):
         self.cpDirLabel = None
 
 
-        ## receiver main application
-        self.main = self
-        
         ## stack with used commands
         self.undoStack = None
         ## group of command stacks

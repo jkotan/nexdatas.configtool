@@ -52,22 +52,22 @@ class ComponentNew(QUndoCommand):
         else:    
             self._comp.instance = None
         
-        self.receiver.main.componentList.addElement(self._comp)
+        self.receiver.componentList.addElement(self._comp)
         print "EXEC componentNew"
         
     ## unexecutes the command
     # \brief It removes the new component
     def undo(self):
         if self._comp is not None:
-            self.receiver.main.componentList.removeElement(self._comp, False)
+            self.receiver.componentList.removeElement(self._comp, False)
 
             if hasattr(self._comp,'instance') and self._comp.instance:
-                subwindow = self.receiver.main.subWindow(
+                subwindow = self.receiver.subWindow(
                     self._comp.instance, 
-                    self.receiver.main.ui.mdi.subWindowList())
+                    self.receiver.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
-                    self.receiver.main.ui.mdi.closeActiveSubWindow() 
+                    self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.ui.mdi.closeActiveSubWindow() 
             
         print "UNDO componentNew"
 
@@ -94,23 +94,23 @@ class ComponentRemove(QUndoCommand):
     def redo(self):
         
         if self._cp is not None:
-            self.receiver.main.componentList.removeElement(self._cp, False)
+            self.receiver.componentList.removeElement(self._cp, False)
         else:
-            self._cp = self.receiver.main.componentList.currentListElement()
+            self._cp = self.receiver.componentList.currentListElement()
             if self._cp is None:
                 QMessageBox.warning(
-                    self.receiver.main, 
+                    self.receiver, 
                     "Component not selected", 
                     "Please select one of the components")
             else:
-                self.receiver.main.componentList.removeElement(self._cp, True)
+                self.receiver.componentList.removeElement(self._cp, True)
             
         if hasattr(self._cp, "instance"):
-            subwindow = self.receiver.main.subWindow(
-                self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._cp.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
-                self.receiver.main.ui.mdi.closeActiveSubWindow()
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.ui.mdi.closeActiveSubWindow()
             
             
         print "EXEC componentRemove"
@@ -121,30 +121,30 @@ class ComponentRemove(QUndoCommand):
     def undo(self):
         if self._cp is not None:
 
-            self.receiver.main.componentList.addElement(self._cp, False)
+            self.receiver.componentList.addElement(self._cp, False)
             if self._cp.instance is None:
                 self._cp.instance = Component()
                 self._cp.instance.id = self._cp.id
                 self._cp.instance.directory = \
-                    self.receiver.main.componentList.directory
+                    self.receiver.componentList.directory
                 self._cp.instance.name = \
-                    self.receiver.main.componentList.elements[
+                    self.receiver.componentList.elements[
                     self._cp.id].name
 
 
             self._cp.instance.createGUI()
             self._cp.instance.addContextMenu(
-                self.receiver.main.contextMenuActions)
+                self.receiver.contextMenuActions)
 
-            subwindow = self.receiver.main.subWindow(
-                self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._cp.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                 self._cp.instance.dialog.setSaveFocus()
             else:    
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._cp.instance.dialog)
                 self._subwindow.resize(680, 560)
                 self._cp.instance.dialog.setSaveFocus()
@@ -154,14 +154,14 @@ class ComponentRemove(QUndoCommand):
 
             if hasattr(self._cp.instance, "connectExternalActions"):     
                 self._cp.instance.connectExternalActions(
-                    **self.receiver.main.externalCPActions)
+                    **self.receiver.externalCPActions)
 
 
 
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateElements(self._cp.id)
+            self.receiver.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
         print "UNDO componentRemove"
 
 
@@ -197,25 +197,25 @@ class ComponentListChanged(QUndoCommand):
                 self.name = unicode(self.item.text())
             if self._cp is None:
                 self._cp, self._oldName = \
-                    self.receiver.main.componentList.listItemChanged(
+                    self.receiver.componentList.listItemChanged(
                     self.item, self.name)
             else:
                 self._cp.name = self.name
                 
-            self.receiver.main.componentList.populateElements(self._cp.id)
+            self.receiver.componentList.populateElements(self._cp.id)
             if self._cp.instance is not None:
                 self._oldDirectory = self._cp.instance.directory 
                 self._cp.instance.setName(self.name, self.directory)
             else:
                 self._oldDirectory = \
-                    self.receiver.main.componentList.directory 
+                    self.receiver.componentList.directory 
 
 
-        cp = self.receiver.main.componentList.currentListElement()
+        cp = self.receiver.componentList.currentListElement()
         if hasattr(cp, "id"):
-            self.receiver.main.componentList.populateElements(cp.id)
+            self.receiver.componentList.populateElements(cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
               
         print "EXEC componentChanged"
 
@@ -225,15 +225,15 @@ class ComponentListChanged(QUndoCommand):
     def undo(self):
         if self._cp is not None:
             self._cp.name = self._oldName 
-            self.receiver.main.componentList.addElement(self._cp, False)
+            self.receiver.componentList.addElement(self._cp, False)
             if self._cp.instance is not None:
                 self._cp.instance.setName(self._oldName, self._oldDirectory)
 
-        cp = self.receiver.main.componentList.currentListElement()
+        cp = self.receiver.componentList.currentListElement()
         if hasattr(cp, "id"):
-            self.receiver.main.componentList.populateElements(cp.id)
+            self.receiver.componentList.populateElements(cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
 
         print "UNDO componentChanged"
 
@@ -260,24 +260,24 @@ class DataSourceNew(QUndoCommand):
             self._ds = LabeledObject("", None)
         else:
             self._ds.instance = None
-        self.receiver.main.sourceList.addElement(self._ds)
+        self.receiver.sourceList.addElement(self._ds)
         print "EXEC dsourceNew"
 
     ## unexecutes the command
     # \brief It removes the added datasource
     def undo(self):
         if self._ds is not None:
-            self.receiver.main.sourceList.removeElement(self._ds, False)
+            self.receiver.sourceList.removeElement(self._ds, False)
 
 
             if hasattr(self._ds,'instance'):
                 subwindow = \
-                    self.receiver.main.subWindow(
+                    self.receiver.subWindow(
                     self._ds.instance, 
-                    self.receiver.main.ui.mdi.subWindowList())
+                    self.receiver.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
-                    self.receiver.main.ui.mdi.closeActiveSubWindow() 
+                    self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.ui.mdi.closeActiveSubWindow() 
 
         print "UNDO dsourceNew"
 
@@ -305,23 +305,23 @@ class DataSourceRemove(QUndoCommand):
     def redo(self):
         
         if self._ds is not None:
-            self.receiver.main.sourceList.removeElement(self._ds, False)
+            self.receiver.sourceList.removeElement(self._ds, False)
         else:
-            self._ds = self.receiver.main.sourceList.currentListElement()
+            self._ds = self.receiver.sourceList.currentListElement()
             if self._ds is None:
                 QMessageBox.warning(
-                    self.receiver.main, "DataSource not selected", 
+                    self.receiver, "DataSource not selected", 
                     "Please select one of the datasources")            
             else:
-                self.receiver.main.sourceList.removeElement(self._ds, True)
+                self.receiver.sourceList.removeElement(self._ds, True)
             
 
         if hasattr(self._ds, "instance"):
-            subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
-                self.receiver.main.ui.mdi.closeActiveSubWindow()
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.ui.mdi.closeActiveSubWindow()
             
             
         print "EXEC dsourceRemove"
@@ -331,18 +331,18 @@ class DataSourceRemove(QUndoCommand):
     def undo(self):
         if self._ds is not None:
 
-            self.receiver.main.sourceList.addElement(self._ds, False)
+            self.receiver.sourceList.addElement(self._ds, False)
 
             self._ds.instance.createGUI()
 
-            subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.dialog.setSaveFocus()
             else:    
                 self._ds.instance.createDialog()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(680, 560)
                 self._ds.instance.dialog.setSaveFocus()
@@ -386,23 +386,23 @@ class DataSourceListChanged(QUndoCommand):
                 self.name = unicode(self.item.text())
             if self._ds is None:
                 self._ds, self._oldName = \
-                    self.receiver.main.sourceList.listItemChanged(
+                    self.receiver.sourceList.listItemChanged(
                     self.item, self.name)
             else:
                 self._ds.name = self.name
              
-            self.receiver.main.sourceList.populateElements(self._ds.id)
+            self.receiver.sourceList.populateElements(self._ds.id)
             if self._ds.instance is not None:
                 self._oldDirectory = self._ds.instance.directory 
                 self._ds.instance.setName(self.name, self.directory)
             else:
-                self._oldDirectory = self.receiver.main.sourceList.directory 
+                self._oldDirectory = self.receiver.sourceList.directory 
 
-        ds = self.receiver.main.sourceList.currentListElement()
+        ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds, "id"):
-            self.receiver.main.sourceList.populateElements(ds.id)
+            self.receiver.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateElements()
+            self.receiver.sourceList.populateElements()
 
         print "EXEC dsourceChanged"
 
@@ -411,17 +411,17 @@ class DataSourceListChanged(QUndoCommand):
     def undo(self):
         if self._ds is not None:
             self._ds.name = self._oldName 
-            self.receiver.main.sourceList.addElement(self._ds, False)
+            self.receiver.sourceList.addElement(self._ds, False)
             if self._ds.instance is not None:
                 self._ds.instance.setName(
                     self._oldName, self._oldDirectory)
 
 
-        ds = self.receiver.main.sourceList.currentListElement()
+        ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds, "id"):
-            self.receiver.main.sourceList.populateElements(ds.id)
+            self.receiver.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateElements()
+            self.receiver.sourceList.populateElements()
 
         print "UNDO dsourceChanged"
 
@@ -446,8 +446,8 @@ class CloseApplication(QUndoCommand):
     ## executes the command
     # \brief It is performed during closing the Component Designer
     def redo(self):
-        if hasattr(self.receiver.main.ui,'mdi'):
-            self.receiver.main.close()
+        if hasattr(self.receiver.ui,'mdi'):
+            self.receiver.close()
             print "EXEC closeApp"
 
 

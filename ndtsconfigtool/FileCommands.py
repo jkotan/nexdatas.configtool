@@ -53,7 +53,7 @@ class ComponentOpen(QUndoCommand):
     ## executes the command
     # \brief It loads an existing component from the file
     def redo(self):
-        if hasattr(self.receiver.main.ui,'mdi'):
+        if hasattr(self.receiver.ui,'mdi'):
             if self._cp is None:
                 self._cp = LabeledObject("", None)
             else:    
@@ -61,9 +61,9 @@ class ComponentOpen(QUndoCommand):
 
             self._cpEdit = Component()
             self._cpEdit.id = self._cp.id
-            self._cpEdit.directory = self.receiver.main.componentList.directory
+            self._cpEdit.directory = self.receiver.componentList.directory
             self._cpEdit.createGUI()
-            self._cpEdit.addContextMenu(self.receiver.main.contextMenuActions)
+            self._cpEdit.addContextMenu(self.receiver.contextMenuActions)
             if self._fpath:
                 path = self._cpEdit.load(self._fpath)
             else:
@@ -72,24 +72,24 @@ class ComponentOpen(QUndoCommand):
 
             if hasattr(self._cpEdit, "connectExternalActions"):     
                 self._cpEdit.connectExternalActions(
-                    **self.receiver.main.externalCPActions)
+                    **self.receiver.externalCPActions)
 
             if path:   
                 self._cp.name = self._cpEdit.name  
                 self._cp.instance = self._cpEdit
             
-                self.receiver.main.componentList.addElement(self._cp, False)
+                self.receiver.componentList.addElement(self._cp, False)
                 self._cpEdit.dialog.setWindowTitle(
                     "%s [Component]" % self._cp.name)
 
-                subwindow = self.receiver.main.subWindow(
+                subwindow = self.receiver.subWindow(
                     self._cp.instance, 
-                    self.receiver.main.ui.mdi.subWindowList())
+                    self.receiver.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                     self._cp.instance.dialog.setSaveFocus()
                 else:    
-                    self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                    self._subwindow = self.receiver.ui.mdi.addSubWindow(
                         self._cpEdit.dialog)
                     self._subwindow.resize(680, 560)
                     self._cpEdit.dialog.setSaveFocus()
@@ -106,13 +106,13 @@ class ComponentOpen(QUndoCommand):
             if self._fpath:
 
                 if hasattr(self._cp,'instance') and self._cp.instance:
-                    subwindow = self.receiver.main.subWindow(
-                        self._cpEdit, self.receiver.main.ui.mdi.subWindowList())
+                    subwindow = self.receiver.subWindow(
+                        self._cpEdit, self.receiver.ui.mdi.subWindowList())
                     if subwindow:
-                        self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
-                        self.receiver.main.ui.mdi.closeActiveSubWindow() 
+                        self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
+                        self.receiver.ui.mdi.closeActiveSubWindow() 
 
-                self.receiver.main.componentList.removeElement(
+                self.receiver.componentList.removeElement(
                     self._cp, False)
                 self._cp.instance = None
 
@@ -141,7 +141,7 @@ class DataSourceOpen(QUndoCommand):
     ## executes the command
     # \brief It loads an existing datasource from the file
     def redo(self):
-        if hasattr(self.receiver.main.ui,'mdi'):
+        if hasattr(self.receiver.ui,'mdi'):
             if self._ds is None:
                 self._ds = LabeledObject("", None)
             else:    
@@ -149,7 +149,7 @@ class DataSourceOpen(QUndoCommand):
 
             self._dsEdit = DataSource.DataSource()
             self._dsEdit.id = self._ds.id
-            self._dsEdit.directory = self.receiver.main.sourceList.directory
+            self._dsEdit.directory = self.receiver.sourceList.directory
             if self._fpath:
                 path = self._dsEdit.load(self._fpath)
             else:
@@ -157,25 +157,25 @@ class DataSourceOpen(QUndoCommand):
                 self._fpath = path
             if hasattr(self._dsEdit, "connectExternalActions"):     
                 self._dsEdit.connectExternalActions(
-                    **self.receiver.main.externalDSActions)     
+                    **self.receiver.externalDSActions)     
             if path:   
                 self._ds.name = self._dsEdit.name  
                 self._ds.instance = self._dsEdit
             
-                self.receiver.main.sourceList.addElement(self._ds, False)
+                self.receiver.sourceList.addElement(self._ds, False)
 
                 self._dsEdit.dialog.setWindowTitle(
                     "%s [DataSource]" % self._ds.name)
 
-                subwindow = self.receiver.main.subWindow(
+                subwindow = self.receiver.subWindow(
                     self._ds.instance, 
-                    self.receiver.main.ui.mdi.subWindowList())
+                    self.receiver.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                     self._ds.instance.dialog.setSaveFocus()
                 else:    
  #               print "create"
-                    self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                    self._subwindow = self.receiver.ui.mdi.addSubWindow(
                         self._dsEdit.dialog)
                     self._subwindow.resize(440, 550)
                     self._dsEdit.dialog.setSaveFocus()
@@ -194,14 +194,14 @@ class DataSourceOpen(QUndoCommand):
             if self._fpath:
 
                 if hasattr(self._ds,'instance'):
-                    subwindow = self.receiver.main.subWindow(
+                    subwindow = self.receiver.subWindow(
                         self._ds.instance, 
-                        self.receiver.main.ui.mdi.subWindowList())
+                        self.receiver.ui.mdi.subWindowList())
                     if subwindow:
-                        self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
-                        self.receiver.main.ui.mdi.closeActiveSubWindow() 
+                        self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
+                        self.receiver.ui.mdi.closeActiveSubWindow() 
 
-                self.receiver.main.sourceList.removeElement(self._ds, False)
+                self.receiver.sourceList.removeElement(self._ds, False)
                 self._ds.instance = None
             
         print "UNDO dsourceOpen"
@@ -232,10 +232,10 @@ class ComponentSave(QUndoCommand):
     # \brief It saves with the current component in the file
     def redo(self):
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListElement()
+            self._cp = self.receiver.componentList.currentListElement()
         if self._cp is None:
             QMessageBox.warning(
-                self.receiver.main, "Component not selected", 
+                self.receiver, "Component not selected", 
                 "Please select one of the components")          
         else:
             if self._cp.instance is None:
@@ -243,12 +243,12 @@ class ComponentSave(QUndoCommand):
                 self._cpEdit = Component()
                 self._cpEdit.id = self._cp.id
                 self._cpEdit.directory = \
-                    self.receiver.main.componentList.directory
-                self._cpEdit.name = self.receiver.main.componentList.elements[
+                    self.receiver.componentList.directory
+                self._cpEdit.name = self.receiver.componentList.elements[
                     self._cp.id].name
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(
-                    self.receiver.main.contextMenuActions)
+                    self.receiver.contextMenuActions)
                 self._cpEdit.createHeader()
                 self._cpEdit.dialog.setWindowTitle(
                     "%s [Component]" % self._cp.name)
@@ -257,17 +257,17 @@ class ComponentSave(QUndoCommand):
                 
             if hasattr(self._cpEdit, "connectExternalActions"):     
                 self._cpEdit.connectExternalActions(
-                    **self.receiver.main.externalCPActions)
+                    **self.receiver.externalCPActions)
 
 
 
 
-            subwindow = self.receiver.main.subWindow(
-                self._cpEdit, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._cpEdit, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
             else:    
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._cpEdit.dialog)
                 self._subwindow.resize(680, 560)
                 self._cpEdit.dialog.show()
@@ -276,9 +276,9 @@ class ComponentSave(QUndoCommand):
             if self._cpEdit.save():
                 self._cp.savedName = self._cp.name
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateElements(self._cp.id)
+            self.receiver.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
 
         print "EXEC componentSave"
 
@@ -287,9 +287,9 @@ class ComponentSave(QUndoCommand):
     # \brief It populates the component list
     def undo(self):
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateElements(self._cp.id)
+            self.receiver.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
         print "UNDO componentSave"
 
 
@@ -311,17 +311,17 @@ class ComponentSaveAll(QUndoCommand):
     # \brief It saves all components in the file
     def redo(self):
             
-        for icp in self.receiver.main.componentList.elements.keys():
-            cp = self.receiver.main.componentList.elements[icp]
+        for icp in self.receiver.componentList.elements.keys():
+            cp = self.receiver.componentList.elements[icp]
             if cp.instance is None:
                 #                self._cpEdit = FieldWg()  
                 cpEdit = Component()
                 cpEdit.id = cp.id
-                cpEdit.directory = self.receiver.main.componentList.directory
+                cpEdit.directory = self.receiver.componentList.directory
                 cpEdit.name = \
-                    self.receiver.main.componentList.elements[cp.id].name
+                    self.receiver.componentList.elements[cp.id].name
                 cpEdit.createGUI()
-                cpEdit.addContextMenu(self.receiver.main.contextMenuActions)
+                cpEdit.addContextMenu(self.receiver.contextMenuActions)
                 cpEdit.createHeader()
                 cpEdit.dialog.setWindowTitle("%s [Component]" % cp.name)
                 cp.instance = cpEdit
@@ -362,9 +362,9 @@ class ComponentSaveAs(QUndoCommand):
     # \brief It saves the current components in the file with a different name
     def redo(self):
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListElement()
+            self._cp = self.receiver.componentList.currentListElement()
         if self._cp is None:
-            QMessageBox.warning(self.receiver.main, "Component not selected", 
+            QMessageBox.warning(self.receiver, "Component not selected", 
                                 "Please select one of the components") 
         else:
             if self._cp.instance is not None:
@@ -376,18 +376,18 @@ class ComponentSaveAs(QUndoCommand):
                 self.directory = unicode(fi.dir().path())
 
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateElements(self._cp.id)
+            self.receiver.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
         print "EXEC componentSaveAs"
 
     ## unexecutes the command
     # \brief It populates the Component list
     def undo(self):
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateElements(self._cp.id)
+            self.receiver.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
         print "UNDO componentSaveAs"
 
 
@@ -409,7 +409,7 @@ class ComponentChangeDirectory(QUndoCommand):
     # \brief It changes the current component file directory
     def redo(self):
         if QMessageBox.question(
-            self.receiver.main, "Component - Change Directory",
+            self.receiver, "Component - Change Directory",
             ("All unsaved components will be lost. "\
                 "Would you like to proceed ?").encode(),
             QMessageBox.Yes | QMessageBox.No,
@@ -418,26 +418,26 @@ class ComponentChangeDirectory(QUndoCommand):
 
 
         path = unicode(QFileDialog.getExistingDirectory(
-                self.receiver.main, "Open Directory",
-                self.receiver.main.componentList.directory,
+                self.receiver, "Open Directory",
+                self.receiver.componentList.directory,
                 QFileDialog.ShowDirsOnly or QFileDialog.DontResolveSymlinks))
 
         if not path:
             return
-        subwindows = self.receiver.main.ui.mdi.subWindowList()
+        subwindows = self.receiver.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), ComponentDlg):
-                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.ui.mdi.closeActiveSubWindow()
+                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.ui.mdi.closeActiveSubWindow()
 
 
 
-        self.receiver.main.componentList.elements = {} 
-        self.receiver.main.componentList.directory = path
-        self.receiver.main.updateStatusBar()
+        self.receiver.componentList.elements = {} 
+        self.receiver.componentList.directory = path
+        self.receiver.updateStatusBar()
 
-        self.receiver.main.loadComponents()
+        self.receiver.loadComponents()
 
         print "EXEC componentChangeDirectory"
 
@@ -459,25 +459,25 @@ class DataSourceSaveAll(QUndoCommand):
     # \brief It saves all the datasources in files
     def redo(self):
             
-        for ids in self.receiver.main.sourceList.elements.keys():
-            ds = self.receiver.main.sourceList.elements[ids]
+        for ids in self.receiver.sourceList.elements.keys():
+            ds = self.receiver.sourceList.elements[ids]
             if ds.instance is None:
                 dsEdit = DataSource.DataSource()
                 dsEdit.id = ds.id
-                dsEdit.directory = self.receiver.main.sourceList.directory
+                dsEdit.directory = self.receiver.sourceList.directory
                 dsEdit.name = \
-                    self.receiver.main.sourceList.elements[ds.id].name
+                    self.receiver.sourceList.elements[ds.id].name
                 ds.instance = dsEdit 
 
             if ds.instance is not None: 
                 if ds.instance.save():
                     ds.savedName = ds.name
 
-        ds = self.receiver.main.sourceList.currentListElement()
+        ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateElements(ds.id)
+            self.receiver.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateElements()
+            self.receiver.sourceList.populateElements()
 
 
         print "EXEC dsourceSaveAll"
@@ -501,18 +501,18 @@ class DataSourceSave(QUndoCommand):
     # \brief It saves the current datasource in files
     def redo(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListElement()
+            self._ds = self.receiver.sourceList.currentListElement()
         if self._ds is None:
             QMessageBox.warning(
-                self.receiver.main, "DataSource not selected", 
+                self.receiver, "DataSource not selected", 
                 "Please select one of the datasources")            
 
         if self._ds is not None and hasattr(self._ds, "instance"):
             if self._ds.instance is None:
                 dsEdit = DataSource.DataSource()
                 dsEdit.id = self._ds.id
-                dsEdit.directory = self.receiver.main.sourceList.directory
-                dsEdit.name = self.receiver.main.sourceList.elements[
+                dsEdit.directory = self.receiver.sourceList.directory
+                dsEdit.name = self.receiver.sourceList.elements[
                     self._ds.id].name
                 self._ds.instance = dsEdit 
 
@@ -520,22 +520,22 @@ class DataSourceSave(QUndoCommand):
                 self._ds.savedName = self._ds.name
 
 
-        ds = self.receiver.main.sourceList.currentListElement()
+        ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateElements(ds.id)
+            self.receiver.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateElements()
+            self.receiver.sourceList.populateElements()
             
         print "EXEC dsourceSave"
 
     ## unexecutes the command
     # \brief It populates the datasource list
     def undo(self):
-        ds = self.receiver.main.sourceList.currentListElement()
+        ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds , "id"):
-            self.receiver.main.sourceList.populateElements(ds.id)
+            self.receiver.sourceList.populateElements(ds.id)
         else:
-            self.receiver.main.sourceList.populateElements()
+            self.receiver.sourceList.populateElements()
         print "UNDO dsourceSave"
 
 
@@ -566,16 +566,16 @@ class DataSourceSaveAs(QUndoCommand):
     # \brief It saves the current datasource in files with a different name
     def redo(self):
         if self._ds is None:
-            self._ds = self.receiver.main.sourceList.currentListElement()
+            self._ds = self.receiver.sourceList.currentListElement()
         if self._ds is None:
-            QMessageBox.warning(self.receiver.main, "DataSource not selected", 
+            QMessageBox.warning(self.receiver, "DataSource not selected", 
                                 "Please select one of the datasources")
         else:
             if self._ds.instance is None:
                 dsEdit = DataSource.DataSource()
                 dsEdit.id = self._ds.id
-                dsEdit.directory = self.receiver.main.sourceList.directory
-                dsEdit.name = self.receiver.main.sourceList.elements[
+                dsEdit.directory = self.receiver.sourceList.directory
+                dsEdit.name = self.receiver.sourceList.elements[
                     self._ds.id].name
                 self._ds.instance = dsEdit 
             
@@ -612,7 +612,7 @@ class DataSourceChangeDirectory(QUndoCommand):
     # \brief It changes the current file directory with datasources
     def redo(self):
         if QMessageBox.question(
-            self.receiver.main, "DataSource - Change Directory",
+            self.receiver, "DataSource - Change Directory",
             ("All unsaved datasources will be lost. "\
                  "Would you like to proceed ?").encode(),
             QMessageBox.Yes | QMessageBox.No,
@@ -621,27 +621,27 @@ class DataSourceChangeDirectory(QUndoCommand):
 
 
         path = unicode(QFileDialog.getExistingDirectory(
-                self.receiver.main, "Open Directory",
-                self.receiver.main.sourceList.directory,
+                self.receiver, "Open Directory",
+                self.receiver.sourceList.directory,
                 QFileDialog.ShowDirsOnly or QFileDialog.DontResolveSymlinks))
 
         if not path:
             return
 
-        subwindows = self.receiver.main.ui.mdi.subWindowList()
+        subwindows = self.receiver.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), CommonDataSourceDlg):
-                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.ui.mdi.closeActiveSubWindow()
+                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.ui.mdi.closeActiveSubWindow()
 
 
 
-        self.receiver.main.sourceList.elements = {} 
-        self.receiver.main.sourceList.directory = path
-        self.receiver.main.updateStatusBar()
+        self.receiver.sourceList.elements = {} 
+        self.receiver.sourceList.directory = path
+        self.receiver.updateStatusBar()
 
-        self.receiver.main.loadDataSources()
+        self.receiver.loadDataSources()
 
         print "EXEC dsourceChangeDirectory"
 
@@ -666,7 +666,7 @@ class ComponentReloadList(QUndoCommand):
     #        into the component list
     def redo(self):
         if QMessageBox.question(
-            self.receiver.main, "Component - Reload List",
+            self.receiver, "Component - Reload List",
             ("All unsaved components will be lost. " \
                  "Would you like to proceed ?").encode(),
             QMessageBox.Yes | QMessageBox.No,
@@ -674,15 +674,15 @@ class ComponentReloadList(QUndoCommand):
             return
 
         
-        subwindows = self.receiver.main.ui.mdi.subWindowList()
+        subwindows = self.receiver.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), ComponentDlg):
-                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.ui.mdi.closeActiveSubWindow()
+                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.ui.mdi.closeActiveSubWindow()
 
-        self.receiver.main.componentList.elements = {} 
-        self.receiver.main.loadComponents()
+        self.receiver.componentList.elements = {} 
+        self.receiver.loadComponents()
 
         print "EXEC componentReloadList"
 
@@ -707,7 +707,7 @@ class DataSourceReloadList(QUndoCommand):
     #        into the datasource list
     def redo(self):
         if QMessageBox.question(
-            self.receiver.main, "DataSource - Reload List",
+            self.receiver, "DataSource - Reload List",
             ("All unsaved datasources will be lost. "\
                  "Would you like to proceed ?").encode(),
             QMessageBox.Yes | QMessageBox.No,
@@ -715,15 +715,15 @@ class DataSourceReloadList(QUndoCommand):
             return
 
 
-        subwindows = self.receiver.main.ui.mdi.subWindowList()
+        subwindows = self.receiver.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), CommonDataSourceDlg):
-                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.ui.mdi.closeActiveSubWindow()
+                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.ui.mdi.closeActiveSubWindow()
                     
-        self.receiver.main.sourceList.elements = {} 
-        self.receiver.main.loadDataSources()
+        self.receiver.sourceList.elements = {} 
+        self.receiver.loadDataSources()
 
         print "EXEC dsourceReloadList"
 

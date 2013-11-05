@@ -51,7 +51,7 @@ class ComponentItemCommand(QUndoCommand):
     # \brief It stores the old states of the current component
     def preExecute(self):
         if self._cp is None:
-            self._cp = self.receiver.main.componentList.currentListElement()
+            self._cp = self.receiver.componentList.currentListElement()
         if self._cp is not None:
             if self._oldstate is None and hasattr(self._cp, "instance") \
                     and hasattr(self._cp.instance, "setState"):
@@ -60,12 +60,12 @@ class ComponentItemCommand(QUndoCommand):
 
             else:
                 QMessageBox.warning(
-                    self.receiver.main, "Component not created", 
+                    self.receiver, "Component not created", 
                     "Please edit one of the components")
                 
         else:
             QMessageBox.warning(
-                self.receiver.main, "Component not selected", 
+                self.receiver, "Component not selected", 
                 "Please select one of the components")
 
     
@@ -77,9 +77,9 @@ class ComponentItemCommand(QUndoCommand):
                 self._cp.instance = Component()
                 self._cp.instance.id = self._cp.id
                 self._cp.instance.directory = \
-                    self.receiver.main.componentList.directory
+                    self.receiver.componentList.directory
                 self._cp.instance.name = \
-                    self.receiver.main.componentList.elements[
+                    self.receiver.componentList.elements[
                     self._cp.id].name
 
             if self._newstate is None and hasattr(
@@ -87,25 +87,25 @@ class ComponentItemCommand(QUndoCommand):
                 self._newstate = self._cp.instance.getState() 
             else:
                 if hasattr(
-                    self.receiver.main.componentList.elements[
+                    self.receiver.componentList.elements[
                         self._cp.id].instance, "setState"): 
-                    self.receiver.main.componentList.elements[
+                    self.receiver.componentList.elements[
                         self._cp.id].instance.setState(self._newstate)
 
 
 
-                subwindow = self.receiver.main.subWindow(
+                subwindow = self.receiver.subWindow(
                     self._cp.instance, 
-                    self.receiver.main.ui.mdi.subWindowList())
+                    self.receiver.ui.mdi.subWindowList())
 
                 if subwindow:
-                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                     self._cp.instance.reconnectSaveAction()
                 else:    
                     self._cp.instance.createGUI()
 
                     self._cp.instance.addContextMenu(
-                        self.receiver.main.contextMenuActions)
+                        self.receiver.contextMenuActions)
                     if self._cp.instance.isDirty():
                         self._cp.instance.dialog.setWindowTitle(
                             "%s [Component]*" % self._cp.name)
@@ -114,7 +114,7 @@ class ComponentItemCommand(QUndoCommand):
                             "%s [Component]" % self._cp.name)
                      
                     self._cp.instance.reconnectSaveAction()
-                    self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                    self._subwindow = self.receiver.ui.mdi.addSubWindow(
                         self._cp.instance.dialog)
                     self._subwindow.resize(680, 560)
 
@@ -123,13 +123,13 @@ class ComponentItemCommand(QUndoCommand):
 
                 if hasattr(self._cp.instance, "connectExternalActions"):     
                     self._cp.instance.connectExternalActions(
-                        **self.receiver.main.externalCPActions) 
+                        **self.receiver.externalCPActions) 
 
 
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateElements(self._cp.id)
+            self.receiver.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
 
         
     ## executes the command
@@ -147,35 +147,35 @@ class ComponentItemCommand(QUndoCommand):
     #        to the old state
     def undo(self):
         if self._cp is not None and self._oldstate is not None:
-            self.receiver.main.componentList.elements[
+            self.receiver.componentList.elements[
                 self._cp.id].instance.setState(self._oldstate)
             
 
-            subwindow = self.receiver.main.subWindow(
-                self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
+            subwindow = self.receiver.subWindow(
+                self._cp.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
             else:    
                 if self._cp.instance is None:
                     self._cp.instance = Component()
                     self._cp.instance.id = self._cp.id
                     self._cp.instance.directory = \
-                        self.receiver.main.componentList.directory
+                        self.receiver.componentList.directory
                     self._cp.instance.name = \
-                        self.receiver.main.componentList.elements[
+                        self.receiver.componentList.elements[
                         self._cp.id].name
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
-                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
+                self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._cp.instance.dialog)
                 self._subwindow.resize(680, 560)
 
                 self._cp.instance.dialog.show()
         self._cp.instance.reconnectSaveAction()
         if hasattr(self._cp, "id"):
-            self.receiver.main.componentList.populateElements(self._cp.id)
+            self.receiver.componentList.populateElements(self._cp.id)
         else:
-            self.receiver.main.componentList.populateElements()
+            self.receiver.componentList.populateElements()
 
         print "UNDO componentItemComponent"
 
@@ -200,7 +200,7 @@ class ComponentClear(ComponentItemCommand):
             self.preExecute()
             if self._cp is not None:                
                 if QMessageBox.question(
-                    self.receiver.main, "Component - Clear",
+                    self.receiver, "Component - Clear",
                     "Clear the component: %s ".encode() %  (self._cp.name),
                     QMessageBox.Yes | QMessageBox.No,
                     QMessageBox.Yes ) == QMessageBox.No :
@@ -211,9 +211,9 @@ class ComponentClear(ComponentItemCommand):
 
 
                 if hasattr(self._cp, "instance"):
-                    if self._cp.instance in self.receiver.main.ui.mdi\
+                    if self._cp.instance in self.receiver.ui.mdi\
                             .subWindowList():
-                        self.receiver.main.ui.mdi.setActiveSubWindow(
+                        self.receiver.ui.mdi.setActiveSubWindow(
                             self._cp.instance)
                     self._cp.instance.createHeader()            
                 
@@ -226,7 +226,7 @@ class ComponentClear(ComponentItemCommand):
                     if hasattr(self._cp.instance, 
                                "connectExternalActions"):     
                         self._cp.instance.connectExternalActions(
-                            **self.receiver.main.externalCPActions) 
+                            **self.receiver.externalCPActions) 
 
 
         self.postExecute()
@@ -262,12 +262,12 @@ class ComponentLoadComponentItem(ComponentItemCommand):
                         if not self._cp.instance.loadComponentItem(
                             self._itemName):
                             QMessageBox.warning(
-                                self.receiver.main, "SubComponent not loaded", 
+                                self.receiver, "SubComponent not loaded", 
                                 "Please ensure that you have selected "\
                                     "the proper items")
                 else:
                     QMessageBox.warning(
-                        self.receiver.main, "Component item not selected", 
+                        self.receiver, "Component item not selected", 
                         "Please select one of the component items")            
                         
         self.postExecute()
@@ -297,7 +297,7 @@ class ComponentRemoveItem(ComponentItemCommand):
                     if hasattr(self._cp.instance, "removeSelectedItem"):
                         if not self._cp.instance.removeSelectedItem():
                             QMessageBox.warning(
-                                self.receiver.main, 
+                                self.receiver, 
                                 "Cutting item not possible", 
                                 "Please select another tree item") 
         self.postExecute()
@@ -326,7 +326,7 @@ class ComponentCopyItem(ComponentItemCommand):
                     if hasattr(self._cp.instance, "copySelectedItem"):
                         if not self._cp.instance.copySelectedItem():
                             QMessageBox.warning(
-                                self.receiver.main, 
+                                self.receiver, 
                                 "Copying item not possible", 
                                 "Please select another tree item") 
         self.postExecute()
@@ -357,7 +357,7 @@ class ComponentPasteItem(ComponentItemCommand):
                     if hasattr(self._cp.instance, "pasteItem"):
                         if not self._cp.instance.pasteItem():
                             QMessageBox.warning(
-                                self.receiver.main, 
+                                self.receiver, 
                                 "Pasting item not possible", 
                                 "Please select another tree item") 
         self.postExecute()
@@ -535,7 +535,7 @@ class ComponentNewItem(ComponentItemCommand):
             if self._cp is not None:
                 if self._cp.instance is None:                
                     QMessageBox.warning(
-                        self.receiver.main, "Component Item not selected", 
+                        self.receiver, "Component Item not selected", 
                         "Please select one of the component Items")            
                 if hasattr(self._cp.instance, "addItem"):
                     self._child = self._cp.instance.addItem(self.itemName)
@@ -558,7 +558,7 @@ class ComponentNewItem(ComponentItemCommand):
                             self._cp.instance.tagClicked(self._childIndex)
                     else:
                         QMessageBox.warning(
-                            self.receiver.main, 
+                            self.receiver, 
                             "Creating the %s Item not possible" \
                                 % self.itemName, 
                             "Please select another tree or new item ")
@@ -610,12 +610,12 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
                         if not self._cp.instance.loadDataSourceItem(
                             self.itemName):
                             QMessageBox.warning(
-                                self.receiver.main, "DataSource not loaded", 
+                                self.receiver, "DataSource not loaded", 
                                 "Please ensure that you have selected "\
                                     "the proper items")
                 else:
                     QMessageBox.warning(
-                        self.receiver.main, "Component item not selected", 
+                        self.receiver, "Component item not selected", 
                         "Please select one of the component items")            
                     
                         
@@ -648,25 +648,25 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
                     self._index = None
                     self._cp = None
                     QMessageBox.warning(
-                        self.receiver.main, "Component Item not created", 
+                        self.receiver, "Component Item not created", 
                         "Please edit one of the component Items")            
                     return
 
-                ds = self.receiver.main.sourceList.currentListElement()
+                ds = self.receiver.sourceList.currentListElement()
                 if ds is None:
                     self._oldstate = None
                     self._index = None
                     self._cp = None
                     QMessageBox.warning(
-                        self.receiver.main, "DataSource not selected", 
+                        self.receiver, "DataSource not selected", 
                         "Please select one of the datasources")            
                     return
 
                 if ds.instance is None:
                     dsEdit = DataSource.DataSource()
                     dsEdit.id = ds.id
-                    dsEdit.directory = self.receiver.main.sourceList.directory
-                    dsEdit.name = self.receiver.main.sourceList.elements[
+                    dsEdit.directory = self.receiver.sourceList.directory
+                    dsEdit.name = self.receiver.sourceList.elements[
                         ds.id].name
                     ds.instance = dsEdit 
                 else:
@@ -675,12 +675,12 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
 
                 if hasattr(dsEdit, "connectExternalActions"):     
                     dsEdit.connectExternalActions(
-                        **self.receiver.main.externalDSActions)
+                        **self.receiver.externalDSActions)
                 
                 if not hasattr(ds.instance, "createNodes"):
                     self._cp = None
                     QMessageBox.warning(
-                        self.receiver.main, "Component Item not created", 
+                        self.receiver, "Component Item not created", 
                         "Please edit one of the component Items")            
                     return
 
@@ -688,7 +688,7 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
                 if dsNode is None:
                     self._cp = None
                     QMessageBox.warning(
-                        self.receiver.main, 
+                        self.receiver, 
                         "Datasource node cannot be created", 
                         "Problem in importing the external node")            
                     return
@@ -696,12 +696,12 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
                 if not hasattr(self._cp.instance, "addDataSourceItem"):
                     self._cp = None
                     QMessageBox.warning(
-                        self.receiver.main, "Component Item not created", 
+                        self.receiver, "Component Item not created", 
                         "Please edit one of the component Items")            
                     return
                 if not self._cp.instance.addDataSourceItem(dsNode):
                     QMessageBox.warning(
-                        self.receiver.main, 
+                        self.receiver, 
                         "Adding the datasource item not possible", 
                         "Please ensure that you have selected the proper items")
 
@@ -735,25 +735,25 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                     self._index = None
                     self._cp = None
                     QMessageBox.warning(
-                        self.receiver.main, "Component Item not created", 
+                        self.receiver, "Component Item not created", 
                         "Please edit one of the component Items")
                     return
 
-                ds = self.receiver.main.sourceList.currentListElement()
+                ds = self.receiver.sourceList.currentListElement()
                 if ds is None:
                     self._oldstate = None
                     self._index = None
                     self._cp = None
                     QMessageBox.warning(
-                        self.receiver.main, "DataSource not selected", 
+                        self.receiver, "DataSource not selected", 
                         "Please select one of the datasources")
                     return
 
                 if ds.instance is None:
                     dsEdit = DataSource.DataSource()
                     dsEdit.id = ds.id
-                    dsEdit.directory = self.receiver.main.sourceList.directory
-                    dsEdit.name = self.receiver.main.sourceList.elements[
+                    dsEdit.directory = self.receiver.sourceList.directory
+                    dsEdit.name = self.receiver.sourceList.elements[
                         ds.id].name
                     ds.instance = dsEdit 
                 else:
@@ -763,7 +763,7 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                         or not ds.instance.dataSourceName:
                     self._cp = None
                     QMessageBox.warning(
-                        self.receiver.main, "DataSource wihtout name", 
+                        self.receiver, "DataSource wihtout name", 
                         "Please define datasource name")
                     return
 
@@ -771,12 +771,12 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
 
                 if hasattr(dsEdit, "connectExternalActions"):     
                     dsEdit.connectExternalActions(
-                        **self.receiver.main.externalDSActions)
+                        **self.receiver.externalDSActions)
                 
                 if not hasattr(ds.instance, "createNodes"):
                     self._cp = None
                     QMessageBox.warning(
-                        self.receiver.main, "Component Item not created", 
+                        self.receiver, "Component Item not created", 
                         "Please edit one of the component Items")
                     return
 
@@ -784,13 +784,13 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                 if not hasattr(self._cp.instance, "linkDataSourceItem"):
                     self._cp = None
                     QMessageBox.warning(
-                        self.receiver.main, "Component Item not created", 
+                        self.receiver, "Component Item not created", 
                         "Please edit one of the component Items")            
                     return
                 if not self._cp.instance.linkDataSourceItem(
                     dsEdit.dataSourceName):
                     QMessageBox.warning(
-                        self.receiver.main, 
+                        self.receiver, 
                         "Linking the datasource item not possible", 
                         "Please ensure that you have selected "\
                             "the proper items")            
@@ -823,7 +823,7 @@ class ComponentApplyItem(ComponentItemCommand):
 
                     if not self._cp.instance.applyItem():
                         QMessageBox.warning(
-                            self.receiver.main, "Applying item not possible", 
+                            self.receiver, "Applying item not possible", 
                             "Please select another tree item") 
 
 
@@ -858,7 +858,7 @@ class ComponentMoveUpItem(ComponentItemCommand):
 
                     if self._cp.instance.moveUpItem() is None:
                         QMessageBox.warning(
-                            self.receiver.main, "Moving item up not possible", 
+                            self.receiver, "Moving item up not possible", 
                             "Please select another tree item") 
 
 
@@ -895,7 +895,7 @@ class ComponentMoveDownItem(ComponentItemCommand):
 
                     if self._cp.instance.moveDownItem() is None:
                         QMessageBox.warning(
-                            self.receiver.main, 
+                            self.receiver, 
                             "Moving item down not possible", 
                             "Please select another tree item") 
 

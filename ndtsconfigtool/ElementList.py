@@ -264,7 +264,7 @@ class ElementList(QWidget):
             self.elements[ide] =  el
             if el.instance is not None:
                 el.instance.id = el.id
-                if new:
+                if new and hasattr(el.instance, "applied"):
                     el.instance.applied =  True
             print name
         return ide 

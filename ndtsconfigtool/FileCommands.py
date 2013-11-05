@@ -21,7 +21,7 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox, QFileDialog)
+from PyQt4.QtGui import (QMessageBox, QFileDialog, QUndoCommand)
 from PyQt4.QtCore import (QFileInfo)
 
 from .DataSourceDlg import CommonDataSourceDlg
@@ -29,7 +29,6 @@ from . import DataSource
 from .ComponentDlg import ComponentDlg
 from .Component import Component
 from .LabeledObject import LabeledObject
-from .Command import Command
 
 
 
@@ -37,13 +36,15 @@ from .Command import Command
 
 
 ## Command which loads an existing component from the file
-class ComponentOpen(Command):
+class ComponentOpen(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cpEdit = None
         self._cp = None
         self._fpath = None
@@ -51,8 +52,8 @@ class ComponentOpen(Command):
 
     ## executes the command
     # \brief It loads an existing component from the file
-    def execute(self):
-        if hasattr(self.receiver.main,'mdi'):
+    def redo(self):
+        if hasattr(self.receiver.main.ui,'mdi'):
             if self._cp is None:
                 self._cp = LabeledObject("", None)
             else:    
@@ -82,12 +83,13 @@ class ComponentOpen(Command):
                     "%s [Component]" % self._cp.name)
 
                 subwindow = self.receiver.main.subWindow(
-                    self._cp.instance, self.receiver.main.mdi.subWindowList())
+                    self._cp.instance, 
+                    self.receiver.main.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                     self._cp.instance.dialog.setSaveFocus()
                 else:    
-                    self._subwindow = self.receiver.main.mdi.addSubWindow(
+                    self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                         self._cpEdit.dialog)
                     self._subwindow.resize(680, 560)
                     self._cpEdit.dialog.setSaveFocus()
@@ -99,16 +101,16 @@ class ComponentOpen(Command):
 
     ## unexecutes the command
     # \brief It removes the loaded component from the component list
-    def unexecute(self):
+    def undo(self):
         if hasattr(self._cp, "instance"):
             if self._fpath:
 
                 if hasattr(self._cp,'instance') and self._cp.instance:
                     subwindow = self.receiver.main.subWindow(
-                        self._cpEdit, self.receiver.main.mdi.subWindowList())
+                        self._cpEdit, self.receiver.main.ui.mdi.subWindowList())
                     if subwindow:
-                        self.receiver.main.mdi.setActiveSubWindow(subwindow) 
-                        self.receiver.main.mdi.closeActiveSubWindow() 
+                        self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                        self.receiver.main.ui.mdi.closeActiveSubWindow() 
 
                 self.receiver.main.componentList.removeElement(
                     self._cp, False)
@@ -118,22 +120,18 @@ class ComponentOpen(Command):
             
         print "UNDO componentOpen"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentOpen(self.receiver, self.slot) 
-
-
 
 
 ## Command which loads an existing datasource from the file
-class DataSourceOpen(Command):
+class DataSourceOpen(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._dsEdit = None
         self._ds = None
         self._fpath = None
@@ -142,8 +140,8 @@ class DataSourceOpen(Command):
         
     ## executes the command
     # \brief It loads an existing datasource from the file
-    def execute(self):
-        if hasattr(self.receiver.main,'mdi'):
+    def redo(self):
+        if hasattr(self.receiver.main.ui,'mdi'):
             if self._ds is None:
                 self._ds = LabeledObject("", None)
             else:    
@@ -170,13 +168,14 @@ class DataSourceOpen(Command):
                     "%s [DataSource]" % self._ds.name)
 
                 subwindow = self.receiver.main.subWindow(
-                    self._ds.instance, self.receiver.main.mdi.subWindowList())
+                    self._ds.instance, 
+                    self.receiver.main.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                     self._ds.instance.dialog.setSaveFocus()
                 else:    
  #               print "create"
-                    self._subwindow = self.receiver.main.mdi.addSubWindow(
+                    self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                         self._dsEdit.dialog)
                     self._subwindow.resize(440, 550)
                     self._dsEdit.dialog.setSaveFocus()
@@ -190,27 +189,23 @@ class DataSourceOpen(Command):
 
     ## unexecutes the command
     # \brief It removes the loaded datasource from the datasource list
-    def unexecute(self):
+    def undo(self):
         if hasattr(self._ds, "instance"):
             if self._fpath:
 
                 if hasattr(self._ds,'instance'):
                     subwindow = self.receiver.main.subWindow(
                         self._ds.instance, 
-                        self.receiver.main.mdi.subWindowList())
+                        self.receiver.main.ui.mdi.subWindowList())
                     if subwindow:
-                        self.receiver.main.mdi.setActiveSubWindow(subwindow) 
-                        self.receiver.main.mdi.closeActiveSubWindow() 
+                        self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                        self.receiver.main.ui.mdi.closeActiveSubWindow() 
 
                 self.receiver.main.sourceList.removeElement(self._ds, False)
                 self._ds.instance = None
             
         print "UNDO dsourceOpen"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceOpen(self.receiver, self.slot) 
 
 
 
@@ -220,20 +215,22 @@ class DataSourceOpen(Command):
 
 
 ## Command which saves with the current component in the file
-class ComponentSave(Command):
+class ComponentSave(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
         self._cpEdit = None
         self._subwindow = None
         
     ## executes the command
     # \brief It saves with the current component in the file
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is None:
@@ -266,11 +263,11 @@ class ComponentSave(Command):
 
 
             subwindow = self.receiver.main.subWindow(
-                self._cpEdit, self.receiver.main.mdi.subWindowList())
+                self._cpEdit, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
             else:    
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._cpEdit.dialog)
                 self._subwindow.resize(680, 560)
                 self._cpEdit.dialog.show()
@@ -288,7 +285,7 @@ class ComponentSave(Command):
 
     ## unexecutes the command
     # \brief It populates the component list
-    def unexecute(self):
+    def undo(self):
         if hasattr(self._cp, "id"):
             self.receiver.main.componentList.populateElements(self._cp.id)
         else:
@@ -296,26 +293,23 @@ class ComponentSave(Command):
         print "UNDO componentSave"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentSave(self.receiver, self.slot) 
 
 
 
 ## Command which saves all components in the file
-class ComponentSaveAll(Command):
+class ComponentSaveAll(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        self.receiver = receiver
         
         
     ## executes the command
     # \brief It saves all components in the file
-    def execute(self):
+    def redo(self):
             
         for icp in self.receiver.main.componentList.elements.keys():
             cp = self.receiver.main.componentList.elements[icp]
@@ -339,31 +333,21 @@ class ComponentSaveAll(Command):
         print "EXEC componentSaveAll"
 
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def unexecute(self):
-        print "UNDO componentSaveAll"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentSaveAll(self.receiver, self.slot) 
-
-
 
 
 
 
 
 ## Command which saves the current components in the file with a different name
-class ComponentSaveAs(Command):
+class ComponentSaveAs(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         ## new name of component
         self.name = None
         ## directory of the component file
@@ -376,7 +360,7 @@ class ComponentSaveAs(Command):
 
     ## executes the command
     # \brief It saves the current components in the file with a different name
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is None:
@@ -399,7 +383,7 @@ class ComponentSaveAs(Command):
 
     ## unexecutes the command
     # \brief It populates the Component list
-    def unexecute(self):
+    def undo(self):
         if hasattr(self._cp, "id"):
             self.receiver.main.componentList.populateElements(self._cp.id)
         else:
@@ -407,26 +391,23 @@ class ComponentSaveAs(Command):
         print "UNDO componentSaveAs"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentSaveAs(self.receiver, self.slot) 
-
 
 
 ## Command which changes the current component file directory
-class ComponentChangeDirectory(Command):
+class ComponentChangeDirectory(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
         
     ## executes the command
     # \brief It changes the current component file directory
-    def execute(self):
+    def redo(self):
         if QMessageBox.question(
             self.receiver.main, "Component - Change Directory",
             ("All unsaved components will be lost. "\
@@ -443,12 +424,12 @@ class ComponentChangeDirectory(Command):
 
         if not path:
             return
-        subwindows = self.receiver.main.mdi.subWindowList()
+        subwindows = self.receiver.main.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), ComponentDlg):
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.mdi.closeActiveSubWindow()
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.main.ui.mdi.closeActiveSubWindow()
 
 
 
@@ -460,34 +441,23 @@ class ComponentChangeDirectory(Command):
 
         print "EXEC componentChangeDirectory"
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def unexecute(self):
-        print "UNDO componentChangeDirectory"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentChangeDirectory(self.receiver, self.slot) 
-
-
-
 
 
 ## Command which saves all the datasources in files
-class DataSourceSaveAll(Command):
+class DataSourceSaveAll(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
         
     ## executes the command
     # \brief It saves all the datasources in files
-    def execute(self):
+    def redo(self):
             
         for ids in self.receiver.main.sourceList.elements.keys():
             ds = self.receiver.main.sourceList.elements[ids]
@@ -512,32 +482,24 @@ class DataSourceSaveAll(Command):
 
         print "EXEC dsourceSaveAll"
 
-    ## executes the command
-    # \brief It does nothing
-    def unexecute(self):
-        print "UNDO dsourceSaveAll"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceSaveAll(self.receiver, self.slot) 
-
-
-
 
 
 
 ## Command which saves the current datasource in files
-class DataSourceSave(Command):
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+class DataSourceSave(QUndoCommand):
+    ## constructor
+    # \param receiver command receiver
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         
         
     ## executes the command
     # \brief It saves the current datasource in files
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -568,7 +530,7 @@ class DataSourceSave(Command):
 
     ## unexecutes the command
     # \brief It populates the datasource list
-    def unexecute(self):
+    def undo(self):
         ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
             self.receiver.main.sourceList.populateElements(ds.id)
@@ -577,24 +539,20 @@ class DataSourceSave(Command):
         print "UNDO dsourceSave"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceSave(self.receiver, self.slot) 
-
-
 
 
 
 
 ## Command which saves the current datasource in files with a different name
-class DataSourceSaveAs(Command):
+class DataSourceSaveAs(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         ## new datasource name
         self.name = None
         ## new file directory
@@ -606,7 +564,7 @@ class DataSourceSaveAs(Command):
 
     ## executes the command
     # \brief It saves the current datasource in files with a different name
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -636,33 +594,23 @@ class DataSourceSaveAs(Command):
             
         print "EXEC dsourceSaveAs"
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def unexecute(self):
-        print "UNDO dsourceSaveAs"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceSaveAs(self.receiver, self.slot) 
-
-
 
 
 ## Command which changes the current file directory with datasources
-class DataSourceChangeDirectory(Command):
+class DataSourceChangeDirectory(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
         
     ## executes the command
     # \brief It changes the current file directory with datasources
-    def execute(self):
+    def redo(self):
         if QMessageBox.question(
             self.receiver.main, "DataSource - Change Directory",
             ("All unsaved datasources will be lost. "\
@@ -680,12 +628,12 @@ class DataSourceChangeDirectory(Command):
         if not path:
             return
 
-        subwindows = self.receiver.main.mdi.subWindowList()
+        subwindows = self.receiver.main.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), CommonDataSourceDlg):
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.mdi.closeActiveSubWindow()
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.main.ui.mdi.closeActiveSubWindow()
 
 
 
@@ -697,35 +645,26 @@ class DataSourceChangeDirectory(Command):
 
         print "EXEC dsourceChangeDirectory"
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def unexecute(self):
-        print "UNDO dsourceChangeDirectory"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceChangeDirectory(self.receiver, self.slot)
-
 
 
 
 ## Command which reloads the components from the current component directory 
 #  into the component list
-class ComponentReloadList(Command):
+class ComponentReloadList(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
         
     ## executes the command
     # \brief It reloads the components from the current component directory 
     #        into the component list
-    def execute(self):
+    def redo(self):
         if QMessageBox.question(
             self.receiver.main, "Component - Reload List",
             ("All unsaved components will be lost. " \
@@ -735,12 +674,12 @@ class ComponentReloadList(Command):
             return
 
         
-        subwindows = self.receiver.main.mdi.subWindowList()
+        subwindows = self.receiver.main.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), ComponentDlg):
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.mdi.closeActiveSubWindow()
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.main.ui.mdi.closeActiveSubWindow()
 
         self.receiver.main.componentList.elements = {} 
         self.receiver.main.loadComponents()
@@ -748,35 +687,25 @@ class ComponentReloadList(Command):
         print "EXEC componentReloadList"
 
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def unexecute(self):
-        print "UNDO componentReloadList"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentReloadList(self.receiver, self.slot) 
-
-
 
 
 ## Command which reloads the datasources from the current datasource directory 
 #  into the datasource list
-class DataSourceReloadList(Command):
+class DataSourceReloadList(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
         
     ## executes the command
     # \brief It reloads the datasources from the current datasource directory 
     #        into the datasource list
-    def execute(self):
+    def redo(self):
         if QMessageBox.question(
             self.receiver.main, "DataSource - Reload List",
             ("All unsaved datasources will be lost. "\
@@ -786,31 +715,18 @@ class DataSourceReloadList(Command):
             return
 
 
-        subwindows = self.receiver.main.mdi.subWindowList()
+        subwindows = self.receiver.main.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), CommonDataSourceDlg):
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.mdi.closeActiveSubWindow()
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.main.ui.mdi.closeActiveSubWindow()
                     
         self.receiver.main.sourceList.elements = {} 
         self.receiver.main.loadDataSources()
 
         print "EXEC dsourceReloadList"
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def unexecute(self):
-        print "UNDO dsourceReloadList"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceReloadList(self.receiver, self.slot) 
-
-
-        
 
 if __name__ == "__main__":
     pass

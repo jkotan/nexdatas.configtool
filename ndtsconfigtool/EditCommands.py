@@ -21,12 +21,11 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import (QMessageBox, QUndoCommand)
 
 from .DataSourceDlg import DataSourceDlg
 from . import DataSource
 from .Component import Component
-from .Command import Command
 
 
 
@@ -36,13 +35,15 @@ from .Command import Command
 
 
 ## Command which opens dialog with the current component 
-class ComponentEdit(Command):
+class ComponentEdit(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
         self._cpEdit = None
         self._subwindow = None
@@ -50,7 +51,7 @@ class ComponentEdit(Command):
         
     ## executes the command
     # \brief It opens dialog with the current component 
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is None:                
@@ -81,9 +82,9 @@ class ComponentEdit(Command):
 
 
             subwindow = self.receiver.main.subWindow(
-                self._cpEdit, self.receiver.main.mdi.subWindowList())
+                self._cpEdit, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._cpEdit.reconnectSaveAction()
             else:    
                 self._cpEdit.createGUI()
@@ -98,7 +99,7 @@ class ComponentEdit(Command):
                         "%s [Component]" % self._cp.name)
                      
                 self._cpEdit.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._cpEdit.dialog)
                 self._subwindow.resize(680, 560)
                 self._cpEdit.dialog.show()
@@ -109,30 +110,23 @@ class ComponentEdit(Command):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO componentEdit"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentEdit(self.receiver, self.slot) 
-
-
-
 
 
 
 
 
 ## Command which copies the current datasource into the clipboard
-class DataSourceCopy(Command):
+class DataSourceCopy(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         self._oldstate = None
         self._newstate = None
@@ -141,7 +135,7 @@ class DataSourceCopy(Command):
         
     ## executes the command
     # \brief It copies the current datasource into the clipboard
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -159,9 +153,9 @@ class DataSourceCopy(Command):
 
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -174,7 +168,7 @@ class DataSourceCopy(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -186,7 +180,7 @@ class DataSourceCopy(Command):
 
     ## unexecutes the command
     # \brief It updates state of datasource to the old state
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and self._ds.instance is not None:
         
@@ -197,9 +191,9 @@ class DataSourceCopy(Command):
 
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -212,7 +206,7 @@ class DataSourceCopy(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -221,23 +215,16 @@ class DataSourceCopy(Command):
         print "UNDO dsourceCopy"
         
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceCopy(self.receiver, self.slot) 
-        
-
-
-
-
 ## Command which moves the current datasource into the clipboard
-class DataSourceCut(Command):
+class DataSourceCut(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         self._oldstate = None
         self._newstate = None
@@ -246,7 +233,7 @@ class DataSourceCut(Command):
         
     ## executes the command
     # \brief It moves the current datasource into the clipboard
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -266,9 +253,9 @@ class DataSourceCut(Command):
                 self._ds.instance.updateForm()
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -281,7 +268,7 @@ class DataSourceCut(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -298,7 +285,7 @@ class DataSourceCut(Command):
 
     ## unexecutes the command
     # \brief It copy back the removed datasource
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and self._ds.instance is not None:
         
@@ -308,9 +295,9 @@ class DataSourceCut(Command):
                 self._ds.id].instance.updateForm()
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -323,7 +310,7 @@ class DataSourceCut(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -336,23 +323,18 @@ class DataSourceCut(Command):
         print "UNDO dsourceCut"
         
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceCut(self.receiver, self.slot) 
-        
-
-
 
 
 ## Command which pastes the current datasource from the clipboard
-class DataSourcePaste(Command):
+class DataSourcePaste(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         self._oldstate = None
         self._newstate = None
@@ -361,7 +343,7 @@ class DataSourcePaste(Command):
         
     ## executes the command
     # \brief It pastes the current datasource from the clipboard
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -398,9 +380,9 @@ class DataSourcePaste(Command):
 
             
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createDialog()
@@ -413,7 +395,7 @@ class DataSourcePaste(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -428,7 +410,7 @@ class DataSourcePaste(Command):
 
     ## unexecutes the command
     # \brief It remove the pasted datasource
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and  self._ds.instance is not None:
         
@@ -439,9 +421,9 @@ class DataSourcePaste(Command):
 
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 self._ds.instance.createGUI()
@@ -454,7 +436,7 @@ class DataSourcePaste(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -467,22 +449,16 @@ class DataSourcePaste(Command):
         print "UNDO dsourcePaste"
         
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourcePaste(self.receiver, self.slot) 
-        
-
-
-
 ## Command which applies the changes from the form for the current datasource 
-class DataSourceApply(Command):
+class DataSourceApply(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         self._oldstate = None
         self._newstate = None
@@ -491,7 +467,7 @@ class DataSourceApply(Command):
         
     ## executes the command
     # \brief It applies the changes from the form for the current datasource  
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -513,7 +489,7 @@ class DataSourceApply(Command):
             if hasattr(self._ds.instance, "connectExternalActions"):
                 self._ds.instance.connectExternalActions(
                     **self.receiver.main.externalDSActions)
-            self._subwindow = self.receiver.main.mdi.addSubWindow(
+            self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                 self._ds.instance.dialog)
             self._subwindow.resize(440, 550)
             self._ds.instance.dialog.show()
@@ -534,9 +510,9 @@ class DataSourceApply(Command):
 
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction()
             else:    
                 self._ds.instance.createGUI()
@@ -549,7 +525,7 @@ class DataSourceApply(Command):
                         "%s [Component]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._ds.instance.dialog.show()
@@ -572,7 +548,7 @@ class DataSourceApply(Command):
 
     ## unexecutes the command
     # \brief It recovers the old state of the current datasource
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None and hasattr(self._ds,'instance') \
                 and  self._ds.instance is not None:
         
@@ -580,9 +556,9 @@ class DataSourceApply(Command):
                 self._ds.id].instance.setState(self._oldstate)
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self.receiver.main.sourceList.elements[
                     self._ds.id].instance.updateForm()
                 self._ds.instance.reconnectSaveAction()
@@ -594,7 +570,7 @@ class DataSourceApply(Command):
                     self._ds.id].instance.updateForm()
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
 
@@ -616,32 +592,27 @@ class DataSourceApply(Command):
         print "UNDO dsourceApply"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceApply(self.receiver, self.slot) 
-
-
-
 
 
 
 
 ## Command which takes the datasources from the current component
-class ComponentTakeDataSources(Command):
+class ComponentTakeDataSources(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
        
 
     ## executes the command
     # \brief It reloads the datasources from the current datasource directory 
     #        into the datasource list
-    def execute(self):
+    def redo(self):
 
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
@@ -653,13 +624,13 @@ class ComponentTakeDataSources(Command):
                 datasources = self._cp.instance.getDataSources()
         
                 if datasources:
-                    dialogs = self.receiver.main.mdi.subWindowList()
+                    dialogs = self.receiver.main.ui.mdi.subWindowList()
                     if dialogs:
                         for dialog in dialogs:
                             if isinstance(dialog, DataSourceDlg):
-                                self.receiver.main.mdi.setActiveSubWindow(
+                                self.receiver.main.ui.mdi.setActiveSubWindow(
                                     dialog)
-                                self.receiver.main.mdi.closeActiveSubWindow()
+                                self.receiver.main.ui.mdi.closeActiveSubWindow()
         
                     self.receiver.main.setDataSources(datasources, new = True)
                 else:
@@ -672,26 +643,21 @@ class ComponentTakeDataSources(Command):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO componentTakeDataSources"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentTakeDataSources(self.receiver, self.slot) 
-
 
 
 
 ## Command which takes the datasources from the current component
-class ComponentTakeDataSource(Command):
+class ComponentTakeDataSource(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
         self._ids = None
         self._ds = None
@@ -700,7 +666,7 @@ class ComponentTakeDataSource(Command):
     ## executes the command
     # \brief It reloads the datasources from the current datasource directory 
     #        into the datasource list
-    def execute(self):
+    def redo(self):
 
         if not self._lids:
             self._lids = \
@@ -720,13 +686,14 @@ class ComponentTakeDataSource(Command):
 
                     datasource = self._cp.instance.getCurrentDataSource()
                     if datasource:            
-                        dialogs = self.receiver.main.mdi.subWindowList()
+                        dialogs = self.receiver.main.ui.mdi.subWindowList()
                         if dialogs:
                             for dialog in dialogs:
                                 if isinstance(dialog, DataSourceDlg):
-                                    self.receiver.main.mdi.setActiveSubWindow(
+                                    self.receiver.main.ui.mdi.\
+                                        setActiveSubWindow(
                                         dialog)
-                                    self.receiver.main.mdi\
+                                    self.receiver.main.ui.mdi\
                                         .closeActiveSubWindow()
         
                         self._ids = self.receiver.main.setDataSources(
@@ -744,7 +711,7 @@ class ComponentTakeDataSource(Command):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO componentTakeDataSource"
         
 
@@ -752,31 +719,26 @@ class ComponentTakeDataSource(Command):
         if hasattr(self._ds,'instance'):
             subwindow = self.receiver.main.subWindow(
                 self._ds.instance, 
-                self.receiver.main.mdi.subWindowList())
+                self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
-                self.receiver.main.mdi.closeActiveSubWindow() 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.closeActiveSubWindow() 
 
 
         self.receiver.main.sourceList.populateElements(self._lids)
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentTakeDataSource(self.receiver, self.slot) 
-
-
-
 
 
 ## Command which opens the dialog with the current datasource
-class DataSourceEdit(Command):
+class DataSourceEdit(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         self._dsEdit = None
         self._subwindow = None
@@ -784,7 +746,7 @@ class DataSourceEdit(Command):
         
     ## executes the command
     # \brief It opens the dialog with the current datasource
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is None:
@@ -815,9 +777,9 @@ class DataSourceEdit(Command):
                     **self.receiver.main.externalDSActions)
 
             subwindow = self.receiver.main.subWindow(
-                self._dsEdit, self.receiver.main.mdi.subWindowList())
+                self._dsEdit, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.reconnectSaveAction() 
             else:    
                 if self._ds.instance.dialog is None:
@@ -831,7 +793,7 @@ class DataSourceEdit(Command):
                         "%s [DataSource]" % self._ds.name)
                      
                 self._ds.instance.reconnectSaveAction()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(440, 550)
                 self._dsEdit.dialog.show()
@@ -841,75 +803,11 @@ class DataSourceEdit(Command):
             
         print "EXEC dsourceEdit"
 
-    ## unexecutes the command
-    # \brief It does nothing
-    def unexecute(self):
-        print "UNDO dsourceEdit"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceEdit(self.receiver, self.slot) 
 
 
 
 
 
-## Empty undo command. It is no need to implement it 
-class UndoCommand(Command):
-
-    ## constructor
-    # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
-
-
-    ## executes the command
-    # \brief It does nothing
-    def execute(self):
-        print "EXEC undo"
-
-    ## unexecutes the command
-    # \brief It does nothing
-    def unexecute(self):
-        pass
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return UndoCommand(self.receiver, self.slot) 
-
-
-
-## Empty undo command. It is no need to implement it 
-class RedoCommand(Command):
-
-    ## constructor
-    # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
-
-    ## executes the command
-    # \brief It does nothing
-    def execute(self):
-        print "EXEC redo"
-
-    ## unexecutes the command
-    # \brief It does nothing
-    def unexecute(self):
-        pass
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return RedoCommand(self.receiver, self.slot) 
-
-        
 
 if __name__ == "__main__":
     pass

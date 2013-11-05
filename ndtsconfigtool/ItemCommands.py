@@ -21,25 +21,26 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import QMessageBox, QUndoCommand
 from PyQt4.QtCore import SIGNAL
 
 from . import DataSource
 from .Component import Component
 from .ComponentModel import ComponentModel
-from .Command import Command
 from .EditCommands import (DataSourceCut, DataSourceCopy, DataSourcePaste)
 
 
 ## Abstract Command which helps in defing commands related to 
 #  Component item operations
-class ComponentItemCommand(Command):
+class ComponentItemCommand(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
         self._oldstate = None
         self._index = None
@@ -94,10 +95,11 @@ class ComponentItemCommand(Command):
 
 
                 subwindow = self.receiver.main.subWindow(
-                    self._cp.instance, self.receiver.main.mdi.subWindowList())
+                    self._cp.instance, 
+                    self.receiver.main.ui.mdi.subWindowList())
 
                 if subwindow:
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                     self._cp.instance.reconnectSaveAction()
                 else:    
                     self._cp.instance.createGUI()
@@ -112,7 +114,7 @@ class ComponentItemCommand(Command):
                             "%s [Component]" % self._cp.name)
                      
                     self._cp.instance.reconnectSaveAction()
-                    self._subwindow = self.receiver.main.mdi.addSubWindow(
+                    self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                         self._cp.instance.dialog)
                     self._subwindow.resize(680, 560)
 
@@ -132,7 +134,7 @@ class ComponentItemCommand(Command):
         
     ## executes the command
     # \brief It execute pre- and post- executors
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
     
@@ -143,16 +145,16 @@ class ComponentItemCommand(Command):
     ## helps to construct the unexecute component item command 
     # \brief It changes back the states of the current component 
     #        to the old state
-    def unexecute(self):
+    def undo(self):
         if self._cp is not None and self._oldstate is not None:
             self.receiver.main.componentList.elements[
                 self._cp.id].instance.setState(self._oldstate)
             
 
             subwindow = self.receiver.main.subWindow(
-                self._cp.instance, self.receiver.main.mdi.subWindowList())
+                self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow)
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
             else:    
                 if self._cp.instance is None:
                     self._cp.instance = Component()
@@ -164,7 +166,7 @@ class ComponentItemCommand(Command):
                         self._cp.id].name
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._cp.instance.dialog)
                 self._subwindow.resize(680, 560)
 
@@ -178,10 +180,6 @@ class ComponentItemCommand(Command):
         print "UNDO componentItemComponent"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentItemCommand(self.receiver, self.slot) 
 
 
 
@@ -190,14 +188,14 @@ class ComponentClear(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
 
 
     ## executes the command
     # \brief It clears the whole current component
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:                
@@ -213,9 +211,9 @@ class ComponentClear(ComponentItemCommand):
 
 
                 if hasattr(self._cp, "instance"):
-                    if self._cp.instance in self.receiver.main.mdi\
+                    if self._cp.instance in self.receiver.main.ui.mdi\
                             .subWindowList():
-                        self.receiver.main.mdi.setActiveSubWindow(
+                        self.receiver.main.ui.mdi.setActiveSubWindow(
                             self._cp.instance)
                     self._cp.instance.createHeader()            
                 
@@ -236,11 +234,6 @@ class ComponentClear(ComponentItemCommand):
 
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentClear(self.receiver, self.slot) 
-
 
 
 
@@ -250,16 +243,16 @@ class ComponentLoadComponentItem(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
         ## 
         self._itemName = ""        
         
     ## executes the command
     # \brief It loads sub-components into the current component 
     #        tree from the file
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -281,10 +274,6 @@ class ComponentLoadComponentItem(ComponentItemCommand):
         print "EXEC componentLoadcomponentItem"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentLoadComponentItem(self.receiver, self.slot) 
 
 
 
@@ -293,14 +282,14 @@ class ComponentRemoveItem(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
 
         
     ## executes the command
     # \brief It moves the current component item into the clipboard
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -315,12 +304,6 @@ class ComponentRemoveItem(ComponentItemCommand):
         print "EXEC componentRemoveItem"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentRemoveItem(self.receiver, self.slot) 
-
-
 
 
 ## Command which copies the current component item into the clipboard
@@ -328,14 +311,14 @@ class ComponentCopyItem(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
 
         
     ## executes the command
     # \brief It copies the current component item into the clipboard
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -350,11 +333,6 @@ class ComponentCopyItem(ComponentItemCommand):
         print "EXEC componentCopyItem"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentCopyItem(self.receiver, self.slot) 
-
 
 
 ## Command which pastes the component item from the clipboard into 
@@ -363,15 +341,15 @@ class ComponentPasteItem(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
 
         
     ## executes the command
     # \brief It pastes the component item from the clipboard into 
     #        the current component tree
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -386,12 +364,6 @@ class ComponentPasteItem(ComponentItemCommand):
         print "EXEC componentPasteItem"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentPasteItem(self.receiver, self.slot) 
-
-
 
 
 
@@ -403,38 +375,34 @@ class CutItem(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
         ## type of the cutting item with values: component of datasource
         self.type = None
 
-        self._ds = DataSourceCut(receiver, slot)
-        self._cp = ComponentRemoveItem(receiver, slot)
+        self._ds = DataSourceCut(receiver, parent)
+        self._cp = ComponentRemoveItem(receiver, parent)
 
     ## executes the command
     # \brief It moves the current, i.e. datasource or component item, 
     #        into the clipboard
-    def execute(self):
+    def redo(self):
         if self.type == 'component':
-            self._cp.execute()
+            self._cp.redo()
         elif self.type == 'datasource':
-            self._ds.execute()
+            self._ds.redo()
 
     ## unexecutes the command
     # \brief It adds back the current, i.e. datasource or component item
-    def unexecute(self):
+    def undo(self):
         if self.type == 'component':
-            self._cp.unexecute()
+            self._cp.undo()
         elif self.type == 'datasource':
-            self._ds.unexecute()
+            self._ds.undo()
         
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return CutItem(self.receiver, self.slot) 
 
 
 
@@ -445,83 +413,76 @@ class CutItem(ComponentItemCommand):
 #  into the clipboard
 class CopyItem(ComponentItemCommand):
 
+
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
         ## type of the coping item with values: component of datasource
         self.type = None
 
-        self._ds = DataSourceCopy(receiver, slot)
-        self._cp = ComponentCopyItem(receiver, slot)
+        self._ds = DataSourceCopy(receiver, parent)
+        self._cp = ComponentCopyItem(receiver, parent)
 
 
     ## executes the command
     # \brief It copies the current item, i.e. datasource or component item, 
     #        into the clipboard
-    def execute(self):
+    def redo(self):
         if self.type == 'component':
-            self._cp.execute()
+            self._cp.redo()
         elif self.type == 'datasource':
-            self._ds.execute()
+            self._ds.redo()
 
 
     ## unexecutes the command
     # \brief It unexecutes copy commands for datasources or components
-    def unexecute(self):
+    def undo(self):
         if self.type == 'component':
-            self._cp.unexecute()
+            self._cp.undo()
         elif self.type == 'datasource':
-            self._ds.unexecute()
+            self._ds.undo()
         
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return CopyItem(self.receiver, self.slot) 
 
 
 
 ## Command which pastes the current item from the clipboard 
 #  into the current dialog, i.e. the current datasource or 
 #  the current component item tree
-class PasteItem(Command):
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
-        ## type of the pasting item with values: component of datasource
+class PasteItem(QUndoCommand):
+
+
+    ## constructor
+    # \param receiver command receiver
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver 
         self.type = None
 
-        self._ds = DataSourcePaste(receiver, slot)
-        self._cp = ComponentPasteItem(receiver, slot)
+        self._ds = DataSourcePaste(receiver, parent)
+        self._cp = ComponentPasteItem(receiver, parent)
 
     ## executes the command
     # \brief It pastes the current item from the clipboard into 
     #        the current dialog, i.e. the current datasource or 
     #        the current component item tree
-    def execute(self):
+    def redo(self):
         if self.type == 'component':
-            self._cp.execute()
+            self._cp.redo()
         elif self.type == 'datasource':
-            self._ds.execute()
+            self._ds.redo()
 
     ## unexecutes the command
     # \brief It unexecutes paste commands for datasources or components
-    def unexecute(self):
+    def undo(self):
         if self.type == 'component':
-            self._cp.unexecute()
+            self._cp.undo()
         elif self.type == 'datasource':
-            self._ds.unexecute()
+            self._ds.undo()
         
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return PasteItem(self.receiver, self.slot) 
-
-
 
 
 
@@ -530,13 +491,13 @@ class ComponentMerge(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
         
     ## executes the command
     # \brief It merges the current component
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:                
@@ -548,19 +509,17 @@ class ComponentMerge(ComponentItemCommand):
 
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentMerge(self.receiver, self.slot) 
-
-
 
 
 
 ## Command which creates a new item in the current component tree
 class ComponentNewItem(ComponentItemCommand):
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+
+    ## constructor
+    # \param receiver command receiver
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
         ## name of the new component item
         self.itemName = ""
         self._index = None
@@ -570,7 +529,7 @@ class ComponentNewItem(ComponentItemCommand):
 
     ## executes the command
     # \brief It creates a new item in the current component tree
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -623,12 +582,6 @@ class ComponentNewItem(ComponentItemCommand):
         print "EXEC componentNewItem"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentNewItem(self.receiver, self.slot) 
-
-
 
 
 
@@ -637,9 +590,9 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
         self._cp = None
         ## name of the new datasource item
         self.itemName = ""
@@ -647,7 +600,7 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
 
     ## executes the command
     # \brief It loads a datasource from a file into the current component tree
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -670,11 +623,6 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
         print "EXEC componentMerge"
 
         
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentLoadDataSourceItem(self.receiver, self.slot) 
-
 
 
 
@@ -683,14 +631,14 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
         
         
     ## executes the command
     # \brief It adds the current datasource into the current component tree
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -762,12 +710,6 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
         self.postExecute()
         print "EXEC componentAddDataSourceItem"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentAddDataSourceItem(self.receiver, self.slot) 
-
-
 
 
 ## Command which links the current datasource into the current component tree
@@ -775,14 +717,14 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
         
         
     ## executes the command
     # \brief It links the current datasource into the current component tree
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -856,10 +798,6 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
         self.postExecute()
         print "EXEC componentLinkDataSourceItem"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentLinkDataSourceItem(self.receiver, self.slot) 
 
 
 ## Command which applies the changes from the form for 
@@ -868,16 +806,15 @@ class ComponentApplyItem(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
-        self._index = None
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
         
         
     ## executes the command
     # \brief It applies the changes from the form for 
     #        the current component item
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -894,12 +831,6 @@ class ComponentApplyItem(ComponentItemCommand):
         print "EXEC componentApplyItem"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentApplyItem(self.receiver, self.slot) 
-
-
 
 
 
@@ -910,15 +841,15 @@ class ComponentMoveUpItem(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
         self._index = None
         
         
     ## executes the command
     # \brief It applies the changes from the form for the current component item
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -937,11 +868,6 @@ class ComponentMoveUpItem(ComponentItemCommand):
         print "EXEC componentMoveUpItem"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentMoveUpItem(self.receiver, self.slot) 
-
 
 
 
@@ -952,15 +878,15 @@ class ComponentMoveDownItem(ComponentItemCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        ComponentItemCommand.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        ComponentItemCommand.__init__(self, receiver, parent)
         self._index = None
         
         
     ## executes the command
     # \brief It applies the changes from the form for the current component item
-    def execute(self):
+    def redo(self):
         if self._cp is None:
             self.preExecute()
             if self._cp is not None:
@@ -976,11 +902,6 @@ class ComponentMoveDownItem(ComponentItemCommand):
         self.postExecute()
         print "EXEC componentMoveDownItem"
 
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentMoveDownItem(self.receiver, self.slot) 
 
 
 

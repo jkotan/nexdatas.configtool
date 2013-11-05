@@ -21,11 +21,10 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import (QMessageBox, QUndoCommand)
 
 from .Component import Component
 from .LabeledObject import LabeledObject
-from .Command import Command
 
 
 
@@ -33,18 +32,20 @@ from .Command import Command
 
 
 ## Command which creates a new component
-class ComponentNew(Command):
+class ComponentNew(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._comp = None
 
     ## executes the command
     # \brief It creates a new component
-    def execute(self):       
+    def redo(self):       
             
         if self._comp is None:
             self._comp = LabeledObject("", None)
@@ -56,42 +57,41 @@ class ComponentNew(Command):
         
     ## unexecutes the command
     # \brief It removes the new component
-    def unexecute(self):
+    def undo(self):
         if self._comp is not None:
             self.receiver.main.componentList.removeElement(self._comp, False)
 
             if hasattr(self._comp,'instance') and self._comp.instance:
                 subwindow = self.receiver.main.subWindow(
-                    self._comp.instance, self.receiver.main.mdi.subWindowList())
+                    self._comp.instance, 
+                    self.receiver.main.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow) 
-                    self.receiver.main.mdi.closeActiveSubWindow() 
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.main.ui.mdi.closeActiveSubWindow() 
             
         print "UNDO componentNew"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentNew(self.receiver, self.slot) 
 
 
 
 
 ## Command which removes the current component from the component list
-class ComponentRemove(Command):
+class ComponentRemove(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
         self._subwindow = None
         
 
     ## executes the command
     # \brief It removes the current component from the component list
-    def execute(self):
+    def redo(self):
         
         if self._cp is not None:
             self.receiver.main.componentList.removeElement(self._cp, False)
@@ -107,10 +107,10 @@ class ComponentRemove(Command):
             
         if hasattr(self._cp, "instance"):
             subwindow = self.receiver.main.subWindow(
-                self._cp.instance, self.receiver.main.mdi.subWindowList())
+                self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                self.receiver.main.mdi.closeActiveSubWindow()
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.main.ui.mdi.closeActiveSubWindow()
             
             
         print "EXEC componentRemove"
@@ -118,7 +118,7 @@ class ComponentRemove(Command):
 
     ## unexecutes the command
     # \brief It reloads the removed component from the component list
-    def unexecute(self):
+    def undo(self):
         if self._cp is not None:
 
             self.receiver.main.componentList.addElement(self._cp, False)
@@ -137,14 +137,14 @@ class ComponentRemove(Command):
                 self.receiver.main.contextMenuActions)
 
             subwindow = self.receiver.main.subWindow(
-                self._cp.instance, self.receiver.main.mdi.subWindowList())
+                self._cp.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._cp.instance.dialog.setSaveFocus()
             else:    
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._cp.instance.dialog)
                 self._subwindow.resize(680, 560)
                 self._cp.instance.dialog.setSaveFocus()
@@ -162,32 +162,21 @@ class ComponentRemove(Command):
             self.receiver.main.componentList.populateElements(self._cp.id)
         else:
             self.receiver.main.componentList.populateElements()
-
-                    
-
-
-
         print "UNDO componentRemove"
 
 
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentRemove(self.receiver, self.slot) 
-
-
-
-
 ## Command which changes the current component in the list
-class ComponentListChanged(Command):
+class ComponentListChanged(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         ## new item
         self.item = None
         ## new directory
@@ -202,7 +191,7 @@ class ComponentListChanged(Command):
 
     ## executes the command
     # \brief It changes the current component in the list
-    def execute(self):
+    def redo(self):
         if self.item is not None or self.name is not None:
             if self.name is None:
                 self.name = unicode(self.item.text())
@@ -233,7 +222,7 @@ class ComponentListChanged(Command):
 
     ## unexecutes the command
     # \brief It changes back the current component in the list
-    def unexecute(self):
+    def undo(self):
         if self._cp is not None:
             self._cp.name = self._oldName 
             self.receiver.main.componentList.addElement(self._cp, False)
@@ -249,26 +238,24 @@ class ComponentListChanged(Command):
         print "UNDO componentChanged"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ComponentListChanged(self.receiver, self.slot) 
     
 
 
 ## Command which creates a new datasource
-class DataSourceNew(Command):
+class DataSourceNew(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         
     ## executes the command
     # \brief It creates a new datasource
-    def execute(self):
+    def redo(self):
         if self._ds is None:
             self._ds = LabeledObject("", None)
         else:
@@ -278,7 +265,7 @@ class DataSourceNew(Command):
 
     ## unexecutes the command
     # \brief It removes the added datasource
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None:
             self.receiver.main.sourceList.removeElement(self._ds, False)
 
@@ -286,37 +273,36 @@ class DataSourceNew(Command):
             if hasattr(self._ds,'instance'):
                 subwindow = \
                     self.receiver.main.subWindow(
-                    self._ds.instance, self.receiver.main.mdi.subWindowList())
+                    self._ds.instance, 
+                    self.receiver.main.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow) 
-                    self.receiver.main.mdi.closeActiveSubWindow() 
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
+                    self.receiver.main.ui.mdi.closeActiveSubWindow() 
 
         print "UNDO dsourceNew"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceNew(self.receiver, self.slot) 
 
 
 
 
 
 ## Command which removes the current datasource from the datasource list
-class DataSourceRemove(Command):
+class DataSourceRemove(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         self._subwindow = None
         
     ## executes the command
     # \brief It removes the current datasource from the datasource list
-    def execute(self):
+    def redo(self):
         
         if self._ds is not None:
             self.receiver.main.sourceList.removeElement(self._ds, False)
@@ -332,17 +318,17 @@ class DataSourceRemove(Command):
 
         if hasattr(self._ds, "instance"):
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                self.receiver.main.mdi.closeActiveSubWindow()
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.main.ui.mdi.closeActiveSubWindow()
             
             
         print "EXEC dsourceRemove"
 
     ## unexecutes the command
     # \brief It adds the removes datasource into the datasource list
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None:
 
             self.receiver.main.sourceList.addElement(self._ds, False)
@@ -350,13 +336,13 @@ class DataSourceRemove(Command):
             self._ds.instance.createGUI()
 
             subwindow = self.receiver.main.subWindow(
-                self._ds.instance, self.receiver.main.mdi.subWindowList())
+                self._ds.instance, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
                 self._ds.instance.dialog.setSaveFocus()
             else:    
                 self._ds.instance.createDialog()
-                self._subwindow = self.receiver.main.mdi.addSubWindow(
+                self._subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._ds.instance.dialog)
                 self._subwindow.resize(680, 560)
                 self._ds.instance.dialog.setSaveFocus()
@@ -366,21 +352,19 @@ class DataSourceRemove(Command):
         print "UNDO dsourceRemove"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceRemove(self.receiver, self.slot) 
 
 
 
 ## Command which performs change of  the current datasource 
-class DataSourceListChanged(Command):
+class DataSourceListChanged(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         ## new item
         self.item = None
         ## new datasource name
@@ -396,7 +380,7 @@ class DataSourceListChanged(Command):
         
     ## executes the command
     # \brief It performs change of  the current datasource 
-    def execute(self):
+    def redo(self):
         if self.item is not None or self.name is not None:
             if self.name is None:
                 self.name = unicode(self.item.text())
@@ -424,7 +408,7 @@ class DataSourceListChanged(Command):
 
     ## unexecutes the command
     # \brief It changes back the current datasource 
-    def unexecute(self):
+    def undo(self):
         if self._ds is not None:
             self._ds.name = self._oldName 
             self.receiver.main.sourceList.addElement(self._ds, False)
@@ -443,41 +427,29 @@ class DataSourceListChanged(Command):
 
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return DataSourceListChanged(self.receiver, self.slot) 
     
 
 
 
 
 ## Command which is performed during closing the Component Designer
-class CloseApplication(Command):
+class CloseApplication(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
 
     ## executes the command
     # \brief It is performed during closing the Component Designer
-    def execute(self):
-        if hasattr(self.receiver.main,'mdi'):
+    def redo(self):
+        if hasattr(self.receiver.main.ui,'mdi'):
             self.receiver.main.close()
             print "EXEC closeApp"
 
-    ## executes the command
-    # \brief It does nothing
-    def unexecute(self):
-        print "UNDO closeApp"
-
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return CloseApplication(self.receiver, self.slot) 
 
 
 

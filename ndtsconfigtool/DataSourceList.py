@@ -22,7 +22,6 @@
 """ datasource list widget """
 
 
-from .ui.ui_elementlist import Ui_ElementList
 from .DataSource import DataSource
 from .ElementList import ElementList
 

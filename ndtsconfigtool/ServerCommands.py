@@ -21,29 +21,30 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox)
+from PyQt4.QtGui import (QMessageBox, QUndoCommand)
 
 from .DataSourceDlg import (CommonDataSourceDlg)
 from . import DataSource
 from .ComponentDlg import ComponentDlg
 from .Component import Component
-from .Command import Command
 
 ## Command which performs connection to the configuration server
-class ServerConnect(Command):
+class ServerConnect(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._oldstate = None
         self._state = None
         
 
     ## executes the command
     # \brief It perform connection to the configuration server
-    def execute(self):       
+    def redo(self):       
         if self.receiver.main.configServer:
             try:
                 if self._oldstate is None:
@@ -67,7 +68,7 @@ class ServerConnect(Command):
     ## unexecutes the command
     # \brief It undo connection to the configuration server, 
     #        i.e. it close the connection to the server
-    def unexecute(self):
+    def undo(self):
         if self.receiver.main.configServer:
             try:
                 self.receiver.main.configServer.close()
@@ -82,25 +83,23 @@ class ServerConnect(Command):
 
         print "UNDO serverConnect"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerConnect(self.receiver, self.slot) 
 
 
 
 ## Command which fetches the components from the configuration server
-class ServerFetchComponents(Command):
+class ServerFetchComponents(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
 
     ## executes the command
     # \brief It fetches the components from the configuration server
-    def execute(self):       
+    def redo(self):       
         if QMessageBox.question(
             self.receiver.main, 
             "Component - Reload List from Configuration server",
@@ -111,13 +110,13 @@ class ServerFetchComponents(Command):
             return
 
         
-        subwindows = self.receiver.main.mdi.subWindowList()
+        subwindows = self.receiver.main.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 dialog = subwindow.widget()
                 if isinstance(dialog, ComponentDlg):
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.mdi.closeActiveSubWindow()
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.main.ui.mdi.closeActiveSubWindow()
 
         self.receiver.main.componentList.elements = {} 
 
@@ -147,30 +146,26 @@ class ServerFetchComponents(Command):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO serverFetchComponents"
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerFetchComponents(self.receiver, self.slot) 
 
 
 ## Command which stores the current component in the configuration server
-class ServerStoreComponent(Command):
+class ServerStoreComponent(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
         self._cpEdit = None
-        
 
     ## executes the command
     # \brief It stores the current component in the configuration server
-    def execute(self):       
+    def redo(self):       
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is not None:
@@ -199,9 +194,9 @@ class ServerStoreComponent(Command):
 
                 
             subwindow = self.receiver.main.subWindow(
-                self._cpEdit, self.receiver.main.mdi.subWindowList())
+                self._cpEdit, self.receiver.main.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.main.mdi.setActiveSubWindow(subwindow) 
+                self.receiver.main.ui.mdi.setActiveSubWindow(subwindow) 
             else:    
                 self._cpEdit.createGUI()
 
@@ -215,7 +210,7 @@ class ServerStoreComponent(Command):
                         "%s [Component]" % self._cp.name)
                      
                 self._cpEdit.reconnectSaveAction()
-                subwindow = self.receiver.main.mdi.addSubWindow(
+                subwindow = self.receiver.main.ui.mdi.addSubWindow(
                     self._cpEdit.dialog)
                 subwindow.resize(680, 560)
                 self._cpEdit.dialog.show()
@@ -256,37 +251,31 @@ class ServerStoreComponent(Command):
 
     ## unexecutes the command
     # \brief It populates only the component list
-    def unexecute(self):
+    def undo(self):
         if hasattr(self._cp, "id"):
             self.receiver.main.componentList.populateElements(self._cp.id)
         else:
             self.receiver.main.componentList.populateElements()
         print "UNDO serverStoreComponent"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerStoreComponent(self.receiver, self.slot) 
-
-
-
 
 
 ## Command which deletes the current component from the configuration server
-class ServerDeleteComponent(Command):
+class ServerDeleteComponent(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
-        self._cpEdit = None
         
 
     ## executes the command
     # \brief It deletes the current component from the configuration server
-    def execute(self):       
+    def redo(self):       
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is not None:
@@ -322,37 +311,34 @@ class ServerDeleteComponent(Command):
 
     ## unexecutes the command
     # \brief It populates only the component list
-    def unexecute(self):
+    def undo(self):
         if hasattr(self._cp, "id"):
             self.receiver.main.componentList.populateElements(self._cp.id)
         else:
             self.receiver.main.componentList.populateElements()
         print "UNDO serverDeleteComponent"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerDeleteComponent(self.receiver, self.slot) 
-
-
 
 
 ## Command which sets on the configuration server the current component 
 #  as mandatory
-class ServerSetMandatoryComponent(Command):
+class ServerSetMandatoryComponent(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
+        
         
 
     ## executes the command
     # \brief It sets on the configuration server the current component 
     #        as mandatory
-    def execute(self):       
+    def redo(self):       
         if self._cp is None:
             self._cp = self.receiver.main.componentList.currentListElement()
         if self._cp is not None:
@@ -378,33 +364,25 @@ class ServerSetMandatoryComponent(Command):
                     unicode(e))
         print "EXEC serverSetMandatoryComponent"
 
-    ## unexecutes the command
-    # \brief It does nothing    
-    def unexecute(self):
-        print "UNDO serverSetMandatoryComponent"
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerSetMandatoryComponent(self.receiver, self.slot) 
-
 
 
 ## Command which fetches a list of the mandatory components from 
 #  the configuration server
-class ServerGetMandatoryComponents(Command):
+class ServerGetMandatoryComponents(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
 
     ## executes the command
     # \brief It fetches a list of the mandatory components from 
     #        the configuration server
-    def execute(self):       
+    def redo(self):       
         try:
             if not self.receiver.main.configServer.connected:
                 QMessageBox.information(
@@ -430,35 +408,26 @@ class ServerGetMandatoryComponents(Command):
                 unicode(e))
         print "EXEC serverGetMandatoryComponent"
 
-    ## unexecutes the command
-    # \brief It does nothing    
-    def unexecute(self):
-        print "UNDO serverGetMandatoryComponent"
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerGetMandatoryComponents(self.receiver, self.slot) 
-
-
 
 
 ## Command which sets on the configuration server the current component 
 #  as not mandatory
-class ServerUnsetMandatoryComponent(Command):
+class ServerUnsetMandatoryComponent(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._cp = None
         
 
     ## executes the command
     # \brief It sets on the configuration server the current component 
     #        as not mandatory
-    def execute(self):       
+    def redo(self):       
         if self._cp is None:
             self._cp = \
                 self.receiver.main.componentList.currentListElement()
@@ -488,24 +457,24 @@ class ServerUnsetMandatoryComponent(Command):
 
     ## unexecutes the command
     # \brief It does nothing    
-    def unexecute(self):
+    def undo(self):
         print "UNDO serverUnsetMandatoryComponent"
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerUnsetMandatoryComponent(self.receiver, self.slot) 
 
 
 ## Command which fetches the datasources from the configuration server
-class ServerFetchDataSources(Command):
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+class ServerFetchDataSources(QUndoCommand):
+    ## constructor
+    # \param receiver command receiver
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
 
     ## executes the command
     # \brief It fetches the datasources from the configuration server
-    def execute(self):       
+    def redo(self):       
 
         if QMessageBox.question(
             self.receiver.main, 
@@ -517,13 +486,13 @@ class ServerFetchDataSources(Command):
             return
 
 
-        subwindows = self.receiver.main.mdi.subWindowList()
+        subwindows = self.receiver.main.ui.mdi.subWindowList()
         if subwindows:
             for subwindow in subwindows:
                 dialog = subwindow.widget()
                 if isinstance(dialog, CommonDataSourceDlg):
-                    self.receiver.main.mdi.setActiveSubWindow(subwindow)
-                    self.receiver.main.mdi.closeActiveSubWindow()
+                    self.receiver.main.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.main.ui.mdi.closeActiveSubWindow()
                     
         self.receiver.main.sourceList.elements = {} 
 
@@ -554,29 +523,26 @@ class ServerFetchDataSources(Command):
 
     ## unexecutes the command
     # \brief It does nothing    
-    def unexecute(self):
+    def undo(self):
         print "UNDO serverFetchDataSources"
-
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerFetchDataSources(self.receiver, self.slot) 
 
 
 ## Command which stores the current datasource in the configuration server
-class ServerStoreDataSource(Command):
+class ServerStoreDataSource(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
         
 
     ## executes the command
     # \brief It fetches the datasources from the configuration server
-    def execute(self):       
+    def redo(self):       
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is not None and hasattr(self._ds, "instance"):
@@ -621,7 +587,7 @@ class ServerStoreDataSource(Command):
 
     ## unexecutes the command
     # \brief It populates the datasource list
-    def unexecute(self):
+    def undo(self):
         ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
             self.receiver.main.sourceList.populateElements(ds.id)
@@ -629,24 +595,22 @@ class ServerStoreDataSource(Command):
             self.receiver.main.sourceList.populateElements()
         print "UNDO serverStoreDataSource"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerStoreDataSource(self.receiver, self.slot) 
 
 ## Command which deletes the current datasource in the configuration server
-class ServerDeleteDataSource(Command):
+class ServerDeleteDataSource(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._ds = None
 
     ## executes the command
     # \brief It deletes the current datasource in the configuration server
-    def execute(self):       
+    def redo(self):       
         if self._ds is None:
             self._ds = self.receiver.main.sourceList.currentListElement()
         if self._ds is not None:
@@ -687,7 +651,7 @@ class ServerDeleteDataSource(Command):
 
     ## unexecutes the command
     # \brief It populates the datasource list
-    def unexecute(self):
+    def undo(self):
         ds = self.receiver.main.sourceList.currentListElement()
         if hasattr(ds , "id"):
             self.receiver.main.sourceList.populateElements(ds.id)
@@ -695,26 +659,23 @@ class ServerDeleteDataSource(Command):
             self.receiver.main.sourceList.populateElements()
         print "UNDO serverDeleteDataSource"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerDeleteDataSource(self.receiver, self.slot) 
-
 
 
 ## Command which closes connection to the configuration server
-class ServerClose(Command):
+class ServerClose(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._state = None
 
     ## executes the command
     # \brief It closes connection to the configuration server
-    def execute(self):       
+    def redo(self):       
         if self.receiver.main.configServer:
             self.receiver.main.configServer.close()
 
@@ -735,7 +696,7 @@ class ServerClose(Command):
 
     ## unexecutes the command
     # \brief It reopen the connection to the configuration server
-    def unexecute(self):
+    def undo(self):
         if self.receiver.main.configServer:
             try:
                 if  self._state is None:   
@@ -751,26 +712,23 @@ class ServerClose(Command):
                     unicode(e))
         print "UNDO serverClose"
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerClose(self.receiver, self.slot) 
-
 
 ## Command which saves all components in the file
-class ServerStoreAllComponents(Command):
+class ServerStoreAllComponents(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         self._subwindow = None
         
         
     ## executes the command
     # \brief It saves all components in the file
-    def execute(self):
+    def redo(self):
             
         for icp in self.receiver.main.componentList.elements.keys():
             cp = self.receiver.main.componentList.elements[icp]
@@ -821,29 +779,26 @@ class ServerStoreAllComponents(Command):
 
     ## unexecutes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO componentStoreAll"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerStoreAllComponents(self.receiver, self.slot) 
-
 
 ## Command which saves all the datasources in files
-class ServerStoreAllDataSources(Command):
+class ServerStoreAllDataSources(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
-    # \param slot slot name of the receiver related to the command
-    def __init__(self, receiver, slot):
-        Command.__init__(self, receiver, slot)
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
         
         
     ## executes the command
     # \brief It saves all the datasources in files
-    def execute(self):
+    def redo(self):
             
         for ids in self.receiver.main.sourceList.elements.keys():
             ds = self.receiver.main.sourceList.elements[ids]
@@ -895,14 +850,10 @@ class ServerStoreAllDataSources(Command):
 
     ## executes the command
     # \brief It does nothing
-    def unexecute(self):
+    def undo(self):
         print "UNDO dsourceStoreAll"
 
 
-    ## clones the command
-    # \returns clone of the current instance
-    def clone(self):
-        return ServerStoreAllDataSources(self.receiver, self.slot) 
         
 
 if __name__ == "__main__":

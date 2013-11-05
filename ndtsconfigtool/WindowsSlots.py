@@ -79,23 +79,27 @@ class WindowsSlots(object):
             self.windows[ac] = getattr(self.main.ui, ac)
 
         self.windows["Mapper"] = QSignalMapper(self.main)
-        self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
-                     self.main.ui.mdi, SLOT("setActiveWindow(QMdiSubWindow*)"))
-
         self.windows["Menu"] = self.main.ui.menuWindow
+
+#        self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
+#                     self.main.ui.mdi, SLOT("setActiveSubWindow(QWidget*)"))
+#        self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
+#                     self.main.ui.mdi, SLOT("setActiveSubWindow(QMdiSubWindow*)"))
+
+        self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
+                     self.activate)
+
+
         self.main.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
                      self.updateWindowMenu)
-
-
-        # signals
-
         self.main.connect(
             self.main.ui.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"), 
             self.mdiWindowActivated)
 
 
 
-
+    def activate(self, sub):
+        self.main.ui.mdi.setActiveSubWindow(sub)
 
 
     ## activated window action, i.e. it changes the current position 
@@ -204,7 +208,6 @@ class WindowsSlots(object):
                          self.windows["Mapper"], SLOT("map()"))
             self.windows["Mapper"].setMapping(action, dialog)
             i += 1
-
 
     ## adds actions to target
     # \param target action target

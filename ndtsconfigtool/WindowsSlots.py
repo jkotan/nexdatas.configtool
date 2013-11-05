@@ -82,7 +82,8 @@ class WindowsSlots(object):
         self.windows["Menu"] = self.main.ui.menuWindow
 
 #        self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
-#                     self.main.ui.mdi, SLOT("setActiveSubWindow(QMdiSubWindow*)"))
+#                     self.main.ui.mdi, 
+#                      SLOT("setActiveSubWindow(QMdiSubWindow*)"))
 
         self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
                      self.activate)
@@ -222,6 +223,40 @@ class WindowsSlots(object):
                 target.addAction(action)
 
 
+    ## closes the current window
+    # \brief Is closes the current datasource window
+    def dsourceClose(self):
+        print "datasource close"
+        subwindow = self.main.ui.mdi.activeSubWindow()
+        if subwindow and isinstance(subwindow.widget(), CommonDataSourceDlg) \
+                and subwindow.widget().datasource:
+            
+            ds = subwindow.widget().datasource
+
+            ds.updateForm()
+            if ds.dialog:
+                ds.dialog.reject()
+
+            self.main.ui.mdi.setActiveSubWindow(subwindow)
+            self.main.ui.mdi.closeActiveSubWindow()
+
+
+    ## closes the current window
+    # \brief Is closes the current component window
+    def componentClose(self):
+        print "component close"
+        subwindow = self.main.ui.mdi.activeSubWindow()
+        if subwindow and isinstance(subwindow.widget(), ComponentDlg) \
+                and subwindow.widget().component:
+            cp = subwindow.widget().component
+
+            if cp.dialog:
+                cp.dialog.reject()
+
+
+            self.main.ui.mdi.setActiveSubWindow(subwindow)
+            self.main.ui.mdi.closeActiveSubWindow()
+        
 
 if __name__ == "__main__":   
     pass

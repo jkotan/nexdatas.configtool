@@ -24,11 +24,10 @@
 import os
 
 from PyQt4.QtCore import (
-    SIGNAL, SLOT, QSettings, Qt,  QSignalMapper, 
-    QVariant)
+    SIGNAL, QSettings, Qt, QVariant)
 from PyQt4.QtGui import (
     QMainWindow, 
-    QAction, QKeySequence, QMessageBox, QIcon, 
+    QAction, QMessageBox, QIcon, 
     QLabel, QFrame,
     QUndoGroup, QUndoStack)
 
@@ -213,21 +212,6 @@ class MainWindow(QMainWindow):
         return status
 
 
-    ## creates action
-    # \param text string shown in menu
-    # \param slot action slot 
-    # \param shortcut key short-cut
-    # \param icon qrc_resource icon name
-    # \param tip text for status bar and text hint
-    # \param checkable if command/action checkable
-    # \param signal action signal   
-    # \returns the action instance
-    def _createAction(self, text, slot=None, shortcut=None, icon=None,
-                     tip=None, checkable=False, signal="triggered()"):
-        action = QAction(text, self)
-        return self.__setAction(
-            action, text, slot, shortcut, icon,
-            tip, checkable, signal)
 
     ## creates action
     # \param action the action instance
@@ -269,7 +253,7 @@ class MainWindow(QMainWindow):
                 self.connect(pars[1], SIGNAL(pars[2]), 
                              getattr(slots, pars[0]))
 
-    def createUndoRedoActions(self):
+    def __createUndoRedoActions(self):
         self.undoGroup.addStack(self.undoStack)
         self.undoGroup.setActiveStack(self.undoStack)
         actionUndo = self.undoGroup.createUndoAction(self)
@@ -289,7 +273,7 @@ class MainWindow(QMainWindow):
         self.undoGroup = QUndoGroup(self)
         self.undoStack = QUndoStack(self)
 
-        self.createUndoRedoActions()
+        self.__createUndoRedoActions()
         
         self.slots["File"] = FileSlots(self)
         self.slots["List"] = ListSlots(self)
@@ -317,7 +301,7 @@ class MainWindow(QMainWindow):
         viewDockAction.setToolTip("Show/Hide the dock lists")
         viewDockAction.setStatusTip("Show/Hide the dock lists")
 
-        viewAllAttributesAction = self.__setAction(
+        self.__setAction(
             self.ui.actionAllAttributesView,
             "&All Attributes", self.viewAllAttributes, "",
             tip = "Go to the component list", checkable=True)
@@ -421,7 +405,7 @@ class MainWindow(QMainWindow):
         self.externalDSActions = {
             "externalSave":self.slots["File"].dsourceSaveButton, 
             "externalApply":self.slots["Edit"].dsourceApplyButton, 
-            "externalClose":self.dsourceClose, 
+            "externalClose":self.slots["Windows"].dsourceClose, 
             "externalStore":self.slots["Server"].\
                 serverStoreDataSourceButton}    
 
@@ -431,7 +415,7 @@ class MainWindow(QMainWindow):
             "externalSave":self.slots["File"].componentSaveButton,
             "externalStore":self.slots["Server"].serverStoreComponentButton,
             "externalApply":self.slots["Item"].componentApplyItemButton,
-            "externalClose":self.componentClose,
+            "externalClose":self.slots["Windows"].componentClose,
             "externalDSLink":self.slots["Item"].\
                 componentLinkDataSourceItemButton}
 
@@ -664,40 +648,6 @@ class MainWindow(QMainWindow):
 
     # mdi
 
-    ## closes the current window
-    # \brief Is closes the current datasource window
-    def dsourceClose(self):
-        print "datasource close"
-        subwindow = self.ui.mdi.activeSubWindow()
-        if subwindow and isinstance(subwindow.widget(), CommonDataSourceDlg) \
-                and subwindow.widget().datasource:
-            
-            ds = subwindow.widget().datasource
-
-            ds.updateForm()
-            if ds.dialog:
-                ds.dialog.reject()
-
-            self.ui.mdi.setActiveSubWindow(subwindow)
-            self.ui.mdi.closeActiveSubWindow()
-
-
-    ## closes the current window
-    # \brief Is closes the current component window
-    def componentClose(self):
-        print "component close"
-        subwindow = self.ui.mdi.activeSubWindow()
-        if subwindow and isinstance(subwindow.widget(), ComponentDlg) \
-                and subwindow.widget().component:
-            cp = subwindow.widget().component
-
-            if cp.dialog:
-                cp.dialog.reject()
-
-
-            self.ui.mdi.setActiveSubWindow(subwindow)
-            self.ui.mdi.closeActiveSubWindow()
-        
     # windows
 
     # view

@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <definition>
-  <datasource type="CLIENT">
+  <datasource type="CLIENT" name="adsasd">
     <record name="emitance"/>
     <doc>test client datasource</doc>
   </datasource>

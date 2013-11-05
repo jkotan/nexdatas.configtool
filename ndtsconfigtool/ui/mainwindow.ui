@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1175</width>
+    <height>597</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="margin">
+     <number>0</number>
+    </property>
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="QMdiArea" name="mdi">
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1175</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionNewDataSource"/>
+    <addaction name="actionLoad"/>
+    <addaction name="actionLoadDataSource"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveDataSource"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="actionSaveDataSourceAs"/>
+    <addaction name="actionSaveAll"/>
+    <addaction name="actionSaveAllDataSources"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose"/>
+    <addaction name="actionCloseDataSource"/>
+    <addaction name="separator"/>
+    <addaction name="actionReloadList"/>
+    <addaction name="actionReloadDataSourceList"/>
+    <addaction name="actionChangeDirectory"/>
+    <addaction name="actionChangeDataSourceDirectory"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionCutItem"/>
+    <addaction name="actionCopyItem"/>
+    <addaction name="actionPasteItem"/>
+    <addaction name="separator"/>
+    <addaction name="actionCutComponentItem"/>
+    <addaction name="actionCopyComponentItem"/>
+    <addaction name="actionPasteComponentItem"/>
+    <addaction name="separator"/>
+    <addaction name="actionCutDataSource"/>
+    <addaction name="actionCopyDataSource"/>
+    <addaction name="actionPasteDataSource"/>
+    <addaction name="separator"/>
+    <addaction name="actionEditComponent"/>
+    <addaction name="actionTakeDataSourceItem"/>
+    <addaction name="actionTakeDataSources"/>
+    <addaction name="separator"/>
+    <addaction name="actionEditDataSource"/>
+    <addaction name="actionApplyDataSource"/>
+   </widget>
+   <widget class="QMenu" name="menuComponentItems">
+    <property name="title">
+     <string>&amp;Component Items</string>
+    </property>
+    <addaction name="actionNewGroupItem"/>
+    <addaction name="actionNewFieldItem"/>
+    <addaction name="actionNewStrategyItem"/>
+    <addaction name="actionNewDataSourceItem"/>
+    <addaction name="actionNewAttributeItem"/>
+    <addaction name="actionNewLinkItem"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoadSubComponentItem"/>
+    <addaction name="actionLoadDataSourceItem"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddDataSourceItem"/>
+    <addaction name="actionLinkDataSourceItem"/>
+    <addaction name="separator"/>
+    <addaction name="actionMoveUpComponentItem"/>
+    <addaction name="actionMoveDownComponentItem"/>
+    <addaction name="separator"/>
+    <addaction name="actionMergeComponentItems"/>
+    <addaction name="actionApplyComponentItem"/>
+    <addaction name="separator"/>
+    <addaction name="actionClearComponentItems"/>
+   </widget>
+   <widget class="QMenu" name="menuServer">
+    <property name="title">
+     <string>&amp;Server</string>
+    </property>
+    <addaction name="actionConnectServer"/>
+    <addaction name="separator"/>
+    <addaction name="actionFetchComponentsServer"/>
+    <addaction name="actionStoreComponentServer"/>
+    <addaction name="actionStoreAllComponentsServer"/>
+    <addaction name="actionDeleteComponentServer"/>
+    <addaction name="separator"/>
+    <addaction name="actionFetchDataSourcesServer"/>
+    <addaction name="actionStoreDataSourceServer"/>
+    <addaction name="actionStoreAllDataSourcesServer"/>
+    <addaction name="actionDeleteDataSourceServer"/>
+    <addaction name="separator"/>
+    <addaction name="actionGetMandatoryComponentsServer"/>
+    <addaction name="actionSetComponentMandatoryServer"/>
+    <addaction name="actionUnsetComponentMandatoryServer"/>
+    <addaction name="separator"/>
+    <addaction name="actionCloseServer"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="actionAllAttributesView"/>
+   </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>&amp;Window</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionComponentDesignerHelp"/>
+    <addaction name="actionAboutComponentDesigner"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuComponentItems"/>
+   <addaction name="menuServer"/>
+   <addaction name="menuView"/>
+   <addaction name="menuWindow"/>
+   <addaction name="separator"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="compDockWidget">
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Collections</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <property name="margin">
+      <number>0</number>
+     </property>
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QSplitter" name="dockSplitter">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="handleWidth">
+        <number>6</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QToolBar" name="componentToolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionNew"/>
+   <addaction name="actionLoad"/>
+   <addaction name="actionEditComponent"/>
+   <addaction name="actionSave"/>
+   <addaction name="actionSaveAs"/>
+   <addaction name="actionMergeComponentItems"/>
+   <addaction name="actionClose"/>
+  </widget>
+  <widget class="QToolBar" name="editToolBar">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionCutItem"/>
+   <addaction name="actionCopyItem"/>
+   <addaction name="actionPasteItem"/>
+   <addaction name="separator"/>
+  </widget>
+  <widget class="QToolBar" name="dsourceToolBar">
+   <property name="windowTitle">
+    <string>toolBar_3</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionNewDataSource"/>
+   <addaction name="actionLoadDataSource"/>
+   <addaction name="actionEditDataSource"/>
+   <addaction name="actionSaveDataSource"/>
+   <addaction name="actionCloseDataSource"/>
+  </widget>
+  <widget class="QToolBar" name="serverToolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionConnectServer"/>
+   <addaction name="actionCloseServer"/>
+  </widget>
+  <widget class="QToolBar" name="helpToolBar">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionComponentDesignerHelp"/>
+  </widget>
+  <action name="actionNew">
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new component</string>
+   </property>
+  </action>
+  <action name="actionNewDataSource">
+   <property name="text">
+    <string>&amp;New DataSource</string>
+   </property>
+   <property name="iconText">
+    <string>New</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new data source</string>
+   </property>
+  </action>
+  <action name="actionLoad">
+   <property name="text">
+    <string>&amp;Load ...</string>
+   </property>
+   <property name="toolTip">
+    <string>Load an existing data source</string>
+   </property>
+  </action>
+  <action name="actionLoadDataSource">
+   <property name="text">
+    <string>&amp;Load DataSource ...</string>
+   </property>
+   <property name="iconText">
+    <string>Load</string>
+   </property>
+   <property name="toolTip">
+    <string>Load an existing data source</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Write the component into a file</string>
+   </property>
+  </action>
+  <action name="actionSaveDataSource">
+   <property name="text">
+    <string>&amp;Save DataSource</string>
+   </property>
+   <property name="iconText">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>Save &amp;As ...</string>
+   </property>
+   <property name="toolTip">
+    <string>Write the component into a file as ...</string>
+   </property>
+  </action>
+  <action name="actionSaveDataSourceAs">
+   <property name="text">
+    <string>Save DataSource &amp;As</string>
+   </property>
+  </action>
+  <action name="actionSaveAll">
+   <property name="text">
+    <string>Save All</string>
+   </property>
+   <property name="toolTip">
+    <string>Write all components into files</string>
+   </property>
+  </action>
+  <action name="actionSaveAllDataSources">
+   <property name="text">
+    <string>Save All DataSources</string>
+   </property>
+  </action>
+  <action name="actionCloseDataSource">
+   <property name="text">
+    <string>Cl&amp;ose DataSource</string>
+   </property>
+   <property name="iconText">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionReloadList">
+   <property name="text">
+    <string>Reload List</string>
+   </property>
+  </action>
+  <action name="actionReloadDataSourceList">
+   <property name="text">
+    <string>Reload DataSource List</string>
+   </property>
+  </action>
+  <action name="actionChangeDirectory">
+   <property name="text">
+    <string>Change Directory ...</string>
+   </property>
+  </action>
+  <action name="actionChangeDataSourceDirectory">
+   <property name="text">
+    <string>Change DataSource Directory ...</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="actionCutItem">
+   <property name="text">
+    <string>C&amp;ut Item</string>
+   </property>
+   <property name="iconText">
+    <string>Cut</string>
+   </property>
+  </action>
+  <action name="actionCopyItem">
+   <property name="text">
+    <string>&amp;Copy Item</string>
+   </property>
+   <property name="iconText">
+    <string>Copy</string>
+   </property>
+  </action>
+  <action name="actionPasteItem">
+   <property name="text">
+    <string>&amp;Paste Item</string>
+   </property>
+   <property name="iconText">
+    <string>Paste</string>
+   </property>
+  </action>
+  <action name="actionCutComponentItem">
+   <property name="text">
+    <string>C&amp;ut Component Item</string>
+   </property>
+  </action>
+  <action name="actionCopyComponentItem">
+   <property name="text">
+    <string>&amp;Copy Component Item</string>
+   </property>
+  </action>
+  <action name="actionPasteComponentItem">
+   <property name="text">
+    <string>&amp;Paste Component Item</string>
+   </property>
+  </action>
+  <action name="actionCutDataSource">
+   <property name="text">
+    <string>C&amp;ut DataSource</string>
+   </property>
+  </action>
+  <action name="actionCopyDataSource">
+   <property name="text">
+    <string>&amp;Copy DataSource</string>
+   </property>
+  </action>
+  <action name="actionPasteDataSource">
+   <property name="text">
+    <string>&amp;Paste DataSource</string>
+   </property>
+  </action>
+  <action name="actionEditComponent">
+   <property name="text">
+    <string>&amp;Edit Component</string>
+   </property>
+   <property name="iconText">
+    <string>Edit</string>
+   </property>
+  </action>
+  <action name="actionTakeDataSourceItem">
+   <property name="text">
+    <string>&amp;Take DataSource Item</string>
+   </property>
+  </action>
+  <action name="actionTakeDataSources">
+   <property name="text">
+    <string>Take DataSources</string>
+   </property>
+  </action>
+  <action name="actionEditDataSource">
+   <property name="text">
+    <string>&amp;Edit DataSource</string>
+   </property>
+   <property name="iconText">
+    <string>Edit</string>
+   </property>
+  </action>
+  <action name="actionApplyDataSource">
+   <property name="text">
+    <string>&amp;Apply DataSource</string>
+   </property>
+  </action>
+  <action name="actionNewGroupItem">
+   <property name="text">
+    <string>New &amp;Group</string>
+   </property>
+  </action>
+  <action name="actionNewFieldItem">
+   <property name="text">
+    <string>New &amp;Field</string>
+   </property>
+  </action>
+  <action name="actionNewStrategyItem">
+   <property name="text">
+    <string>New &amp;Strategy</string>
+   </property>
+  </action>
+  <action name="actionNewDataSourceItem">
+   <property name="text">
+    <string>New &amp;DataSource</string>
+   </property>
+  </action>
+  <action name="actionNewAttributeItem">
+   <property name="text">
+    <string>New A&amp;ttribute</string>
+   </property>
+  </action>
+  <action name="actionNewLinkItem">
+   <property name="text">
+    <string>New &amp;Link</string>
+   </property>
+  </action>
+  <action name="actionLoadSubComponentItem">
+   <property name="text">
+    <string>Load SubComponent Item ...</string>
+   </property>
+  </action>
+  <action name="actionLoadDataSourceItem">
+   <property name="text">
+    <string>Load DataSource Item ...</string>
+   </property>
+  </action>
+  <action name="actionAddDataSourceItem">
+   <property name="text">
+    <string>Add DataSource</string>
+   </property>
+  </action>
+  <action name="actionLinkDataSourceItem">
+   <property name="text">
+    <string>Link DataSource</string>
+   </property>
+  </action>
+  <action name="actionMoveUpComponentItem">
+   <property name="text">
+    <string>Move Up Component Item</string>
+   </property>
+  </action>
+  <action name="actionMoveDownComponentItem">
+   <property name="text">
+    <string>Move Down Component Item</string>
+   </property>
+  </action>
+  <action name="actionMergeComponentItems">
+   <property name="text">
+    <string>Merge Component Items</string>
+   </property>
+   <property name="iconText">
+    <string>Merge</string>
+   </property>
+  </action>
+  <action name="actionApplyComponentItem">
+   <property name="text">
+    <string>Apply Component Item</string>
+   </property>
+  </action>
+  <action name="actionClearComponentItems">
+   <property name="text">
+    <string>Clear Component Items</string>
+   </property>
+  </action>
+  <action name="actionConnectServer">
+   <property name="text">
+    <string>&amp;Connect ...</string>
+   </property>
+  </action>
+  <action name="actionFetchComponentsServer">
+   <property name="text">
+    <string>&amp;Fetch Components</string>
+   </property>
+  </action>
+  <action name="actionStoreComponentServer">
+   <property name="text">
+    <string>&amp;Store Component</string>
+   </property>
+  </action>
+  <action name="actionStoreAllComponentsServer">
+   <property name="text">
+    <string>Store &amp;All Components</string>
+   </property>
+  </action>
+  <action name="actionDeleteComponentServer">
+   <property name="text">
+    <string>&amp;Delete Component</string>
+   </property>
+  </action>
+  <action name="actionFetchDataSourcesServer">
+   <property name="text">
+    <string>&amp;Fetch DataSources</string>
+   </property>
+  </action>
+  <action name="actionStoreDataSourceServer">
+   <property name="text">
+    <string>&amp;Store DataSource</string>
+   </property>
+  </action>
+  <action name="actionStoreAllDataSourcesServer">
+   <property name="text">
+    <string>Store &amp;All DataSources</string>
+   </property>
+  </action>
+  <action name="actionGetMandatoryComponentsServer">
+   <property name="text">
+    <string>&amp;Get Mandatory Components</string>
+   </property>
+  </action>
+  <action name="actionSetComponentMandatoryServer">
+   <property name="text">
+    <string>Set Component Mandatory</string>
+   </property>
+  </action>
+  <action name="actionUnsetComponentMandatoryServer">
+   <property name="text">
+    <string>Unset Component Mandatory</string>
+   </property>
+  </action>
+  <action name="actionCloseServer">
+   <property name="text">
+    <string>Cl&amp;ose</string>
+   </property>
+  </action>
+  <action name="actionAllAttributesView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;All Attributes</string>
+   </property>
+  </action>
+  <action name="actionComponentDesignerHelp">
+   <property name="text">
+    <string>Component Designer &amp;Help</string>
+   </property>
+   <property name="iconText">
+    <string>Help</string>
+   </property>
+  </action>
+  <action name="actionAboutComponentDesigner">
+   <property name="text">
+    <string>&amp;About Component Designer</string>
+   </property>
+  </action>
+  <action name="actionDeleteDataSourceServer">
+   <property name="text">
+    <string>&amp;Delete DataSource</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Cl&amp;ose</string>
+   </property>
+  </action>
+  <action name="actionNextWindows">
+   <property name="text">
+    <string>&amp;Next</string>
+   </property>
+  </action>
+  <action name="actionPreviousWindows">
+   <property name="text">
+    <string>&amp;Previous</string>
+   </property>
+  </action>
+  <action name="actionCascadeWindows">
+   <property name="text">
+    <string>Casca&amp;de</string>
+   </property>
+  </action>
+  <action name="actionTileWindows">
+   <property name="text">
+    <string>&amp;Tile</string>
+   </property>
+  </action>
+  <action name="actionRestoreAllWindows">
+   <property name="text">
+    <string>&amp;Restore All</string>
+   </property>
+  </action>
+  <action name="actionCloseAllWindows">
+   <property name="text">
+    <string>&amp;Close All </string>
+   </property>
+  </action>
+  <action name="actionIconizeAllWindows">
+   <property name="text">
+    <string>&amp;Iconize All</string>
+   </property>
+  </action>
+  <action name="actionCloseWindows">
+   <property name="text">
+    <string>Cl&amp;ose</string>
+   </property>
+  </action>
+  <action name="actionComponentListWindows">
+   <property name="text">
+    <string>&amp;Component List</string>
+   </property>
+  </action>
+  <action name="actionDataSourceListWindows">
+   <property name="text">
+    <string>&amp;DataSource List</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ComponentList</class>
- <widget class="QWidget" name="ComponentList">
+ <class>ElementList</class>
+ <widget class="QWidget" name="ElementList">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>304</width>
-    <height>420</height>
+    <width>303</width>
+    <height>497</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ComponentList</string>
+   <string>ElementList</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <property name="margin">
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QTabWidget" name="componentTabWidget">
+    <widget class="QTabWidget" name="elementTabWidget">
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
@@ -28,13 +31,22 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="componentTab">
+     <property name="elideMode">
+      <enum>Qt::ElideNone</enum>
+     </property>
+     <property name="documentMode">
+      <bool>false</bool>
+     </property>
+     <property name="movable">
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="elementTab">
       <attribute name="title">
-       <string>  Components  </string>
+       <string>Elements</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
-        <widget class="QListWidget" name="componentListWidget"/>
+        <widget class="QListWidget" name="elementListWidget"/>
        </item>
       </layout>
      </widget>
@@ -43,8 +55,7 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>componentListWidget</tabstop>
-  <tabstop>componentTabWidget</tabstop>
+  <tabstop>elementListWidget</tabstop>
  </tabstops>
  <resources/>
  <connections/>

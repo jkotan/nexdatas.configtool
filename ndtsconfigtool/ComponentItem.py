@@ -34,13 +34,20 @@ class ComponentItem(object):
         self.__childItems = []
         ## the parent ComponentItem of the item
         self.parent = parent
-        
+   
+
+    ## provides indexs of given child
+    # \param child   
+    # \returns child index
+    def index(self, child):    
+        return self.__childItems.index(child)
+
 
     ## provides a number of the current item
     # \returns a number of the current item
     def childNumber(self):
         if self.parent:
-            return self.parent.__childItems.index(self)
+            return self.parent.index(self)
         return 0
         
 

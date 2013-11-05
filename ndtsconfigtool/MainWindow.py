@@ -292,17 +292,17 @@ class MainWindow(QMainWindow):
         viewDockAction.setToolTip("Show/Hide the dock lists")
         viewDockAction.setStatusTip("Show/Hide the dock lists")
 
+        self.ui.menuView.insertAction(
+            self.ui.menuView.actions()[0],
+            viewDockAction)
+
         self.__setAction(
             self.ui.actionAllAttributesView,
             "&All Attributes", self.viewAllAttributes, "",
             tip = "Go to the component list", checkable=True)
 
-        self.ui.menuView.insertAction(self.ui.menuView.actions()[0],
-                                      viewDockAction)
 
         # Signals
-
-
         self.connect(self.componentList.ui.elementListWidget, 
                      SIGNAL("itemDoubleClicked(QListWidgetItem*)"), 
                      self.slots["Edit"].componentEdit)
@@ -584,7 +584,6 @@ class MainWindow(QMainWindow):
     ## loads the component list
     # \brief It loads the component list from the default directory
     def loadComponents(self):
-#        self.componentList.elements = {}
         print "COMPONENT"
         self.componentList.loadList(
             self.externalCPActions, 
@@ -595,8 +594,6 @@ class MainWindow(QMainWindow):
 
         self.componentList.populateElements(ide)
         
-
-   # lists
 
 
     ## update datasource list item according to open window

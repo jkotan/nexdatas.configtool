@@ -304,6 +304,7 @@ class ComponentSaveAll(QUndoCommand):
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
+        ## main window
         self.receiver = receiver
         
         

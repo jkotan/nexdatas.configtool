@@ -60,11 +60,11 @@ class HelpForm(QDialog):
         ## help text Browser
         self.textBrowser = QTextBrowser(self)
 
-        self.layout = QVBoxLayout(self)
-        self.layout.addWidget(self.toolBar)
-        self.layout.addWidget(self.textBrowser, 1)
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.toolBar)
+        layout.addWidget(self.textBrowser, 1)
 
-        self.setLayout(self.layout)
+        self.setLayout(layout)
         self.textBrowser.setSearchPaths([":/help"])
         self.textBrowser.setSource(QUrl(self._page))
         self.resize(660, 700)

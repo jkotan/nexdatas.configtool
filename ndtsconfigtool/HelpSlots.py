@@ -19,7 +19,7 @@
 ## \file HelpSlots.py
 # user pool commands of GUI application
 
-""" Edit slots """
+""" Help slots """
 
 import platform
 
@@ -33,11 +33,14 @@ from .HelpForm import HelpForm
 class HelpSlots(object):
 
     ## constructor
-    # \param length maximal length of the stack
+    # \param main the main window dialog
     def __init__(self, main):
+        ## main window
         self.main = main
+        ## command stack
         self.undoStack = main.undoStack
-
+        
+        ## action data
         self.actions = {
 
         "actionAboutComponentDesigner":[

@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndtsconfigtool nexdatas
-## \file Command.py
+## \file ItemCommands.py
 # user commands of GUI application
 
 """ Component Designer commands """

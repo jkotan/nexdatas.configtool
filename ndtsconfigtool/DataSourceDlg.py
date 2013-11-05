@@ -236,6 +236,7 @@ if __name__ == "__main__":
     
     w = QWidget()
     w.show()
+    ## datasource form
     form2 = DataSourceDlg(w)
     form2.createGUI()
     form2.treeMode(True)

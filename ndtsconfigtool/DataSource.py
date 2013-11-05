@@ -36,6 +36,7 @@ from . import DataSourceDlg
 from .DataSourceMethods import DataSourceMethods
 
 
+## class with datasource variables
 class Variables(object):
     pass
 

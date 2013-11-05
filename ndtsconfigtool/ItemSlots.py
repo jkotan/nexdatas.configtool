@@ -57,11 +57,15 @@ from .ComponentDlg import ComponentDlg
 class ItemSlots(object):
 
     ## constructor
-    # \param length maximal length of the stack
+    # \param main the main window dialog
     def __init__(self, main):
+        ## main window
         self.main = main
+        ## command stack
         self.undoStack = main.undoStack
 
+
+        ## action data
         self.actions = {
         "actionNewGroupItem":[
             "New &Group Item", "componentNewGroupItem",

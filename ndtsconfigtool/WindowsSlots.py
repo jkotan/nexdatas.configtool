@@ -32,14 +32,17 @@ from .ComponentDlg import ComponentDlg
 class WindowsSlots(object):
 
     ## constructor
-    # \param length maximal length of the stack
+    # \param main the main window dialog
     def __init__(self, main):
+        ## main window
         self.main = main
+        ## command stack
         self.undoStack = main.undoStack
 
         ## dictionary with window actions
         self.windows = {}
 
+        ## action data
         self.actions = {
             "actionNextWindows":[
                 "&Next", "activateNextSubWindow", 
@@ -143,26 +146,32 @@ class WindowsSlots(object):
         self.main.componentList.ui.elementListWidget.setFocus()
 
   
-  ## restores all windows
+    ## restores all windows
     # \brief It restores all windows in MDI
     def gotoDataSourceList(self):
         self.main.sourceList.ui.elementListWidget.setFocus()
 
+    ## activates the next subwindow
     def activateNextSubWindow(self):
         self.main.ui.mdi.activateNextSubWindow()
 
+    ## activates the previous subwindow
     def activatePreviousSubWindow(self):
         self.main.ui.mdi.activatePreviousSubWindow()
 
+    ## cascades the subwindows
     def cascadeSubWindows(self):
         self.main.ui.mdi.cascadeSubWindows()
 
+    ## tiles the subwindows
     def tileSubWindows(self):
         self.main.ui.mdi.tileSubWindows()
  
+    ## closes all subwindows
     def closeAllSubWindows(self):
         self.main.ui.mdi.closeAllSubWindows()
 
+    ## closes the active subwindow
     def closeActiveSubWindow(self):
         self.main.ui.mdi.closeActiveSubWindow()
 

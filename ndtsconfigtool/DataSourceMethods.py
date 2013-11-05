@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndtsconfigtool nexdatas
-## \file DataSourceMethod.py
+## \file DataSourceMethods.py
 # Data Source method class
 
 """ Provides datasource widget methods """

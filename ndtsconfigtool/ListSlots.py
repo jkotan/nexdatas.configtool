@@ -43,11 +43,14 @@ from .EditCommands import (
 class ListSlots(object):
 
     ## constructor
-    # \param length maximal length of the stack
+    # \param main the main window dialog
     def __init__(self, main):
+        ## main window
         self.main = main
+        ## command stack
         self.undoStack = main.undoStack
 
+        ## action data
         self.actions = {
             "actionClose":[
                 "&Remove", "componentRemove",
@@ -69,6 +72,7 @@ class ListSlots(object):
 
             }
 
+        ## task data
         self.tasks = [
             [ "dsourceChanged",
               self.main.sourceList.ui.elementListWidget, 

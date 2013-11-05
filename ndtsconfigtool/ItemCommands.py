@@ -460,6 +460,7 @@ class PasteItem(QUndoCommand):
         QUndoCommand.__init__(self, parent)
         ## main window
         self.receiver = receiver 
+        ## element type 
         self.type = None
 
         self._ds = DataSourcePaste(receiver, parent)

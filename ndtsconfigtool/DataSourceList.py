@@ -60,7 +60,7 @@ class DataSourceList(ElementList):
 
 
     ## creates Element 
-    # \param element name
+    # \param name element name
     # \returns element instance
     def createElement(self, name):
         dlg = DataSource()

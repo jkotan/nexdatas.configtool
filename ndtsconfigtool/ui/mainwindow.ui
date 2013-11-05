@@ -639,6 +639,56 @@
     <string>Cl&amp;ose</string>
    </property>
   </action>
+  <action name="actionNextWindows">
+   <property name="text">
+    <string>&amp;Next</string>
+   </property>
+  </action>
+  <action name="actionPreviousWindows">
+   <property name="text">
+    <string>&amp;Previous</string>
+   </property>
+  </action>
+  <action name="actionCascadeWindows">
+   <property name="text">
+    <string>Casca&amp;de</string>
+   </property>
+  </action>
+  <action name="actionTileWindows">
+   <property name="text">
+    <string>&amp;Tile</string>
+   </property>
+  </action>
+  <action name="actionRestoreAllWindows">
+   <property name="text">
+    <string>&amp;Restore All</string>
+   </property>
+  </action>
+  <action name="actionCloseAllWindows">
+   <property name="text">
+    <string>&amp;Close All </string>
+   </property>
+  </action>
+  <action name="actionIconizeAllWindows">
+   <property name="text">
+    <string>&amp;Iconize All</string>
+   </property>
+  </action>
+  <action name="actionCloseWindows">
+   <property name="text">
+    <string>Cl&amp;ose</string>
+   </property>
+  </action>
+  <action name="actionComponentListWindows">
+   <property name="text">
+    <string>&amp;Component List</string>
+   </property>
+  </action>
+  <action name="actionDataSourceListWindows">
+   <property name="text">
+    <string>&amp;DataSource List</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

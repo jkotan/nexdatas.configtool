@@ -45,6 +45,7 @@ from .EditSlots import EditSlots
 from .ItemSlots import ItemSlots
 from .ServerSlots import ServerSlots
 from .HelpSlots import HelpSlots
+from .WindowsSlots import WindowsSlots
 
 
 
@@ -98,8 +99,6 @@ class MainWindow(QMainWindow):
         ## configuration server
         self.configServer = None
         
-        ## dictionary with window actions
-        self.windows = {}
 
 
         ## action slots
@@ -135,7 +134,6 @@ class MainWindow(QMainWindow):
             self.setupServer(settings)
 
         status = self.createStatusBar()        
-        self.updateWindowMenu()
         status.showMessage("Ready", 5000)
 
         self.setWindowTitle("NDTS Component Designer")
@@ -299,10 +297,13 @@ class MainWindow(QMainWindow):
         self.slots["Item"] = ItemSlots(self)
         self.slots["Server"] = ServerSlots(self)
         self.slots["Help"] = HelpSlots(self)
+        self.slots["Windows"] = WindowsSlots(self)
 
         for sl in self.slots.values():
             self.setActions(sl)
             self.setTasks(sl)
+
+        self.slots["Windows"].updateWindowMenu()
 
         # server
 
@@ -324,52 +325,8 @@ class MainWindow(QMainWindow):
         self.ui.menuView.insertAction(self.ui.menuView.actions()[0],
                                       viewDockAction)
 
-        # Windows
+        # Signals
 
-        self.windows["NextAction"] = self._createAction(
-            "&Next", self.ui.mdi.activateNextSubWindow, 
-            QKeySequence.NextChild, tip = "Go to the next window")
-        self.windows["PrevAction"] = self._createAction(
-            "&Previous", self.ui.mdi.activatePreviousSubWindow,
-            QKeySequence.PreviousChild, tip = "Go to the previous window")
-        self.windows["CascadeAction"] = self._createAction(
-            "Casca&de", self.ui.mdi.cascadeSubWindows , 
-            tip = "Cascade the windows")
-        self.windows["TileAction"] = self._createAction(
-            "&Tile", self.ui.mdi.tileSubWindows, tip = "Tile the windows")
-        self.windows["RestoreAction"] = self._createAction(
-            "&Restore All", self.windowRestoreAll, 
-            tip = "Restore the windows")
-        self.windows["CloseAllAction"] = self._createAction(
-            "&Close All", self.ui.mdi.closeAllSubWindows, 
-            tip = "Close the windows")
-        self.windows["MinimizeAction"] = self._createAction(
-            "&Iconize All", self.windowMinimizeAll, 
-            tip = "Minimize the windows")
-        self.windows["CloseAction"] = self._createAction(
-            "&Close", self.ui.mdi.closeActiveSubWindow, 
-            QKeySequence(Qt.Key_Escape),
-            tip = "Close the window" )
-        self.windows["ComponentListAction"] = self._createAction(
-            "&Component List", self.gotoComponentList, "Ctrl+<",
-            tip = "Go to the component list" )
-        self.windows["DataSourceListAction"] = self._createAction(
-            "&DataSource List", self.gotoDataSourceList, "Ctrl+>",
-            tip = "Go to the component list" )
-
-
-        self.windows["Mapper"] = QSignalMapper(self)
-        self.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
-                     self.ui.mdi, SLOT("setActiveWindow(QMdiSubWindow*)"))
-
-        self.windows["Menu"] = self.ui.menuWindow
-
-
-        # signals
-
-        self.connect(
-            self.ui.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"), 
-            self.mdiWindowActivated)
 
         self.connect(self.componentList.ui.elementListWidget, 
                      SIGNAL("itemDoubleClicked(QListWidgetItem*)"), 
@@ -378,7 +335,6 @@ class MainWindow(QMainWindow):
         self.connect(self.sourceList.ui.elementListWidget, 
                      SIGNAL("itemDoubleClicked(QListWidgetItem*)"), 
                      self.slots["Edit"].dsourceEdit)
-
 
         ## Component context menu
 
@@ -665,21 +621,6 @@ class MainWindow(QMainWindow):
         self.componentList.populateElements(ide)
         
 
-    ## adds actions to target
-    # \param target action target
-    # \param actions actions to be added   
-    @classmethod    
-    def _addActions(cls, target, actions):
-        if not  hasattr(actions, '__iter__'):
-            target.addAction(actions)
-        for action in actions:
-            if action is None:
-                target.addSeparator()
-            else:
-                target.addAction(action)
-
-    # File            
-
    # lists
 
 
@@ -721,21 +662,6 @@ class MainWindow(QMainWindow):
         return status        
             
 
-
-
-
-    ## restores all windows
-    # \brief It restores all windows in MDI
-    def gotoComponentList(self):
-        self.componentList.ui.elementListWidget.setFocus()
-
-  
-  ## restores all windows
-    # \brief It restores all windows in MDI
-    def gotoDataSourceList(self):
-        self.sourceList.ui.elementListWidget.setFocus()
-
-
     # mdi
 
     ## closes the current window
@@ -774,39 +700,6 @@ class MainWindow(QMainWindow):
         
     # windows
 
-    ## activated window action, i.e. it changes the current position 
-    #  of the component and datasource lists 
-    # \param subwindow selected subwindow
-    def mdiWindowActivated(self, subwindow):
-        widget = subwindow.widget() if hasattr(subwindow, "widget") else None
-        if isinstance(widget, CommonDataSourceDlg):
-            if widget.datasource.id is not None:
-                if hasattr(self.sourceList.currentListElement(),"id"):
-                    if self.sourceList.currentListElement().id \
-                            != widget.datasource.id: 
-                        self.sourceList.populateElements(
-                            widget.datasource.id)
-        elif isinstance(widget, ComponentDlg):
-            if widget.component.id is not None:
-                if hasattr(self.componentList.currentListElement(),"id"):
-                    if self.componentList.currentListElement().id \
-                            != widget.component.id:
-                        self.componentList.populateElements(
-                            widget.component.id)
-
-
-    ## restores all windows
-    # \brief It restores all windows in MDI
-    def windowRestoreAll(self):
-        for dialog in self.ui.mdi.subWindowList():
-            dialog.showNormal()
-
-
-    ## minimizes all windows
-    # \brief It minimizes all windows in MDI
-    def windowMinimizeAll(self):
-        for dialog in self.ui.mdi.subWindowList():
-            dialog.showMinimized()
     # view
 
     ## shows all attributes in the tree
@@ -848,45 +741,3 @@ class MainWindow(QMainWindow):
                 swin = sw
                 break
         return swin
-        
-
-    ## updates the window menu
-    # \brief It updates the window menu with the open windows
-    def updateWindowMenu(self):
-        self.windows["Menu"].clear()
-        self._addActions(self.windows["Menu"], 
-                         (self.windows["NextAction"],
-                          self.windows["PrevAction"], 
-                          self.windows["CascadeAction"],
-                          self.windows["TileAction"], 
-                          self.windows["RestoreAction"],
-                          self.windows["MinimizeAction"],
-                          None,
-                          self.windows["CloseAction"],
-                          self.windows["CloseAllAction"],
-                          None,
-                          self.windows["ComponentListAction"], 
-                          self.windows["DataSourceListAction"]
-                          ))
-        dialogs = self.ui.mdi.subWindowList()
-        if not dialogs:
-            return
-        self.windows["Menu"].addSeparator()
-        i = 1
-        menu = self.windows["Menu"]
-        for dialog in dialogs:
-            title = dialog.windowTitle()
-            if i == 10:
-                self.windows["Menu"].addSeparator()
-                menu = menu.addMenu("&More")
-            accel = ""
-            if i < 10:
-                accel = "&%s " % unicode(i)
-            elif i < 36:
-                accel = "&%s " % unicode(chr(i + ord("@") - 9))
-            action = menu.addAction("%s%s" % (accel, title))
-            self.connect(action, SIGNAL("triggered()"),
-                         self.windows["Mapper"], SLOT("map()"))
-            self.windows["Mapper"].setMapping(action, dialog)
-            i += 1
-

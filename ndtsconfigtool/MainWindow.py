@@ -643,11 +643,6 @@ class MainWindow(QMainWindow):
         return status        
             
 
-    # mdi
-
-    # windows
-
-    # view
 
     ## shows all attributes in the tree
     # \brief switch between all attributes in the tree or only type attribute

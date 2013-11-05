@@ -82,8 +82,6 @@ class WindowsSlots(object):
         self.windows["Menu"] = self.main.ui.menuWindow
 
 #        self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
-#                     self.main.ui.mdi, SLOT("setActiveSubWindow(QWidget*)"))
-#        self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
 #                     self.main.ui.mdi, SLOT("setActiveSubWindow(QMdiSubWindow*)"))
 
         self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
@@ -97,9 +95,10 @@ class WindowsSlots(object):
             self.mdiWindowActivated)
 
 
-
-    def activate(self, sub):
-        self.main.ui.mdi.setActiveSubWindow(sub)
+    ## actives mdi subwindow
+    # \param subWindow given sub-window 
+    def activate(self, subWindow):
+        self.main.ui.mdi.setActiveSubWindow(subWindow)
 
 
     ## activated window action, i.e. it changes the current position 

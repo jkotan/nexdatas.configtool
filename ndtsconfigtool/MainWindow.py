@@ -144,7 +144,6 @@ class MainWindow(QMainWindow):
         self.ui.dockSplitter.setStretchFactor(0, 2)
         self.ui.dockSplitter.setStretchFactor(1, 1)
 
-#        self.ui.mdi.setOption(QMdiArea.DontMaximizeSubWindowOnActivation)
 
 
     ## setups direcconfiguration server
@@ -249,6 +248,12 @@ class MainWindow(QMainWindow):
         actionUndo.setIcon(QIcon(":/undo.png"))
         actionRedo = self.undoGroup.createRedoAction(self)
         actionRedo.setIcon(QIcon(":/redo.png"))
+
+        actionUndo.setToolTip("Undo")
+        actionUndo.setStatusTip("Undo")
+        actionRedo.setToolTip("Redo")
+        actionRedo.setStatusTip("Redo")
+
         self.ui.menuEdit.insertAction(self.ui.menuEdit.actions()[0],
                                       actionUndo)
         self.ui.menuEdit.insertAction(actionUndo, actionRedo)

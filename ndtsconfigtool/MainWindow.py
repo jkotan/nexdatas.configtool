@@ -227,19 +227,9 @@ class MainWindow(QMainWindow):
     def _createAction(self, text, slot=None, shortcut=None, icon=None,
                      tip=None, checkable=False, signal="triggered()"):
         action = QAction(text, self)
-        if icon is not None:
-            action.setIcon(QIcon(":/%s.png"% unicode(icon).strip()))
-        if shortcut is not None:
-            action.setShortcut(shortcut)
-        if tip is not None:
-            action.setToolTip(tip)
-            action.setStatusTip(tip)
-        if slot is not None:
-            self.connect(action, SIGNAL(signal), slot)
-        if checkable:
-            action.setCheckable(True)
-        return action
-
+        return self.__setAction(
+            action, text, slot, shortcut, icon,
+            tip, checkable, signal)
 
     ## creates action
     # \param action the action instance
@@ -318,21 +308,7 @@ class MainWindow(QMainWindow):
 
         if not PYTANGO_AVAILABLE:
             self.ui.actionConnectServer.setDisabled(True)
-
-        self.ui.actionFetchComponentsServer.setDisabled(True)
-        self.ui.actionStoreComponentServer.setDisabled(True)
-        self.ui.actionStoreAllComponentsServer.setDisabled(True)
-        self.ui.actionDeleteComponentServer.setDisabled(True)
-        self.ui.actionGetMandatoryComponentsServer.setDisabled(True)
-        self.ui.actionSetComponentMandatoryServer.setDisabled(True)
-        self.ui.actionUnsetComponentMandatoryServer.setDisabled(True)
-        self.ui.actionFetchDataSourcesServer.setDisabled(True)
-        self.ui.actionStoreDataSourceServer.setDisabled(True)
-        self.ui.actionStoreAllDataSourcesServer.setDisabled(True)
-        self.ui.actionDeleteDataSourceServer.setDisabled(True)
-        self.ui.actionCloseServer.setDisabled(True)
-
-
+        self.disableServer(True)
 
         # View
 
@@ -347,8 +323,6 @@ class MainWindow(QMainWindow):
 
         self.ui.menuView.insertAction(self.ui.menuView.actions()[0],
                                       viewDockAction)
-
-
 
         # Windows
 
@@ -389,21 +363,6 @@ class MainWindow(QMainWindow):
                      self.ui.mdi, SLOT("setActiveWindow(QMdiSubWindow*)"))
 
         self.windows["Menu"] = self.ui.menuWindow
-
-#        self.windows["Menu"] = self.menuBar().addMenu("&Window")
-#        self.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
-#                     self.updateWindowMenu)
-
-        
-
-#        self.menuBar().addSeparator()
-
-#        helpMenu = self.menuBar().addMenu("&Help") 
-#        self._addActions(helpMenu, (helpHelpAction, helpAboutAction ))
-        
-
-        # tasks
-     
 
 
         # signals

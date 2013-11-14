@@ -19,18 +19,19 @@
 ## \file ComponentDesigner.pyw
 # GUI to create the XML components 
 
+""" Component Designer - configuration tool for Nexus Data Writer """
+
 import sys
 
 from PyQt4.QtGui import (QApplication, QIcon)
 
 
-import ndtsconfigtool     
 from ndtsconfigtool.MainWindow import MainWindow
 from ndtsconfigtool.qrc import qrc_resources
 
 
 if __name__ == "__main__":
-    import gc
+#    import gc
 #    gc.set_debug(gc.DEBUG_LEAK | gc.DEBUG_STATS)
 #    gc.set_debug(gc.DEBUG_LEAK )
     app = QApplication(sys.argv)

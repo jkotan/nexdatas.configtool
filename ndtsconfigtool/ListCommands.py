@@ -123,7 +123,7 @@ class ComponentRemove(QUndoCommand):
 
             self.receiver.componentList.addElement(self._cp, False)
             if self._cp.instance is None:
-                self._cp.instance = Component()
+                self._cp.instance = Component(self.receiver.componentList)
                 self._cp.instance.id = self._cp.id
                 self._cp.instance.directory = \
                     self.receiver.componentList.directory

@@ -60,7 +60,7 @@ class ComponentEdit(QUndoCommand):
         else:
             if self._cp.instance is None:
                 #                self._cpEdit = FieldWg()  
-                self._cpEdit = Component()
+                self._cpEdit = Component(self.receiver.componentList)
                 self._cpEdit.id = self._cp.id
                 self._cpEdit.directory = \
                     self.receiver.componentList.directory
@@ -475,7 +475,7 @@ class DataSourceApply(QUndoCommand):
                                 "Please select one of the datasources")
         if self._ds.instance is None:
             #                self._dsEdit = FieldWg()  
-            self._ds.instance  = DataSource.DataSource()
+            self._ds.instance  = DataSource.DataSource(self.receiver.sourceList)
             self._ds.instance.id = self._ds.id
             self._ds.instance.directory = \
                 self.receiver.sourceList.directory
@@ -755,7 +755,7 @@ class DataSourceEdit(QUndoCommand):
         else:
             if self._ds.instance is None:
                 #                self._dsEdit = FieldWg()  
-                self._dsEdit = DataSource.DataSource()
+                self._dsEdit = DataSource.DataSource(self.receiver.sourceList)
                 
                 self._dsEdit.id = self._ds.id
                 self._dsEdit.directory = self.receiver.sourceList.directory

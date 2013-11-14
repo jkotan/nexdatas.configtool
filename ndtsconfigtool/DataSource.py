@@ -44,7 +44,7 @@ class Variables(object):
 class CommonDataSource(object):
     
     ## constructor
-    def __init__(self):
+    def __init__(self, parent):
         
         ## data source type
         self.dataSourceType = 'CLIENT'
@@ -52,7 +52,7 @@ class CommonDataSource(object):
         self.doc = u''
 
         ## datasource dialog
-        self.dialog = NodeDlg()
+        self.dialog = NodeDlg(parent)
 
         ## datasource name
         self.dataSourceName = u''
@@ -138,7 +138,7 @@ class DataSource(CommonDataSource):
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
-        super(DataSource, self).__init__()
+        super(DataSource, self).__init__(parent)
 
 
         ## dialog parent

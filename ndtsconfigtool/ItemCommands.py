@@ -74,7 +74,7 @@ class ComponentItemCommand(QUndoCommand):
     def postExecute(self):    
         if self._cp is not None:
             if self._cp.instance is None:
-                self._cp.instance = Component()
+                self._cp.instance = Component(self.receiver.componentList)
                 self._cp.instance.id = self._cp.id
                 self._cp.instance.directory = \
                     self.receiver.componentList.directory
@@ -157,7 +157,7 @@ class ComponentItemCommand(QUndoCommand):
                 self.receiver.ui.mdi.setActiveSubWindow(subwindow)
             else:    
                 if self._cp.instance is None:
-                    self._cp.instance = Component()
+                    self._cp.instance = Component(self.receiver.componentList)
                     self._cp.instance.id = self._cp.id
                     self._cp.instance.directory = \
                         self.receiver.componentList.directory
@@ -664,7 +664,7 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
                     return
 
                 if ds.instance is None:
-                    dsEdit = DataSource.DataSource()
+                    dsEdit = DataSource.DataSource(self.receiver.sourceList)
                     dsEdit.id = ds.id
                     dsEdit.directory = self.receiver.sourceList.directory
                     dsEdit.name = self.receiver.sourceList.elements[
@@ -751,7 +751,7 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                     return
 
                 if ds.instance is None:
-                    dsEdit = DataSource.DataSource()
+                    dsEdit = DataSource.DataSource(self.receiver.sourceList)
                     dsEdit.id = ds.id
                     dsEdit.directory = self.receiver.sourceList.directory
                     dsEdit.name = self.receiver.sourceList.elements[

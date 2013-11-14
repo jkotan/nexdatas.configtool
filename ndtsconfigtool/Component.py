@@ -47,7 +47,7 @@ class Component(object):
     
     ## constructor
     # \brief Sets variables
-    def __init__(self):
+    def __init__(self, parent = None):
 
         ## directory from which components are loaded by default
         self.directory = ""
@@ -61,6 +61,8 @@ class Component(object):
         self.dialog = None
         ## component DOM document
         self.document = None        
+        ## parent node
+        self.parent = parent
 
         if os.path.exists(os.path.join(os.getcwd(),"components")):
             self._xmlPath = os.path.abspath(os.path.join(
@@ -561,7 +563,7 @@ class Component(object):
     ## creates GUI
     # It calls setupUi and creates required action connections
     def createGUI(self):
-        self.dialog = ComponentDlg(self, None)
+        self.dialog = ComponentDlg(self, self.parent)
         self.dialog.ui.setupUi(self.dialog)
         self.view = self.dialog.ui.view
 

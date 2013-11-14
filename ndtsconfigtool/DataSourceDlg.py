@@ -154,7 +154,7 @@ class DataSourceDlg(CommonDataSourceDlg):
         from .DataSource import CommonDataSource
 
         ## datasource data
-        self.datasource = CommonDataSource()
+        self.datasource = CommonDataSource(parent)
         ## datasource methods
         self.__methods = DataSourceMethods(self, self.datasource)
         

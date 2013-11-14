@@ -171,7 +171,7 @@ class ServerStoreComponent(QUndoCommand):
         if self._cp is not None:
             if self._cp.instance is None:
                 #                self._cpEdit = FieldWg()  
-                self._cpEdit = Component()
+                self._cpEdit = Component(self.receiver.componentList)
                 self._cpEdit.id = self._cp.id
                 self._cpEdit.directory = \
                     self.receiver.componentList.directory
@@ -734,7 +734,7 @@ class ServerStoreAllComponents(QUndoCommand):
             cp = self.receiver.componentList.elements[icp]
             if cp.instance is None:
                 #                self._cpEdit = FieldWg()  
-                cpEdit = Component()
+                cpEdit = Component(self.receiver.componentList)
                 cpEdit.id = cp.id
                 cpEdit.directory = self.receiver.componentList.directory
                 cpEdit.name = self.receiver.componentList.elements[
@@ -803,7 +803,7 @@ class ServerStoreAllDataSources(QUndoCommand):
         for ids in self.receiver.sourceList.elements.keys():
             ds = self.receiver.sourceList.elements[ids]
             if ds.instance is None:
-                dsEdit = DataSource.DataSource()
+                dsEdit = DataSource.DataSource(self.receiver.sourceList)
                 dsEdit.id = ds.id
                 dsEdit.directory = self.receiver.sourceList.directory
                 dsEdit.name = \

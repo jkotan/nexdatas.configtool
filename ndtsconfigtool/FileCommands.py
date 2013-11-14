@@ -59,7 +59,7 @@ class ComponentOpen(QUndoCommand):
             else:    
                 self._cp.instance = None
 
-            self._cpEdit = Component()
+            self._cpEdit = Component(self.receiver.componentList)
             self._cpEdit.id = self._cp.id
             self._cpEdit.directory = self.receiver.componentList.directory
             self._cpEdit.createGUI()
@@ -147,7 +147,7 @@ class DataSourceOpen(QUndoCommand):
             else:    
                 self._ds.instance = None
 
-            self._dsEdit = DataSource.DataSource()
+            self._dsEdit = DataSource.DataSource(self.receiver.sourceList)
             self._dsEdit.id = self._ds.id
             self._dsEdit.directory = self.receiver.sourceList.directory
             if self._fpath:
@@ -240,7 +240,7 @@ class ComponentSave(QUndoCommand):
         else:
             if self._cp.instance is None:
                 #                self._cpEdit = FieldWg()  
-                self._cpEdit = Component()
+                self._cpEdit = Component(self.receiver.componentList)
                 self._cpEdit.id = self._cp.id
                 self._cpEdit.directory = \
                     self.receiver.componentList.directory
@@ -316,7 +316,7 @@ class ComponentSaveAll(QUndoCommand):
             cp = self.receiver.componentList.elements[icp]
             if cp.instance is None:
                 #                self._cpEdit = FieldWg()  
-                cpEdit = Component()
+                cpEdit = Component(self.receiver.componentList)
                 cpEdit.id = cp.id
                 cpEdit.directory = self.receiver.componentList.directory
                 cpEdit.name = \
@@ -463,7 +463,7 @@ class DataSourceSaveAll(QUndoCommand):
         for ids in self.receiver.sourceList.elements.keys():
             ds = self.receiver.sourceList.elements[ids]
             if ds.instance is None:
-                dsEdit = DataSource.DataSource()
+                dsEdit = DataSource.DataSource(self.receiver.sourceList)
                 dsEdit.id = ds.id
                 dsEdit.directory = self.receiver.sourceList.directory
                 dsEdit.name = \
@@ -510,7 +510,7 @@ class DataSourceSave(QUndoCommand):
 
         if self._ds is not None and hasattr(self._ds, "instance"):
             if self._ds.instance is None:
-                dsEdit = DataSource.DataSource()
+                dsEdit = DataSource.DataSource(self.receiver.sourceList)
                 dsEdit.id = self._ds.id
                 dsEdit.directory = self.receiver.sourceList.directory
                 dsEdit.name = self.receiver.sourceList.elements[
@@ -573,7 +573,7 @@ class DataSourceSaveAs(QUndoCommand):
                                 "Please select one of the datasources")
         else:
             if self._ds.instance is None:
-                dsEdit = DataSource.DataSource()
+                dsEdit = DataSource.DataSource(self.receiver.sourceList)
                 dsEdit.id = self._ds.id
                 dsEdit.directory = self.receiver.sourceList.directory
                 dsEdit.name = self.receiver.sourceList.elements[

@@ -148,7 +148,7 @@ class DataSource(CommonDataSource):
         self.dialog = DataSourceDlg.CommonDataSourceDlg(self, parent)
 
         ## datasource methods
-        self.__methods = DataSourceMethods(self.dialog, self)
+        self.__methods = DataSourceMethods(self.dialog, self, self.parent)
 
         ## datasource directory
         self.directory = ""
@@ -217,7 +217,7 @@ class DataSource(CommonDataSource):
         if fname is None:
             if not self.name:
                 filename = unicode(QFileDialog.getOpenFileName(
-                        self.dialog,"Open File",self.directory,
+                        self.parent,"Open File",self.directory,
                         "XML files (*.xml);;HTML files (*.html);;"
                         "SVG files (*.svg);;User Interface files (*.ui)"))
                 fi = QFileInfo(filename)
@@ -255,23 +255,23 @@ class DataSource(CommonDataSource):
                     self.setFromNode(ds)
                 self.savedXML = self.document.toString(0)
             else:
-                QMessageBox.warning(self.dialog, "Cannot open the file", 
+                QMessageBox.warning(self.parent, "Cannot open the file", 
                                     "Cannot open the file: %s" % (filename))
             try:
                 self.createGUI()
 
             except Exception, e:
-                QMessageBox.warning(self.dialog, "dialog not created", 
+                QMessageBox.warning(self.parent, "dialog not created", 
                                     "Problems in creating a dialog %s :\n\n%s" \
                                         %(self.name,unicode(e)))
                 
         except (IOError, OSError, ValueError), e:
             error = "Failed to load: %s" % e
             print error
-            QMessageBox.warning(self.dialog, "Saving problem", error )
+            QMessageBox.warning(self.parent, "Saving problem", error )
 
         except Exception, e:
-            QMessageBox.warning(self.dialog, "Saving problem", e )
+            QMessageBox.warning(self.parent, "Saving problem", e )
             print e
         finally:                 
             if fh is not None:
@@ -361,7 +361,7 @@ class DataSource(CommonDataSource):
                     + "Please try to use Save As command " \
                     + "or change the datasource directory"
                 print error
-                QMessageBox.warning(self.dialog, "Saving problem",  error) 
+                QMessageBox.warning(self.parent, "Saving problem",  error) 
 
             finally:
                 if fh is not None:
@@ -374,7 +374,7 @@ class DataSource(CommonDataSource):
     def getNewName(self):
         filename = unicode(
             QFileDialog.getSaveFileName(
-                self.dialog,"Save DataSource As ...",self.directory,
+                self.parent,"Save DataSource As ...",self.directory,
                 "XML files (*.xml);;HTML files (*.html);;"
                 "SVG files (*.svg);;User Interface files (*.ui)"))
         print "saving in %s"% (filename)
@@ -387,7 +387,7 @@ class DataSource(CommonDataSource):
     ## gets the current view
     # \returns the current view  
     def __getview(self):
-        if self.dialog and hasattr(self.dialog,"view"):
+        if self.dialog and hasattr(self.parent,"view"):
             return self.dialog.view
 
     ## sets the current view

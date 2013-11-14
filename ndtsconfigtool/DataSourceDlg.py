@@ -156,7 +156,7 @@ class DataSourceDlg(CommonDataSourceDlg):
         ## datasource data
         self.datasource = CommonDataSource(parent)
         ## datasource methods
-        self.__methods = DataSourceMethods(self, self.datasource)
+        self.__methods = DataSourceMethods(self, self.datasource, self.parent)
         
 
 

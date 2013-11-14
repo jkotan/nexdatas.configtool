@@ -283,7 +283,7 @@ class Component(object):
         self.dialog.ui.splitter.setStretchFactor(0, 1)
         self.dialog.ui.splitter.setStretchFactor(1, 1)
         
-        model = ComponentModel(self.document, self._allAttributes, self.dialog)
+        model = ComponentModel(self.document, self._allAttributes, self.parent)
         self.view.setModel(model)
         self.connectView()
         
@@ -578,20 +578,20 @@ class Component(object):
             self.view.selectionModel(), 
             SIGNAL("currentChanged(QModelIndex,QModelIndex)"), 
             self.tagClicked)  
-        self.dialog.connect(
+        self.parent.connect(
             self.view.selectionModel(), 
             SIGNAL("currentChanged(QModelIndex,QModelIndex)"), 
             self.tagClicked)  
         self.dialog.disconnect(
             self.view, SIGNAL("expanded(QModelIndex)"), 
             self._resizeColumns)
-        self.dialog.connect(
+        self.parent.connect(
             self.view, SIGNAL("expanded(QModelIndex)"), 
             self._resizeColumns)
         self.dialog.disconnect(
             self.view, SIGNAL("collapsed(QModelIndex)"), 
             self._resizeColumns)
-        self.dialog.connect(
+        self.parent.connect(
             self.view, SIGNAL("collapsed(QModelIndex)"), 
             self._resizeColumns)
 
@@ -607,17 +607,17 @@ class Component(object):
                                externalClose = None, externalStore=None, 
                                externalDSLink = None):
         if externalSave and self.externalSave is None:
-            self.dialog.connect(
+            self.parent.connect(
                 self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                 externalSave)
             self.externalSave = externalSave
         if externalStore and self.externalStore is None:
-            self.dialog.connect(
+            self.parent.connect(
                 self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
                 externalStore)
             self.externalStore = externalStore
         if externalClose and self.externalClose is None:
-            self.dialog.connect(
+            self.parent.connect(
                 self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
                 externalClose)
             self.externalClose = externalClose
@@ -635,21 +635,21 @@ class Component(object):
             self.dialog.disconnect(
                 self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                 self.externalSave)
-            self.dialog.connect(
+            self.parent.connect(
                 self.dialog.ui.savePushButton, SIGNAL("clicked()"), 
                 self.externalSave)
         if self.externalStore:
             self.dialog.disconnect(
                 self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
                 self.externalStore)
-            self.dialog.connect(
+            self.parent.connect(
                 self.dialog.ui.storePushButton, SIGNAL("clicked()"), 
                 self.externalStore)
         if self.externalClose:
             self.dialog.disconnect(
                 self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
                 self.externalClose)
-            self.dialog.connect(
+            self.parent.connect(
                 self.dialog.ui.closePushButton, SIGNAL("clicked()"), 
                 self.externalClose)
 
@@ -666,7 +666,7 @@ class Component(object):
             model.setAttributeView(self._allAttributes)
 #             self.view.reset()
             newModel = ComponentModel(
-                self.document, self._allAttributes, self.dialog)
+                self.document, self._allAttributes, self.parent)
             self.view.setModel(newModel)
             self.connectView()
             self._hideFrame()
@@ -789,7 +789,7 @@ class Component(object):
         if not filePath:
             if not self.name:
                 self._componentFile = unicode(QFileDialog.getOpenFileName(
-                        self.dialog, "Open File", self._xmlPath,
+                        self.parent, "Open File", self._xmlPath,
                         "XML files (*.xml);;HTML files (*.html);;"
                         "SVG files (*.svg);;User Interface files (*.ui)"))
             else:
@@ -812,12 +812,12 @@ class Component(object):
                     return self._componentFile
                 else:
                     QMessageBox.warning(
-                        self.dialog, "Cannot open the file", 
+                        self.parent, "Cannot open the file", 
                         "Cannot open the file: %s" % (self._componentFile))
 
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
-                QMessageBox.warning(self.dialog, "Loading problem",
+                QMessageBox.warning(self.parent, "Loading problem",
                                     error )
                 
                 print error
@@ -857,7 +857,7 @@ class Component(object):
                 j += 1
         if self.dialog and self.dialog.ui:
             newModel = ComponentModel(
-                self.document, self._allAttributes, self.dialog)
+                self.document, self._allAttributes, self.parent)
             self.view.setModel(newModel)
             self.connectView()
         
@@ -881,7 +881,7 @@ class Component(object):
         if not filePath:
             itemFile = unicode(
                 QFileDialog.getOpenFileName(
-                    self.dialog, "Open File", self._xmlPath,
+                    self.parent, "Open File", self._xmlPath,
                     "XML files (*.xml);;HTML files (*.html);;"
                     "SVG files (*.svg);;User Interface files (*.ui)"))
         else:
@@ -898,7 +898,7 @@ class Component(object):
                     definition = root.firstChildElement(QString("definition"))
                     if definition.nodeName() != "definition":
                         QMessageBox.warning(
-                            self.dialog, "Corrupted SubComponent", 
+                            self.parent, "Corrupted SubComponent", 
                             "Component %s without <definition> tag" % itemFile)
                         return
                     child = definition.firstChild()
@@ -922,7 +922,7 @@ class Component(object):
 
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
-                QMessageBox.warning(self.dialog, "Loading problem",
+                QMessageBox.warning(self.parent, "Loading problem",
                                     error )
                 print error
             finally:                 
@@ -949,7 +949,7 @@ class Component(object):
         while not child.isNull():
             if child.nodeName() == 'datasource':
                 QMessageBox.warning(
-                    self.dialog, "DataSource exists", 
+                    self.parent, "DataSource exists", 
                     "To add a new datasource please remove the old one")
                 return
             child = child.nextSibling()    
@@ -964,7 +964,7 @@ class Component(object):
         if not filePath:
             dsFile = unicode(
                 QFileDialog.getOpenFileName(
-                    self.dialog, "Open File", self._dsPath,
+                    self.parent, "Open File", self._dsPath,
                     "XML files (*.xml);;HTML files (*.html);;"
                     "SVG files (*.svg);;User Interface files (*.ui)"))
         else:
@@ -987,7 +987,7 @@ class Component(object):
                         self.dialog.ui.widget.appendElement(ds2, index)
                     else:
                         QMessageBox.warning(
-                            self.dialog, "Corrupted DataSource ", 
+                            self.parent, "Corrupted DataSource ", 
                             "Missing <datasource> tag in %s" % dsFile)
 
                         
@@ -1025,7 +1025,7 @@ class Component(object):
         while not child.isNull():
             if child.nodeName() == 'datasource':
                 QMessageBox.warning(
-                    self.dialog, "DataSource exists", 
+                    self.parent, "DataSource exists", 
                     "To add a new datasource please remove the old one")
                 return
             child = child.nextSibling()    
@@ -1068,7 +1068,7 @@ class Component(object):
         while not child.isNull():
             if child.nodeName() == 'datasource':
                 QMessageBox.warning(
-                    self.dialog, "DataSource exists", 
+                    self.parent, "DataSource exists", 
                     "To link a new datasource please remove the old one")
                 return
             child = child.nextSibling()    
@@ -1116,11 +1116,11 @@ class Component(object):
         document = None
         dialog = False
 
-        self._mergerdlg = MergerDlg(self.dialog)
+        self._mergerdlg = MergerDlg(self.parent)
         self._mergerdlg.createGUI()
-        self.dialog.connect(
+        self.parent.connect(
             self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
-        self.dialog.connect(
+        self.parent.connect(
             self._mergerdlg.interruptButton, SIGNAL("clicked()"), 
             self._interruptMerger)
 
@@ -1136,7 +1136,7 @@ class Component(object):
             return
         try:
             self._merger = Merger(self.document)
-            self.dialog.connect(
+            self.parent.connect(
                 self._merger, SIGNAL("finished"), self._closeMergerDlg)
                     
             cNode = self._getCurrentNode()
@@ -1147,7 +1147,7 @@ class Component(object):
             self.document = QDomDocument()
             if dialog:
                 newModel = ComponentModel(
-                    self.document, self._allAttributes, self.dialog)
+                    self.document, self._allAttributes, self.parent)
                 self.view.setModel(newModel)
                 self.view.reset()
                 self._hideFrame()
@@ -1169,7 +1169,7 @@ class Component(object):
             self._merged = True
             if dialog:
                 newModel = ComponentModel(
-                    document, self._allAttributes, self.dialog)
+                    document, self._allAttributes, self.parent)
             self.document = document
             if dialog:
                 self.view.setModel(newModel)
@@ -1189,7 +1189,7 @@ class Component(object):
             self._merged = False
             if dialog:
                 newModel = ComponentModel(
-                    document, self._allAttributes, self.dialog)
+                    document, self._allAttributes, self.parent)
             self.document = document
             if dialog:
                 self.view.setModel(newModel)
@@ -1199,7 +1199,7 @@ class Component(object):
                     self._showNodes(e.nodes)
             if dialog:    
                 QMessageBox.warning(
-                    self.dialog, "Merging problem",
+                    self.parent, "Merging problem",
                     "Error in %s Merging: %s" % (
                         unicode(self.name), unicode(e.value)) )
         except  Exception, e:    
@@ -1207,13 +1207,13 @@ class Component(object):
             self._merged = False
             if dialog:
                 newModel = ComponentModel(
-                    document, self._allAttributes, self.dialog)
+                    document, self._allAttributes, self.parent)
                 self.document = document
                 self.view.setModel(newModel)
                 self._hideFrame()
                 self.connectView()
             if dialog:    
-                QMessageBox.warning(self.dialog, "Warning",
+                QMessageBox.warning(self.parent, "Warning",
                                     "%s" % unicode(e) )
  
         return self._merged
@@ -1244,7 +1244,7 @@ class Component(object):
         self.document.appendChild(definition)
         if self.dialog and self.dialog.ui:
             newModel = ComponentModel(
-                self.document, self._allAttributes, self.dialog)
+                self.document, self._allAttributes, self.parent)
             self.view.setModel(newModel)
             self.connectView()
         self._hideFrame()
@@ -1331,7 +1331,7 @@ class Component(object):
     # \brief It saves the component in the xml file 
     def save(self):
         if not self._merged:
-            QMessageBox.warning(self.dialog, "Saving problem",
+            QMessageBox.warning(self.parent, "Saving problem",
                                 "Document not merged" )
             return
         error = None
@@ -1355,7 +1355,7 @@ class Component(object):
         except (IOError, OSError, ValueError), e:
             error = "Failed to save: %s Please try to use Save as "\
                 "or change the component directory" % e
-            QMessageBox.warning(self.dialog, "Saving problem",
+            QMessageBox.warning(self.parent, "Saving problem",
                                 error )
             print error
         finally:
@@ -1368,7 +1368,7 @@ class Component(object):
     # \brief It is called on removing  the component from the list
     def _close(self):
         if QMessageBox.question(
-            self.dialog, "Close component",
+            self.parent, "Close component",
             "Would you like to close the component ?", 
             QMessageBox.Yes | QMessageBox.No) == QMessageBox.No :
             return
@@ -1383,7 +1383,7 @@ class Component(object):
 
         self._componentFile = unicode(
             QFileDialog.getSaveFileName(
-                self.dialog,"Save Component As ...", self._componentFile,
+                self.parent,"Save Component As ...", self._componentFile,
                 "XML files (*.xml);;HTML files (*.html);;"
                 "SVG files (*.svg);;User Interface files (*.ui)"))
         return self._componentFile

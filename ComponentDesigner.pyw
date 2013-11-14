@@ -41,7 +41,8 @@ if __name__ == "__main__":
     app.setApplicationName("NDTS Component Designer")
     form = MainWindow()
     form.show()
-    app.exec_()
+
+    sys.exit(app.exec_())
     
 
 

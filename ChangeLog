@@ -1,4 +1,8 @@
 2013-11-06 Jan Kotanski <jankotan@gmail.com>
+	* fixes QT parent issues
+	* tagged as v1.4.1
+
+2013-11-06 Jan Kotanski <jankotan@gmail.com>
 	* splitting datasources
 	* adding Slots
 	* splitting command

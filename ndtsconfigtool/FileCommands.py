@@ -714,7 +714,7 @@ class DataSourceReloadList(QUndoCommand):
             QMessageBox.Yes | QMessageBox.No,
             QMessageBox.Yes ) == QMessageBox.No :
             return
-
+        
 
         subwindows = self.receiver.ui.mdi.subWindowList()
         if subwindows:

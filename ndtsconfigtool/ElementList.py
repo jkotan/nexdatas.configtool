@@ -23,7 +23,7 @@
 import os
 
 from PyQt4.QtCore import (Qt, QString, QVariant)
-from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem)
+from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem, QProgressDialog)
 
 from .ui.ui_elementlist import Ui_ElementList
 from .LabeledObject import LabeledObject
@@ -228,8 +228,13 @@ class ElementList(QWidget):
                 return
             
         ide = None    
-        for elname in elements.keys():
-                
+        keys = elements.keys()
+        progress = QProgressDialog(
+            "Setting %s elements" % self.clName, 
+            QString(), 0, len(keys), self)    
+        progress.setWindowModality(Qt.WindowModal)
+        for i in range(len(keys)):
+            elname = keys[i]
             name = self.dashName(elname)
             dlg = self.createElement(name)    
             try:
@@ -266,7 +271,9 @@ class ElementList(QWidget):
                 el.instance.id = el.id
                 if new and hasattr(el.instance, "applied"):
                     el.instance.applied =  True
-            print name
+            print i, name 
+            progress.setValue(i)
+        progress.setValue(len(keys))
         return ide 
 
 
@@ -299,7 +306,12 @@ class ElementList(QWidget):
             except:
                 return
 
-        for fname in dirList:
+        progress = QProgressDialog(
+            "Loading %s elements" % self.clName, 
+            QString(), 0, len(dirList), self)    
+        progress.setWindowModality(Qt.WindowModal)
+        for i in range(len(dirList)):
+            fname = dirList[i]
             name = self.nameFromFile(fname)
             dlg = self.createElement(name)
             dlg.load()    
@@ -315,7 +327,8 @@ class ElementList(QWidget):
             if el.instance is not None:
                 el.instance.id = el.id
             print name
-            
+            progress.setValue(i)
+        progress.setValue(len(dirList))
 
 
 

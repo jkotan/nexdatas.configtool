@@ -21,8 +21,9 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox, QFileDialog, QUndoCommand)
-from PyQt4.QtCore import (QFileInfo)
+from PyQt4.QtGui import (QMessageBox, QFileDialog, QUndoCommand,
+                         QProgressDialog)
+from PyQt4.QtCore import (Qt, QFileInfo, QString)
 
 from .DataSourceDlg import CommonDataSourceDlg
 from . import DataSource
@@ -311,8 +312,14 @@ class ComponentSaveAll(QUndoCommand):
     ## executes the command
     # \brief It saves all components in the file
     def redo(self):
-            
-        for icp in self.receiver.componentList.elements.keys():
+
+        keys = self.receiver.componentList.elements.keys()
+        progress = QProgressDialog(
+            "Saving Component elements", 
+            QString(), 0, len(keys), self.receiver)    
+        progress.setWindowModality(Qt.WindowModal)
+        for i in range(len(keys)):
+            icp = keys[i]
             cp = self.receiver.componentList.elements[icp]
             if cp.instance is None:
                 #                self._cpEdit = FieldWg()  
@@ -330,6 +337,8 @@ class ComponentSaveAll(QUndoCommand):
             if cp.instance is not None:
                 cp.instance.merge()    
                 cp.instance.save()    
+            progress.setValue(i)
+        progress.setValue(len(keys))
 
         print "EXEC componentSaveAll"
 
@@ -459,8 +468,14 @@ class DataSourceSaveAll(QUndoCommand):
     ## executes the command
     # \brief It saves all the datasources in files
     def redo(self):
+        keys = self.receiver.sourceList.elements.keys()
+        progress = QProgressDialog(
+            "Saving DataSource elements", 
+            QString(), 0, len(keys), self.receiver)    
+        progress.setWindowModality(Qt.WindowModal)
             
-        for ids in self.receiver.sourceList.elements.keys():
+        for i in range(len(keys)):
+            ids = keys[i]
             ds = self.receiver.sourceList.elements[ids]
             if ds.instance is None:
                 dsEdit = DataSource.DataSource(self.receiver.sourceList)
@@ -473,6 +488,8 @@ class DataSourceSaveAll(QUndoCommand):
             if ds.instance is not None: 
                 if ds.instance.save():
                     ds.savedName = ds.name
+            progress.setValue(i)
+        progress.setValue(len(keys))
 
         ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds , "id"):

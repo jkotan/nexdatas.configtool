@@ -23,7 +23,8 @@
 import os
 
 from PyQt4.QtCore import (Qt, QString, QVariant)
-from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem, QProgressDialog)
+from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem, 
+                         QProgressDialog)
 
 from .ui.ui_elementlist import Ui_ElementList
 from .LabeledObject import LabeledObject

@@ -21,7 +21,9 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox, QUndoCommand)
+from PyQt4.QtGui import (QMessageBox, QUndoCommand, QProgressDialog)
+
+from PyQt4.QtCore import (Qt, QString)
 
 from .DataSourceDlg import (CommonDataSourceDlg)
 from . import DataSource
@@ -729,8 +731,15 @@ class ServerStoreAllComponents(QUndoCommand):
     ## executes the command
     # \brief It saves all components in the file
     def redo(self):
+
+        keys = self.receiver.componentList.elements.keys()
+        progress = QProgressDialog(
+            "Storing Component elements", 
+            QString(), 0, len(keys), self.receiver)    
+        progress.setWindowModality(Qt.WindowModal)
             
-        for icp in self.receiver.componentList.elements.keys():
+        for i in range(len(keys)):
+            icp = keys[i]
             cp = self.receiver.componentList.elements[icp]
             if cp.instance is None:
                 #                self._cpEdit = FieldWg()  
@@ -768,6 +777,8 @@ class ServerStoreAllComponents(QUndoCommand):
                 QMessageBox.warning(
                     self.receiver, "Error in storing the component", 
                     unicode(e))
+            progress.setValue(i)
+        progress.setValue(len(keys))
         if hasattr(cp, "id"):
             self.receiver.componentList.populateElements(cp.id)
         else:
@@ -800,7 +811,14 @@ class ServerStoreAllDataSources(QUndoCommand):
     # \brief It saves all the datasources in files
     def redo(self):
             
-        for ids in self.receiver.sourceList.elements.keys():
+        keys = self.receiver.sourceList.elements.keys()
+        progress = QProgressDialog(
+            "Storing DataSource elements", 
+            QString(), 0, len(keys), self.receiver)    
+        progress.setWindowModality(Qt.WindowModal)
+
+        for i in range(len(keys)):
+            ids = keys[i]
             ds = self.receiver.sourceList.elements[ids]
             if ds.instance is None:
                 dsEdit = DataSource.DataSource(self.receiver.sourceList)
@@ -839,6 +857,8 @@ class ServerStoreAllDataSources(QUndoCommand):
                     unicode(e))
 
 
+            progress.setValue(i)
+        progress.setValue(len(keys))
         ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds , "id"):
             self.receiver.sourceList.populateElements(ds.id)

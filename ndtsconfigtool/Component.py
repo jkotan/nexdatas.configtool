@@ -1112,17 +1112,18 @@ class Component(object):
 
     ## merges the component tree
     # \returns True on success
-    def merge(self):
+    def merge(self, showMergerDlg = True):
         document = None
         dialog = False
 
-        self._mergerdlg = MergerDlg(self.parent)
-        self._mergerdlg.createGUI()
-        self.parent.connect(
-            self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
-        self.parent.connect(
-            self._mergerdlg.interruptButton, SIGNAL("clicked()"), 
-            self._interruptMerger)
+        if showMergerDlg:
+            self._mergerdlg = MergerDlg(self.parent)
+            self._mergerdlg.createGUI()
+            self.parent.connect(
+                self._mergerdlg, SIGNAL("finished(int)"), self._interruptMerger)
+            self.parent.connect(
+                self._mergerdlg.interruptButton, SIGNAL("clicked()"), 
+                self._interruptMerger)
 
         try:
             if self.view and self.dialog and self.dialog.ui \
@@ -1136,8 +1137,9 @@ class Component(object):
             return
         try:
             self._merger = Merger(self.document)
-            self.parent.connect(
-                self._merger, SIGNAL("finished"), self._closeMergerDlg)
+            if showMergerDlg:
+                self.parent.connect(
+                    self._merger, SIGNAL("finished"), self._closeMergerDlg)
                     
             cNode = self._getCurrentNode()
             if cNode:
@@ -1155,12 +1157,14 @@ class Component(object):
 
             self._merger.start()
 
-            self._mergerdlg.exec_()
+            if showMergerDlg:
+                self._mergerdlg.exec_()
 
             if self._merger:
                 self._merger.wait()
                 
-            self._closeMergerDlg()
+            if showMergerDlg:
+                self._closeMergerDlg()
 
  
             if self._merger and self._merger.exception is not None:

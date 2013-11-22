@@ -234,6 +234,7 @@ class ElementList(QWidget):
             "Setting %s elements" % self.clName, 
             QString(), 0, len(keys), self)    
         progress.setWindowModality(Qt.WindowModal)
+        progress.show()
         for i in range(len(keys)):
             elname = keys[i]
             name = self.dashName(elname)
@@ -275,6 +276,7 @@ class ElementList(QWidget):
             print i, name 
             progress.setValue(i)
         progress.setValue(len(keys))
+        progress.close()
         return ide 
 
 
@@ -311,6 +313,7 @@ class ElementList(QWidget):
             "Loading %s elements" % self.clName, 
             QString(), 0, len(dirList), self)    
         progress.setWindowModality(Qt.WindowModal)
+        progress.show()
         for i in range(len(dirList)):
             fname = dirList[i]
             name = self.nameFromFile(fname)
@@ -330,6 +333,7 @@ class ElementList(QWidget):
             print name
             progress.setValue(i)
         progress.setValue(len(dirList))
+        progress.close()
 
 
 

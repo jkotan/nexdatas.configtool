@@ -735,9 +735,10 @@ class ServerStoreAllComponents(QUndoCommand):
         keys = self.receiver.componentList.elements.keys()
         progress = QProgressDialog(
             "Storing Component elements", 
-            QString(), 0, len(keys), self.receiver)    
+            QString(), 0, len(keys), self.receiver.componentList)    
         progress.setWindowModality(Qt.WindowModal)
-            
+        progress.show()    
+
         for i in range(len(keys)):
             icp = keys[i]
             cp = self.receiver.componentList.elements[icp]
@@ -755,7 +756,7 @@ class ServerStoreAllComponents(QUndoCommand):
                 cp.instance = cpEdit
 
             try:
-                cp.instance.merge()    
+                cp.instance.merge(False)    
                 xml = cp.instance.get()    
                 if not self.receiver.configServer.connected:
                     QMessageBox.information(
@@ -779,6 +780,7 @@ class ServerStoreAllComponents(QUndoCommand):
                     unicode(e))
             progress.setValue(i)
         progress.setValue(len(keys))
+        progress.close()    
         if hasattr(cp, "id"):
             self.receiver.componentList.populateElements(cp.id)
         else:
@@ -814,8 +816,9 @@ class ServerStoreAllDataSources(QUndoCommand):
         keys = self.receiver.sourceList.elements.keys()
         progress = QProgressDialog(
             "Storing DataSource elements", 
-            QString(), 0, len(keys), self.receiver)    
+            QString(), 0, len(keys), self.receiver.sourceList)    
         progress.setWindowModality(Qt.WindowModal)
+        progress.show()    
 
         for i in range(len(keys)):
             ids = keys[i]
@@ -859,6 +862,7 @@ class ServerStoreAllDataSources(QUndoCommand):
 
             progress.setValue(i)
         progress.setValue(len(keys))
+        progress.close()    
         ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds , "id"):
             self.receiver.sourceList.populateElements(ds.id)

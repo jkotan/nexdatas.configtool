@@ -316,8 +316,9 @@ class ComponentSaveAll(QUndoCommand):
         keys = self.receiver.componentList.elements.keys()
         progress = QProgressDialog(
             "Saving Component elements", 
-            QString(), 0, len(keys), self.receiver)    
+            QString(), 0, len(keys), self.receiver.componentList)    
         progress.setWindowModality(Qt.WindowModal)
+        progress.show()
         for i in range(len(keys)):
             icp = keys[i]
             cp = self.receiver.componentList.elements[icp]
@@ -335,10 +336,11 @@ class ComponentSaveAll(QUndoCommand):
                 cp.instance = cpEdit
 
             if cp.instance is not None:
-                cp.instance.merge()    
+                cp.instance.merge(False)    
                 cp.instance.save()    
             progress.setValue(i)
         progress.setValue(len(keys))
+        progress.close()
 
         print "EXEC componentSaveAll"
 
@@ -471,8 +473,9 @@ class DataSourceSaveAll(QUndoCommand):
         keys = self.receiver.sourceList.elements.keys()
         progress = QProgressDialog(
             "Saving DataSource elements", 
-            QString(), 0, len(keys), self.receiver)    
+            QString(), 0, len(keys), self.receiver.sourceList)    
         progress.setWindowModality(Qt.WindowModal)
+        progress.show()
             
         for i in range(len(keys)):
             ids = keys[i]
@@ -490,6 +493,7 @@ class DataSourceSaveAll(QUndoCommand):
                     ds.savedName = ds.name
             progress.setValue(i)
         progress.setValue(len(keys))
+        progress.close()
 
         ds = self.receiver.sourceList.currentListElement()
         if hasattr(ds , "id"):

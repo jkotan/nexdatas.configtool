@@ -273,7 +273,7 @@ class ElementList(QWidget):
                 el.instance.id = el.id
                 if new and hasattr(el.instance, "applied"):
                     el.instance.applied =  True
-            print i, name 
+            print name 
             progress.setValue(i)
         progress.setValue(len(keys))
         progress.close()

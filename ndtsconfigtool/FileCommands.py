@@ -317,6 +317,7 @@ class ComponentSaveAll(QUndoCommand):
         progress = QProgressDialog(
             "Saving Component elements", 
             QString(), 0, len(keys), self.receiver.componentList)    
+        progress.setWindowTitle("Save All Components")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
         for i in range(len(keys)):
@@ -474,6 +475,7 @@ class DataSourceSaveAll(QUndoCommand):
         progress = QProgressDialog(
             "Saving DataSource elements", 
             QString(), 0, len(keys), self.receiver.sourceList)    
+        progress.setWindowTitle("Save All DataSources")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
             

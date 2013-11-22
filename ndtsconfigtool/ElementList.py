@@ -233,6 +233,7 @@ class ElementList(QWidget):
         progress = QProgressDialog(
             "Setting %s elements" % self.clName, 
             QString(), 0, len(keys), self)    
+        progress.setWindowTitle("Set Elements")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
         for i in range(len(keys)):
@@ -312,6 +313,7 @@ class ElementList(QWidget):
         progress = QProgressDialog(
             "Loading %s elements" % self.clName, 
             QString(), 0, len(dirList), self)    
+        progress.setWindowTitle("Load Elements")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
         for i in range(len(dirList)):

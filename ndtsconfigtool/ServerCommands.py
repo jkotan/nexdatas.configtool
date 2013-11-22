@@ -736,6 +736,7 @@ class ServerStoreAllComponents(QUndoCommand):
         progress = QProgressDialog(
             "Storing Component elements", 
             QString(), 0, len(keys), self.receiver.componentList)    
+        progress.setWindowTitle("Store All Components")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()    
 
@@ -817,6 +818,7 @@ class ServerStoreAllDataSources(QUndoCommand):
         progress = QProgressDialog(
             "Storing DataSource elements", 
             QString(), 0, len(keys), self.receiver.sourceList)    
+        progress.setWindowTitle("Store All DataSources")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()    
 

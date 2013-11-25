@@ -225,7 +225,7 @@ class MainWindow(QMainWindow):
     # \param tip text for status bar and text hint
     # \param checkable if command/action checkable
     # \param signal action signal   
-    def __setAction(self, action, text, slot=None, shortcut=None, icon=None,
+    def __setAction(self, action, _, slot=None, shortcut=None, icon=None,
                      tip=None, checkable=False, signal="triggered()"):
         if icon is not None:
             action.setIcon(QIcon(":/%s.png"% unicode(icon).strip()))

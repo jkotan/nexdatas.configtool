@@ -114,7 +114,6 @@ class GroupDlg(NodeDlg):
                  self.doc,
                  attributes
                  )
-#        print  "GET", unicode(state)
         return state
 
 
@@ -128,7 +127,6 @@ class GroupDlg(NodeDlg):
          self.doc,
          attributes
          ) = state
-#        print "SET",  unicode(state)
         self.attributes = copy.copy(attributes)
 
 

@@ -31,7 +31,8 @@ from .ComponentDlg import ComponentDlg
 from .Component import Component
 from .LabeledObject import LabeledObject
 
-
+import logging
+logger = logging.getLogger(__name__)
 
 
 
@@ -97,7 +98,7 @@ class ComponentOpen(QUndoCommand):
                     self._cpEdit.dialog.show()
                     self._cp.instance = self._cpEdit 
                 self._cpEdit.dialog.show()
-                print "EXEC componentOpen"
+                logger.info("EXEC componentOpen")
 
 
     ## unexecutes the command
@@ -119,7 +120,7 @@ class ComponentOpen(QUndoCommand):
 
 
             
-        print "UNDO componentOpen"
+        logger.info("UNDO componentOpen")
 
 
 
@@ -175,7 +176,6 @@ class DataSourceOpen(QUndoCommand):
                     self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                     self._ds.instance.dialog.setSaveFocus()
                 else:    
- #               print "create"
                     self._subwindow = self.receiver.ui.mdi.addSubWindow(
                         self._dsEdit.dialog)
                     self._subwindow.resize(440, 550)
@@ -185,7 +185,7 @@ class DataSourceOpen(QUndoCommand):
 
 
                 self._dsEdit.dialog.show()
-                print "EXEC dsourceOpen"
+                logger.info("EXEC dsourceOpen")
 
 
     ## unexecutes the command
@@ -205,7 +205,7 @@ class DataSourceOpen(QUndoCommand):
                 self.receiver.sourceList.removeElement(self._ds, False)
                 self._ds.instance = None
             
-        print "UNDO dsourceOpen"
+        logger.info("UNDO dsourceOpen")
 
 
 
@@ -281,7 +281,7 @@ class ComponentSave(QUndoCommand):
         else:
             self.receiver.componentList.populateElements()
 
-        print "EXEC componentSave"
+        logger.info("EXEC componentSave")
 
 
     ## unexecutes the command
@@ -291,7 +291,7 @@ class ComponentSave(QUndoCommand):
             self.receiver.componentList.populateElements(self._cp.id)
         else:
             self.receiver.componentList.populateElements()
-        print "UNDO componentSave"
+        logger.info("UNDO componentSave")
 
 
 
@@ -343,7 +343,7 @@ class ComponentSaveAll(QUndoCommand):
         progress.setValue(len(keys))
         progress.close()
 
-        print "EXEC componentSaveAll"
+        logger.info("EXEC componentSaveAll")
 
 
 
@@ -392,7 +392,7 @@ class ComponentSaveAs(QUndoCommand):
             self.receiver.componentList.populateElements(self._cp.id)
         else:
             self.receiver.componentList.populateElements()
-        print "EXEC componentSaveAs"
+        logger.info("EXEC componentSaveAs")
 
     ## unexecutes the command
     # \brief It populates the Component list
@@ -401,7 +401,7 @@ class ComponentSaveAs(QUndoCommand):
             self.receiver.componentList.populateElements(self._cp.id)
         else:
             self.receiver.componentList.populateElements()
-        print "UNDO componentSaveAs"
+        logger.info("UNDO componentSaveAs")
 
 
 
@@ -452,7 +452,7 @@ class ComponentChangeDirectory(QUndoCommand):
 
         self.receiver.loadComponents()
 
-        print "EXEC componentChangeDirectory"
+        logger.info("EXEC componentChangeDirectory")
 
 
 
@@ -504,7 +504,7 @@ class DataSourceSaveAll(QUndoCommand):
             self.receiver.sourceList.populateElements()
 
 
-        print "EXEC dsourceSaveAll"
+        logger.info("EXEC dsourceSaveAll")
 
 
 
@@ -550,7 +550,7 @@ class DataSourceSave(QUndoCommand):
         else:
             self.receiver.sourceList.populateElements()
             
-        print "EXEC dsourceSave"
+        logger.info("EXEC dsourceSave")
 
     ## unexecutes the command
     # \brief It populates the datasource list
@@ -560,7 +560,7 @@ class DataSourceSave(QUndoCommand):
             self.receiver.sourceList.populateElements(ds.id)
         else:
             self.receiver.sourceList.populateElements()
-        print "UNDO dsourceSave"
+        logger.info("UNDO dsourceSave")
 
 
 
@@ -616,7 +616,7 @@ class DataSourceSaveAs(QUndoCommand):
 
 
             
-        print "EXEC dsourceSaveAs"
+        logger.info("EXEC dsourceSaveAs")
 
 
 
@@ -667,7 +667,7 @@ class DataSourceChangeDirectory(QUndoCommand):
 
         self.receiver.loadDataSources()
 
-        print "EXEC dsourceChangeDirectory"
+        logger.info("EXEC dsourceChangeDirectory")
 
 
 
@@ -708,7 +708,7 @@ class ComponentReloadList(QUndoCommand):
         self.receiver.componentList.elements = {} 
         self.receiver.loadComponents()
 
-        print "EXEC componentReloadList"
+        logger.info("EXEC componentReloadList")
 
 
 
@@ -749,7 +749,7 @@ class DataSourceReloadList(QUndoCommand):
         self.receiver.sourceList.elements = {} 
         self.receiver.loadDataSources()
 
-        print "EXEC dsourceReloadList"
+        logger.info("EXEC dsourceReloadList")
 
 
 if __name__ == "__main__":

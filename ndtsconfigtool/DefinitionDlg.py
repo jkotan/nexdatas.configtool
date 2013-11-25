@@ -31,6 +31,9 @@ from .AttributeDlg import AttributeDlg
 from .NodeDlg import NodeDlg 
 from .DomTools import DomTools
 
+import logging
+logger = logging.getLogger(__name__)
+
 ## dialog defining a definition tag
 class DefinitionDlg(NodeDlg):
     
@@ -89,7 +92,6 @@ class DefinitionDlg(NodeDlg):
                  self.doc,
                  attributes
                  )
-#        print  "GET", unicode(state)
         return state
 
 
@@ -103,7 +105,6 @@ class DefinitionDlg(NodeDlg):
          self.doc,
          attributes
          ) = state
-#        print "SET",  unicode(state)
         self.attributes = copy.copy(attributes)
 
 

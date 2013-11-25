@@ -77,7 +77,6 @@ class RichAttributeDlg(NodeDlg):
                  self.rank,
                  dimensions
                  )
-#        print  "GET", unicode(state)
         return state
 
 
@@ -93,7 +92,6 @@ class RichAttributeDlg(NodeDlg):
          self.rank,
          dimensions
          ) = state
-#        print "SET",  unicode(state)
         self.dimensions = copy.copy(dimensions)
 
 

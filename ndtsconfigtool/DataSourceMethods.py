@@ -30,9 +30,8 @@ from PyQt4.QtXml import (QDomDocument)
 from .DomTools import DomTools
 from .Errors import ParameterError
 
-
-
-
+import logging
+logger = logging.getLogger(__name__)
 
 
         
@@ -263,7 +262,7 @@ class DataSourceMethods(object):
             elem.setAttribute(QString("name"), 
                               QString(self.__datasource.dataSourceName))
         else:
-            print "name not defined"
+            logger.info("name not defined")
 
         if self.__datasource.dataSourceType in  self.__dialog.imp.keys():
             self.__dialog.imp[str(self.__datasource.dataSourceType)

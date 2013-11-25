@@ -35,6 +35,9 @@ from .DomTools import DomTools
 from . import DataSourceDlg 
 from .DataSourceMethods import DataSourceMethods
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 ## class with datasource variables
 class Variables(object):
@@ -267,12 +270,12 @@ class DataSource(CommonDataSource):
                 
         except (IOError, OSError, ValueError), e:
             error = "Failed to load: %s" % e
-            print error
+            logger.warn(error)
             QMessageBox.warning(self.parent, "Saving problem", error )
 
         except Exception, e:
             QMessageBox.warning(self.parent, "Saving problem", e )
-            print e
+            logger.warn(str(e))
         finally:                 
             if fh is not None:
                 fh.close()
@@ -341,7 +344,7 @@ class DataSource(CommonDataSource):
 
         error = None
         filename = os.path.join(self.directory, self.name + ".ds.xml") 
-        print "saving in %s"% (filename)
+        logger.info("saving in %s"% (filename))
         if filename:
             try:
                 fh = QFile(filename)
@@ -354,13 +357,12 @@ class DataSource(CommonDataSource):
                 document = QDomDocument()
                 document.setContent(xml)
                 stream << document.toString(2)
-            #                print self.document.toString(2)
                 self.savedXML = document.toString(0)
             except (IOError, OSError, ValueError), e:
                 error = "Failed to save: %s " % e \
                     + "Please try to use Save As command " \
                     + "or change the datasource directory"
-                print error
+                logger.warn(error)
                 QMessageBox.warning(self.parent, "Saving problem",  error) 
 
             finally:
@@ -377,7 +379,7 @@ class DataSource(CommonDataSource):
                 self.parent,"Save DataSource As ...",self.directory,
                 "XML files (*.xml);;HTML files (*.html);;"
                 "SVG files (*.svg);;User Interface files (*.ui)"))
-        print "saving in %s"% (filename)
+        logger.info("saving in %s"% (filename))
         return filename
 
 

@@ -29,6 +29,7 @@ from PyQt4.QtGui import (QWidget, QGridLayout, QApplication,
                          QMenu, QFileDialog, QMessageBox)
 from PyQt4.QtXml import (QDomDocument)
 
+
 from .FieldDlg import FieldDlg 
 from .GroupDlg import GroupDlg 
 from .LinkDlg import LinkDlg 
@@ -40,6 +41,10 @@ from .Merger import Merger, MergerDlg, IncompatibleNodeError
 from .ComponentModel import ComponentModel
 from .DomTools import DomTools
 from .ComponentDlg import ComponentDlg
+
+import logging
+logger = logging.getLogger(__name__)
+
 
 
 ## Component data 
@@ -272,7 +277,7 @@ class Component(object):
             self._loadFromString(xml)
         except (IOError, OSError, ValueError), e:
             error = "Failed to load: %s" % e
-            print error
+            logger.warn(error)
         self._hideFrame()    
         self._selectItem(path) 
             
@@ -425,26 +430,19 @@ class Component(object):
     ## pastes the component item from the clipboard into the component tree
     # \returns True on success    
     def pasteItem(self):
-        print "pasting item"
-        
         if not self.view or not self.dialog or not self.view.model() \
                 or not self.dialog.ui or not self.dialog.ui.widget \
                 or not hasattr(self.dialog.ui.widget,"subItems") :
-            ## Message
             return
 
         clipboard = QApplication.clipboard()
-#        print "TEXT: \n",clipboard.text()
         clipNode = self._stringToNode(clipboard.text())
         if clipNode is None:
             return
 
-#        print "TEXT: \n",clipboard.text()
         name = unicode(clipNode.nodeName())
 
-#        print "NAME: ",clipNode.nodeName()
         if name not in self.dialog.ui.widget.subItems:
-            ## Message
             return        
 
         index = self.view.currentIndex()
@@ -452,7 +450,6 @@ class Component(object):
             return
         sel = index.internalPointer()
         if not sel:
-            ## Message
             return
 
         node = sel.node
@@ -679,19 +676,19 @@ class Component(object):
     # \param index of component tree item
     def tagClicked(self, index):
         if not index.isValid() or not self.dialog:
-            print "Not valid index"
+            logger.warn("Not valid index")
             return
         self._currentTag = index
         item  = self._currentTag.internalPointer()
         if item is None:
-            print "Not valid index item"
+            logger.warn("Not valid index item")
             return
 
         node = item.node
         nNode = node.nodeName()
 
         if not self.dialog.ui:
-            print "Dialog does not exist"
+            logger.warn("Dialog does not exist")
             return
             
         
@@ -820,7 +817,7 @@ class Component(object):
                 QMessageBox.warning(self.parent, "Loading problem",
                                     error )
                 
-                print error
+                logger.warn(error)
             finally:                 
                 if fh is not None:
                     fh.close()
@@ -872,7 +869,6 @@ class Component(object):
                 or "component" not in  self.dialog.ui.widget.subItems:
             return
         index = self.view.currentIndex()
-#        print "L index", index.column()
         sel = index.internalPointer()
         if not sel or not index.isValid():
             return
@@ -924,7 +920,7 @@ class Component(object):
                 error = "Failed to load: %s" % e
                 QMessageBox.warning(self.parent, "Loading problem",
                                     error )
-                print error
+                logger.warn(error)
             finally:                 
                 if fh is not None:
                     fh.close()
@@ -937,7 +933,6 @@ class Component(object):
     ## loads the datasource item from the xml file 
     # \param filePath xml file name with full path    
     def loadDataSourceItem(self, filePath = None):
-        print "Loading DataSource"
 
         
         if not self.view or not self.dialog or not self.view.model() \
@@ -999,7 +994,7 @@ class Component(object):
 
             except (IOError, OSError, ValueError), e:
                 error = "Failed to load: %s" % e
-                print error
+                logger.warn(error)
             finally:                 
                 if fh is not None:
                     fh.close()
@@ -1010,7 +1005,6 @@ class Component(object):
     ## add the datasource into the component tree
     # \param dsNode datasource DOM node
     def addDataSourceItem(self, dsNode):
-        print "Adding DataSource"
         
         if dsNode.nodeName() != 'datasource':
             return
@@ -1056,7 +1050,6 @@ class Component(object):
     ## link the datasource into the component tree
     # \param dsName datasource name
     def linkDataSourceItem(self, dsName):
-        print "Linking DataSource"
         
         if not self.view or not self.dialog or not self.view.model() \
                 or not self.dialog.ui or not self.dialog.ui.widget \
@@ -1188,7 +1181,7 @@ class Component(object):
             self._merger = None
 
         except IncompatibleNodeError, e: 
-            print "Error in Merging: %s" % unicode(e.value)
+            logger.warn("Error in Merging: %s" % unicode(e.value))
             self._merger = None
             self._merged = False
             if dialog:
@@ -1207,7 +1200,7 @@ class Component(object):
                     "Error in %s Merging: %s" % (
                         unicode(self.name), unicode(e.value)) )
         except  Exception, e:    
-            print "Exception: %s" % unicode(e)
+            logger.warn("Exception: %s" % unicode(e))
             self._merged = False
             if dialog:
                 newModel = ComponentModel(
@@ -1342,7 +1335,7 @@ class Component(object):
         if self._componentFile is None:
             self.setName(self.name, self.directory)
         fpath = os.path.join(self.directory, self.name + ".xml")     
-        print "saving ", fpath
+        logger.info("saving ", fpath)
         try:
             fh = QFile(fpath)
             if not fh.open(QIODevice.WriteOnly):
@@ -1355,13 +1348,12 @@ class Component(object):
                 raise ValueError, "Empty component"
     
             self.savedXML = self.get()
-            #                print self.document.toString(2)
         except (IOError, OSError, ValueError), e:
             error = "Failed to save: %s Please try to use Save as "\
                 "or change the component directory" % e
             QMessageBox.warning(self.parent, "Saving problem",
                                 error )
-            print error
+            logger.warn(error)
         finally:
             if fh is not None:
                 fh.close()

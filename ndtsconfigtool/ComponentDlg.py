@@ -26,6 +26,9 @@ from PyQt4.QtGui import (QDialog, QWidget)
 from .ui.ui_componentdlg import Ui_ComponentDlg
 from .DomTools import DomTools
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 
 ## compoent dialog 
@@ -53,7 +56,7 @@ class ComponentDlg(QDialog):
         if self.ui and self.ui.widget:
             return DomTools.getNodeRow(child, self.ui.widget.node)
         else:
-            print "Widget does not exist"
+            logger.warn("Widget does not exist")
 
 
     ## sets focus on save button

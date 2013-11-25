@@ -26,8 +26,8 @@ from PyQt4.QtGui import (QMessageBox, QUndoCommand)
 from .Component import Component
 from .LabeledObject import LabeledObject
 
-
-
+import logging
+logger = logging.getLogger(__name__)
 
 
 
@@ -53,8 +53,8 @@ class ComponentNew(QUndoCommand):
             self._comp.instance = None
         
         self.receiver.componentList.addElement(self._comp)
-        print "EXEC componentNew"
-        
+        logger.info("EXEC componentNew")        
+
     ## unexecutes the command
     # \brief It removes the new component
     def undo(self):
@@ -69,8 +69,7 @@ class ComponentNew(QUndoCommand):
                     self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                     self.receiver.ui.mdi.closeActiveSubWindow() 
             
-        print "UNDO componentNew"
-
+        logger.info("UNDO componentNew")
 
 
 
@@ -113,7 +112,7 @@ class ComponentRemove(QUndoCommand):
                 self.receiver.ui.mdi.closeActiveSubWindow()
             
             
-        print "EXEC componentRemove"
+        logger.info("EXEC componentRemove")
 
 
     ## unexecutes the command
@@ -162,8 +161,7 @@ class ComponentRemove(QUndoCommand):
             self.receiver.componentList.populateElements(self._cp.id)
         else:
             self.receiver.componentList.populateElements()
-        print "UNDO componentRemove"
-
+        logger.info("UNDO componentRemove")
 
 
 
@@ -217,7 +215,7 @@ class ComponentListChanged(QUndoCommand):
         else:
             self.receiver.componentList.populateElements()
               
-        print "EXEC componentChanged"
+        logger.info("EXEC componentChanged")
 
 
     ## unexecutes the command
@@ -235,8 +233,7 @@ class ComponentListChanged(QUndoCommand):
         else:
             self.receiver.componentList.populateElements()
 
-        print "UNDO componentChanged"
-
+        logger.info("UNDO componentChanged")
 
     
 
@@ -261,7 +258,8 @@ class DataSourceNew(QUndoCommand):
         else:
             self._ds.instance = None
         self.receiver.sourceList.addElement(self._ds)
-        print "EXEC dsourceNew"
+        logger.info("EXEC dsourceNew")
+
 
     ## unexecutes the command
     # \brief It removes the added datasource
@@ -279,8 +277,7 @@ class DataSourceNew(QUndoCommand):
                     self.receiver.ui.mdi.setActiveSubWindow(subwindow) 
                     self.receiver.ui.mdi.closeActiveSubWindow() 
 
-        print "UNDO dsourceNew"
-
+        logger.info("UNDO dsourceNew")
 
 
 
@@ -324,7 +321,8 @@ class DataSourceRemove(QUndoCommand):
                 self.receiver.ui.mdi.closeActiveSubWindow()
             
             
-        print "EXEC dsourceRemove"
+        logger.info("EXEC dsourceRemove")
+
 
     ## unexecutes the command
     # \brief It adds the removes datasource into the datasource list
@@ -349,8 +347,7 @@ class DataSourceRemove(QUndoCommand):
                 self._ds.instance.dialog.show()
                     
             self._ds.instance.dialog.show()
-        print "UNDO dsourceRemove"
-
+        logger.info("UNDO dsourceRemove")
 
 
 
@@ -404,7 +401,8 @@ class DataSourceListChanged(QUndoCommand):
         else:
             self.receiver.sourceList.populateElements()
 
-        print "EXEC dsourceChanged"
+        logger.info("EXEC dsourceChanged")
+
 
     ## unexecutes the command
     # \brief It changes back the current datasource 
@@ -423,8 +421,7 @@ class DataSourceListChanged(QUndoCommand):
         else:
             self.receiver.sourceList.populateElements()
 
-        print "UNDO dsourceChanged"
-
+        logger.info("UNDO dsourceChanged")
 
 
     
@@ -443,13 +440,13 @@ class CloseApplication(QUndoCommand):
         ## main window
         self.receiver = receiver
 
+
     ## executes the command
     # \brief It is performed during closing the Component Designer
     def redo(self):
         if hasattr(self.receiver.ui,'mdi'):
             self.receiver.close()
-            print "EXEC closeApp"
-
+            logger.info("EXEC closeApp")
 
 
 

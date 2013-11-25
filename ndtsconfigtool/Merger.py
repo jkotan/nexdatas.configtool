@@ -127,7 +127,6 @@ class Merger(QThread):
             if attr.contains("name") else ""
 
         if node.parentNode().nodeName() != '#document':
-#            print node.nodeName()
             res =  self._getAncestors(node.parentNode()) 
         res += "/" + unicode(node.nodeName()) 
         if name:
@@ -140,7 +139,6 @@ class Merger(QThread):
     # \param elem2 secound node element
     # \returns True if the given elements are mergeable
     def _areMergeable(self, elem1, elem2):
-#        print "checking:" ,elem1.nodeName(), elem2.nodeName()
         if elem1.nodeName() != elem2.nodeName():
             return False
         tagName = unicode(elem1.nodeName())
@@ -153,7 +151,6 @@ class Merger(QThread):
             if attr1.contains("name") else ""
         name2 = attr2.namedItem("name").nodeValue() \
             if attr1.contains("name") else ""
-#        print "with names" ,name1,name2        
 
         if name1 != name2 and name1 and name2:
             if tagName in self._singles: 
@@ -263,7 +260,6 @@ class Merger(QThread):
         if node:
             self._hasAttributes(node)
 
-#            print "merging the children of: ", node.nodeName()
             
             children = node.childNodes()
             nchildren = children.count()

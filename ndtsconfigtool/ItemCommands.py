@@ -29,6 +29,8 @@ from .Component import Component
 from .ComponentModel import ComponentModel
 from .EditCommands import (DataSourceCut, DataSourceCopy, DataSourcePaste)
 
+import logging
+logger = logging.getLogger(__name__)
 
 ## Abstract Command which helps in defing commands related to 
 #  Component item operations
@@ -139,8 +141,7 @@ class ComponentItemCommand(QUndoCommand):
             self.preExecute()
     
         self.postExecute()
-        print "EXEC componentItemCommand"
-
+        logger.info("EXEC componentItemCommand")
 
     ## helps to construct the unexecute component item command 
     # \brief It changes back the states of the current component 
@@ -177,8 +178,7 @@ class ComponentItemCommand(QUndoCommand):
         else:
             self.receiver.componentList.populateElements()
 
-        print "UNDO componentItemComponent"
-
+        logger.info("UNDO componentItemComponent")
 
 
 
@@ -230,8 +230,7 @@ class ComponentClear(ComponentItemCommand):
 
 
         self.postExecute()
-        print "EXEC componentClear"
-
+        logger.info("EXEC componentClear")
 
 
 
@@ -271,8 +270,7 @@ class ComponentLoadComponentItem(ComponentItemCommand):
                         "Please select one of the component items")            
                         
         self.postExecute()
-        print "EXEC componentLoadcomponentItem"
-
+        logger.info("EXEC componentLoadcomponentItem")
 
 
 
@@ -301,8 +299,7 @@ class ComponentRemoveItem(ComponentItemCommand):
                                 "Cutting item not possible", 
                                 "Please select another tree item") 
         self.postExecute()
-        print "EXEC componentRemoveItem"
-
+        logger.info("EXEC componentRemoveItem")
 
 
 
@@ -330,8 +327,7 @@ class ComponentCopyItem(ComponentItemCommand):
                                 "Copying item not possible", 
                                 "Please select another tree item") 
         self.postExecute()
-        print "EXEC componentCopyItem"
-
+        logger.info("EXEC componentCopyItem")
 
 
 
@@ -361,8 +357,7 @@ class ComponentPasteItem(ComponentItemCommand):
                                 "Pasting item not possible", 
                                 "Please select another tree item") 
         self.postExecute()
-        print "EXEC componentPasteItem"
-
+        logger.info("EXEC componentPasteItem")
 
 
 
@@ -506,8 +501,7 @@ class ComponentMerge(ComponentItemCommand):
                     self._cp.instance.merge()
         
         self.postExecute()
-        print "EXEC componentMerge"
-
+        logger.info("EXEC componentMerge")
 
 
 
@@ -580,8 +574,7 @@ class ComponentNewItem(ComponentItemCommand):
                     finalIndex, self._childIndex)
 
         self.postExecute()
-        print "EXEC componentNewItem"
-
+        logger.info("EXEC componentNewItem")
 
 
 
@@ -621,8 +614,7 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
                     
                         
         self.postExecute()
-        print "EXEC componentMerge"
-
+        logger.info("EXEC componentMerge")
         
 
 
@@ -709,8 +701,7 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
 
 
         self.postExecute()
-        print "EXEC componentAddDataSourceItem"
-
+        logger.info("EXEC componentAddDataSourceItem")
 
 
 ## Command which links the current datasource into the current component tree
@@ -797,8 +788,7 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                             "the proper items")            
 
         self.postExecute()
-        print "EXEC componentLinkDataSourceItem"
-
+        logger.info("EXEC componentLinkDataSourceItem")
 
 
 ## Command which applies the changes from the form for 
@@ -829,8 +819,7 @@ class ComponentApplyItem(ComponentItemCommand):
 
 
         self.postExecute()
-        print "EXEC componentApplyItem"
-
+        logger.info("EXEC componentApplyItem")
 
 
 
@@ -866,8 +855,7 @@ class ComponentMoveUpItem(ComponentItemCommand):
         self.postExecute()
 
             
-        print "EXEC componentMoveUpItem"
-
+        logger.info("EXEC componentMoveUpItem")
 
 
 
@@ -901,8 +889,7 @@ class ComponentMoveDownItem(ComponentItemCommand):
                             "Please select another tree item") 
 
         self.postExecute()
-        print "EXEC componentMoveDownItem"
-
+        logger.info("EXEC componentMoveDownItem")
 
 
 

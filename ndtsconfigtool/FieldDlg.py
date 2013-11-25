@@ -40,7 +40,6 @@ class FieldDlg(NodeDlg):
     # \param parent patent instance
     def __init__(self, parent=None):
         super(FieldDlg, self).__init__(parent)
-#        print "fparent", self.parent
         
         ## field name
         self.name = u''
@@ -85,7 +84,6 @@ class FieldDlg(NodeDlg):
                  attributes,
                  dimensions
                  )
-#        print  "GET", unicode(state)
         return state
 
 
@@ -103,7 +101,6 @@ class FieldDlg(NodeDlg):
          attributes,
          dimensions
          ) = state
-#        print "SET",  unicode(state)
         self.attributes = copy.copy(attributes)
         self.dimensions = copy.copy(dimensions)
 

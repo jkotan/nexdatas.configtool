@@ -27,6 +27,7 @@ from PyQt4.QtGui import (QDialog, QDialogButtonBox, QMessageBox)
 from .ui.ui_attributedlg import Ui_AttributeDlg
 from .Errors import CharacterError
 
+
 ## dialog defining a tag attribute 
 class AttributeDlg(QDialog):
 

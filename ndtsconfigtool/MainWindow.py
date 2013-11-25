@@ -584,7 +584,6 @@ class MainWindow(QMainWindow):
     ## loads the component list
     # \brief It loads the component list from the default directory
     def loadComponents(self):
-        print "COMPONENT"
         self.componentList.loadList(
             self.externalCPActions, 
             self.contextMenuActions

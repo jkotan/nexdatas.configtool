@@ -229,7 +229,6 @@ class WindowsSlots(object):
     ## closes the current window
     # \brief Is closes the current datasource window
     def dsourceClose(self):
-        print "datasource close"
         subwindow = self.main.ui.mdi.activeSubWindow()
         if subwindow and isinstance(subwindow.widget(), CommonDataSourceDlg) \
                 and subwindow.widget().datasource:
@@ -247,7 +246,6 @@ class WindowsSlots(object):
     ## closes the current window
     # \brief Is closes the current component window
     def componentClose(self):
-        print "component close"
         subwindow = self.main.ui.mdi.activeSubWindow()
         if subwindow and isinstance(subwindow.widget(), ComponentDlg) \
                 and subwindow.widget().component:

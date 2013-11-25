@@ -28,9 +28,8 @@ from . import DataSource
 from .Component import Component
 
 
-
-
-
+import logging
+logger = logging.getLogger(__name__)
 
 
 
@@ -106,12 +105,12 @@ class ComponentEdit(QUndoCommand):
             self._cp.instance = self._cpEdit 
 
             
-        print "EXEC componentEdit"
+        logger.info("EXEC componentEdit")
 
     ## unexecutes the command
     # \brief It does nothing
     def undo(self):
-        print "UNDO componentEdit"
+        logger.info("UNDO componentEdit")
 
 
 
@@ -176,7 +175,7 @@ class DataSourceCopy(QUndoCommand):
 
             self._newstate = self._ds.instance.getState() 
             
-        print "EXEC dsourceCopy"
+        logger.info("EXEC dsourceCopy")
 
     ## unexecutes the command
     # \brief It updates state of datasource to the old state
@@ -212,7 +211,7 @@ class DataSourceCopy(QUndoCommand):
                 self._ds.instance.dialog.show()
             
             
-        print "UNDO dsourceCopy"
+        logger.info("UNDO dsourceCopy")
         
 
 ## Command which moves the current datasource into the clipboard
@@ -281,7 +280,7 @@ class DataSourceCut(QUndoCommand):
         else:
             self.receiver.sourceList.populateElements()
             
-        print "EXEC dsourceCut"
+        logger.info("EXEC dsourceCut")
 
     ## unexecutes the command
     # \brief It copy back the removed datasource
@@ -320,7 +319,7 @@ class DataSourceCut(QUndoCommand):
         else:
             self.receiver.sourceList.populateElements()
             
-        print "UNDO dsourceCut"
+        logger.info("UNDO dsourceCut")
         
 
 
@@ -406,7 +405,7 @@ class DataSourcePaste(QUndoCommand):
                 self.receiver.sourceList.populateElements(self._ds.id)
             else:
                 self.receiver.sourceList.populateElements()
-        print "EXEC dsourcePaste"
+        logger.info("EXEC dsourcePaste")
 
     ## unexecutes the command
     # \brief It remove the pasted datasource
@@ -446,7 +445,7 @@ class DataSourcePaste(QUndoCommand):
             else:
                 self.receiver.sourceList.populateElements()
             
-        print "UNDO dsourcePaste"
+        logger.info("UNDO dsourcePaste")
         
 
 ## Command which applies the changes from the form for the current datasource 
@@ -543,7 +542,7 @@ class DataSourceApply(QUndoCommand):
             QMessageBox.warning(self.receiver, "DataSource not created", 
                                 "Please edit one of the datasources")
             
-        print "EXEC dsourceApply"
+        logger.info("EXEC dsourceApply")
 
 
     ## unexecutes the command
@@ -589,7 +588,7 @@ class DataSourceApply(QUndoCommand):
                 self.receiver.sourceList.populateElements()
             
             
-        print "UNDO dsourceApply"
+        logger.info("UNDO dsourceApply")
 
 
 
@@ -639,12 +638,12 @@ class ComponentTakeDataSources(QUndoCommand):
                         "Please select one of the datasource items")            
 
 
-        print "EXEC componentTakeDataSources"
+        logger.info("EXEC componentTakeDataSources")
 
     ## unexecutes the command
     # \brief It does nothing
     def undo(self):
-        print "UNDO componentTakeDataSources"
+        logger.info("UNDO componentTakeDataSources")
 
 
 
@@ -707,12 +706,12 @@ class ComponentTakeDataSource(QUndoCommand):
                             self.receiver, "DataSource item not selected", 
                             "Please select one of the datasource items")
                         
-        print "EXEC componentTakeDataSource"
+        logger.info("EXEC componentTakeDataSource")
 
     ## unexecutes the command
     # \brief It does nothing
     def undo(self):
-        print "UNDO componentTakeDataSource"
+        logger.info("UNDO componentTakeDataSource")
         
 
         self.receiver.sourceList.removeElement(self._ds, False)
@@ -801,7 +800,7 @@ class DataSourceEdit(QUndoCommand):
 
 
             
-        print "EXEC dsourceEdit"
+        logger.info("EXEC dsourceEdit")
 
 
 

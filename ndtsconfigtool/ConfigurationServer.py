@@ -21,13 +21,16 @@
 
 """ Provides connects to configuration server"""
 
+import logging
+logger = logging.getLogger(__name__)
+
 try:
     import PyTango
     ## if module PyTango avalable
     PYTANGO_AVAILABLE = True
 except ImportError, e:
     PYTANGO_AVAILABLE = False
-    print "PyTango is not available: %s" % e
+    logger.info("PyTango is not available: %s" % e)
 
 import time
 

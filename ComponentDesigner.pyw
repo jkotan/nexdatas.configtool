@@ -21,7 +21,9 @@
 
 """ Component Designer - configuration tool for Nexus Data Writer """
 
+import logging
 import sys
+from optparse import OptionParser
 
 from PyQt4.QtGui import (QApplication, QIcon)
 
@@ -30,7 +32,30 @@ from ndtsconfigtool.MainWindow import MainWindow
 from ndtsconfigtool.qrc import qrc_resources
 
 
-if __name__ == "__main__":
+## the main function
+def main():
+    levels = {'debug': logging.DEBUG,
+              'info': logging.INFO,
+              'warning': logging.WARNING,
+              'error': logging.ERROR,
+              'critical': logging.CRITICAL}
+
+    usage = "usage: ComponentDesigner.pyw [-l logging level]"
+
+    parser = OptionParser(usage=usage)
+
+    parser.add_option(
+        "-l","--log", dest="log", 
+        help="logging level, i.e. debug, info, warning, error, critical")
+
+    (options, args) = parser.parse_args()
+
+
+    if options.log:
+        level_name = options.log
+        level = levels.get(level_name, logging.NOTSET)
+        logging.basicConfig(level=level)     
+
 #    import gc
 #    gc.set_debug(gc.DEBUG_LEAK | gc.DEBUG_STATS)
 #    gc.set_debug(gc.DEBUG_LEAK )
@@ -43,6 +68,10 @@ if __name__ == "__main__":
     form.show()
 
     sys.exit(app.exec_())
-    
+
+
+
+if __name__ == "__main__":
+    main()
 
 

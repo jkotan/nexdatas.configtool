@@ -29,6 +29,10 @@ from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem,
 from .ui.ui_elementlist import Ui_ElementList
 from .LabeledObject import LabeledObject
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 ## dialog defining a group tag
 class ElementList(QWidget):
     
@@ -201,7 +205,6 @@ class ElementList(QWidget):
                         self.elements[el].instance.dialog.\
                             setWindowTitle("%s [%s]" % (name, self.clName))
                 except:
-#                    print "C++", self.elements[el].name
                     self.elements[el].instance.dialog = None
 
         if selected is not None:
@@ -274,7 +277,7 @@ class ElementList(QWidget):
                 el.instance.id = el.id
                 if new and hasattr(el.instance, "applied"):
                     el.instance.applied =  True
-            print name 
+            logger.info("setting %s" % name)
             progress.setValue(i)
         progress.setValue(len(keys))
         progress.close()
@@ -332,7 +335,7 @@ class ElementList(QWidget):
             self.elements[id(el)] =  el
             if el.instance is not None:
                 el.instance.id = el.id
-            print name
+            logger.info("loading %s" % name)
             progress.setValue(i)
         progress.setValue(len(dirList))
         progress.close()

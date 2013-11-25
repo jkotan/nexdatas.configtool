@@ -128,7 +128,6 @@ class StrategyDlg(NodeDlg):
                  self.canfail,
                  self.doc
                  )
-#        print  "GET", unicode(state)
         return state
 
 
@@ -146,7 +145,6 @@ class StrategyDlg(NodeDlg):
          self.canfail,
          self.doc
          ) = state
-#        print "SET",  unicode(state)
 
 
     ## shows and hides frames according to modeComboBox

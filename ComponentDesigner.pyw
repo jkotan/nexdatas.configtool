@@ -40,13 +40,23 @@ def main():
               'error': logging.ERROR,
               'critical': logging.CRITICAL}
 
-    usage = "usage: ComponentDesigner.pyw [-l logging level]"
+    usage = "usage: ComponentDesigner.pyw [-l logging level] "\
+        "[-c components] [-d datasources] [-s server]"
 
     parser = OptionParser(usage=usage)
 
     parser.add_option(
         "-l","--log", dest="log", 
         help="logging level, i.e. debug, info, warning, error, critical")
+    parser.add_option(
+        "-c","--components", dest="components", 
+        help="directory with components")
+    parser.add_option(
+        "-d","--datasources", dest="datasources", 
+        help="directory with datasources")
+    parser.add_option(
+        "-s","--server", dest="server", 
+        help="configuration server")
 
     (options, args) = parser.parse_args()
 
@@ -64,7 +74,7 @@ def main():
     app.setOrganizationName("DESY")
     app.setOrganizationDomain("desy.de")
     app.setApplicationName("NDTS Component Designer")
-    form = MainWindow()
+    form = MainWindow(options.components, options.datasources, options.server)
     form.show()
 
     sys.exit(app.exec_())

@@ -47,6 +47,8 @@ from .HelpSlots import HelpSlots
 from .WindowsSlots import WindowsSlots
 
 
+import logging
+logger = logging.getLogger(__name__)
 
 
 from .ConfigurationServer import (ConfigurationServer, PYTANGO_AVAILABLE)
@@ -56,8 +58,11 @@ class MainWindow(QMainWindow):
 
     ## constructor
     # \param parent parent widget
-    def __init__(self, parent=None):
+    def __init__(self, components=None, datasources=None, 
+                 server=None, parent=None):
         super(MainWindow, self).__init__(parent)
+        logger.debug("PARAMETERS: %s %s %s %s", 
+                     components, datasources, server, parent)
 
         ## component tree menu under mouse cursor
         self.contextMenuActions = None
@@ -97,9 +102,11 @@ class MainWindow(QMainWindow):
 
         settings = QSettings()
         dsDirectory = self.__setDirectory(
-            settings, "DataSources/directory", "datasources")    
+            settings, "DataSources/directory", "datasources", 
+            datasources)    
         cpDirectory = self.__setDirectory(
-            settings, "Components/directory", "components")    
+            settings, "Components/directory", "components", 
+            components)    
 
 
         self.createGUI(dsDirectory, cpDirectory)            
@@ -119,7 +126,7 @@ class MainWindow(QMainWindow):
             settings.value("MainWindow/State").toByteArray())
 
         if PYTANGO_AVAILABLE:
-            self.setupServer(settings)
+            self.setupServer(settings, server)
 
         status = self.createStatusBar()        
         status.showMessage("Ready", 5000)
@@ -150,25 +157,29 @@ class MainWindow(QMainWindow):
     # \param settings application QSettings object
     # \param name setting variable name
     # \param default defualt value    
+    # \param directory user's directory
     # \returns set directory    
     @classmethod    
-    def __setDirectory(cls, settings, name, default):
-        directory = ""
+    def __setDirectory(cls, settings, name, default, directory = None):
+        if directory and os.path.exists(directory):
+            return os.path.abspath(directory)
+        ldir = ""
         dsdir = unicode(settings.value(name).toString())
         if dsdir:
-            directory = os.path.abspath(dsdir)
+            ldir = os.path.abspath(dsdir)
         else:
             if os.path.exists(os.path.join(os.getcwd(), default)):
-                directory = os.path.abspath(
+                ldir = os.path.abspath(
                     os.path.join(os.getcwd(), default))
             else:
-                directory = os.getcwd()
-        return directory        
+                ldir = os.getcwd()
+        return ldir        
             
 
     ## setups configuration server
     # \param settings application QSettings object
-    def setupServer(self, settings):
+    # \param server user's server
+    def setupServer(self, settings, server = None):
         self.configServer = ConfigurationServer()
         self.configServer.device = unicode(
             settings.value("ConfigServer/device").toString())

@@ -56,6 +56,28 @@ class ConfigurationServer(object):
         ## device proxy
         self._proxy = None
 
+    ## sets server from string
+    # \param device string
+    def setServer(self, device):
+        logger.debug(device)
+        ahost = device.split(":")
+        if len(ahost) > 1:
+            self.host = ahost[0]
+            adev = ahost[1].split("/")
+            if len(adev) > 1:
+                try:
+                    self.port = int(adev[0])
+                except:
+                    self.port = 10000
+                self.device = "/".join(adev[1:])
+            else:
+                self.device = adev[0]
+                self.port = 10000
+        else:
+            self.device = device
+            self.host = 'localhost'
+            self.port = 10000
+                
 
     ## allows to store the server state    
     # \returns the state of the server

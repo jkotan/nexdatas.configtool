@@ -180,14 +180,18 @@ class MainWindow(QMainWindow):
     # \param settings application QSettings object
     # \param server user's server
     def setupServer(self, settings, server = None):
+
         self.configServer = ConfigurationServer()
-        self.configServer.device = unicode(
-            settings.value("ConfigServer/device").toString())
-        self.configServer.host = unicode(
-            settings.value("ConfigServer/host").toString())
-        port = str(settings.value("ConfigServer/port").toString())
-        if port:
-            self.configServer.port = int(port)
+        if server:
+            self.configServer.setServer(server)
+        else:    
+            self.configServer.device = unicode(
+                settings.value("ConfigServer/device").toString())
+            self.configServer.host = unicode(
+                settings.value("ConfigServer/host").toString())
+            port = str(settings.value("ConfigServer/port").toString())
+            if port:
+                self.configServer.port = int(port)
 
 
     ## updates directories in status bar

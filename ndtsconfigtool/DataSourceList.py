@@ -25,6 +25,8 @@
 from .DataSource import DataSource
 from .ElementList import ElementList
 
+import logging
+logger = logging.getLogger(__name__)
 
 ## dialog defining a group tag
 class DataSourceList(ElementList):
@@ -89,6 +91,8 @@ if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
+    logging.basicConfig(level=logging.DEBUG)     
+
     ## Qt application
     app = QApplication(sys.argv)
     ## group form
@@ -100,7 +104,7 @@ if __name__ == "__main__":
 
 
     if form.elements:
-        print "Other datasources:"
+        logger.info("Other datasources:")
         for k in form.elements.keys():
-            print  " %s = '%s' " % (k, form.elements[k])
+            logger.info(" %s = '%s' " % (k, form.elements[k]))
     

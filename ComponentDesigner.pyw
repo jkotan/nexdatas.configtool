@@ -40,14 +40,14 @@ def main():
               'error': logging.ERROR,
               'critical': logging.CRITICAL}
 
-    usage = "usage: ComponentDesigner.pyw [-l logging level] "\
-        "[-c components] [-d datasources] [-s server]"
+    usage = "usage: ComponentDesigner.pyw "\
+        "[-s server] [-c components] [-d datasources] ... "
 
     parser = OptionParser(usage=usage)
 
     parser.add_option(
-        "-l","--log", dest="log", 
-        help="logging level, i.e. debug, info, warning, error, critical")
+        "-s","--server", dest="server", 
+        help="configuration server")
     parser.add_option(
         "-c","--components", dest="components", 
         help="directory with components")
@@ -55,8 +55,8 @@ def main():
         "-d","--datasources", dest="datasources", 
         help="directory with datasources")
     parser.add_option(
-        "-s","--server", dest="server", 
-        help="configuration server")
+        "-l","--log", dest="log", 
+        help="logging level, i.e. debug, info, warning, error, critical")
 
     (options, args) = parser.parse_args()
 

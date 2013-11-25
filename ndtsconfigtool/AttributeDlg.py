@@ -27,6 +27,9 @@ from PyQt4.QtGui import (QDialog, QDialogButtonBox, QMessageBox)
 from .ui.ui_attributedlg import Ui_AttributeDlg
 from .Errors import CharacterError
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 ## dialog defining a tag attribute 
 class AttributeDlg(QDialog):
@@ -86,6 +89,8 @@ if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
+    logging.basicConfig(level=logging.DEBUG)     
+
     ## Qt application
     app = QApplication(sys.argv)
     ## attribute form
@@ -95,5 +100,5 @@ if __name__ == "__main__":
 
     if form.result():
         if form.name:
-            print "Attribute: %s = \'%s\'" % ( form.name, form.value )
+            logger.info("Attribute: %s = \'%s\'" % ( form.name, form.value ))
     

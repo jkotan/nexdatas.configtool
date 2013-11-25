@@ -26,6 +26,9 @@ from PyQt4.QtGui import (QDialog, QMessageBox)
 
 from .ui.ui_connectdlg import Ui_ConnectDlg
 
+import logging
+logger = logging.getLogger(__name__)
+
 ## dialog defining a tag connect 
 class ConnectDlg(QDialog):
     
@@ -122,6 +125,8 @@ if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
+    logging.basicConfig(level=logging.DEBUG)     
+
    ## Qt application
     app = QApplication(sys.argv)
     ## connect form
@@ -132,6 +137,6 @@ if __name__ == "__main__":
 
     if form.result():
         if form.device:
-            print "Connect: %s , %s , %s" % \
-                ( form.device, form.host, form.port )
+            logger.info("Connect: %s , %s , %s" % \
+                ( form.device, form.host, form.port ))
     

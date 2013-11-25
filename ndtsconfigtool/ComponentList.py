@@ -28,6 +28,9 @@ from PyQt4.QtGui import QMessageBox
 from .Component import Component
 from .ElementList import ElementList
 
+import logging
+logger = logging.getLogger(__name__)
+
 ## dialog defining a group tag
 class ComponentList(ElementList):
     
@@ -114,6 +117,8 @@ if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
+    logging.basicConfig(level=logging.DEBUG)     
+
     ## Qt application
     app = QApplication(sys.argv)
     ## group form
@@ -124,7 +129,7 @@ if __name__ == "__main__":
 
 
     if form.elements:
-        print "Other components:"
+        logger.info("Other components:")
         for mk in form.elements.keys():
-            print  " %s = '%s' " % (mk, form.elements[mk])
+            logger.info(" %s = '%s' " % (mk, form.elements[mk]))
     

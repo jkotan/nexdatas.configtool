@@ -33,6 +33,10 @@ from .DimensionsDlg import DimensionsDlg
 from .NodeDlg import NodeDlg 
 from .DomTools import DomTools
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 ## dialog defining a field tag
 class FieldDlg(NodeDlg):
     
@@ -535,6 +539,8 @@ if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
+    logging.basicConfig(level=logging.DEBUG)     
+
     ## Qt application
     app = QApplication(sys.argv)
     ## field form
@@ -552,24 +558,24 @@ It should be defined by client."""
     form.show()
     app.exec_()
     if form.name:
-        print "Field: name = \'%s\'" % ( form.name )
+        logger.info("Field: name = \'%s\'" % ( form.name ))
     if form.nexusType:
-        print "       type = \'%s\'" % ( form.nexusType )
+        logger.info("       type = \'%s\'" % ( form.nexusType ))
     if form.units:
-        print "       units = \'%s\'" % ( form.units )
+        logger.info("       units = \'%s\'" % ( form.units ))
     if form.attributes:
-        print "Other attributes:"
+        logger.info("Other attributes:")
         for k in form.attributes.keys():
-            print  " %s = '%s' " % (k, form.attributes[k])
+            logger.info( " %s = '%s' " % (k, form.attributes[k]))
     if form.value:
-        print "Value:\n \'%s\'" % ( form.value )
+        logger.info("Value:\n \'%s\'" % ( form.value ))
     if form.rank:
-        print " rank = %s" % ( form.rank )
+        logger.info(" rank = %s" % ( form.rank ))
     if form.dimensions:
-        print "Dimensions:"
+        logger.info("Dimensions:")
         for mrow, mln in enumerate(form.dimensions):
-            print  " %s: %s " % (mrow+1, mln)
+            logger.info( " %s: %s " % (mrow+1, mln))
             
     if form.doc:
-        print "Doc: \n%s" % form.doc
+        logger.info("Doc: \n%s" % form.doc)
     

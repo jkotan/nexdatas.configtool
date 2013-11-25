@@ -29,6 +29,9 @@ from .NodeDlg import NodeDlg
 from .Errors import CharacterError
 from .DomTools import DomTools
 
+import logging
+logger = logging.getLogger(__name__)
+
 ## dialog defining a tag link 
 class LinkDlg(NodeDlg):
     
@@ -207,6 +210,9 @@ if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
+    logging.basicConfig(level=logging.DEBUG)     
+
+
     ## Qt application
     app = QApplication(sys.argv)
     ## link form
@@ -218,5 +224,5 @@ if __name__ == "__main__":
     app.exec_()
 
     if form.name:
-        print "Link: %s = \'%s\'" % ( form.name, form.target )
+        logger.info("Link: %s = \'%s\'" % ( form.name, form.target ))
     

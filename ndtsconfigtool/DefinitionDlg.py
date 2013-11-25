@@ -327,6 +327,9 @@ if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
+    logging.basicConfig(level=logging.DEBUG)     
+
+
     ## Qt application
     app = QApplication(sys.argv)
     ## definition form
@@ -341,12 +344,12 @@ if __name__ == "__main__":
 
 
     if form.nexusType:
-        print "Definition: name = \'%s\' type = \'%s\'" \
-            % ( form.name, form.nexusType )
+        logger.info("Definition: name = \'%s\' type = \'%s\'" \
+            % ( form.name, form.nexusType ))
     if form.attributes:
-        print "Other attributes:"
+        logger.info("Other attributes:")
         for k in form.attributes.keys():
-            print  " %s = '%s' " % (k, form.attributes[k])
+            logger.info(" %s = '%s' " % (k, form.attributes[k]))
     if form.doc:
-        print "Doc: \n%s" % form.doc
+        logger.info("Doc: \n%s" % form.doc)
     

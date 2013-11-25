@@ -32,6 +32,10 @@ from .DimensionsDlg import DimensionsDlg
 from .Errors import CharacterError
 from .DomTools import DomTools
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 ## dialog defining an attribute
 class RichAttributeDlg(NodeDlg):
     
@@ -416,6 +420,9 @@ if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
+    logging.basicConfig(level=logging.DEBUG)     
+
+
     ## Qt application
     app = QApplication(sys.argv)
     ## attribute form
@@ -429,8 +436,8 @@ if __name__ == "__main__":
     app.exec_()
 
     if form.name:
-        print "Attribute: %s = \'%s\'" % ( form.name, form.value )
+        logger.info("Attribute: %s = \'%s\'" % ( form.name, form.value ))
     if form.nexusType:
-        print "Type: %s" % form.nexusType
+        logger.info("Type: %s" % form.nexusType)
     if form.doc:
-        print "Doc: \n%s" % form.doc
+        logger.info("Doc: \n%s" % form.doc)

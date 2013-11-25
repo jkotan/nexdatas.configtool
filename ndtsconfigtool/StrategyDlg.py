@@ -27,6 +27,9 @@ from .ui.ui_strategydlg import Ui_StrategyDlg
 from .NodeDlg import NodeDlg 
 from .DomTools import DomTools
 
+import logging
+logger = logging.getLogger(__name__)
+
 ## dialog defining an attribute
 class StrategyDlg(NodeDlg):
     
@@ -315,8 +318,11 @@ class StrategyDlg(NodeDlg):
 
 if __name__ == "__main__":
     import sys
-
     from PyQt4.QtGui import QApplication
+
+    logging.basicConfig(level=logging.DEBUG)     
+
+
     ## Qt application
     app = QApplication(sys.argv)
     ## attribute form
@@ -331,10 +337,10 @@ if __name__ == "__main__":
     app.exec_()
 
     if form.mode:
-        print "Mode: %s " % ( form.mode )
+        logger.info("Mode: %s " % ( form.mode ))
     if form.mode == "STEP":
         if form.trigger:
-            print "Trigger: ", form.trigger
+            logger.info("Trigger: %s"% form.trigger)
     if form.mode == "POSTRUN":
         if form.postrun:
-            print "Postrun label: ", form.postrun
+            logger.info("Postrun label: %s" % form.postrun)

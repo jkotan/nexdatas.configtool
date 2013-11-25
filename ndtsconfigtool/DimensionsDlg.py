@@ -26,6 +26,9 @@ from PyQt4.QtGui import (QTableWidgetItem, QMessageBox, QDialog)
 
 from .ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 ## dialog defining a dimensions tag
 class DimensionsDlg(QDialog):
@@ -167,8 +170,11 @@ class DimensionsDlg(QDialog):
 
 if __name__ == "__main__":
     import sys
-
     from PyQt4.QtGui import QApplication
+
+    logging.basicConfig(level=logging.DEBUG)     
+
+
     ## Qt application
     app = QApplication(sys.argv)
     ## dimensions form
@@ -182,11 +188,9 @@ if __name__ == "__main__":
 
     if form.result():
         if form.rank:
-            print "Dimensions: rank = %s" % ( form.rank )
+            logger.info("Dimensions: rank = %s" % ( form.rank ))
         if form.lengths:
-            print "Lengths:"
+            logger.info("Lengths:")
             for mrow, mln in enumerate(form.lengths):
-                print  " %s: %s " % (mrow+1, mln)
-        if form.doc:
-            print "Doc: \n%s" % form.doc
+                logger.info(" %s: %s " % (mrow+1, mln))
     

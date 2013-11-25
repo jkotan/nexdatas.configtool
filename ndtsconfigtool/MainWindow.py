@@ -47,11 +47,11 @@ from .HelpSlots import HelpSlots
 from .WindowsSlots import WindowsSlots
 
 
+from .ConfigurationServer import (ConfigurationServer, PYTANGO_AVAILABLE)
+
 import logging
 logger = logging.getLogger(__name__)
 
-
-from .ConfigurationServer import (ConfigurationServer, PYTANGO_AVAILABLE)
 
 ## main window class
 class MainWindow(QMainWindow):

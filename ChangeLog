@@ -1,3 +1,7 @@
+2013-11-XX Jan Kotanski <jankotan@gmail.com>
+	* adding program parameters : server, components, datasources, log
+	* tagged as v1.4.2
+
 2013-11-19 Jan Kotanski <jankotan@gmail.com>
 	* fixes QT parent issues
 	* tagged as v1.4.1

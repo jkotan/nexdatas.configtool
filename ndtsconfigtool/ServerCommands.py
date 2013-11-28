@@ -224,6 +224,9 @@ class ServerStoreComponent(QUndoCommand):
                     
             try:
                 xml = self._cpEdit.get()    
+                if not self.receiver.configServer:
+                    raise Exception("Server not connected")
+                    
                 if not self.receiver.configServer.connected:
                     if QMessageBox.question(
                         self.receiver, 
@@ -554,6 +557,9 @@ class ServerStoreDataSource(QUndoCommand):
         if self._ds is not None and hasattr(self._ds, "instance"):
             try:
                 xml = self._ds.instance.get()    
+                if not self.receiver.configServer:
+                    raise Exception("Server not connected")
+
                 if not self.receiver.configServer.connected:
                     if QMessageBox.question(
                         self.receiver, 

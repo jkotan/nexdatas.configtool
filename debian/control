@@ -1,0 +1,18 @@
+Source: python-ndtsconfigtool
+Section: shells
+Priority: optional
+Maintainer: Jan Kotański (jkotan) 
+Build-Depends: debhelper (>=9.0), python-support (>= 1.0), cdbs (>= 0.4.49), python-all-dev
+XS-Python-Version: >=2.6
+Standards-Version: 3.9.3.1
+Package: python-ndtsconfigtool
+Architecture: all
+Homepage: https://code.google.com/p/nexdatas/
+XB-Python-Version: ${python:Versions}
+Depends: ${misc:Depends}, ${python:Depends}
+Description: Component Designer for Nexus Tango Writer
+ Component Designer is dedicated to create XML configuration files 
+ for Nexus Tango Writer	 
+ Look for more information about this:
+
+https://code.google.com/p/nexdatas/

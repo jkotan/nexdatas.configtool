@@ -1,3 +1,7 @@
+2013-12-02 Jan Kotanski <jankotan@gmail.com>
+	* fixes for showing component datasources
+	* tagged as v1.4.3
+
 2013-11-25 Jan Kotanski <jankotan@gmail.com>
 	* adding program parameters : server, components, datasources, log
 	* adding progressbars during loading, setting and saving elements

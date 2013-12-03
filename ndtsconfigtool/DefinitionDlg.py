@@ -44,8 +44,8 @@ class DefinitionDlg(NodeDlg):
         
         ## definition name
         self.name = u''
-        ## definition type
-        self.nexusType = u''
+        ## definition content
+        self.content = u''
         ## definition doc
         self.doc = u''
         ## definition attributes
@@ -67,8 +67,8 @@ class DefinitionDlg(NodeDlg):
 
         if self.name is not None:
             self.ui.nameLineEdit.setText(self.name) 
-        if self.nexusType is not None:
-            self.ui.typeLineEdit.setText(self.nexusType) 
+        if self.content is not None:
+            self.ui.contentTextEdit.setText(self.content) 
         if self.doc is not None:
             self.ui.docTextEdit.setText(self.doc)
 
@@ -88,7 +88,7 @@ class DefinitionDlg(NodeDlg):
         attributes = copy.copy(self.attributes)
 
         state = (self.name,
-                 self.nexusType,
+                 self.content,
                  self.doc,
                  attributes
                  )
@@ -101,7 +101,7 @@ class DefinitionDlg(NodeDlg):
     def setState(self, state):
 
         (self.name,
-         self.nexusType,
+         self.content,
          self.doc,
          attributes
          ) = state
@@ -116,8 +116,6 @@ class DefinitionDlg(NodeDlg):
         self.ui.setupUi(self)
         
         self.updateForm()
-
-        self.__updateUi()
 
         self.connect(
             self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
@@ -148,18 +146,18 @@ class DefinitionDlg(NodeDlg):
         self.name = unicode(
             attributeMap.namedItem("name").nodeValue() \
                 if attributeMap.contains("name") else "")
-        self.nexusType = unicode(
-            attributeMap.namedItem("type").nodeValue() \
-                if attributeMap.contains("type") else "")
 
         self.attributes.clear()    
         self.__attributes.clear()    
         for i in range(attributeMap.count()):
             attribute = attributeMap.item(i)
-            attrName = unicode(attribute.nodeName())
-            if attrName != "name" and attrName != "type":
+            attrName = unicode(attribute.nodeName())  
+            if attrName != "name":
                 self.attributes[attrName] = unicode(attribute.nodeValue())
                 self.__attributes[attrName] = unicode(attribute.nodeValue())
+
+        text = DomTools.getText(self.node)    
+        self.content = unicode(text).strip() if text else ""
 
         doc = self.node.firstChildElement(QString("doc"))           
         text = DomTools.getText(doc)    
@@ -255,13 +253,6 @@ class DefinitionDlg(NodeDlg):
             
 
 
-    ## updates definition user interface
-    # \brief It sets enable or disable the OK button
-    def __updateUi(self):
-        pass
-#        enable = not self.ui.typeLineEdit.text().isEmpty()
-#        self.ui.applyPushButton.setEnabled(enable)
-
 
 
     ## applys input text strings
@@ -269,8 +260,8 @@ class DefinitionDlg(NodeDlg):
     #        and apply the dialog
     def apply(self):
         self.name = unicode(self.ui.nameLineEdit.text())
-        self.nexusType = unicode(self.ui.typeLineEdit.text())
 
+        self.content = unicode(self.ui.contentTextEdit.toPlainText())
         self.doc = unicode(self.ui.docTextEdit.toPlainText())
         
         index = self.view.currentIndex()
@@ -303,8 +294,8 @@ class DefinitionDlg(NodeDlg):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         if self.name:    
             elem.setAttribute(QString("name"), QString(self.name))
-        if self.nexusType:
-            elem.setAttribute(QString("type"), QString(self.nexusType))
+
+        self.replaceText(mindex, unicode(self.content))    
 
         for attr in self.attributes.keys():
             elem.setAttribute(QString(attr), QString(self.attributes[attr]))
@@ -334,8 +325,8 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     ## definition form
     form = DefinitionDlg()
-    form.name = 'entry'
-    form.nexusType = 'NXentry'
+    form.name = 'scan'
+    form.content = '$components.default'
     form.doc = 'The main entry'
     form.attributes = {"title":"Test run 1", "run_cycle":"2012-1"}
     form.createGUI()

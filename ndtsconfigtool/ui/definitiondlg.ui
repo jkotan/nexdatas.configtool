@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>446</width>
-    <height>585</height>
+    <width>325</width>
+    <height>489</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -28,13 +28,13 @@
   <property name="modal">
    <bool>false</bool>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <layout class="QFormLayout" name="formLayout">
+        <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="0">
           <widget class="QLabel" name="nameLabel">
            <property name="text">
@@ -49,17 +49,14 @@
           <widget class="QLineEdit" name="nameLineEdit"/>
          </item>
          <item row="1" column="0">
-          <widget class="QLabel" name="typeLabel">
+          <widget class="QLabel" name="contentLabel">
            <property name="text">
-            <string>&amp;Type:</string>
+            <string>&amp;Content:</string>
            </property>
            <property name="buddy">
-            <cstring>typeLineEdit</cstring>
+            <cstring>contentTextEdit</cstring>
            </property>
           </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="typeLineEdit"/>
          </item>
         </layout>
        </item>
@@ -69,11 +66,11 @@
           <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeType">
-          <enum>QSizePolicy::Maximum</enum>
+          <enum>QSizePolicy::MinimumExpanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
+           <width>28</width>
            <height>20</height>
           </size>
          </property>
@@ -100,20 +97,7 @@
       </layout>
      </item>
      <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Maximum</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>18</height>
-        </size>
-       </property>
-      </spacer>
+      <widget class="QTextEdit" name="contentTextEdit"/>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -181,11 +165,13 @@
  </widget>
  <tabstops>
   <tabstop>nameLineEdit</tabstop>
-  <tabstop>typeLineEdit</tabstop>
+  <tabstop>contentTextEdit</tabstop>
   <tabstop>addPushButton</tabstop>
   <tabstop>removePushButton</tabstop>
   <tabstop>attributeTableWidget</tabstop>
   <tabstop>docTextEdit</tabstop>
+  <tabstop>applyPushButton</tabstop>
+  <tabstop>resetPushButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

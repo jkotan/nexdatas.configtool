@@ -181,7 +181,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form = DefinitionDlg()
         form.show()
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.node, None)
@@ -208,7 +208,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form = DefinitionDlg()
         form.show()
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
@@ -217,27 +217,26 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         
         self.assertTrue(form.ui.applyPushButton.isEnabled())
         self.assertTrue(form.ui.resetPushButton.isEnabled())
 
         name = "myname"
-        nType = "NXEntry"
+        content = "$components.default"
         QTest.keyClicks(form.ui.nameLineEdit, name)
         self.assertEqual(form.ui.nameLineEdit.text(),name)
-        QTest.keyClicks(form.ui.typeLineEdit, nType)
-        self.assertEqual(form.ui.typeLineEdit.text(), nType)
+        QTest.keyClicks(form.ui.contentTextEdit, content)
+        self.assertEqual(form.ui.contentTextEdit.toPlainText(), content)
 
         self.assertTrue(not form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.contentTextEdit.toPlainText().isEmpty())
 
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
 #        form.apply()
 #        self.assertEqual(form.name, name)
-#        self.assertEqual(form.nexusType, nType)
 
         self.assertEqual(form.result(),0)
 
@@ -252,7 +251,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form = DefinitionDlg()
         form.show()
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
@@ -261,64 +260,64 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
 
         name = "myname"
-        nType = "NXEntry"
+        content = "NXEntry"
         doc = "My documentation: \n ble ble ble "
         attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
         
         self.assertEqual(form.updateForm(),None)
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         form.name = name
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.updateForm(),None)
     
         self.assertEqual(form.ui.nameLineEdit.text(),name)
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         form.ui.nameLineEdit.setText("")
 
         form.name = ""
-        form.nexusType = nType
+        form.content = content
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.updateForm(),None)
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.typeLineEdit.text(), nType)
+        self.assertEqual(form.ui.contentTextEdit.toPlainText(), content)
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
 
 
 
-        form.ui.typeLineEdit.setText("")
+        form.ui.contentTextEdit.setText("")
 
         form.doc = doc
-        form.nexusType = ""
+        form.content = ""
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.updateForm(),None)
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
 
@@ -327,16 +326,16 @@ class DefinitionDlgTest(unittest.TestCase):
 
         form.name = name
         form.doc = doc
-        form.nexusType = nType
+        form.content = content
         form.attributes = attributes
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.updateForm(),None)
     
-        self.assertEqual(form.ui.typeLineEdit.text(), nType)
+        self.assertEqual(form.ui.contentTextEdit.toPlainText(), content)
         self.assertEqual(form.ui.nameLineEdit.text(),name)
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
@@ -370,7 +369,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form = DefinitionDlg()
         form.show()
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
@@ -381,7 +380,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         name = "myname"
-        nType = "NXEntry"
+        content = "NXEntry"
         doc = "My documentation: \n ble ble ble "
         attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
 
@@ -389,7 +388,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.getState(),('','','',{}))
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         form.name = name
@@ -397,17 +396,17 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.getState(),(name,'','',{}))
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
 
         form.name = ""
-        form.nexusType = nType
+        form.content = content
 
-        self.assertEqual(form.getState(),('',nType,'',{}))
+        self.assertEqual(form.getState(),('',content,'',{}))
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
 
@@ -415,18 +414,18 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         form.doc = doc
-        form.nexusType = ""
+        form.content = ""
 
         self.assertEqual(form.getState(),('', '', doc, {}))
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
 
 
         form.doc = ""
-        form.nexusType = ""
+        form.content = ""
         
         form.attributes = attributes
         state = form.getState()
@@ -440,18 +439,18 @@ class DefinitionDlgTest(unittest.TestCase):
             self.assertEqual(attributes[at], state[3][at])
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         form.name = name
         form.doc = doc
-        form.nexusType = nType
+        form.content = content
         form.attributes = attributes
 
         state = form.getState()
 
         self.assertEqual(state[0],name)
-        self.assertEqual(state[1],nType)
+        self.assertEqual(state[1],content)
         self.assertEqual(state[2],doc)
         self.assertEqual(len(state),4)
         self.assertTrue(state[3] is not attributes)
@@ -460,7 +459,7 @@ class DefinitionDlgTest(unittest.TestCase):
             self.assertEqual(attributes[at], state[3][at])
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
 
@@ -484,7 +483,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form = DefinitionDlg()
         form.show()
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc", "symbols"])
@@ -495,7 +494,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         name = "myname"
-        nType = "NXEntry"
+        content = "NXEntry"
         doc = "My documentation: \n ble ble ble "
         attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
 
@@ -503,45 +502,45 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.setState(['','','',{}]), None)
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
 
         self.assertEqual(form.setState([name,'','',{}]), None)
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
         self.assertEqual(form.name,name) 
-        self.assertEqual(form.nexusType,'') 
+        self.assertEqual(form.content,'') 
         self.assertEqual(form.doc,'') 
         self.assertEqual(form.attributes,{}) 
 
         form.name = ""
 
-        self.assertEqual(form.setState(['',nType,'',{}]), None)
+        self.assertEqual(form.setState(['',content,'',{}]), None)
  
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
         self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
 
         self.assertEqual(form.name,'') 
-        self.assertEqual(form.nexusType, nType) 
+        self.assertEqual(form.content, content) 
         self.assertEqual(form.doc,'') 
         self.assertEqual(form.attributes,{}) 
 
-        form.nexusType = ""
+        form.content = ""
 
         self.assertEqual(form.setState(['','',doc,{}]), None)
  
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.name,'') 
-        self.assertEqual(form.nexusType, '') 
+        self.assertEqual(form.content, '') 
         self.assertEqual(form.doc,doc) 
         self.assertEqual(form.attributes,{}) 
 
@@ -551,32 +550,32 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.setState(['','','',attributes]), None)
  
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.name,'') 
-        self.assertEqual(form.nexusType, '') 
+        self.assertEqual(form.content, '') 
         self.assertEqual(form.doc,'') 
         self.assertEqual(form.attributes,attributes) 
         self.assertTrue(form.attributes is not attributes)
 
 
 
-        self.assertEqual(form.setState([name,nType,doc,attributes]), None)
+        self.assertEqual(form.setState([name,content,doc,attributes]), None)
  
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.name,name) 
-        self.assertEqual(form.nexusType, nType) 
+        self.assertEqual(form.content, content) 
         self.assertEqual(form.doc,doc) 
         self.assertEqual(form.attributes,attributes) 
         self.assertTrue(form.attributes is not attributes)
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
 
@@ -598,12 +597,12 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
 
         name = "myname"
-        nType = "NXEntry"
+        content = "NXEntry"
         doc = "My documentation: \n ble ble ble "
         attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
         
@@ -612,7 +611,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
  
         self.assertEqual(form.ui.nameLineEdit.text(), '') 
-        self.assertEqual(form.ui.typeLineEdit.text(), '')
+        self.assertEqual(form.ui.contentTextEdit.toPlainText(), '')
         self.assertEqual(form.ui.docTextEdit.toPlainText(), '')
 
         form = DefinitionDlg()
@@ -623,7 +622,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
     
         self.assertEqual(form.ui.nameLineEdit.text(),name)
-        self.assertEqual(form.ui.typeLineEdit.text(), '')
+        self.assertEqual(form.ui.contentTextEdit.toPlainText(), '')
         self.assertEqual(form.ui.docTextEdit.toPlainText(), '')
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
         self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
@@ -631,13 +630,13 @@ class DefinitionDlgTest(unittest.TestCase):
 
         form = DefinitionDlg()
         form.show()
-        form.nexusType = nType
+        form.content = content
 
 
         form.createGUI()
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertEqual(form.ui.typeLineEdit.text(), nType)
+        self.assertEqual(form.ui.contentTextEdit.toPlainText(), content)
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
 
@@ -651,7 +650,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
     
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
 
@@ -661,12 +660,12 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.name = name
         form.doc = doc
-        form.nexusType = nType
+        form.content = content
         form.attributes = attributes
 
         form.createGUI()
     
-        self.assertEqual(form.ui.typeLineEdit.text(), nType)
+        self.assertEqual(form.ui.contentTextEdit.toPlainText(), content)
         self.assertEqual(form.ui.nameLineEdit.text(),name)
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
@@ -687,7 +686,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 #        form.apply()
 #        self.assertEqual(form.name, name)
-#        self.assertEqual(form.nexusType, nType)
+#        self.assertEqual(form.content, content)
 
         self.assertEqual(form.result(),0)
 
@@ -703,6 +702,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -711,6 +711,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("type","mytype%s" %  nn)
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -726,7 +729,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -736,7 +739,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
         
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -746,15 +749,17 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.content, "$components.some%s" %  nn)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc", "symbols"])
+        self.assertEqual(
+            form.attributes, {u'shortname': u'mynshort%s' % nn, u'type': u'mytype%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(
+            form.subItems, 
+            ["group", "field", "attribute", "link", "component", "doc", "symbols"])
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
@@ -771,6 +776,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -779,6 +785,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("type","mytype%s" %  nn)
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -794,7 +803,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
 #        form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -804,7 +813,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
         
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -815,15 +824,15 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.content, "$components.some%s" %  nn)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'type': u'mytype%s'% nn, u'unit': u'myunits%s' % nn})
         self.assertEqual(form.subItems, 
                          ["group", "field", "attribute", "link", "component", "doc", "symbols"])
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
@@ -860,7 +869,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
 #        form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -870,7 +879,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
         
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -879,7 +888,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.setFromNode()
 
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -887,7 +896,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
@@ -912,7 +921,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -922,7 +931,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
         
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -931,7 +940,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.setFromNode()
 
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -940,7 +949,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
@@ -955,6 +964,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -963,6 +973,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("type","mytype%s" %  nn)
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -978,7 +991,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -988,7 +1001,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
         
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -996,10 +1009,10 @@ class DefinitionDlgTest(unittest.TestCase):
         
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        attributes = {u'shortname': u'mynshort%s' % nn, u'type': u'mytype%s' % nn, u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.content, "$components.some%s" %  nn)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
         self.assertEqual(form.subItems, 
@@ -1007,7 +1020,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
@@ -1041,6 +1054,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -1049,6 +1063,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("type","mytype%s" %  nn)
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -1064,7 +1081,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1074,7 +1091,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
         
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1082,10 +1099,10 @@ class DefinitionDlgTest(unittest.TestCase):
         
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        attributes = {u'shortname': u'mynshort%s' % nn, u'type': u'mytype%s' % nn,u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.content, "$components.some%s" %  nn)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
         self.assertEqual(form.subItems, 
@@ -1093,7 +1110,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
@@ -1129,6 +1146,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -1137,6 +1155,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("type","mytype%s" %  nn)
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -1152,7 +1173,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1162,7 +1183,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
         
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1170,10 +1191,10 @@ class DefinitionDlgTest(unittest.TestCase):
         
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        attributes = {u'shortname': u'mynshort%s' % nn, u'type': u'mytype%s' % nn, u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.content, "$components.some%s" %  nn)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
         self.assertEqual(form.subItems, 
@@ -1181,7 +1202,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
@@ -1219,6 +1240,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -1227,6 +1249,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("type","mytype%s" %  nn)
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -1242,7 +1267,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1252,7 +1277,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
         
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1260,10 +1285,10 @@ class DefinitionDlgTest(unittest.TestCase):
         
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        attributes = {u'shortname': u'mynshort%s' % nn, u'type': u'mytype%s' % nn,u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.content, "$components.some%s" %  nn)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
         self.assertEqual(form.subItems, 
@@ -1271,7 +1296,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
@@ -1358,6 +1383,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -1367,6 +1393,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
         qdn.setAttribute("logname","mynlong%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -1382,7 +1411,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1392,7 +1421,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.createGUI()
         
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1400,10 +1429,10 @@ class DefinitionDlgTest(unittest.TestCase):
         
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'logname': u'mynlong%s' %nn, u'unit': u'myunits%s' % nn}
+        attributes = {u'type': u'mytype%s' % nn, u'shortname': u'mynshort%s' % nn, u'logname': u'mynlong%s' %nn, u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.content, "$components.some%s" %  nn)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
         self.assertEqual(form.subItems, 
@@ -1411,7 +1440,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
@@ -1505,6 +1534,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -1514,6 +1544,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
         qdn.setAttribute("logname","mynlong%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -1529,7 +1562,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1540,7 +1573,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         atw = form.ui.attributeTableWidget        
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1548,10 +1581,10 @@ class DefinitionDlgTest(unittest.TestCase):
         
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'logname': u'mynlong%s' %nn, u'unit': u'myunits%s' % nn}
+        attributes = {u'type': u'mytype%s' % nn, u'shortname': u'mynshort%s' % nn, u'logname': u'mynlong%s' %nn, u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.content, "$components.some%s" %  nn)
         self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
         self.assertEqual(form.subItems, 
@@ -1559,7 +1592,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.contentTextEdit.toPlainText().isEmpty())
         self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
 
         self.assertEqual(atw.columnCount(),2)
@@ -1651,6 +1684,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -1659,6 +1693,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("type","mytype%s" %  nn)
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -1674,7 +1711,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1705,9 +1742,6 @@ class DefinitionDlgTest(unittest.TestCase):
             if nm == "name":
                 self.assertEqual(vl,form.name)
                 cnt += 1 
-            elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
-                cnt += 1 
             else:
                 self.assertEqual(vl,form.attributes[str(nm)])
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
@@ -1720,9 +1754,15 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(olddoc,form.doc)
 
 
+        text = DomTools.getText(form.node)    
+        oldcont = unicode(text).strip() if text else ""
+
+        self.assertEqual(oldcont,form.content)
+
+
 
         form.name = nname
-        form.nexusType = ntype
+        form.content = ntype
         form.attributes.clear()
         for at in attrs.keys() :
             form.attributes[at] =  attrs[at]
@@ -1769,6 +1809,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -1777,6 +1818,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("type","mytype%s" %  nn)
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -1792,7 +1836,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1823,9 +1867,6 @@ class DefinitionDlgTest(unittest.TestCase):
             if nm == "name":
                 self.assertEqual(vl,form.name)
                 cnt += 1 
-            elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
-                cnt += 1 
             else:
                 self.assertEqual(vl,form.attributes[str(nm)])
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
@@ -1837,10 +1878,14 @@ class DefinitionDlgTest(unittest.TestCase):
 
         self.assertEqual(olddoc,form.doc)
 
+        text = DomTools.getText(form.node)    
+        oldcont = unicode(text).strip() if text else ""
+
+        self.assertEqual(oldcont,form.content)
 
 
         form.name = nname
-        form.nexusType = ntype
+        form.content = ntype
         form.attributes.clear()
         for at in attrs.keys() :
             form.attributes[at] =  attrs[at]
@@ -1880,6 +1925,12 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
+        text = DomTools.getText(form.node)    
+        oldcont = unicode(text).strip() if text else ""
+
+        self.assertEqual(oldcont,form.content)
+
+
 
     ## constructor test
     # \brief It tests default settings
@@ -1888,6 +1939,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -1896,6 +1948,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("type","mytype%s" %  nn)
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -1911,7 +1966,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -1938,9 +1993,6 @@ class DefinitionDlgTest(unittest.TestCase):
             if nm == "name":
                 self.assertEqual(vl,form.name)
                 cnt += 1 
-            elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
-                cnt += 1 
             else:
                 self.assertEqual(vl,form.attributes[str(nm)])
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
@@ -1951,6 +2003,12 @@ class DefinitionDlgTest(unittest.TestCase):
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,form.doc)
+
+
+        text = DomTools.getText(form.node)    
+        oldcont = unicode(text).strip() if text else ""
+
+        self.assertEqual(oldcont,form.content)
 
 
         nname = "newname"
@@ -1971,7 +2029,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         form.ui.nameLineEdit.setText(nname)
-        form.ui.typeLineEdit.setText(ntype)
+        form.ui.contentTextEdit.setText(ntype)
 
         form.ui.docTextEdit.setText(str(mdoc))
         form.ui.docTextEdit.setText(str(mdoc))
@@ -2002,7 +2060,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         self.assertEqual(form.name, nname)
-        self.assertEqual(form.nexusType, ntype)
+        self.assertEqual(form.content, ntype)
         self.assertEqual(form.doc, mdoc)
         self.assertEqual(form.attributes, attrs)
 
@@ -2030,6 +2088,12 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
 
+        text = DomTools.getText(form.node)    
+        oldcont = unicode(text).strip() if text else ""
+
+        self.assertEqual(oldcont,form.content)
+
+
 
 
     ## constructor test
@@ -2039,6 +2103,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -2047,6 +2112,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("type","mytype%s" %  nn)
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -2062,7 +2130,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -2089,9 +2157,6 @@ class DefinitionDlgTest(unittest.TestCase):
             if nm == "name":
                 self.assertEqual(vl,form.name)
                 cnt += 1 
-            elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
-                cnt += 1 
             else:
                 self.assertEqual(vl,form.attributes[str(nm)])
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
@@ -2102,6 +2167,13 @@ class DefinitionDlgTest(unittest.TestCase):
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,form.doc)
+
+
+
+        text = DomTools.getText(form.node)    
+        oldcont = unicode(text).strip() if text else ""
+
+        self.assertEqual(oldcont,form.content)
 
 
         nname = "newname"
@@ -2122,7 +2194,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         form.ui.nameLineEdit.setText(nname)
-        form.ui.typeLineEdit.setText(ntype)
+        form.ui.contentTextEdit.setText(ntype)
 
         form.ui.docTextEdit.setText(str(mdoc))
         form.ui.docTextEdit.setText(str(mdoc))
@@ -2151,9 +2223,9 @@ class DefinitionDlgTest(unittest.TestCase):
 
         form.reset()
 
-        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        ats= {u'shortname': u'mynshort%s' % nn, u'type': u'mytype%s' % nn, u'unit': u'myunits%s' % nn}
         self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.content, "$components.some%s" %  nn)
         self.assertEqual(form.doc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip()) 
         self.assertEqual(form.attributes,  ats )
 
@@ -2165,9 +2237,6 @@ class DefinitionDlgTest(unittest.TestCase):
             if nm == "name":
                 self.assertEqual(vl, "myname%s" % nn)
                 cnt += 1 
-            elif nm == "type":
-                self.assertEqual(vl, "mytype%s" % nn)
-                cnt += 1 
             else:
                 self.assertEqual(vl,ats[str(nm)])
         self.assertEqual(len(ats),attributeMap.count() - cnt)
@@ -2177,6 +2246,12 @@ class DefinitionDlgTest(unittest.TestCase):
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip())
+
+        text = DomTools.getText(form.node)    
+        oldcont = unicode(text).strip() if text else ""
+
+        self.assertEqual(oldcont,form.content)
+
 
 
 
@@ -2188,6 +2263,7 @@ class DefinitionDlgTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
 
         dks = []
+        cks = []
         doc = QDomDocument()
         nname = "definition"
         qdn = doc.createElement(nname)
@@ -2196,6 +2272,9 @@ class DefinitionDlgTest(unittest.TestCase):
         qdn.setAttribute("type","mytype%s" %  nn)
         qdn.setAttribute("unit","myunits%s" %  nn)
         qdn.setAttribute("shortname","mynshort%s" %  nn)
+        cks.append(doc.createTextNode("$components.some%s\n" %  nn))
+        qdn.appendChild(cks[-1]) 
+
         doc.appendChild(qdn) 
         dname = "doc"
         mdoc = doc.createElement(dname)
@@ -2211,7 +2290,7 @@ class DefinitionDlgTest(unittest.TestCase):
         form.show()
         form.node = qdn
         self.assertEqual(form.name, '')
-        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.content, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.subItems, 
@@ -2237,9 +2316,6 @@ class DefinitionDlgTest(unittest.TestCase):
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
                 self.assertEqual(vl,form.name)
-                cnt += 1 
-            elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
                 cnt += 1 
             else:
                 self.assertEqual(vl,form.attributes[str(nm)])
@@ -2271,7 +2347,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         form.ui.nameLineEdit.setText(nname)
-        form.ui.typeLineEdit.setText(ntype)
+        form.ui.contentTextEdit.setText(ntype)
 
         form.ui.docTextEdit.setText(str(mdoc))
         form.ui.docTextEdit.setText(str(mdoc))
@@ -2300,9 +2376,9 @@ class DefinitionDlgTest(unittest.TestCase):
 
         QTest.mouseClick(form.ui.resetPushButton, Qt.LeftButton)
 
-        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        ats= {u'shortname': u'mynshort%s' % nn, u'type': u'mytype%s' % nn,u'unit': u'myunits%s' % nn}
         self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
+        self.assertEqual(form.content, "$components.some%s" %  nn)
         self.assertEqual(form.doc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip()) 
         self.assertEqual(form.attributes,  ats )
 
@@ -2314,9 +2390,6 @@ class DefinitionDlgTest(unittest.TestCase):
             if nm == "name":
                 self.assertEqual(vl, "myname%s" % nn)
                 cnt += 1 
-            elif nm == "type":
-                self.assertEqual(vl, "mytype%s" % nn)
-                cnt += 1 
             else:
                 self.assertEqual(vl,ats[str(nm)])
         self.assertEqual(len(ats),attributeMap.count() - cnt)
@@ -2326,6 +2399,12 @@ class DefinitionDlgTest(unittest.TestCase):
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip())
+
+
+        text = DomTools.getText(form.node)    
+        oldcont = unicode(text).strip() if text else ""
+
+        self.assertEqual(oldcont,form.content)
 
 
 

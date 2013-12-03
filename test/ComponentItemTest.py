@@ -30,7 +30,7 @@ import time
 
 from PyQt4.QtXml import QDomNode, QDomDocument
 
-from ndtsconfigtool.ComponentItem import ComponentItem
+from nxsconfigtool.ComponentItem import ComponentItem
 
 
 

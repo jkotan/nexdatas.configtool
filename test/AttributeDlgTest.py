@@ -33,9 +33,9 @@ from PyQt4.QtGui import (QApplication, QMessageBox)
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
 
-from ndtsconfigtool.AttributeDlg import AttributeDlg
+from nxsconfigtool.AttributeDlg import AttributeDlg
 
-from ndtsconfigtool.ui.ui_attributedlg import Ui_AttributeDlg
+from nxsconfigtool.ui.ui_attributedlg import Ui_AttributeDlg
 
 
 ##  Qt-application

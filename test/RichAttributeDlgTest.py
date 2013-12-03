@@ -35,14 +35,14 @@ from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString
 from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
 
 
-from ndtsconfigtool.RichAttributeDlg import RichAttributeDlg
-from ndtsconfigtool.ComponentModel import ComponentModel
-from ndtsconfigtool.AttributeDlg import AttributeDlg
-from ndtsconfigtool.NodeDlg import NodeDlg
-from ndtsconfigtool.DimensionsDlg import DimensionsDlg
+from nxsconfigtool.RichAttributeDlg import RichAttributeDlg
+from nxsconfigtool.ComponentModel import ComponentModel
+from nxsconfigtool.AttributeDlg import AttributeDlg
+from nxsconfigtool.NodeDlg import NodeDlg
+from nxsconfigtool.DimensionsDlg import DimensionsDlg
 
-from ndtsconfigtool.ui.ui_richattributedlg import Ui_RichAttributeDlg
-from ndtsconfigtool.DomTools import DomTools
+from nxsconfigtool.ui.ui_richattributedlg import Ui_RichAttributeDlg
+from nxsconfigtool.DomTools import DomTools
 
 
 ##  Qt-application

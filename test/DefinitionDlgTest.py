@@ -35,13 +35,13 @@ from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString
 from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
 
 
-from ndtsconfigtool.DefinitionDlg import DefinitionDlg
-from ndtsconfigtool.ComponentModel import ComponentModel
-from ndtsconfigtool.AttributeDlg import AttributeDlg
-from ndtsconfigtool.NodeDlg import NodeDlg
+from nxsconfigtool.DefinitionDlg import DefinitionDlg
+from nxsconfigtool.ComponentModel import ComponentModel
+from nxsconfigtool.AttributeDlg import AttributeDlg
+from nxsconfigtool.NodeDlg import NodeDlg
 
-from ndtsconfigtool.ui.ui_definitiondlg import Ui_DefinitionDlg
-from ndtsconfigtool.DomTools import DomTools
+from nxsconfigtool.ui.ui_definitiondlg import Ui_DefinitionDlg
+from nxsconfigtool.DomTools import DomTools
 
 
 ##  Qt-application

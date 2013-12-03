@@ -15,7 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package ndtsconfigtool nexdatas
+## \package nxsconfigtool nexdatas
 ## \file setup.py
 # GUI to create the XML components 
 
@@ -25,7 +25,7 @@ from distutils.command.build import build
 from distutils.command.clean import clean
 
 ## package name
-TOOL = "ndtsconfigtool"
+TOOL = "nxsconfigtool"
 ## package instance
 ITOOL = __import__(TOOL)
 

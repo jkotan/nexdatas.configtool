@@ -35,11 +35,11 @@ from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QModelIndex
 from PyQt4.QtXml import QDomNode, QDomDocument
 
 
-from ndtsconfigtool.NodeDlg import NodeDlg
-from ndtsconfigtool.ComponentModel import ComponentModel
-from ndtsconfigtool.ComponentItem import ComponentItem
+from nxsconfigtool.NodeDlg import NodeDlg
+from nxsconfigtool.ComponentModel import ComponentModel
+from nxsconfigtool.ComponentItem import ComponentItem
 
-from ndtsconfigtool.DomTools import DomTools
+from nxsconfigtool.DomTools import DomTools
 
 ##  Qt-application
 app = None

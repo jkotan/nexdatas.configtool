@@ -33,7 +33,7 @@ from PyQt4.QtGui import (QApplication, QMessageBox)
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
 
-from ndtsconfigtool.ConnectDlg import ConnectDlg
+from nxsconfigtool.ConnectDlg import ConnectDlg
 
 ##  Qt-application
 app = None

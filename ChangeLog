@@ -1,3 +1,8 @@
+2013-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* changing ComponentDesigner into nxscomp_designer
+	* changing ndtsconfigtool into nxsconfigtool package
+	* tagged as v1.5.0
+
 2013-12-03 Jan Kotanski <jankotan@gmail.com>
 	* adding content into definitions widget
 	* tagged as v1.4.4

@@ -35,15 +35,15 @@ from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString, QModelI
 from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
 
 
-from ndtsconfigtool.DataSourceDlg import DataSourceDlg, CommonDataSourceDlg
-from ndtsconfigtool.DataSourceMethods import DataSourceMethods
-from ndtsconfigtool.DataSource import CommonDataSource
-from ndtsconfigtool.ComponentModel import ComponentModel
-from ndtsconfigtool.AttributeDlg import AttributeDlg
-from ndtsconfigtool.NodeDlg import NodeDlg
-from ndtsconfigtool.DimensionsDlg import DimensionsDlg
+from nxsconfigtool.DataSourceDlg import DataSourceDlg, CommonDataSourceDlg
+from nxsconfigtool.DataSourceMethods import DataSourceMethods
+from nxsconfigtool.DataSource import CommonDataSource
+from nxsconfigtool.ComponentModel import ComponentModel
+from nxsconfigtool.AttributeDlg import AttributeDlg
+from nxsconfigtool.NodeDlg import NodeDlg
+from nxsconfigtool.DimensionsDlg import DimensionsDlg
 
-from ndtsconfigtool.ui.ui_datasourcedlg import Ui_DataSourceDlg
+from nxsconfigtool.ui.ui_datasourcedlg import Ui_DataSourceDlg
 
 
 ##  Qt-application

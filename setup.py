@@ -19,6 +19,8 @@
 ## \file setup.py
 # GUI to create the XML components 
 
+""" setup.py for NXS Component Designer """
+
 import os
 from distutils.core import setup
 from distutils.command.build import build

@@ -58,7 +58,7 @@ def main():
         "-l","--log", dest="log", 
         help="logging level, i.e. debug, info, warning, error, critical")
 
-    (options, args) = parser.parse_args()
+    (options, _) = parser.parse_args()
 
 
     if options.log:

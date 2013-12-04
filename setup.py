@@ -19,7 +19,7 @@
 ## \file setup.py
 # GUI to create the XML components 
 
-import os, shutil, sys
+import os
 from distutils.core import setup
 from distutils.command.build import build
 from distutils.command.clean import clean
@@ -39,20 +39,26 @@ class toolBuild(build):
     ## creates the python qrc files
     # \param qfile qrc file name
     # \param path  qrc file path 
-    def makeqrc(self, qfile, path):
-        compiled = os.system("pyrcc4 %s/%s.qrc -o %s/qrc_%s.py" % (path, qfile, path, qfile))
+    @classmethod
+    def makeqrc(cls, qfile, path):
+        compiled = os.system("pyrcc4 %s/%s.qrc -o %s/qrc_%s.py" % (
+                path, qfile, path, qfile))
         if compiled == 0:
-            print "Built: %s/%s.qrc -> %s/qrc_%s.py" % (path, qfile, path, qfile)
+            print "Built: %s/%s.qrc -> %s/qrc_%s.py" % (
+                path, qfile, path, qfile)
         else:
             print "Warning: Cannot build  %s%s.qrc"  % (path, qfile)
 
     ## creates the python ui files
     # \param ufile ui file name
     # \param path  ui file path 
-    def makeui(self, ufile, path):
-        compiled = os.system("pyuic4 %s/%s.ui -o %s/ui_%s.py" % (path, ufile, path, ufile))
+    @classmethod
+    def makeui(cls, ufile, path):
+        compiled = os.system("pyuic4 %s/%s.ui -o %s/ui_%s.py" % (
+                path, ufile, path, ufile))
         if compiled == 0:
-            print "Compiled %s/%s.ui -> %s/ui_%s.py" % (path, ufile, path, ufile)
+            print "Compiled %s/%s.ui -> %s/ui_%s.py" % (
+                path, ufile, path, ufile)
         else:
             print "Warning: Cannot build %s/ui_%s.py"  % (path, ufile)
 
@@ -65,8 +71,8 @@ class toolBuild(build):
             for ui in ufiles:
                 if not ui[0] in (".", ".."):
                     self.makeui(ui[0], ui[1])
-        except TypeError,e:
-            print "No .ui files to build",e
+        except TypeError as e:
+            print "No .ui files to build", e
 
 
         try:
@@ -89,37 +95,41 @@ class toolClean(clean):
     ## runner
     # \brief It is running during cleaning
     def run(self):
-        cfiles = [ "%s/%s" % (TOOL,cfile)  for cfile 
+        cfiles = [ "%s/%s" % (TOOL, cfile)  for cfile 
                   in os.listdir("%s" % TOOL) if cfile.endswith('.pyc') ]
         for fl in cfiles:
             os.remove(str(fl))
 
 
-        cfiles = [ "%s/ui/%s" % (TOOL,cfile)  for cfile 
-                  in os.listdir("%s/ui" % TOOL) if cfile.endswith('.pyc') or (cfile.endswith('.py') and cfile.endswith('__init_.py'))]
+        cfiles = [ "%s/ui/%s" % (TOOL, cfile)  for cfile 
+                  in os.listdir("%s/ui" % TOOL) if cfile.endswith('.pyc') or \
+                       (cfile.endswith('.py') \
+                            and cfile.endswith('__init_.py'))]
         for fl in cfiles:
             os.remove(str(fl))
 
 
-        cfiles = [ "%s/qrc/%s" % (TOOL,cfile)  for cfile 
-                  in os.listdir("%s/qrc" % TOOL) if cfile.endswith('.pyc') or (cfile.endswith('.py') and cfile.endswith('__init_.py'))]
+        cfiles = [ "%s/qrc/%s" % (TOOL, cfile)  for cfile 
+                  in os.listdir("%s/qrc" % TOOL) if cfile.endswith('.pyc') \
+                       or (cfile.endswith('.py') \
+                               and cfile.endswith('__init_.py'))]
         for fl in cfiles:
             os.remove(str(fl))
         clean.run(self)
 
-#datas = [('components', [ cp for cp in os.listdir("components") if cp.endswith('.xml')]), 
-#         ('datasources', [ ds for ds in os.listdir("datasources") if ds.endswith('.ds.xml')])]
 
 
 
 ## metadata for distutils
-SETUPDATA=dict(
+SETUPDATA = dict(
     name = "nexdatas.configtool",
     version = ITOOL.__version__,
     author = "Jan Kotanski, Eugen Wintersberger , Halil Pasic",
-    author_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, halil.pasic@gmail.com",
+    author_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, " \
+        + "halil.pasic@gmail.com",
     maintainer = "Jan Kotanski, Eugen Wintersberger , Halil Pasic",
-    maintainer_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, halil.pasic@gmail.com",
+    maintainer_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, " \
+        "halil.pasic@gmail.com",
     description = ("Configuration tool  for creating components"),
     license = "GNU GENERAL PUBLIC LICENSE, version 3",
     keywords = "configuration writer Tango component nexus data",

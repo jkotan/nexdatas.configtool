@@ -85,8 +85,8 @@ class toolBuild(build):
 
 
         try:
-            qfiles = [(  qfile[:-4], qrcdir) for qfile 
-                      in os.listdir(qrcdir) if qfile.endswith('.qrc')]
+            qfiles = [(  qfile[:-4], QRCDIR) for qfile 
+                      in os.listdir(QRCDIR) if qfile.endswith('.qrc')]
             for qrc in qfiles:
                 if not qrc[0] in (".", ".."):
                     self.makeqrc(qrc[0], qrc[1])
@@ -119,8 +119,8 @@ class toolClean(clean):
             os.remove(str(fl))
 
 
-        cfiles = [ os.path.join(qrcdir, cfile)  for cfile 
-                   in os.listdir(qrcdir) if cfile.endswith('.pyc') \
+        cfiles = [ os.path.join(QRCDIR, cfile)  for cfile 
+                   in os.listdir(QRCDIR) if cfile.endswith('.pyc') \
                        or (cfile.endswith('.py') \
                                and cfile.endswith('__init_.py'))]
         for fl in cfiles:
@@ -145,7 +145,7 @@ SETUPDATA = dict(
     keywords = "configuration writer Tango component nexus data",
     url = "http://code.google.com/p/nexdatas/",
     platforms= ("Linux", " Windows"," MacOS "),
-    packages=[TOOL, UIDIR, qrcdir],
+    packages=[TOOL, UIDIR, QRCDIR],
     scripts = ['nxscomp_designer.pyw'],
     long_description= read('README'),
     cmdclass = {"build" : toolBuild, "clean" : toolClean}

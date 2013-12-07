@@ -62,7 +62,7 @@ class HelpSlots(object):
                 """<b>Component Designer</b> v %s
                 <p>Copyright &copy; 2012-2013 DESY, GNU GENERAL PUBLIC LICENSE
                 <p>This application can be used to create
-                XML configuration file for the Nexus Data Writer.
+                XML configuration files for Nexus Data Writer.
                 <p>Python %s - Qt %s - PyQt %s on %s""" % (
                 unicode(__version__), 
                 unicode(platform.python_version()),

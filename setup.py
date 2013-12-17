@@ -15,17 +15,19 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package ndtsconfigtool nexdatas
+## \package nxsconfigtool nexdatas
 ## \file setup.py
 # GUI to create the XML components 
 
-import os, shutil, sys
+""" setup.py for NXS Component Designer """
+
+import os
 from distutils.core import setup
 from distutils.command.build import build
 from distutils.command.clean import clean
 
 ## package name
-TOOL = "ndtsconfigtool"
+TOOL = "nxsconfigtool"
 ## package instance
 ITOOL = __import__(TOOL)
 
@@ -33,50 +35,63 @@ ITOOL = __import__(TOOL)
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+UIDIR = os.path.join(TOOL, "ui")
+QRCDIR = os.path.join(TOOL, "qrc")
+
+
 ## ui and qrc builder for python
 class toolBuild(build):
 
     ## creates the python qrc files
     # \param qfile qrc file name
     # \param path  qrc file path 
-    def makeqrc(self, qfile, path):
-        compiled = os.system("pyrcc4 %s/%s.qrc -o %s/qrc_%s.py" % (path, qfile, path, qfile))
+    @classmethod
+    def makeqrc(cls, qfile, path):
+        qrcfile = os.path.join(path, "%s.qrc" % qfile)
+        pyfile = os.path.join(path, "qrc_%s.py" % qfile)
+        
+        compiled = os.system("pyrcc4 %s -o %s" % (qrcfile, pyfile))
         if compiled == 0:
-            print "Built: %s/%s.qrc -> %s/qrc_%s.py" % (path, qfile, path, qfile)
+            print "Built: %s -> %s" % (qrcfile, pyfile)
         else:
-            print "Warning: Cannot build  %s%s.qrc"  % (path, qfile)
+            print >> sys.stderr, "Error: Cannot build  %s" % (pyfile)
+
 
     ## creates the python ui files
     # \param ufile ui file name
     # \param path  ui file path 
-    def makeui(self, ufile, path):
-        compiled = os.system("pyuic4 %s/%s.ui -o %s/ui_%s.py" % (path, ufile, path, ufile))
+    @classmethod
+    def makeui(cls, ufile, path):
+        uifile = os.path.join(path, "%s.ui" % ufile)
+        pyfile = os.path.join(path, "ui_%s.py" % ufile)
+        compiled = os.system("pyuic4 %s -o %s" % (uifile, pyfile))
         if compiled == 0:
-            print "Compiled %s/%s.ui -> %s/ui_%s.py" % (path, ufile, path, ufile)
+            print "Compiled %s -> %s" % (uifile, pyfile)
         else:
-            print "Warning: Cannot build %s/ui_%s.py"  % (path, ufile)
+            print >> sys.stderr,  "Error: Cannot build %s" % (pyfile)
 
     ## runner
     # \brief It is running during building
     def run(self):
         try:
-            ufiles = [(  ufile[:-3], "%s/ui" % TOOL ) for ufile 
-                      in os.listdir("%s/ui" % TOOL) if ufile.endswith('.ui')]
+            ufiles = [(  ufile[:-3], 
+                         UIDIR ) for ufile 
+                      in os.listdir(UIDIR) if ufile.endswith('.ui')]
             for ui in ufiles:
                 if not ui[0] in (".", ".."):
                     self.makeui(ui[0], ui[1])
-        except TypeError,e:
-            print "No .ui files to build",e
+        except TypeError as e:
+            print  >> sys.stderr, "No .ui files to build", e
 
 
         try:
-            qfiles = [(  qfile[:-4], "%s/qrc" % TOOL) for qfile 
-                      in os.listdir("%s/qrc" % TOOL) if qfile.endswith('.qrc')]
+            qfiles = [(  qfile[:-4], QRCDIR) for qfile 
+                      in os.listdir(QRCDIR) if qfile.endswith('.qrc')]
             for qrc in qfiles:
                 if not qrc[0] in (".", ".."):
                     self.makeqrc(qrc[0], qrc[1])
         except TypeError:
-            print "No .qrc files to build"
+            print  >> sys.stderr, "No .qrc files to build"
 
         build.run(self)
 
@@ -89,46 +104,49 @@ class toolClean(clean):
     ## runner
     # \brief It is running during cleaning
     def run(self):
-        cfiles = [ "%s/%s" % (TOOL,cfile)  for cfile 
-                  in os.listdir("%s" % TOOL) if cfile.endswith('.pyc') ]
+
+        cfiles = [ os.path.join(TOOL, cfile)  for cfile 
+                   in os.listdir("%s" % TOOL) if cfile.endswith('.pyc') ]
         for fl in cfiles:
             os.remove(str(fl))
 
 
-        cfiles = [ "%s/ui/%s" % (TOOL,cfile)  for cfile 
-                  in os.listdir("%s/ui" % TOOL) if cfile.endswith('.pyc') or (cfile.endswith('.py') and cfile.endswith('__init_.py'))]
+        cfiles = [ os.path.join(UIDIR, cfile)  for cfile 
+                   in os.listdir(UIDIR) if cfile.endswith('.pyc') or \
+                       (cfile.endswith('.py') \
+                            and cfile.endswith('__init_.py'))]
         for fl in cfiles:
             os.remove(str(fl))
 
 
-        cfiles = [ "%s/qrc/%s" % (TOOL,cfile)  for cfile 
-                  in os.listdir("%s/qrc" % TOOL) if cfile.endswith('.pyc') or (cfile.endswith('.py') and cfile.endswith('__init_.py'))]
+        cfiles = [ os.path.join(QRCDIR, cfile)  for cfile 
+                   in os.listdir(QRCDIR) if cfile.endswith('.pyc') \
+                       or (cfile.endswith('.py') \
+                               and cfile.endswith('__init_.py'))]
         for fl in cfiles:
             os.remove(str(fl))
         clean.run(self)
 
-#datas = [('components', [ cp for cp in os.listdir("components") if cp.endswith('.xml')]), 
-#         ('datasources', [ ds for ds in os.listdir("datasources") if ds.endswith('.ds.xml')])]
 
 
 
 ## metadata for distutils
-SETUPDATA=dict(
+SETUPDATA = dict(
     name = "nexdatas.configtool",
     version = ITOOL.__version__,
     author = "Jan Kotanski, Eugen Wintersberger , Halil Pasic",
-    author_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, halil.pasic@gmail.com",
+    author_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, " \
+        + "halil.pasic@gmail.com",
     maintainer = "Jan Kotanski, Eugen Wintersberger , Halil Pasic",
-    maintainer_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, halil.pasic@gmail.com",
+    maintainer_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, " \
+        "halil.pasic@gmail.com",
     description = ("Configuration tool  for creating components"),
     license = "GNU GENERAL PUBLIC LICENSE, version 3",
     keywords = "configuration writer Tango component nexus data",
     url = "http://code.google.com/p/nexdatas/",
     platforms= ("Linux", " Windows"," MacOS "),
-    packages=[TOOL, "%s/ui"% TOOL, "%s/qrc"% TOOL],
-#    data_files = datas,
-    scripts = ['ComponentDesigner.pyw'],
-#    package_data={'ndts': ['TDS']},
+    packages=[TOOL, UIDIR, QRCDIR],
+    scripts = ['nxscomp_designer.pyw'],
     long_description= read('README'),
     cmdclass = {"build" : toolBuild, "clean" : toolClean}
 )

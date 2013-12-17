@@ -29,7 +29,7 @@ import binascii
 import time
 
 
-from ndtsconfigtool.LabeledObject import LabeledObject
+from nxsconfigtool.LabeledObject import LabeledObject
 
 
 ## if 64-bit machione

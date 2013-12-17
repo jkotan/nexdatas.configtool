@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<definition>
+<definition name="asdfasdf">
   <doc>Has to be merged into the DESY default component to get a full NEXUS SAS tree.</doc>
   <group type="NXentry" name="entry">
     <group type="NXsample" name="sample">
@@ -130,5 +130,4 @@ The beamtime ID at DESY is an 8 digit number.R</doc>
       <link target="NXentry/NXinstrument/NXdetector/data" name="data"/>
     </group>
     <field type="NX_CHAR" name="definition">NXsas</field>
-  </group>
-</definition>
+  </group>asfd</definition>

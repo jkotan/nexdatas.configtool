@@ -33,8 +33,8 @@ from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
 
 
-from ndtsconfigtool.DimensionsDlg import DimensionsDlg
-from ndtsconfigtool.ui.ui_dimensionsdlg import Ui_DimensionsDlg
+from nxsconfigtool.DimensionsDlg import DimensionsDlg
+from nxsconfigtool.ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
 
 ##  Qt-application

@@ -31,9 +31,9 @@ import time
 from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QAbstractItemModel, QModelIndex, QVariant
 from PyQt4.QtXml import QDomNode, QDomDocument
 
-from ndtsconfigtool.ComponentModel import ComponentModel
-from ndtsconfigtool.ComponentItem import ComponentItem
-from ndtsconfigtool.DomTools import DomTools
+from nxsconfigtool.ComponentModel import ComponentModel
+from nxsconfigtool.ComponentItem import ComponentItem
+from nxsconfigtool.DomTools import DomTools
 
 
 

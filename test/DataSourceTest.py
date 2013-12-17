@@ -31,10 +31,10 @@ import time
 from PyQt4.QtCore import (QModelIndex)
 from PyQt4.QtGui import (QApplication, QMessageBox)
 
-from ndtsconfigtool.DataSourceDlg import CommonDataSourceDlg
-from ndtsconfigtool.DataSource import CommonDataSource, DataSource
-from ndtsconfigtool.DataSourceMethods import DataSourceMethods
-from ndtsconfigtool.NodeDlg import NodeDlg
+from nxsconfigtool.DataSourceDlg import CommonDataSourceDlg
+from nxsconfigtool.DataSource import CommonDataSource, DataSource
+from nxsconfigtool.DataSourceMethods import DataSourceMethods
+from nxsconfigtool.NodeDlg import NodeDlg
 
 ##  Qt-application
 app = None

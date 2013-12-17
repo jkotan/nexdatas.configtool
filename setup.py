@@ -132,7 +132,7 @@ class toolClean(clean):
 
 ## metadata for distutils
 SETUPDATA = dict(
-    name = "nexdatas.configtool",
+    name = "python-nxsconfigtool",
     version = ITOOL.__version__,
     author = "Jan Kotanski, Eugen Wintersberger , Halil Pasic",
     author_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, " \

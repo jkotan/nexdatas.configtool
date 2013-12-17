@@ -1,5 +1,5 @@
-python-ndtsconfigtool (1.4.2) unstable; urgency=low
+python-nxsconfigtool (1.5.0) unstable; urgency=low
 
   * Initial release. (Closes: #XXXXXX)
 
- -- jkotan <jankotan@gmail.com>  Sun, 01 Dec 2013 14:18:46 +0100
+ -- Jan Kotański (jkotan) <jankotan@gmail.com>  Tue, 17 Dec 2013 13:12:15 +0100

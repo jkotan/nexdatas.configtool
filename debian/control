@@ -1,9 +1,10 @@
 Source: nxsconfigtool
-Priority: extra
 Section: editors
+Priority: optional
 Maintainer: Jan Kotanski <jankotan@gmail.com> 
-Build-Depends: python (>=2.6), debhelper (>=9.0), python-support (>= 1.0), cdbs (>= 0.4.49), python-all-dev, pyqt4-dev-tools
-X-Python-Version: >=2.6
+Build-Depends: python (>=2.6), debhelper (>=9.0), python-all-dev, pyqt4-dev-tools
+Vcs-browser: https://code.google.com/p/nexdatas.configtool/
+Homepage:  https://code.google.com/p/nexdatas/
 XS-Python-Version: >=2.6
 Standards-Version: 3.9.3.1
 
@@ -11,10 +12,11 @@ Package: nxsconfigtool
 Architecture: all
 Homepage: https://code.google.com/p/nexdatas/
 Depends: python (>=2.6), python-qt4,  ${misc:Depends}
-Suggests: python-pytango
+Recommends: python-pytango
 Description: Component Designer for Nexus Data Writer
  NXS Component Designer is dedicated to create XML configuration files 
- for Nexus Data Writer	 
+ for Nexus Data Writer.
+ .
  Look for more information about this:
  https://code.google.com/p/nexdatas/
 

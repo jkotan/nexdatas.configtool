@@ -137,7 +137,7 @@ class toolClean(clean):
                     os.remove(script + ".pyw")
         clean.run(self)
 
-## provides window scripts
+## provides windows scripts
 def get_scripts(scripts):
         if get_platform()[:3] == 'win':
             return scripts + [sc + ".pyw" for sc in scripts],

@@ -22,9 +22,12 @@
 """ setup.py for NXS Component Designer """
 
 import os
+from distutils.util import get_platform
 from distutils.core import setup
 from distutils.command.build import build
 from distutils.command.clean import clean
+from distutils.command.install_scripts import install_scripts
+import shutil
 
 ## package name
 TOOL = "nxsconfigtool"
@@ -37,7 +40,7 @@ def read(fname):
 
 UIDIR = os.path.join(TOOL, "ui")
 QRCDIR = os.path.join(TOOL, "qrc")
-
+SCRIPTS = ['nxscomp_designer']
 
 ## ui and qrc builder for python
 class toolBuild(build):
@@ -55,7 +58,6 @@ class toolBuild(build):
             print "Built: %s -> %s" % (qrcfile, pyfile)
         else:
             print >> sys.stderr, "Error: Cannot build  %s" % (pyfile)
-
 
     ## creates the python ui files
     # \param ufile ui file name
@@ -93,8 +95,11 @@ class toolBuild(build):
         except TypeError:
             print  >> sys.stderr, "No .qrc files to build"
 
-        build.run(self)
 
+        if get_platform()[:3] == 'win':
+            for script in SCRIPTS:
+                shutil.copy(script, script + ".pyw")
+        build.run(self)
 
 
 ## cleaner for python
@@ -125,9 +130,18 @@ class toolClean(clean):
                                and cfile.endswith('__init_.py'))]
         for fl in cfiles:
             os.remove(str(fl))
+
+        if get_platform()[:3] == 'win':
+            for script in SCRIPTS:
+                if os.path.exists(script+ ".pyw"):
+                    os.remove(script + ".pyw")
         clean.run(self)
 
-
+## provides window scripts
+def get_scripts(scripts):
+        if get_platform()[:3] == 'win':
+            return scripts + [sc + ".pyw" for sc in scripts],
+        return scripts
 
 
 ## metadata for distutils
@@ -146,7 +160,7 @@ SETUPDATA = dict(
     url = "http://code.google.com/p/nexdatas/",
     platforms= ("Linux", " Windows"," MacOS "),
     packages=[TOOL, UIDIR, QRCDIR],
-    scripts = ['nxscomp_designer'],
+    scripts = get_scripts(SCRIPTS),
     long_description= read('README'),
     cmdclass = {"build" : toolBuild, "clean" : toolClean}
 )

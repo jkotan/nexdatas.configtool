@@ -1,4 +1,4 @@
 version=3
 
-http://www.desy.de/~jkotan/dist/python-nxsconfigtool-(.+)\.tar\.gz
+http://www.desy.de/~jkotan/dist/nxsconfigtool_(.+)\.tar\.gz
 

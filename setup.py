@@ -146,7 +146,7 @@ SETUPDATA = dict(
     url = "http://code.google.com/p/nexdatas/",
     platforms= ("Linux", " Windows"," MacOS "),
     packages=[TOOL, UIDIR, QRCDIR],
-    scripts = ['nxscomp_designer.pyw'],
+    scripts = ['nxscomp_designer'],
     long_description= read('README'),
     cmdclass = {"build" : toolBuild, "clean" : toolClean}
 )

@@ -139,10 +139,9 @@ class toolClean(clean):
 
 ## provides windows scripts
 def get_scripts(scripts):
-        if get_platform()[:3] == 'win':
-            return scripts + [str(sc + ".pyw") for sc in scripts],
-        return scripts
-
+    if get_platform()[:3] == 'win':
+        return scripts + [sc + '.pyw' for sc in scripts]
+    return scripts
 
 ## metadata for distutils
 SETUPDATA = dict(

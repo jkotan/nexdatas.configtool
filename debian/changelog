@@ -1,0 +1,11 @@
+nxsconfigtool (1.5.1) UNRELEASED; urgency=low
+
+  * Switch to dpkg-source 3.0 (quilt) format
+
+ -- Jan Kotanski (jkotan) <jankotan@gmail.com>  Thu, 19 Dec 2013 16:06:07 +0100
+
+nxsconfigtool (1.5.0) unstable; urgency=low
+
+  * Initial release. 
+
+ -- Jan Kotanski (jkotan) <jankotan@gmail.com>  Tue, 17 Dec 2013 13:12:15 +0100

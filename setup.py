@@ -160,9 +160,6 @@ SETUPDATA = dict(
     platforms= ("Linux", " Windows"," MacOS "),
     packages=[TOOL, UIDIR, QRCDIR],
     scripts = get_scripts(SCRIPTS),
-    data_files = [("",["man/nxscomp_designer.1",
-                       "README","COPYRIGHT"]),
-                  ],
     long_description= read('README'),
     cmdclass = {"build" : toolBuild, "clean" : toolClean}
 )

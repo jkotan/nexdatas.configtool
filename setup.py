@@ -154,14 +154,14 @@ SETUPDATA = dict(
     maintainer_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, " \
         "halil.pasic@gmail.com",
     description = ("Configuration tool  for creating components"),
-    license = "GNU GENERAL PUBLIC LICENSE, version 3",
+    license = read('COPYRIGHT'),
+#    license = "GNU GENERAL PUBLIC LICENSE, version 3",
     keywords = "configuration writer Tango component nexus data",
     url = "http://code.google.com/p/nexdatas/",
     platforms= ("Linux", " Windows"," MacOS "),
     packages=[TOOL, UIDIR, QRCDIR],
     scripts = get_scripts(SCRIPTS),
     long_description= read('README'),
-    license='COPYRIGHT',
     cmdclass = {"build" : toolBuild, "clean" : toolClean}
 )
 

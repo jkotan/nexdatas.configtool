@@ -30,6 +30,7 @@ from PyQt4.QtGui import (QApplication, QIcon)
 
 from nxsconfigtool.MainWindow import MainWindow
 from nxsconfigtool.qrc import qrc_resources
+from nxsconfigtool import __version__
 
 
 ## the main function
@@ -45,6 +46,17 @@ def main():
 
     parser = OptionParser(usage=usage)
 
+    parser.add_option(
+        "-m", "--mandatory",  
+        action="store_true",
+        default=False, dest="mandatory", 
+        help="make use mandatory components as well")
+    parser.add_option(
+        "-v","--version", 
+        action="store_true",
+        default="False",
+        dest="version", 
+        help="program version")
     parser.add_option(
         "-s","--server", dest="server", 
         help="configuration server")
@@ -66,6 +78,14 @@ def main():
         level = levels.get(level_name, logging.NOTSET)
         logging.basicConfig(level=level)     
 
+    if options.version:
+        level_name = 1
+        level = levels.get(level_name, logging.NOTSET)
+        logging.basicConfig(level=level)     
+        logger = logging.getLogger("")
+        logger.info(__version__)
+        sys.exit(0)
+
 #    import gc
 #    gc.set_debug(gc.DEBUG_LEAK | gc.DEBUG_STATS)
 #    gc.set_debug(gc.DEBUG_LEAK )
@@ -73,7 +93,7 @@ def main():
     app.setWindowIcon(QIcon(":/icon.png"))
     app.setOrganizationName("DESY")
     app.setOrganizationDomain("desy.de")
-    app.setApplicationName("NDTS Component Designer")
+    app.setApplicationName("NXS Component Designer")
     form = MainWindow(options.components, options.datasources, options.server)
     form.show()
 

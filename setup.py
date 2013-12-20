@@ -161,6 +161,7 @@ SETUPDATA = dict(
     packages=[TOOL, UIDIR, QRCDIR],
     scripts = get_scripts(SCRIPTS),
     long_description= read('README'),
+    license='COPYRIGHT',
     cmdclass = {"build" : toolBuild, "clean" : toolClean}
 )
 

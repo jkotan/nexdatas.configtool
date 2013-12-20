@@ -1,18 +1,17 @@
-==========================
-NDTS Component Designer
-==========================
+======================
+NXS Component Designer
+======================
 
 Authors: Jan Kotanski, Eugen Wintersberger, Halil Pasic
 
 Component Designer is a GUI configuration tool dedicated to create components 
 as well as datasources which constitute the XML configuration strings of 
-Nexus Data Writer (NDTS). The created XML elements can be saved 
+Nexus Data Writer (NXS). The created XML elements can be saved 
 in the extended Nexus XML format in Configuration Tango Server or in disk files.
 
 
-=================================
 Installation from sources
-=================================
+=========================
 
 
 Install the dependencies:
@@ -21,9 +20,9 @@ Install the dependencies:
 
 PyTango? is only needed if one wants to use Configuration Server
 
-Download the latest NDTS Configuration Tool version from
+Download the latest NXS Configuration Tool version from
 
-    NDTS Component Designer 
+    NXS Component Designer 
 
 and extract the sources.
 
@@ -36,14 +35,13 @@ Next, run the installation script
 $ python setup.py install
 
 
-=================================
 General overview
-=================================
+================
 
 
-The NDTS Component Designer program allows to creates components as well as 
+The NXS Component Designer program allows to creates components as well as 
 datasources which constitute the XML configuration strings of 
-Nexus Data Writer (NDTS). The created XML elements can be saved 
+Nexus Data Writer (NXS). The created XML elements can be saved 
 in the extended Nexus XML format in Configuration Tango Server or in disk files.
  
 The File menu is used to create new or load existing components and datasources. 
@@ -73,9 +71,8 @@ the lists causes opening either Component Window or DataSource Window.
 All the most commonly used menu options are also available on Toolbar. 
 
 
-==============
 Icons
-==============
+=====
 
 Icons fetched from http://findicons.com/pack/990/vistaico_toolbar.
 

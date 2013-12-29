@@ -41,7 +41,7 @@ def main():
               'error': logging.ERROR,
               'critical': logging.CRITICAL}
 
-    usage = "usage: nxscomp_designer.pyw "\
+    usage = "usage: nxscomp_designer "\
         "[-s server] [-c components] [-d datasources] ... "
 
     parser = OptionParser(usage=usage)

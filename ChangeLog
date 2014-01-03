@@ -1,7 +1,3 @@
-2013-01-03 Jan Kotanski <jankotan@gmail.com>
-	* moving XMLConfigServer.py into nxsconfigserver module
-	* tagged as v1.5.2
-
 2013-12-19 Jan Kotanski <jankotan@gmail.com>
 	* adding adding manpage and separate extention for windows
 	* tagged as v1.5.1

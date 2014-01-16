@@ -145,7 +145,7 @@ def get_scripts(scripts):
 
 ## metadata for distutils
 SETUPDATA = dict(
-    name = "nxsconfigtool",
+    name = "nexdatas.configtool",
     version = ITOOL.__version__,
     author = "Jan Kotanski, Eugen Wintersberger , Halil Pasic",
     author_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, " \

@@ -1,3 +1,7 @@
+2014-01-31 Jan Kotanski <jankotan@gmail.com>
+	* bugfixes for showing error messages
+	* tagged as v1.5.3
+
 2014-01-16 Jan Kotanski <jankotan@gmail.com>
 	* coming back to 'nexdatas.configtool' package name
 	* tagged as v1.5.2

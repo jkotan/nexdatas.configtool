@@ -181,7 +181,7 @@ class ItemSlots(object):
             self.main.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
-            QMessageBox.warning(self, "Item not selected", 
+            QMessageBox.warning(self.main, "Item not selected", 
                                 "Please select one of the items")            
             cmd.type = None
             return
@@ -200,7 +200,7 @@ class ItemSlots(object):
             self.main.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
-            QMessageBox.warning(self, "Item not selected", 
+            QMessageBox.warning(self.main, "Item not selected", 
                                 "Please select one of the items")            
             cmd.type = None
 
@@ -220,7 +220,7 @@ class ItemSlots(object):
             self.main.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
-            QMessageBox.warning(self, "Item not selected", 
+            QMessageBox.warning(self.main, "Item not selected", 
                                 "Please select one of the items")            
             cmd.type = None
             return
@@ -232,65 +232,70 @@ class ItemSlots(object):
     ## new group component item action
     # \brief It adds a new group component item
     def componentNewGroupItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), 
-                      ComponentDlg):
+        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+                isinstance(self.main.ui.mdi.activeSubWindow().widget(),
+                           ComponentDlg):
             cmd = ComponentNewItem(self.main)
             cmd.itemName = 'group' 
             self.undoStack.push(cmd)
         else:
-            QMessageBox.warning(self, "Component not created", 
+            QMessageBox.warning(self.main, "Component not created", 
                                 "Please edit one of the components")            
 
 
     ## new group component item action
     # \brief It adds a new group component item
     def componentNewStrategyItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), 
-                      ComponentDlg):
+        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+                isinstance(self.main.ui.mdi.activeSubWindow().widget(),
+                           ComponentDlg):
             cmd = ComponentNewItem(self.main)
             cmd.itemName = 'strategy' 
             self.undoStack.push(cmd)
         else:
-            QMessageBox.warning(self, "Component not created", 
+            QMessageBox.warning(self.main, "Component not created", 
                                 "Please edit one of the components")            
     
 
     ## new field component item action
     # \brief It adds a new field component item
     def componentNewFieldItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), 
-                      ComponentDlg):
+        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+                isinstance(self.main.ui.mdi.activeSubWindow().widget(),
+                           ComponentDlg):
             cmd = ComponentNewItem(self.main)
             cmd.itemName = 'field' 
             self.undoStack.push(cmd)
         else:
-            QMessageBox.warning(self, "Component not created", 
+            QMessageBox.warning(self.main, "Component not created", 
                                 "Please edit one of the components")            
 
 
     ## new attribute component item action
     # \brief It adds a new attribute component item 
     def componentNewAttributeItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), 
-                      ComponentDlg):
+        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+                isinstance(self.main.ui.mdi.activeSubWindow().widget(),
+                           ComponentDlg):
             cmd = ComponentNewItem(self.main)
             cmd.itemName = 'attribute' 
             self.undoStack.push(cmd)
         else:
-            QMessageBox.warning(self, "Component not created", 
+            QMessageBox.warning(self.main, "Component not created", 
                                 "Please edit one of the components")            
             
 
     ## new link component item action
     # \brief It adds a new link component item
     def componentNewLinkItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), 
-                      ComponentDlg):
+        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+                isinstance(self.main.ui.mdi.activeSubWindow().widget(),
+                           ComponentDlg):
             cmd = ComponentNewItem(self.main)
             cmd.itemName = 'link' 
             self.undoStack.push(cmd)
         else:
-            QMessageBox.warning(self, "Component not created", 
+            QMessageBox.warning(self.main, "Component not created", 
                                 "Please edit one of the components")            
 
 
@@ -300,26 +305,28 @@ class ItemSlots(object):
     ## new datasource component item action
     # \brief It adds a new datasource component item
     def componentNewDataSourceItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(),
-                      ComponentDlg):
+        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+                isinstance(self.main.ui.mdi.activeSubWindow().widget(),
+                           ComponentDlg):
             cmd = ComponentNewItem(self.main)
             cmd.itemName = 'datasource' 
             self.undoStack.push(cmd)
         else:
-            QMessageBox.warning(self, "Component not created", 
+            QMessageBox.warning(self.main, "Component not created", 
                                 "Please edit one of the components")            
-
+            
 
 
     ## load sub-component item action
     # \brief It loads a sub-component item from a file
     def componentLoadComponentItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(), 
-                      ComponentDlg):
+        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+                isinstance(self.main.ui.mdi.activeSubWindow().widget(),
+                           ComponentDlg):
             cmd = ComponentLoadComponentItem(self.main)
             self.undoStack.push(cmd)
         else:
-            QMessageBox.warning(self, "Component not created", 
+            QMessageBox.warning(self.main, "Component not created", 
                                 "Please edit one of the components")            
 
 
@@ -327,12 +334,13 @@ class ItemSlots(object):
     ## load datasource component item action
     # \brief It loads a datasource component item from a file
     def componentLoadDataSourceItem(self):
-        if isinstance(self.main.ui.mdi.activeSubWindow().widget(),
-                      ComponentDlg):
+        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+                isinstance(self.main.ui.mdi.activeSubWindow().widget(),
+                           ComponentDlg):
             cmd = ComponentLoadDataSourceItem(self.main)
             self.undoStack.push(cmd)
         else:
-            QMessageBox.warning(self, "Component not created", 
+            QMessageBox.warning(self.main, "Component not created", 
                                 "Please edit one of the components")            
 
 

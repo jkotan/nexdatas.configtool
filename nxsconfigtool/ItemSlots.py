@@ -232,7 +232,7 @@ class ItemSlots(object):
     ## new group component item action
     # \brief It adds a new group component item
     def componentNewGroupItem(self):
-        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+        if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
                 isinstance(self.main.ui.mdi.activeSubWindow().widget(),
                            ComponentDlg):
             cmd = ComponentNewItem(self.main)
@@ -246,7 +246,7 @@ class ItemSlots(object):
     ## new group component item action
     # \brief It adds a new group component item
     def componentNewStrategyItem(self):
-        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+        if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
                 isinstance(self.main.ui.mdi.activeSubWindow().widget(),
                            ComponentDlg):
             cmd = ComponentNewItem(self.main)
@@ -260,7 +260,7 @@ class ItemSlots(object):
     ## new field component item action
     # \brief It adds a new field component item
     def componentNewFieldItem(self):
-        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+        if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
                 isinstance(self.main.ui.mdi.activeSubWindow().widget(),
                            ComponentDlg):
             cmd = ComponentNewItem(self.main)
@@ -274,7 +274,7 @@ class ItemSlots(object):
     ## new attribute component item action
     # \brief It adds a new attribute component item 
     def componentNewAttributeItem(self):
-        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+        if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
                 isinstance(self.main.ui.mdi.activeSubWindow().widget(),
                            ComponentDlg):
             cmd = ComponentNewItem(self.main)
@@ -288,7 +288,7 @@ class ItemSlots(object):
     ## new link component item action
     # \brief It adds a new link component item
     def componentNewLinkItem(self):
-        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+        if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
                 isinstance(self.main.ui.mdi.activeSubWindow().widget(),
                            ComponentDlg):
             cmd = ComponentNewItem(self.main)
@@ -305,7 +305,7 @@ class ItemSlots(object):
     ## new datasource component item action
     # \brief It adds a new datasource component item
     def componentNewDataSourceItem(self):
-        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+        if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
                 isinstance(self.main.ui.mdi.activeSubWindow().widget(),
                            ComponentDlg):
             cmd = ComponentNewItem(self.main)
@@ -320,7 +320,7 @@ class ItemSlots(object):
     ## load sub-component item action
     # \brief It loads a sub-component item from a file
     def componentLoadComponentItem(self):
-        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+        if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
                 isinstance(self.main.ui.mdi.activeSubWindow().widget(),
                            ComponentDlg):
             cmd = ComponentLoadComponentItem(self.main)
@@ -334,7 +334,7 @@ class ItemSlots(object):
     ## load datasource component item action
     # \brief It loads a datasource component item from a file
     def componentLoadDataSourceItem(self):
-        if hasattr(self.main.ui.mdi.activeSubWindow(), widget) and \
+        if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
                 isinstance(self.main.ui.mdi.activeSubWindow().widget(),
                            ComponentDlg):
             cmd = ComponentLoadDataSourceItem(self.main)

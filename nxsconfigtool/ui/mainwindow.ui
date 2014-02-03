@@ -472,32 +472,32 @@
   </action>
   <action name="actionNewGroupItem">
    <property name="text">
-    <string>New &amp;Group</string>
+    <string>Add &amp;Group</string>
    </property>
   </action>
   <action name="actionNewFieldItem">
    <property name="text">
-    <string>New &amp;Field</string>
+    <string>Add &amp;Field</string>
    </property>
   </action>
   <action name="actionNewStrategyItem">
    <property name="text">
-    <string>New &amp;Strategy</string>
+    <string>Add &amp;Strategy</string>
    </property>
   </action>
   <action name="actionNewDataSourceItem">
    <property name="text">
-    <string>New &amp;DataSource</string>
+    <string>Add &amp;DataSource</string>
    </property>
   </action>
   <action name="actionNewAttributeItem">
    <property name="text">
-    <string>New A&amp;ttribute</string>
+    <string>Add A&amp;ttribute</string>
    </property>
   </action>
   <action name="actionNewLinkItem">
    <property name="text">
-    <string>New &amp;Link</string>
+    <string>Add &amp;Link</string>
    </property>
   </action>
   <action name="actionLoadSubComponentItem">
@@ -512,7 +512,7 @@
   </action>
   <action name="actionAddDataSourceItem">
    <property name="text">
-    <string>Add DataSource</string>
+    <string>Append DataSource</string>
    </property>
   </action>
   <action name="actionLinkDataSourceItem">

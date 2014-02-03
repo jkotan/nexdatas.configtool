@@ -68,22 +68,22 @@ class ItemSlots(object):
         ## action data
         self.actions = {
         "actionNewGroupItem":[
-            "New &Group Item", "componentNewGroupItem",
+            "Add &Group Item", "componentNewGroupItem",
             "", "componentnewitem", "Add a new component group item"],
         "actionNewFieldItem":[
-            "New &Field Item", "componentNewFieldItem", 
+            "Add &Field Item", "componentNewFieldItem", 
             "", "componentnewitem", "Add a new  component field item"],
         "actionNewStrategyItem":[
-            "New &Strategy Item", "componentNewStrategyItem",
+            "Add &Strategy Item", "componentNewStrategyItem",
             "", "componentnewitem", "Add a new component strategy item"],
         "actionNewDataSourceItem":[
-            "New &DataSource Item", "componentNewDataSourceItem",
+            "Add &DataSource Item", "componentNewDataSourceItem",
             "", "componentnewitem", "Add a new component data source item"],
         "actionNewAttributeItem":[
-            "New A&ttribute Item", "componentNewAttributeItem", 
+            "Add A&ttribute Item", "componentNewAttributeItem", 
             "", "componentnewitem", "Add a new component attribute item"],
         "actionNewLinkItem":[
-            "New &Link Item", "componentNewLinkItem", 
+            "Add &Link Item", "componentNewLinkItem", 
             "", "componentnewitem", "Add a new  component link item"],
         "actionLoadSubComponentItem":[
             "Load SubComponent Item...", "componentLoadComponentItem", 
@@ -94,9 +94,9 @@ class ItemSlots(object):
             "", "componentloaditem", 
             "Load an existing data source from the file"],
         "actionAddDataSourceItem":[
-            "Add DataSource Item", "componentAddDataSourceItem", 
+            "Append DataSource Item", "componentAddDataSourceItem", 
             QKeySequence(Qt.CTRL +  Qt.Key_Plus),
-            "componentadditem", "Add the data source from the list"],
+            "componentadditem", "Append the data source from the list"],
         "actionLinkDataSourceItem":[
             "Link DataSource Item", "componentLinkDataSourceItem", 
             "Ctrl+L",

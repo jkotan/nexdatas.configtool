@@ -35,6 +35,7 @@
 <file alias="home.png">../images/symbol_help.png</file>
 
 <file>../help/index.html</file>
+<file>../help/elementsmenu.html</file>
 <file>../help/filemenu.html</file>
 <file>../help/editmenu.html</file>
 <file>../help/itemsmenu.html</file>

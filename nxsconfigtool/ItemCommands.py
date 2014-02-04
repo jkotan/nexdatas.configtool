@@ -172,7 +172,8 @@ class ComponentItemCommand(QUndoCommand):
                 self._subwindow.resize(680, 560)
 
                 self._cp.instance.dialog.show()
-        self._cp.instance.reconnectSaveAction()
+        if self._cp.instance:        
+            self._cp.instance.reconnectSaveAction()
         if hasattr(self._cp, "id"):
             self.receiver.componentList.populateElements(self._cp.id)
         else:

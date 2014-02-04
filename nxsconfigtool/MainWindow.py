@@ -269,6 +269,10 @@ class MainWindow(QMainWindow):
         actionRedo.setToolTip("Redo")
         actionRedo.setStatusTip("Redo")
 
+        actionUndo.setShortcut("Ctrl+Z")
+        actionRedo.setShortcut("Ctrl+Y")
+
+
         self.ui.menuEdit.insertAction(self.ui.menuEdit.actions()[0],
                                       actionUndo)
         self.ui.menuEdit.insertAction(actionUndo, actionRedo)

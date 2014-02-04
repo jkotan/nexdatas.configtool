@@ -1,6 +1,7 @@
 2014-01-XX Jan Kotanski <jankotan@gmail.com>
 	* adding Elements into menubar
 	* cosmetic changes in menu names
+	* fixes for moving up/down, redo and merging components
 	* tagged as v1.5.4
 
 2014-01-31 Jan Kotanski <jankotan@gmail.com>

@@ -352,7 +352,6 @@ class MainWindow(QMainWindow):
             self.ui.actionMoveDownComponentItem,
             None,
             self.ui.actionApplyComponentItem,
-            self.ui.actionMergeComponentItems,
             None,
             self.ui.actionClearComponentItems
             ) 
@@ -362,6 +361,7 @@ class MainWindow(QMainWindow):
             self.ui.actionNew, 
             self.ui.actionLoad, 
             self.ui.actionEditComponent, 
+            self.ui.actionMergeComponentItems,
             None, 
             self.ui.actionSave, 
             self.ui.actionSaveAs,
@@ -635,11 +635,11 @@ class MainWindow(QMainWindow):
         status = False
         if self.ui.mdi.activeSubWindow() and isinstance(
             self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
-            widget  = self.ui.mdi.activeSubWindow().widget()
+            widget = self.ui.mdi.activeSubWindow().widget()
             if isinstance(widget, ComponentDlg):
                 if widget.component.id is not None:
 
-                    if hasattr(self.componentList.currentListElement(),"id"):
+                    if hasattr(self.componentList.currentListElement(), "id"):
                         if self.componentList.currentListElement().id \
                                 != widget.component.id:
                             self.componentList.populateElements(

@@ -66,6 +66,7 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <addaction name="separator"/>
     <addaction name="actionCutItem"/>
     <addaction name="actionCopyItem"/>
     <addaction name="actionPasteItem"/>
@@ -101,7 +102,6 @@
     <addaction name="actionMoveUpComponentItem"/>
     <addaction name="actionMoveDownComponentItem"/>
     <addaction name="separator"/>
-    <addaction name="actionMergeComponentItems"/>
     <addaction name="actionApplyComponentItem"/>
     <addaction name="separator"/>
     <addaction name="actionClearComponentItems"/>
@@ -151,13 +151,13 @@
      <string>&amp;Elements</string>
     </property>
     <addaction name="actionNew"/>
-    <addaction name="actionNewDataSource"/>
-    <addaction name="separator"/>
     <addaction name="actionEditComponent"/>
+    <addaction name="actionMergeComponentItems"/>
+    <addaction name="actionClose"/>
+    <addaction name="separator"/>
+    <addaction name="actionNewDataSource"/>
     <addaction name="actionEditDataSource"/>
     <addaction name="actionApplyDataSource"/>
-    <addaction name="separator"/>
-    <addaction name="actionClose"/>
     <addaction name="actionCloseDataSource"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
@@ -537,7 +537,7 @@
   </action>
   <action name="actionMergeComponentItems">
    <property name="text">
-    <string>Merge Component Items</string>
+    <string>Merge Component</string>
    </property>
    <property name="iconText">
     <string>Merge</string>

@@ -53,6 +53,7 @@ class ComponentItemCommand(QUndoCommand):
     # \brief It stores the old states of the current component
     def preExecute(self):
         if self._cp is None:
+            self.receiver.updateComponentListItem()
             self._cp = self.receiver.componentList.currentListElement()
         if self._cp is not None:
             if self._oldstate is None and hasattr(self._cp, "instance") \

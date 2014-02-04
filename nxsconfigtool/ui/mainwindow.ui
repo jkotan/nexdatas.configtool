@@ -46,8 +46,6 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="actionNew"/>
-    <addaction name="actionNewDataSource"/>
     <addaction name="actionLoad"/>
     <addaction name="actionLoadDataSource"/>
     <addaction name="separator"/>
@@ -58,21 +56,16 @@
     <addaction name="actionSaveAll"/>
     <addaction name="actionSaveAllDataSources"/>
     <addaction name="separator"/>
-    <addaction name="actionClose"/>
-    <addaction name="actionCloseDataSource"/>
-    <addaction name="separator"/>
     <addaction name="actionReloadList"/>
     <addaction name="actionReloadDataSourceList"/>
+    <addaction name="separator"/>
     <addaction name="actionChangeDirectory"/>
     <addaction name="actionChangeDataSourceDirectory"/>
-    <addaction name="separator"/>
-    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="separator"/>
     <addaction name="actionCutItem"/>
     <addaction name="actionCopyItem"/>
     <addaction name="actionPasteItem"/>
@@ -85,12 +78,8 @@
     <addaction name="actionCopyDataSource"/>
     <addaction name="actionPasteDataSource"/>
     <addaction name="separator"/>
-    <addaction name="actionEditComponent"/>
     <addaction name="actionTakeDataSourceItem"/>
     <addaction name="actionTakeDataSources"/>
-    <addaction name="separator"/>
-    <addaction name="actionEditDataSource"/>
-    <addaction name="actionApplyDataSource"/>
    </widget>
    <widget class="QMenu" name="menuComponentItems">
     <property name="title">
@@ -157,9 +146,26 @@
     <addaction name="actionComponentDesignerHelp"/>
     <addaction name="actionAboutComponentDesigner"/>
    </widget>
-   <addaction name="menuFile"/>
+   <widget class="QMenu" name="menu_Elements">
+    <property name="title">
+     <string>&amp;Elements</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionNewDataSource"/>
+    <addaction name="separator"/>
+    <addaction name="actionEditComponent"/>
+    <addaction name="actionEditDataSource"/>
+    <addaction name="actionApplyDataSource"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose"/>
+    <addaction name="actionCloseDataSource"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <addaction name="menu_Elements"/>
    <addaction name="menuEdit"/>
    <addaction name="menuComponentItems"/>
+   <addaction name="menuFile"/>
    <addaction name="menuServer"/>
    <addaction name="menuView"/>
    <addaction name="menuWindow"/>
@@ -229,7 +235,6 @@
    <addaction name="actionCutItem"/>
    <addaction name="actionCopyItem"/>
    <addaction name="actionPasteItem"/>
-   <addaction name="separator"/>
   </widget>
   <widget class="QToolBar" name="dsourceToolBar">
    <property name="windowTitle">
@@ -274,7 +279,7 @@
   </widget>
   <action name="actionNew">
    <property name="text">
-    <string>&amp;New</string>
+    <string>&amp;New Component</string>
    </property>
    <property name="toolTip">
     <string>Create a new component</string>
@@ -293,7 +298,7 @@
   </action>
   <action name="actionLoad">
    <property name="text">
-    <string>&amp;Load ...</string>
+    <string>&amp;Load Component ...</string>
    </property>
    <property name="toolTip">
     <string>Load an existing data source</string>
@@ -312,7 +317,7 @@
   </action>
   <action name="actionSave">
    <property name="text">
-    <string>&amp;Save</string>
+    <string>&amp;Save Component</string>
    </property>
    <property name="toolTip">
     <string>Write the component into a file</string>
@@ -328,7 +333,7 @@
   </action>
   <action name="actionSaveAs">
    <property name="text">
-    <string>Save &amp;As ...</string>
+    <string>Save Component &amp;As ...</string>
    </property>
    <property name="toolTip">
     <string>Write the component into a file as ...</string>
@@ -336,12 +341,12 @@
   </action>
   <action name="actionSaveDataSourceAs">
    <property name="text">
-    <string>Save DataSource &amp;As</string>
+    <string>Save DataSource &amp;As ...</string>
    </property>
   </action>
   <action name="actionSaveAll">
    <property name="text">
-    <string>Save All</string>
+    <string>Save All Components</string>
    </property>
    <property name="toolTip">
     <string>Write all components into files</string>
@@ -362,7 +367,7 @@
   </action>
   <action name="actionReloadList">
    <property name="text">
-    <string>Reload List</string>
+    <string>Reload Component List</string>
    </property>
   </action>
   <action name="actionReloadDataSourceList">
@@ -372,7 +377,7 @@
   </action>
   <action name="actionChangeDirectory">
    <property name="text">
-    <string>Change Directory ...</string>
+    <string>Change Component Directory ...</string>
    </property>
   </action>
   <action name="actionChangeDataSourceDirectory">
@@ -636,7 +641,7 @@
   </action>
   <action name="actionClose">
    <property name="text">
-    <string>Cl&amp;ose</string>
+    <string>Cl&amp;ose Component</string>
    </property>
   </action>
   <action name="actionNextWindows">

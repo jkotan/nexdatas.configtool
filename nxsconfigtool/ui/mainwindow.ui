@@ -47,19 +47,19 @@
      <string>&amp;File</string>
     </property>
     <addaction name="actionLoad"/>
-    <addaction name="actionLoadDataSource"/>
-    <addaction name="separator"/>
     <addaction name="actionSave"/>
-    <addaction name="actionSaveDataSource"/>
     <addaction name="actionSaveAs"/>
-    <addaction name="actionSaveDataSourceAs"/>
     <addaction name="actionSaveAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoadDataSource"/>
+    <addaction name="actionSaveDataSource"/>
+    <addaction name="actionSaveDataSourceAs"/>
     <addaction name="actionSaveAllDataSources"/>
     <addaction name="separator"/>
     <addaction name="actionReloadList"/>
-    <addaction name="actionReloadDataSourceList"/>
-    <addaction name="separator"/>
     <addaction name="actionChangeDirectory"/>
+    <addaction name="separator"/>
+    <addaction name="actionReloadDataSourceList"/>
     <addaction name="actionChangeDataSourceDirectory"/>
    </widget>
    <widget class="QMenu" name="menuEdit">

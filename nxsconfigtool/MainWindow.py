@@ -363,15 +363,16 @@ class MainWindow(QMainWindow):
         ## Component list menu
         self.componentListMenuActions =  ( 
             self.ui.actionNew, 
-            self.ui.actionLoad, 
             self.ui.actionEditComponent, 
             self.ui.actionMergeComponentItems,
+            self.ui.actionClose,
             None, 
+            self.ui.actionLoad, 
             self.ui.actionSave, 
             self.ui.actionSaveAs,
             self.ui.actionSaveAll, 
-            None,
-            self.ui.actionClose,
+            self.ui.actionReloadList,
+            self.ui.actionChangeDirectory,
             None,
             self.ui.actionFetchComponentsServer,
             self.ui.actionStoreComponentServer,
@@ -381,9 +382,6 @@ class MainWindow(QMainWindow):
             self.ui.actionSetComponentMandatoryServer,
             self.ui.actionUnsetComponentMandatoryServer,
             None,
-            self.ui.actionReloadList,
-            self.ui.actionChangeDirectory,
-            None,
             self.ui.actionTakeDataSources
             ) 
 
@@ -391,22 +389,21 @@ class MainWindow(QMainWindow):
         ## DataSource list menu
         self.dsourceListMenuActions =  ( 
             self.ui.actionNewDataSource,
-            self.ui.actionLoadDataSource, 
             self.ui.actionEditDataSource, 
+            self.ui.actionApplyDataSource,
+            self.ui.actionCloseDataSource,
             None, 
+            self.ui.actionLoadDataSource, 
             self.ui.actionSaveDataSource,
             self.ui.actionSaveDataSourceAs,
             self.ui.actionSaveAllDataSources,
-            None,
-            self.ui.actionCloseDataSource,
+            self.ui.actionReloadDataSourceList,
+            self.ui.actionChangeDataSourceDirectory,
             None,
             self.ui.actionFetchDataSourcesServer,
             self.ui.actionStoreDataSourceServer,
             self.ui.actionStoreAllDataSourcesServer,
-            self.ui.actionDeleteDataSourceServer,
-            None,
-            self.ui.actionReloadDataSourceList,
-            self.ui.actionChangeDataSourceDirectory
+            self.ui.actionDeleteDataSourceServer
             ) 
         
 

@@ -66,24 +66,6 @@ class ComponentList(ElementList):
                     self._allAttributes)
             
 
-    ## removes the current element    
-    #  \brief It removes the current element asking before about it
-    def removeElement(self, obj = None, question = True):
-        super(ComponentList, self).removeElement(obj, question)
-
-        attr = self.currentListElement()
-        if attr is None:
-            return
-        if QMessageBox.question(
-            self, "%s - Remove" % self.clName,
-            "Remove %s: %s = \'%s\'".encode() \
-                %  (self.clName, attr, self.elements[unicode(attr)]),
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.Yes ) == QMessageBox.No :
-            return
-        if unicode(attr) in self.elements.keys():
-            self.elements.pop(unicode(attr))
-            self.populateElements()
 
 
     ## retrives element name from file name

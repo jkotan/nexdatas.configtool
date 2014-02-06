@@ -366,21 +366,21 @@ class MainWindow(QMainWindow):
             self.ui.actionEditComponent, 
             self.ui.actionMergeComponentItems,
             self.ui.actionClose,
-            None, 
+            None, {"File":(
             self.ui.actionLoad, 
             self.ui.actionSave, 
             self.ui.actionSaveAs,
             self.ui.actionSaveAll, 
             self.ui.actionReloadList,
-            self.ui.actionChangeDirectory,
-            None,
+            self.ui.actionChangeDirectory)},
+            None, {"Server":(
             self.ui.actionFetchComponentsServer,
             self.ui.actionStoreComponentServer,
             self.ui.actionStoreAllComponentsServer,
             self.ui.actionDeleteComponentServer,
             self.ui.actionGetMandatoryComponentsServer,
             self.ui.actionSetComponentMandatoryServer,
-            self.ui.actionUnsetComponentMandatoryServer,
+            self.ui.actionUnsetComponentMandatoryServer)},
             None,
             self.ui.actionTakeDataSources
             ) 
@@ -392,18 +392,18 @@ class MainWindow(QMainWindow):
             self.ui.actionEditDataSource, 
             self.ui.actionApplyDataSource,
             self.ui.actionCloseDataSource,
-            None, 
+            None, {"File":(
             self.ui.actionLoadDataSource, 
             self.ui.actionSaveDataSource,
             self.ui.actionSaveDataSourceAs,
             self.ui.actionSaveAllDataSources,
             self.ui.actionReloadDataSourceList,
-            self.ui.actionChangeDataSourceDirectory,
-            None,
+            self.ui.actionChangeDataSourceDirectory)},
+            None, {"Server":(
             self.ui.actionFetchDataSourcesServer,
             self.ui.actionStoreDataSourceServer,
             self.ui.actionStoreAllDataSourcesServer,
-            self.ui.actionDeleteDataSourceServer
+            self.ui.actionDeleteDataSourceServer)}
             ) 
         
 

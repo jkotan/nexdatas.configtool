@@ -81,6 +81,14 @@ class ElementList(QWidget):
         for action in self._actions:
             if action is None:
                 menu.addSeparator()
+            elif isinstance(action, dict):
+                for k in action:
+                    submenu = menu.addMenu(k)        
+                    for saction in action[k]:
+                        if saction is None:
+                            submenu.addSeparator()
+                        else:
+                            submenu.addAction(saction)
             else:
                 menu.addAction(action)
         menu.exec_(self.ui.elementListWidget.viewport().mapToGlobal(position))

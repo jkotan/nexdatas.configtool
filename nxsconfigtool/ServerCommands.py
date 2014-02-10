@@ -61,8 +61,8 @@ class ServerConnect(QUndoCommand):
                 else:
                     self.receiver.configServer.setState(self._state)
                     self.receiver.configServer.connect()
-                    
-                self.receiver.disableServer(False)
+                if self.receiver.configServer.connected:    
+                    self.receiver.disableServer(False)
             except Exception, e:
                 QMessageBox.warning(
                     self.receiver, 

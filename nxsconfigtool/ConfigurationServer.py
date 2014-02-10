@@ -120,7 +120,9 @@ class ConfigurationServer(object):
                 self._proxy.set_timeout_millis(25000)
                 self._proxy.Open()
                 self.connected = True
-
+            else:
+                raise Exception("Cannot connect to: %s" % self.device.encode())
+                
 
     ## opens connection to the configuration server
     # \brief It fetches parameters of tango device and calls connect() method

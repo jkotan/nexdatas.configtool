@@ -368,6 +368,6 @@ if __name__ == "__main__":
 
     if form.elements:
         logger.info("Other datasources:")
-        for k in form.elements.keys():
-            logger.info("%s = '%s' " % (k, form.elements[k]))
+        for kk in form.elements.keys():
+            logger.info("%s = '%s' " % (kk, form.elements[kk]))
     

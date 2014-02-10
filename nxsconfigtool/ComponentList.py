@@ -23,8 +23,6 @@
 """ component list widget """
 
 
-from PyQt4.QtGui import QMessageBox
-
 from .Component import Component
 from .ElementList import ElementList
 

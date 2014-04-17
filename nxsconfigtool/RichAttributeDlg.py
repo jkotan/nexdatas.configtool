@@ -242,6 +242,9 @@ class RichAttributeDlg(NodeDlg):
         if self.rank < len(self.dimensions) :
             self.rank = len(self.dimensions)
             self.rank = len(self._dimensions)
+        elif self.rank > len(self.dimensions):
+            self.dimensions.extend([None]*(self.rank -len(self.dimensions)))
+            self._dimensions.extend([None]*(self.rank -len(self._dimensions)))
 
 
 

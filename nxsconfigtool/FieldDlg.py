@@ -63,9 +63,9 @@ class FieldDlg(NodeDlg):
         self.rank = 0
         ## dimensions
         self.dimensions = []
-        self.__dimensions = []
+        self.__dimensions = [] 
 
-
+       
         ## allowed subitems
         self.subItems = ["attribute", "datasource", "doc", "dimensions", 
                          "enumeration", "strategy"]
@@ -271,6 +271,10 @@ class FieldDlg(NodeDlg):
         if self.rank < len(self.dimensions) :
             self.rank = len(self.dimensions)
             self.rank = len(self.__dimensions)
+        elif self.rank > len(self.dimensions):
+            self.dimensions.extend([None]*(self.rank -len(self.dimensions)))
+            self.__dimensions.extend([None]*(self.rank -len(self.__dimensions)))
+            
 
         doc = self.node.firstChildElement(QString("doc"))           
         text = DomTools.getText(doc)    

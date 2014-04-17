@@ -1,4 +1,5 @@
-2014-02-XX Jan Kotanski <jankotan@gmail.com>
+2014-04-17 Jan Kotanski <jankotan@gmail.com>
+	* fixing updating dimensions from Node
 	* adding checks if server connected
 	* tagged as v1.5.6
 

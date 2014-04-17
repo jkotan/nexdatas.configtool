@@ -140,6 +140,9 @@ class CommonDataSourceDlg(NodeDlg):
         event.accept()    
 
 
+    def reject(self):
+        self.parent().close()
+        super(CommonDataSourceDlg, self).reject()
 
 
 

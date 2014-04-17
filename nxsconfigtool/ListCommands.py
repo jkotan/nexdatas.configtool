@@ -91,7 +91,6 @@ class ComponentRemove(QUndoCommand):
     ## executes the command
     # \brief It removes the current component from the component list
     def redo(self):
-        
         if self._cp is not None:
             self.receiver.componentList.removeElement(self._cp, False)
         else:

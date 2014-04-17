@@ -74,6 +74,11 @@ class ComponentDlg(QDialog):
         event.accept()    
 
 
+    def reject(self):
+        self.parent().close()
+        super(ComponentDlg, self).reject()
+        
+
 
 
 if __name__ == "__main__":

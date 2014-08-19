@@ -1,3 +1,8 @@
+2014-04-XX Jan Kotanski <jankotan@gmail.com>
+	* fixing missinh import sys in setup.py
+	* fixing logger info mesage for saving components
+	* tagged as v1.5.8
+
 2014-04-17 Jan Kotanski <jankotan@gmail.com>
 	* fixing closing mdi windows on escape
 	* tagged as v1.5.7

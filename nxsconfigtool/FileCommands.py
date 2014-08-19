@@ -387,6 +387,8 @@ class ComponentSaveAs(QUndoCommand):
                 if self.name[-4:] == '.xml':
                     self.name = self.name[:-4]
                 self.directory = unicode(fi.dir().path())
+                self._cp.instance.name = self.name
+                self._cp.instance.directory = self.directory
 
         if hasattr(self._cp, "id"):
             self.receiver.componentList.populateElements(self._cp.id)

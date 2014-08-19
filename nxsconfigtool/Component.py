@@ -1335,7 +1335,7 @@ class Component(object):
         if self._componentFile is None:
             self.setName(self.name, self.directory)
         fpath = os.path.join(self.directory, self.name + ".xml")     
-        logger.info("saving ", fpath)
+        logger.info("saving %s" % fpath)
         try:
             fh = QFile(fpath)
             if not fh.open(QIODevice.WriteOnly):

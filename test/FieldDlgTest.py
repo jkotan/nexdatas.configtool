@@ -401,7 +401,7 @@ class FieldDlgTest(unittest.TestCase):
         attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
         nn =  self.__rnd.randint(1, 9) 
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(nn)]
+        dimensions = [str(self.__rnd.randint(1, 40))  for n in range(nn)]
         
         self.assertEqual(form.updateForm(),None)
     
@@ -1571,7 +1571,7 @@ class FieldDlgTest(unittest.TestCase):
 
 
         rn =  self.__rnd.randint(1, 9) 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", QString(unicode(rn)))
@@ -1669,7 +1669,7 @@ class FieldDlgTest(unittest.TestCase):
 
 
         rn =  self.__rnd.randint(1, 9) 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", QString(unicode(rn)))
@@ -2022,7 +2022,7 @@ class FieldDlgTest(unittest.TestCase):
             qdn.appendChild(dval[-1]) 
 
         rn =  self.__rnd.randint(1, 9) 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", QString(unicode(rn)))
@@ -2145,7 +2145,7 @@ class FieldDlgTest(unittest.TestCase):
 
         rn =  self.__rnd.randint(1, 9) 
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", QString(unicode(rn)))
@@ -2264,7 +2264,7 @@ class FieldDlgTest(unittest.TestCase):
 
         rn =  self.__rnd.randint(1, 9) 
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", QString(unicode(rn)))
@@ -2392,7 +2392,7 @@ class FieldDlgTest(unittest.TestCase):
 
         rn =  self.__rnd.randint(1, 9) 
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", QString(unicode(rn)))
@@ -2571,7 +2571,7 @@ class FieldDlgTest(unittest.TestCase):
 
         rn =  self.__rnd.randint(1, 9) 
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", QString(unicode(rn)))
@@ -2839,7 +2839,7 @@ class FieldDlgTest(unittest.TestCase):
             form.attributes[at] =  attrs[at]
 
         mrnk = self.__rnd.randint(0,5)     
-        mdimensions = [self.__rnd.randint(1, 40)  for n in range(mrnk)]
+        mdimensions = [str(self.__rnd.randint(1, 40))  for n in range(mrnk)]
         form.rank = mrnk
         form.dimensions = mdimensions
         form.doc = mdoc
@@ -2888,7 +2888,7 @@ class FieldDlgTest(unittest.TestCase):
                 vl = int(at.namedItem("value").nodeValue())
                 self.assertTrue(ind >0 )
                 self.assertTrue(ind <= mrnk )
-                self.assertEqual(mdimensions[ind-1], vl)
+                self.assertEqual(mdimensions[ind-1], str(vl))
             child = child.nextSibling()    
 
         vtext = DomTools.getText(qdn)    
@@ -3252,7 +3252,7 @@ class FieldDlgTest(unittest.TestCase):
             i += 1
 
         mrnk = self.__rnd.randint(0,5)     
-        self.dimensions = [self.__rnd.randint(1, 40)  for n in range(mrnk)]
+        self.dimensions = [str(self.__rnd.randint(1, 40))  for n in range(mrnk)]
 
         QTimer.singleShot(10, self.dimensionsWidget)
         QTest.mouseClick(form.ui.dimPushButton, Qt.LeftButton)
@@ -3310,7 +3310,7 @@ class FieldDlgTest(unittest.TestCase):
                 vl = int(at.namedItem("value").nodeValue())
                 self.assertTrue(ind >0 )
                 self.assertTrue(ind <= mrnk )
-                self.assertEqual(self.dimensions[ind-1], vl)
+                self.assertEqual(self.dimensions[ind-1], str(vl))
             child = child.nextSibling()    
 
 
@@ -3380,7 +3380,7 @@ class FieldDlgTest(unittest.TestCase):
 
         rn =  self.__rnd.randint(1, 9) 
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", QString(unicode(rn)))
@@ -3506,7 +3506,7 @@ class FieldDlgTest(unittest.TestCase):
             i += 1
 
         mrnk = self.__rnd.randint(0,5)     
-        self.dimensions = [self.__rnd.randint(1, 40)  for n in range(mrnk)]
+        self.dimensions = [str(self.__rnd.randint(1, 40))  for n in range(mrnk)]
 
         QTimer.singleShot(10, self.dimensionsWidget)
         QTest.mouseClick(form.ui.dimPushButton, Qt.LeftButton)
@@ -3567,7 +3567,7 @@ class FieldDlgTest(unittest.TestCase):
                 vl = int(at.namedItem("value").nodeValue())
                 self.assertTrue(ind >0 )
                 self.assertTrue(ind <= rn )
-                self.assertEqual(dimensions[ind-1], vl)
+                self.assertEqual(dimensions[ind-1], str(vl))
             child = child.nextSibling()    
 
 
@@ -3609,7 +3609,7 @@ class FieldDlgTest(unittest.TestCase):
 
         rn =  self.__rnd.randint(1, 9) 
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", QString(unicode(rn)))
@@ -3735,7 +3735,7 @@ class FieldDlgTest(unittest.TestCase):
             i += 1
 
         mrnk = self.__rnd.randint(0,5)     
-        self.dimensions = [self.__rnd.randint(1, 40)  for n in range(mrnk)]
+        self.dimensions = [str(self.__rnd.randint(1, 40))  for n in range(mrnk)]
 
         QTimer.singleShot(10, self.dimensionsWidget)
         QTest.mouseClick(form.ui.dimPushButton, Qt.LeftButton)
@@ -3796,7 +3796,7 @@ class FieldDlgTest(unittest.TestCase):
                 vl = int(at.namedItem("value").nodeValue())
                 self.assertTrue(ind >0 )
                 self.assertTrue(ind <= rn )
-                self.assertEqual(dimensions[ind-1], vl)
+                self.assertEqual(dimensions[ind-1], str(vl))
             child = child.nextSibling()    
 
 
@@ -4145,7 +4145,7 @@ class FieldDlgTest(unittest.TestCase):
 
         rn =  self.__rnd.randint(1, 9) 
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", QString(unicode(rn)))
@@ -4240,7 +4240,7 @@ class FieldDlgTest(unittest.TestCase):
                 vl = int(at.namedItem("value").nodeValue())
                 self.assertTrue(ind >0 )
                 self.assertTrue(ind <= rn )
-                self.assertEqual(dimensions[ind-1], vl)
+                self.assertEqual(dimensions[ind-1], str(vl))
             child = child.nextSibling()    
 
 
@@ -4301,7 +4301,7 @@ class FieldDlgTest(unittest.TestCase):
                 vl = int(at.namedItem("value").nodeValue())
                 self.assertTrue(ind >0 )
                 self.assertTrue(ind <= rn )
-                self.assertEqual(dimensions[ind-1], vl)
+                self.assertEqual(dimensions[ind-1], str(vl))
             child = child.nextSibling()    
 
 
@@ -4369,7 +4369,7 @@ class FieldDlgTest(unittest.TestCase):
 
         rn =  self.__rnd.randint(1, 9) 
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", QString(unicode(rn)))
@@ -4464,7 +4464,7 @@ class FieldDlgTest(unittest.TestCase):
                 vl = int(at.namedItem("value").nodeValue())
                 self.assertTrue(ind >0 )
                 self.assertTrue(ind <= rn )
-                self.assertEqual(dimensions[ind-1], vl)
+                self.assertEqual(dimensions[ind-1], str(vl))
             child = child.nextSibling()    
 
 

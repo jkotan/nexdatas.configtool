@@ -204,7 +204,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  str(self.__rnd.randint(0, 6) )
-        lengths = [self.__rnd.randint(1, 6) for r in range(int(rank)) ]
+        lengths = [str(self.__rnd.randint(1, 6)) for r in range(int(rank)) ]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
@@ -262,7 +262,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
-        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
         doc = 'My Document'*self.__rnd.randint(1, 10) 
         form = DimensionsDlg()
         form.rank = rank
@@ -294,7 +294,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
-        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
@@ -356,7 +356,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
-        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
@@ -506,7 +506,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
-        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
@@ -602,7 +602,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)  
         rank =  self.__rnd.randint(1, 6) 
-        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])

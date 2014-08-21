@@ -1,3 +1,7 @@
+2014-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* adding variables to dimensions
+	* tagged as v1.5.9
+
 2014-08-21 Jan Kotanski <jankotan@gmail.com>
 	* fixing save as components
 	* fixing missing import sys in setup.py

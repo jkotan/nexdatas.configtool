@@ -251,14 +251,12 @@ class FieldDlg(NodeDlg):
                             index = int(
                                 attributeMap.namedItem("index").nodeValue())
                         if attributeMap.contains("value"):
-                            value = int(
+                            value = str(
                                 attributeMap.namedItem("value").nodeValue())
                     except:
                         pass
                     if index < 1: 
                         index = None
-                    if value < 1: 
-                        value = None
                     if index is not None:
                         while len(self.dimensions)< index:
                             self.dimensions.append(None)

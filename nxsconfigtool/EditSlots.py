@@ -21,7 +21,7 @@
 
 """ Edit slots """
 
-from PyQt4.QtGui import QKeySequence 
+from PyQt4.QtGui import QKeySequence
 from PyQt4.QtCore import Qt
 
 
@@ -47,44 +47,44 @@ class EditSlots(object):
         self.main = main
         ## command stack
         self.undoStack = main.undoStack
-        
+
         ## action data
         self.actions = {
         "actionEditComponent":[
             "&Edit Component", "componentEdit",
             "Ctrl+E", "componentedit", "Edit the component"],
         "actionTakeDataSourceItem":[
-            "Take DataSource Item " , "componentTakeDataSource", 
+            "Take DataSource Item " , "componentTakeDataSource",
             "Ctrl+G",
-            "componenttakedatasource", 
+            "componenttakedatasource",
             "Take the currnet data sources from the component"],
         "actionTakeDataSources":[
-            "Take DataSources " , "componentTakeDataSources", 
+            "Take DataSources " , "componentTakeDataSources",
             "",
-            "componenttakedatasource", 
+            "componenttakedatasource",
             "Take data sources from the component"],
         "actionEditDataSource":[
-            "&Edit DataSource", "dsourceEdit",  
-            "Ctrl+Shift+E", 
+            "&Edit DataSource", "dsourceEdit",
+            "Ctrl+Shift+E",
             "dsourceedit", "Edit the data source"],
         "actionApplyDataSource":[
-            "Apply DataSource", "dsourceApply", 
+            "Apply DataSource", "dsourceApply",
             "Ctrl+Shift+R", "dsourceapply", "Apply the data source"],
         "actionCopyDataSource":[
-            "Copy DataSource", "dsourceCopy", 
+            "Copy DataSource", "dsourceCopy",
             "", "copy", "Copy the data source"],
         "actionCutDataSource":[
-            "Cut DataSource", "dsourceCut", 
+            "Cut DataSource", "dsourceCut",
             QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Delete),
             "cut", "Cut the data source"],
         "actionPasteDataSource":[
-            "Paste DataSource", "dsourcePaste", 
+            "Paste DataSource", "dsourcePaste",
             QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Insert),
             "paste", "Paste the data source"]
 
             }
 
-    ## take datasources 
+    ## take datasources
     # \brief It takes datasources from the current component
     def componentTakeDataSources(self):
         cmd = ComponentEdit(self.main)
@@ -94,7 +94,7 @@ class EditSlots(object):
         self.undoStack.clear()
 
 
-    ## take datasources 
+    ## take datasources
     # \brief It takes datasources from the current component
     def componentTakeDataSource(self):
         cmd = ComponentEdit(self.main)
@@ -111,14 +111,14 @@ class EditSlots(object):
 
 
     ## edit datasource action
-    # \brief It opens a dialog with the current datasource      
+    # \brief It opens a dialog with the current datasource
     def dsourceEdit(self):
         cmd = DataSourceEdit(self.main)
         cmd.redo()
 
-        
+
     ## apply datasource item action executed by button
-    # \brief It applies the changes in the current datasource item  
+    # \brief It applies the changes in the current datasource item
     #        executed by button
     def dsourceApplyButton(self):
         if self.main.updateDataSourceListItem():
@@ -126,7 +126,7 @@ class EditSlots(object):
 
 
     ## apply datasource item action
-    # \brief It applies the changes in the current datasource item 
+    # \brief It applies the changes in the current datasource item
     def dsourceApply(self):
         cmd = DataSourceApply(self.main)
         self.undoStack.push(cmd)
@@ -140,7 +140,7 @@ class EditSlots(object):
 
 
     ## cuts datasource item action
-    # \brief It removes the current datasources item and copies it 
+    # \brief It removes the current datasources item and copies it
     #        into the clipboard
     def dsourceCut(self):
         cmd = DataSourceCut(self.main)
@@ -154,5 +154,5 @@ class EditSlots(object):
         self.undoStack.push(cmd)
 
 
-if __name__ == "__main__":   
+if __name__ == "__main__":
     pass

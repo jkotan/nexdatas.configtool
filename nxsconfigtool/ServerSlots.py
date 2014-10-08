@@ -61,84 +61,76 @@ class ServerSlots(object):
 
         ## action data
         self.actions = {
-        "actionConnectServer":[
-            "&Connect ...", "serverConnect", 
-            "Ctrl+T", "serverconnect", 
+        "actionConnectServer": [
+            "&Connect ...", "serverConnect",
+            "Ctrl+T", "serverconnect",
             "Connect to the configuration server"],
-        "actionFetchComponentsServer":[
-            "&Fetch Components", "serverFetchComponents", 
-            "Ctrl+F", "serverfetchdatasources", 
+        "actionFetchComponentsServer": [
+            "&Fetch Components", "serverFetchComponents",
+            "Ctrl+F", "serverfetchdatasources",
             "Fetch datasources from the configuration server"],
 
-        "actionStoreComponentServer":[
-            "&Store Component", "serverStoreComponent", 
-            "Ctrl+B", "serverstorecomponent", 
+        "actionStoreComponentServer": [
+            "&Store Component", "serverStoreComponent",
+            "Ctrl+B", "serverstorecomponent",
             "Store component in the configuration server"],
 
-        "actionStoreAllComponentsServer":[
-            "&Store All Components", "serverStoreAllComponents", 
-            "", "serverstoreallcomponents", 
+        "actionStoreAllComponentsServer": [
+            "&Store All Components", "serverStoreAllComponents",
+            "", "serverstoreallcomponents",
             "Store all components in the configuration server"],
 
-        "actionDeleteComponentServer":[
-            "&Delete Component", "serverDeleteComponent", 
-            "", "serverdeletedatasource", 
+        "actionDeleteComponentServer": [
+            "&Delete Component", "serverDeleteComponent",
+            "", "serverdeletedatasource",
             "Delete datalsource from the configuration server"],
 
-
-
-        "actionFetchDataSourcesServer":[
-            "&Fetch DataSources", "serverFetchDataSources", 
-            "Ctrl+Shift+F", "serverfetchdatasources", 
+        "actionFetchDataSourcesServer": [
+            "&Fetch DataSources", "serverFetchDataSources",
+            "Ctrl+Shift+F", "serverfetchdatasources",
             "Fetch datasources from the configuration server"],
 
-        "actionStoreDataSourceServer":[
-            "&Store Datasource", "serverStoreDataSource", 
-            "Ctrl+Shift+B", "serverstoredatasource", 
+        "actionStoreDataSourceServer": [
+            "&Store Datasource", "serverStoreDataSource",
+            "Ctrl+Shift+B", "serverstoredatasource",
             "Store datasource in the configuration server"],
 
-        "actionStoreAllDataSourcesServer":[
-            "&Store All Datasources", "serverStoreAllDataSources", 
-            "", "serverstorealldatasources", 
+        "actionStoreAllDataSourcesServer": [
+            "&Store All Datasources", "serverStoreAllDataSources",
+            "", "serverstorealldatasources",
             "Store all datasources in the configuration server"],
 
-        "actionDeleteDataSourceServer":[
-            "&Delete Datasource", "serverDeleteDataSource", 
-            "", "serverdeletedatasource", 
+        "actionDeleteDataSourceServer": [
+            "&Delete Datasource", "serverDeleteDataSource",
+            "", "serverdeletedatasource",
             "Delete datasource from the configuration server"],
 
-
-
-        "actionSetComponentMandatoryServer":[
-            "Set Component Mandatory", "serverSetMandatoryComponent", 
-            "", "serversetmandatory", 
+        "actionSetComponentMandatoryServer": [
+            "Set Component Mandatory", "serverSetMandatoryComponent",
+            "", "serversetmandatory",
             "Set the component as mandatory  on the configuration server"],
 
-        "actionGetMandatoryComponentsServer":[
-            "Get Mandatory Components", "serverGetMandatoryComponents", 
-            "", "servergetmandatory", 
+        "actionGetMandatoryComponentsServer": [
+            "Get Mandatory Components", "serverGetMandatoryComponents",
+            "", "servergetmandatory",
             "Get mandatory components  from the configuration server"],
 
-        "actionUnsetComponentMandatoryServer":[
-            "Unset Component Mandatory", "serverUnsetMandatoryComponent", 
-            "", "serverunsetmandatory", 
+        "actionUnsetComponentMandatoryServer": [
+            "Unset Component Mandatory", "serverUnsetMandatoryComponent",
+            "", "serverunsetmandatory",
             "Unset the component as mandatory on the configuration server"],
 
-
-
-        "actionCloseServer":[
-            "C&lose", "serverClose", 
-            "Ctrl+L", "serverclose", 
+        "actionCloseServer": [
+            "C&lose", "serverClose",
+            "Ctrl+L", "serverclose",
             "Close connection to the configuration server"]
         }
-
 
     ## connect server action
     # \brief It connects to configuration server
     def serverConnect(self):
         cmd = ServerConnect(self.main)
         self.undoStack.push(cmd)
-
 
     ## fetch server components action
     # \brief It fetches components from the configuration server
@@ -147,14 +139,12 @@ class ServerSlots(object):
         cmd.redo()
         self.undoStack.clear()
 
-
     ## store server component action executed by button
-    # \brief It stores the current component 
+    # \brief It stores the current component
     #        in the configuration server executed by button
     def serverStoreComponentButton(self):
         if self.main.updateComponentListItem():
             self.serverStoreComponent()
-
 
     ## store server component action
     # \brief It stores the current component in the configuration server
@@ -165,7 +155,6 @@ class ServerSlots(object):
         self.undoStack.push(cmd)
         cmd = ServerStoreComponent(self.main)
         cmd.redo()
-
 
     ## store server all components action
     # \brief It stores all components in the configuration server
@@ -180,20 +169,17 @@ class ServerSlots(object):
         cmd = ServerDeleteComponent(self.main)
         cmd.redo()
 
-
     ## set component mandatory action
     # \brief It sets the current component as mandatory
     def serverSetMandatoryComponent(self):
         cmd = ServerSetMandatoryComponent(self.main)
         cmd.redo()
 
-
     ## get mandatory components action
     # \brief It fetches mandatory components
     def serverGetMandatoryComponents(self):
         cmd = ServerGetMandatoryComponents(self.main)
         cmd.redo()
-
 
     ## unset component mandatory action
     # \brief It unsets the current component as mandatory
@@ -208,7 +194,6 @@ class ServerSlots(object):
         cmd.redo()
         self.undoStack.clear()
 
-
     ## store server datasource action
     # \brief It stores the current datasource in the configuration server
     def serverStoreDataSource(self):
@@ -219,10 +204,8 @@ class ServerSlots(object):
         cmd = ServerStoreDataSource(self.main)
         cmd.redo()
 
-
-
     ## store server datasource action executed by button
-    # \brief It stores the current datasource in 
+    # \brief It stores the current datasource in
     #        the configuration server executed by button
     def serverStoreDataSourceButton(self):
         if self.main.updateDataSourceListItem():
@@ -235,7 +218,6 @@ class ServerSlots(object):
         cmd.redo()
         self.undoStack.clear()
 
-
     ## delete server datasource action
     # \brief It deletes the current datasource from the configuration server
     def serverDeleteDataSource(self):
@@ -244,7 +226,6 @@ class ServerSlots(object):
         cmd = ServerDeleteDataSource(self.main)
         cmd.redo()
 
-
     ## close server action
     # \brief It closes the configuration server
     def serverClose(self):
@@ -252,6 +233,5 @@ class ServerSlots(object):
         self.undoStack.push(cmd)
 
 
-
-if __name__ == "__main__":   
+if __name__ == "__main__":
     pass

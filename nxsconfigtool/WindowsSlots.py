@@ -44,40 +44,39 @@ class WindowsSlots(object):
 
         ## action data
         self.actions = {
-            "actionNextWindows":[
-                "&Next", "activateNextSubWindow", 
+            "actionNextWindows": [
+                "&Next", "activateNextSubWindow",
                 QKeySequence.NextChild, "", "Go to the next window"],
-            "actionPreviousWindows":[
+            "actionPreviousWindows": [
                 "&Previous", "activatePreviousSubWindow",
-                QKeySequence.PreviousChild, "" ,"Go to the previous window"],
-            "actionCascadeWindows":[
-                "Casca&de", "cascadeSubWindows" , "", "",
+                QKeySequence.PreviousChild, "", "Go to the previous window"],
+            "actionCascadeWindows": [
+                "Casca&de", "cascadeSubWindows", "", "",
                 "Cascade the windows"],
-            "actionTileWindows":[
-                "&Tile", "tileSubWindows", "", "",  
+            "actionTileWindows": [
+                "&Tile", "tileSubWindows", "", "",
                 "Tile the windows"],
-            "actionRestoreAllWindows":[
+            "actionRestoreAllWindows": [
                 "&Restore All", "windowRestoreAll", "", "",
                 "Restore the windows"],
-            "actionCloseAllWindows":[
-                "&Close All", "closeAllSubWindows", "", "", 
+            "actionCloseAllWindows": [
+                "&Close All", "closeAllSubWindows", "", "",
                 "Close the windows"],
-            "actionIconizeAllWindows":[
+            "actionIconizeAllWindows": [
                 "&Iconize All", "windowMinimizeAll", "", "",
                 "Minimize the windows"],
-            "actionCloseWindows":[
+            "actionCloseWindows": [
                 "&Close", "closeActiveSubWindow", "",
                 QKeySequence(Qt.Key_Escape),
-                "Close the window" ],
-            "actionComponentListWindows":[
+                "Close the window"],
+            "actionComponentListWindows": [
                 "&Component List", "gotoComponentList", "Ctrl+<", "",
-                "Go to the component list" ],
-            "actionDataSourceListWindows":[
+                "Go to the component list"],
+            "actionDataSourceListWindows": [
                 "&DataSource List", "gotoDataSourceList", "Ctrl+>", "",
-                "Go to the component list" ]
+                "Go to the component list"]
             }
 
-        
         for ac in self.actions.keys():
             self.windows[ac] = getattr(self.main.ui, ac)
 
@@ -90,30 +89,28 @@ class WindowsSlots(object):
         self.main.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
                      self.updateWindowMenu)
         self.main.connect(
-            self.main.ui.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"), 
+            self.main.ui.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"),
             self.mdiWindowActivated)
 
-
-    ## activated window action, i.e. it changes the current position 
-    #  of the component and datasource lists 
+    ## activated window action, i.e. it changes the current position
+    #  of the component and datasource lists
     # \param subwindow selected subwindow
     def mdiWindowActivated(self, subwindow):
         widget = subwindow.widget() if hasattr(subwindow, "widget") else None
         if isinstance(widget, CommonDataSourceDlg):
             if widget.datasource.id is not None:
-                if hasattr(self.main.sourceList.currentListElement(),"id"):
+                if hasattr(self.main.sourceList.currentListElement(), "id"):
                     if self.main.sourceList.currentListElement().id \
-                            != widget.datasource.id: 
+                            != widget.datasource.id:
                         self.main.sourceList.populateElements(
                             widget.datasource.id)
         elif isinstance(widget, ComponentDlg):
             if widget.component.id is not None:
-                if hasattr(self.main.componentList.currentListElement(),"id"):
+                if hasattr(self.main.componentList.currentListElement(), "id"):
                     if self.main.componentList.currentListElement().id \
                             != widget.component.id:
                         self.main.componentList.populateElements(
                             widget.component.id)
-
 
     ## restores all windows
     # \brief It restores all windows in MDI
@@ -121,72 +118,62 @@ class WindowsSlots(object):
         for dialog in self.main.ui.mdi.subWindowList():
             dialog.showNormal()
 
-
     ## minimizes all windows
     # \brief It minimizes all windows in MDI
     def windowMinimizeAll(self):
         for dialog in self.main.ui.mdi.subWindowList():
             dialog.showMinimized()
 
-
     ## restores all windows
     # \brief It restores all windows in MDI
     def gotoComponentList(self):
         self.main.componentList.ui.elementListWidget.setFocus()
 
-  
     ## restores all windows
     # \brief It restores all windows in MDI
     def gotoDataSourceList(self):
         self.main.sourceList.ui.elementListWidget.setFocus()
 
-
     ## activates the next subwindow
     def activateNextSubWindow(self):
         self.main.ui.mdi.activateNextSubWindow()
-
 
     ## activates the previous subwindow
     def activatePreviousSubWindow(self):
         self.main.ui.mdi.activatePreviousSubWindow()
 
-
     ## cascades the subwindows
     def cascadeSubWindows(self):
         self.main.ui.mdi.cascadeSubWindows()
-
 
     ## tiles the subwindows
     def tileSubWindows(self):
         self.main.ui.mdi.tileSubWindows()
 
- 
     ## closes all subwindows
     def closeAllSubWindows(self):
         self.main.ui.mdi.closeAllSubWindows()
 
-
     ## closes the active subwindow
     def closeActiveSubWindow(self):
         self.main.ui.mdi.closeActiveSubWindow()
-        
 
     ## updates the window menu
     # \brief It updates the window menu with the open windows
     def updateWindowMenu(self):
         self.windows["Menu"].clear()
-        self._addActions(self.windows["Menu"], 
+        self._addActions(self.windows["Menu"],
                          (self.windows["actionNextWindows"],
-                          self.windows["actionPreviousWindows"], 
+                          self.windows["actionPreviousWindows"],
                           self.windows["actionCascadeWindows"],
-                          self.windows["actionTileWindows"], 
+                          self.windows["actionTileWindows"],
                           self.windows["actionRestoreAllWindows"],
                           self.windows["actionIconizeAllWindows"],
                           None,
                           self.windows["actionCloseWindows"],
                           self.windows["actionCloseAllWindows"],
                           None,
-                          self.windows["actionComponentListWindows"], 
+                          self.windows["actionComponentListWindows"],
                           self.windows["actionDataSourceListWindows"]
                           ))
         dialogs = self.main.ui.mdi.subWindowList()
@@ -211,13 +198,12 @@ class WindowsSlots(object):
             self.windows["Mapper"].setMapping(action, dialog)
             i += 1
 
-
     ## adds actions to target
     # \param target action target
-    # \param actions actions to be added   
-    @classmethod    
+    # \param actions actions to be added
+    @classmethod
     def _addActions(cls, target, actions):
-        if not  hasattr(actions, '__iter__'):
+        if not hasattr(actions, '__iter__'):
             target.addAction(actions)
         for action in actions:
             if action is None:
@@ -225,14 +211,13 @@ class WindowsSlots(object):
             else:
                 target.addAction(action)
 
-
     ## closes the current window
     # \brief Is closes the current datasource window
     def dsourceClose(self):
         subwindow = self.main.ui.mdi.activeSubWindow()
         if subwindow and isinstance(subwindow.widget(), CommonDataSourceDlg) \
                 and subwindow.widget().datasource:
-            
+
             ds = subwindow.widget().datasource
 
             ds.updateForm()
@@ -241,7 +226,6 @@ class WindowsSlots(object):
 
             self.main.ui.mdi.setActiveSubWindow(subwindow)
             self.main.ui.mdi.closeActiveSubWindow()
-
 
     ## closes the current window
     # \brief Is closes the current component window
@@ -254,10 +238,9 @@ class WindowsSlots(object):
             if cp.dialog:
                 cp.dialog.reject()
 
-
             self.main.ui.mdi.setActiveSubWindow(subwindow)
             self.main.ui.mdi.closeActiveSubWindow()
-        
 
-if __name__ == "__main__":   
+
+if __name__ == "__main__":
     pass

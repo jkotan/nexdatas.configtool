@@ -52,37 +52,35 @@ class ListSlots(object):
 
         ## action data
         self.actions = {
-            "actionClose":[
+            "actionClose": [
                 "&Remove", "componentRemove",
                 "Ctrl+P", "componentremove", "Close the component"],
-            "actionCloseDataSource":[
+            "actionCloseDataSource": [
                 "&Remove DataSource", "dsourceRemove",
-                "Ctrl+Shift+P", "dsourceremove", 
+                "Ctrl+Shift+P", "dsourceremove",
                 "Close the data source"],
-            "actionNew":[
-                "&New", "componentNew", 
+            "actionNew": [
+                "&New", "componentNew",
                 QKeySequence.New, "componentnew", "Create a new component"],
-            "actionNewDataSource":[
+            "actionNewDataSource": [
                 "&New DataSource", "dsourceNew",
-                "Ctrl+Shift+N", "dsourceadd", 
-                "Create a new data source"], 
-            "actionQuit":[
-                "&Quit", "closeApp", 
+                "Ctrl+Shift+N", "dsourceadd",
+                "Create a new data source"],
+            "actionQuit": [
+                "&Quit", "closeApp",
                 "Ctrl+Q", "filequit", "Close the application"],
 
             }
 
         ## task data
         self.tasks = [
-            [ "dsourceChanged",
-              self.main.sourceList.ui.elementListWidget, 
-              "itemChanged(QListWidgetItem*)"],
+            ["dsourceChanged",
+             self.main.sourceList.ui.elementListWidget,
+             "itemChanged(QListWidgetItem*)"],
             ["componentChanged",
-             self.main.componentList.ui.elementListWidget, 
+             self.main.componentList.ui.elementListWidget,
              "itemChanged(QListWidgetItem*)"]
             ]
-
-
 
     ## remove component action
     # \brief It removes from the component list the current component
@@ -90,13 +88,11 @@ class ListSlots(object):
         cmd = ComponentRemove(self.main)
         self.undoStack.push(cmd)
 
-
     ## remove datasource action
-    # \brief It removes the current datasource      
+    # \brief It removes the current datasource
     def dsourceRemove(self):
         cmd = DataSourceRemove(self.main)
         self.undoStack.push(cmd)
-        
 
     ## new component action
     # \brief It creates a new component
@@ -104,13 +100,11 @@ class ListSlots(object):
         cmd = ComponentNew(self.main)
         self.undoStack.push(cmd)
 
-
     ## new datasource action
-    # \brief It creates a new datasource      
+    # \brief It creates a new datasource
     def dsourceNew(self):
         cmd = DataSourceNew(self.main)
         self.undoStack.push(cmd)
-
 
     ## close application action
     # \brief It closes the main application
@@ -118,17 +112,14 @@ class ListSlots(object):
         cmd = CloseApplication(self.main)
         self.undoStack.push(cmd)
 
-
-
     ## component change action
     # \param item new selected item on the component list
-    def componentChanged(self, item): 
+    def componentChanged(self, item):
         cmd = ComponentEdit(self.main)
         cmd.redo()
         cmd = ComponentListChanged(self.main)
         cmd.item = item
         self.undoStack.push(cmd)
-
 
     ## datasource change action
     # \param item new selected item ond the datasource list
@@ -140,6 +131,5 @@ class ListSlots(object):
         self.undoStack.push(cmd)
 
 
-
-if __name__ == "__main__":   
+if __name__ == "__main__":
     pass

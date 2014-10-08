@@ -24,20 +24,21 @@
 from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
 
 from .ui.ui_strategydlg import Ui_StrategyDlg
-from .NodeDlg import NodeDlg 
+from .NodeDlg import NodeDlg
 from .DomTools import DomTools
 
 import logging
 logger = logging.getLogger(__name__)
 
+
 ## dialog defining an attribute
 class StrategyDlg(NodeDlg):
-    
+
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(StrategyDlg, self).__init__(parent)
-        
+
         ## strategy mode
         self.mode = u''
         ## trigger label
@@ -58,51 +59,50 @@ class StrategyDlg(NodeDlg):
         ## allowed subitems
         self.subItems = ["doc"]
 
-        ## writing can fail 
+        ## writing can fail
         self.canfail = False
 
         ## user interface
         self.ui = Ui_StrategyDlg()
 
     ## updates the field strategy
-    # \brief It sets the form local variables 
+    # \brief It sets the form local variables
     def updateForm(self):
         index = -1
         if self.mode is not None:
             index = self.ui.modeComboBox.findText(unicode(self.mode))
-            if  index > -1 :
+            if index > -1:
                 self.ui.modeComboBox.setCurrentIndex(index)
                 self.setFrames(self.mode)
-        if index < 0 or index is None:        
+        if index < 0 or index is None:
             index2 = self.ui.modeComboBox.findText(unicode("STEP"))
             self.mode = 'STEP'
             self.ui.modeComboBox.setCurrentIndex(index2)
             self.setFrames(self.mode)
-                
-        if self.trigger is not None :
-            self.ui.triggerLineEdit.setText(self.trigger) 
 
-        self.ui.compressionCheckBox.setChecked(self.compression) 
-        self.ui.canFailCheckBox.setChecked(self.canfail) 
-        self.ui.shuffleCheckBox.setChecked(self.shuffle) 
+        if self.trigger is not None:
+            self.ui.triggerLineEdit.setText(self.trigger)
+
+        self.ui.compressionCheckBox.setChecked(self.compression)
+        self.ui.canFailCheckBox.setChecked(self.canfail)
+        self.ui.shuffleCheckBox.setChecked(self.shuffle)
         self.ui.rateSpinBox.setValue(self.rate)
 
-        if self.grows is not None :
+        if self.grows is not None:
             try:
                 grows = int(self.grows)
                 if grows < 0:
                     grows = 0
             except:
                 grows = 0
-            self.ui.growsSpinBox.setValue(grows) 
-        if self.postrun is not None :
-            self.ui.postLineEdit.setText(self.postrun) 
+            self.ui.growsSpinBox.setValue(grows)
+        if self.postrun is not None:
+            self.ui.postLineEdit.setText(self.postrun)
         if self.doc is not None:
             self.ui.docTextEdit.setText(self.doc)
 
-
     ##  creates GUI
-    # \brief It calls setupUi and  connects signals and slots    
+    # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
         self.ui.setupUi(self)
 
@@ -110,15 +110,14 @@ class StrategyDlg(NodeDlg):
 
 #        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(self.ui.modeComboBox, 
+        self.connect(self.ui.modeComboBox,
                      SIGNAL("currentIndexChanged(QString)"), self.setFrames)
-        self.connect(self.ui.compressionCheckBox, 
+        self.connect(self.ui.compressionCheckBox,
                      SIGNAL("stateChanged(int)"), self.setCompression)
 
         self.setCompression(self.ui.compressionCheckBox.isChecked())
 
-
-    ## provides the state of the strategy dialog        
+    ## provides the state of the strategy dialog
     # \returns state of the strategy in tuple
     def getState(self):
         state = (self.mode,
@@ -133,9 +132,8 @@ class StrategyDlg(NodeDlg):
                  )
         return state
 
-
-    ## sets the state of the strategy dialog        
-    # \param state strategy state written in tuple 
+    ## sets the state of the strategy dialog
+    # \param state strategy state written in tuple
     def setState(self, state):
 
         (self.mode,
@@ -149,22 +147,20 @@ class StrategyDlg(NodeDlg):
          self.doc
          ) = state
 
-
     ## shows and hides frames according to modeComboBox
-    # \param text the edited text   
+    # \param text the edited text
     def setFrames(self, text):
         if text == 'STEP':
-            self.ui.triggerFrame.show()            
-            self.ui.postFrame.hide()            
+            self.ui.triggerFrame.show()
+            self.ui.postFrame.hide()
             self.ui.triggerLineEdit.setFocus()
         elif text == 'POSTRUN':
-            self.ui.postFrame.show()            
-            self.ui.triggerFrame.hide()            
+            self.ui.postFrame.show()
+            self.ui.triggerFrame.hide()
             self.ui.postLineEdit.setFocus()
         else:
-            self.ui.postFrame.hide()            
-            self.ui.triggerFrame.hide()            
-
+            self.ui.postFrame.hide()
+            self.ui.triggerFrame.hide()
 
     ## shows and hides compression widgets according to compressionCheckBox
     # \param state value from compressionCheckBox
@@ -173,16 +169,13 @@ class StrategyDlg(NodeDlg):
         self.ui.rateLabel.setEnabled(enable)
         self.ui.rateSpinBox.setEnabled(enable)
         self.ui.shuffleCheckBox.setEnabled(enable)
-                
-
-
 
     ## sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         if node:
             ## defined in NodeDlg class
-            self.node = node 
+            self.node = node
         if not self.node:
             return
         attributeMap = self.node.attributes()
@@ -197,17 +190,17 @@ class StrategyDlg(NodeDlg):
         if attributeMap.contains("canfail"):
             self.canfail = \
                 False if str(attributeMap.namedItem("canfail").nodeValue()
-                             ).upper() == "FALSE"  else True
+                             ).upper() == "FALSE" else True
 
         if attributeMap.contains("compression"):
             self.compression = \
                 False if str(attributeMap.namedItem("compression").nodeValue()
-                             ).upper() == "FALSE"  else True
+                             ).upper() == "FALSE" else True
 
             if attributeMap.contains("shuffle"):
                 self.shuffle = \
                     False if str(attributeMap.namedItem("shuffle").nodeValue()
-                                 ).upper() == "FALSE"  else True
+                                 ).upper() == "FALSE" else True
 
             if attributeMap.contains("rate"):
                 rate = int(attributeMap.namedItem("rate").nodeValue())
@@ -215,21 +208,17 @@ class StrategyDlg(NodeDlg):
                     rate = 0
                 elif rate > 9:
                     rate = 9
-                self.rate = rate    
+                self.rate = rate
 
-
-        text = DomTools.getText(self.node)    
+        text = DomTools.getText(self.node)
         self.postrun = unicode(text).strip() if text else ""
 
-        doc = self.node.firstChildElement(QString("doc"))           
-        text = DomTools.getText(doc)    
+        doc = self.node.firstChildElement(QString("doc"))
+        text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
-
-
-
     ## accepts input text strings
-    # \brief It copies the attribute name and value from 
+    # \brief It copies the attribute name and value from
     #        lineEdit widgets and accept the dialog
     def apply(self):
 
@@ -238,21 +227,18 @@ class StrategyDlg(NodeDlg):
         self.postrun = ''
 
         self.mode = unicode(self.ui.modeComboBox.currentText())
-        if self.mode ==  'STEP':
+        if self.mode == 'STEP':
             self.trigger = unicode(self.ui.triggerLineEdit.text())
             grows = int(self.ui.growsSpinBox.value())
             if grows > 0:
                 self.grows = str(grows)
-        if self.mode ==  'POSTRUN':
+        if self.mode == 'POSTRUN':
             self.postrun = unicode(self.ui.postLineEdit.text())
-
 
         self.canfail = self.ui.canFailCheckBox.isChecked()
         self.compression = self.ui.compressionCheckBox.isChecked()
         self.shuffle = self.ui.shuffleCheckBox.isChecked()
         self.rate = self.ui.rateSpinBox.value()
-            
-
 
         self.doc = unicode(self.ui.docTextEdit.toPlainText())
 
@@ -260,25 +246,22 @@ class StrategyDlg(NodeDlg):
         finalIndex = self.view.model().createIndex(
             index.row(), 2, index.parent().internalPointer())
 
-
-        self.view.expand(index)    
-        if self.node  and self.root and self.node.isElement():
+        self.view.expand(index)
+        if self.node and self.root and self.node.isElement():
             self.updateNode(index)
-        if  index.column() != 0:
+        if index.column() != 0:
             index = self.view.model().index(
                 index.row(), 0, index.parent())
         self.view.model().emit(SIGNAL(
                 "dataChanged(QModelIndex,QModelIndex)"), index, finalIndex)
-        self.view.expand(index)    
-
-
+        self.view.expand(index)
 
     ## updates the Node
     # \brief It sets node from the dialog variables
     def updateNode(self, index=QModelIndex()):
         elem = self.node.toElement()
 
-        mindex = self.view.currentIndex() if not index.isValid() else index   
+        mindex = self.view.currentIndex() if not index.isValid() else index
 
         attributeMap = self.node.attributes()
         for _ in range(attributeMap.count()):
@@ -294,34 +277,31 @@ class StrategyDlg(NodeDlg):
             elem.setAttribute(QString("canfail"), QString("true"))
         if self.compression:
             elem.setAttribute(QString("compression"), QString("true"))
-            elem.setAttribute(QString("shuffle"), QString("true") \
-                                  if self.shuffle else "false" )
+            elem.setAttribute(QString("shuffle"), QString("true")
+                              if self.shuffle else "false")
             elem.setAttribute(QString("rate"), QString(str(self.rate)))
 
         self.replaceText(mindex, unicode(self.postrun))
 
-        doc = self.node.firstChildElement(QString("doc"))           
-        if not self.doc and doc and doc.nodeName() == "doc" :
+        doc = self.node.firstChildElement(QString("doc"))
+        if not self.doc and doc and doc.nodeName() == "doc":
             self.removeElement(doc, mindex)
-            
+
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
-            newDoc.appendChild(newText) 
-            if doc and doc.nodeName() == "doc" :
+            newDoc.appendChild(newText)
+            if doc and doc.nodeName() == "doc":
                 self.replaceElement(doc, newDoc, mindex)
             else:
                 self.appendElement(newDoc, mindex)
-
-
 
 
 if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
-    logging.basicConfig(level=logging.DEBUG)     
-
+    logging.basicConfig(level=logging.DEBUG)
 
     ## Qt application
     app = QApplication(sys.argv)
@@ -337,10 +317,10 @@ if __name__ == "__main__":
     app.exec_()
 
     if form.mode:
-        logger.info("Mode: %s " % ( form.mode ))
+        logger.info("Mode: %s " % form.mode)
     if form.mode == "STEP":
         if form.trigger:
-            logger.info("Trigger: %s"% form.trigger)
+            logger.info("Trigger: %s" % form.trigger)
     if form.mode == "POSTRUN":
         if form.postrun:
             logger.info("Postrun label: %s" % form.postrun)

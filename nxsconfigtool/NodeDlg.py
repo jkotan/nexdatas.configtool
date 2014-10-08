@@ -26,25 +26,26 @@ from PyQt4.QtCore import (SIGNAL, QModelIndex)
 
 from .DomTools import DomTools
 
-## abstract node dialog 
+
+## abstract node dialog
 class NodeDlg(QDialog):
-    
+
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(NodeDlg, self).__init__(parent)
 
-        ## DOM node    
+        ## DOM node
         self.node = None
         ## DOM root
         self.root = None
         ## component tree view
-        self.view = None 
+        self.view = None
 
         ## allowed subitems
         self.subItems = []
 
-        ##  user interface 
+        ##  user interface
         self.ui = None
 
         ## external apply action
@@ -62,102 +63,89 @@ class NodeDlg(QDialog):
     # \param externalClose close action
     # \param externalStore store action
     # \param externalDSLink dsource link action
-    def connectExternalActions(self, externalApply=None , externalSave=None,
-                               externalClose = None, externalStore=None, 
-                               externalDSLink = None):
+    def connectExternalActions(self, externalApply=None, externalSave=None,
+                               externalClose=None, externalStore=None,
+                               externalDSLink=None):
         if externalApply and self.externalApply is None and self.ui and \
-                hasattr(self.ui,"applyPushButton") and self.ui.applyPushButton:
+                hasattr(self.ui, "applyPushButton") and \
+                self.ui.applyPushButton:
             self.connect(
                 self.ui.applyPushButton, SIGNAL("clicked()"), externalApply)
             self.externalApply = externalApply
         if externalDSLink and self.externalDSLink is None and self.ui and \
-                hasattr(self.ui,"linkDSPushButton") \
+                hasattr(self.ui, "linkDSPushButton") \
                 and self.ui.linkDSPushButton:
             self.connect(
                 self.ui.linkDSPushButton, SIGNAL("clicked()"), externalDSLink)
             self.externalDSLink = externalDSLink
 
-        
     ## resets the dialog
-    # \brief It sets forms and dialog from DOM    
+    # \brief It sets forms and dialog from DOM
     def reset(self):
-        if self.view and hasattr(self.view,"currentIndex"):
+        if self.view and hasattr(self.view, "currentIndex"):
             index = self.view.currentIndex()
         self.setFromNode()
         self.updateForm()
         if self.view:
-            if  index.column() != 0:
+            if index.column() != 0:
                 index = self.view.model().index(index.row(), 0, index.parent())
             self.view.model().emit(
                 SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
 
-                
-        
-
     ## replaces node text for the given node
     # \param index of child text node
     # \param text string with text
-    def replaceText(self, index, text = None):
-        if self.view is not None and self.view.model() is not None: 
+    def replaceText(self, index, text=None):
+        if self.view is not None and self.view.model() is not None:
             return DomTools.replaceText(
                 self.node, index, self.view.model(), text)
-    
 
     ## removes node element
     # \param element DOM node element to remove
-    # \param parent parent node index      
+    # \param parent parent node index
     def removeElement(self, element, parent):
-        if self.view is not None and self.view.model() is not None:  
+        if self.view is not None and self.view.model() is not None:
             return DomTools.removeElement(
                 element, parent, self.view.model())
 
-
     ## replaces node element
-    # \param oldElement old DOM node element 
-    # \param newElement new DOM node element 
+    # \param oldElement old DOM node element
+    # \param newElement new DOM node element
     # \param parent parent node index
     def replaceElement(self, oldElement, newElement, parent):
-        if self.view is not None and self.view.model() is not None: 
+        if self.view is not None and self.view.model() is not None:
             return DomTools.replaceElement(
                 oldElement, newElement, parent, self.view.model())
-            
-
 
     ## appends node element
-    # \param newElement new DOM node element 
-    # \param parent parent node index      
+    # \param newElement new DOM node element
+    # \param parent parent node index
     def appendElement(self, newElement, parent):
-        if self.view is not None and self.view.model() is not None: 
+        if self.view is not None and self.view.model() is not None:
             return DomTools.appendNode(
                 newElement, parent, self.view.model())
-        return False     
+        return False
 
-            
     ## updates the form
     # \brief abstract class
     def updateForm(self):
         pass
 
-
     ## updates the node
     # \brief abstract class
     def updateNode(self, index=QModelIndex()):
         pass
-        
 
     ## creates GUI
     # \brief abstract class
     def createGUI(self):
         pass
 
-        
     ## sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         pass
 
 
-
 if __name__ == "__main__":
     pass
-    

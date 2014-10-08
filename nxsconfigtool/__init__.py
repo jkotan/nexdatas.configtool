@@ -19,11 +19,9 @@
 ## \file nxsconfigtool/__init__.py
 # package constructor
 
-""" --- Component Designer -- 
-GUI configuration tool for creating input files for Tango Data Writer 
+""" --- Component Designer --
+GUI configuration tool for creating input files for Tango Data Writer
 """
 
 ## version of the application
 __version__ = "1.5.9"
-
- 

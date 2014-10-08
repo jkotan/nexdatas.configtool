@@ -23,7 +23,7 @@
 import os
 
 from PyQt4.QtCore import (Qt, QString, QVariant)
-from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem, 
+from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem,
                          QProgressDialog)
 
 from .ui.ui_elementlist import Ui_ElementList
@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 ## dialog defining a group tag
 class ElementList(QWidget):
-    
+
     ## constructor
     # \param directory datasource directory
     # \param parent patent instance
@@ -43,7 +43,7 @@ class ElementList(QWidget):
         super(ElementList, self).__init__(parent)
          ## directory from which components are loaded by default
         self.directory = directory
-        
+
         ## group elements
         self.elements = {}
 
@@ -61,7 +61,7 @@ class ElementList(QWidget):
         self.name = "elements"
 
     ##  creates GUI
-    # \brief It calls setupUi and  connects signals and slots    
+    # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
 
         self.ui.setupUi(self)
@@ -71,10 +71,7 @@ class ElementList(QWidget):
 
         self.populateElements()
 
-
-
-
-    ## opens context Menu        
+    ## opens context Menu
     # \param position in the element list
     def _openMenu(self, position):
         menu = QMenu()
@@ -83,7 +80,7 @@ class ElementList(QWidget):
                 menu.addSeparator()
             elif isinstance(action, dict):
                 for k in action:
-                    submenu = menu.addMenu(k)        
+                    submenu = menu.addMenu(k)
                     for saction in action[k]:
                         if saction is None:
                             submenu.addSeparator()
@@ -93,43 +90,37 @@ class ElementList(QWidget):
                 menu.addAction(action)
         menu.exec_(self.ui.elementListWidget.viewport().mapToGlobal(position))
 
-
     ## sets context menu actions for the element list
-    # \param actions tuple with actions 
+    # \param actions tuple with actions
     def setActions(self, actions):
         self.ui.elementListWidget.setContextMenuPolicy(Qt.CustomContextMenu)
         self.ui.elementListWidget.customContextMenuRequested.connect(
             self._openMenu)
         self._actions = actions
-        
-            
 
-
-    ## adds an element    
-    #  \brief It runs the Element Dialog and fetches element 
-    #         name and value    
-    def addElement(self, obj, flag = True):
+    ## adds an element
+    #  \brief It runs the Element Dialog and fetches element
+    #         name and value
+    def addElement(self, obj, flag=True):
         self.elements[obj.id] = obj
 
         self.populateElements(obj.id, flag)
-                
-                
+
     ## takes a name of the current element
-    # \returns name of the current element            
+    # \returns name of the current element
     def currentListElement(self):
         item = self.ui.elementListWidget.currentItem()
         if item is None:
             return None
-        return self.elements[item.data(Qt.UserRole).toLongLong()[0]] 
+        return self.elements[item.data(Qt.UserRole).toLongLong()[0]]
 
-
-    ## removes the current element    
+    ## removes the current element
     #  \brief It removes the current element asking before about it
-    def removeElement(self, obj = None, question = True):
-        
+    def removeElement(self, obj=None, question=True):
+
         if obj is not None:
             oid = obj.id
-        else:    
+        else:
             cds = self.currentListElement()
             if cds is None:
                 return
@@ -137,26 +128,23 @@ class ElementList(QWidget):
         if oid is None:
             return
         if oid in self.elements.keys():
-            if question :
+            if question:
                 if QMessageBox.question(
                     self, "%s - Close" % self.clName,
-                    "Close %s: %s ".encode() \
-                        %  (self.clName, self.elements[oid].name),
+                    "Close %s: %s ".encode()
+                    % (self.clName, self.elements[oid].name),
                     QMessageBox.Yes | QMessageBox.No,
-                    QMessageBox.Yes ) == QMessageBox.No :
+                    QMessageBox.Yes) == QMessageBox.No:
                     return
 
             self.elements.pop(oid)
             self.populateElements()
-            
 
-
-
-    ## changes the current value of the element        
-    # \brief It changes the current value of the element and informs 
+    ## changes the current value of the element
+    # \brief It changes the current value of the element and informs
     #        the user that element names arenot editable
-    def listItemChanged(self, item, name = None):
-        ide =  self.currentListElement().id 
+    def listItemChanged(self, item, name=None):
+        ide = self.currentListElement().id
         if ide in self.elements.keys():
             old = self.elements[ide]
             oname = self.elements[ide].name
@@ -167,15 +155,14 @@ class ElementList(QWidget):
             self.populateElements()
             return old, oname
 
-
-    ## fills in the element list      
-    # \param selectedElement selected element    
+    ## fills in the element list
+    # \param selectedElement selected element
     # \param edit flag if edit the selected item
-    def populateElements(self, selectedElement = None, edit = False):
+    def populateElements(self, selectedElement=None, edit=False):
         selected = None
         self.ui.elementListWidget.clear()
 
-        slist = [(self.elements[key].name, key) 
+        slist = [(self.elements[key].name, key)
                  for key in self.elements.keys()]
         slist.sort()
 
@@ -184,29 +171,27 @@ class ElementList(QWidget):
             item.setData(Qt.UserRole, QVariant(self.elements[el].id))
             item.setFlags(item.flags() | Qt.ItemIsEditable)
             dirty = False
-            if hasattr(self.elements[el],"isDirty") \
+            if hasattr(self.elements[el], "isDirty") \
                     and self.elements[el].isDirty():
                 dirty = True
             if self.elements[el].instance is not None:
-                if hasattr(self.elements[el].instance,"isDirty") \
+                if hasattr(self.elements[el].instance, "isDirty") \
                         and self.elements[el].instance.isDirty():
                     dirty = True
             if dirty:
-                item.setForeground(Qt.red) 
+                item.setForeground(Qt.red)
             else:
                 item.setForeground(Qt.black)
-
 
             self.ui.elementListWidget.addItem(item)
             if selectedElement is not None \
                     and selectedElement == self.elements[el].id:
                 selected = item
 
-
             if self.elements[el].instance is not None \
                     and self.elements[el].instance.dialog is not None:
                 try:
-                    if  dirty:
+                    if dirty:
                         self.elements[el].instance.dialog.\
                             setWindowTitle("%s [%s]*" % (name, self.clName))
                     else:
@@ -221,40 +206,39 @@ class ElementList(QWidget):
             if edit:
                 self.ui.elementListWidget.editItem(selected)
 
-
     ## sets the elements
     # \param elements dictionary with the elements, i.e. name:xml
     # \param externalActions dictionary with external actions
     # \param itemActions actions of the context menu
     # \param new logical variableset to True if element is not saved
-    def setList(self, elements, externalActions = None, 
-                itemActions = None, new = False):
+    def setList(self, elements, externalActions=None,
+                itemActions=None, new=False):
         if not os.path.isdir(self.directory):
             try:
                 if os.path.exists(os.path.join(os.getcwd(), self.name)):
                     self.directory = os.path.abspath(
                         os.path.join(os.getcwd(), self.name))
                 else:
-                    self.directory = os.getcwd() 
+                    self.directory = os.getcwd()
             except:
                 return
-            
-        ide = None    
+
+        ide = None
         keys = elements.keys()
         progress = QProgressDialog(
-            "Setting %s elements" % self.clName, 
-            QString(), 0, len(keys), self)    
+            "Setting %s elements" % self.clName,
+            QString(), 0, len(keys), self)
         progress.setWindowTitle("Set Elements")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
         for i in range(len(keys)):
             elname = keys[i]
             name = self.dashName(elname)
-            dlg = self.createElement(name)    
+            dlg = self.createElement(name)
             try:
                 if str(elements[elname]).strip():
-                    dlg.set(elements[elname], new)    
-                else:    
+                    dlg.set(elements[elname], new)
+                else:
                     if hasattr(dlg, "createHeader"):
                         dlg.createHeader()
                     QMessageBox.warning(
@@ -265,49 +249,46 @@ class ElementList(QWidget):
                     self, "%s cannot be loaded" % self.clName,
                     "%s %s cannot be loaded" % (self.clName, elname))
 
-            if hasattr(dlg, "dataSourceName"):    
+            if hasattr(dlg, "dataSourceName"):
                 dlg.dataSourceName = elname
 
-            if hasattr(dlg, "addContextMenu"):    
+            if hasattr(dlg, "addContextMenu"):
                 dlg.addContextMenu(itemActions)
-                
-            if hasattr(dlg,"connectExternalActions"):     
+
+            if hasattr(dlg, "connectExternalActions"):
                 actions = externalActions if externalActions else {}
-                dlg.connectExternalActions(**actions)    
+                dlg.connectExternalActions(**actions)
 
             el = LabeledObject(name, dlg)
             if new:
                 el.savedName = ""
 
             ide = id(el)
-            self.elements[ide] =  el
+            self.elements[ide] = el
             if el.instance is not None:
                 el.instance.id = el.id
                 if new and hasattr(el.instance, "applied"):
-                    el.instance.applied =  True
+                    el.instance.applied = True
             logger.info("setting %s" % name)
             progress.setValue(i)
         progress.setValue(len(keys))
         progress.close()
-        return ide 
-
-
+        return ide
 
     ## replaces name special characters by underscore
     # \param name give name
-    # \returns replaced element            
-    @classmethod            
+    # \returns replaced element
+    @classmethod
     def dashName(cls, name):
-        return name 
+        return name
 
-            
     ## loads the element list from the given dictionary
     # \param externalActions dictionary with external actions
     # \param itemActions actions of the context menu
-    def loadList(self, externalActions = None, itemActions=None):
+    def loadList(self, externalActions=None, itemActions=None):
         try:
-            dirList = [l for l in  os.listdir(self.directory) \
-                           if l.endswith(self.extention)]
+            dirList = [l for l in os.listdir(self.directory)
+                       if l.endswith(self.extention)]
         except:
             try:
                 if os.path.exists(os.path.join(os.getcwd(), self.name)):
@@ -316,14 +297,14 @@ class ElementList(QWidget):
                 else:
                     self.directory = os.getcwd()
 
-                dirList = [l for l in  os.listdir(self.directory) \
-                               if l.endswith(self.extention)]
+                dirList = [l for l in os.listdir(self.directory)
+                           if l.endswith(self.extention)]
             except:
                 return
 
         progress = QProgressDialog(
-            "Loading %s elements" % self.clName, 
-            QString(), 0, len(dirList), self)    
+            "Loading %s elements" % self.clName,
+            QString(), 0, len(dirList), self)
         progress.setWindowTitle("Load Elements")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
@@ -331,16 +312,16 @@ class ElementList(QWidget):
             fname = dirList[i]
             name = self.nameFromFile(fname)
             dlg = self.createElement(name)
-            dlg.load()    
+            dlg.load()
             if hasattr(dlg, "addContextMenu"):
                 dlg.addContextMenu(itemActions)
 
             actions = externalActions if externalActions else {}
-            if hasattr(dlg,"connectExternalActions"):     
-                dlg.connectExternalActions(**actions)    
-            
+            if hasattr(dlg, "connectExternalActions"):
+                dlg.connectExternalActions(**actions)
+
             el = LabeledObject(name, dlg)
-            self.elements[id(el)] =  el
+            self.elements[id(el)] = el
             if el.instance is not None:
                 el.instance.id = el.id
             logger.info("loading %s" % name)
@@ -349,12 +330,11 @@ class ElementList(QWidget):
         progress.close()
 
 
-
 if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
-    logging.basicConfig(level=logging.DEBUG)     
+    logging.basicConfig(level=logging.DEBUG)
 
     ## Qt application
     app = QApplication(sys.argv)
@@ -365,9 +345,7 @@ if __name__ == "__main__":
     form.show()
     app.exec_()
 
-
     if form.elements:
         logger.info("Other datasources:")
         for kk in form.elements.keys():
             logger.info("%s = '%s' " % (kk, form.elements[kk]))
-    

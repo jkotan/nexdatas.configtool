@@ -22,7 +22,6 @@
 """ help widget """
 
 
-
 from PyQt4.QtCore import (QUrl, Qt, SIGNAL, SLOT)
 from PyQt4.QtGui import (QAction, QApplication, QDialog, QIcon,
         QKeySequence, QLabel, QTextBrowser, QToolBar, QVBoxLayout)
@@ -51,10 +50,9 @@ class HelpForm(QDialog):
         self.createGUI()
         self.createActions()
 
-
     ##  creates GUI
     # \brief It create dialogs for help dialog
-    def createGUI(self):   
+    def createGUI(self):
         ## help tool bar
         self.toolBar = QToolBar(self)
         ## help text Browser
@@ -71,10 +69,9 @@ class HelpForm(QDialog):
         self.setWindowTitle("%s Help" % (
                 QApplication.applicationName()))
 
-
     ## creates actions
     # \brief It creates actions and sets the command pool and stack
-    def createActions(self):    
+    def createActions(self):
 
         backAction = QAction(QIcon(":/back.png"), "&Back", self)
         backAction.setShortcut(QKeySequence.Back)
@@ -103,7 +100,6 @@ class HelpForm(QDialog):
         self.disconnect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
             self.updatePageTitle)
 
-
         self.connect(backAction, SIGNAL("triggered()"),
             self.textBrowser, SLOT("backward()"))
         self.connect(forwardAction, SIGNAL("triggered()"),
@@ -115,13 +111,12 @@ class HelpForm(QDialog):
 
         self.updatePageTitle()
 
-
     ## updates the title page
     # \brief It resets the pageLabel withg the document title
     def updatePageTitle(self):
         self.pageLabel.setText(
             "<p><b><i><font color='#0066ee' font size = 4>" +
-            "&nbsp;&nbsp;" + self.textBrowser.documentTitle() 
+            "&nbsp;&nbsp;" + self.textBrowser.documentTitle()
             + "</i></b></p></br>"
             )
 
@@ -135,4 +130,3 @@ if __name__ == "__main__":
     form = HelpForm("index.html")
     form.show()
     app.exec_()
-

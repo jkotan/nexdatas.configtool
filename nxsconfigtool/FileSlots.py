@@ -23,7 +23,6 @@
 
 from PyQt4.QtGui import QKeySequence
 
-
 from .FileCommands import (
     ComponentOpen,
     DataSourceOpen,
@@ -45,7 +44,6 @@ from .EditCommands import (
     DataSourceApply
     )
 
-
 from .ItemCommands import (
     ComponentMerge
     )
@@ -66,59 +64,58 @@ class FileSlots(object):
         self.main = main
         ## command stack
         self.undoStack = main.undoStack
-        
+
         ## action data
         self.actions = {
-            "actionLoad":[
+            "actionLoad": [
                 "&Load...", "componentOpen",
-                QKeySequence.Open, "componentopen", 
+                QKeySequence.Open, "componentopen",
                 "Load an existing component"],
-            "actionLoadDataSource":[
+            "actionLoadDataSource": [
                 "&Load DataSource...", "dsourceOpen",
-                "Ctrl+Shift+O", "dsourceopen", 
+                "Ctrl+Shift+O", "dsourceopen",
                 "Load an existing data source"],
-            "actionSave":[
+            "actionSave": [
                 "&Save", "componentSave",
-                QKeySequence.Save, "componentsave", 
+                QKeySequence.Save, "componentsave",
                 "Write the component into a file"],
-            "actionSaveDataSource":[
+            "actionSaveDataSource": [
                 "&Save DataSource", "dsourceSave",
-                "Ctrl+Shift+S", "dsourcesave", 
+                "Ctrl+Shift+S", "dsourcesave",
                 "Write the data source into a file"],
-            "actionSaveAs":[
+            "actionSaveAs": [
                 "Save &As...", "componentSaveAs",
-                "", "componentsaveas", 
+                "", "componentsaveas",
                 "Write the component into a file as ..."],
-            "actionSaveDataSourceAs":[
+            "actionSaveDataSourceAs": [
                 "Save DataSource &As...", "dsourceSaveAs",
-                "", "dsourcesaveas", 
+                "", "dsourcesaveas",
                 "Write the data source  in a file as ..."],
-            "actionSaveAll":[
+            "actionSaveAll": [
                 "Save All", "componentSaveAll",
                 "", "componentsaveall", "Write all components into files"],
-            "actionSaveAllDataSources":[
+            "actionSaveAllDataSources": [
                 "Save All DataSources", "dsourceSaveAll",
                 "", "dsourcessaveall", "Write all data sources in files"],
-            "actionReloadDataSourceList":[
-                "Reload DataSource List", "dsourceReloadList", 
+            "actionReloadDataSourceList": [
+                "Reload DataSource List", "dsourceReloadList",
                 "", "dsourcereloadlist", "Reload the data-source list"],
-            "actionReloadList":[
-                "Reload List", "componentReloadList", 
+            "actionReloadList": [
+                "Reload List", "componentReloadList",
                 "", "componentreloadlist", "Reload the component list"],
-            "actionChangeDirectory":[
+            "actionChangeDirectory": [
                 "Change Directory...", "componentChangeDirectory",
-                "", "componentrechangedirectory", 
+                "", "componentrechangedirectory",
                 "Change the component list directory"],
-            "actionChangeDataSourceDirectory":[
-                "Change DataSource Directory...", "dsourceChangeDirectory", 
-                "", "dsourcerechangedirectory", 
+            "actionChangeDataSourceDirectory": [
+                "Change DataSource Directory...", "dsourceChangeDirectory",
+                "", "dsourcerechangedirectory",
                 "Change the data-source list directory"]
             }
 
-
     ## open component action
     # \brief It opens component from the file
-    def componentOpen(self):        
+    def componentOpen(self):
         cmd = ComponentOpen(self.main)
         self.undoStack.push(cmd)
 
@@ -128,9 +125,8 @@ class FileSlots(object):
         cmd = DataSourceOpen(self.main)
         self.undoStack.push(cmd)
 
-
     ## save component action
-    # \brief It saves the current component      
+    # \brief It saves the current component
     def componentSave(self):
         cmd = ComponentEdit(self.main)
         cmd.redo()
@@ -139,16 +135,14 @@ class FileSlots(object):
         cmd = ComponentSave(self.main)
         cmd.redo()
 
-
     ## save component action executed by button
-    # \brief It saves the current component executed by button   
+    # \brief It saves the current component executed by button
     def componentSaveButton(self):
         if self.main.updateComponentListItem():
             self.componentSave()
 
-
     ## save datasource item action
-    # \brief It saves the changes in the current datasource item 
+    # \brief It saves the changes in the current datasource item
     def dsourceSave(self):
         cmd = DataSourceEdit(self.main)
         cmd.redo()
@@ -157,14 +151,12 @@ class FileSlots(object):
         cmd = DataSourceSave(self.main)
         cmd.redo()
 
-
     ## save datasource item action executed by button
-    # \brief It saves the changes in the current datasource item executed 
+    # \brief It saves the changes in the current datasource item executed
     #        by button
     def dsourceSaveButton(self):
         if self.main.updateDataSourceListItem():
             self.dsourceSave()
-
 
     ## save component item as action
     # \brief It saves the changes in the current component item with a new name
@@ -183,9 +175,8 @@ class FileSlots(object):
         cmd = ComponentSave(self.main)
         cmd.redo()
 
-
     ## save datasource item as action
-    # \brief It saves the changes in the current datasource item with 
+    # \brief It saves the changes in the current datasource item with
     #        a new name
     def dsourceSaveAs(self):
         cmd = DataSourceEdit(self.main)
@@ -202,14 +193,12 @@ class FileSlots(object):
         cmd = DataSourceSave(self.main)
         cmd.redo()
 
-
     ## save all components item action
     # \brief It saves the changes in all components item
     def componentSaveAll(self):
         cmd = ComponentSaveAll(self.main)
         cmd.redo()
         self.undoStack.clear()
-
 
     ## save all datasource item action
     # \brief It saves the changes in all datasources item
@@ -218,14 +207,12 @@ class FileSlots(object):
         cmd.redo()
         self.undoStack.clear()
 
-
     ## change component directory action
     # \brief It changes the default component directory
     def componentChangeDirectory(self):
         cmd = ComponentChangeDirectory(self.main)
         cmd.redo()
         self.undoStack.clear()
-
 
     ## change datasource directory action
     # \brief It changes the default datasource directory
@@ -234,14 +221,12 @@ class FileSlots(object):
         cmd.redo()
         self.undoStack.clear()
 
-
     ## reload component list
     # \brief It changes the default component directory and reload components
     def componentReloadList(self):
         cmd = ComponentReloadList(self.main)
         cmd.redo()
         self.undoStack.clear()
-
 
     ## reload datasource list
     # \brief It changes the default datasource directory and reload datasources
@@ -251,7 +236,5 @@ class FileSlots(object):
         self.undoStack.clear()
 
 
-        
-
-if __name__ == "__main__":   
+if __name__ == "__main__":
     pass

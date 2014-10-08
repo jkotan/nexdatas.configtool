@@ -19,25 +19,27 @@
 ## \file Errors.py
 # Error classes
 
-""" "Component Desigener Errors  """ 
+""" "Component Desigener Errors  """
+
 
 ## charater error
-class CharacterError(Exception): 
+class CharacterError(Exception):
     pass
 
+
 ## error of passed parameter
-class ParameterError(Exception): 
+class ParameterError(Exception):
     pass
 
 
 ## merging error for wrong node structure
-class IncompatibleNodeError(Exception): 
+class IncompatibleNodeError(Exception):
     ## constructor
     # \param value text of the error
     # \param nodes list of error related nodes
-    def __init__(self, value, nodes = None):
+    def __init__(self, value, nodes=None):
         Exception.__init__(self, value)
-        ## text of the error        
+        ## text of the error
         self.value = value
         ## list of error related nodes
         self.nodes = nodes if nodes else []

@@ -25,21 +25,22 @@ from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
 from PyQt4.QtGui import (QMessageBox)
 
 from .ui.ui_linkdlg import Ui_LinkDlg
-from .NodeDlg import NodeDlg 
+from .NodeDlg import NodeDlg
 from .Errors import CharacterError
 from .DomTools import DomTools
 
 import logging
 logger = logging.getLogger(__name__)
 
-## dialog defining a tag link 
+
+## dialog defining a tag link
 class LinkDlg(NodeDlg):
-    
+
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(LinkDlg, self).__init__(parent)
-        
+
         ## link name
         self.name = u''
         ## link target
@@ -53,22 +54,19 @@ class LinkDlg(NodeDlg):
         ## user interface
         self.ui = Ui_LinkDlg()
 
-
     ## updates the link dialog
     # \brief It sets the form local variables
     def updateForm(self):
         if self.name is not None:
-            self.ui.nameLineEdit.setText(self.name) 
+            self.ui.nameLineEdit.setText(self.name)
         if self.doc is not None:
             self.ui.docTextEdit.setText(self.doc)
 
-        if self.target is not None:    
+        if self.target is not None:
             self.ui.targetLineEdit.setText(self.target)
 
-
-
     ##  creates GUI
-    # \brief It calls setupUi and  connects signals and slots    
+    # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
 
         self.ui.setupUi(self)
@@ -77,15 +75,13 @@ class LinkDlg(NodeDlg):
 
         self._updateUi()
 
-
         self.connect(
             self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(
-            self.ui.nameLineEdit, SIGNAL("textEdited(QString)"), 
+            self.ui.nameLineEdit, SIGNAL("textEdited(QString)"),
             self._updateUi)
 
-
-    ## provides the state of the link dialog        
+    ## provides the state of the link dialog
     # \returns state of the group in tuple
     def getState(self):
 
@@ -95,18 +91,14 @@ class LinkDlg(NodeDlg):
                  )
         return state
 
-
-
-    ## sets the state of the link dialog        
-    # \param state link state written in tuple 
+    ## sets the state of the link dialog
+    # \param state link state written in tuple
     def setState(self, state):
 
         (self.name,
          self.target,
          self.doc
          ) = state
-
-
 
     ## sets the form from the DOM node
     # \param node DOM node
@@ -119,17 +111,15 @@ class LinkDlg(NodeDlg):
         attributeMap = self.node.attributes()
 
         self.name = unicode(
-            attributeMap.namedItem("name").nodeValue() \
-                if attributeMap.contains("name") else "")
+            attributeMap.namedItem("name").nodeValue()
+            if attributeMap.contains("name") else "")
         self.target = unicode(
-            attributeMap.namedItem("target").nodeValue() \
-                if attributeMap.contains("target") else "")
- 
-        doc = self.node.firstChildElement(QString("doc"))           
-        text = DomTools.getText(doc)    
+            attributeMap.namedItem("target").nodeValue()
+            if attributeMap.contains("target") else "")
+
+        doc = self.node.firstChildElement(QString("doc"))
+        text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
-
-
 
     ## updates link user interface
     # \brief It sets enable or disable the OK button
@@ -137,23 +127,21 @@ class LinkDlg(NodeDlg):
         enable = not self.ui.nameLineEdit.text().isEmpty()
         self.ui.applyPushButton.setEnabled(enable)
 
-
-
     ## accepts input text strings
-    # \brief It copies the link name and target from lineEdit widgets 
+    # \brief It copies the link name and target from lineEdit widgets
     #        and accept the dialog
     def apply(self):
         name = unicode(self.ui.nameLineEdit.text())
-        
+
         try:
             if 1 in [c in name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
-                raise CharacterError, \
-                    ("Name contains one of forbidden characters") 
+                raise CharacterError(
+                    "Name contains one of forbidden characters")
             if name[0] == '-':
-                raise CharacterError, \
-                    ("The first character of Name is '-'") 
+                raise CharacterError(
+                    "The first character of Name is '-'")
 
-        except CharacterError, e:   
+        except CharacterError, e:
             QMessageBox.warning(self, "Character Error", unicode(e))
             return
         self.name = name
@@ -164,54 +152,49 @@ class LinkDlg(NodeDlg):
         index = self.view.currentIndex()
         finalIndex = self.view.model().createIndex(
             index.row(), 2, index.parent().internalPointer())
-        self.view.expand(index)    
+        self.view.expand(index)
 
-        if self.node  and self.root and self.node.isElement():
+        if self.node and self.root and self.node.isElement():
             self.updateNode(index)
-                    
-        if  index.column() != 0:
+
+        if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         self.view.model().emit(
             SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, finalIndex)
-        self.view.expand(index)    
-
+        self.view.expand(index)
 
     ## updates the Node
     # \brief It sets node from the dialog variables
     def updateNode(self, index=QModelIndex()):
         elem = self.node.toElement()
-        mindex = self.view.currentIndex() if not index.isValid() else index   
-
+        mindex = self.view.currentIndex() if not index.isValid() else index
 
         attributeMap = self.node.attributes()
         for _ in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
-        if self.name:    
+        if self.name:
             elem.setAttribute(QString("name"), QString(self.name))
-        if self.target:    
+        if self.target:
             elem.setAttribute(QString("target"), QString(self.target))
 
-
-        doc = self.node.firstChildElement(QString("doc"))           
-        if not self.doc and doc and doc.nodeName() == "doc" :
+        doc = self.node.firstChildElement(QString("doc"))
+        if not self.doc and doc and doc.nodeName() == "doc":
             self.removeElement(doc, mindex)
         elif self.doc:
             newDoc = self.root.createElement(QString("doc"))
             newText = self.root.createTextNode(QString(self.doc))
             newDoc.appendChild(newText)
-            if doc and doc.nodeName() == "doc" :
+            if doc and doc.nodeName() == "doc":
                 self.replaceElement(doc, newDoc, mindex)
             else:
                 self.appendElement(newDoc, mindex)
-
 
 
 if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
-    logging.basicConfig(level=logging.DEBUG)     
-
+    logging.basicConfig(level=logging.DEBUG)
 
     ## Qt application
     app = QApplication(sys.argv)
@@ -224,5 +207,4 @@ if __name__ == "__main__":
     app.exec_()
 
     if form.name:
-        logger.info("Link: %s = \'%s\'" % ( form.name, form.target ))
-    
+        logger.info("Link: %s = \'%s\'" % (form.name, form.target))

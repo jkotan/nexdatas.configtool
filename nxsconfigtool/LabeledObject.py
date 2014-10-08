@@ -21,6 +21,7 @@
 
 """ labeled object for component and datasource lists"""
 
+
 ## item of the component or datasource list
 class LabeledObject(object):
     ## constructor

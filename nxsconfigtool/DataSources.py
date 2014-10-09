@@ -33,7 +33,6 @@ from .ui.ui_pyevaldsdlg import Ui_PyEvalDsDlg
 from .DomTools import DomTools
 
 
-
 ## CLIENT dialog impementation
 class ClientSource(object):
     ## allowed subitems
@@ -41,7 +40,7 @@ class ClientSource(object):
     ## variables
     var = {
         ## client record name
-        "recordName":u''}
+        "recordName": u''}
 
     ## constructor
     ## \param main datasource dialog
@@ -63,38 +62,34 @@ class ClientSource(object):
         combo = unicode(self.main.ui.typeComboBox.currentText())
         self.main.updateUi(combo)
 
-    ## connects the dialog actions 
+    ## connects the dialog actions
     def connectWidgets(self):
         self.main.disconnect(
-            self.ui.cRecNameLineEdit, SIGNAL("textChanged(QString)"), 
+            self.ui.cRecNameLineEdit, SIGNAL("textChanged(QString)"),
             self.__cRecNameLineEdit)
         self.main.connect(
-            self.ui.cRecNameLineEdit, SIGNAL("textChanged(QString)"), 
+            self.ui.cRecNameLineEdit, SIGNAL("textChanged(QString)"),
             self.__cRecNameLineEdit)
 
-
-    ## updates datasource ui 
+    ## updates datasource ui
     # \param datasource class
     def updateForm(self, datasource):
         if datasource.var['CLIENT'].recordName is not None:
             self.ui.cRecNameLineEdit.setText(
                 datasource.var['CLIENT'].recordName)
-        
-
 
     ## sets the form from the DOM node
     # \param datasource class
     def setFromNode(self, datasource):
-        record = self.main.node.firstChildElement(QString("record"))           
+        record = self.main.node.firstChildElement(QString("record"))
         if record.nodeName() != "record":
-            QMessageBox.warning(self.main, "Internal error", 
+            QMessageBox.warning(self.main, "Internal error",
                                     "Missing <record> tag")
         else:
             attributeMap = record.attributes()
             datasource.var['CLIENT'].recordName = unicode(
-                attributeMap.namedItem("name").nodeValue() \
-                    if attributeMap.contains("name") else "")
-        
+                attributeMap.namedItem("name").nodeValue()
+                if attributeMap.contains("name") else "")
 
     ## copies parameters from form to datasource instance
     # \param datasource class
@@ -102,25 +97,21 @@ class ClientSource(object):
         recName = unicode(self.ui.cRecNameLineEdit.text())
 
         if not recName:
-            QMessageBox.warning(self.main, "Empty record name", 
+            QMessageBox.warning(self.main, "Empty record name",
                                 "Please define the record name")
             self.ui.cRecNameLineEdit.setFocus()
             return
         datasource.var['CLIENT'].recordName = recName
 
-
-
     ## creates datasource nodes
     # \param datasource class
-    # \param root root node 
-    # \param elem datasource node 
+    # \param root root node
+    # \param elem datasource node
     def createNodes(self, datasource, root, elem):
         record = root.createElement(QString("record"))
         record.setAttribute(
             QString("name"), QString(datasource.var['CLIENT'].recordName))
-        elem.appendChild(record)            
-
-        
+        elem.appendChild(record)
 
 
 ## DB dialog impementation
@@ -130,13 +121,13 @@ class DBSource(object):
     ## variables
     var = {
        ## database type
-        'dbtype':'MYSQL',
+        'dbtype': 'MYSQL',
         ## database format
-        'dataFormat':'SCALAR',
+        'dataFormat': 'SCALAR',
         ## database query
-        'query':"",
+        'query': "",
         ## database parameters
-        'parameters':{}}
+        'parameters': {}}
 
     ## constructor
     ## \param main datasource dialog
@@ -152,58 +143,50 @@ class DBSource(object):
         self.dbParam = {}
 
         ## parameter map for xml tags
-        self.__dbmap = {"dbname":"DB name",
-                      "hostname":"DB host",
-                      "port":"DB port",
-                      "user":"DB user",
-                      "passwd":"DB password",
-                      "mycnf":"Mysql cnf",
-                      "mode":"Oracle mode"
-                     } 
+        self.__dbmap = {"dbname": "DB name",
+                      "hostname": "DB host",
+                      "port": "DB port",
+                      "user": "DB user",
+                      "passwd": "DB password",
+                      "mycnf": "Mysql cnf",
+                      "mode": "Oracle mode"
+                     }
         self.__idbmap = dict(zip(self.__dbmap.values(), self.__dbmap.keys()))
-        
+
     ## clears widget parameters
     def clear(self):
         self.dbParam = {}
-        
 
     ## checks if widget button should be enable
     # \returns if widget button should be enable
     def isEnable(self):
         return not self.ui.dQueryLineEdit.text().isEmpty()
 
-
-
-
     ## calls updateUi when the name text is changing
     def __dQueryLineEdit(self):
         combo = unicode(self.main.ui.typeComboBox.currentText())
         self.main.updateUi(combo)
 
-        
-
     ## calls updateUi when the name text is changing
-    # \param text the edited text   
+    # \param text the edited text
     def __dParamComboBox(self, text):
         param = unicode(text)
         if param == 'DB password':
             QMessageBox.warning(
-                self, "Unprotected password", 
-                "Please note that there is no support for "\
-                    "any password protection")
-            
+                self, "Unprotected password",
+                "Please note that there is no support for "
+                "any password protection")
+
         self.populateParameters(unicode(text))
 
-
-    ## adds an parameter    
-    #  \brief It runs the Parameter Dialog and fetches parameter name 
-    #         and value    
+    ## adds an parameter
+    #  \brief It runs the Parameter Dialog and fetches parameter name
+    #         and value
     def __addParameter(self):
-        name =  unicode(self.ui.dParamComboBox.currentText())
+        name = unicode(self.ui.dParamComboBox.currentText())
         if name not in self.dbParam.keys():
             self.dbParam[name] = ""
         self.populateParameters(name)
-    
 
     ## takes a name of the current parameter
     # \returns name of the current parameter
@@ -214,55 +197,49 @@ class DBSource(object):
             return None
         return item.data(Qt.UserRole).toString()
 
-
-    ## removes an parameter    
+    ## removes an parameter
     #  \brief It removes the current parameter asking before about it
     def __removeParameter(self):
         param = self.__currentTableParameter()
         if param is None:
             return
         if QMessageBox.question(self, "Parameter - Remove",
-                                "Remove parameter: %s = \'%s\'".encode() 
-                                %  (param, self.dbParam[unicode(param)]),
+                                "Remove parameter: %s = \'%s\'".encode()
+                                % (param, self.dbParam[unicode(param)]),
                                 QMessageBox.Yes | QMessageBox.No,
-                                QMessageBox.Yes )  == QMessageBox.No :
+                                QMessageBox.Yes) == QMessageBox.No:
             return
         if unicode(param) in self.dbParam.keys():
             self.dbParam.pop(unicode(param))
             self.populateParameters()
 
-
-    ## changes the current value of the parameter        
-    # \brief It changes the current value of the parameter and informs 
+    ## changes the current value of the parameter
+    # \brief It changes the current value of the parameter and informs
     #        the user that parameter names arenot editable
     def __tableItemChanged(self, item):
         param = self.__currentTableParameter()
-        if unicode(param)  not in self.dbParam.keys():
+        if unicode(param) not in self.dbParam.keys():
             return
         column = self.ui.dParameterTableWidget.currentColumn()
         if column == 1:
             self.dbParam[unicode(param)] = unicode(item.text())
         if column == 0:
             QMessageBox.warning(
-                self, "Parameter name is not editable", 
-                "To change the parameter name, "\
-                    "please remove the parameter and add the new one")
+                self, "Parameter name is not editable",
+                "To change the parameter name, "
+                "please remove the parameter and add the new one")
         self.populateParameters()
 
-
-
-
-
-    ## fills in the paramter table      
+    ## fills in the paramter table
     # \param selectedParameter selected parameter
-    def populateParameters(self, selectedParameter = None):
+    def populateParameters(self, selectedParameter=None):
         selected = None
         self.ui.dParameterTableWidget.clear()
         self.ui.dParameterTableWidget.setSortingEnabled(False)
         self.ui.dParameterTableWidget.setRowCount(len(self.dbParam))
         headers = ["Name", "Value"]
         self.ui.dParameterTableWidget.setColumnCount(len(headers))
-        self.ui.dParameterTableWidget.setHorizontalHeaderLabels(headers)	
+        self.ui.dParameterTableWidget.setHorizontalHeaderLabels(headers)
         for row, name in enumerate(self.dbParam):
             item = QTableWidgetItem(name)
             item.setData(Qt.UserRole, QVariant(name))
@@ -280,86 +257,80 @@ class DBSource(object):
             self.ui.dParameterTableWidget.setCurrentItem(selected)
             self.ui.dParameterTableWidget.editItem(selected)
 
-
-
-
-    ## connects the dialog actions 
+    ## connects the dialog actions
     def connectWidgets(self):
         self.main.disconnect(
-            self.ui.dQueryLineEdit, SIGNAL("textChanged(QString)"), 
+            self.ui.dQueryLineEdit, SIGNAL("textChanged(QString)"),
             self.__dQueryLineEdit)
         self.main.disconnect(
-            self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"), 
+            self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"),
             self.__dParamComboBox)
         self.main.disconnect(
             self.ui.dAddPushButton, SIGNAL("clicked()"), self.__addParameter)
         self.main.disconnect(
-            self.ui.dRemovePushButton, SIGNAL("clicked()"), 
+            self.ui.dRemovePushButton, SIGNAL("clicked()"),
             self.__removeParameter)
         self.main.disconnect(
-            self.ui.dParameterTableWidget, 
+            self.ui.dParameterTableWidget,
             SIGNAL("itemChanged(QTableWidgetItem*)"),
             self.__tableItemChanged)
         self.main.connect(
-            self.ui.dQueryLineEdit, 
+            self.ui.dQueryLineEdit,
             SIGNAL("textChanged(QString)"), self.__dQueryLineEdit)
         self.main.connect(
-            self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"), 
+            self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"),
             self.__dParamComboBox)
         self.main.connect(
             self.ui.dAddPushButton, SIGNAL("clicked()"), self.__addParameter)
         self.main.connect(
-            self.ui.dRemovePushButton, SIGNAL("clicked()"), 
+            self.ui.dRemovePushButton, SIGNAL("clicked()"),
             self.__removeParameter)
         self.main.connect(
-            self.ui.dParameterTableWidget, 
+            self.ui.dParameterTableWidget,
             SIGNAL("itemChanged(QTableWidgetItem*)"),
             self.__tableItemChanged)
 
-
-    ## updates datasource ui 
+    ## updates datasource ui
     # \param datasource class
     def updateForm(self, datasource):
-        if datasource.var['DB'].dbtype  is not None:
+        if datasource.var['DB'].dbtype is not None:
             index = self.ui.dTypeComboBox.findText(
                 unicode(datasource.var['DB'].dbtype))
-            if  index > -1 :
+            if index > -1:
                 self.ui.dTypeComboBox.setCurrentIndex(index)
             else:
-                datasource.var['DB'].dbtype = 'MYSQL'    
+                datasource.var['DB'].dbtype = 'MYSQL'
         if datasource.var['DB'].dataFormat is not None:
             index = self.ui.dFormatComboBox.findText(
                 unicode(datasource.var['DB'].dataFormat))
-            if  index > -1 :
+            if index > -1:
                 self.ui.dFormatComboBox.setCurrentIndex(index)
             else:
-                datasource.var['DB'].dataFormat = 'SCALAR'    
-        
-        if datasource.var['DB'].query is not None:        
+                datasource.var['DB'].dataFormat = 'SCALAR'
+
+        if datasource.var['DB'].query is not None:
             self.ui.dQueryLineEdit.setText(datasource.var['DB'].query)
-                
-        
+
         self.dbParam = {}
         for par in datasource.var['DB'].parameters.keys():
             index = self.ui.dParamComboBox.findText(unicode(par))
-            if  index < 0 :
+            if index < 0:
                 QMessageBox.warning(
-                    self.main, "Unregistered parameter", 
-                    "Unknown parameter %s = '%s' will be removed." 
-                    % (par, datasource.var['DB'].parameters[unicode(par)]) )
+                    self.main, "Unregistered parameter",
+                    "Unknown parameter %s = '%s' will be removed."
+                    % (par, datasource.var['DB'].parameters[unicode(par)]))
                 datasource.var['DB'].parameters.pop(unicode(par))
             else:
-                self.dbParam[unicode(par)]=datasource.var['DB'].parameters[
+                self.dbParam[unicode(par)] = datasource.var['DB'].parameters[
                     (unicode(par))]
         self.populateParameters()
-
 
     ## sets the form from the DOM node
     # \param datasource class
     def setFromNode(self, datasource):
         database = self.main.node.firstChildElement(QString("database"))
         if database.nodeName() != "database":
-            QMessageBox.warning(self.main, "Internal error", 
+            QMessageBox.warning(self.main, "Internal error",
                                 "Missing <database> tag")
         else:
             attributeMap = database.attributes()
@@ -374,7 +345,7 @@ class DBSource(object):
                         unicode(attributeMap.item(i).nodeValue())
                     self.dbParam[self.__dbmap[name]] = unicode(
                         attributeMap.item(i).nodeValue())
-                        
+
         if not datasource.var['DB'].dbtype:
             datasource.var['DB'].dbtype = 'MYSQL'
         text = unicode(DomTools.getText(database))
@@ -383,34 +354,31 @@ class DBSource(object):
         self.dbParam['Oracle DSN'] = unicode(text).strip() \
             if text else ""
 
-
         query = self.main.node.firstChildElement(QString("query"))
         if query.nodeName() != "query":
-            QMessageBox.warning(self.main, "Internal error", 
+            QMessageBox.warning(self.main, "Internal error",
                                     "Missing <query> tag")
         else:
             attributeMap = query.attributes()
 
             datasource.var['DB'].dataFormat = unicode(
-                attributeMap.namedItem("format").nodeValue() \
-                    if attributeMap.contains("format") else "SCALAR")
-
+                attributeMap.namedItem("format").nodeValue()
+                if attributeMap.contains("format") else "SCALAR")
 
         text = unicode(DomTools.getText(query))
         datasource.var['DB'].query = unicode(text).strip() if text else ""
-
 
     ## copies parameters from form to datasource instance
     # \param datasource class
     def fromForm(self, datasource):
         query = unicode(self.ui.dQueryLineEdit.text()).strip()
         if not query:
-            QMessageBox.warning(self.main, "Empty query", 
+            QMessageBox.warning(self.main, "Empty query",
                                 "Please define the DB query")
             self.ui.dQueryLineEdit.setFocus()
             return
         datasource.var['DB'].query = query
-        datasource.var['DB'].dbtype =  unicode(
+        datasource.var['DB'].dbtype = unicode(
             self.ui.dTypeComboBox.currentText())
         datasource.var['DB'].dataFormat = unicode(
             self.ui.dFormatComboBox.currentText())
@@ -419,32 +387,32 @@ class DBSource(object):
         for par in self.dbParam.keys():
             datasource.var['DB'].parameters[par] = self.dbParam[par]
 
-
     ## creates datasource nodes
     # \param datasource class
-    # \param root root node 
-    # \param elem datasource node 
+    # \param root root node
+    # \param elem datasource node
     def createNodes(self, datasource, root, elem):
         db = root.createElement(QString("database"))
-        db.setAttribute(QString("dbtype"), QString(datasource.var['DB'].dbtype))
+        db.setAttribute(
+            QString("dbtype"), QString(datasource.var['DB'].dbtype))
         for par in datasource.var['DB'].parameters.keys():
             if par == 'Oracle DSN':
                 newText = root.createTextNode(
                     QString(datasource.var['DB'].parameters[par]))
                 db.appendChild(newText)
             else:
-                db.setAttribute(QString(self.__idbmap[par]), 
+                db.setAttribute(QString(self.__idbmap[par]),
                                 QString(datasource.var['DB'].parameters[par]))
-        elem.appendChild(db)            
+        elem.appendChild(db)
 
         query = root.createElement(QString("query"))
-        query.setAttribute(QString("format"), 
+        query.setAttribute(QString("format"),
                            QString(datasource.var['DB'].dataFormat))
         if datasource.var['DB'].query:
             newText = root.createTextNode(QString(datasource.var['DB'].query))
             query.appendChild(newText)
 
-        elem.appendChild(query)            
+        elem.appendChild(query)
 
 
 ## TANGO dialog impementation
@@ -455,19 +423,19 @@ class TangoSource(object):
     ## variables
     var = {
         ## Tango device name
-        'deviceName':u'',
+        'deviceName': u'',
         ## Tango member name
-        'memberName':u'',
+        'memberName': u'',
         ## Tango member name
-        'memberType':u'',
+        'memberType': u'',
         ## Tango host name
-        'host':u'',
+        'host': u'',
         ## Tango host name
-        'port':u'',
+        'port': u'',
         ## encoding for DevEncoded Tango types
-        'encoding':u'',
+        'encoding': u'',
         ## group for Tango DataSources
-        'group':u''
+        'group': u''
         }
 
     ## \param main datasource dialog
@@ -479,30 +447,28 @@ class TangoSource(object):
         ## main datasource dialog
         self.main = main
 
-
     ## checks if widget button should be enable
     # \returns if widget button should be enable
     def isEnable(self):
         return not self.ui.tDevNameLineEdit.text().isEmpty() and \
             not self.ui.tMemberNameLineEdit.text().isEmpty()
 
-
-
-    ## updates datasource ui 
+    ## updates datasource ui
     # \param datasource class
     def updateForm(self, datasource):
         if datasource.var['TANGO'].deviceName is not None:
-            self.ui.tDevNameLineEdit.setText(datasource.var['TANGO'].deviceName)
+            self.ui.tDevNameLineEdit.setText(
+                datasource.var['TANGO'].deviceName)
         if datasource.var['TANGO'].memberName is not None:
             self.ui.tMemberNameLineEdit.setText(
                 datasource.var['TANGO'].memberName)
         if datasource.var['TANGO'].memberType is not None:
             index = self.ui.tMemberComboBox.findText(
                 unicode(datasource.var['TANGO'].memberType))
-            if  index > -1 :
+            if index > -1:
                 self.ui.tMemberComboBox.setCurrentIndex(index)
             else:
-                datasource.var['TANGO'].memberType = 'attribute'    
+                datasource.var['TANGO'].memberType = 'attribute'
         if datasource.var['TANGO'].host is not None:
             self.ui.tHostLineEdit.setText(datasource.var['TANGO'].host)
         if datasource.var['TANGO'].port is not None:
@@ -512,87 +478,83 @@ class TangoSource(object):
         if datasource.var['TANGO'].group is not None:
             self.ui.tGroupLineEdit.setText(datasource.var['TANGO'].group)
 
-
-
     ## calls updateUi when the name text is changing
     def __tDevNameLineEdit(self):
         combo = unicode(self.main.ui.typeComboBox.currentText())
         self.main.updateUi(combo)
-
 
     ## calls updateUi when the name text is changing
     def __tMemberNameLineEdit(self):
         combo = unicode(self.main.ui.typeComboBox.currentText())
         self.main.updateUi(combo)
 
-    ## connects the dialog actions 
+    ## connects the dialog actions
     def connectWidgets(self):
         self.main.disconnect(
-            self.ui.tDevNameLineEdit, 
-            SIGNAL("textChanged(QString)"), 
+            self.ui.tDevNameLineEdit,
+            SIGNAL("textChanged(QString)"),
             self.__tDevNameLineEdit)
         self.main.disconnect(
-            self.ui.tMemberNameLineEdit, SIGNAL("textChanged(QString)"), 
+            self.ui.tMemberNameLineEdit, SIGNAL("textChanged(QString)"),
             self.__tMemberNameLineEdit)
 
         self.main.connect(
-            self.ui.tDevNameLineEdit, SIGNAL("textChanged(QString)"), 
+            self.ui.tDevNameLineEdit, SIGNAL("textChanged(QString)"),
             self.__tDevNameLineEdit)
         self.main.connect(
-            self.ui.tMemberNameLineEdit, SIGNAL("textChanged(QString)"), 
+            self.ui.tMemberNameLineEdit, SIGNAL("textChanged(QString)"),
             self.__tMemberNameLineEdit)
-
 
     ## sets the form from the DOM node
     # \param datasource class
     def setFromNode(self, datasource):
         record = self.main.node.firstChildElement(QString("record"))
         if record.nodeName() != "record":
-            QMessageBox.warning(self.main, "Internal error", 
+            QMessageBox.warning(self.main, "Internal error",
                                     "Missing <record> tag")
         else:
             attributeMap = record.attributes()
             datasource.var['TANGO'].memberName = unicode(
-                attributeMap.namedItem("name").nodeValue() \
-                    if attributeMap.contains("name") else "")
+                attributeMap.namedItem("name").nodeValue()
+                if attributeMap.contains("name") else "")
 
         device = self.main.node.firstChildElement(QString("device"))
         if device.nodeName() != "device":
-            QMessageBox.warning(self.main, "Internal error", 
+            QMessageBox.warning(self.main, "Internal error",
                                     "Missing <device> tag")
         else:
             attributeMap = device.attributes()
             datasource.var['TANGO'].deviceName = unicode(
-                attributeMap.namedItem("name").nodeValue() \
-                    if attributeMap.contains("name") else "")
+                attributeMap.namedItem("name").nodeValue()
+                if attributeMap.contains("name") else "")
             datasource.var['TANGO'].memberType = unicode(
-                attributeMap.namedItem("member").nodeValue() \
-                    if attributeMap.contains("member") else "attribute")
+                attributeMap.namedItem("member").nodeValue()
+                if attributeMap.contains("member") else "attribute")
             datasource.var['TANGO'].host = unicode(
-                attributeMap.namedItem("hostname").nodeValue() \
-                    if attributeMap.contains("hostname") else "")
+                attributeMap.namedItem("hostname").nodeValue()
+                if attributeMap.contains("hostname") else "")
             datasource.var['TANGO'].port = unicode(
-                attributeMap.namedItem("port").nodeValue() \
-                    if attributeMap.contains("port") else "")
+                attributeMap.namedItem("port").nodeValue()
+                if attributeMap.contains("port") else "")
             datasource.var['TANGO'].encoding = unicode(
-                attributeMap.namedItem("encoding").nodeValue() \
-                    if attributeMap.contains("encoding") else "")
+                attributeMap.namedItem("encoding").nodeValue()
+                if attributeMap.contains("encoding") else "")
             datasource.var['TANGO'].group = unicode(
-                attributeMap.namedItem("group").nodeValue() \
-                    if attributeMap.contains("group") else "")
+                attributeMap.namedItem("group").nodeValue()
+                if attributeMap.contains("group") else "")
 
     ## copies parameters from form to datasource instance
     # \param datasource class
     def fromForm(self, datasource):
         devName = unicode(self.ui.tDevNameLineEdit.text())
         memName = unicode(self.ui.tMemberNameLineEdit.text())
-        if not devName: 
-            QMessageBox.warning(self.main, "Empty device name", 
+        if not devName:
+            QMessageBox.warning(self.main, "Empty device name",
                                 "Please define the device name")
             self.ui.tDevNameLineEdit.setFocus()
             return
         if not memName:
-            QMessageBox.warning(self.main, "Empty member name", 
+            QMessageBox.warning(self.main, "Empty member name",
                                 "Please define the member name")
             self.ui.tMemberNameLineEdit.setFocus()
             return
@@ -606,35 +568,34 @@ class TangoSource(object):
             self.ui.tEncodingLineEdit.text())
         datasource.var['TANGO'].group = unicode(self.ui.tGroupLineEdit.text())
 
-
     ## creates datasource nodes
     # \param datasource class
-    # \param root root node 
-    # \param elem datasource node 
+    # \param root root node
+    # \param elem datasource node
     def createNodes(self, datasource, root, elem):
         record = root.createElement(QString("record"))
-        record.setAttribute(QString("name"), 
+        record.setAttribute(QString("name"),
                             QString(datasource.var['TANGO'].memberName))
-        elem.appendChild(record)            
+        elem.appendChild(record)
 
         device = root.createElement(QString("device"))
-        device.setAttribute(QString("name"), 
+        device.setAttribute(QString("name"),
                             QString(datasource.var['TANGO'].deviceName))
-        device.setAttribute(QString("member"), 
+        device.setAttribute(QString("member"),
                             QString(datasource.var['TANGO'].memberType))
         if datasource.var['TANGO'].host:
-            device.setAttribute(QString("hostname"), 
+            device.setAttribute(QString("hostname"),
                                 QString(datasource.var['TANGO'].host))
         if datasource.var['TANGO'].port:
-            device.setAttribute(QString("port"), 
+            device.setAttribute(QString("port"),
                                 QString(datasource.var['TANGO'].port))
         if datasource.var['TANGO'].encoding:
-            device.setAttribute(QString("encoding"), 
+            device.setAttribute(QString("encoding"),
                                 QString(datasource.var['TANGO'].encoding))
         if datasource.var['TANGO'].group:
-            device.setAttribute(QString("group"), 
+            device.setAttribute(QString("group"),
                                 QString(datasource.var['TANGO'].group))
-        elem.appendChild(device)            
+        elem.appendChild(device)
 
 
 ## PYEVAL dialog impementation
@@ -645,13 +606,13 @@ class PyEvalSource(object):
     ## variables
     var = {
         ## pyeval result variable
-        'result':"ds.result",
+        'result': "ds.result",
         ## pyeval datasource variables
-        'input':"",
+        'input': "",
         ## pyeval python script
-        'script':"",
+        'script': "",
         ## pyeval datasources
-        'dataSources':{}
+        'dataSources': {}
         }
 
     ## \param main datasource dialog
@@ -668,13 +629,11 @@ class PyEvalSource(object):
     def isEnable(self):
         return True
 
-    ## connects the dialog actions 
+    ## connects the dialog actions
     def connectWidgets(self):
         pass
 
-
-
-    ## updates datasource ui 
+    ## updates datasource ui
     # \param datasource class
     def updateForm(self, datasource):
         if datasource.var['PYEVAL'].result is not None:
@@ -684,33 +643,31 @@ class PyEvalSource(object):
         if datasource.var['PYEVAL'].script is not None:
             self.ui.peScriptTextEdit.setText(datasource.var['PYEVAL'].script)
 
-
-
     ## sets the form from the DOM node
     # \param datasource class
     def setFromNode(self, datasource):
-        res = self.main.node.firstChildElement(QString("result"))           
-        text = DomTools.getText(res)    
-        while len(text)>0 and text[0] =='\n':
+        res = self.main.node.firstChildElement(QString("result"))
+        text = DomTools.getText(res)
+        while len(text) > 0 and text[0] == '\n':
             text = text[1:]
         datasource.var['PYEVAL'].script = unicode(text) if text else ""
         attributeMap = res.attributes()
         datasource.var['PYEVAL'].result = unicode(
-            "ds." + attributeMap.namedItem("name").nodeValue() \
-                if attributeMap.contains("name") else "")
+            "ds." + attributeMap.namedItem("name").nodeValue()
+            if attributeMap.contains("name") else "")
 
-        ds = DomTools.getText(self.main.node)    
+        ds = DomTools.getText(self.main.node)
         dslist = unicode(ds).strip().split() \
             if unicode(ds).strip() else []
         datasource.var['PYEVAL'].dataSources = {}
         child = self.main.node.firstChildElement(
-            QString("datasource"))           
+            QString("datasource"))
         while not child.isNull():
             if child.nodeName() == 'datasource':
                 attributeMap = child.attributes()
                 name = unicode(
-                    attributeMap.namedItem("name").nodeValue() \
-                        if attributeMap.contains("name") else "")
+                    attributeMap.namedItem("name").nodeValue()
+                    if attributeMap.contains("name") else "")
                 if name.strip():
                     dslist.append(name.strip())
                     doc = QDomDocument()
@@ -718,13 +675,11 @@ class PyEvalSource(object):
                         doc.importNode(child, True))
                     datasource.var['PYEVAL'].dataSources[name] = unicode(
                         doc.toString(0))
-                    child = child.nextSiblingElement("datasource")    
-                    
-            
-        datasource.var['PYEVAL'].input = " ".join(
-            "ds."+ (d[13:] if (len(d)> 13 and d[:13] =="$datasources.") 
-                    else d) for d in dslist)
+                    child = child.nextSiblingElement("datasource")
 
+        datasource.var['PYEVAL'].input = " ".join(
+            "ds." + (d[13:] if (len(d) > 13 and d[:13] == "$datasources.")
+                    else d) for d in dslist)
 
     ## copies parameters from form to datasource instance
     # \param datasource class
@@ -735,61 +690,55 @@ class PyEvalSource(object):
             unicode(self.ui.peResultLineEdit.text()).strip()
         script = unicode(self.ui.peScriptTextEdit.toPlainText())
         if not script:
-            QMessageBox.warning(self.main, "Empty script", 
+            QMessageBox.warning(self.main, "Empty script",
                                 "Please define the PyEval script")
             self.ui.dQueryLineEdit.setFocus()
-            return 
+            return
         datasource.var['PYEVAL'].script = script
-
-
 
     ## creates datasource nodes
     # \param datasource class
-    # \param root root node 
-    # \param elem datasource node 
+    # \param root root node
+    # \param elem datasource node
     def createNodes(self, datasource, root, elem):
         res = root.createElement(QString("result"))
         rn = str(datasource.var['PYEVAL'].result).strip()
         if rn:
             res.setAttribute(
-                QString("name"), 
-                QString(rn[3:] if (len(rn) > 3 and rn[:3] == 'ds.' ) else rn))
+                QString("name"),
+                QString(rn[3:] if (len(rn) > 3 and rn[:3] == 'ds.') else rn))
         if datasource.var['PYEVAL'].script:
             script = root.createTextNode(
                 QString(
                     datasource.var['PYEVAL'].script if (
-                        len(datasource.var['PYEVAL'].script)>0 and \
-                            datasource.var['PYEVAL'].script[0] == '\n') else (
-                        "\n"+ datasource.var['PYEVAL'].script)))
+                        len(datasource.var['PYEVAL'].script) > 0 and
+                        datasource.var['PYEVAL'].script[0] == '\n') else (
+                        "\n" + datasource.var['PYEVAL'].script)))
             res.appendChild(script)
-        elem.appendChild(res)            
+        elem.appendChild(res)
         if datasource.var['PYEVAL'].input:
             dslist = unicode(datasource.var['PYEVAL'].input).split()
-            newds = "" 
+            newds = ""
             for d in dslist:
-                name = d[3:] if (len(d) > 3 and d[:3] == 'ds.' ) else d
+                name = d[3:] if (len(d) > 3 and d[:3] == 'ds.') else d
                 if name in datasource.var['PYEVAL'].dataSources.keys():
-                    document = QDomDocument() 
+                    document = QDomDocument()
                     if not document.setContent(
                         datasource.var['PYEVAL'].dataSources[name]):
-                        raise ValueError, "could not parse XML"  
+                        raise ValueError("could not parse XML")
                     else:
-                        if self.main and hasattr(self.main,"root"):
+                        if self.main and hasattr(self.main, "root"):
 
                             dsnode = DomTools.getFirstElement(
                                 document, "datasource")
                             child = root.importNode(dsnode, True)
                             elem.appendChild(child)
 
-                else :
-                    newds = "\n ".join([newds,"$datasources." + name])
-                
+                else:
+                    newds = "\n ".join([newds, "$datasources." + name])
+
             newText = root.createTextNode(QString(newds))
             elem.appendChild(newText)
-
-
-
-
 
 
 if __name__ == "__main__":

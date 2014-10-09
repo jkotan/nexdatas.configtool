@@ -28,9 +28,10 @@ from .ElementList import ElementList
 import logging
 logger = logging.getLogger(__name__)
 
+
 ## dialog defining a group tag
 class DataSourceList(ElementList):
-    
+
     ## constructor
     # \param directory element directory
     # \param parent patent instance
@@ -45,11 +46,10 @@ class DataSourceList(ElementList):
         self.clName = "DataSource"
         ## extention
         self.extention = ".ds.xml"
-        
 
     ## retrives element name from file name
     # \param fname filename
-    # \returns element name        
+    # \returns element name
     @classmethod
     def nameFromFile(cls, fname):
         if fname[-4:] == '.xml':
@@ -58,10 +58,9 @@ class DataSourceList(ElementList):
                 name = name[:-3]
         else:
             name = fname
-        return name    
+        return name
 
-
-    ## creates Element 
+    ## creates Element
     # \param name element name
     # \returns element instance
     def createElement(self, name):
@@ -71,27 +70,22 @@ class DataSourceList(ElementList):
         dlg.createGUI()
         return dlg
 
-
     ## replaces name special characters by underscore
     # \param name give name
-    # \returns replaced element            
-    @classmethod            
+    # \returns replaced element
+    @classmethod
     def dashName(cls, name):
-        res =  "".join(
-            x.replace('/','_').replace('\\','_').replace(':','_') \
-                for x in name if (x.isalnum() or x in ["/","\\",":","_"]))
-        return res 
-
-
-
-
+        res = "".join(
+            x.replace('/', '_').replace('\\', '_').replace(':', '_')
+            for x in name if (x.isalnum() or x in ["/", "\\", ":", "_"]))
+        return res
 
 
 if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
-    logging.basicConfig(level=logging.DEBUG)     
+    logging.basicConfig(level=logging.DEBUG)
 
     ## Qt application
     app = QApplication(sys.argv)
@@ -102,9 +96,7 @@ if __name__ == "__main__":
     form.show()
     app.exec_()
 
-
     if form.elements:
         logger.info("Other datasources:")
         for k in form.elements.keys():
             logger.info(" %s = '%s' " % (k, form.elements[k]))
-    

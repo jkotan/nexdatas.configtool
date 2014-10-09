@@ -34,11 +34,12 @@ except ImportError, e:
 
 import time
 
-from .ConnectDlg import  ConnectDlg
+from .ConnectDlg import ConnectDlg
+
 
 ## configuration server
 class ConfigurationServer(object):
-    
+
     ## constructor
     def __init__(self):
         ## name of tango device
@@ -49,10 +50,10 @@ class ConfigurationServer(object):
 
         ## port of tango device
         self.port = None
-        
+
         ## connection status
-        self.connected = False 
-        
+        self.connected = False
+
         ## device proxy
         self._proxy = None
 
@@ -77,15 +78,13 @@ class ConfigurationServer(object):
             self.device = device
             self.host = 'localhost'
             self.port = 10000
-                
 
-    ## allows to store the server state    
+    ## allows to store the server state
     # \returns the state of the server
     def getState(self):
         return (self.device, self.host, self.port, self.connected)
 
-
-    ## allows to store the server state    
+    ## allows to store the server state
     # \param state the state of the server
     def setState(self, state):
         (self.device, self.host, self.port, self.connected) = state
@@ -110,31 +109,29 @@ class ConfigurationServer(object):
                     if self._proxy.state() != PyTango.DevState.RUNNING:
                         found = True
                 except Exception:
-                    
+
                     time.sleep(0.01)
                     found = False
                 cnt += 1
 
-
-            if found:    
+            if found:
                 self._proxy.set_timeout_millis(25000)
                 self._proxy.Open()
                 self.connected = True
             else:
                 raise Exception("Cannot connect to: %s" % self.device.encode())
-                
 
     ## opens connection to the configuration server
     # \brief It fetches parameters of tango device and calls connect() method
     def open(self):
-        aform  = ConnectDlg()
+        aform = ConnectDlg()
         if self.device:
             aform.device = self.device
         if self.host:
             aform.host = self.host
         if self.port is not None:
             aform.port = self.port
-            
+
         aform.createGUI()
         aform.show()
         if aform.exec_():
@@ -143,11 +140,10 @@ class ConfigurationServer(object):
             self.port = aform.port
             self.connect()
 
-            
     ## fetch all components
     # \returns dictionary with names : xml of components
     def fetchComponents(self):
-        names = [] 
+        names = []
         comps = []
         if self._proxy and self.connected:
             names = self._proxy.AvailableComponents()
@@ -163,13 +159,11 @@ class ConfigurationServer(object):
                     except:
                         comps.append("")
             return dict(zip(names, comps))
-            
-
 
     ## fetch all datasources
     # \returns dictionary with names : xml of datasources
     def fetchDataSources(self):
-        names = [] 
+        names = []
         ds = []
         if self._proxy and self.connected:
             names = self._proxy.AvailableDataSources()
@@ -183,18 +177,16 @@ class ConfigurationServer(object):
                         ds.extend(xml)
                     except:
                         ds.append("")
-                        
-            return dict(zip(names, ds))
 
+            return dict(zip(names, ds))
 
     ## stores the component
     # \param name component name
-    # \param xml XML content of the component    
+    # \param xml XML content of the component
     def storeComponent(self, name, xml):
         if self._proxy and self.connected:
             self._proxy.XMLString = str(xml)
             self._proxy.StoreComponent(str(name))
-
 
     ## stores the datasource
     # \param name datasource name
@@ -203,7 +195,6 @@ class ConfigurationServer(object):
         if self._proxy and self.connected:
             self._proxy.XMLString = str(xml)
             self._proxy.StoreDataSource(str(name))
-            
 
     ## stores the component
     # \param name component name
@@ -211,14 +202,11 @@ class ConfigurationServer(object):
         if self._proxy and self.connected:
             self._proxy.DeleteComponent(str(name))
 
-
     ## stores the datasource
     # \param name datasource name
     def deleteDataSource(self, name):
         if self._proxy and self.connected:
             self._proxy.DeleteDataSource(str(name))
-
-
 
     ## set the given component mandatory
     # \param name component name
@@ -226,21 +214,17 @@ class ConfigurationServer(object):
         if self._proxy and self.connected:
             self._proxy.setMandatoryComponents([str(name)])
 
-
     ## get the mandatory components
-    # returns list of the mandatory components            
+    # returns list of the mandatory components
     def getMandatory(self):
         if self._proxy and self.connected:
             return self._proxy.MandatoryComponents()
-
 
     ## unset the given component mandatory
     # \param name component name
     def unsetMandatory(self, name):
         if self._proxy and self.connected:
             self._proxy.unsetMandatoryComponents([str(name)])
-
-
 
     ## closes connecion
     # \brief It closes connecion to configuration server
@@ -249,8 +233,8 @@ class ConfigurationServer(object):
             if self._proxy.State() == PyTango.DevState.OPEN:
                 self._proxy.Close()
                 self.connected = False
-                
-            
+
+
 ## test function
 def test():
     import sys
@@ -261,7 +245,7 @@ def test():
     cs.device = "p09/mcs/r228"
     cs.host = "haso228k.desy.de"
     cs.port = 10000
-    cs.open() 
+    cs.open()
     cs.close()
     app.exit()
 

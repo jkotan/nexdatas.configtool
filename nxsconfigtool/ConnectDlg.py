@@ -29,14 +29,15 @@ from .ui.ui_connectdlg import Ui_ConnectDlg
 import logging
 logger = logging.getLogger(__name__)
 
-## dialog defining a tag connect 
+
+## dialog defining a tag connect
 class ConnectDlg(QDialog):
-    
+
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(ConnectDlg, self).__init__(parent)
-        
+
         ## device name of the configuration server
         self.device = u''
         ## host name of the configuration server
@@ -46,23 +47,19 @@ class ConnectDlg(QDialog):
         ## user interface
         self.ui = Ui_ConnectDlg()
 
-
-    ## creates GUI    
+    ## creates GUI
     # \brief It updates GUI and creates connection for required actions
     def createGUI(self):
         self.ui.setupUi(self)
         self.updateForm()
         self.__updateUi()
 
-
-        self.connect(self.ui.connectPushButton, SIGNAL("clicked()"), 
+        self.connect(self.ui.connectPushButton, SIGNAL("clicked()"),
                      self.accept)
-        self.connect(self.ui.cancelPushButton, SIGNAL("clicked()"), 
+        self.connect(self.ui.cancelPushButton, SIGNAL("clicked()"),
                      self.reject)
-        self.connect(self.ui.deviceLineEdit, 
+        self.connect(self.ui.deviceLineEdit,
                      SIGNAL("textEdited(QString)"), self.__updateUi)
-
-        
 
     ## updates the connect dialog
     # \brief It sets initial values of the connection form
@@ -74,58 +71,57 @@ class ConnectDlg(QDialog):
         if self.port is not None:
             self.ui.portLineEdit.setText(str(self.port))
 
-
     ## updates connect user interface
     # \brief It sets enable or disable the OK button
     def __updateUi(self):
         enable = not self.ui.deviceLineEdit.text().isEmpty()
         self.ui.connectPushButton.setEnabled(enable)
 
-
     ## accepts input text strings
-    # \brief It copies the connect name and value from lineEdit 
+    # \brief It copies the connect name and value from lineEdit
     #        widgets and accept the dialog
     def accept(self):
         device = unicode(self.ui.deviceLineEdit.text()).strip()
-        if not device: 
-            QMessageBox.warning(self, "Empty device name", 
+        if not device:
+            QMessageBox.warning(self, "Empty device name",
                                 "Please define the device name")
             self.ui.deviceLineEdit.setFocus()
             return
-        
+
         self.device = device
         self.host = unicode(self.ui.hostLineEdit.text()).strip()
-        
+
         self.port = None
         try:
             port = str(self.ui.portLineEdit.text())
             if port:
                 self.port = int(port)
         except:
-            QMessageBox.warning(self, "Wrong port number", 
+            QMessageBox.warning(self, "Wrong port number",
                                 "Please define the port number")
             self.ui.portLineEdit.setFocus()
             return
-            
-        if self.port is not None and  not self.host:
-            QMessageBox.warning(self, "Empty host name", 
+
+        if self.port is not None and not self.host:
+            QMessageBox.warning(self, "Empty host name",
                                 "Please define the host name")
             self.ui.hostLineEdit.setFocus()
             return
 
         if self.port is None and self.host:
-            QMessageBox.warning(self, "Empty port", 
+            QMessageBox.warning(self, "Empty port",
                                 "Please define the port")
             self.ui.portLineEdit.setFocus()
             return
 
         QDialog.accept(self)
 
+
 if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
-    logging.basicConfig(level=logging.DEBUG)     
+    logging.basicConfig(level=logging.DEBUG)
 
    ## Qt application
     app = QApplication(sys.argv)
@@ -133,10 +129,9 @@ if __name__ == "__main__":
     form = ConnectDlg()
     form.createGUI()
     form.show()
-    app.exec_() 
+    app.exec_()
 
     if form.result():
         if form.device:
-            logger.info("Connect: %s , %s , %s" % \
-                ( form.device, form.host, form.port ))
-    
+            logger.info("Connect: %s , %s , %s" %
+                        (form.device, form.host, form.port))

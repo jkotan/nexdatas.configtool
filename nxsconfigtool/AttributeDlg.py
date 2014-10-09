@@ -31,14 +31,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-## dialog defining a tag attribute 
+## dialog defining a tag attribute
 class AttributeDlg(QDialog):
 
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(AttributeDlg, self).__init__(parent)
-        
+
         ## attribute name
         self.name = u''
         ## attribute value
@@ -47,12 +47,11 @@ class AttributeDlg(QDialog):
         ## user interface
         self.ui = Ui_AttributeDlg()
         self.ui.setupUi(self)
-        
+
         self.__updateUi()
 
-        self.connect(self.ui.nameLineEdit, 
+        self.connect(self.ui.nameLineEdit,
                      SIGNAL("textEdited(QString)"), self.__updateUi)
-
 
     ## updates attribute user interface
     # \brief It sets enable or disable the OK button
@@ -60,24 +59,22 @@ class AttributeDlg(QDialog):
         enable = not self.ui.nameLineEdit.text().isEmpty()
         self.ui.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
 
-
-
     ## accepts input text strings
-    # \brief It copies the attribute name and value from lineEdit widgets 
+    # \brief It copies the attribute name and value from lineEdit widgets
     #        and accept the dialog
     def accept(self):
         name = unicode(self.ui.nameLineEdit.text())
-        
+
         try:
             if 1 in [c in name for c in '!"#$%&\'()*+,/;<=>?@[\\]^`{|}~']:
-                raise CharacterError, \
-                    ("Name contains one of forbidden characters")
+                raise CharacterError(
+                    "Name contains one of forbidden characters")
             if len(name) == 0:
-                raise CharacterError, ("Empty Name") 
+                raise CharacterError("Empty Name")
             if name[0] == '-':
-                raise CharacterError, ("The first character of Name is '-'")
+                raise CharacterError("The first character of Name is '-'")
 
-        except CharacterError, e:   
+        except CharacterError, e:
             QMessageBox.warning(self, "Character Error", unicode(e))
             return
         self.name = name
@@ -89,16 +86,15 @@ if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
-    logging.basicConfig(level=logging.DEBUG)     
+    logging.basicConfig(level=logging.DEBUG)
 
     ## Qt application
     app = QApplication(sys.argv)
     ## attribute form
     form = AttributeDlg()
     form.show()
-    app.exec_() 
+    app.exec_()
 
     if form.result():
         if form.name:
-            logger.info("Attribute: %s = \'%s\'" % ( form.name, form.value ))
-    
+            logger.info("Attribute: %s = \'%s\'" % (form.name, form.value))

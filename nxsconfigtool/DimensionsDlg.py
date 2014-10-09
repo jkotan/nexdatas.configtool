@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 ## dialog defining a dimensions tag
 class DimensionsDlg(QDialog):
-    
+
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
@@ -49,38 +49,36 @@ class DimensionsDlg(QDialog):
         ## allowed subitems
         self.subItems = ["dim"]
 
-
     ##  creates GUI
-    # \brief It calls setupUi and  connects signals and slots    
+    # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
 
         try:
-            if self.rank is not None and int(self.rank) >= 0 :
+            if self.rank is not None and int(self.rank) >= 0:
                 self.rank = int(self.rank)
-                for i, ln in enumerate(self.lengths):    
+                for i, ln in enumerate(self.lengths):
                     if ln:
                         if '$var' not in ln:
                             iln = int(ln)
-                            self.lengths[i] = ln 
+                            self.lengths[i] = ln
                             if iln < 1:
                                 self.lengths[i] = None
                         else:
                             self.lengths[i] = ln
-                    else:        
+                    else:
                         self.lengths[i] = None
         except:
             self.rank = 1
             self.lengths = []
-            
+
         if not self.lengths:
             self.lengths = []
-            
+
         self.ui.setupUi(self)
 
-        
-        self.ui.rankSpinBox.setValue(self.rank)    
+        self.ui.rankSpinBox.setValue(self.rank)
 
-        self.connect(self.ui.dimTableWidget, 
+        self.connect(self.ui.dimTableWidget,
                      SIGNAL("itemChanged(QTableWidgetItem*)"),
                      self.__tableItemChanged)
 
@@ -88,22 +86,20 @@ class DimensionsDlg(QDialog):
         self.__populateLengths()
         self.ui.rankSpinBox.setFocus()
 
-        self.connect(self.ui.rankSpinBox, 
+        self.connect(self.ui.rankSpinBox,
                      SIGNAL("valueChanged(int)"), self.__valueChanged)
 
-                
     ## takes a name of the current dim
-    # \returns name of the current dim            
+    # \returns name of the current dim
     def __currentTableDim(self):
         return self.ui.dimTableWidget.currentRow()
 
-
-    ## changes the current value of the dim        
-    # \brief It changes the current value of the dim 
+    ## changes the current value of the dim
+    # \brief It changes the current value of the dim
     # and informs the user about wrong values
     def __tableItemChanged(self, item):
         row = self.__currentTableDim()
-        
+
         if row not in range(len(self.lengths)):
             return
         column = self.ui.dimTableWidget.currentColumn()
@@ -121,32 +117,30 @@ class DimensionsDlg(QDialog):
             except:
                 QMessageBox.warning(
                     self, "Value Error", "Wrong value of the edited length")
-                
+
         self.__populateLengths()
 
-
     ## calls updateUi when the name text is changing
-    # \param text the edited text   
+    # \param text the edited text
     def __valueChanged(self):
         self.rank = int(self.ui.rankSpinBox.value())
-        self.__populateLengths(self.rank-1)
+        self.__populateLengths(self.rank - 1)
 
-
-    ## fills in the dim table      
-    # \param selectedDim selected dim    
-    def __populateLengths(self, selectedDim = None):
+    ## fills in the dim table
+    # \param selectedDim selected dim
+    def __populateLengths(self, selectedDim=None):
         selected = None
         self.ui.dimTableWidget.clear()
         self.ui.dimTableWidget.setRowCount(self.rank)
-        
+
         while self.rank > len(self.lengths):
             self.lengths.append(None)
-        
+
         headers = ["Length"]
         self.ui.dimTableWidget.setColumnCount(len(headers))
-        self.ui.dimTableWidget.setHorizontalHeaderLabels(headers)	
-        self.ui.dimTableWidget.setVerticalHeaderLabels( 
-            [unicode(l+1) for l in range(self.rank)] )	
+        self.ui.dimTableWidget.setHorizontalHeaderLabels(headers)
+        self.ui.dimTableWidget.setVerticalHeaderLabels(
+            [unicode(l + 1) for l in range(self.rank)])
         for row, ln in enumerate(self.lengths):
             if ln:
                 item = QTableWidgetItem(unicode(ln))
@@ -162,12 +156,9 @@ class DimensionsDlg(QDialog):
             selected.setSelected(True)
             self.ui.dimTableWidget.setCurrentItem(selected)
             self.ui.dimTableWidget.editItem(selected)
-            
-
-
 
     ## accepts input text strings
-    # \brief It copies the dimensions name and type from lineEdit widgets 
+    # \brief It copies the dimensions name and type from lineEdit widgets
     #        and accept the dialog
     def accept(self):
         while len(self.lengths) > self.rank:
@@ -178,8 +169,7 @@ if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
-    logging.basicConfig(level=logging.DEBUG)     
-
+    logging.basicConfig(level=logging.DEBUG)
 
     ## Qt application
     app = QApplication(sys.argv)
@@ -194,9 +184,8 @@ if __name__ == "__main__":
 
     if form.result():
         if form.rank:
-            logger.info("Dimensions: rank = %s" % ( form.rank ))
+            logger.info("Dimensions: rank = %s" % (form.rank))
         if form.lengths:
             logger.info("Lengths:")
             for mrow, mln in enumerate(form.lengths):
-                logger.info(" %s: %s " % (mrow+1, mln))
-    
+                logger.info(" %s: %s " % (mrow + 1, mln))

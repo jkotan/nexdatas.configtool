@@ -50,34 +50,34 @@ class EditSlots(object):
 
         ## action data
         self.actions = {
-        "actionEditComponent":[
+        "actionEditComponent": [
             "&Edit Component", "componentEdit",
             "Ctrl+E", "componentedit", "Edit the component"],
-        "actionTakeDataSourceItem":[
-            "Take DataSource Item " , "componentTakeDataSource",
+        "actionTakeDataSourceItem": [
+            "Take DataSource Item ", "componentTakeDataSource",
             "Ctrl+G",
             "componenttakedatasource",
             "Take the currnet data sources from the component"],
-        "actionTakeDataSources":[
-            "Take DataSources " , "componentTakeDataSources",
+        "actionTakeDataSources": [
+            "Take DataSources ", "componentTakeDataSources",
             "",
             "componenttakedatasource",
             "Take data sources from the component"],
-        "actionEditDataSource":[
+        "actionEditDataSource": [
             "&Edit DataSource", "dsourceEdit",
             "Ctrl+Shift+E",
             "dsourceedit", "Edit the data source"],
-        "actionApplyDataSource":[
+        "actionApplyDataSource": [
             "Apply DataSource", "dsourceApply",
             "Ctrl+Shift+R", "dsourceapply", "Apply the data source"],
-        "actionCopyDataSource":[
+        "actionCopyDataSource": [
             "Copy DataSource", "dsourceCopy",
             "", "copy", "Copy the data source"],
-        "actionCutDataSource":[
+        "actionCutDataSource": [
             "Cut DataSource", "dsourceCut",
             QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Delete),
             "cut", "Cut the data source"],
-        "actionPasteDataSource":[
+        "actionPasteDataSource": [
             "Paste DataSource", "dsourcePaste",
             QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Insert),
             "paste", "Paste the data source"]
@@ -93,7 +93,6 @@ class EditSlots(object):
         cmd.redo()
         self.undoStack.clear()
 
-
     ## take datasources
     # \brief It takes datasources from the current component
     def componentTakeDataSource(self):
@@ -102,20 +101,17 @@ class EditSlots(object):
         cmd = ComponentTakeDataSource(self.main)
         self.undoStack.push(cmd)
 
-
     ## edit component action
     # \brief It opens a dialog with the current component
     def componentEdit(self):
         cmd = ComponentEdit(self.main)
         cmd.redo()
 
-
     ## edit datasource action
     # \brief It opens a dialog with the current datasource
     def dsourceEdit(self):
         cmd = DataSourceEdit(self.main)
         cmd.redo()
-
 
     ## apply datasource item action executed by button
     # \brief It applies the changes in the current datasource item
@@ -124,20 +120,17 @@ class EditSlots(object):
         if self.main.updateDataSourceListItem():
             self.dsourceApply()
 
-
     ## apply datasource item action
     # \brief It applies the changes in the current datasource item
     def dsourceApply(self):
         cmd = DataSourceApply(self.main)
         self.undoStack.push(cmd)
 
-
     ## copy datasource item action
     # \brief It copies the  current datasource item into the clipboard
     def dsourceCopy(self):
         cmd = DataSourceCopy(self.main)
         cmd.redo()
-
 
     ## cuts datasource item action
     # \brief It removes the current datasources item and copies it
@@ -146,13 +139,11 @@ class EditSlots(object):
         cmd = DataSourceCut(self.main)
         self.undoStack.push(cmd)
 
-
     ## paste datasource item action
     # \brief It pastes the datasource item from the clipboard
     def dsourcePaste(self):
         cmd = DataSourcePaste(self.main)
         self.undoStack.push(cmd)
-
 
 if __name__ == "__main__":
     pass

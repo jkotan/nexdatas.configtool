@@ -17,7 +17,7 @@
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package nxsconfigtool nexdatas
 ## \file ComponentDlg.py
-# component classes 
+# component classes
 
 """ component widget """
 
@@ -30,24 +30,22 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-
-## compoent dialog 
+## compoent dialog
 class ComponentDlg(QDialog):
-    
+
     ## constructor
     # \param component component instance
     # \param parent patent instance
     def __init__(self, component, parent=None):
         super(ComponentDlg, self).__init__(parent)
         ## component instance
-        self.component = component 
+        self.component = component
 
         ## user interface
         self.ui = Ui_ComponentDlg()
-        
+
         ## default widget
         self.ui.widget = QWidget(self)
-
 
     ## provides row number of the given node
     # \param child child item
@@ -58,29 +56,23 @@ class ComponentDlg(QDialog):
         else:
             logger.warn("Widget does not exist")
 
-
     ## sets focus on save button
     # \brief It sets focus on save button
     def setSaveFocus(self):
-        if self.ui :
+        if self.ui:
             self.ui.savePushButton.setFocus()
 
-        
     ## closes the window and cleans the dialog label
     # \param event closing event
     def closeEvent(self, event):
         super(ComponentDlg, self).closeEvent(event)
         self.component.dialog = None
-        event.accept()    
-
+        event.accept()
 
     def reject(self):
         self.parent().close()
         super(ComponentDlg, self).reject()
-        
-
 
 
 if __name__ == "__main__":
     pass
-    

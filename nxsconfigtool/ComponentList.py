@@ -29,9 +29,10 @@ from .ElementList import ElementList
 import logging
 logger = logging.getLogger(__name__)
 
+
 ## dialog defining a group tag
 class ComponentList(ElementList):
-    
+
     ## constructor
     # \param directory element directory
     # \param parent patent instance
@@ -50,10 +51,9 @@ class ComponentList(ElementList):
         ## extention
         self.extention = ".xml"
 
-
     ## switches between all attributes in the try or only type attribute
     # \param status all attributes are shown if True
-    def viewAttributes(self, status = None):
+    def viewAttributes(self, status=None):
         if status is None:
             return self._allAttributes
         self._allAttributes = True if status else False
@@ -62,22 +62,19 @@ class ComponentList(ElementList):
                     and self.elements[k].instance:
                 self.elements[k].instance.viewAttributes(
                     self._allAttributes)
-            
-
-
 
     ## retrives element name from file name
     # \param fname filename
-    # \returns element name        
+    # \returns element name
     @classmethod
     def nameFromFile(cls, fname):
         if fname[-4:] == '.xml':
             name = fname[:-4]
         else:
             name = fname
-        return name        
+        return name
 
-    ## creates Element 
+    ## creates Element
     # \param name element name
     # \returns element instance
     def createElement(self, name):
@@ -87,17 +84,12 @@ class ComponentList(ElementList):
         dlg.createGUI()
         return dlg
 
-            
-
-
-
-
 
 if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication
 
-    logging.basicConfig(level=logging.DEBUG)     
+    logging.basicConfig(level=logging.DEBUG)
 
     ## Qt application
     app = QApplication(sys.argv)
@@ -107,9 +99,7 @@ if __name__ == "__main__":
     form.show()
     app.exec_()
 
-
     if form.elements:
         logger.info("Other components:")
         for mk in form.elements.keys():
             logger.info(" %s = '%s' " % (mk, form.elements[mk]))
-    

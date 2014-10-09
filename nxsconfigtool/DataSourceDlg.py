@@ -24,36 +24,34 @@
 from PyQt4.QtCore import (SIGNAL, QModelIndex)
 from PyQt4.QtGui import QApplication
 
-from .NodeDlg import NodeDlg 
+from .NodeDlg import NodeDlg
 from .DataSources import ClientSource, TangoSource, DBSource, PyEvalSource
 from .DataSourceMethods import DataSourceMethods
 
 from .ui.ui_datasourcedlg import Ui_DataSourceDlg
 
 
-
-
 ## available datasources
-dsTypes = {'CLIENT':ClientSource,
-           'TANGO':TangoSource,
-           'DB':DBSource,
-           'PYEVAL':PyEvalSource
+dsTypes = {'CLIENT': ClientSource,
+           'TANGO': TangoSource,
+           'DB': DBSource,
+           'PYEVAL': PyEvalSource
            }
+
 
 ## load user datasources
 # \param dsJSON json string with user datasources
 def appendUserDataSource(dsJSON):
     for dk in dsJSON.keys():
         pkl = dsJSON[dk].split(".")
-        dec =  __import__(".".join(pkl[:-1]), 
-                          globals(), locals(), pkl[-1])  
+        dec = __import__(".".join(pkl[:-1]),
+                         globals(), locals(), pkl[-1])
         dsTypes[dk] = getattr(dec, pkl[-1])
-    
 
 
 ## dialog defining commmon datasource
 class CommonDataSourceDlg(NodeDlg):
-    
+
     ## constructor
     # \param datasource instance
     # \param parent patent instance
@@ -62,7 +60,6 @@ class CommonDataSourceDlg(NodeDlg):
 
         ##  datasource instance
         self.datasource = datasource
-
 
         ## allowed subitems
         self.subItems = []
@@ -73,25 +70,22 @@ class CommonDataSourceDlg(NodeDlg):
         ## user interface
         self.ui = Ui_DataSourceDlg()
         ## datasource widget
-        self.wg  = {}
+        self.wg = {}
 
         ## QWidget instances
-        self.qwg  = {}
-
+        self.qwg = {}
 
         for ds in dsTypes.keys():
             self.imp[ds] = dsTypes[ds](self)
             self.subItems.extend(self.imp[ds].subItems)
             self.wg[ds] = self.imp[ds].widgetClass()
-            self.imp[ds].ui = self.wg[ds] 
-
+            self.imp[ds].ui = self.wg[ds]
 
     ## sets focus on save button
     # \brief It sets focus on save button
     def setSaveFocus(self):
-        if self.ui :
+        if self.ui:
             self.ui.savePushButton.setFocus()
-
 
     ## updates group user interface
     # \brief It sets enable or disable the OK button
@@ -104,51 +98,46 @@ class CommonDataSourceDlg(NodeDlg):
         self.ui.storePushButton.setEnabled(enable)
 
     ## shows and hides frames according to typeComboBox
-    # \param text the edited text   
+    # \param text the edited text
     def setFrames(self, text):
         for k in self.qwg.keys():
             if text == k:
                 self.qwg[k].show()
             else:
                 self.qwg[k].hide()
-                
-            if hasattr(self.imp[k],"populateParameters"):
+
+            if hasattr(self.imp[k], "populateParameters"):
                 self.imp[k].populateParameters()
-            
+
         self.updateUi(text)
 
-
-    ## connects the dialog actions 
+    ## connects the dialog actions
     def connectWidgets(self):
-        self.disconnect(self.ui.typeComboBox, 
+        self.disconnect(self.ui.typeComboBox,
                         SIGNAL("currentIndexChanged(QString)"), self.setFrames)
-        self.connect(self.ui.typeComboBox, 
+        self.connect(self.ui.typeComboBox,
                      SIGNAL("currentIndexChanged(QString)"), self.setFrames)
         for k in self.imp.keys():
             self.imp[k].connectWidgets()
 
-
-
     ## closes the window and cleans the dialog label
     # \param event closing event
     def closeEvent(self, event):
-        if hasattr(self.datasource.dialog,"clearDialog"):
+        if hasattr(self.datasource.dialog, "clearDialog"):
             self.datasource.dialog.clearDialog()
         self.datasource.dialog = None
-        if hasattr(self.datasource,"clearDialog"):
+        if hasattr(self.datasource, "clearDialog"):
             self.datasource.clearDialog()
-        event.accept()    
-
+        event.accept()
 
     def reject(self):
         self.parent().close()
         super(CommonDataSourceDlg, self).reject()
 
 
-
 ## dialog defining separate datasource
 class DataSourceDlg(CommonDataSourceDlg):
-    
+
     ## constructor
     # \param parent patent instance
     def __init__(self, parent=None):
@@ -160,56 +149,47 @@ class DataSourceDlg(CommonDataSourceDlg):
         self.datasource = CommonDataSource(parent)
         ## datasource methods
         self.__methods = DataSourceMethods(self, self.datasource, parent)
-        
 
-
-            
     ## updates the form
     # \brief updates the form
     def updateForm(self):
-        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+        if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.updateForm()
-
 
     ## clears the dialog
     # \brief clears the dialog
     def clearDialog(self):
-        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+        if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.setDialog(None)
 
-
     ## updates the node
-    # \brief updates the node 
+    # \brief updates the node
     def updateNode(self, index=QModelIndex()):
-        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+        if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.updateNode(index)
-        
 
     ## creates GUI
     # \brief creates GUI
     def createGUI(self):
-        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+        if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.createGUI()
 
-        
     ## sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
-        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+        if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.setFromNode(node)
-        
 
     ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
-        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+        if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.apply()
 
-
     ## sets the tree mode used in ComponentDlg without save/close buttons
-    # \param enable logical variable which dis-/enables mode 
-    def treeMode(self, enable = True):
-        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+    # \param enable logical variable which dis-/enables mode
+    def treeMode(self, enable=True):
+        if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.treeMode(enable)
 
     ## connects the save action and stores the apply action
@@ -218,25 +198,23 @@ class DataSourceDlg(CommonDataSourceDlg):
     # \param externalClose close action
     # \param externalStore store action
     # \param externalDSLink dsource link action
-    def connectExternalActions(self, externalApply=None , externalSave=None,
-                               externalClose = None, externalStore=None,
-                               externalDSLink = None):
-        if hasattr(self,"_DataSourceDlg__methods")  and self.__methods:
+    def connectExternalActions(self, externalApply=None, externalSave=None,
+                               externalClose=None, externalStore=None,
+                               externalDSLink=None):
+        if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.connectExternalActions(
-                externalApply, externalSave, 
+                externalApply, externalSave,
                 externalClose, externalStore)
-
-        
 
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QWidget 
+    from PyQt4.QtGui import QWidget
     ## Qt application
     app = QApplication(sys.argv)
 
     ## the second datasource form
-    
+
     w = QWidget()
     w.show()
     ## datasource form
@@ -246,9 +224,4 @@ if __name__ == "__main__":
 
     form2.show()
 
-
-
     app.exec_()
-
-
-#  LocalWords:  decryption

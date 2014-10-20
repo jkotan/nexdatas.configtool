@@ -23,8 +23,8 @@
 
 import copy
 
-from PyQt4.QtCore import (SIGNAL, QString, QVariant, Qt, QModelIndex)
 from PyQt4.QtGui import (QMessageBox, QTableWidgetItem)
+from PyQt4.QtCore import (SIGNAL, QString, QVariant, Qt, QModelIndex)
 
 from .ui.ui_fielddlg import Ui_FieldDlg
 from .AttributeDlg import AttributeDlg

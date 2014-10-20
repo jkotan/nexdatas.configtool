@@ -287,7 +287,10 @@ class DataSource(CommonDataSource):
         definition = newdoc.createElement(QString("definition"))
         newdoc.appendChild(definition)
 
-        newds = newdoc.importNode(ds, True)
+        if ds:
+            newds = newdoc.importNode(ds, True)
+        else:
+            newds = newdoc.createElement(QString("datasource"))
         definition.appendChild(newds)
         return newdoc.toString(0)
 

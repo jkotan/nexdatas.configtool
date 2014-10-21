@@ -230,7 +230,7 @@ class ConfigurationServer(object):
     # \brief It closes connecion to configuration server
     def close(self):
         if self._proxy and self.connected:
-            if self._proxy.State() == PyTango.DevState.OPEN:
+            if self._proxy.state() == PyTango.DevState.OPEN:
                 self._proxy.Close()
                 self.connected = False
 

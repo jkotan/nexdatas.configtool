@@ -1,7 +1,8 @@
 2014-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* adding support for dim datasources
 	* fixes for repair datasource
 	* applying pep8
-	* tagged as v1.5.10
+	* tagged as v1.6.0
 
 2014-08-26 Jan Kotanski <jankotan@gmail.com>
 	* adding variables for dimensions

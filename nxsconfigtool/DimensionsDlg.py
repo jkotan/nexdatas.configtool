@@ -58,7 +58,7 @@ class DimensionsDlg(QDialog):
                 self.rank = int(self.rank)
                 for i, ln in enumerate(self.lengths):
                     if ln:
-                        if '$var' not in ln:
+                        if '$var' not in ln or '$datasources' not in ln:
                             iln = int(ln)
                             self.lengths[i] = ln
                             if iln < 1:
@@ -106,7 +106,8 @@ class DimensionsDlg(QDialog):
         if column == 0:
             try:
                 if item.text():
-                    if '$var' not in str(item.text()):
+                    if '$var' not in str(item.text()) and  \
+                            '$datasources' not in str(item.text()):
                         iln = int(item.text())
                         if iln < 1:
                             raise ValueError("Non-positive length value")

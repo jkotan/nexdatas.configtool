@@ -83,7 +83,8 @@ class Merger(QThread):
                      "enumeration", "strategy"],
             "group": ["group", "field", "attribute", "link", "component",
                      "doc"],
-            "link": ["doc"]
+            "link": ["doc"],
+            "dim": ["datasource", "doc"]
             }
 
         ## with unique text

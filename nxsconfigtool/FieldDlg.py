@@ -246,6 +246,10 @@ class FieldDlg(NodeDlg):
                                 attributeMap.namedItem("value").nodeValue())
                     except:
                         pass
+                    
+                    text = DomTools.getText(child)
+                    value = unicode(text).strip() \
+                        if text and "$datasources." in text
                     if index < 1:
                         index = None
                     if index is not None:
@@ -498,8 +502,19 @@ class FieldDlg(NodeDlg):
                 for i in range(min(self.rank, len(self.dimensions))):
                     dim = self.root.createElement(QString("dim"))
                     dim.setAttribute(QString("index"), QString(unicode(i + 1)))
-                    dim.setAttribute(QString("value"),
-                                     QString(unicode(self.dimensions[i])))
+                    if "$datasources." not in unicode(self.dimensions[i]):
+                        
+                        dim.setAttribute(QString("value"),
+                                         QString(unicode(self.dimensions[i])))
+                    else:
+                        dim.setAttribute(QString("value"),
+                                         QString(
+                                unicode(self.dimensions[i]).replaceAll(
+                                    "$datasources.","$value.")))
+                        dsText = self.root.createTextNode(
+                            QString(unicode(self.dimensions[i])))
+                        dim.appendChild(dsText)
+                        
                     newDimens.appendChild(dim)
 
             if dimens and dimens.nodeName() == "dimensions":

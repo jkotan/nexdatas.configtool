@@ -248,8 +248,8 @@ class FieldDlg(NodeDlg):
                         pass
                     
                     text = DomTools.getText(child)
-                    value = unicode(text).strip() \
-                        if text and "$datasources." in text
+                    if text and "$datasources." in text:
+                        value = str(text).strip()
                     if index < 1:
                         index = None
                     if index is not None:
@@ -507,13 +507,13 @@ class FieldDlg(NodeDlg):
                         dim.setAttribute(QString("value"),
                                          QString(unicode(self.dimensions[i])))
                     else:
-                        dim.setAttribute(QString("value"),
-                                         QString(
-                                unicode(self.dimensions[i]).replaceAll(
-                                    "$datasources.","$value.")))
                         dsText = self.root.createTextNode(
                             QString(unicode(self.dimensions[i])))
+                        dstrategy = self.root.createElement(QString("strategy"))
+                        dstrategy.setAttribute(QString("mode"),
+                                   QString(unicode("CONFIG")))
                         dim.appendChild(dsText)
+                        dim.appendChild(dstrategy)
                         
                     newDimens.appendChild(dim)
 

@@ -84,7 +84,7 @@ class Merger(QThread):
             "group": ["group", "field", "attribute", "link", "component",
                      "doc"],
             "link": ["doc"],
-            "dim": ["datasource", "doc"]
+            "dim": ["datasource", "strategy", "doc"]
             }
 
         ## with unique text
@@ -95,7 +95,7 @@ class Merger(QThread):
             "attribute": ["name"],
             "definition": [],
             "dimensions": ["rank"],
-            "dim": ["index", "value"],
+            "dim": ["index"],
             "field": ["name"],
             "group": ["type"],
             "link": ["name", "target"],

@@ -358,13 +358,14 @@ class RichAttributeDlg(NodeDlg):
                     dim = self.root.createElement(QString("dim"))
                     dim.setAttribute(QString("index"), QString(unicode(i + 1)))
                     if "$datasources." not in unicode(self.dimensions[i]):
-                        
+
                         dim.setAttribute(QString("value"),
                                          QString(unicode(self.dimensions[i])))
                     else:
                         dsText = self.root.createTextNode(
                             QString(unicode(self.dimensions[i])))
-                        dstrategy = self.root.createElement(QString("strategy"))
+                        dstrategy = self.root.createElement(
+                            QString("strategy"))
                         dstrategy.setAttribute(QString("mode"),
                                    QString(unicode("CONFIG")))
                         dim.appendChild(dsText)

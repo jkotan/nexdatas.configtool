@@ -144,16 +144,18 @@ class ElementList(QWidget):
     # \brief It changes the current value of the element and informs
     #        the user that element names arenot editable
     def listItemChanged(self, item, name=None):
-        ide = self.currentListElement().id
-        if ide in self.elements.keys():
-            old = self.elements[ide]
-            oname = self.elements[ide].name
-            if name is None:
-                self.elements[ide].name = unicode(item.text())
-            else:
-                self.elements[ide].name = name
-            self.populateElements()
-            return old, oname
+        cle = self.currentListElement()
+        if cle:
+            ide = self.currentListElement().id
+            if ide in self.elements.keys():
+                old = self.elements[ide]
+                oname = self.elements[ide].name
+                if name is None:
+                    self.elements[ide].name = unicode(item.text())
+                else:
+                    self.elements[ide].name = name
+                self.populateElements()
+                return old, oname
 
     ## fills in the element list
     # \param selectedElement selected element

@@ -1,3 +1,7 @@
+2014-12-XX Jan Kotanski <jankotan@gmail.com>
+	* adding check for currentList Element
+	* tagged as v1.6.1
+
 2014-10-29 Jan Kotanski <jankotan@gmail.com>
 	* adding support for dim datasources
 	* fixes for repair datasource

@@ -156,6 +156,7 @@ class ElementList(QWidget):
                     self.elements[ide].name = name
                 self.populateElements()
                 return old, oname
+        return None, None
 
     ## fills in the element list
     # \param selectedElement selected element

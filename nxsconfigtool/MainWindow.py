@@ -433,8 +433,11 @@ class MainWindow(QMainWindow):
                     try:
                         cid = elementList.currentListElement()
                         elementList.populateElements(cp.id)
-                        self.slots["Edit"].componentEdit()
-                        cp.instance.merge()
+                        if hasattr(cp.instance, "merge"):
+                            self.slots["Edit"].componentEdit()
+                            cp.instance.merge()
+                        else:
+                            self.slots["Edit"].dsourceEdit()
                         if not cp.instance.save():
                             elementList.populateElements(cid)
                             event.ignore()

@@ -146,7 +146,7 @@ class ElementList(QWidget):
     def listItemChanged(self, item, name=None):
         cle = self.currentListElement()
         if cle:
-            ide = self.currentListElement().id
+            ide = cle.id
             if ide in self.elements.keys():
                 old = self.elements[ide]
                 oname = self.elements[ide].name

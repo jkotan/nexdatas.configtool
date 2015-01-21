@@ -188,7 +188,8 @@ class ComponentListChanged(QUndoCommand):
             else:
                 self._cp.name = self.name
 
-            self.receiver.componentList.populateElements(self._cp.id)
+            self.receiver.componentList.populateElements(
+                self._cp.id if hasattr(self._cp, "id") else None)
             if self._cp.instance is not None:
                 self._oldDirectory = self._cp.instance.directory
                 self._cp.instance.setName(self.name, self.directory)
@@ -359,7 +360,8 @@ class DataSourceListChanged(QUndoCommand):
             else:
                 self._ds.name = self.name
 
-            self.receiver.sourceList.populateElements(self._ds.id)
+            self.receiver.sourceList.populateElements(
+                self._ds.id if hasattr(self._ds, "id") else None)
             if self._ds.instance is not None:
                 self._oldDirectory = self._ds.instance.directory
                 self._ds.instance.setName(self.name, self.directory)

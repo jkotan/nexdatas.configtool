@@ -1,3 +1,7 @@
+2015-01-XX Jan Kotanski <jankotan@gmail.com>
+	* fix for missing setfocus in pyeval
+	* tagged as v1.6.3
+
 2015-01-21 Jan Kotanski <jankotan@gmail.com>
 	* fix for populating lists without selection
 	* fix for empty currentlistelement

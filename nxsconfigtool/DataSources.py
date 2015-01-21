@@ -692,7 +692,8 @@ class PyEvalSource(object):
         if not script:
             QMessageBox.warning(self.main, "Empty script",
                                 "Please define the PyEval script")
-            self.ui.dQueryLineEdit.setFocus()
+            if hasattr(ui, "dQueryLineEdit"):
+                self.ui.dQueryLineEdit.setFocus()
             return
         datasource.var['PYEVAL'].script = script
 

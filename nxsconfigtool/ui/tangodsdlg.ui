@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>476</width>
-    <height>261</height>
+    <width>364</width>
+    <height>305</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0,0,0" rowminimumheight="0,0,0,0,0,0,0">
+    <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0,0,0">
      <item row="0" column="0">
       <widget class="QLabel" name="tDevNameLabel">
        <property name="text">

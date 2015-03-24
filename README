@@ -28,7 +28,7 @@ and extract the sources.
 
 One can also download the lastest version directly from the git repository by
 
-git clone https://code.google.com/p/nexdatas.configtool/
+git clone https://github.com/jkotan/nexdatas.configtool/
 
 Next, run the installation script
 

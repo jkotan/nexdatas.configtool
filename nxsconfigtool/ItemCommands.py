@@ -757,11 +757,11 @@ class ComponentApplyItem(ComponentItemCommand):
             if self._cp is not None:
                 if hasattr(self._cp, "instance") \
                         and hasattr(self._cp.instance, "applyItem"):
-
                     if not self._cp.instance.applyItem():
-                        QMessageBox.warning(
-                            self.receiver, "Applying item not possible",
-                            "Please select another tree item")
+                        pass
+#                        QMessageBox.warning(
+#                            self.receiver, "Applying item not possible",
+#                            "Please select another tree item")
 
         self.postExecute()
         logger.info("EXEC componentApplyItem")

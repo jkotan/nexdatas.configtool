@@ -310,7 +310,7 @@ class ElementList(QWidget):
             QString(), 0, len(dirList), self)
         progress.setWindowTitle("Load Elements")
         progress.setWindowModality(Qt.WindowModal)
-        progress.show()
+        progress.forceShow()
         for i in range(len(dirList)):
             fname = dirList[i]
             name = self.nameFromFile(fname)

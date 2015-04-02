@@ -45,6 +45,7 @@ from .EditCommands import (
     )
 
 from .ItemCommands import (
+    ComponentApplyItem,
     ComponentMerge
     )
 
@@ -128,6 +129,8 @@ class FileSlots(object):
     ## save component action
     # \brief It saves the current component
     def componentSave(self):
+        cmd = ComponentApplyItem(self.main)
+        self.undoStack.push(cmd)
         cmd = ComponentEdit(self.main)
         cmd.redo()
         cmd = ComponentMerge(self.main)
@@ -161,6 +164,8 @@ class FileSlots(object):
     ## save component item as action
     # \brief It saves the changes in the current component item with a new name
     def componentSaveAs(self):
+        cmd = ComponentApplyItem(self.main)
+        self.undoStack.push(cmd)
         cmd = ComponentEdit(self.main)
         cmd.redo()
         cmd = ComponentMerge(self.main)

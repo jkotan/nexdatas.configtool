@@ -1,5 +1,6 @@
 2015-XX-XX Jan Kotanski <jankotan@gmail.com>
-	* adding compliter intoi group types
+	* adding default datasource name and record
+	* adding completer into group types
 	* removes question on removing attributes
 	* fix for missing setfocus in pyeval
 	* tagged as v1.7.0

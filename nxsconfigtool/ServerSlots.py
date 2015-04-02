@@ -44,6 +44,7 @@ from .EditCommands import (
     )
 
 from .ItemCommands import (
+    ComponentApplyItem,
     ComponentMerge,
     )
 
@@ -149,6 +150,8 @@ class ServerSlots(object):
     ## store server component action
     # \brief It stores the current component in the configuration server
     def serverStoreComponent(self):
+        cmd = ComponentApplyItem(self.main)
+        self.undoStack.push(cmd)
         cmd = ComponentEdit(self.main)
         cmd.redo()
         cmd = ComponentMerge(self.main)
@@ -159,6 +162,7 @@ class ServerSlots(object):
     ## store server all components action
     # \brief It stores all components in the configuration server
     def serverStoreAllComponents(self):
+        cmd = ComponentApplyItem(self.main)
         cmd = ServerStoreAllComponents(self.main)
         cmd.redo()
         self.undoStack.clear()

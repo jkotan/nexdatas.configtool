@@ -191,7 +191,10 @@ class DataSource(CommonDataSource):
     # \param directory directory of the datasources
     def setName(self, name, directory):
         self.name = unicode(name)
-#        self.dialog.ui.nameLineEdit.setText(self.name)
+        if not self.dataSourceName:
+            self.dataSourceName = self.name
+            self.dialog.ui.nameLineEdit.setText(self.name)
+            self.dialog.imp['CLIENT'].ui.cRecNameLineEdit.setText(self.name)
         if directory:
             self.directory = unicode(directory)
 

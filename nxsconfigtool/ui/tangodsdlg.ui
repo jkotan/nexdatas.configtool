@@ -127,6 +127,15 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tDevNameLineEdit</tabstop>
+  <tabstop>tMemberComboBox</tabstop>
+  <tabstop>tMemberNameLineEdit</tabstop>
+  <tabstop>tHostLineEdit</tabstop>
+  <tabstop>tPortLineEdit</tabstop>
+  <tabstop>tEncodingLineEdit</tabstop>
+  <tabstop>tGroupLineEdit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

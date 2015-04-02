@@ -71,6 +71,13 @@ class ClientSource(object):
             self.ui.cRecNameLineEdit, SIGNAL("textChanged(QString)"),
             self.__cRecNameLineEdit)
 
+    ## sets the tab order of subframe
+    # \param first first widget from the parent dialog
+    # \param last last widget from the parent dialog
+    def setTabOrder(self, first, last):
+        self.main.setTabOrder(first, self.ui.cRecNameLineEdit)
+        self.main.setTabOrder(self.ui.cRecNameLineEdit, last)
+
     ## updates datasource ui
     # \param datasource class
     def updateForm(self, datasource):
@@ -90,6 +97,7 @@ class ClientSource(object):
             datasource.var['CLIENT'].recordName = unicode(
                 attributeMap.namedItem("name").nodeValue()
                 if attributeMap.contains("name") else "")
+
 
     ## copies parameters from form to datasource instance
     # \param datasource class
@@ -290,6 +298,19 @@ class DBSource(object):
             SIGNAL("itemChanged(QTableWidgetItem*)"),
             self.__tableItemChanged)
 
+    ## sets the tab order of subframe
+    # \param first first widget from the parent dialog
+    # \param last last widget from the parent dialog
+    def setTabOrder(self, first, last):
+        self.main.setTabOrder(first, self.ui.dTypeComboBox)
+        self.main.setTabOrder(self.ui.dTypeComboBox, self.ui.dFormatComboBox)
+        self.main.setTabOrder(self.ui.dFormatComboBox, self.ui.dQueryLineEdit)
+        self.main.setTabOrder(self.ui.dQueryLineEdit, self.ui.dParamComboBox)
+        self.main.setTabOrder(self.ui.dParamComboBox, self.ui.dAddPushButton)
+        self.main.setTabOrder(self.ui.dAddPushButton, self.ui.dRemovePushButton)
+        self.main.setTabOrder(self.ui.dRemovePushButton, self.ui.dParameterTableWidget)
+        self.main.setTabOrder(self.ui.dParameterTableWidget, last)
+
     ## updates datasource ui
     # \param datasource class
     def updateForm(self, datasource):
@@ -452,6 +473,19 @@ class TangoSource(object):
     def isEnable(self):
         return not self.ui.tDevNameLineEdit.text().isEmpty() and \
             not self.ui.tMemberNameLineEdit.text().isEmpty()
+
+    ## sets the tab order of subframe
+    # \param first first widget from the parent dialog
+    # \param last last widget from the parent dialog
+    def setTabOrder(self, first, last):
+        self.main.setTabOrder(first, self.ui.tDevNameLineEdit)
+        self.main.setTabOrder(self.ui.tDevNameLineEdit, self.ui.tMemberComboBox)
+        self.main.setTabOrder(self.ui.tMemberComboBox, self.ui.tMemberNameLineEdit)
+        self.main.setTabOrder(self.ui.tMemberNameLineEdit, self.ui.tHostLineEdit)
+        self.main.setTabOrder(self.ui.tHostLineEdit, self.ui.tPortLineEdit)
+        self.main.setTabOrder(self.ui.tPortLineEdit, self.ui.tEncodingLineEdit)
+        self.main.setTabOrder(self.ui.tEncodingLineEdit, self.ui.tGroupLineEdit)
+        self.main.setTabOrder(self.ui.tGroupLineEdit, last)
 
     ## updates datasource ui
     # \param datasource class
@@ -632,6 +666,16 @@ class PyEvalSource(object):
     ## connects the dialog actions
     def connectWidgets(self):
         pass
+
+
+    ## sets the tab order of subframe
+    # \param first first widget from the parent dialog
+    # \param last last widget from the parent dialog
+    def setTabOrder(self, first, last):
+        self.main.setTabOrder(first, self.ui.peInputLineEdit)
+        self.main.setTabOrder(self.ui.peInputLineEdit, self.ui.peScriptTextEdit)
+        self.main.setTabOrder(self.ui.peScriptTextEdit, self.ui.peResultLineEdit)
+        self.main.setTabOrder(self.ui.peResultLineEdit, last)
 
     ## updates datasource ui
     # \param datasource class

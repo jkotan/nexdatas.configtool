@@ -33,6 +33,9 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>cRecNameLineEdit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

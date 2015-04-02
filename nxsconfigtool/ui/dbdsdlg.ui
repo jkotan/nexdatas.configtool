@@ -236,6 +236,15 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>dTypeComboBox</tabstop>
+  <tabstop>dFormatComboBox</tabstop>
+  <tabstop>dQueryLineEdit</tabstop>
+  <tabstop>dParamComboBox</tabstop>
+  <tabstop>dAddPushButton</tabstop>
+  <tabstop>dRemovePushButton</tabstop>
+  <tabstop>dParameterTableWidget</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

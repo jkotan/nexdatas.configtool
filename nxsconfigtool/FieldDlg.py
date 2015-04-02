@@ -321,13 +321,6 @@ class FieldDlg(NodeDlg):
         attr = self.__currentTableAttribute()
         if attr is None:
             return
-        if QMessageBox.question(
-            self, "Attribute - Remove",
-            "Remove attribute: %s = \'%s\'".encode() % (
-                attr, self.__attributes[unicode(attr)]),
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.Yes) == QMessageBox.No:
-            return
         if unicode(attr) in self.__attributes.keys():
             self.__attributes.pop(unicode(attr))
             self.populateAttributes()

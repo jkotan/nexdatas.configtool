@@ -24,7 +24,7 @@
 import copy
 
 from PyQt4.QtCore import (SIGNAL, QString, Qt, QVariant, QModelIndex)
-from PyQt4.QtGui import (QMessageBox, QTableWidgetItem)
+from PyQt4.QtGui import (QMessageBox, QTableWidgetItem, QCompleter)
 
 from .ui.ui_groupdlg import Ui_GroupDlg
 from .AttributeDlg import AttributeDlg
@@ -58,6 +58,62 @@ class GroupDlg(NodeDlg):
         self.subItems = ["group", "field", "attribute", "link",
                          "component", "doc"]
 
+        self.typehelper = [
+            'NXaperture',
+            'NXattenuator',
+            'NXbeam',
+            'NXbeam_stop',
+            'NXbending_magnet',
+            'NXcapillary',
+            'NXcharacterization',
+            'NXcite',
+            'NXcollection',
+            'NXcollimator',
+            'NXcrystal',
+            'NXdata',
+            'NXdetector_group',
+            'NXdetector_module',
+            'NXdetector',
+            'NXdisk_chopper',
+            'NXentry',
+            'NXenvironment',
+            'NXevent_data',
+            'NXfermi_chopper',
+            'NXfilter',
+            'NXflipper',
+            'NXfresnel_zone_plate',
+            'NXgeometry',
+            'NXgrating',
+            'NXguide',
+            'NXinsertion_device',
+            'NXinstrument',
+            'NXlog',
+            'NXmirror',
+            'NXmoderator',
+            'NXmonitor',
+            'NXmonochromator',
+            'NXnote',
+            'NXobject',
+            'NXorientation',
+            'NXparameters',
+            'NXpinhole',
+            'NXpolarizer',
+            'NXpositioner',
+            'NXprocess',
+            'NXroot',
+            'NXsample',
+            'NXsensor',
+            'NXshape',
+            'NXslit',
+            'NXsource',
+            'NXsubentry',
+            'NXtransformations',
+            'NXtranslation',
+            'NXuser',
+            'NXvelocity_selector',
+            'NXxraylens'
+            ]
+
         ## user interface
         self.ui = Ui_GroupDlg()
 
@@ -82,7 +138,10 @@ class GroupDlg(NodeDlg):
     # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
         self.ui.setupUi(self)
-
+        completer = QCompleter(
+            [QString(tp) for tp in self.typehelper],
+            self)
+        self.ui.typeLineEdit.setCompleter(completer)
         self.updateForm()
 
         self.__updateUi()
@@ -186,13 +245,6 @@ class GroupDlg(NodeDlg):
     def __removeAttribute(self):
         attr = self.__currentTableAttribute()
         if attr is None:
-            return
-        if QMessageBox.question(
-            self, "Attribute - Remove",
-            "Remove attribute: %s = \'%s\'".encode()
-            % (attr, self.__attributes[unicode(attr)]),
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.Yes) == QMessageBox.No:
             return
         if unicode(attr) in self.__attributes.keys():
             self.__attributes.pop(unicode(attr))

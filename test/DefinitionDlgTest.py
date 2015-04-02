@@ -1474,40 +1474,12 @@ class DefinitionDlgTest(unittest.TestCase):
         
         form.populateAttributes(aname)
 
+        
 
-        QTimer.singleShot(10, self.rmAttributeWidgetClose)
+#        QTimer.singleShot(10, self.rmAttributeWidget)
         QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
         
-        self.assertEqual(self.text,"Remove attribute: %s = '%s'" % (aname,avalue))
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
-        for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
-            k = str(it.text())
-            self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
-            self.assertEqual(it2.text(), attributes[k])
-
-
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-
-
-
-
-        aname = self.__rnd.choice(attributes.keys())
-        avalue = attributes[aname]
-        
-        
-        form.populateAttributes(aname)
-
-        
-
-        QTimer.singleShot(10, self.rmAttributeWidget)
-        QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
-        
-        self.assertEqual(self.text,"Remove attribute: %s = '%s'" % (aname,avalue))
+#        self.assertEqual(self.text,"Remove attribute: %s = '%s'" % (aname,avalue))
 
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
@@ -2042,7 +2014,7 @@ class DefinitionDlgTest(unittest.TestCase):
             print item.text()
 
 
-            QTimer.singleShot(10, self.rmAttributeWidget)
+#            QTimer.singleShot(10, self.rmAttributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
 
 
@@ -2207,7 +2179,7 @@ class DefinitionDlgTest(unittest.TestCase):
             print item.text()
 
 
-            QTimer.singleShot(10, self.rmAttributeWidget)
+#            QTimer.singleShot(10, self.rmAttributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
 
 
@@ -2360,7 +2332,7 @@ class DefinitionDlgTest(unittest.TestCase):
             print item.text()
 
 
-            QTimer.singleShot(10, self.rmAttributeWidget)
+#            QTimer.singleShot(10, self.rmAttributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
 
 

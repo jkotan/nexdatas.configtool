@@ -3236,7 +3236,7 @@ class FieldDlgTest(unittest.TestCase):
             item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0) 
 
 
-            QTimer.singleShot(10, self.rmAttributeWidget)
+#            QTimer.singleShot(10, self.rmAttributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
 
 
@@ -3490,7 +3490,7 @@ class FieldDlgTest(unittest.TestCase):
             item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0) 
 
 
-            QTimer.singleShot(10, self.rmAttributeWidget)
+#            QTimer.singleShot(10, self.rmAttributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
 
 
@@ -3719,9 +3719,8 @@ class FieldDlgTest(unittest.TestCase):
             item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0) 
 
 
-            QTimer.singleShot(10, self.rmAttributeWidget)
+#            QTimer.singleShot(10, self.rmAtributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
-
 
 
 

@@ -1,6 +1,9 @@
-2015-01-XX Jan Kotanski <jankotan@gmail.com>
+2015-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* adding compliter intoi group types
+	* removes question on removing attributes
 	* fix for missing setfocus in pyeval
-	* tagged as v1.6.3
+	* tagged as v1.7.0
+
 
 2015-01-21 Jan Kotanski <jankotan@gmail.com>
 	* fix for populating lists without selection

@@ -1,6 +1,7 @@
 2015-XX-XX Jan Kotanski <jankotan@gmail.com>
 	* adding default datasource name and record
 	* adding completer into group types
+	* adding copy/cut/paste to datasource content menu
 	* removes question on removing attributes
 	* fix for missing setfocus in pyeval
 	* tagged as v1.7.0

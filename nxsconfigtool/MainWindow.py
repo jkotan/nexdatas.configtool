@@ -375,6 +375,10 @@ class MainWindow(QMainWindow):
             self.ui.actionEditDataSource,
             self.ui.actionApplyDataSource,
             self.ui.actionCloseDataSource,
+            None,
+            self.ui.actionCopyDataSource,
+            self.ui.actionCutDataSource,
+            self.ui.actionPasteDataSource,
             None, {"File": (
             self.ui.actionLoadDataSource,
             self.ui.actionSaveDataSource,

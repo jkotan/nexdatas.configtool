@@ -98,7 +98,6 @@ class ClientSource(object):
                 attributeMap.namedItem("name").nodeValue()
                 if attributeMap.contains("name") else "")
 
-
     ## copies parameters from form to datasource instance
     # \param datasource class
     def fromForm(self, datasource):
@@ -303,12 +302,18 @@ class DBSource(object):
     # \param last last widget from the parent dialog
     def setTabOrder(self, first, last):
         self.main.setTabOrder(first, self.ui.dTypeComboBox)
-        self.main.setTabOrder(self.ui.dTypeComboBox, self.ui.dFormatComboBox)
-        self.main.setTabOrder(self.ui.dFormatComboBox, self.ui.dQueryLineEdit)
-        self.main.setTabOrder(self.ui.dQueryLineEdit, self.ui.dParamComboBox)
-        self.main.setTabOrder(self.ui.dParamComboBox, self.ui.dAddPushButton)
-        self.main.setTabOrder(self.ui.dAddPushButton, self.ui.dRemovePushButton)
-        self.main.setTabOrder(self.ui.dRemovePushButton, self.ui.dParameterTableWidget)
+        self.main.setTabOrder(
+            self.ui.dTypeComboBox, self.ui.dFormatComboBox)
+        self.main.setTabOrder(
+            self.ui.dFormatComboBox, self.ui.dQueryLineEdit)
+        self.main.setTabOrder(
+            self.ui.dQueryLineEdit, self.ui.dParamComboBox)
+        self.main.setTabOrder(
+            self.ui.dParamComboBox, self.ui.dAddPushButton)
+        self.main.setTabOrder(
+            self.ui.dAddPushButton, self.ui.dRemovePushButton)
+        self.main.setTabOrder(
+            self.ui.dRemovePushButton, self.ui.dParameterTableWidget)
         self.main.setTabOrder(self.ui.dParameterTableWidget, last)
 
     ## updates datasource ui
@@ -479,12 +484,18 @@ class TangoSource(object):
     # \param last last widget from the parent dialog
     def setTabOrder(self, first, last):
         self.main.setTabOrder(first, self.ui.tDevNameLineEdit)
-        self.main.setTabOrder(self.ui.tDevNameLineEdit, self.ui.tMemberComboBox)
-        self.main.setTabOrder(self.ui.tMemberComboBox, self.ui.tMemberNameLineEdit)
-        self.main.setTabOrder(self.ui.tMemberNameLineEdit, self.ui.tHostLineEdit)
-        self.main.setTabOrder(self.ui.tHostLineEdit, self.ui.tPortLineEdit)
-        self.main.setTabOrder(self.ui.tPortLineEdit, self.ui.tEncodingLineEdit)
-        self.main.setTabOrder(self.ui.tEncodingLineEdit, self.ui.tGroupLineEdit)
+        self.main.setTabOrder(
+            self.ui.tDevNameLineEdit, self.ui.tMemberComboBox)
+        self.main.setTabOrder(
+            self.ui.tMemberComboBox, self.ui.tMemberNameLineEdit)
+        self.main.setTabOrder(
+            self.ui.tMemberNameLineEdit, self.ui.tHostLineEdit)
+        self.main.setTabOrder(
+            self.ui.tHostLineEdit, self.ui.tPortLineEdit)
+        self.main.setTabOrder(
+            self.ui.tPortLineEdit, self.ui.tEncodingLineEdit)
+        self.main.setTabOrder(
+            self.ui.tEncodingLineEdit, self.ui.tGroupLineEdit)
         self.main.setTabOrder(self.ui.tGroupLineEdit, last)
 
     ## updates datasource ui
@@ -667,14 +678,15 @@ class PyEvalSource(object):
     def connectWidgets(self):
         pass
 
-
     ## sets the tab order of subframe
     # \param first first widget from the parent dialog
     # \param last last widget from the parent dialog
     def setTabOrder(self, first, last):
         self.main.setTabOrder(first, self.ui.peInputLineEdit)
-        self.main.setTabOrder(self.ui.peInputLineEdit, self.ui.peScriptTextEdit)
-        self.main.setTabOrder(self.ui.peScriptTextEdit, self.ui.peResultLineEdit)
+        self.main.setTabOrder(
+            self.ui.peInputLineEdit, self.ui.peScriptTextEdit)
+        self.main.setTabOrder(
+            self.ui.peScriptTextEdit, self.ui.peResultLineEdit)
         self.main.setTabOrder(self.ui.peResultLineEdit, last)
 
     ## updates datasource ui
@@ -736,7 +748,7 @@ class PyEvalSource(object):
         if not script:
             QMessageBox.warning(self.main, "Empty script",
                                 "Please define the PyEval script")
-            if hasattr(ui, "dQueryLineEdit"):
+            if hasattr(self.ui, "dQueryLineEdit"):
                 self.ui.dQueryLineEdit.setFocus()
             return
         datasource.var['PYEVAL'].script = script

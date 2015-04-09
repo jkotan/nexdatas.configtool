@@ -106,7 +106,8 @@ class ConfigurationServer(object):
                 if cnt > 1:
                     time.sleep(0.01)
                 try:
-                    if self._proxy.state() != PyTango.DevState.RUNNING:
+                    if self._proxy.command_inout("State") \
+                            != PyTango.DevState.RUNNING:
                         found = True
                 except Exception:
 
@@ -116,7 +117,7 @@ class ConfigurationServer(object):
 
             if found:
                 self._proxy.set_timeout_millis(25000)
-                self._proxy.Open()
+                self._proxy.command_inout("Open")
                 self.connected = True
             else:
                 raise Exception("Cannot connect to: %s" % self.device.encode())
@@ -146,15 +147,15 @@ class ConfigurationServer(object):
         names = []
         comps = []
         if self._proxy and self.connected:
-            names = self._proxy.AvailableComponents()
+            names = self._proxy.command_inout("AvailableComponents")
 
             try:
-                comps = self._proxy.Components(names)
+                comps = self._proxy.command_inout("Components", names)
             except:
                 comps = []
                 for n in names:
                     try:
-                        xml = self._proxy.Components([n])
+                        xml = self._proxy.command_inout("Components", [n])
                         comps.append(xml[0])
                     except:
                         comps.append("")
@@ -166,14 +167,14 @@ class ConfigurationServer(object):
         names = []
         ds = []
         if self._proxy and self.connected:
-            names = self._proxy.AvailableDataSources()
+            names = self._proxy.command_inout("AvailableDataSources")
             try:
-                ds = self._proxy.DataSources(names)
+                ds = self._proxy.command_inout("DataSources", names)
             except:
                 ds = []
                 for n in names:
                     try:
-                        xml = self._proxy.DataSources([n])
+                        xml = self._proxy.command_inout("DataSources", [n])
                         ds.extend(xml)
                     except:
                         ds.append("")
@@ -186,7 +187,7 @@ class ConfigurationServer(object):
     def storeComponent(self, name, xml):
         if self._proxy and self.connected:
             self._proxy.XMLString = str(xml)
-            self._proxy.StoreComponent(str(name))
+            self._proxy.command_inout("StoreComponent", str(name))
 
     ## stores the datasource
     # \param name datasource name
@@ -194,44 +195,45 @@ class ConfigurationServer(object):
     def storeDataSource(self, name, xml):
         if self._proxy and self.connected:
             self._proxy.XMLString = str(xml)
-            self._proxy.StoreDataSource(str(name))
+            self._proxy.command_inout("StoreDataSource", str(name))
 
     ## stores the component
     # \param name component name
     def deleteComponent(self, name):
         if self._proxy and self.connected:
-            self._proxy.DeleteComponent(str(name))
+            self._proxy.command_inout("DeleteComponent", str(name))
 
     ## stores the datasource
     # \param name datasource name
     def deleteDataSource(self, name):
         if self._proxy and self.connected:
-            self._proxy.DeleteDataSource(str(name))
+            self._proxy.command_inout("DeleteDataSource", str(name))
 
     ## set the given component mandatory
     # \param name component name
     def setMandatory(self, name):
         if self._proxy and self.connected:
-            self._proxy.setMandatoryComponents([str(name)])
+            self._proxy.command_inout("SetMandatoryComponents",
+                                      [str(name)])
 
     ## get the mandatory components
     # returns list of the mandatory components
     def getMandatory(self):
         if self._proxy and self.connected:
-            return self._proxy.MandatoryComponents()
+            return self._proxy.command_inout("MandatoryComponents")
 
     ## unset the given component mandatory
     # \param name component name
     def unsetMandatory(self, name):
         if self._proxy and self.connected:
-            self._proxy.unsetMandatoryComponents([str(name)])
+            self._proxy.command_inout("UnsetMandatoryComponents", [str(name)])
 
     ## closes connecion
     # \brief It closes connecion to configuration server
     def close(self):
         if self._proxy and self.connected:
-            if self._proxy.state() == PyTango.DevState.OPEN:
-                self._proxy.Close()
+            if self._proxy.command_inout("State") == PyTango.DevState.OPEN:
+                self._proxy.command_inout("Close")
                 self.connected = False
 
 

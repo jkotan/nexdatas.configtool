@@ -97,13 +97,13 @@ class CommonDataSourceDlg(NodeDlg):
         self.ui.savePushButton.setEnabled(enable)
         self.ui.storePushButton.setEnabled(enable)
         self.setTabOrder(self.ui.typeComboBox, self.ui.nameLineEdit)
-        self.imp[str(text)].setTabOrder(self.ui.nameLineEdit, self.ui.savePushButton)
+        self.imp[str(text)].setTabOrder(
+            self.ui.nameLineEdit, self.ui.savePushButton)
         self.setTabOrder(self.ui.savePushButton, self.ui.storePushButton)
         self.setTabOrder(self.ui.storePushButton, self.ui.closePushButton)
         self.setTabOrder(self.ui.closePushButton, self.ui.applyPushButton)
         self.setTabOrder(self.ui.applyPushButton, self.ui.resetPushButton)
         self.setTabOrder(self.ui.resetPushButton, self.ui.docTextEdit)
-
 
     ## shows and hides frames according to typeComboBox
     # \param text the edited text

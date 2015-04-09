@@ -21,8 +21,8 @@
 
 """ attribute dialog """
 
-from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import (QDialog, QDialogButtonBox, QMessageBox)
+from PyQt4.QtCore import SIGNAL
 
 from .ui.ui_attributedlg import Ui_AttributeDlg
 from .Errors import CharacterError

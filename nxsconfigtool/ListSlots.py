@@ -79,7 +79,13 @@ class ListSlots(object):
              "itemChanged(QListWidgetItem*)"],
             ["componentChanged",
              self.main.componentList.ui.elementListWidget,
-             "itemChanged(QListWidgetItem*)"]
+             "itemChanged(QListWidgetItem*)"],
+            ["componentRowChanged",
+             self.main.componentList.ui.elementListWidget,
+             "currentRowChanged(int)"],
+            ["dsourceRowChanged",
+             self.main.sourceList.ui.elementListWidget,
+             "currentRowChanged(int)"]
             ]
 
     ## remove component action
@@ -130,6 +136,15 @@ class ListSlots(object):
         cmd.item = item
         self.undoStack.push(cmd)
 
+    ## component row change action
+    # \param item row Changed
+    def componentRowChanged(self, row):
+        self.main.deselectComponentSubWindow()
+
+    ## dsource row change action
+    # \param item row Changed
+    def dsourceRowChanged(self, row):
+        self.main.deselectDataSourceSubWindow()
 
 if __name__ == "__main__":
     pass

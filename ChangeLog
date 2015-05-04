@@ -1,4 +1,5 @@
-2015-04-XX Jan Kotanski <jankotan@gmail.com>
+2015-05-04 Jan Kotanski <jankotan@gmail.com>
+	* adding focussing back to element list
 	* fix for store/save components from list menu
 	* adding short-cuts for deleting elements from server
 	* tagged as v1.6.5

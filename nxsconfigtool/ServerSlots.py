@@ -147,17 +147,19 @@ class ServerSlots(object):
         if self.main.updateComponentListItem():
             cmd = ComponentApplyItem(self.main)
             self.undoStack.push(cmd)
-            self.serverStoreComponent()
+            self.serverStoreComponent(False)
 
     ## store server component action
     # \brief It stores the current component in the configuration server
-    def serverStoreComponent(self):
+    def serverStoreComponent(self, focus=True):
         cmd = ComponentEdit(self.main)
         cmd.redo()
         cmd = ComponentMerge(self.main)
         self.undoStack.push(cmd)
         cmd = ServerStoreComponent(self.main)
         cmd.redo()
+        if focus:
+            self.main.componentList.setItemFocus()
 
     ## store server all components action
     # \brief It stores all components in the configuration server
@@ -172,7 +174,8 @@ class ServerSlots(object):
     def serverDeleteComponent(self):
         cmd = ServerDeleteComponent(self.main)
         cmd.redo()
-
+        self.main.componentList.setItemFocus()
+            
     ## set component mandatory action
     # \brief It sets the current component as mandatory
     def serverSetMandatoryComponent(self):
@@ -200,20 +203,22 @@ class ServerSlots(object):
 
     ## store server datasource action
     # \brief It stores the current datasource in the configuration server
-    def serverStoreDataSource(self):
+    def serverStoreDataSource(self, focus=True):
         cmd = DataSourceEdit(self.main)
         cmd.redo()
         cmd = DataSourceApply(self.main)
         self.undoStack.push(cmd)
         cmd = ServerStoreDataSource(self.main)
         cmd.redo()
+        if focus:
+            self.main.sourceList.setItemFocus()
 
     ## store server datasource action executed by button
     # \brief It stores the current datasource in
     #        the configuration server executed by button
     def serverStoreDataSourceButton(self):
         if self.main.updateDataSourceListItem():
-            self.serverStoreDataSource()
+            self.serverStoreDataSource(False)
 
     ## store server all datasources action
     # \brief It stores all components in the configuration server
@@ -229,6 +234,7 @@ class ServerSlots(object):
         cmd.redo()
         cmd = ServerDeleteDataSource(self.main)
         cmd.redo()
+        self.main.sourceList.setItemFocus()
 
     ## close server action
     # \brief It closes the configuration server

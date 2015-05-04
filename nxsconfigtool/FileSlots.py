@@ -128,13 +128,15 @@ class FileSlots(object):
 
     ## save component action
     # \brief It saves the current component
-    def componentSave(self):
+    def componentSave(self, focus=True):
         cmd = ComponentEdit(self.main)
         cmd.redo()
         cmd = ComponentMerge(self.main)
         self.undoStack.push(cmd)
         cmd = ComponentSave(self.main)
         cmd.redo()
+        if focus:
+            self.main.componentList.setItemFocus()
 
     ## save component action executed by button
     # \brief It saves the current component executed by button
@@ -142,24 +144,26 @@ class FileSlots(object):
         if self.main.updateComponentListItem():
             cmd = ComponentApplyItem(self.main)
             self.undoStack.push(cmd)
-            self.componentSave()
+            self.componentSave(False)
 
     ## save datasource item action
     # \brief It saves the changes in the current datasource item
-    def dsourceSave(self):
+    def dsourceSave(self, focus=True):
         cmd = DataSourceEdit(self.main)
         cmd.redo()
         cmd = DataSourceApply(self.main)
         self.undoStack.push(cmd)
         cmd = DataSourceSave(self.main)
         cmd.redo()
+        if focus:
+            self.main.sourceList.setItemFocus()
 
     ## save datasource item action executed by button
     # \brief It saves the changes in the current datasource item executed
     #        by button
     def dsourceSaveButton(self):
         if self.main.updateDataSourceListItem():
-            self.dsourceSave()
+            self.dsourceSave(False)
 
     ## save component item as action
     # \brief It saves the changes in the current component item with a new name

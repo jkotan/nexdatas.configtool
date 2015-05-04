@@ -618,6 +618,39 @@ class MainWindow(QMainWindow):
                     status = True
         return status
 
+    ## deselect component list item according to open window
+    def deselectComponentSubWindow(self):
+        wlist = self.ui.mdi.subWindowList()
+
+        if self.ui.mdi.activeSubWindow() and isinstance(
+            self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+            widget = self.ui.mdi.activeSubWindow().widget()
+            if isinstance(widget, ComponentDlg):
+                if widget.component.id is not None:
+
+                    if hasattr(self.componentList.currentListElement(), "id"):
+                        if self.componentList.currentListElement().id \
+                                != widget.component.id:
+
+                            self.ui.mdi.setActiveSubWindow(None)
+
+    ## deselect component list item according to open window
+    def deselectDataSourceSubWindow(self):
+        wlist = self.ui.mdi.subWindowList()
+
+        if self.ui.mdi.activeSubWindow() and isinstance(
+            self.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
+            widget = self.ui.mdi.activeSubWindow().widget()
+            if isinstance(widget, CommonDataSourceDlg):
+                if widget.datasource.id is not None:
+
+                    if hasattr(self.sourceList.currentListElement(), "id"):
+                        if self.sourceList.currentListElement().id \
+                                != widget.datasource.id:
+
+                            self.ui.mdi.setActiveSubWindow(None)
+        
+
     ## shows all attributes in the tree
     # \brief switch between all attributes in the tree or only type attribute
     def viewAllAttributes(self):

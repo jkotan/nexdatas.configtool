@@ -114,6 +114,9 @@ class ElementList(QWidget):
             return None
         return self.elements[item.data(Qt.UserRole).toLongLong()[0]]
 
+    def setItemFocus(self):
+        self.ui.elementListWidget.setFocus()        
+
     ## removes the current element
     #  \brief It removes the current element asking before about it
     def removeElement(self, obj=None, question=True):

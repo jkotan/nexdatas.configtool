@@ -129,8 +129,6 @@ class FileSlots(object):
     ## save component action
     # \brief It saves the current component
     def componentSave(self):
-        cmd = ComponentApplyItem(self.main)
-        self.undoStack.push(cmd)
         cmd = ComponentEdit(self.main)
         cmd.redo()
         cmd = ComponentMerge(self.main)
@@ -142,6 +140,8 @@ class FileSlots(object):
     # \brief It saves the current component executed by button
     def componentSaveButton(self):
         if self.main.updateComponentListItem():
+            cmd = ComponentApplyItem(self.main)
+            self.undoStack.push(cmd)
             self.componentSave()
 
     ## save datasource item action

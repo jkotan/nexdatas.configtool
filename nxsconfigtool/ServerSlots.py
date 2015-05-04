@@ -83,8 +83,8 @@ class ServerSlots(object):
 
         "actionDeleteComponentServer": [
             "&Delete Component", "serverDeleteComponent",
-            "", "serverdeletedatasource",
-            "Delete datalsource from the configuration server"],
+            "Ctrl+H", "serverdeletecomponent",
+            "Delete component from the configuration server"],
 
         "actionFetchDataSourcesServer": [
             "&Fetch DataSources", "serverFetchDataSources",
@@ -103,7 +103,7 @@ class ServerSlots(object):
 
         "actionDeleteDataSourceServer": [
             "&Delete Datasource", "serverDeleteDataSource",
-            "", "serverdeletedatasource",
+            "Ctrl+Shift+H", "serverdeletedatasource",
             "Delete datasource from the configuration server"],
 
         "actionSetComponentMandatoryServer": [
@@ -145,13 +145,13 @@ class ServerSlots(object):
     #        in the configuration server executed by button
     def serverStoreComponentButton(self):
         if self.main.updateComponentListItem():
+            cmd = ComponentApplyItem(self.main)
+            self.undoStack.push(cmd)
             self.serverStoreComponent()
 
     ## store server component action
     # \brief It stores the current component in the configuration server
     def serverStoreComponent(self):
-        cmd = ComponentApplyItem(self.main)
-        self.undoStack.push(cmd)
         cmd = ComponentEdit(self.main)
         cmd.redo()
         cmd = ComponentMerge(self.main)

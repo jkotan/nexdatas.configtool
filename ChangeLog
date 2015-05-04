@@ -1,3 +1,8 @@
+2015-04-XX Jan Kotanski <jankotan@gmail.com>
+	* fix for store/save components from list menu
+	* adding short-cuts for deleting elements from server
+	* tagged as v1.6.5
+
 2015-04-09 Jan Kotanski <jankotan@gmail.com>
 	* making workaround for memory leak in pytango
 	* tagged as v1.6.4

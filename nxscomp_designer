@@ -77,6 +77,8 @@ def main():
         level_name = options.log
         level = levels.get(level_name, logging.NOTSET)
         logging.basicConfig(level=level)
+    else:
+        logging.basicConfig()
 
     if options.version:
         print (__version__)

@@ -85,7 +85,7 @@ class DomTools(object):
     def replaceText(cls, node, index, model, text=None):
         if node:
             root = model.rootIndex.internalPointer().node
-            children = node.childNodes
+            children = node.childNodes()
             i = 0
             j = 0
             while i < children.count():

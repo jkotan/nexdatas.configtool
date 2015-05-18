@@ -86,7 +86,7 @@ class ComponentOpen(QUndoCommand):
                     self._cp.instance,
                     self.receiver.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.setActiveSubWindow(subwindow)
                     self._cp.instance.dialog.setSaveFocus()
                 else:
                     self._subwindow = self.receiver.ui.mdi.addSubWindow(
@@ -108,7 +108,7 @@ class ComponentOpen(QUndoCommand):
                     subwindow = self.receiver.subWindow(
                         self._cpEdit, self.receiver.ui.mdi.subWindowList())
                     if subwindow:
-                        self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                        self.receiver.setActiveSubWindow(subwindow)
                         self.receiver.ui.mdi.closeActiveSubWindow()
 
                 self.receiver.componentList.removeElement(
@@ -166,7 +166,7 @@ class DataSourceOpen(QUndoCommand):
                     self._ds.instance,
                     self.receiver.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.setActiveSubWindow(subwindow)
                     self._ds.instance.dialog.setSaveFocus()
                 else:
                     self._subwindow = self.receiver.ui.mdi.addSubWindow(
@@ -190,7 +190,7 @@ class DataSourceOpen(QUndoCommand):
                         self._ds.instance,
                         self.receiver.ui.mdi.subWindowList())
                     if subwindow:
-                        self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                        self.receiver.setActiveSubWindow(subwindow)
                         self.receiver.ui.mdi.closeActiveSubWindow()
 
                 self.receiver.sourceList.removeElement(self._ds, False)
@@ -247,7 +247,7 @@ class ComponentSave(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._cpEdit, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
             else:
                 self._subwindow = self.receiver.ui.mdi.addSubWindow(
                     self._cpEdit.dialog)
@@ -409,7 +409,7 @@ class ComponentChangeDirectory(QUndoCommand):
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), ComponentDlg):
-                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.setActiveSubWindow(subwindow)
                     self.receiver.ui.mdi.closeActiveSubWindow()
 
         self.receiver.componentList.elements = {}
@@ -605,7 +605,7 @@ class DataSourceChangeDirectory(QUndoCommand):
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), CommonDataSourceDlg):
-                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.setActiveSubWindow(subwindow)
                     self.receiver.ui.mdi.closeActiveSubWindow()
 
         self.receiver.sourceList.elements = {}
@@ -645,7 +645,7 @@ class ComponentReloadList(QUndoCommand):
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), ComponentDlg):
-                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.setActiveSubWindow(subwindow)
                     self.receiver.ui.mdi.closeActiveSubWindow()
 
         self.receiver.componentList.elements = {}
@@ -682,7 +682,7 @@ class DataSourceReloadList(QUndoCommand):
         if subwindows:
             for subwindow in subwindows:
                 if isinstance(subwindow.widget(), CommonDataSourceDlg):
-                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.setActiveSubWindow(subwindow)
                     self.receiver.ui.mdi.closeActiveSubWindow()
 
         self.receiver.sourceList.elements = {}

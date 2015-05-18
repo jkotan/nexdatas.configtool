@@ -65,7 +65,7 @@ class ComponentNew(QUndoCommand):
                     self._comp.instance,
                     self.receiver.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.setActiveSubWindow(subwindow)
                     self.receiver.ui.mdi.closeActiveSubWindow()
 
         logger.info("UNDO componentNew")
@@ -103,7 +103,7 @@ class ComponentRemove(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._cp.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self.receiver.ui.mdi.closeActiveSubWindow()
 
         logger.info("EXEC componentRemove")
@@ -130,7 +130,7 @@ class ComponentRemove(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._cp.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self._cp.instance.dialog.setSaveFocus()
             else:
                 if not self._cp.instance.dialog:
@@ -257,7 +257,7 @@ class DataSourceNew(QUndoCommand):
                     self._ds.instance,
                     self.receiver.ui.mdi.subWindowList())
                 if subwindow:
-                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.setActiveSubWindow(subwindow)
                     self.receiver.ui.mdi.closeActiveSubWindow()
 
         logger.info("UNDO dsourceNew")
@@ -295,7 +295,7 @@ class DataSourceRemove(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self.receiver.ui.mdi.closeActiveSubWindow()
 
         logger.info("EXEC dsourceRemove")
@@ -312,7 +312,7 @@ class DataSourceRemove(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self._ds.instance.dialog.setSaveFocus()
             else:
                 self._ds.instance.createDialog()

@@ -117,7 +117,7 @@ class ServerFetchComponents(QUndoCommand):
             for subwindow in subwindows:
                 dialog = subwindow.widget()
                 if isinstance(dialog, ComponentDlg):
-                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.setActiveSubWindow(subwindow)
                     self.receiver.ui.mdi.closeActiveSubWindow()
 
         self.receiver.componentList.elements = {}
@@ -196,7 +196,7 @@ class ServerStoreComponent(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._cpEdit, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
             else:
                 self._cpEdit.createGUI()
 
@@ -481,7 +481,7 @@ class ServerFetchDataSources(QUndoCommand):
             for subwindow in subwindows:
                 dialog = subwindow.widget()
                 if isinstance(dialog, CommonDataSourceDlg):
-                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.setActiveSubWindow(subwindow)
                     self.receiver.ui.mdi.closeActiveSubWindow()
 
         self.receiver.sourceList.elements = {}

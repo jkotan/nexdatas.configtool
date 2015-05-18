@@ -84,7 +84,7 @@ class WindowsSlots(object):
         self.windows["Menu"] = self.main.ui.menuWindow
 
         self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
-                          self.main.ui.mdi.setActiveSubWindow)
+                          self.main.setActiveSubWindow)
 
         self.main.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
                      self.updateWindowMenu)
@@ -224,7 +224,7 @@ class WindowsSlots(object):
             if ds.dialog:
                 ds.dialog.reject()
 
-            self.main.ui.mdi.setActiveSubWindow(subwindow)
+            self.main.setActiveSubWindow(subwindow)
             self.main.ui.mdi.closeActiveSubWindow()
 
     ## closes the current window
@@ -238,7 +238,7 @@ class WindowsSlots(object):
             if cp.dialog:
                 cp.dialog.reject()
 
-            self.main.ui.mdi.setActiveSubWindow(subwindow)
+            self.main.setActiveSubWindow(subwindow)
             self.main.ui.mdi.closeActiveSubWindow()
 
 

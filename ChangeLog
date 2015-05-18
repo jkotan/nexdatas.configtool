@@ -1,5 +1,6 @@
-2015-05-XX Jan Kotanski <jankotan@gmail.com>
+2015-05-18 Jan Kotanski <jankotan@gmail.com>
 	* fix for uninitiated logging
+	* adds SetActiveWindow decoration
 	* tagged as v1.6.6
 
 2015-05-04 Jan Kotanski <jankotan@gmail.com>

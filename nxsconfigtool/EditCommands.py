@@ -79,7 +79,7 @@ class ComponentEdit(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._cpEdit, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self._cpEdit.reconnectSaveAction()
             else:
                 self._cpEdit.createGUI()
@@ -144,7 +144,7 @@ class DataSourceCopy(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self._ds.instance.reconnectSaveAction()
             else:
                 self._ds.instance.createGUI()
@@ -180,7 +180,7 @@ class DataSourceCopy(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self._ds.instance.reconnectSaveAction()
             else:
                 self._ds.instance.createGUI()
@@ -240,7 +240,7 @@ class DataSourceCut(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self._ds.instance.reconnectSaveAction()
             else:
                 self._ds.instance.createGUI()
@@ -280,7 +280,7 @@ class DataSourceCut(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self._ds.instance.reconnectSaveAction()
             else:
                 self._ds.instance.createGUI()
@@ -361,7 +361,7 @@ class DataSourcePaste(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self._ds.instance.reconnectSaveAction()
             else:
                 self._ds.instance.createDialog()
@@ -399,7 +399,7 @@ class DataSourcePaste(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self._ds.instance.reconnectSaveAction()
             else:
                 self._ds.instance.createGUI()
@@ -484,7 +484,7 @@ class DataSourceApply(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self._ds.instance.reconnectSaveAction()
             else:
                 self._ds.instance.createGUI()
@@ -527,7 +527,7 @@ class DataSourceApply(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._ds.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self.receiver.sourceList.elements[
                     self._ds.id].instance.updateForm()
                 self._ds.instance.reconnectSaveAction()
@@ -591,7 +591,7 @@ class ComponentTakeDataSources(QUndoCommand):
                     if dialogs:
                         for dialog in dialogs:
                             if isinstance(dialog, DataSourceDlg):
-                                self.receiver.ui.mdi.setActiveSubWindow(
+                                self.receiver.setActiveSubWindow(
                                     dialog)
                                 self.receiver.ui.mdi.closeActiveSubWindow()
 
@@ -681,7 +681,7 @@ class ComponentTakeDataSource(QUndoCommand):
                 self._ds.instance,
                 self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self.receiver.ui.mdi.closeActiveSubWindow()
 
         self.receiver.sourceList.populateElements(self._lids)
@@ -736,7 +736,7 @@ class DataSourceEdit(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._dsEdit, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
                 self._ds.instance.reconnectSaveAction()
             else:
                 if self._ds.instance.dialog is None:

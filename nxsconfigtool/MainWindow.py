@@ -617,6 +617,13 @@ class MainWindow(QMainWindow):
                                 widget.component.id)
                     status = True
         return status
+   
+    ## actives sub-window if in mdi area
+    def setActiveSubWindow(self, window):
+        w = window if window in self.ui.mdi.subWindowList() else None
+        self.ui.mdi.setActiveSubWindow(w)
+            
+            
 
     ## deselect component list item according to open window
     def deselectComponentSubWindow(self):
@@ -632,7 +639,7 @@ class MainWindow(QMainWindow):
                         if self.componentList.currentListElement().id \
                                 != widget.component.id:
 
-                            self.ui.mdi.setActiveSubWindow(None)
+                            self.setActiveSubWindow(None)
 
     ## deselect component list item according to open window
     def deselectDataSourceSubWindow(self):
@@ -648,7 +655,7 @@ class MainWindow(QMainWindow):
                         if self.sourceList.currentListElement().id \
                                 != widget.datasource.id:
 
-                            self.ui.mdi.setActiveSubWindow(None)
+                            self.setActiveSubWindow(None)
         
 
     ## shows all attributes in the tree

@@ -100,7 +100,7 @@ class ComponentItemCommand(QUndoCommand):
                     self.receiver.ui.mdi.subWindowList())
 
                 if subwindow:
-                    self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                    self.receiver.setActiveSubWindow(subwindow)
                     self._cp.instance.reconnectSaveAction()
                 else:
                     self._cp.instance.createGUI()
@@ -151,7 +151,7 @@ class ComponentItemCommand(QUndoCommand):
             subwindow = self.receiver.subWindow(
                 self._cp.instance, self.receiver.ui.mdi.subWindowList())
             if subwindow:
-                self.receiver.ui.mdi.setActiveSubWindow(subwindow)
+                self.receiver.setActiveSubWindow(subwindow)
             else:
                 if self._cp.instance is None:
                     self._cp.instance = Component(self.receiver.componentList)
@@ -206,7 +206,7 @@ class ComponentClear(ComponentItemCommand):
                 if hasattr(self._cp, "instance"):
                     if self._cp.instance in self.receiver.ui.mdi\
                             .subWindowList():
-                        self.receiver.ui.mdi.setActiveSubWindow(
+                        self.receiver.setActiveSubWindow(
                             self._cp.instance)
                     self._cp.instance.createHeader()
 

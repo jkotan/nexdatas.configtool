@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <definition>
-  <group type="NXentry" name="entry2">
+  <group type="NXentry" name="entry3">
     <group type="NXinstrument" name="instrument">
       <group type="NXsource" name="source">
         <field units="m" type="NX_FLOAT" name="distance">100.</field>
@@ -2042,7 +2042,7 @@ recent write operations to the server.
         <attribute type="NX_CHAR" name="ala">
           1
         </attribute>
-        <field type="NX_CHAR" name="ala">
+        <field type="NX_BOOLEAN" name="ala">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
             <device port="10000" hostname="haso228k.desy.de" member="property" name="p09/tst/exp.01"/>

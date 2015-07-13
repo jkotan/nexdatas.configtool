@@ -1,3 +1,7 @@
+2015-05-XX Jan Kotanski <jankotan@gmail.com>
+	* fix for lack of instances in element lists
+	* tagged as v1.6.8
+
 2015-05-18 Jan Kotanski <jankotan@gmail.com>
 	* fix for replaceText in DomTools
 	* tagged as v1.6.7

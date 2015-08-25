@@ -24,7 +24,7 @@
 import os
 import sys
 from distutils.util import get_platform
-from distutils.core import setup
+from distutils.core import setup, Command
 from distutils.command.build import build
 from distutils.command.clean import clean
 from distutils.command.install_scripts import install_scripts
@@ -135,6 +135,24 @@ class toolClean(clean):
         clean.run(self)
 
 
+## test command class
+class TestCommand(Command):
+
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import sys
+        import subprocess
+        errno = subprocess.call([sys.executable, 'test/runtest.py'])
+        raise SystemExit(errno)
+
+
 ## provides windows scripts
 def get_scripts(scripts):
     if get_platform()[:3] == 'win':
@@ -161,7 +179,7 @@ SETUPDATA = dict(
     packages=[TOOL, UIDIR, QRCDIR],
     scripts=get_scripts(SCRIPTS),
     long_description=read('README'),
-    cmdclass={"build": toolBuild, "clean": toolClean}
+    cmdclass={"build": toolBuild, "clean": toolClean, "test": TestCommand}
 )
 
 

@@ -32,6 +32,7 @@ from .Component import Component
 from .LabeledObject import LabeledObject
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 

@@ -32,6 +32,7 @@ from .NodeDlg import NodeDlg
 from .DomTools import DomTools
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 
@@ -58,6 +59,7 @@ class GroupDlg(NodeDlg):
         self.subItems = ["group", "field", "attribute", "link",
                          "component", "doc"]
 
+        ## list of NeXus types
         self.typehelper = [
             'NXaperture',
             'NXattenuator',

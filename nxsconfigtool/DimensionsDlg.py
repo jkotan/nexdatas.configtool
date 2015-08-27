@@ -27,6 +27,7 @@ from PyQt4.QtGui import (QTableWidgetItem, QMessageBox, QDialog)
 from .ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 

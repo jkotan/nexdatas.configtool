@@ -31,6 +31,7 @@ from .ComponentDlg import ComponentDlg
 from .Component import Component
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 

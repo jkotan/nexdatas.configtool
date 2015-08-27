@@ -22,6 +22,7 @@
 """ Provides connects to configuration server"""
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 try:

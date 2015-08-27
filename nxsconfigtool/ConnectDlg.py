@@ -27,6 +27,7 @@ from PyQt4.QtGui import (QDialog, QMessageBox)
 from .ui.ui_connectdlg import Ui_ConnectDlg
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 

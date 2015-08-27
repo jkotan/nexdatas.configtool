@@ -43,6 +43,7 @@ from .DomTools import DomTools
 from .ComponentDlg import ComponentDlg
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 

@@ -50,6 +50,7 @@ from .WindowsSlots import WindowsSlots
 from .ConfigurationServer import (ConfigurationServer, PYTANGO_AVAILABLE)
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 
@@ -57,6 +58,9 @@ logger = logging.getLogger(__name__)
 class MainWindow(QMainWindow):
 
     ## constructor
+    # \param components component direcotry
+    # \param datasources datasource directory
+    # \param server configuration server
     # \param parent parent widget
     def __init__(self, components=None, datasources=None,
                  server=None, parent=None):

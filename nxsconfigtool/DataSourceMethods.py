@@ -31,6 +31,7 @@ from .DomTools import DomTools
 from .Errors import ParameterError
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 
@@ -40,6 +41,7 @@ class DataSourceMethods(object):
     ## constructor
     # \param dialog datasource dialog
     # \param datasource data
+    # \param parent qt parent
     def __init__(self, dialog, datasource, parent=None):
 
         ## datasource dialog

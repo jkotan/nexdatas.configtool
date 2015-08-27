@@ -30,6 +30,7 @@ from .ComponentModel import ComponentModel
 from .EditCommands import (DataSourceCut, DataSourceCopy, DataSourcePaste)
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 

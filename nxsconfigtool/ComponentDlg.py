@@ -27,6 +27,7 @@ from .ui.ui_componentdlg import Ui_ComponentDlg
 from .DomTools import DomTools
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 
@@ -69,6 +70,7 @@ class ComponentDlg(QDialog):
         self.component.dialog = None
         event.accept()
 
+    ## rejects component closing    
     def reject(self):
         self.parent().close()
         super(ComponentDlg, self).reject()

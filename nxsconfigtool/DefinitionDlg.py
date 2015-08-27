@@ -32,6 +32,7 @@ from .NodeDlg import NodeDlg
 from .DomTools import DomTools
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 

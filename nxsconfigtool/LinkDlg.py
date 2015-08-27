@@ -30,6 +30,7 @@ from .Errors import CharacterError
 from .DomTools import DomTools
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 

@@ -28,6 +28,7 @@ from .ui.ui_attributedlg import Ui_AttributeDlg
 from .Errors import CharacterError
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 

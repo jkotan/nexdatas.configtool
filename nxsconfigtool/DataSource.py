@@ -36,6 +36,7 @@ from . import DataSourceDlg
 from .DataSourceMethods import DataSourceMethods
 
 import logging
+## message logger
 logger = logging.getLogger(__name__)
 
 
@@ -192,6 +193,7 @@ class DataSource(CommonDataSource):
     def setName(self, name, directory):
         self.name = unicode(name)
         if not self.dataSourceName:
+            ## datasource name
             self.dataSourceName = self.name
             self.dialog.ui.nameLineEdit.setText(self.name)
             self.dialog.imp['CLIENT'].ui.cRecNameLineEdit.setText(self.name)

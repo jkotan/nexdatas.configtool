@@ -30,7 +30,8 @@ from .ui.ui_elementlist import Ui_ElementList
 from .LabeledObject import LabeledObject
 
 import logging
-logger = logging.getLogger(__name__)
+## message logger
+setlogger = logging.getLogger(__name__)
 
 
 ## dialog defining a group tag
@@ -114,6 +115,7 @@ class ElementList(QWidget):
             return None
         return self.elements[item.data(Qt.UserRole).toLongLong()[0]]
 
+    ## sets focus into element list
     def setItemFocus(self):
         self.ui.elementListWidget.setFocus()        
 

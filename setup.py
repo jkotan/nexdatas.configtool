@@ -40,8 +40,11 @@ ITOOL = __import__(TOOL)
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+## ui directory
 UIDIR = os.path.join(TOOL, "ui")
+## qrc directory
 QRCDIR = os.path.join(TOOL, "qrc")
+## executable scripts
 SCRIPTS = ['nxscomp_designer']
 
 
@@ -138,14 +141,18 @@ class toolClean(clean):
 ## test command class
 class TestCommand(Command):
 
+    ## user options
     user_options = []
 
+    ## initializes options
     def initialize_options(self):
         pass
 
+    ## finalizes options
     def finalize_options(self):
         pass
-
+    
+    ## runs command
     def run(self):
         import sys
         import subprocess

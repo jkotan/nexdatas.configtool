@@ -137,12 +137,12 @@ class ListSlots(object):
         self.undoStack.push(cmd)
 
     ## component row change action
-    # \param item row Changed
+    # \param row row Changed
     def componentRowChanged(self, row):
         self.main.deselectComponentSubWindow()
 
     ## dsource row change action
-    # \param item row Changed
+    # \param row row Changed
     def dsourceRowChanged(self, row):
         self.main.deselectDataSourceSubWindow()
 

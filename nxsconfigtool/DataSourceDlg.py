@@ -138,7 +138,7 @@ class CommonDataSourceDlg(NodeDlg):
             self.datasource.clearDialog()
         event.accept()
 
-    ## rejects datasource changes 
+    ## rejects datasource changes
     def reject(self):
         self.parent().close()
         super(CommonDataSourceDlg, self).reject()

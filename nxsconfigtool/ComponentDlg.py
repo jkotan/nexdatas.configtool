@@ -70,7 +70,7 @@ class ComponentDlg(QDialog):
         self.component.dialog = None
         event.accept()
 
-    ## rejects component closing    
+    ## rejects component closing
     def reject(self):
         self.parent().close()
         super(ComponentDlg, self).reject()

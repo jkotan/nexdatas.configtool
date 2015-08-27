@@ -175,7 +175,7 @@ class ServerSlots(object):
         cmd = ServerDeleteComponent(self.main)
         cmd.redo()
         self.main.componentList.setItemFocus()
-            
+
     ## set component mandatory action
     # \brief It sets the current component as mandatory
     def serverSetMandatoryComponent(self):

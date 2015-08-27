@@ -117,7 +117,7 @@ class ElementList(QWidget):
 
     ## sets focus into element list
     def setItemFocus(self):
-        self.ui.elementListWidget.setFocus()        
+        self.ui.elementListWidget.setFocus()
 
     ## removes the current element
     #  \brief It removes the current element asking before about it

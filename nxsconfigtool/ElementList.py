@@ -31,7 +31,7 @@ from .LabeledObject import LabeledObject
 
 import logging
 ## message logger
-setlogger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 ## dialog defining a group tag

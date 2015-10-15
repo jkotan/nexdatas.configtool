@@ -1,6 +1,7 @@
 2015-05-XX Jan Kotanski <jankotan@gmail.com>
+	* adding datasources for link's targets
 	* fix for lack of instances in element lists
-	* tagged as v1.6.8
+	* tagged as v1.7.0
 
 2015-05-18 Jan Kotanski <jankotan@gmail.com>
 	* fix for replaceText in DomTools

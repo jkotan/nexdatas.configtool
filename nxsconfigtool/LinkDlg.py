@@ -50,7 +50,7 @@ class LinkDlg(NodeDlg):
         self.doc = u''
 
         ## allowed subitems
-        self.subItems = ["doc"]
+        self.subItems = ["doc", "datasource", "strategy"]
 
         ## user interface
         self.ui = Ui_LinkDlg()
@@ -118,6 +118,10 @@ class LinkDlg(NodeDlg):
             attributeMap.namedItem("target").nodeValue()
             if attributeMap.contains("target") else "")
 
+        text = unicode(DomTools.getText(self.node)).strip()
+        if text and text.startswith("$datasources."):
+            self.target = text
+
         doc = self.node.firstChildElement(QString("doc"))
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
@@ -175,8 +179,12 @@ class LinkDlg(NodeDlg):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         if self.name:
             elem.setAttribute(QString("name"), QString(self.name))
+        self.replaceText(mindex)
         if self.target:
-            elem.setAttribute(QString("target"), QString(self.target))
+            if self.target.startswith("$datasources."):
+                self.replaceText(mindex, unicode(self.target))
+            else:
+                elem.setAttribute(QString("target"), QString(self.target))
 
         doc = self.node.firstChildElement(QString("doc"))
         if not self.doc and doc and doc.nodeName() == "doc":

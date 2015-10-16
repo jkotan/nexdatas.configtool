@@ -1,5 +1,6 @@
-2015-05-XX Jan Kotanski <jankotan@gmail.com>
+2015-10-16 Jan Kotanski <jankotan@gmail.com>
 	* adding datasources for link's targets
+	  (working with nxswriter > 1.9.0)
 	* fix for lack of instances in element lists
 	* tagged as v1.7.0
 
@@ -211,8 +212,8 @@
 2012-11-29 Jan Kotanski <jankotan@gmail.com>
 	* adding datasources for attributes
 	* adding selection of the growing dimension in strategy STEP mode
-	* fixing BadWindow error
-	* tagged as v1.0.1
+	* fixing BadWindow error	
+* tagged as v1.0.1
 
 2012-11-20 Jan Kotanski <jankotan@gmail.com>
 	* the first tag with ComponentDesigner

@@ -449,6 +449,7 @@ class DataSourceApply(QUndoCommand):
         if self._ds is None:
             QMessageBox.warning(self.receiver, "DataSource not selected",
                                 "Please select one of the datasources")
+            return
         if self._ds.instance is None:
             #                self._dsEdit = FieldWg()
             self._ds.instance = DataSource.DataSource(self.receiver.sourceList)

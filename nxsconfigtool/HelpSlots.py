@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ class HelpSlots(object):
     def helpAbout(self):
         QMessageBox.about(self.main, "About Component Designer",
                 """<b>Component Designer</b> v %s
-                <p>Copyright &copy; 2012-2015 DESY, GNU GENERAL PUBLIC LICENSE
+                <p>Copyright &copy; 2012-2016 DESY, GNU GENERAL PUBLIC LICENSE
                 <p>This application can be used to create
                 XML configuration files for Nexus Data Writer.
                 <p>Python %s - Qt %s - PyQt %s on %s""" % (

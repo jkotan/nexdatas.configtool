@@ -1,3 +1,7 @@
+2016-02-22 Jan Kotanski <jankotan@gmail.com>
+	* change nxscomp_designer into nxsdesigner
+	* tagged as v1.8.0
+
 2015-10-20 Jan Kotanski <jankotan@gmail.com>
 	* fix for apply datasources
 	* tagged as v1.7.1

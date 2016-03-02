@@ -1,0 +1,8 @@
+<?xml version='1.0'?>
+<definition>
+  <datasource type="PYEVAL" name="pilatus_filestartnum_cb">
+    <result name="result">
+commonblock["pilatus_filestartnum"] = ds.pilatus_filestartnum
+ds.result = commonblock["pilatus_filestartnum"]</result>
+ $datasources.pilatus_filestartnum</datasource>
+</definition>

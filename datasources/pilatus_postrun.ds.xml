@@ -1,0 +1,21 @@
+<?xml version='1.0'?>
+<definition>
+  <datasource type="PYEVAL" name="pilatus_postrun">
+    <result name="result">
+unixdir = (ds.pilatus_filedir).replace("\\","/")
+if len(unixdir)> 1 and unixdir[1] == ":":
+    unixdir = "/data" + unixdir[2:]
+if unixdir and unixdir[-1] == "/":
+    unixdir = unixdir[:-1]
+filestartnum = str(commonblock["pilatus_filestartnum"])
+result = "" + unixdir + "/" + ds.pilatus_fileprefix + "%05d"
+result += ds.pilatus_filepostfix + ":"
+result += filestartnum + ":" +  str(ds.pilatus_filestartnum-1)
+ds.result =  result
+</result>
+ $datasources.pilatus_filestartnum
+ $datasources.pilatus_filestartnum_cb
+ $datasources.pilatus_filedir
+ $datasources.pilatus_filepostfix
+ $datasources.pilatus_fileprefix</datasource>
+</definition>

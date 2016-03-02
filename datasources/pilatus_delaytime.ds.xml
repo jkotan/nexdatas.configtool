@@ -1,0 +1,7 @@
+<?xml version='1.0'?>
+<definition>
+  <datasource type="TANGO" name="pilatus_delaytime">
+    <record name="DelayTime"/>
+    <device port="10000" hostname="haso107d1" group="pilatus_" member="attribute" name="p09/pilatus/exp.01"/>
+  </datasource>
+</definition>

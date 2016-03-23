@@ -1,3 +1,7 @@
+2016-02-XX Jan Kotanski <jankotan@gmail.com>
+	* add create Online component command
+	* tagged as v1.9.0
+
 2016-02-22 Jan Kotanski <jankotan@gmail.com>
 	* change nxscomp_designer into nxsdesigner
 	* tagged as v1.8.0

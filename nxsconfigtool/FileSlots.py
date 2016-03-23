@@ -36,23 +36,23 @@ from .FileCommands import (
     ComponentReloadList,
     DataSourceReloadList,
     DataSourceChangeDirectory
-    )
+)
 
 from .EditCommands import (
     ComponentEdit,
     DataSourceEdit,
     DataSourceApply
-    )
+)
 
 from .ItemCommands import (
     ComponentApplyItem,
     ComponentMerge
-    )
+)
 
 from .ListCommands import (
     ComponentListChanged,
     DataSourceListChanged
-    )
+)
 
 
 ## stack with the application commands
@@ -112,7 +112,7 @@ class FileSlots(object):
                 "Change DataSource Directory...", "dsourceChangeDirectory",
                 "", "dsourcerechangedirectory",
                 "Change the data-source list directory"]
-            }
+        }
 
     ## open component action
     # \brief It opens component from the file

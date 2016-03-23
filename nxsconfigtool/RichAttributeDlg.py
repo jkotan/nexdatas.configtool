@@ -205,7 +205,7 @@ class RichAttributeDlg(NodeDlg):
                     try:
                         if attributeMap.contains("index"):
                             index = int(attributeMap.namedItem(
-                                    "index").nodeValue())
+                                "index").nodeValue())
                         if attributeMap.contains("value"):
                             value = str(attributeMap.namedItem(
                                 "value").nodeValue())
@@ -368,7 +368,7 @@ class RichAttributeDlg(NodeDlg):
                         dstrategy = self.root.createElement(
                             QString("strategy"))
                         dstrategy.setAttribute(QString("mode"),
-                                   QString(unicode("CONFIG")))
+                                               QString(unicode("CONFIG")))
                         dim.appendChild(dsText)
                         dim.appendChild(dstrategy)
                     newDimens.appendChild(dim)

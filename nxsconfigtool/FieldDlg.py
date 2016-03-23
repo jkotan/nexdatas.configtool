@@ -281,7 +281,7 @@ class FieldDlg(NodeDlg):
         aform = AttributeDlg()
         if aform.exec_():
 
-            if not aform.name in self.__attributes.keys():
+            if aform.name not in self.__attributes.keys():
                 self.__attributes[aform.name] = aform.value
                 self.populateAttributes(aform.name)
             else:
@@ -505,8 +505,9 @@ class FieldDlg(NodeDlg):
                             QString(unicode(self.dimensions[i])))
                         dstrategy = self.root.createElement(
                             QString("strategy"))
-                        dstrategy.setAttribute(QString("mode"),
-                                   QString(unicode("CONFIG")))
+                        dstrategy.setAttribute(
+                            QString("mode"),
+                            QString(unicode("CONFIG")))
                         dim.appendChild(dsText)
                         dim.appendChild(dstrategy)
 

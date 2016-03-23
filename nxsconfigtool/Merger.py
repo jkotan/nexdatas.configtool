@@ -34,9 +34,10 @@ from .DomTools import DomTools
 
 ## dialog of the merger
 class MergerDlg(QDialog):
+
     ## constructor
     # \param parent dialog
-    def __init__(self,  parent=None):
+    def __init__(self, parent=None):
         super(MergerDlg, self).__init__(parent)
 
         ## interrupt button
@@ -75,17 +76,17 @@ class Merger(QThread):
         ## allowed children of the given nodes
         self._children = {
             "attribute": ["datasource", "strategy", "enumeration", "doc",
-                         "dimensions"],
+                          "dimensions"],
             "definition": ["group", "field", "attribute", "link", "component",
-                          "doc", "symbols"],
+                           "doc", "symbols"],
             "dimensions": ["dim", "doc"],
             "field": ["attribute", "datasource", "doc", "dimensions",
-                     "enumeration", "strategy"],
+                      "enumeration", "strategy"],
             "group": ["group", "field", "attribute", "link", "component",
-                     "doc"],
+                      "doc"],
             "link": ["datasource", "strategy", "doc"],
             "dim": ["datasource", "strategy", "doc"]
-            }
+        }
 
         ## with unique text
         self.uniqueText = ['field', 'attribute', 'query', 'strategy', 'result']
@@ -105,7 +106,7 @@ class Merger(QThread):
             "device": ["member", "name"],
             "database": ["dbtype"],
             "query": ["format"]
-            }
+        }
 
         ## it contains an exception instance when the exception was raised
         self.exception = None
@@ -168,7 +169,7 @@ class Merger(QThread):
                                  unicode(at2.nodeValue())))
 
         if not status and (tagName in self._singles
-                            or (name1 and name1 == name2)):
+                           or (name1 and name1 == name2)):
             raise IncompatibleNodeError(
                 "Incompatible element attributes  %s: " % unicode(tags),
                 [elem1, elem2])

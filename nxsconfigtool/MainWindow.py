@@ -227,7 +227,7 @@ class MainWindow(QMainWindow):
     # \param checkable if command/action checkable
     # \param signal action signal
     def __setAction(self, action, _, slot=None, shortcut=None, icon=None,
-                     tip=None, checkable=False, signal="triggered()"):
+                    tip=None, checkable=False, signal="triggered()"):
         if icon is not None:
             action.setIcon(QIcon(":/%s.png" % unicode(icon).strip()))
         if shortcut is not None:
@@ -352,7 +352,7 @@ class MainWindow(QMainWindow):
             self.ui.actionApplyComponentItem,
             None,
             self.ui.actionClearComponentItems
-            )
+        )
 
         ## Component list menu
         self.componentListMenuActions = (
@@ -361,23 +361,23 @@ class MainWindow(QMainWindow):
             self.ui.actionMergeComponentItems,
             self.ui.actionClose,
             None, {"File": (
-            self.ui.actionLoad,
-            self.ui.actionSave,
-            self.ui.actionSaveAs,
-            self.ui.actionSaveAll,
-            self.ui.actionReloadList,
-            self.ui.actionChangeDirectory)},
+                self.ui.actionLoad,
+                self.ui.actionSave,
+                self.ui.actionSaveAs,
+                self.ui.actionSaveAll,
+                self.ui.actionReloadList,
+                self.ui.actionChangeDirectory)},
             None, {"Server": (
-            self.ui.actionFetchComponentsServer,
-            self.ui.actionStoreComponentServer,
-            self.ui.actionStoreAllComponentsServer,
-            self.ui.actionDeleteComponentServer,
-            self.ui.actionGetMandatoryComponentsServer,
-            self.ui.actionSetComponentMandatoryServer,
-            self.ui.actionUnsetComponentMandatoryServer)},
+                self.ui.actionFetchComponentsServer,
+                self.ui.actionStoreComponentServer,
+                self.ui.actionStoreAllComponentsServer,
+                self.ui.actionDeleteComponentServer,
+                self.ui.actionGetMandatoryComponentsServer,
+                self.ui.actionSetComponentMandatoryServer,
+                self.ui.actionUnsetComponentMandatoryServer)},
             None,
             self.ui.actionTakeDataSources
-            )
+        )
 
         ## DataSource list menu
         self.dsourceListMenuActions = (
@@ -390,18 +390,18 @@ class MainWindow(QMainWindow):
             self.ui.actionCutDataSource,
             self.ui.actionPasteDataSource,
             None, {"File": (
-            self.ui.actionLoadDataSource,
-            self.ui.actionSaveDataSource,
-            self.ui.actionSaveDataSourceAs,
-            self.ui.actionSaveAllDataSources,
-            self.ui.actionReloadDataSourceList,
-            self.ui.actionChangeDataSourceDirectory)},
+                self.ui.actionLoadDataSource,
+                self.ui.actionSaveDataSource,
+                self.ui.actionSaveDataSourceAs,
+                self.ui.actionSaveAllDataSources,
+                self.ui.actionReloadDataSourceList,
+                self.ui.actionChangeDataSourceDirectory)},
             None, {"Server": (
-            self.ui.actionFetchDataSourcesServer,
-            self.ui.actionStoreDataSourceServer,
-            self.ui.actionStoreAllDataSourcesServer,
-            self.ui.actionDeleteDataSourceServer)}
-            )
+                self.ui.actionFetchDataSourcesServer,
+                self.ui.actionStoreDataSourceServer,
+                self.ui.actionStoreAllDataSourcesServer,
+                self.ui.actionDeleteDataSourceServer)}
+        )
 
         # datasource widget actions
         self.externalDSActions = {
@@ -540,7 +540,7 @@ class MainWindow(QMainWindow):
                 str(self.configServer.port)
                 if self.configServer.port else "10000",
                 self.configServer.device
-                )
+            )
         else:
             dev = "None"
 
@@ -580,7 +580,7 @@ class MainWindow(QMainWindow):
             components,
             self.externalCPActions,
             self.contextMenuActions
-           )
+        )
         ide = self.componentList.elements.itervalues().next().id \
             if len(self.componentList.elements) else None
 
@@ -592,7 +592,7 @@ class MainWindow(QMainWindow):
         self.componentList.loadList(
             self.externalCPActions,
             self.contextMenuActions
-            )
+        )
         ide = self.componentList.elements.itervalues().next().id \
             if len(self.componentList.elements) else None
 
@@ -603,8 +603,8 @@ class MainWindow(QMainWindow):
     def updateDataSourceListItem(self):
         status = False
         if self.ui.mdi.activeSubWindow() and isinstance(
-            self.ui.mdi.activeSubWindow().widget(),
-            CommonDataSourceDlg):
+                self.ui.mdi.activeSubWindow().widget(),
+                CommonDataSourceDlg):
             widget = self.ui.mdi.activeSubWindow().widget()
             if isinstance(widget, CommonDataSourceDlg):
                 if widget.datasource.id is not None:
@@ -621,7 +621,7 @@ class MainWindow(QMainWindow):
     def updateComponentListItem(self):
         status = False
         if self.ui.mdi.activeSubWindow() and isinstance(
-            self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+                self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             widget = self.ui.mdi.activeSubWindow().widget()
             if isinstance(widget, ComponentDlg):
                 if widget.component.id is not None:
@@ -644,7 +644,7 @@ class MainWindow(QMainWindow):
         wlist = self.ui.mdi.subWindowList()
 
         if self.ui.mdi.activeSubWindow() and isinstance(
-            self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+                self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             widget = self.ui.mdi.activeSubWindow().widget()
             if isinstance(widget, ComponentDlg):
                 if widget.component.id is not None:
@@ -660,7 +660,7 @@ class MainWindow(QMainWindow):
         wlist = self.ui.mdi.subWindowList()
 
         if self.ui.mdi.activeSubWindow() and isinstance(
-            self.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
+                self.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
             widget = self.ui.mdi.activeSubWindow().widget()
             if isinstance(widget, CommonDataSourceDlg):
                 if widget.datasource.id is not None:

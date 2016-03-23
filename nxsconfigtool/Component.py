@@ -71,13 +71,13 @@ class Component(object):
 
         if os.path.exists(os.path.join(os.getcwd(), "components")):
             self._xmlPath = os.path.abspath(os.path.join(
-                    os.getcwd(), "components"))
+                os.getcwd(), "components"))
         else:
             self._xmlPath = os.getcwd()
 
         if os.path.exists(os.path.join(os.getcwd(), "datasources")):
             self._dsPath = os.path.abspath(os.path.join(
-                    os.getcwd(), "datasources"))
+                os.getcwd(), "datasources"))
         else:
             self._dsPath = os.getcwd()
 
@@ -153,7 +153,7 @@ class Component(object):
 
         while unicode(
             ancestors[0].parentNode().nodeName()).strip() != '#document' and \
-            unicode(ancestors[0].parentNode().nodeName()).strip() != '':
+                unicode(ancestors[0].parentNode().nodeName()).strip() != '':
             ancestors.insert(0, ancestors[0].parentNode())
         ancestors.insert(0, ancestors[0].parentNode())
 
@@ -449,7 +449,7 @@ class Component(object):
     # \param name component item name
     # \returns component DOM node related to the new item
     def addItem(self, name):
-        if not name in self._tagClasses.keys():
+        if name not in self._tagClasses.keys():
             return
         if not self.view or not self.dialog or not self.view.model() \
                 or not self.dialog.ui or not self.dialog.ui.widget:
@@ -747,9 +747,9 @@ class Component(object):
         if not filePath:
             if not self.name:
                 self._componentFile = unicode(QFileDialog.getOpenFileName(
-                        self.parent, "Open File", self._xmlPath,
-                        "XML files (*.xml);;HTML files (*.html);;"
-                        "SVG files (*.svg);;User Interface files (*.ui)"))
+                    self.parent, "Open File", self._xmlPath,
+                    "XML files (*.xml);;HTML files (*.html);;"
+                    "SVG files (*.svg);;User Interface files (*.ui)"))
             else:
                 self._componentFile = os.path.join(
                     self.directory, self.name + ".xml")
@@ -1299,9 +1299,9 @@ class Component(object):
     # \brief It is called on removing  the component from the list
     def _close(self):
         if QMessageBox.question(
-            self.parent, "Close component",
-            "Would you like to close the component ?",
-            QMessageBox.Yes | QMessageBox.No) == QMessageBox.No:
+                self.parent, "Close component",
+                "Would you like to close the component ?",
+                QMessageBox.Yes | QMessageBox.No) == QMessageBox.No:
             return
         self.dialog.reject()
 

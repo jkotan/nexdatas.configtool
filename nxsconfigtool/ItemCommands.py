@@ -84,10 +84,10 @@ class ComponentItemCommand(QUndoCommand):
                     self.receiver.componentList.directory
                 self._cp.instance.name = \
                     self.receiver.componentList.elements[
-                    self._cp.id].name
+                        self._cp.id].name
 
             if self._newstate is None and hasattr(
-                self._cp.instance, "getState"):
+                    self._cp.instance, "getState"):
                 self._newstate = self._cp.instance.getState()
             else:
                 if hasattr(
@@ -161,7 +161,7 @@ class ComponentItemCommand(QUndoCommand):
                         self.receiver.componentList.directory
                     self._cp.instance.name = \
                         self.receiver.componentList.elements[
-                        self._cp.id].name
+                            self._cp.id].name
                 if not self._cp.instance.dialog:
                     self._cp.instance.createGUI()
                 self._subwindow = self.receiver.ui.mdi.addSubWindow(
@@ -197,8 +197,8 @@ class ComponentClear(ComponentItemCommand):
                 if QMessageBox.question(
                     self.receiver, "Component - Clear",
                     "Clear the component: %s ".encode() % (self._cp.name),
-                    QMessageBox.Yes | QMessageBox.No,
-                    QMessageBox.Yes) == QMessageBox.No:
+                        QMessageBox.Yes | QMessageBox.No,
+                        QMessageBox.Yes) == QMessageBox.No:
                     self._oldstate = None
                     self._index = None
                     self._cp = None
@@ -249,7 +249,7 @@ class ComponentLoadComponentItem(ComponentItemCommand):
                         and self._cp.instance.view.model():
                     if hasattr(self._cp.instance, "loadComponentItem"):
                         if not self._cp.instance.loadComponentItem(
-                            self._itemName):
+                                self._itemName):
                             QMessageBox.warning(
                                 self.receiver, "SubComponent not loaded",
                                 "Please ensure that you have selected "
@@ -507,7 +507,7 @@ class ComponentNewItem(ComponentItemCommand):
                         if row is not None:
                             self._childIndex = \
                                 self._cp.instance.view.model().index(
-                                row, 0, self._index)
+                                    row, 0, self._index)
                             self._cp.instance.view.setCurrentIndex(
                                 self._childIndex)
                             self._cp.instance.tagClicked(self._childIndex)
@@ -559,11 +559,11 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
                         and self._cp.instance.view.model():
                     if hasattr(self._cp.instance, "loadDataSourceItem"):
                         if not self._cp.instance.loadDataSourceItem(
-                            self.itemName):
+                                self.itemName):
                             QMessageBox.warning(
                                 self.receiver, "DataSource not loaded",
                                 "Please ensure that you have selected "
-                                    "the proper items")
+                                "the proper items")
                 else:
                     QMessageBox.warning(
                         self.receiver, "Component item not selected",
@@ -728,7 +728,7 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
                         "Please edit one of the component Items")
                     return
                 if not self._cp.instance.linkDataSourceItem(
-                    dsEdit.dataSourceName):
+                        dsEdit.dataSourceName):
                     QMessageBox.warning(
                         self.receiver,
                         "Linking the datasource item not possible",
@@ -786,7 +786,7 @@ class ComponentMoveUpItem(ComponentItemCommand):
             self.preExecute()
             if self._cp is not None:
                 if hasattr(self._cp, "instance") and hasattr(
-                    self._cp.instance, "moveUpItem"):
+                        self._cp.instance, "moveUpItem"):
 
                     if self._cp.instance.moveUpItem() is None:
                         QMessageBox.warning(

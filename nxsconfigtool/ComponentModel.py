@@ -242,7 +242,7 @@ class ComponentModel(QAbstractItemModel):
     # \param position row integer index of the first removed row
     # \param parent index of the parent item
     # \returns True if parent exists
-    def removeItem(self, position,  parent=QModelIndex()):
+    def removeItem(self, position, parent=QModelIndex()):
         item = parent.internalPointer()
         if not item:
             return False

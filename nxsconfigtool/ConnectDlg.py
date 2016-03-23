@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
 
-   ## Qt application
+    ## Qt application
     app = QApplication(sys.argv)
     ## connect form
     form = ConnectDlg()

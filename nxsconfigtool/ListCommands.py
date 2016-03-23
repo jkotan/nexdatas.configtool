@@ -122,7 +122,7 @@ class ComponentRemove(QUndoCommand):
                     self.receiver.componentList.directory
                 self._cp.instance.name = \
                     self.receiver.componentList.elements[
-                    self._cp.id].name
+                        self._cp.id].name
 
             self._cp.instance.createGUI()
             self._cp.instance.addContextMenu(
@@ -185,7 +185,7 @@ class ComponentListChanged(QUndoCommand):
             if self._cp is None:
                 self._cp, self._oldName = \
                     self.receiver.componentList.listItemChanged(
-                    self.item, self.name)
+                        self.item, self.name)
             else:
                 self._cp.name = self.name
 
@@ -255,8 +255,8 @@ class DataSourceNew(QUndoCommand):
             if hasattr(self._ds, 'instance'):
                 subwindow = \
                     self.receiver.subWindow(
-                    self._ds.instance,
-                    self.receiver.ui.mdi.subWindowList())
+                        self._ds.instance,
+                        self.receiver.ui.mdi.subWindowList())
                 if subwindow:
                     self.receiver.setActiveSubWindow(subwindow)
                     self.receiver.ui.mdi.closeActiveSubWindow()
@@ -357,7 +357,7 @@ class DataSourceListChanged(QUndoCommand):
             if self._ds is None:
                 self._ds, self._oldName = \
                     self.receiver.sourceList.listItemChanged(
-                    self.item, self.name)
+                        self.item, self.name)
             else:
                 self._ds.name = self.name
 

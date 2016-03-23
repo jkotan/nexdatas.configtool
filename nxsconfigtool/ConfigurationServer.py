@@ -97,8 +97,7 @@ class ConfigurationServer(object):
                                  self.device.encode())
         else:
             return self.device.encode()
-        
-        
+
     ## connects to the configuration server
     # \brief It opens the configuration Tango device
     def connect(self):

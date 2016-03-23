@@ -93,6 +93,7 @@ class ServerConnect(QUndoCommand):
 
         logger.info("UNDO serverConnect")
 
+
 ## Command which performs connection to the configuration server
 class ServerCreate(QUndoCommand):
 
@@ -113,7 +114,8 @@ class ServerCreate(QUndoCommand):
         if self.receiver.configServer:
             if self.receiver.configServer.connected:
                 try:
-                    cc = ComponentCreator(self.receiver.configServer, self.receiver)
+                    cc = ComponentCreator(
+                        self.receiver.configServer, self.receiver)
                     if cc.checkOnlineFile(self.receiver.onlineFile):
                         self.receiver.onlineFile = cc.onlineFile
                         cc.create()
@@ -124,7 +126,7 @@ class ServerCreate(QUndoCommand):
                                 cpid = self.__addComponent(cp, xml, cc.action)
                             self.receiver.componentList.populateElements(cpid)
                             self.receiver.sourceList.populateElements(dsid)
-                        
+
                 except Exception, e:
                     QMessageBox.warning(
                         self.receiver,
@@ -138,7 +140,6 @@ class ServerCreate(QUndoCommand):
         cpEdit.id = cp.id
         cpEdit.directory = self.receiver.componentList.directory
         cpEdit.createGUI()
-
 
         cpEdit.name = name
         cpEdit.set(QString(xml), True)
@@ -158,7 +159,7 @@ class ServerCreate(QUndoCommand):
             if cp.instance.save():
                 cp.savedName = cp.name
                 cpEdit.savedXML = cp.instance.get()
-                
+
         if hasattr(self.receiver.ui, 'mdi'):
             subwindow = self.receiver.subWindow(
                 cp.instance, self.receiver.ui.mdi.subWindowList())
@@ -174,14 +175,14 @@ class ServerCreate(QUndoCommand):
                 cp.instance = cpEdit
             cpEdit.dialog.show()
         return cp.id
-            
+
     def __addDataSource(self, name, xml, action):
         ds = LabeledObject(name, None)
         dsEdit = DataSource.DataSource(self.receiver.sourceList)
         dsEdit.id = ds.id
         dsEdit.directory = self.receiver.sourceList.directory
         dsEdit.name = name
-        
+
         dsEdit.set(QString(xml), True)
         if hasattr(dsEdit, "connectExternalActions"):
             dsEdit.connectExternalActions(
@@ -200,7 +201,7 @@ class ServerCreate(QUndoCommand):
             if ds.instance.save():
                 ds.savedName = ds.name
                 ds.instance.savedXML = ds.instance.get()
-        
+
         if hasattr(self.receiver.ui, 'mdi'):
             subwindow = self.receiver.subWindow(
                 ds.instance,
@@ -243,8 +244,8 @@ class ServerFetchComponents(QUndoCommand):
             "Component - Reload List from Configuration server",
             ("All unsaved components will be lost. "
              "Would you like to proceed ?").encode(),
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.Yes) == QMessageBox.No:
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.Yes) == QMessageBox.No:
             return
 
         subwindows = self.receiver.ui.mdi.subWindowList()
@@ -267,8 +268,8 @@ class ServerFetchComponents(QUndoCommand):
                             self.receiver.configServer.device,
                             self.receiver.configServer.host,
                             self.receiver.configServer.port
-                            )
                         )
+                    )
 
                 self.receiver.configServer.connect()
                 self.receiver.disableServer(False)
@@ -314,7 +315,7 @@ class ServerStoreComponent(QUndoCommand):
                     self.receiver.componentList.directory
                 self._cpEdit.name = \
                     self.receiver.componentList.elements[
-                    self._cp.id].name
+                        self._cp.id].name
                 self._cpEdit.createGUI()
                 self._cpEdit.addContextMenu(
                     self.receiver.contextMenuActions)
@@ -364,9 +365,9 @@ class ServerStoreComponent(QUndoCommand):
                             self.receiver.configServer.device,
                             self.receiver.configServer.host,
                             self.receiver.configServer.port
-                            ),
-                        QMessageBox.Yes | QMessageBox.No,
-                        QMessageBox.Yes) == QMessageBox.No:
+                        ),
+                            QMessageBox.Yes | QMessageBox.No,
+                            QMessageBox.Yes) == QMessageBox.No:
                         raise Exception("Server not connected")
 
                 self.receiver.configServer.connect()
@@ -424,8 +425,8 @@ class ServerDeleteComponent(QUndoCommand):
                             self.receiver.configServer.device,
                             self.receiver.configServer.host,
                             self.receiver.configServer.port
-                            )
                         )
+                    )
 
                 self.receiver.configServer.connect()
                 self.receiver.disableServer(False)
@@ -482,8 +483,8 @@ class ServerSetMandatoryComponent(QUndoCommand):
                             self.receiver.configServer.device,
                             self.receiver.configServer.host,
                             self.receiver.configServer.port
-                            )
                         )
+                    )
 
                 self.receiver.configServer.connect()
                 self.receiver.disableServer(False)
@@ -521,8 +522,8 @@ class ServerGetMandatoryComponents(QUndoCommand):
                         self.receiver.configServer.device,
                         self.receiver.configServer.host,
                         self.receiver.configServer.port
-                        )
                     )
+                )
 
             self.receiver.configServer.connect()
             self.receiver.disableServer(False)
@@ -568,8 +569,8 @@ class ServerUnsetMandatoryComponent(QUndoCommand):
                             self.receiver.configServer.device,
                             self.receiver.configServer.host,
                             self.receiver.configServer.port
-                            )
                         )
+                    )
 
                 self.receiver.configServer.connect()
                 self.receiver.disableServer(False)
@@ -607,8 +608,8 @@ class ServerFetchDataSources(QUndoCommand):
             "DataSource - Reload List from Configuration Server",
             ("All unsaved datasources will be lost. "
              "Would you like to proceed ?").encode(),
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.Yes) == QMessageBox.No:
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.Yes) == QMessageBox.No:
             return
 
         subwindows = self.receiver.ui.mdi.subWindowList()
@@ -631,8 +632,8 @@ class ServerFetchDataSources(QUndoCommand):
                             self.receiver.configServer.device,
                             self.receiver.configServer.host,
                             self.receiver.configServer.port
-                            )
                         )
+                    )
                 self.receiver.configServer.connect()
                 self.receiver.disableServer(False)
                 cdict = self.receiver.configServer.fetchDataSources()
@@ -681,9 +682,9 @@ class ServerStoreDataSource(QUndoCommand):
                             self.receiver.configServer.device,
                             self.receiver.configServer.host,
                             self.receiver.configServer.port
-                            ),
-                        QMessageBox.Yes | QMessageBox.No,
-                        QMessageBox.Yes) == QMessageBox.No:
+                        ),
+                            QMessageBox.Yes | QMessageBox.No,
+                            QMessageBox.Yes) == QMessageBox.No:
                         raise Exception("Server not connected")
 
                 self.receiver.configServer.connect()
@@ -752,8 +753,8 @@ class ServerDeleteDataSource(QUndoCommand):
                                 self.receiver.configServer.device,
                                 self.receiver.configServer.host,
                                 self.receiver.configServer.port
-                                )
                             )
+                        )
 
                     self.receiver.configServer.connect()
                     self.receiver.disableServer(False)
@@ -885,8 +886,8 @@ class ServerStoreAllComponents(QUndoCommand):
                             self.receiver.configServer.device,
                             self.receiver.configServer.host,
                             self.receiver.configServer.port
-                            )
                         )
+                    )
                 self.receiver.configServer.connect()
                 self.receiver.disableServer(False)
                 self.receiver.configServer.storeComponent(
@@ -958,8 +959,8 @@ class ServerStoreAllDataSources(QUndoCommand):
                             self.receiver.configServer.device,
                             self.receiver.configServer.host,
                             self.receiver.configServer.port
-                            )
                         )
+                    )
                 self.receiver.configServer.connect()
                 self.receiver.disableServer(False)
                 if ds.instance.name:

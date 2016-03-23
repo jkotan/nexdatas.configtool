@@ -75,7 +75,7 @@ class WindowsSlots(object):
             "actionDataSourceListWindows": [
                 "&DataSource List", "gotoDataSourceList", "Ctrl+>", "",
                 "Go to the component list"]
-            }
+        }
 
         for ac in self.actions.keys():
             self.windows[ac] = getattr(self.main.ui, ac)
@@ -87,7 +87,7 @@ class WindowsSlots(object):
                           self.main.setActiveSubWindow)
 
         self.main.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
-                     self.updateWindowMenu)
+                          self.updateWindowMenu)
         self.main.connect(
             self.main.ui.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"),
             self.mdiWindowActivated)
@@ -194,7 +194,7 @@ class WindowsSlots(object):
                 accel = "&%s " % unicode(chr(i + ord("@") - 9))
             action = menu.addAction("%s%s" % (accel, title))
             self.main.connect(action, SIGNAL("triggered()"),
-                         self.windows["Mapper"], SLOT("map()"))
+                              self.windows["Mapper"], SLOT("map()"))
             self.windows["Mapper"].setMapping(action, dialog)
             i += 1
 

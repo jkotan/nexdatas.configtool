@@ -91,7 +91,7 @@ class ClientSource(object):
         record = self.main.node.firstChildElement(QString("record"))
         if record.nodeName() != "record":
             QMessageBox.warning(self.main, "Internal error",
-                                    "Missing <record> tag")
+                                "Missing <record> tag")
         else:
             attributeMap = record.attributes()
             datasource.var['CLIENT'].recordName = unicode(
@@ -127,14 +127,15 @@ class DBSource(object):
     subItems = ["query", "database", "doc"]
     ## variables
     var = {
-       ## database type
+        ## database type
         'dbtype': 'MYSQL',
         ## database format
         'dataFormat': 'SCALAR',
         ## database query
         'query': "",
         ## database parameters
-        'parameters': {}}
+        'parameters': {}
+    }
 
     ## constructor
     ## \param main datasource dialog
@@ -150,14 +151,15 @@ class DBSource(object):
         self.dbParam = {}
 
         ## parameter map for xml tags
-        self.__dbmap = {"dbname": "DB name",
-                      "hostname": "DB host",
-                      "port": "DB port",
-                      "user": "DB user",
-                      "passwd": "DB password",
-                      "mycnf": "Mysql cnf",
-                      "mode": "Oracle mode"
-                     }
+        self.__dbmap = {
+            "dbname": "DB name",
+            "hostname": "DB host",
+            "port": "DB port",
+            "user": "DB user",
+            "passwd": "DB password",
+            "mycnf": "Mysql cnf",
+            "mode": "Oracle mode"
+        }
         self.__idbmap = dict(zip(self.__dbmap.values(), self.__dbmap.keys()))
 
     ## clears widget parameters
@@ -383,7 +385,7 @@ class DBSource(object):
         query = self.main.node.firstChildElement(QString("query"))
         if query.nodeName() != "query":
             QMessageBox.warning(self.main, "Internal error",
-                                    "Missing <query> tag")
+                                "Missing <query> tag")
         else:
             attributeMap = query.attributes()
 
@@ -462,7 +464,7 @@ class TangoSource(object):
         'encoding': u'',
         ## group for Tango DataSources
         'group': u''
-        }
+    }
 
     ## \param main datasource dialog
     def __init__(self, main):
@@ -556,7 +558,7 @@ class TangoSource(object):
         record = self.main.node.firstChildElement(QString("record"))
         if record.nodeName() != "record":
             QMessageBox.warning(self.main, "Internal error",
-                                    "Missing <record> tag")
+                                "Missing <record> tag")
         else:
             attributeMap = record.attributes()
             datasource.var['TANGO'].memberName = unicode(
@@ -566,7 +568,7 @@ class TangoSource(object):
         device = self.main.node.firstChildElement(QString("device"))
         if device.nodeName() != "device":
             QMessageBox.warning(self.main, "Internal error",
-                                    "Missing <device> tag")
+                                "Missing <device> tag")
         else:
             attributeMap = device.attributes()
             datasource.var['TANGO'].deviceName = unicode(
@@ -658,7 +660,7 @@ class PyEvalSource(object):
         'script': "",
         ## pyeval datasources
         'dataSources': {}
-        }
+    }
 
     ## \param main datasource dialog
     def __init__(self, main):
@@ -735,7 +737,7 @@ class PyEvalSource(object):
 
         datasource.var['PYEVAL'].input = " ".join(
             "ds." + (d[13:] if (len(d) > 13 and d[:13] == "$datasources.")
-                    else d) for d in dslist)
+                     else d) for d in dslist)
 
     ## copies parameters from form to datasource instance
     # \param datasource class
@@ -781,7 +783,7 @@ class PyEvalSource(object):
                 if name in datasource.var['PYEVAL'].dataSources.keys():
                     document = QDomDocument()
                     if not document.setContent(
-                        datasource.var['PYEVAL'].dataSources[name]):
+                            datasource.var['PYEVAL'].dataSources[name]):
                         raise ValueError("could not parse XML")
                     else:
                         if self.main and hasattr(self.main, "root"):

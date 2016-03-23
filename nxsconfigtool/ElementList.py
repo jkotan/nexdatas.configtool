@@ -42,7 +42,7 @@ class ElementList(QWidget):
     # \param parent patent instance
     def __init__(self, directory, parent=None):
         super(ElementList, self).__init__(parent)
-         ## directory from which components are loaded by default
+        ## directory from which components are loaded by default
         self.directory = directory
 
         ## group elements
@@ -138,8 +138,8 @@ class ElementList(QWidget):
                     self, "%s - Close" % self.clName,
                     "Close %s: %s ".encode()
                     % (self.clName, self.elements[oid].name),
-                    QMessageBox.Yes | QMessageBox.No,
-                    QMessageBox.Yes) == QMessageBox.No:
+                        QMessageBox.Yes | QMessageBox.No,
+                        QMessageBox.Yes) == QMessageBox.No:
                     return
 
             self.elements.pop(oid)

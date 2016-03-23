@@ -395,14 +395,14 @@ class ComponentChangeDirectory(QUndoCommand):
             self.receiver, "Component - Change Directory",
             ("All unsaved components will be lost. "
              "Would you like to proceed ?").encode(),
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.Yes) == QMessageBox.No:
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.Yes) == QMessageBox.No:
             return
 
         path = unicode(QFileDialog.getExistingDirectory(
-                self.receiver, "Open Directory",
-                self.receiver.componentList.directory,
-                QFileDialog.ShowDirsOnly or QFileDialog.DontResolveSymlinks))
+            self.receiver, "Open Directory",
+            self.receiver.componentList.directory,
+            QFileDialog.ShowDirsOnly or QFileDialog.DontResolveSymlinks))
 
         if not path:
             return
@@ -590,14 +590,14 @@ class DataSourceChangeDirectory(QUndoCommand):
             self.receiver, "DataSource - Change Directory",
             ("All unsaved datasources will be lost. "
              "Would you like to proceed ?").encode(),
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.Yes) == QMessageBox.No:
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.Yes) == QMessageBox.No:
             return
 
         path = unicode(QFileDialog.getExistingDirectory(
-                self.receiver, "Open Directory",
-                self.receiver.sourceList.directory,
-                QFileDialog.ShowDirsOnly or QFileDialog.DontResolveSymlinks))
+            self.receiver, "Open Directory",
+            self.receiver.sourceList.directory,
+            QFileDialog.ShowDirsOnly or QFileDialog.DontResolveSymlinks))
 
         if not path:
             return
@@ -638,8 +638,8 @@ class ComponentReloadList(QUndoCommand):
             self.receiver, "Component - Reload List",
             ("All unsaved components will be lost. "
              "Would you like to proceed ?").encode(),
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.Yes) == QMessageBox.No:
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.Yes) == QMessageBox.No:
             return
 
         subwindows = self.receiver.ui.mdi.subWindowList()
@@ -675,8 +675,8 @@ class DataSourceReloadList(QUndoCommand):
             self.receiver, "DataSource - Reload List",
             ("All unsaved datasources will be lost. "
              "Would you like to proceed ?").encode(),
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.Yes) == QMessageBox.No:
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.Yes) == QMessageBox.No:
             return
 
         subwindows = self.receiver.ui.mdi.subWindowList()

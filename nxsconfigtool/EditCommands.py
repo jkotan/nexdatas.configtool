@@ -655,7 +655,7 @@ class ComponentTakeDataSource(QUndoCommand):
                                 if isinstance(dialog, DataSourceDlg):
                                     self.receiver.ui.mdi.\
                                         setActiveSubWindow(
-                                        dialog)
+                                            dialog)
                                     self.receiver.ui.mdi\
                                         .closeActiveSubWindow()
 

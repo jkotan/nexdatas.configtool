@@ -159,7 +159,7 @@ class DefinitionDlg(NodeDlg):
     def __addAttribute(self):
         aform = AttributeDlg()
         if aform.exec_():
-            if not aform.name in self.__attributes.keys():
+            if aform.name not in self.__attributes.keys():
                 self.__attributes[aform.name] = aform.value
                 self.populateAttributes(aform.name)
             else:

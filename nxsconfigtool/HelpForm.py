@@ -23,8 +23,9 @@
 
 
 from PyQt4.QtCore import (QUrl, Qt, SIGNAL, SLOT)
-from PyQt4.QtGui import (QAction, QApplication, QDialog, QIcon,
-        QKeySequence, QLabel, QTextBrowser, QToolBar, QVBoxLayout)
+from PyQt4.QtGui import (
+    QAction, QApplication, QDialog, QIcon,
+    QKeySequence, QLabel, QTextBrowser, QToolBar, QVBoxLayout)
 
 
 ## detail help
@@ -67,7 +68,7 @@ class HelpForm(QDialog):
         self.textBrowser.setSource(QUrl(self._page))
         self.resize(660, 700)
         self.setWindowTitle("%s Help" % (
-                QApplication.applicationName()))
+            QApplication.applicationName()))
 
     ## creates actions
     # \brief It creates actions and sets the command pool and stack
@@ -92,22 +93,22 @@ class HelpForm(QDialog):
         self.toolBar.addWidget(self.pageLabel)
 
         self.disconnect(backAction, SIGNAL("triggered()"),
-            self.textBrowser, SLOT("backward()"))
+                        self.textBrowser, SLOT("backward()"))
         self.disconnect(forwardAction, SIGNAL("triggered()"),
-            self.textBrowser, SLOT("forward()"))
+                        self.textBrowser, SLOT("forward()"))
         self.disconnect(homeAction, SIGNAL("triggered()"),
-            self.textBrowser, SLOT("home()"))
+                        self.textBrowser, SLOT("home()"))
         self.disconnect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
-            self.updatePageTitle)
+                        self.updatePageTitle)
 
         self.connect(backAction, SIGNAL("triggered()"),
-            self.textBrowser, SLOT("backward()"))
+                     self.textBrowser, SLOT("backward()"))
         self.connect(forwardAction, SIGNAL("triggered()"),
-            self.textBrowser, SLOT("forward()"))
+                     self.textBrowser, SLOT("forward()"))
         self.connect(homeAction, SIGNAL("triggered()"),
-            self.textBrowser, SLOT("home()"))
+                     self.textBrowser, SLOT("home()"))
         self.connect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
-            self.updatePageTitle)
+                     self.updatePageTitle)
 
         self.updatePageTitle()
 
@@ -118,7 +119,7 @@ class HelpForm(QDialog):
             "<p><b><i><font color='#0066ee' font size = 4>" +
             "&nbsp;&nbsp;" + self.textBrowser.documentTitle()
             + "</i></b></p></br>"
-            )
+        )
 
 
 if __name__ == "__main__":

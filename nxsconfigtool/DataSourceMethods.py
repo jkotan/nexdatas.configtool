@@ -426,7 +426,7 @@ class DataSourceMethods(object):
         self.__datasource.document = QDomDocument()
         self.__dialog.root = self.__datasource.document
         if not self.__datasource.document.setContent(
-            self.__datasource.repair(text)):
+                self.__datasource.repair(text)):
             raise ValueError("could not parse XML")
         else:
             if self.__dialog and hasattr(self.__dialog, "root"):

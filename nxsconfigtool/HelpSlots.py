@@ -43,26 +43,24 @@ class HelpSlots(object):
 
         ## action data
         self.actions = {
-
-        "actionAboutComponentDesigner": [
-            "&About Component Designer",
-            "helpAbout", "", "icon", "About Component Designer"],
-
-        "actionComponentDesignerHelp": [
-            "Component Desigener &Help", "helpHelp",
-            QKeySequence.HelpContents, "help", "Detail help"]
-
-            }
+            "actionAboutComponentDesigner": [
+                "&About Component Designer",
+                "helpAbout", "", "icon", "About Component Designer"],
+            "actionComponentDesignerHelp": [
+                "Component Desigener &Help", "helpHelp",
+                QKeySequence.HelpContents, "help", "Detail help"]
+        }
 
     ## shows help about
     # \brief It shows message box with help about
     def helpAbout(self):
-        QMessageBox.about(self.main, "About Component Designer",
-                """<b>Component Designer</b> v %s
-                <p>Copyright &copy; 2012-2016 DESY, GNU GENERAL PUBLIC LICENSE
-                <p>This application can be used to create
-                XML configuration files for Nexus Data Writer.
-                <p>Python %s - Qt %s - PyQt %s on %s""" % (
+        QMessageBox.about(
+            self.main, "About Component Designer",
+            """<b>Component Designer</b> v %s
+            <p>Copyright &copy; 2012-2016 DESY, GNU GENERAL PUBLIC LICENSE
+            <p>This application can be used to create
+            XML configuration files for Nexus Data Writer.
+            <p>Python %s - Qt %s - PyQt %s on %s""" % (
                 unicode(__version__),
                 unicode(platform.python_version()),
                 unicode(QT_VERSION_STR),

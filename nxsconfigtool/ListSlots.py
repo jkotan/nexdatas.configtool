@@ -31,12 +31,12 @@ from .ListCommands import (
     DataSourceRemove,
     DataSourceListChanged,
     CloseApplication
-    )
+)
 
 from .EditCommands import (
     ComponentEdit,
     DataSourceEdit
-    )
+)
 
 
 ## stack with the application commands
@@ -70,7 +70,7 @@ class ListSlots(object):
                 "&Quit", "closeApp",
                 "Ctrl+Q", "filequit", "Close the application"],
 
-            }
+        }
 
         ## task data
         self.tasks = [
@@ -86,7 +86,7 @@ class ListSlots(object):
             ["dsourceRowChanged",
              self.main.sourceList.ui.elementListWidget,
              "currentRowChanged(int)"]
-            ]
+        ]
 
     ## remove component action
     # \brief It removes from the component list the current component

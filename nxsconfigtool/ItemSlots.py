@@ -42,11 +42,11 @@ from .ItemCommands import (
     ComponentApplyItem,
     ComponentMoveUpItem,
     ComponentMoveDownItem
-    )
+)
 
 from .EditCommands import (
     ComponentEdit
-    )
+)
 
 from .DataSourceDlg import CommonDataSourceDlg
 from .ComponentDlg import ComponentDlg
@@ -65,79 +65,81 @@ class ItemSlots(object):
 
         ## action data
         self.actions = {
-        "actionNewGroupItem": [
-            "Add &Group Item", "componentNewGroupItem",
-            "", "componentnewitem", "Add a new component group item"],
-        "actionNewFieldItem": [
-            "Add &Field Item", "componentNewFieldItem",
-            "", "componentnewitem", "Add a new  component field item"],
-        "actionNewStrategyItem": [
-            "Add &Strategy Item", "componentNewStrategyItem",
-            "", "componentnewitem", "Add a new component strategy item"],
-        "actionNewDataSourceItem": [
-            "Add &DataSource Item", "componentNewDataSourceItem",
-            "", "componentnewitem", "Add a new component data source item"],
-        "actionNewAttributeItem": [
-            "Add A&ttribute Item", "componentNewAttributeItem",
-            "", "componentnewitem", "Add a new component attribute item"],
-        "actionNewLinkItem": [
-            "Add &Link Item", "componentNewLinkItem",
-            "", "componentnewitem", "Add a new  component link item"],
-        "actionLoadSubComponentItem": [
-            "Load SubComponent Item...", "componentLoadComponentItem",
-            "", "componentloaditem",
-            "Load an existing component part from the file"],
-        "actionLoadDataSourceItem": [
-            "Load DataSource Item...", "componentLoadDataSourceItem",
-            "", "componentloaditem",
-            "Load an existing data source from the file"],
-        "actionAddDataSourceItem": [
-            "Append DataSource Item", "componentAddDataSourceItem",
-            QKeySequence(Qt.CTRL + Qt.Key_Plus),
-            "componentadditem", "Append the data source from the list"],
-        "actionLinkDataSourceItem": [
-            "Link DataSource Item", "componentLinkDataSourceItem",
-            "Ctrl+L",
-            "componentlinkitem", "Link the data source from the list"],
-        "actionMoveUpComponentItem": [
-            "&Move Up Component Item", "componentMoveUpItem",
-            "Ctrl+[", "componentsmoveupitem", "Move up the component item"],
-        "actionMoveDownComponentItem": [
-            "&Move Down Component Item", "componentMoveDownItem",
-            "Ctrl+]", "componentsmovedownitem",
-            "Move down the component item"],
-        "actionMergeComponentItems": [
-            "Merge Component Items", "componentMerge",
-            "Ctrl+M", "componentmerge", "Merge the component items"],
-        "actionApplyComponentItem": [
-            "&Apply Component Item", "componentApplyItem",
-            "Ctrl+R", "componentsapplyitem", "Apply the component item"],
-        "actionClearComponentItems": [
-            "Clear Component Items", "componentClear",
-            "", "componentclear", "Removes all component items"],
-        "actionCutItem": [
-            "C&ut Item", "cutItem",
-            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
-            "cut", "Cut the item"],
-        "actionCopyItem": [
-            "&Copy Item", "copyItem",
-            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_C),
-            "copy", "Copy the item"],
-        "actionPasteItem": [
-            "&Paste Item", "pasteItem",
-            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_V),
-            "paste", "Paste the item"],
-        "actionCutComponentItem": [
-            "Cut Component Item", "componentRemoveItem",
-            QKeySequence(Qt.CTRL + Qt.Key_Delete),
-            "cut", "Remove the component item"],
-        "actionCopyComponentItem": [
-            "Copy Component Item", "componentCopyItem", "",
-            "copy", "Copy the component item"],
-        "actionPasteComponentItem": [
-            "Paste Component Item", "componentPasteItem",
-            QKeySequence(Qt.CTRL + Qt.Key_Insert),
-            "paste", "Paste the component item"],
+            "actionNewGroupItem": [
+                "Add &Group Item", "componentNewGroupItem",
+                "", "componentnewitem", "Add a new component group item"],
+            "actionNewFieldItem": [
+                "Add &Field Item", "componentNewFieldItem",
+                "", "componentnewitem", "Add a new  component field item"],
+            "actionNewStrategyItem": [
+                "Add &Strategy Item", "componentNewStrategyItem",
+                "", "componentnewitem", "Add a new component strategy item"],
+            "actionNewDataSourceItem": [
+                "Add &DataSource Item", "componentNewDataSourceItem",
+                "", "componentnewitem",
+                "Add a new component data source item"],
+            "actionNewAttributeItem": [
+                "Add A&ttribute Item", "componentNewAttributeItem",
+                "", "componentnewitem", "Add a new component attribute item"],
+            "actionNewLinkItem": [
+                "Add &Link Item", "componentNewLinkItem",
+                "", "componentnewitem", "Add a new  component link item"],
+            "actionLoadSubComponentItem": [
+                "Load SubComponent Item...", "componentLoadComponentItem",
+                "", "componentloaditem",
+                "Load an existing component part from the file"],
+            "actionLoadDataSourceItem": [
+                "Load DataSource Item...", "componentLoadDataSourceItem",
+                "", "componentloaditem",
+                "Load an existing data source from the file"],
+            "actionAddDataSourceItem": [
+                "Append DataSource Item", "componentAddDataSourceItem",
+                QKeySequence(Qt.CTRL + Qt.Key_Plus),
+                "componentadditem", "Append the data source from the list"],
+            "actionLinkDataSourceItem": [
+                "Link DataSource Item", "componentLinkDataSourceItem",
+                "Ctrl+L",
+                "componentlinkitem", "Link the data source from the list"],
+            "actionMoveUpComponentItem": [
+                "&Move Up Component Item", "componentMoveUpItem",
+                "Ctrl+[", "componentsmoveupitem",
+                "Move up the component item"],
+            "actionMoveDownComponentItem": [
+                "&Move Down Component Item", "componentMoveDownItem",
+                "Ctrl+]", "componentsmovedownitem",
+                "Move down the component item"],
+            "actionMergeComponentItems": [
+                "Merge Component Items", "componentMerge",
+                "Ctrl+M", "componentmerge", "Merge the component items"],
+            "actionApplyComponentItem": [
+                "&Apply Component Item", "componentApplyItem",
+                "Ctrl+R", "componentsapplyitem", "Apply the component item"],
+            "actionClearComponentItems": [
+                "Clear Component Items", "componentClear",
+                "", "componentclear", "Removes all component items"],
+            "actionCutItem": [
+                "C&ut Item", "cutItem",
+                QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_X),
+                "cut", "Cut the item"],
+            "actionCopyItem": [
+                "&Copy Item", "copyItem",
+                QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_C),
+                "copy", "Copy the item"],
+            "actionPasteItem": [
+                "&Paste Item", "pasteItem",
+                QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_V),
+                "paste", "Paste the item"],
+            "actionCutComponentItem": [
+                "Cut Component Item", "componentRemoveItem",
+                QKeySequence(Qt.CTRL + Qt.Key_Delete),
+                "cut", "Remove the component item"],
+            "actionCopyComponentItem": [
+                "Copy Component Item", "componentCopyItem", "",
+                "copy", "Copy the component item"],
+            "actionPasteComponentItem": [
+                "Paste Component Item", "componentPasteItem",
+                QKeySequence(Qt.CTRL + Qt.Key_Insert),
+                "paste", "Paste the component item"],
         }
 
     ## copy component item action
@@ -164,10 +166,11 @@ class ItemSlots(object):
     def copyItem(self):
         cmd = CopyItem(self.main)
         if self.main.ui.mdi.activeSubWindow() and isinstance(
-            self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+                self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             cmd.type = "component"
         elif self.main.ui.mdi.activeSubWindow() and isinstance(
-            self.main.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
+                self.main.ui.mdi.activeSubWindow().widget(),
+                CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self.main, "Item not selected",
@@ -181,10 +184,11 @@ class ItemSlots(object):
     def cutItem(self):
         cmd = CutItem(self.main)
         if self.main.ui.mdi.activeSubWindow() and isinstance(
-            self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+                self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             cmd.type = "component"
         elif self.main.ui.mdi.activeSubWindow() and isinstance(
-            self.main.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
+                self.main.ui.mdi.activeSubWindow().widget(),
+                CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self.main, "Item not selected",
@@ -199,10 +203,11 @@ class ItemSlots(object):
     def pasteItem(self):
         cmd = PasteItem(self.main)
         if self.main.ui.mdi.activeSubWindow() and isinstance(
-            self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
+                self.main.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             cmd.type = "component"
         elif self.main.ui.mdi.activeSubWindow() and isinstance(
-            self.main.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
+                self.main.ui.mdi.activeSubWindow().widget(),
+                CommonDataSourceDlg):
             cmd.type = "datasource"
         else:
             QMessageBox.warning(self.main, "Item not selected",

@@ -206,9 +206,9 @@ class DataSource(CommonDataSource):
         if fname is None:
             if not self.name:
                 filename = unicode(QFileDialog.getOpenFileName(
-                        self.parent, "Open File", self.directory,
-                        "XML files (*.xml);;HTML files (*.html);;"
-                        "SVG files (*.svg);;User Interface files (*.ui)"))
+                    self.parent, "Open File", self.directory,
+                    "XML files (*.xml);;HTML files (*.html);;"
+                    "SVG files (*.svg);;User Interface files (*.ui)"))
                 fi = QFileInfo(filename)
                 fname = str(fi.fileName())
                 if fname[-4:] == '.xml':
@@ -350,7 +350,7 @@ class DataSource(CommonDataSource):
                     + "Please try to use Save As command " \
                     + "or change the datasource directory"
                 logger.warn(error)
-                QMessageBox.warning(self.parent, "Saving problem",  error)
+                QMessageBox.warning(self.parent, "Saving problem", error)
 
             finally:
                 if fh is not None:

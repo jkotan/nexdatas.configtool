@@ -34,7 +34,7 @@ from .EditCommands import (
     DataSourceEdit,
     ComponentTakeDataSources,
     ComponentTakeDataSource
-    )
+)
 
 
 ## stack with the application commands
@@ -50,39 +50,38 @@ class EditSlots(object):
 
         ## action data
         self.actions = {
-        "actionEditComponent": [
-            "&Edit Component", "componentEdit",
-            "Ctrl+E", "componentedit", "Edit the component"],
-        "actionTakeDataSourceItem": [
-            "Take DataSource Item ", "componentTakeDataSource",
-            "Ctrl+G",
-            "componenttakedatasource",
-            "Take the currnet data sources from the component"],
-        "actionTakeDataSources": [
-            "Take DataSources ", "componentTakeDataSources",
-            "",
-            "componenttakedatasource",
-            "Take data sources from the component"],
-        "actionEditDataSource": [
-            "&Edit DataSource", "dsourceEdit",
-            "Ctrl+Shift+E",
-            "dsourceedit", "Edit the data source"],
-        "actionApplyDataSource": [
-            "Apply DataSource", "dsourceApply",
-            "Ctrl+Shift+R", "dsourceapply", "Apply the data source"],
-        "actionCopyDataSource": [
-            "Copy DataSource", "dsourceCopy",
-            "", "copy", "Copy the data source"],
-        "actionCutDataSource": [
-            "Cut DataSource", "dsourceCut",
-            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Delete),
-            "cut", "Cut the data source"],
-        "actionPasteDataSource": [
-            "Paste DataSource", "dsourcePaste",
-            QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Insert),
-            "paste", "Paste the data source"]
-
-            }
+            "actionEditComponent": [
+                "&Edit Component", "componentEdit",
+                "Ctrl+E", "componentedit", "Edit the component"],
+            "actionTakeDataSourceItem": [
+                "Take DataSource Item ", "componentTakeDataSource",
+                "Ctrl+G",
+                "componenttakedatasource",
+                "Take the currnet data sources from the component"],
+            "actionTakeDataSources": [
+                "Take DataSources ", "componentTakeDataSources",
+                "",
+                "componenttakedatasource",
+                "Take data sources from the component"],
+            "actionEditDataSource": [
+                "&Edit DataSource", "dsourceEdit",
+                "Ctrl+Shift+E",
+                "dsourceedit", "Edit the data source"],
+            "actionApplyDataSource": [
+                "Apply DataSource", "dsourceApply",
+                "Ctrl+Shift+R", "dsourceapply", "Apply the data source"],
+            "actionCopyDataSource": [
+                "Copy DataSource", "dsourceCopy",
+                "", "copy", "Copy the data source"],
+            "actionCutDataSource": [
+                "Cut DataSource", "dsourceCut",
+                QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Delete),
+                "cut", "Cut the data source"],
+            "actionPasteDataSource": [
+                "Paste DataSource", "dsourcePaste",
+                QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Insert),
+                "paste", "Paste the data source"]
+        }
 
     ## take datasources
     # \brief It takes datasources from the current component

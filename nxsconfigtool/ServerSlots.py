@@ -42,12 +42,12 @@ from .EditCommands import (
     ComponentEdit,
     DataSourceApply,
     DataSourceEdit
-    )
+)
 
 from .ItemCommands import (
     ComponentApplyItem,
     ComponentMerge,
-    )
+)
 
 
 ## stack with the application commands
@@ -63,72 +63,73 @@ class ServerSlots(object):
 
         ## action data
         self.actions = {
-        "actionConnectServer": [
-            "&Connect ...", "serverConnect",
-            "Ctrl+T", "serverconnect",
-            "Connect to the configuration server"],
-        "actionFetchComponentsServer": [
-            "&Fetch Components", "serverFetchComponents",
-            "Ctrl+F", "serverfetchdatasources",
-            "Fetch datasources from the configuration server"],
+            "actionConnectServer": [
+                "&Connect ...", "serverConnect",
+                "Ctrl+T", "serverconnect",
+                "Connect to the configuration server"],
+            "actionFetchComponentsServer": [
+                "&Fetch Components", "serverFetchComponents",
+                "Ctrl+F", "serverfetchdatasources",
+                "Fetch datasources from the configuration server"],
 
-        "actionStoreComponentServer": [
-            "&Store Component", "serverStoreComponent",
-            "Ctrl+B", "serverstorecomponent",
-            "Store component in the configuration server"],
+            "actionStoreComponentServer": [
+                "&Store Component", "serverStoreComponent",
+                "Ctrl+B", "serverstorecomponent",
+                "Store component in the configuration server"],
 
-        "actionStoreAllComponentsServer": [
-            "&Store All Components", "serverStoreAllComponents",
-            "", "serverstoreallcomponents",
-            "Store all components in the configuration server"],
+            "actionStoreAllComponentsServer": [
+                "&Store All Components", "serverStoreAllComponents",
+                "", "serverstoreallcomponents",
+                "Store all components in the configuration server"],
 
-        "actionDeleteComponentServer": [
-            "&Delete Component", "serverDeleteComponent",
-            "Ctrl+H", "serverdeletecomponent",
-            "Delete component from the configuration server"],
+            "actionDeleteComponentServer": [
+                "&Delete Component", "serverDeleteComponent",
+                "Ctrl+H", "serverdeletecomponent",
+                "Delete component from the configuration server"],
 
-        "actionFetchDataSourcesServer": [
-            "&Fetch DataSources", "serverFetchDataSources",
-            "Ctrl+Shift+F", "serverfetchdatasources",
-            "Fetch datasources from the configuration server"],
+            "actionFetchDataSourcesServer": [
+                "&Fetch DataSources", "serverFetchDataSources",
+                "Ctrl+Shift+F", "serverfetchdatasources",
+                "Fetch datasources from the configuration server"],
 
-        "actionStoreDataSourceServer": [
-            "&Store Datasource", "serverStoreDataSource",
-            "Ctrl+Shift+B", "serverstoredatasource",
-            "Store datasource in the configuration server"],
+            "actionStoreDataSourceServer": [
+                "&Store Datasource", "serverStoreDataSource",
+                "Ctrl+Shift+B", "serverstoredatasource",
+                "Store datasource in the configuration server"],
 
-        "actionStoreAllDataSourcesServer": [
-            "&Store All Datasources", "serverStoreAllDataSources",
-            "", "serverstorealldatasources",
-            "Store all datasources in the configuration server"],
+            "actionStoreAllDataSourcesServer": [
+                "&Store All Datasources", "serverStoreAllDataSources",
+                "", "serverstorealldatasources",
+                "Store all datasources in the configuration server"],
 
-        "actionDeleteDataSourceServer": [
-            "&Delete Datasource", "serverDeleteDataSource",
-            "Ctrl+Shift+H", "serverdeletedatasource",
-            "Delete datasource from the configuration server"],
+            "actionDeleteDataSourceServer": [
+                "&Delete Datasource", "serverDeleteDataSource",
+                "Ctrl+Shift+H", "serverdeletedatasource",
+                "Delete datasource from the configuration server"],
 
-        "actionSetComponentMandatoryServer": [
-            "Set Component Mandatory", "serverSetMandatoryComponent",
-            "", "serversetmandatory",
-            "Set the component as mandatory  on the configuration server"],
+            "actionSetComponentMandatoryServer": [
+                "Set Component Mandatory", "serverSetMandatoryComponent",
+                "", "serversetmandatory",
+                "Set the component as mandatory  on the configuration server"],
 
-        "actionGetMandatoryComponentsServer": [
-            "Get Mandatory Components", "serverGetMandatoryComponents",
-            "", "servergetmandatory",
-            "Get mandatory components  from the configuration server"],
+            "actionGetMandatoryComponentsServer": [
+                "Get Mandatory Components", "serverGetMandatoryComponents",
+                "", "servergetmandatory",
+                "Get mandatory components  from the configuration server"],
 
-        "actionUnsetComponentMandatoryServer": [
-            "Unset Component Mandatory", "serverUnsetMandatoryComponent",
-            "", "serverunsetmandatory",
-            "Unset the component as mandatory on the configuration server"],
-        "actionCreateComponentServer": [
-            "&Create Online Component ...", "serverCreate",
-            "", "servercreate",
-            "Create Component defined in online.xml file"],
-        "actionCloseServer": [
-            "C&lose", "serverClose",
-            "Ctrl+L", "serverclose",
-            "Close connection to the configuration server"]
+            "actionUnsetComponentMandatoryServer": [
+                "Unset Component Mandatory", "serverUnsetMandatoryComponent",
+                "", "serverunsetmandatory",
+                "Unset the component as mandatory on"
+                " the configuration server"],
+            "actionCreateComponentServer": [
+                "&Create Online Component ...", "serverCreate",
+                "", "servercreate",
+                "Create Component defined in online.xml file"],
+            "actionCloseServer": [
+                "C&lose", "serverClose",
+                "Ctrl+L", "serverclose",
+                "Close connection to the configuration server"]
         }
 
     ## connect server action

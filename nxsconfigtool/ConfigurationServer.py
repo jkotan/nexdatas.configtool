@@ -90,16 +90,19 @@ class ConfigurationServer(object):
     def setState(self, state):
         (self.device, self.host, self.port, self.connected) = state
 
+    def getDeviceName(self):
+        if self.host and self.port:
+            return "%s:%s/%s" % (self.host.encode(),
+                                 str(self.port),
+                                 self.device.encode())
+        else:
+            return self.device.encode()
+        
+        
     ## connects to the configuration server
     # \brief It opens the configuration Tango device
     def connect(self):
-        if self.host and self.port:
-            self._proxy = PyTango.DeviceProxy("%s:%s/%s"
-                                              % (self.host.encode(),
-                                                 str(self.port),
-                                                 self.device.encode()))
-        else:
-            self._proxy = PyTango.DeviceProxy(self.device.encode())
+        self._proxy = PyTango.DeviceProxy(self.getDeviceName())
         if self._proxy:
             found = False
             cnt = 0

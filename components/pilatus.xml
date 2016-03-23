@@ -6,7 +6,8 @@
         <field units="um" type="NX_FLOAT64" name="x_pixel_size">172</field>
         <field units="um" type="NX_FLOAT64" name="y_pixel_size">172</field>
         <field type="NX_CHAR" name="layout">area</field>
-        <field type="NX_CHAR" name="description">Pilatus 300k</field>
+        <field type="NX_CHAR" name="description">$datasources.pilatus_description<strategy mode="INIT"/>
+        </field>
         <group type="NXcollection" name="collection">
           <field units="s" type="NX_FLOAT64" name="delay_time">
             <strategy mode="FINAL"/>$datasources.pilatus_delaytime</field>
@@ -26,15 +27,11 @@
             <strategy mode="FINAL"/>$datasources.pilatus_filepostfix</field>
           <field type="NX_CHAR" name="file_prefix">
             <strategy mode="FINAL"/>$datasources.pilatus_fileprefix</field>
-          <field type="NX_CHAR" name="file_start_num">$datasources.pilatus_filestartnum<strategy mode="INIT"/>
-          </field>
           <field type="NX_CHAR" name="last_image_taken">
             <strategy mode="FINAL"/>$datasources.pilatus_lastimagetaken</field>
-          <field type="NX_CHAR" name="file_next_num_final">
-            <strategy mode="FINAL"/>$datasources.pilatus_filestartnum</field>
           <field type="NX_UINT" name="signal">1</field>
-          <field type="NX_CHAR" name="file_next_num">
-            <strategy mode="STEP"/>$datasources.pilatus_filestartnum</field>
+          <field type="NX_CHAR" name="file_start_index_num">
+            <strategy mode="STEP"/>$datasources.pilatus_filestartnum_cb</field>
         </group>
       </group>
     </group>

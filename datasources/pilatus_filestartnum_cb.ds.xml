@@ -2,7 +2,9 @@
 <definition>
   <datasource type="PYEVAL" name="pilatus_filestartnum_cb">
     <result name="result">
-commonblock["pilatus_filestartnum"] = ds.pilatus_filestartnum
-ds.result = commonblock["pilatus_filestartnum"]</result>
- $datasources.pilatus_filestartnum</datasource>
+if "pilatus_filestartnum" not in commonblock:
+    commonblock["pilatus_filestartnum"] = ds.pilatus_filestartnum - ds.pilatus_nbframes + 1
+ds.result = ds.pilatus_filestartnum - ds.pilatus_nbframes</result>
+ $datasources.pilatus_filestartnum
+ $datasources.pilatus_nbframes</datasource>
 </definition>

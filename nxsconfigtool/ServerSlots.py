@@ -24,6 +24,7 @@
 
 from .ServerCommands import (
     ServerConnect,
+    ServerCreate,
     ServerFetchComponents,
     ServerStoreComponent,
     ServerStoreAllComponents,
@@ -120,7 +121,10 @@ class ServerSlots(object):
             "Unset Component Mandatory", "serverUnsetMandatoryComponent",
             "", "serverunsetmandatory",
             "Unset the component as mandatory on the configuration server"],
-
+        "actionCreateComponentServer": [
+            "&Create Online Component ...", "serverCreate",
+            "", "servercreate",
+            "Create Component defined in online.xml file"],
         "actionCloseServer": [
             "C&lose", "serverClose",
             "Ctrl+L", "serverclose",
@@ -132,6 +136,13 @@ class ServerSlots(object):
     def serverConnect(self):
         cmd = ServerConnect(self.main)
         self.undoStack.push(cmd)
+
+    ## create component action
+    # \brief It creates components and datasources from online.xml
+    def serverCreate(self):
+        cmd = ServerCreate(self.main)
+        cmd.redo()
+        self.undoStack.clear()
 
     ## fetch server components action
     # \brief It fetches components from the configuration server

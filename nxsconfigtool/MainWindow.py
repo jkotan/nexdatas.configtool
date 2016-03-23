@@ -48,6 +48,7 @@ from .WindowsSlots import WindowsSlots
 
 
 from .ConfigurationServer import (ConfigurationServer, PYTANGO_AVAILABLE)
+from .ComponentCreator import (NXSTOOLS_AVAILABLE)
 
 import logging
 ## message logger
@@ -99,6 +100,9 @@ class MainWindow(QMainWindow):
 
         ## configuration server
         self.configServer = None
+
+        ## online.xml file name
+        self.onlineFile = None
 
         ## action slots
         self.slots = {}
@@ -188,6 +192,8 @@ class MainWindow(QMainWindow):
                 settings.value("ConfigServer/device").toString())
             self.configServer.host = unicode(
                 settings.value("ConfigServer/host").toString())
+            self.onlineFile = unicode(
+                settings.value("Online/filename").toString())
             port = str(settings.value("ConfigServer/port").toString())
             if port:
                 self.configServer.port = int(port)
@@ -483,6 +489,10 @@ class MainWindow(QMainWindow):
                               QVariant(self.configServer.host))
             settings.setValue("ConfigServer/port",
                               QVariant(self.configServer.port))
+            settings.setValue("ConfigServer/port",
+                              QVariant(self.configServer.port))
+            settings.setValue("Online/filename",
+                              QVariant(self.onlineFile))
             self.configServer.close()
 
     ## stores the setting before finishing the application
@@ -520,6 +530,8 @@ class MainWindow(QMainWindow):
         self.ui.actionStoreAllDataSourcesServer.setDisabled(status)
         self.ui.actionDeleteDataSourceServer.setDisabled(status)
         self.ui.actionCloseServer.setDisabled(status)
+        self.ui.actionCreateComponentServer.setDisabled(
+            status or not NXSTOOLS_AVAILABLE)
 
         if self.configServer and self.configServer.device:
             dev = "%s:%s/%s" % (

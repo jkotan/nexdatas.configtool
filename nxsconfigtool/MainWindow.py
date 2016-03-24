@@ -532,6 +532,8 @@ class MainWindow(QMainWindow):
         self.ui.actionCloseServer.setDisabled(status)
         self.ui.actionCreateComponentServer.setDisabled(
             status or not NXSTOOLS_AVAILABLE)
+        self.ui.actionCreateDataSourcesServer.setDisabled(
+            status or not NXSTOOLS_AVAILABLE)
 
         if self.configServer and self.configServer.device:
             dev = "%s:%s/%s" % (

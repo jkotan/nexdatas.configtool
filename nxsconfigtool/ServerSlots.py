@@ -24,7 +24,8 @@
 
 from .ServerCommands import (
     ServerConnect,
-    ServerCreate,
+    ServerCPCreate,
+    ServerDSCreate,
     ServerFetchComponents,
     ServerStoreComponent,
     ServerStoreAllComponents,
@@ -123,9 +124,13 @@ class ServerSlots(object):
                 "Unset the component as mandatory on"
                 " the configuration server"],
             "actionCreateComponentServer": [
-                "&Create Online Component ...", "serverCreate",
-                "", "servercreate",
+                "&Create Online Component ...", "serverCPCreate",
+                "", "servercpcreate",
                 "Create Component defined in online.xml file"],
+            "actionCreateDataSourcesServer": [
+                "&Create Online Component ...", "serverDSCreate",
+                "", "serverdscreate",
+                "Create all known DataSources defined in online.xml file"],
             "actionCloseServer": [
                 "C&lose", "serverClose",
                 "Ctrl+L", "serverclose",
@@ -140,8 +145,15 @@ class ServerSlots(object):
 
     ## create component action
     # \brief It creates components and datasources from online.xml
-    def serverCreate(self):
-        cmd = ServerCreate(self.main)
+    def serverCPCreate(self):
+        cmd = ServerCPCreate(self.main)
+        cmd.redo()
+        self.undoStack.clear()
+
+    ## create datasources action
+    # \brief It creates all known datasources from online.xml
+    def serverDSCreate(self):
+        cmd = ServerDSCreate(self.main)
         cmd.redo()
         self.undoStack.clear()
 

@@ -30,7 +30,7 @@ from .DataSourceDlg import (CommonDataSourceDlg)
 from . import DataSource
 from .ComponentDlg import ComponentDlg
 from .Component import Component
-from .ComponentCreator import ComponentCreator
+from .ComponentCreator import (ComponentCreator, DataSourceCreator)
 from .LabeledObject import LabeledObject
 from .DomTools import DomTools
 
@@ -95,7 +95,7 @@ class ServerConnect(QUndoCommand):
 
 
 ## Command which performs connection to the configuration server
-class ServerCreate(QUndoCommand):
+class ServerCPCreate(QUndoCommand):
 
     ## constructor
     # \param receiver command receiver
@@ -132,7 +132,7 @@ class ServerCreate(QUndoCommand):
                         self.receiver,
                         "Error in creating Component",
                         unicode(e))
-        logger.info("EXEC serverCreate")
+        logger.info("EXEC serverCPCreate")
 
     def __addComponent(self, name, xml, action):
         cp = LabeledObject(name, None)
@@ -222,7 +222,108 @@ class ServerCreate(QUndoCommand):
     # \brief It undo connection to the configuration server,
     #        i.e. it close the connection to the server
     def undo(self):
-        logger.info("UNDO serverCreate")
+        logger.info("UNDO serverCPCreate")
+
+
+## Command which performs connection to the configuration server
+class ServerDSCreate(QUndoCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
+        self.parent = parent
+#        self._oldstate = None
+#        self._state = None
+
+    ## executes the command
+    # \brief It perform connection to the configuration server
+    def redo(self):
+        if self.receiver.configServer:
+            if self.receiver.configServer.connected:
+                try:
+                    cc = DataSourceCreator(
+                        self.receiver.configServer, self.receiver)
+                    if cc.checkOnlineFile(self.receiver.onlineFile):
+                        self.receiver.onlineFile = cc.onlineFile
+                        cc.create()
+                        if cc.action:
+                            keys = cc.datasources.keys()
+                            progress = QProgressDialog(
+                                "Storing DataSource elements",
+                                QString(), 0, len(keys),
+                                self.receiver.sourceList)
+                            progress.setWindowTitle(
+                                "Store Created DataSources")
+                            progress.setWindowModality(Qt.WindowModal)
+                            progress.show()
+
+                            i = 0
+                            for ds, xml in cc.datasources.items():
+                                dsid = self.__addDataSource(ds, xml, cc.action)
+                                progress.setValue(i)
+                                i += 1
+                            progress.setValue(len(keys))
+                            progress.close()
+                            self.receiver.sourceList.populateElements(dsid)
+
+                except Exception, e:
+                    QMessageBox.warning(
+                        self.receiver,
+                        "Error in creating Component",
+                        unicode(e))
+        logger.info("EXEC serverDSCreate")
+
+    def __addDataSource(self, name, xml, action):
+        ds = LabeledObject(name, None)
+        dsEdit = DataSource.DataSource(self.receiver.sourceList)
+        dsEdit.id = ds.id
+        dsEdit.directory = self.receiver.sourceList.directory
+        dsEdit.name = name
+
+        dsEdit.set(QString(xml), True)
+        if hasattr(dsEdit, "connectExternalActions"):
+            dsEdit.connectExternalActions(
+                **self.receiver.externalDSActions)
+        ds.name = dsEdit.name
+        ds.instance = dsEdit
+        self.receiver.sourceList.addElement(ds, False)
+        dsEdit.dialog.setWindowTitle(
+            "%s [DataSource]" % ds.name)
+
+        if action == "STORE":
+            self.receiver.configServer.storeDataSource(name, xml)
+            ds.instance.savedXML = ds.instance.get()
+            ds.savedName = ds.name
+        elif action == "SAVE":
+            if ds.instance.save():
+                ds.savedName = ds.name
+                ds.instance.savedXML = ds.instance.get()
+
+        if hasattr(self.receiver.ui, 'mdi'):
+            subwindow = self.receiver.subWindow(
+                ds.instance,
+                self.receiver.ui.mdi.subWindowList())
+            if subwindow:
+                self.receiver.setActiveSubWindow(subwindow)
+                ds.instance.dialog.setSaveFocus()
+            else:
+                subwindow = self.receiver.ui.mdi.addSubWindow(
+                    dsEdit.dialog)
+                subwindow.resize(440, 550)
+                dsEdit.dialog.setSaveFocus()
+                dsEdit.dialog.show()
+            dsEdit.dialog.show()
+        return ds.id
+
+    ## unexecutes the command
+    # \brief It undo connection to the configuration server,
+    #        i.e. it close the connection to the server
+    def undo(self):
+        logger.info("UNDO serverDSCreate")
 
 
 ## Command which fetches the components from the configuration server

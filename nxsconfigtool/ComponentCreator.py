@@ -29,14 +29,13 @@ logger = logging.getLogger(__name__)
 
 try:
     import nxstools
-    from nxstools.nxscreator import OnlineCPCreator
+    from nxstools.nxscreator import OnlineCPCreator, OnlineDSCreator
     NXSTOOLS_AVAILABLE = True
     NXSTOOLS_MASTERVER, NXSTOOLS_MINORVER, NXSTOOLS_PATCHVER = \
         nxstools.__version__.split(".")
     if int(NXSTOOLS_MASTERVER) <= 1:
         if int(NXSTOOLS_MINORVER) <= 18:
-            if int(NXSTOOLS_PATCHVER) <= 3:
-                raise ImportError("nxstools is below 1.18.4")
+            raise ImportError("nxstools is below 1.19.0")
 except ImportError, e:
     NXSTOOLS_AVAILABLE = False
     logger.info("nxstools is not available: %s" % e)
@@ -55,6 +54,7 @@ class Options(object):
         self.overwrite = True
         self.lower = True
         self.component = None
+        self.directory = None
 
 
 ## configuration server
@@ -134,16 +134,73 @@ class ComponentCreator(object):
         return action
 
 
+## configuration server
+class DataSourceCreator(object):
+
+    ## constructor
+    def __init__(self, configServer, parent):
+        ## configuration server
+        self.configServer = configServer
+
+        ## online file name
+        self.onlineFile = None
+
+        ## componentName
+        self.componentName = None
+
+        ## created components
+        self.datasources = {}
+        ## available components
+        self.avcomponents = []
+        ## parent
+        self.parent = parent
+
+    ## sets onlineFile name and check if online file exists
+    def checkOnlineFile(self, onlineFile):
+        onlineFile = onlineFile or '/online_dir/online.xml'
+        onlineFile = unicode(QFileDialog.getOpenFileName(
+            self.parent, "Open Online File", onlineFile,
+            "XML files (*.xml)"))
+        if onlineFile:
+            self.onlineFile = onlineFile
+            return True
+        else:
+            self.onlineFile = None
+
+    ## creates component and datasources from online xml
+    def create(self):
+        self.action = None
+        self.datasources = {}
+        if NXSTOOLS_AVAILABLE and self.onlineFile:
+            options = Options(self.configServer.getDeviceName())
+
+            occ = OnlineDSCreator(options, [self.onlineFile], False)
+            self.action = self.selectAction()
+            if self.action:
+                occ.createXMLs()
+                self.datasources = dict(occ.datasources)
+
+    ## runs Creator widget to select the required component
+    # \returns action to be performed with the components and datasources
+    def selectAction(self):
+        aform = CreatorDlg(self.parent)
+        action = None
+        aform.createGUI()
+        aform.setWindowTitle("DataSource Creator")
+        aform.ui.compFrame.hide()
+        aform.resize(600, 0)
+        aform.show()
+        if aform.exec_():
+            action = aform.action
+        return action
+
+
 ## test function
 def test():
     import sys
     from PyQt4.QtGui import QApplication
 
     app = QApplication(sys.argv)
-#    cs = ComponentCreator()
-#    cs.onlineFile = "/online_dir/online.xml"
-#    cs.open()
-#    cs.close()
     app.exit()
 
 if __name__ == "__main__":

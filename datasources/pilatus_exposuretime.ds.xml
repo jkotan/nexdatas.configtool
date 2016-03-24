@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <definition>
   <datasource type="TANGO" name="pilatus_exposuretime">
+    <device port="10000" hostname="haso228k" group="pilatus_" member="attribute" name="p09/pilatus/haso228k"/>
     <record name="ExposureTime"/>
-    <device port="10000" hostname="haso107d1" group="pilatus_" member="attribute" name="p09/pilatus/exp.01"/>
   </datasource>
 </definition>

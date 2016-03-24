@@ -127,6 +127,7 @@
     <addaction name="actionUnsetComponentMandatoryServer"/>
     <addaction name="separator"/>
     <addaction name="actionCreateComponentServer"/>
+    <addaction name="actionCreateDataSourcesServer"/>
     <addaction name="separator"/>
     <addaction name="actionCloseServer"/>
    </widget>
@@ -563,6 +564,11 @@
   <action name="actionCreateComponentServer">
    <property name="text">
     <string>&amp;Create Online Component ...</string>
+   </property>
+  </action>
+  <action name="actionCreateDataSourcesServer">
+   <property name="text">
+    <string>&amp;Create Online DataSources ...</string>
    </property>
   </action>
   <action name="actionFetchComponentsServer">

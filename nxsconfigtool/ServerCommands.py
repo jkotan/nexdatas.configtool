@@ -340,13 +340,17 @@ class ServerFetchComponents(QUndoCommand):
     ## executes the command
     # \brief It fetches the components from the configuration server
     def redo(self):
-        if QMessageBox.question(
-            self.receiver,
-            "Component - Reload List from Configuration server",
-            ("All unsaved components will be lost. "
-             "Would you like to proceed ?").encode(),
+        failures = []
+        if not self.receiver.closeList(
+                None, self.receiver.componentList, failures):
+            return
+        if (failures and QMessageBox.question(
+                self.receiver,
+                "Component - Reload List from Configuration server",
+                ("All unsaved components will be lost. "
+                 "Would you like to proceed ?").encode(),
                 QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.Yes) == QMessageBox.No:
+                QMessageBox.Yes) == QMessageBox.No):
             return
 
         subwindows = self.receiver.ui.mdi.subWindowList()
@@ -703,14 +707,17 @@ class ServerFetchDataSources(QUndoCommand):
     ## executes the command
     # \brief It fetches the datasources from the configuration server
     def redo(self):
-
-        if QMessageBox.question(
-            self.receiver,
-            "DataSource - Reload List from Configuration Server",
-            ("All unsaved datasources will be lost. "
-             "Would you like to proceed ?").encode(),
+        failures = []
+        if not self.receiver.closeList(
+                None, self.receiver.sourceList, failures):
+            return
+        if (failures and QMessageBox.question(
+                self.receiver,
+                "DataSource - Reload List from Configuration Server",
+                ("All unsaved datasources will be lost. "
+                 "Would you like to proceed ?").encode(),
                 QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.Yes) == QMessageBox.No:
+                QMessageBox.Yes) == QMessageBox.No):
             return
 
         subwindows = self.receiver.ui.mdi.subWindowList()

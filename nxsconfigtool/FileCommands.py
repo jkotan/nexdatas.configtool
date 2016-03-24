@@ -391,12 +391,17 @@ class ComponentChangeDirectory(QUndoCommand):
     ## executes the command
     # \brief It changes the current component file directory
     def redo(self):
-        if QMessageBox.question(
-            self.receiver, "Component - Change Directory",
-            ("All unsaved components will be lost. "
-             "Would you like to proceed ?").encode(),
+        failures = []
+        if not self.receiver.closeList(
+                None, self.receiver.componentList, failures):
+            return
+        if (failures and QMessageBox.question(
+                self.receiver,
+                "Component - Reload List from Configuration server",
+                ("All unsaved components will be lost. "
+                 "Would you like to proceed ?").encode(),
                 QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.Yes) == QMessageBox.No:
+                QMessageBox.Yes) == QMessageBox.No):
             return
 
         path = unicode(QFileDialog.getExistingDirectory(
@@ -586,12 +591,17 @@ class DataSourceChangeDirectory(QUndoCommand):
     ## executes the command
     # \brief It changes the current file directory with datasources
     def redo(self):
-        if QMessageBox.question(
-            self.receiver, "DataSource - Change Directory",
-            ("All unsaved datasources will be lost. "
-             "Would you like to proceed ?").encode(),
+        failures = []
+        if not self.receiver.closeList(
+                None, self.receiver.sourceList, failures):
+            return
+        if (failures and QMessageBox.question(
+                self.receiver,
+                "DataSource - Reload List from Configuration Server",
+                ("All unsaved datasources will be lost. "
+                 "Would you like to proceed ?").encode(),
                 QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.Yes) == QMessageBox.No:
+                QMessageBox.Yes) == QMessageBox.No):
             return
 
         path = unicode(QFileDialog.getExistingDirectory(
@@ -634,12 +644,17 @@ class ComponentReloadList(QUndoCommand):
     # \brief It reloads the components from the current component directory
     #        into the component list
     def redo(self):
-        if QMessageBox.question(
-            self.receiver, "Component - Reload List",
-            ("All unsaved components will be lost. "
-             "Would you like to proceed ?").encode(),
+        failures = []
+        if not self.receiver.closeList(
+                None, self.receiver.componentList, failures):
+            return
+        if (failures and QMessageBox.question(
+                self.receiver,
+                "Component - Reload List from Configuration server",
+                ("All unsaved components will be lost. "
+                 "Would you like to proceed ?").encode(),
                 QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.Yes) == QMessageBox.No:
+                QMessageBox.Yes) == QMessageBox.No):
             return
 
         subwindows = self.receiver.ui.mdi.subWindowList()
@@ -671,12 +686,17 @@ class DataSourceReloadList(QUndoCommand):
     # \brief It reloads the datasources from the current datasource directory
     #        into the datasource list
     def redo(self):
-        if QMessageBox.question(
-            self.receiver, "DataSource - Reload List",
-            ("All unsaved datasources will be lost. "
-             "Would you like to proceed ?").encode(),
+        failures = []
+        if not self.receiver.closeList(
+                None, self.receiver.sourceList, failures):
+            return
+        if (failures and QMessageBox.question(
+                self.receiver,
+                "DataSource - Reload List from Configuration Server",
+                ("All unsaved datasources will be lost. "
+                 "Would you like to proceed ?").encode(),
                 QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.Yes) == QMessageBox.No:
+                QMessageBox.Yes) == QMessageBox.No):
             return
 
         subwindows = self.receiver.ui.mdi.subWindowList()

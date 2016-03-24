@@ -425,7 +425,7 @@ class MainWindow(QMainWindow):
     # \param elementList element list
     # \param failures a list of errors
     # \returns True if not canceled
-    def __closeList(self, event, elementList, failures):
+    def closeList(self, event, elementList, failures):
         status = None
         for k in elementList.elements.keys():
             cp = elementList.elements[k]
@@ -454,7 +454,8 @@ class MainWindow(QMainWindow):
                             self.slots["Edit"].dsourceEdit()
                         if not cp.instance.save():
                             elementList.populateElements(cid)
-                            event.ignore()
+                            if event:
+                                event.ignore()
                             return
                         elementList.populateElements(cid)
 
@@ -462,7 +463,9 @@ class MainWindow(QMainWindow):
                         failures.append(unicode(e))
 
                 elif status == QMessageBox.Cancel:
-                    event.ignore()
+                    if event:
+                        event.ignore()
+                        print "CANCEL"
                     return
         return True
 
@@ -499,9 +502,9 @@ class MainWindow(QMainWindow):
     # \param event Qt event
     def closeEvent(self, event):
         failures = []
-        if not self.__closeList(event, self.componentList, failures):
+        if not self.closeList(event, self.componentList, failures):
             return
-        if not self.__closeList(event, self.sourceList, failures):
+        if not self.closeList(event, self.sourceList, failures):
             return
         if (failures and
             QMessageBox.warning(

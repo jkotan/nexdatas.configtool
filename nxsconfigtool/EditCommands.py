@@ -30,7 +30,7 @@ from .Component import Component
 
 import logging
 ## message logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("nxsdesigner")
 
 
 ## Command which opens dialog with the current component

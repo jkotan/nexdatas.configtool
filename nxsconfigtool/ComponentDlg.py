@@ -28,7 +28,7 @@ from .DomTools import DomTools
 
 import logging
 ## message logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("nxsdesigner")
 
 
 ## compoent dialog

@@ -29,17 +29,13 @@ from PyQt4.QtGui import (QApplication, QIcon)
 
 
 from nxsconfigtool.MainWindow import MainWindow
+from nxsconfigtool.Logger import LogHandler, LogActions
 from nxsconfigtool.qrc import qrc_resources
 from nxsconfigtool import __version__
 
 
 ## the main function
 def main():
-    levels = {'debug': logging.DEBUG,
-              'info': logging.INFO,
-              'warning': logging.WARNING,
-              'error': logging.ERROR,
-              'critical': logging.CRITICAL}
 
     usage = "usage: nxsdesigner "\
         "[-s server] [-c components] [-d datasources] ... "
@@ -73,12 +69,12 @@ def main():
 
     (options, _) = parser.parse_args()
 
-    if options.log:
-        level_name = options.log
-        level = levels.get(level_name, logging.NOTSET)
-        logging.basicConfig(level=level)
-    else:
-        logging.basicConfig()
+    level = LogActions.levels.get(options.log, logging.NOTSET)
+    handler = LogHandler()
+    handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+    logger = logging.getLogger("nxsdesigner")
+    logger.addHandler(handler)
+    logger.setLevel(level)
 
     if options.version:
         print (__version__)

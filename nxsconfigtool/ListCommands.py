@@ -28,7 +28,7 @@ from .LabeledObject import LabeledObject
 
 import logging
 ## message logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("nxsdesigner")
 
 
 ## Command which creates a new component

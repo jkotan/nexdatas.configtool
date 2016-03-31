@@ -33,7 +33,7 @@ from .LabeledObject import LabeledObject
 
 import logging
 ## message logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("nxsdesigner")
 
 
 ## Command which loads an existing component from the file

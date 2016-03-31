@@ -93,7 +93,7 @@ class ComponentList(ElementList):
                     if datasource in cp.instance.datasources:
                         comps.add(cp.name)
         return list(comps)
-        
+
 if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication

@@ -169,9 +169,8 @@ class DataSource(CommonDataSource):
         if hasattr(self.document, "toString"):
             xml = unicode(self.document.toString(0))
             dss = set(DomTools.findElements(xml, "datasources"))
-        self.datasources = list(dss)    
+        self.datasources = list(dss)
 
-        
     ## creates dialog
     # \brief It creates dialog, its GUI , updates Nodes and Form
     def createDialog(self):
@@ -283,7 +282,6 @@ class DataSource(CommonDataSource):
             if fh is not None:
                 fh.close()
         self.fetchElements()
-        print "FETCH LOAD", self.name, self.datasources
         if fh is not None:
             return filename
 
@@ -317,7 +315,6 @@ class DataSource(CommonDataSource):
             newds = newdoc.createElement(QString("datasource"))
         definition.appendChild(newds)
         self.fetchElements()
-        print "FETCH REPAIR", self.name, self.datasources
         return newdoc.toString(0)
 
     ## sets datasources from xml string
@@ -346,7 +343,6 @@ class DataSource(CommonDataSource):
                                 "Problems in creating a dialog %s :\n\n%s"
                                 % (self.name, unicode(e)))
         self.fetchElements()
-        print "FETCH SET", self.name, self.datasources
 
     ## accepts and save input text strings
     # \brief It copies the parameters and saves the dialog
@@ -447,7 +443,6 @@ class DataSource(CommonDataSource):
         if hasattr(self, "_DataSource__methods") and self.__methods:
             return self.__methods.updateNode(index)
         self.fetchElements()
-        print "UPDATe NODES", self.name, self.datasources
 
     ## creates GUI
     # \brief abstract class
@@ -469,7 +464,6 @@ class DataSource(CommonDataSource):
         if hasattr(self, "_DataSource__methods") and self.__methods:
             return self.__methods.createNodes(external)
         self.fetchElements()
-        print "CREATe NODES", self.name, self.datasources
 
     ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
@@ -477,7 +471,6 @@ class DataSource(CommonDataSource):
         if hasattr(self, "_DataSource__methods") and self.__methods:
             return self.__methods.apply()
         self.fetchElements()
-        print "FETCH APPLY", self.name, self.datasources
 
     ## sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode
@@ -515,7 +508,6 @@ class DataSource(CommonDataSource):
         if hasattr(self, "_DataSource__methods") and self.__methods:
             return self.__methods.copyFromClipboard()
         self.fetchElements()
-        print "copy from clip", self.name, self.datasources
 
     ## creates the new empty header
     # \brief It clean the DOM tree and put into it xml and definition nodes
@@ -523,7 +515,6 @@ class DataSource(CommonDataSource):
         if hasattr(self, "_DataSource__methods") and self.__methods:
             return self.__methods.createHeader()
         self.fetchElements()
-        print "create HEader", self.name, self.datasources
 
 if __name__ == "__main__":
     import sys

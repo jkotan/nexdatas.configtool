@@ -140,14 +140,16 @@ class ListSlots(object):
     # \param row row Changed
     def componentRowChanged(self, row):
         self.main.deselectComponentSubWindow()
-        did = self.main.componentList.currentListElement()
-        self.main.componentContent(did)
+        did = self.main.componentList.currentListElement().id
+        if did:
+            self.main.componentContent(did)
 
     ## dsource row change action
     # \param row row Changed
     def dsourceRowChanged(self, row):
         self.main.deselectDataSourceSubWindow()
-        did = self.main.sourceList.currentListElement()
-        self.main.dataSourceContent(did)
+        did = self.main.sourceList.currentListElement().id
+        if did:
+            self.main.dataSourceContent(did)
 if __name__ == "__main__":
     pass

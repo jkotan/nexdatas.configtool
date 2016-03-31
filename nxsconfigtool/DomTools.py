@@ -25,6 +25,7 @@ from PyQt4.QtXml import QDomNode
 from PyQt4.QtCore import QString
 import re
 
+
 ## abstract node dialog
 class DomTools(object):
 
@@ -177,6 +178,7 @@ class DomTools(object):
         row = cls.__getElementRow(element, parent.internalPointer().node)
         if row is not None:
             model.removeItem(row, parent)
+
     ## replaces node element
     # \param oldElement old DOM node element
     # \param newElement new DOM node element

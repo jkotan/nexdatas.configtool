@@ -55,6 +55,7 @@ import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
 
+
 ## main window class
 class MainWindow(QMainWindow):
 
@@ -109,7 +110,7 @@ class MainWindow(QMainWindow):
 
         ## log actions
         self.logActions = LogActions(self)
-        
+
         settings = QSettings()
         dsDirectory = self.__setDirectory(
             settings, "DataSources/directory", "datasources",
@@ -189,11 +190,7 @@ class MainWindow(QMainWindow):
                            "', '".join([
                                str(el) for el in datasources])
         logger.info(message)
-        
-        
-    
-                
-        
+
     ##  creates GUI
     # \brief It create dialogs for the main window application
     # \param dsDirectory datasource directory
@@ -216,19 +213,19 @@ class MainWindow(QMainWindow):
     @pyqtSlot(bool)
     def debug(self, flag):
         self.logActions.setlevel("debug", flag)
-        
+
     @pyqtSlot(bool)
     def info(self, flag):
         self.logActions.setlevel("info", flag)
-        
+
     @pyqtSlot(bool)
     def warning(self, flag):
         self.logActions.setlevel("warning", flag)
-        
+
     @pyqtSlot(bool)
     def error(self, flag):
         self.logActions.setlevel("error", flag)
-        
+
     @pyqtSlot(bool)
     def critical(self, flag):
         self.logActions.setlevel("critical", flag)
@@ -236,7 +233,7 @@ class MainWindow(QMainWindow):
     @pyqtSlot(str)
     def insertText(self, message):
         self.ui.logTextBrowser.insertPlainText(message)
-        
+
         self.ui.logTextBrowser.moveCursor(QTextCursor.End)
 
     def connectLogger(self):
@@ -249,7 +246,7 @@ class MainWindow(QMainWindow):
         self.logActions.updatelevel()
         doc = self.ui.logTextBrowser.document()
         doc.setMaximumBlockCount(1000)
-        
+
     ## setups direcconfiguration server
     # \param settings application QSettings object
     # \param name setting variable name

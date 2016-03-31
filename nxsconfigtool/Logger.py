@@ -28,6 +28,7 @@ from PyQt4.QtCore import (QObject, pyqtSignal, pyqtSlot)
 
 logger = logging.getLogger("nxsdesigner")
 
+
 class LogHandler(logging.Handler):
 
     def __init__(self):
@@ -52,13 +53,12 @@ class LogActions(QObject):
     def updatelevel(self):
         levellist = ['no', 'debug', 'info', 'warning', 'error', 'critical']
         eflevel = logger.getEffectiveLevel()
-        ilv = eflevel/10
+        ilv = eflevel / 10
         level = levellist[ilv]
-        print level
         self.setlevel(level, True)
 
     def setlevel(self, level, flag):
-        level =  level if flag else None
+        level = level if flag else None
         logger.setLevel(
             self.levels.get(level, logging.NOTSET))
         for lv in self.levels:

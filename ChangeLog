@@ -1,3 +1,7 @@
+2016-03-XX Jan Kotanski <jankotan@gmail.com>
+	* add debug windows. It closes #6
+	* tagged as v1.10.0
+
 2016-03-24 Jan Kotanski <jankotan@gmail.com>
 	* fix for unsaved element message
 	* tagged as v1.9.1

@@ -24,12 +24,12 @@
 import os
 
 from PyQt4.QtCore import (
-    SIGNAL, QSettings, Qt, QVariant)
+    SIGNAL, QSettings, Qt, QVariant, pyqtSlot)
 from PyQt4.QtGui import (
     QMainWindow,
     QMessageBox, QIcon,
     QLabel, QFrame,
-    QUndoGroup, QUndoStack)
+    QUndoGroup, QUndoStack, QTextCursor)
 
 from .ui.ui_mainwindow import Ui_MainWindow
 
@@ -45,15 +45,15 @@ from .ItemSlots import ItemSlots
 from .ServerSlots import ServerSlots
 from .HelpSlots import HelpSlots
 from .WindowsSlots import WindowsSlots
-
+from .Logger import LogHandler, LogStream, LogActions
 
 from .ConfigurationServer import (ConfigurationServer, PYTANGO_AVAILABLE)
 from .ComponentCreator import (NXSTOOLS_AVAILABLE)
 
 import logging
-## message logger
-logger = logging.getLogger(__name__)
 
+## message logger
+logger = logging.getLogger("nxsdesigner")
 
 ## main window class
 class MainWindow(QMainWindow):
@@ -107,6 +107,9 @@ class MainWindow(QMainWindow):
         ## action slots
         self.slots = {}
 
+        ## log actions
+        self.logActions = LogActions(self)
+        
         settings = QSettings()
         dsDirectory = self.__setDirectory(
             settings, "DataSources/directory", "datasources",
@@ -156,7 +159,42 @@ class MainWindow(QMainWindow):
         self.ui.dockSplitter.addWidget(self.sourceList)
         self.ui.dockSplitter.setStretchFactor(0, 2)
         self.ui.dockSplitter.setStretchFactor(1, 1)
+        self.connectLogger()
 
+    @pyqtSlot(bool)
+    def debug(self, flag):
+        self.logActions.setlevel("debug", flag)
+        
+    @pyqtSlot(bool)
+    def info(self, flag):
+        self.logActions.setlevel("info", flag)
+        
+    @pyqtSlot(bool)
+    def warning(self, flag):
+        self.logActions.setlevel("warning", flag)
+        
+    @pyqtSlot(bool)
+    def error(self, flag):
+        self.logActions.setlevel("error", flag)
+        
+    @pyqtSlot(bool)
+    def critical(self, flag):
+        self.logActions.setlevel("critical", flag)
+
+    @pyqtSlot(str)
+    def insertText(self, message):
+        self.ui.logTextBrowser.insertPlainText(message)
+        self.ui.logTextBrowser.moveCursor(QTextCursor.End)
+
+    def connectLogger(self):
+        self.ui.actionDebug.triggered.connect(self.debug)
+        self.ui.actionInfo.triggered.connect(self.info)
+        self.ui.actionWarning.triggered.connect(self.warning)
+        self.ui.actionError.triggered.connect(self.error)
+        self.ui.actionCritical.triggered.connect(self.critical)
+        LogStream.stdout().written.connect(self.insertText)
+        self.logActions.updatelevel()
+        
     ## setups direcconfiguration server
     # \param settings application QSettings object
     # \param name setting variable name
@@ -303,13 +341,21 @@ class MainWindow(QMainWindow):
             self.ui.actionConnectServer.setDisabled(True)
         self.disableServer(True)
 
-        viewDockAction = self.ui.compDockWidget.toggleViewAction()
-        viewDockAction.setToolTip("Show/Hide the dock lists")
-        viewDockAction.setStatusTip("Show/Hide the dock lists")
+        viewCompDockAction = self.ui.compDockWidget.toggleViewAction()
+        viewCompDockAction.setToolTip("Show/Hide the dock lists")
+        viewCompDockAction.setStatusTip("Show/Hide the dock lists")
+
+        viewLogDockAction = self.ui.logDockWidget.toggleViewAction()
+        viewLogDockAction.setToolTip("Show/Hide the logger")
+        viewLogDockAction.setStatusTip("Show/Hide the logger")
 
         self.ui.menuView.insertAction(
             self.ui.menuView.actions()[0],
-            viewDockAction)
+            viewLogDockAction)
+
+        self.ui.menuView.insertAction(
+            self.ui.menuView.actions()[0],
+            viewCompDockAction)
 
         self.__setAction(
             self.ui.actionAllAttributesView,

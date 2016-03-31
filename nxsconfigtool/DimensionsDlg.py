@@ -28,7 +28,7 @@ from .ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
 import logging
 ## message logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("nxsdesigner")
 
 
 ## dialog defining a dimensions tag

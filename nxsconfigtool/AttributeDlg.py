@@ -29,7 +29,7 @@ from .Errors import CharacterError
 
 import logging
 ## message logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("nxsdesigner")
 
 
 ## dialog defining a tag attribute

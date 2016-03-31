@@ -31,7 +31,7 @@ from .EditCommands import (DataSourceCut, DataSourceCopy, DataSourcePaste)
 
 import logging
 ## message logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("nxsdesigner")
 
 
 ## Abstract Command which helps in defing commands related to

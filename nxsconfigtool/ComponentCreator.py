@@ -25,7 +25,7 @@ from PyQt4.QtGui import (QMessageBox)
 
 import logging
 ## message logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("nxsdesigner")
 
 try:
     import nxstools

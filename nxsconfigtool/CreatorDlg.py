@@ -28,7 +28,7 @@ from .ui.ui_creatordlg import Ui_CreatorDlg
 
 import logging
 ## message logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("nxsdesigner")
 
 
 ## dialog defining a component creator dialog

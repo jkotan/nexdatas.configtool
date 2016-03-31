@@ -37,7 +37,7 @@ from .DataSourceMethods import DataSourceMethods
 
 import logging
 ## message logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("nxsdesigner")
 
 
 ## class with datasource variables

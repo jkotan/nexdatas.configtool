@@ -28,7 +28,7 @@ from .ui.ui_connectdlg import Ui_ConnectDlg
 
 import logging
 ## message logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("nxsdesigner")
 
 
 ## dialog defining a tag connect

@@ -1,5 +1,6 @@
-2016-03-XX Jan Kotanski <jankotan@gmail.com>
-	* add debug windows. It closes #6
+2016-03-31 Jan Kotanski <jankotan@gmail.com>
+	* add logger windows. It closes #6
+	* display datasource and component content in the logger widget
 	* tagged as v1.10.0
 
 2016-03-24 Jan Kotanski <jankotan@gmail.com>

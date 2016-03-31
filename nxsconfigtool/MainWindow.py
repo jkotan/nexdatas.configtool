@@ -233,7 +233,6 @@ class MainWindow(QMainWindow):
     @pyqtSlot(str)
     def insertText(self, message):
         self.ui.logTextBrowser.insertPlainText(message)
-
         self.ui.logTextBrowser.moveCursor(QTextCursor.End)
 
     def connectLogger(self):

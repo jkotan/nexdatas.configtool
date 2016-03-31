@@ -131,6 +131,23 @@ class Component(object):
         ## tag counter
         self._tagCnt = 0
 
+        ## sub components
+        self.components = []
+        ## sub datasources
+        self.datasources = []
+
+    ## fetches $datasources and $components from xml
+    # \brief populate components and datasources
+    def fetchElements(self):
+        dss = set()
+        cps = set()
+        if hasattr(self.document, "toString"):
+            xml = unicode(self.document.toString(0))
+            dss = set(DomTools.findElements(xml, "datasources"))
+            cps = set(DomTools.findElements(xml, "components"))
+        self.components = list(cps)    
+        self.datasources = list(dss)
+        
     ## provides attribute flag
     # \returns flag if all attributes have to be shown
     def getAttrFlag(self):
@@ -299,6 +316,8 @@ class Component(object):
 
         self.view.resizeColumnToContents(0)
         self.view.resizeColumnToContents(1)
+        self.fetchElements()
+        print "FETCH APPLY", self.name, self.components, self.datasources
         return True
 
     ## moving node up
@@ -443,6 +462,8 @@ class Component(object):
             SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
 
         self.view.expand(index)
+        self.fetchElements()
+        print "FETCH PASTE", self.name, self.components, self.datasources
         return True
 
     ## creates the component item with the given name in the component tree
@@ -470,6 +491,8 @@ class Component(object):
         self.view.model().emit(
             SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         self.view.expand(index)
+        self.fetchElements()
+        print "FETCH addItem", self.name, self.components, self.datasources
         if status:
             return child
 
@@ -511,6 +534,8 @@ class Component(object):
         else:
             self.tagClicked(QModelIndex())
 
+        self.fetchElements()
+        print "FETCH removeSelectedItem", self.name, self.components, self.datasources
         return True
 
     ## copies the currenct component tree item if possible
@@ -528,6 +553,8 @@ class Component(object):
 
         clipboard = QApplication.clipboard()
         clipboard.setText(self._nodeToString(node))
+        self.fetchElements()
+        print "FETCH copySelectedItem", self.name, self.components, self.datasources
         return True
 
     ## creates GUI
@@ -780,6 +807,8 @@ class Component(object):
 
                 logger.warn(error)
             finally:
+                self.fetchElements()
+                print "FETCH load", self.name, self.components, self.datasources
                 if fh is not None:
                     fh.close()
 
@@ -792,6 +821,8 @@ class Component(object):
         self._loadFromString(xml)
         self._xmlPath = self._componentFile
         self.savedXML = self.get()
+        self.fetchElements()
+        print "FETCH set", self.name, self.components, self.datasources
         return self._componentFile
 
     ## sets component from XML string
@@ -880,6 +911,8 @@ class Component(object):
                 if fh is not None:
                     fh.close()
 
+        self.fetchElements()
+        print "FETCH load component", self.name, self.components, self.datasources
         return True
 
     ## loads the datasource item from the xml file
@@ -948,6 +981,8 @@ class Component(object):
                 if fh is not None:
                     fh.close()
 
+        self.fetchElements()
+        print "FETCH load datasource", self.name, self.components, self.datasources
         return True
 
     ## add the datasource into the component tree
@@ -991,6 +1026,8 @@ class Component(object):
         self.view.model().emit(
             SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         self.view.expand(index)
+        self.fetchElements()
+        print "FETCH add datasource", self.name, self.components, self.datasources
         return True
 
     ## link the datasource into the component tree
@@ -1029,6 +1066,8 @@ class Component(object):
         self.view.model().emit(
             SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         self.view.expand(index)
+        self.fetchElements()
+        print "FETCH link datasource", self.name, self.components, self.datasources
         return True
 
     ## accepts merger dialog and interrupts merging
@@ -1183,6 +1222,8 @@ class Component(object):
                 self.document, self._allAttributes, self.parent)
             self.view.setModel(newModel)
             self.connectView()
+        self.fetchElements()
+        print "FETCH create header", self.name, self.components, self.datasources
         self._hideFrame()
 
     ## fetches tags with a given name  from the node branch

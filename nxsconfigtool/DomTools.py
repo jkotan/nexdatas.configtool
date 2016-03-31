@@ -23,10 +23,32 @@
 
 from PyQt4.QtXml import QDomNode
 from PyQt4.QtCore import QString
-
+import re
 
 ## abstract node dialog
 class DomTools(object):
+
+    ## provides a list of elements from the given text
+    # \param text give text
+    # \param label element label
+    # \returns list of element names from the given text
+    @classmethod
+    def findElements(self, text, label):
+        variables = []
+        index = text.find("$%s." % label)
+        while index != -1:
+            try:
+                subc = re.finditer(
+                    r"[\w]+",
+                    text[(index + len(label) + 2):]
+                ).next().group(0)
+            except:
+                subc = ""
+            name = subc.strip() if subc else ""
+            if name:
+                variables.append(name)
+            index = text.find("$%s." % label, index + 1)
+        return variables
 
     ## provides row number of the given node
     # \param child child item
@@ -155,7 +177,6 @@ class DomTools(object):
         row = cls.__getElementRow(element, parent.internalPointer().node)
         if row is not None:
             model.removeItem(row, parent)
-
     ## replaces node element
     # \param oldElement old DOM node element
     # \param newElement new DOM node element

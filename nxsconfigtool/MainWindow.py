@@ -139,9 +139,61 @@ class MainWindow(QMainWindow):
 
         status = self.createStatusBar()
         status.showMessage("Ready", 5000)
-
         self.setWindowTitle("NXS Component Designer")
 
+        for ds in self.sourceList.elements.keys():
+            self.dataSourceContent(ds)
+        for cp in self.componentList.elements.keys():
+            self.componentContent(cp)
+
+    def dataSourceContent(self, did):
+        ds = self.sourceList.elements[did]
+        components = []
+        datasources = []
+        if ds and ds.name:
+            if ds and ds.name and ds.instance:
+                name = ds.instance.name
+                components = self.componentList.dataSourceComponents(name)
+                datasources = ds.instance.datasources
+            message = "datasource '%s' " % name
+            if name != ds.name:
+                message += "('%s')" % (ds.name)
+            if components:
+                message += "\n    is linked to: '%s' components" % \
+                           "', '".join([
+                               str(el) for el in components])
+            if datasources:
+                message += "\n    depends on: '%s' datasources" % \
+                           "', '".join([
+                               str(el) for el in datasources])
+        logger.info(message)
+
+    def componentContent(self, did):
+        cp = self.componentList.elements[did]
+        components = []
+        datasources = []
+        if cp and cp.name:
+            if cp and cp.name and cp.instance:
+                name = cp.instance.name
+                components = cp.instance.components
+                datasources = cp.instance.datasources
+            message = "component '%s' " % name
+            if name != cp.name:
+                message += "('%s')" % (cp.name)
+            if components:
+                message += "\n    depends on: '%s' components" % \
+                           "', '".join([
+                               str(el) for el in components])
+            if datasources:
+                message += "\n    depends on: '%s' datasources" % \
+                           "', '".join([
+                               str(el) for el in datasources])
+        logger.info(message)
+        
+        
+    
+                
+        
     ##  creates GUI
     # \brief It create dialogs for the main window application
     # \param dsDirectory datasource directory
@@ -184,6 +236,7 @@ class MainWindow(QMainWindow):
     @pyqtSlot(str)
     def insertText(self, message):
         self.ui.logTextBrowser.insertPlainText(message)
+        
         self.ui.logTextBrowser.moveCursor(QTextCursor.End)
 
     def connectLogger(self):
@@ -194,6 +247,8 @@ class MainWindow(QMainWindow):
         self.ui.actionCritical.triggered.connect(self.critical)
         LogStream.stdout().written.connect(self.insertText)
         self.logActions.updatelevel()
+        doc = self.ui.logTextBrowser.document()
+        doc.setMaximumBlockCount(1000)
         
     ## setups direcconfiguration server
     # \param settings application QSettings object

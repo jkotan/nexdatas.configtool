@@ -69,7 +69,7 @@ def main():
 
     (options, _) = parser.parse_args()
 
-    level = LogActions.levels.get(options.log, logging.NOTSET)
+    level = LogActions.levels.get(options.log, logging.INFO)
     handler = LogHandler()
     handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
     logger = logging.getLogger("nxsdesigner")

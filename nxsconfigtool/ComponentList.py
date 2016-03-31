@@ -85,7 +85,15 @@ class ComponentList(ElementList):
         dlg.createGUI()
         return dlg
 
-
+    def dataSourceComponents(self, datasource):
+        comps = set()
+        for cp in self.elements.values():
+            if cp and cp.name and cp.instance:
+                if hasattr(cp.instance, "datasources"):
+                    if datasource in cp.instance.datasources:
+                        comps.add(cp.name)
+        return list(comps)
+        
 if __name__ == "__main__":
     import sys
     from PyQt4.QtGui import QApplication

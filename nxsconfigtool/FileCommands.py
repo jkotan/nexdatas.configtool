@@ -97,7 +97,7 @@ class ComponentOpen(QUndoCommand):
                     self._cpEdit.dialog.show()
                     self._cp.instance = self._cpEdit
                 self._cpEdit.dialog.show()
-                logger.info("EXEC componentOpen")
+                logger.debug("EXEC componentOpen")
 
     ## unexecutes the command
     # \brief It removes the loaded component from the component list
@@ -116,7 +116,7 @@ class ComponentOpen(QUndoCommand):
                     self._cp, False)
                 self._cp.instance = None
 
-        logger.info("UNDO componentOpen")
+        logger.debug("UNDO componentOpen")
 
 
 ## Command which loads an existing datasource from the file
@@ -178,7 +178,7 @@ class DataSourceOpen(QUndoCommand):
                     self._ds.instance = self._dsEdit
 
                 self._dsEdit.dialog.show()
-                logger.info("EXEC dsourceOpen")
+                logger.debug("EXEC dsourceOpen")
 
     ## unexecutes the command
     # \brief It removes the loaded datasource from the datasource list
@@ -197,7 +197,7 @@ class DataSourceOpen(QUndoCommand):
                 self.receiver.sourceList.removeElement(self._ds, False)
                 self._ds.instance = None
 
-        logger.info("UNDO dsourceOpen")
+        logger.debug("UNDO dsourceOpen")
 
 
 ## Command which saves with the current component in the file
@@ -263,7 +263,7 @@ class ComponentSave(QUndoCommand):
         else:
             self.receiver.componentList.populateElements()
 
-        logger.info("EXEC componentSave")
+        logger.debug("EXEC componentSave")
 
     ## unexecutes the command
     # \brief It populates the component list
@@ -272,7 +272,7 @@ class ComponentSave(QUndoCommand):
             self.receiver.componentList.populateElements(self._cp.id)
         else:
             self.receiver.componentList.populateElements()
-        logger.info("UNDO componentSave")
+        logger.debug("UNDO componentSave")
 
 
 ## Command which saves all components in the file
@@ -320,7 +320,7 @@ class ComponentSaveAll(QUndoCommand):
         progress.setValue(len(keys))
         progress.close()
 
-        logger.info("EXEC componentSaveAll")
+        logger.debug("EXEC componentSaveAll")
 
 
 ## Command which saves the current components in the file with a different name
@@ -365,7 +365,7 @@ class ComponentSaveAs(QUndoCommand):
             self.receiver.componentList.populateElements(self._cp.id)
         else:
             self.receiver.componentList.populateElements()
-        logger.info("EXEC componentSaveAs")
+        logger.debug("EXEC componentSaveAs")
 
     ## unexecutes the command
     # \brief It populates the Component list
@@ -374,7 +374,7 @@ class ComponentSaveAs(QUndoCommand):
             self.receiver.componentList.populateElements(self._cp.id)
         else:
             self.receiver.componentList.populateElements()
-        logger.info("UNDO componentSaveAs")
+        logger.debug("UNDO componentSaveAs")
 
 
 ## Command which changes the current component file directory
@@ -424,7 +424,7 @@ class ComponentChangeDirectory(QUndoCommand):
 
         self.receiver.loadComponents()
 
-        logger.info("EXEC componentChangeDirectory")
+        logger.debug("EXEC componentChangeDirectory")
 
 
 ## Command which saves all the datasources in files
@@ -473,7 +473,7 @@ class DataSourceSaveAll(QUndoCommand):
         else:
             self.receiver.sourceList.populateElements()
 
-        logger.info("EXEC dsourceSaveAll")
+        logger.debug("EXEC dsourceSaveAll")
 
 
 ## Command which saves the current datasource in files
@@ -515,7 +515,7 @@ class DataSourceSave(QUndoCommand):
         else:
             self.receiver.sourceList.populateElements()
 
-        logger.info("EXEC dsourceSave")
+        logger.debug("EXEC dsourceSave")
 
     ## unexecutes the command
     # \brief It populates the datasource list
@@ -525,7 +525,7 @@ class DataSourceSave(QUndoCommand):
             self.receiver.sourceList.populateElements(ds.id)
         else:
             self.receiver.sourceList.populateElements()
-        logger.info("UNDO dsourceSave")
+        logger.debug("UNDO dsourceSave")
 
 
 ## Command which saves the current datasource in files with a different name
@@ -574,7 +574,7 @@ class DataSourceSaveAs(QUndoCommand):
 
                 self.directory = unicode(fi.dir().path())
 
-        logger.info("EXEC dsourceSaveAs")
+        logger.debug("EXEC dsourceSaveAs")
 
 
 ## Command which changes the current file directory with datasources
@@ -625,7 +625,7 @@ class DataSourceChangeDirectory(QUndoCommand):
 
         self.receiver.loadDataSources()
 
-        logger.info("EXEC dsourceChangeDirectory")
+        logger.debug("EXEC dsourceChangeDirectory")
 
 
 ## Command which reloads the components from the current component directory
@@ -667,7 +667,7 @@ class ComponentReloadList(QUndoCommand):
         self.receiver.componentList.elements = {}
         self.receiver.loadComponents()
 
-        logger.info("EXEC componentReloadList")
+        logger.debug("EXEC componentReloadList")
 
 
 ## Command which reloads the datasources from the current datasource directory
@@ -709,7 +709,7 @@ class DataSourceReloadList(QUndoCommand):
         self.receiver.sourceList.elements = {}
         self.receiver.loadDataSources()
 
-        logger.info("EXEC dsourceReloadList")
+        logger.debug("EXEC dsourceReloadList")
 
 
 if __name__ == "__main__":

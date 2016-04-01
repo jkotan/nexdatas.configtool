@@ -142,12 +142,9 @@ class MainWindow(QMainWindow):
         status.showMessage("Ready", 5000)
         self.setWindowTitle("NXS Component Designer")
 
-        for ds in self.sourceList.elements.keys():
-            self.dataSourceContent(ds)
-        for cp in self.componentList.elements.keys():
-            self.componentContent(cp)
-
     def dataSourceContent(self, did):
+        if logger.getEffectiveLevel() > 20:
+            return
         ds = self.sourceList.elements[did]
         components = []
         datasources = []
@@ -170,6 +167,8 @@ class MainWindow(QMainWindow):
         logger.info(message)
 
     def componentContent(self, did):
+        if logger.getEffectiveLevel() > 20:
+            return
         cp = self.componentList.elements[did]
         components = []
         datasources = []

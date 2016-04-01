@@ -53,7 +53,7 @@ class ComponentNew(QUndoCommand):
             self._comp.instance = None
 
         self.receiver.componentList.addElement(self._comp)
-        logger.info("EXEC componentNew")
+        logger.debug("EXEC componentNew")
 
     ## unexecutes the command
     # \brief It removes the new component
@@ -69,7 +69,7 @@ class ComponentNew(QUndoCommand):
                     self.receiver.setActiveSubWindow(subwindow)
                     self.receiver.ui.mdi.closeActiveSubWindow()
 
-        logger.info("UNDO componentNew")
+        logger.debug("UNDO componentNew")
 
 
 ## Command which removes the current component from the component list
@@ -107,7 +107,7 @@ class ComponentRemove(QUndoCommand):
                 self.receiver.setActiveSubWindow(subwindow)
                 self.receiver.ui.mdi.closeActiveSubWindow()
 
-        logger.info("EXEC componentRemove")
+        logger.debug("EXEC componentRemove")
 
     ## unexecutes the command
     # \brief It reloads the removed component from the component list
@@ -152,7 +152,7 @@ class ComponentRemove(QUndoCommand):
             self.receiver.componentList.populateElements(self._cp.id)
         else:
             self.receiver.componentList.populateElements()
-        logger.info("UNDO componentRemove")
+        logger.debug("UNDO componentRemove")
 
 
 ## Command which changes the current component in the list
@@ -204,7 +204,7 @@ class ComponentListChanged(QUndoCommand):
         else:
             self.receiver.componentList.populateElements()
 
-        logger.info("EXEC componentChanged")
+        logger.debug("EXEC componentChanged")
 
     ## unexecutes the command
     # \brief It changes back the current component in the list
@@ -221,7 +221,7 @@ class ComponentListChanged(QUndoCommand):
         else:
             self.receiver.componentList.populateElements()
 
-        logger.info("UNDO componentChanged")
+        logger.debug("UNDO componentChanged")
 
 
 ## Command which creates a new datasource
@@ -244,7 +244,7 @@ class DataSourceNew(QUndoCommand):
         else:
             self._ds.instance = None
         self.receiver.sourceList.addElement(self._ds)
-        logger.info("EXEC dsourceNew")
+        logger.debug("EXEC dsourceNew")
 
     ## unexecutes the command
     # \brief It removes the added datasource
@@ -261,7 +261,7 @@ class DataSourceNew(QUndoCommand):
                     self.receiver.setActiveSubWindow(subwindow)
                     self.receiver.ui.mdi.closeActiveSubWindow()
 
-        logger.info("UNDO dsourceNew")
+        logger.debug("UNDO dsourceNew")
 
 
 ## Command which removes the current datasource from the datasource list
@@ -299,7 +299,7 @@ class DataSourceRemove(QUndoCommand):
                 self.receiver.setActiveSubWindow(subwindow)
                 self.receiver.ui.mdi.closeActiveSubWindow()
 
-        logger.info("EXEC dsourceRemove")
+        logger.debug("EXEC dsourceRemove")
 
     ## unexecutes the command
     # \brief It adds the removes datasource into the datasource list
@@ -324,7 +324,7 @@ class DataSourceRemove(QUndoCommand):
                 self._ds.instance.dialog.show()
 
             self._ds.instance.dialog.show()
-        logger.info("UNDO dsourceRemove")
+        logger.debug("UNDO dsourceRemove")
 
 
 ## Command which performs change of  the current datasource
@@ -375,7 +375,7 @@ class DataSourceListChanged(QUndoCommand):
         else:
             self.receiver.sourceList.populateElements()
 
-        logger.info("EXEC dsourceChanged")
+        logger.debug("EXEC dsourceChanged")
 
     ## unexecutes the command
     # \brief It changes back the current datasource
@@ -393,7 +393,7 @@ class DataSourceListChanged(QUndoCommand):
         else:
             self.receiver.sourceList.populateElements()
 
-        logger.info("UNDO dsourceChanged")
+        logger.debug("UNDO dsourceChanged")
 
 
 ## Command which is performed during closing the Component Designer
@@ -412,7 +412,7 @@ class CloseApplication(QUndoCommand):
     def redo(self):
         if hasattr(self.receiver.ui, 'mdi'):
             self.receiver.close()
-            logger.info("EXEC closeApp")
+            logger.debug("EXEC closeApp")
 
 
 if __name__ == "__main__":

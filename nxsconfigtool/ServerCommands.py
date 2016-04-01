@@ -73,7 +73,7 @@ class ServerConnect(QUndoCommand):
                     "Error in connecting to Configuration Server",
                     unicode(e))
 
-        logger.info("EXEC serverConnect")
+        logger.debug("EXEC serverConnect")
 
     ## unexecutes the command
     # \brief It undo connection to the configuration server,
@@ -91,7 +91,7 @@ class ServerConnect(QUndoCommand):
                     "Error in Closing Configuration Server Connection",
                     unicode(e))
 
-        logger.info("UNDO serverConnect")
+        logger.debug("UNDO serverConnect")
 
 
 ## Command which performs connection to the configuration server
@@ -132,7 +132,7 @@ class ServerCPCreate(QUndoCommand):
                         self.receiver,
                         "Error in creating Component",
                         unicode(e))
-        logger.info("EXEC serverCPCreate")
+        logger.debug("EXEC serverCPCreate")
 
     def __addComponent(self, name, xml, action):
         cp = LabeledObject(name, None)
@@ -222,7 +222,7 @@ class ServerCPCreate(QUndoCommand):
     # \brief It undo connection to the configuration server,
     #        i.e. it close the connection to the server
     def undo(self):
-        logger.info("UNDO serverCPCreate")
+        logger.debug("UNDO serverCPCreate")
 
 
 ## Command which performs connection to the configuration server
@@ -275,7 +275,7 @@ class ServerDSCreate(QUndoCommand):
                         self.receiver,
                         "Error in creating Component",
                         unicode(e))
-        logger.info("EXEC serverDSCreate")
+        logger.debug("EXEC serverDSCreate")
 
     def __addDataSource(self, name, xml, action):
         ds = LabeledObject(name, None)
@@ -323,7 +323,7 @@ class ServerDSCreate(QUndoCommand):
     # \brief It undo connection to the configuration server,
     #        i.e. it close the connection to the server
     def undo(self):
-        logger.info("UNDO serverDSCreate")
+        logger.debug("UNDO serverDSCreate")
 
 
 ## Command which fetches the components from the configuration server
@@ -385,12 +385,12 @@ class ServerFetchComponents(QUndoCommand):
                     self.receiver,
                     "Error in fetching components", unicode(e))
 
-        logger.info("EXEC serverFetchComponents")
+        logger.debug("EXEC serverFetchComponents")
 
     ## unexecutes the command
     # \brief It does nothing
     def undo(self):
-        logger.info("UNDO serverFetchComponents")
+        logger.debug("UNDO serverFetchComponents")
 
 
 ## Command which stores the current component in the configuration server
@@ -490,7 +490,7 @@ class ServerStoreComponent(QUndoCommand):
         else:
             self.receiver.componentList.populateElements()
 
-        logger.info("EXEC serverStoreComponent")
+        logger.debug("EXEC serverStoreComponent")
 
     ## unexecutes the command
     # \brief It populates only the component list
@@ -499,7 +499,7 @@ class ServerStoreComponent(QUndoCommand):
             self.receiver.componentList.populateElements(self._cp.id)
         else:
             self.receiver.componentList.populateElements()
-        logger.info("UNDO serverStoreComponent")
+        logger.debug("UNDO serverStoreComponent")
 
 
 ## Command which deletes the current component from the configuration server
@@ -547,7 +547,7 @@ class ServerDeleteComponent(QUndoCommand):
         cid = self._cp.id if hasattr(self._cp, "id") else None
         self.receiver.componentList.populateElements(cid)
 
-        logger.info("EXEC serverDeleteComponent")
+        logger.debug("EXEC serverDeleteComponent")
 
     ## unexecutes the command
     # \brief It populates only the component list
@@ -556,7 +556,7 @@ class ServerDeleteComponent(QUndoCommand):
             self.receiver.componentList.populateElements(self._cp.id)
         else:
             self.receiver.componentList.populateElements()
-        logger.info("UNDO serverDeleteComponent")
+        logger.debug("UNDO serverDeleteComponent")
 
 
 ## Command which sets on the configuration server the current component
@@ -599,7 +599,7 @@ class ServerSetMandatoryComponent(QUndoCommand):
                     self.receiver,
                     "Error in setting the component as mandatory",
                     unicode(e))
-        logger.info("EXEC serverSetMandatoryComponent")
+        logger.debug("EXEC serverSetMandatoryComponent")
 
 
 ## Command which fetches a list of the mandatory components from
@@ -641,7 +641,7 @@ class ServerGetMandatoryComponents(QUndoCommand):
                 self.receiver,
                 "Error in getting the mandatory components",
                 unicode(e))
-        logger.info("EXEC serverGetMandatoryComponent")
+        logger.debug("EXEC serverGetMandatoryComponent")
 
 
 ## Command which sets on the configuration server the current component
@@ -686,12 +686,12 @@ class ServerUnsetMandatoryComponent(QUndoCommand):
                     self.receiver,
                     "Error in setting the component as mandatory",
                     unicode(e))
-        logger.info("EXEC serverUnsetMandatoryComponent")
+        logger.debug("EXEC serverUnsetMandatoryComponent")
 
     ## unexecutes the command
     # \brief It does nothing
     def undo(self):
-        logger.info("UNDO serverUnsetMandatoryComponent")
+        logger.debug("UNDO serverUnsetMandatoryComponent")
 
 
 ## Command which fetches the datasources from the configuration server
@@ -751,12 +751,12 @@ class ServerFetchDataSources(QUndoCommand):
                     self.receiver,
                     "Error in fetching datasources", unicode(e))
 
-        logger.info("EXEC serverFetchDataSources")
+        logger.debug("EXEC serverFetchDataSources")
 
     ## unexecutes the command
     # \brief It does nothing
     def undo(self):
-        logger.info("UNDO serverFetchDataSources")
+        logger.debug("UNDO serverFetchDataSources")
 
 
 ## Command which stores the current datasource in the configuration server
@@ -816,7 +816,7 @@ class ServerStoreDataSource(QUndoCommand):
         else:
             self.receiver.sourceList.populateElements()
 
-        logger.info("EXEC serverStoreDataSource")
+        logger.debug("EXEC serverStoreDataSource")
 
     ## unexecutes the command
     # \brief It populates the datasource list
@@ -826,7 +826,7 @@ class ServerStoreDataSource(QUndoCommand):
             self.receiver.sourceList.populateElements(ds.id)
         else:
             self.receiver.sourceList.populateElements()
-        logger.info("UNDO serverStoreDataSource")
+        logger.debug("UNDO serverStoreDataSource")
 
 
 ## Command which deletes the current datasource in the configuration server
@@ -879,7 +879,7 @@ class ServerDeleteDataSource(QUndoCommand):
             self.receiver.sourceList.populateElements(ds.id)
         else:
             self.receiver.sourceList.populateElements()
-        logger.info("EXEC serverDeleteDataSource")
+        logger.debug("EXEC serverDeleteDataSource")
 
     ## unexecutes the command
     # \brief It populates the datasource list
@@ -889,7 +889,7 @@ class ServerDeleteDataSource(QUndoCommand):
             self.receiver.sourceList.populateElements(ds.id)
         else:
             self.receiver.sourceList.populateElements()
-        logger.info("UNDO serverDeleteDataSource")
+        logger.debug("UNDO serverDeleteDataSource")
 
 
 ## Command which closes connection to the configuration server
@@ -922,7 +922,7 @@ class ServerClose(QUndoCommand):
                     "Error in closing connection to Configuration Server",
                     unicode(e))
 
-        logger.info("EXEC serverClose")
+        logger.debug("EXEC serverClose")
 
     ## unexecutes the command
     # \brief It reopen the connection to the configuration server
@@ -940,7 +940,7 @@ class ServerClose(QUndoCommand):
                     self.receiver,
                     "Error in connecting to Configuration Server",
                     unicode(e))
-        logger.info("UNDO serverClose")
+        logger.debug("UNDO serverClose")
 
 
 ## Command which saves all components in the file
@@ -1014,12 +1014,12 @@ class ServerStoreAllComponents(QUndoCommand):
         else:
             self.receiver.componentList.populateElements()
 
-        logger.info("EXEC componentStoreAll")
+        logger.debug("EXEC componentStoreAll")
 
     ## unexecutes the command
     # \brief It does nothing
     def undo(self):
-        logger.info("UNDO componentStoreAll")
+        logger.debug("UNDO componentStoreAll")
 
 
 ## Command which saves all the datasources in files
@@ -1055,7 +1055,7 @@ class ServerStoreAllDataSources(QUndoCommand):
                 dsEdit.name = \
                     self.receiver.sourceList.elements[ds.id].name
                 ds.instance = dsEdit
-            logger.info("Store %s" % ds.instance.name)
+            logger.debug("Store %s" % ds.instance.name)
 
             try:
                 xml = ds.instance.get()
@@ -1093,12 +1093,12 @@ class ServerStoreAllDataSources(QUndoCommand):
         else:
             self.receiver.sourceList.populateElements()
 
-        logger.info("EXEC dsourceStoreAll")
+        logger.debug("EXEC dsourceStoreAll")
 
     ## executes the command
     # \brief It does nothing
     def undo(self):
-        logger.info("UNDO dsourceStoreAll")
+        logger.debug("UNDO dsourceStoreAll")
 
 
 if __name__ == "__main__":

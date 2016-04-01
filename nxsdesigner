@@ -95,7 +95,9 @@ def main():
     form = MainWindow(options.components, options.datasources, options.server)
     form.show()
 
-    sys.exit(app.exec_())
+    status = app.exec_()
+    qrc_resources.qCleanupResources()
+    sys.exit(status)
 
 
 if __name__ == "__main__":

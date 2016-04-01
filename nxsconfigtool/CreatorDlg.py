@@ -22,7 +22,7 @@
 """ server creator widget """
 
 from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import (QDialog, QMessageBox)
+from PyQt4.QtGui import QDialog
 
 from .ui.ui_creatordlg import Ui_CreatorDlg
 

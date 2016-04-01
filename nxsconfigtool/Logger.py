@@ -22,9 +22,8 @@
 """ "Component Desigener Loggers  """
 
 import logging
-import sys
 
-from PyQt4.QtCore import (QObject, pyqtSignal, pyqtSlot)
+from PyQt4.QtCore import (QObject, pyqtSignal)
 
 logger = logging.getLogger("nxsdesigner")
 

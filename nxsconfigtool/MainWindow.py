@@ -45,7 +45,7 @@ from .ItemSlots import ItemSlots
 from .ServerSlots import ServerSlots
 from .HelpSlots import HelpSlots
 from .WindowsSlots import WindowsSlots
-from .Logger import LogHandler, LogStream, LogActions
+from .Logger import LogStream, LogActions
 
 from .ConfigurationServer import (ConfigurationServer, PYTANGO_AVAILABLE)
 from .ComponentCreator import (NXSTOOLS_AVAILABLE)
@@ -742,8 +742,6 @@ class MainWindow(QMainWindow):
 
     ## deselect component list item according to open window
     def deselectComponentSubWindow(self):
-        wlist = self.ui.mdi.subWindowList()
-
         if self.ui.mdi.activeSubWindow() and isinstance(
                 self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
             widget = self.ui.mdi.activeSubWindow().widget()
@@ -758,8 +756,6 @@ class MainWindow(QMainWindow):
 
     ## deselect component list item according to open window
     def deselectDataSourceSubWindow(self):
-        wlist = self.ui.mdi.subWindowList()
-
         if self.ui.mdi.activeSubWindow() and isinstance(
                 self.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
             widget = self.ui.mdi.activeSubWindow().widget()

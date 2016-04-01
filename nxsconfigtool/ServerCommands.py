@@ -24,7 +24,6 @@
 from PyQt4.QtGui import (QMessageBox, QUndoCommand, QProgressDialog)
 
 from PyQt4.QtCore import (Qt, QString)
-from PyQt4.QtXml import (QDomDocument)
 
 from .DataSourceDlg import (CommonDataSourceDlg)
 from . import DataSource
@@ -32,7 +31,6 @@ from .ComponentDlg import ComponentDlg
 from .Component import Component
 from .ComponentCreator import (ComponentCreator, DataSourceCreator)
 from .LabeledObject import LabeledObject
-from .DomTools import DomTools
 
 import logging
 ## message logger

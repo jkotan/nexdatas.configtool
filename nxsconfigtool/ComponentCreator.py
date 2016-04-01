@@ -40,8 +40,6 @@ except ImportError, e:
     NXSTOOLS_AVAILABLE = False
     logger.info("nxstools is not available: %s" % e)
 
-import time
-
 from PyQt4.QtGui import (QFileDialog)
 
 from .CreatorDlg import CreatorDlg

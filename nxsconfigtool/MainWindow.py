@@ -148,6 +148,7 @@ class MainWindow(QMainWindow):
         ds = self.sourceList.elements[did]
         components = []
         datasources = []
+        massage = ""
         if ds and ds.name:
             if ds and ds.name and ds.instance:
                 name = ds.instance.name
@@ -164,7 +165,8 @@ class MainWindow(QMainWindow):
                 message += "\n    depends on: '%s' datasources" % \
                            "', '".join([
                                str(el) for el in datasources])
-        logger.info(message)
+        if message:
+            logger.info(message)
 
     def componentContent(self, did):
         if logger.getEffectiveLevel() > 20:
@@ -172,6 +174,7 @@ class MainWindow(QMainWindow):
         cp = self.componentList.elements[did]
         components = []
         datasources = []
+        massage = ""
         if cp and cp.name:
             if cp and cp.name and cp.instance:
                 name = cp.instance.name
@@ -188,7 +191,8 @@ class MainWindow(QMainWindow):
                 message += "\n    depends on: '%s' datasources" % \
                            "', '".join([
                                str(el) for el in datasources])
-        logger.info(message)
+        if message:
+            logger.info(message)
 
     ##  creates GUI
     # \brief It create dialogs for the main window application

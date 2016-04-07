@@ -288,8 +288,7 @@ class DataSource(CommonDataSource):
     ## repairs xml datasources
     # \param xml xml string
     # \returns repaired xml
-    @classmethod
-    def repair(cls, xml):
+    def repair(self, xml):
         olddoc = QDomDocument()
         if not olddoc.setContent(xml):
             raise ValueError("could not parse XML")

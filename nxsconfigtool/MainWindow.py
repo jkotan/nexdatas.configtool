@@ -174,7 +174,7 @@ class MainWindow(QMainWindow):
         cp = self.componentList.elements[did]
         components = []
         datasources = []
-        massage = ""
+        message = ""
         if cp and cp.name:
             if cp and cp.name and cp.instance:
                 name = cp.instance.name

@@ -111,9 +111,12 @@ class ElementList(QWidget):
     # \returns name of the current element
     def currentListElement(self):
         item = self.ui.elementListWidget.currentItem()
-        if item is None:
+        if item is not None \
+           and item.data(Qt.UserRole).toLongLong()[0] \
+           in self.elements.keys():
+            return self.elements[item.data(Qt.UserRole).toLongLong()[0]]
+        else:
             return None
-        return self.elements[item.data(Qt.UserRole).toLongLong()[0]]
 
     ## sets focus into element list
     def setItemFocus(self):

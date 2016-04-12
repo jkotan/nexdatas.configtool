@@ -148,7 +148,7 @@ class MainWindow(QMainWindow):
         ds = self.sourceList.elements[did]
         components = []
         datasources = []
-        massage = ""
+        message = ""
         if ds and ds.name:
             if ds and ds.name and ds.instance:
                 name = ds.instance.name

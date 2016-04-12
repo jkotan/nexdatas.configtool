@@ -440,8 +440,9 @@ class DataSource(CommonDataSource):
     # \brief abstract class
     def updateNode(self, index=QModelIndex()):
         if hasattr(self, "_DataSource__methods") and self.__methods:
-            return self.__methods.updateNode(index)
-        self.fetchElements()
+            res = self.__methods.updateNode(index)
+            self.fetchElements()
+            return res
 
     ## creates GUI
     # \brief abstract class
@@ -461,15 +462,17 @@ class DataSource(CommonDataSource):
     # \returns created DOM node
     def createNodes(self, external=False):
         if hasattr(self, "_DataSource__methods") and self.__methods:
-            return self.__methods.createNodes(external)
-        self.fetchElements()
+            res = self.__methods.createNodes(external)
+            self.fetchElements()
+            return res
 
     ## accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
         if hasattr(self, "_DataSource__methods") and self.__methods:
-            return self.__methods.apply()
-        self.fetchElements()
+            res = self.__methods.apply()
+            self.fetchElements()
+            return res
 
     ## sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode
@@ -505,15 +508,17 @@ class DataSource(CommonDataSource):
     # \return status True on success
     def copyFromClipboard(self):
         if hasattr(self, "_DataSource__methods") and self.__methods:
-            return self.__methods.copyFromClipboard()
-        self.fetchElements()
+            res = self.__methods.copyFromClipboard()
+            self.fetchElements()
+            return res
 
     ## creates the new empty header
     # \brief It clean the DOM tree and put into it xml and definition nodes
     def createHeader(self):
         if hasattr(self, "_DataSource__methods") and self.__methods:
-            return self.__methods.createHeader()
-        self.fetchElements()
+            res = self.__methods.createHeader()
+            self.fetchElements()
+            return res
 
 if __name__ == "__main__":
     import sys

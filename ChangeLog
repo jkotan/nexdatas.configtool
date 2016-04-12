@@ -1,4 +1,8 @@
 2016-04-12 Jan Kotanski <jankotan@gmail.com>
+	* fix fetching datasource elements
+	* tagged as v1.10.7
+
+2016-04-12 Jan Kotanski <jankotan@gmail.com>
 	* fix misprint in MainWindow
 	* tagged as v1.10.6
 

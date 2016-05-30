@@ -26,7 +26,7 @@ From sources
 
 Download the latest NXS Configuration Tool version from
 
-    NXS Component Designer 
+    https://github.com/nexdatas/configtool/
 
 and extract the sources.
 
@@ -36,7 +36,15 @@ git clone https://github.com/jkotan/nexdatas.configtool/
 
 Next, run the installation script
 
-$ python setup.py install
+.. code:: bash
+
+	  $ python setup.py install
+
+and launch
+
+.. code:: bash
+
+	  $ nxsdesigner
 
 Debian packages
 ^^^^^^^^^^^^^^^
@@ -62,13 +70,13 @@ Finally,
 .. code:: bash
 
 	  $ apt-get update
-	  $ apt-get install python-nxsconfigserver nxsconfigserver-db
+	  $ apt-get install nxsconfigtool 
 
 To instal other NexDaTaS packages
 
 .. code:: bash
 
-	  $ apt-get install python-nxswriter nxsconfigtool nxstools
+	  $ apt-get install python-nxswriter python-nxsconfigserver nxsconfigserver-db nxstools
 
 and
 

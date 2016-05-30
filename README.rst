@@ -79,7 +79,7 @@ and
 for Component Selector and Sardana related packages.
 
 
-.. figure:: designer2.png
+.. figure:: png/designer2.png
    :scale: 75 %
    :alt: component designer
 

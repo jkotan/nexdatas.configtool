@@ -217,7 +217,13 @@ SETUPDATA = dict(
 
 
 def main():
-    """ the main function """
+    """ the main function 
+
+    additionally:
+
+    find ./nxsconfigtool/help/ -iname "*.html" -type f -exec sh -c 'pandoc "${0}" -t rst -o "doc/nxs$(basename ${0%.html}.rst)"' {} \;
+
+    """
     setup(**SETUPDATA)
 
 if __name__ == '__main__':

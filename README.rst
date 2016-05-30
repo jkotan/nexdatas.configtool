@@ -87,14 +87,14 @@ and
 for Component Selector and Sardana related packages.
 
 
+General overview
+================
+
 .. figure:: png/designer2.png
    :scale: 75 %
    :alt: component designer
 
    Component Designer
-
-General overview
-================
 
 The **NXS Component** Designer program allows to creates *components* as well as 
 *datasources* which constitute the XML configuration strings of 

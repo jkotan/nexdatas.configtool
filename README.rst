@@ -1,6 +1,5 @@
-======================
-NXS Component Designer
-======================
+Welcome to nxsconfigtool's documentation!
+=========================================
 
 Authors: Jan Kotanski, Eugen Wintersberger, Halil Pasic
 

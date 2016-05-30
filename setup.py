@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file setup.py
-# GUI to create the XML components
+#
 
 """ setup.py for NXS Component Designer """
 
@@ -30,32 +28,39 @@ from distutils.command.clean import clean
 from distutils.command.install_scripts import install_scripts
 import shutil
 
-## package name
+#: package name
 TOOL = "nxsconfigtool"
-## package instance
+#: package instance
 ITOOL = __import__(TOOL)
 
+from sphinx.setup_command import BuildDoc
 
-## reading a file
 def read(fname):
+    """ read the file 
+
+    :param fname: readme file name
+    """
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-## ui directory
+#: ui directory
 UIDIR = os.path.join(TOOL, "ui")
-## qrc directory
+#: qrc directory
 QRCDIR = os.path.join(TOOL, "qrc")
-## executable scripts
+#: executable scripts
 SCRIPTS = ['nxsdesigner']
 
 
-## ui and qrc builder for python
 class toolBuild(build):
+    """ ui and qrc builder for python
+    """
 
-    ## creates the python qrc files
-    # \param qfile qrc file name
-    # \param path  qrc file path
     @classmethod
     def makeqrc(cls, qfile, path):
+        """  creates the python qrc files
+        
+        :param qfile: qrc file name
+        :param path:  qrc file path
+        """
         qrcfile = os.path.join(path, "%s.qrc" % qfile)
         pyfile = os.path.join(path, "qrc_%s.py" % qfile)
 
@@ -65,11 +70,13 @@ class toolBuild(build):
         else:
             print >> sys.stderr, "Error: Cannot build  %s" % (pyfile)
 
-    ## creates the python ui files
-    # \param ufile ui file name
-    # \param path  ui file path
     @classmethod
     def makeui(cls, ufile, path):
+        """ creates the python ui files
+
+        :param ufile: ui file name
+        :param path:  ui file path
+        """
         uifile = os.path.join(path, "%s.ui" % ufile)
         pyfile = os.path.join(path, "ui_%s.py" % ufile)
         compiled = os.system("pyuic4 %s -o %s" % (uifile, pyfile))
@@ -78,9 +85,11 @@ class toolBuild(build):
         else:
             print >> sys.stderr,  "Error: Cannot build %s" % (pyfile)
 
-    ## runner
-    # \brief It is running during building
     def run(self):
+        """ runner
+
+        :\brief: It is running during building
+        """
         try:
             ufiles = [(ufile[:-3], UIDIR) for ufile
                       in os.listdir(UIDIR) if ufile.endswith('.ui')]
@@ -105,12 +114,15 @@ class toolBuild(build):
         build.run(self)
 
 
-## cleaner for python
 class toolClean(clean):
-
-    ## runner
-    # \brief It is running during cleaning
+    """ cleaner for python
+    """
+    
     def run(self):
+        """ runner
+        
+        :brief: It is running during cleaning
+        """
 
         cfiles = [os.path.join(TOOL, cfile) for cfile
                   in os.listdir("%s" % TOOL) if cfile.endswith('.pyc')]
@@ -138,21 +150,22 @@ class toolClean(clean):
         clean.run(self)
 
 
-## test command class
 class TestCommand(Command):
-
-    ## user options
+    """ test command class
+    """
+    
+    #: user options
     user_options = []
 
-    ## initializes options
+    #: initializes options
     def initialize_options(self):
         pass
 
-    ## finalizes options
+    #: finalizes options
     def finalize_options(self):
         pass
     
-    ## runs command
+    #: runs command
     def run(self):
         import sys
         import subprocess
@@ -160,14 +173,22 @@ class TestCommand(Command):
         raise SystemExit(errno)
 
 
-## provides windows scripts
 def get_scripts(scripts):
+    """ provides windows names of python scripts
+
+    :param scripts: list of script names
+    """
     if get_platform()[:3] == 'win':
         return scripts + [sc + '.pyw' for sc in scripts]
     return scripts
 
+release = ITOOL.__version__
+version = ".".join(release.split(".")[:2])
+name = "NXSConfigServer"
 
-## metadata for distutils
+
+
+#: metadata for distutils
 SETUPDATA = dict(
     name="nexdatas.configtool",
     version=ITOOL.__version__,
@@ -179,19 +200,24 @@ SETUPDATA = dict(
     "halil.pasic@gmail.com",
     description=("Configuration tool  for creating components"),
     license=read('COPYRIGHT'),
-#    license="GNU GENERAL PUBLIC LICENSE, version 3",
     keywords="configuration writer Tango component nexus data",
     url="https://github.com/jkotan/nexdatas/",
     platforms=("Linux", " Windows", " MacOS "),
     packages=[TOOL, UIDIR, QRCDIR],
     scripts=get_scripts(SCRIPTS),
-    long_description=read('README'),
-    cmdclass={"build": toolBuild, "clean": toolClean, "test": TestCommand}
+    cmdclass={"build": toolBuild, "clean": toolClean,
+              "test": TestCommand, 'build_sphinx': BuildDoc},
+    command_options={
+        'build_sphinx': {
+            'project': ('setup.py', name),
+            'version': ('setup.py', version),
+            'release': ('setup.py', release)}},
+    long_description=read('README.rst')
 )
 
 
-## the main function
 def main():
+    """ the main function """
     setup(**SETUPDATA)
 
 if __name__ == '__main__':

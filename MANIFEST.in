@@ -1,2 +1,3 @@
+include README.rst
 include COPYRIGHT
 include man/nxsdesigner.1

@@ -437,7 +437,7 @@ class NodeDlgTest(unittest.TestCase):
         vw.myindex =  ki
 
 
-        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),vw.dataChanged)
         form.view = vw
         
         form.reset()
@@ -472,7 +472,7 @@ class NodeDlgTest(unittest.TestCase):
         ki = vw.model().index(n,cn,di)
 
         vw.myindex =  ki 
-        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),vw.dataChanged)
         form.view = vw
         
         form.reset()
@@ -509,7 +509,7 @@ class NodeDlgTest(unittest.TestCase):
         ki = vw.model().index(n,cn,di)
 
         vw.myindex =  ki 
-        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),vw.dataChanged)
         form.view = vw
         
         form.reset()
@@ -551,7 +551,7 @@ class NodeDlgTest(unittest.TestCase):
         vw.myindex =  ki
 
 
-        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),vw.dataChanged)
         form.view = vw
         
         form.node =vw.qdn
@@ -627,7 +627,7 @@ class NodeDlgTest(unittest.TestCase):
         vw.myindex =  ki
 
 
-        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),vw.dataChanged)
 #        form.view = vw
         form.view = None
         
@@ -669,7 +669,7 @@ class NodeDlgTest(unittest.TestCase):
         vw.myindex =  ki
 
 
-        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),vw.dataChanged)
         vw.testModel = None
         form.view = vw
 
@@ -712,7 +712,7 @@ class NodeDlgTest(unittest.TestCase):
         vw.myindex =  ki
 
 
-        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),vw.dataChanged)
         form.view = vw
         
         dts = TestTools()
@@ -792,7 +792,7 @@ class NodeDlgTest(unittest.TestCase):
 
         vw.myindex =  ki
 
-        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),vw.dataChanged)
         form.view = vw
         
         form.node =vw.qdn
@@ -869,7 +869,7 @@ class NodeDlgTest(unittest.TestCase):
 
         inkd = vw.doc.createElement("insertedkid")
 
-        vw.model().connect(vw.model(),SIGNAL("dataChanged(QModelIndex,QModelIndex)"),vw.dataChanged)
+        vw.model().connect(vw.model(),SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),vw.dataChanged)
         form.view = vw
 
         form.node = vw.qdn

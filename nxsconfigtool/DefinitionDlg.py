@@ -254,7 +254,7 @@ class DefinitionDlg(NodeDlg):
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         self.view.model().emit(
-            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, finalIndex)
+            SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"), index, finalIndex)
         self.view.expand(index)
 
     ## updates the Node

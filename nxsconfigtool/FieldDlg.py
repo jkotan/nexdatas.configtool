@@ -441,9 +441,9 @@ class FieldDlg(NodeDlg):
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         self.view.expand(index)
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+        self.view.model().emit(SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),
                                index, finalIndex)
-        self.view.model().emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+        self.view.model().emit(SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),
                                index, index)
 
     ## updates the Node

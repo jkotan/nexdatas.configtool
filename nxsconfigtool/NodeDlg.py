@@ -90,7 +90,7 @@ class NodeDlg(QDialog):
             if index.column() != 0:
                 index = self.view.model().index(index.row(), 0, index.parent())
             self.view.model().emit(
-                SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+                SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"), index, index)
 
     ## replaces node text for the given node
     # \param index of child text node

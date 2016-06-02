@@ -527,10 +527,10 @@ class ComponentNewItem(ComponentItemCommand):
                         0, 2, self._index.parent().parent())
 
                 self._cp.instance.view.model().emit(
-                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                    SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),
                     self._index, self._index)
                 self._cp.instance.view.model().emit(
-                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                    SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),
                     finalIndex, self._childIndex)
 
         self.postExecute()

@@ -221,13 +221,13 @@ class DataSourceMethods(object):
             if hasattr(self.__dialog, "view") and self.__dialog.view \
                     and self.__dialog.view.model():
                 self.__dialog.view.model().emit(
-                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                    SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),
                     index.parent(), index.parent())
                 if index.column() != 0:
                     index = self.__dialog.view.model().index(index.row(), 0,
                                                              index.parent())
                 self.__dialog.view.model().emit(
-                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                    SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),
                     index, finalIndex)
                 self.__dialog.view.expand(index)
 

@@ -254,7 +254,8 @@ class StrategyDlg(NodeDlg):
             index = self.view.model().index(
                 index.row(), 0, index.parent())
         self.view.model().emit(SIGNAL(
-            "dataChanged(const QModelIndex &, const QModelIndex &)"), index, finalIndex)
+            "dataChanged(const QModelIndex &,"
+            " const QModelIndex &)"), index, finalIndex)
         self.view.expand(index)
 
     ## updates the Node

@@ -374,9 +374,11 @@ class Component(object):
             index = self.view.model().index(row, 0, parent)
             self.view.setCurrentIndex(index)
             self.view.model().emit(
-                SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"), index, index)
+                SIGNAL("dataChanged(const QModelIndex &,"
+                       " const QModelIndex &)"), index, index)
             self.view.model().emit(
-                SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"), parent, parent)
+                SIGNAL("dataChanged(const QModelIndex &,"
+                       " const QModelIndex &)"), parent, parent)
             return row
 
     ## moves component item up
@@ -397,9 +399,11 @@ class Component(object):
             index = self.view.model().index(row, 0, parent)
             self.view.setCurrentIndex(index)
             self.view.model().emit(
-                SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"), index, index)
+                SIGNAL("dataChanged(const QModelIndex &,"
+                       " const QModelIndex &)"), index, index)
             self.view.model().emit(
-                SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"), parent, parent)
+                SIGNAL("dataChanged(const QModelIndex &,"
+                       " const QModelIndex &)"), parent, parent)
             return row
 
     ## converts DOM node to XML string
@@ -458,7 +462,8 @@ class Component(object):
         self.dialog.ui.widget.appendElement(clipNode, index)
 
         self.view.model().emit(
-            SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"), index, index)
+            SIGNAL("dataChanged(const QModelIndex &,"
+                   " const QModelIndex &)"), index, index)
 
         self.view.expand(index)
         self.fetchElements()
@@ -487,7 +492,8 @@ class Component(object):
             index = self.view.model().index(index.row(), 0, index.parent())
         status = self.dialog.ui.widget.appendElement(child, index)
         self.view.model().emit(
-            SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"), index, index)
+            SIGNAL("dataChanged(const QModelIndex &,"
+                   " const QModelIndex &)"), index, index)
         self.view.expand(index)
         self.fetchElements()
         if status:
@@ -520,10 +526,12 @@ class Component(object):
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         self.view.model().emit(
-            SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"), index, index)
+            SIGNAL("dataChanged(const QModelIndex &,"
+                   " const QModelIndex &)"), index, index)
         if index.parent().isValid():
             self.view.model().emit(
-                SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),
+                SIGNAL("dataChanged(const QModelIndex &,"
+                       " const QModelIndex &)"),
                 index.parent(), index.parent())
 
             index = self.view.currentIndex()
@@ -566,11 +574,13 @@ class Component(object):
     def connectView(self):
         self.dialog.disconnect(
             self.view.selectionModel(),
-            SIGNAL("currentChanged(const QModelIndex &, const QModelIndex &)"),
+            SIGNAL("currentChanged(const QModelIndex &,"
+                   " const QModelIndex &)"),
             self.tagClicked)
         self.parent.connect(
             self.view.selectionModel(),
-            SIGNAL("currentChanged(const QModelIndex &, const QModelIndex &)"),
+            SIGNAL("currentChanged(const QModelIndex &,"
+                   " const QModelIndex &)"),
             self.tagClicked)
         self.dialog.disconnect(
             self.view, SIGNAL("expanded(QModelIndex)"),
@@ -891,7 +901,8 @@ class Component(object):
                         child = child.nextSibling()
 
                 self.view.model().emit(
-                    SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),
+                    SIGNAL("dataChanged(const QModelIndex &,"
+                           " const QModelIndex &)"),
                     index, index)
                 self.view.expand(index)
 
@@ -961,7 +972,8 @@ class Component(object):
                             "Missing <datasource> tag in %s" % dsFile)
 
                 self.view.model().emit(
-                    SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"),
+                    SIGNAL("dataChanged(const QModelIndex &,"
+                           " const QModelIndex &)"),
                     index, index)
                 self.view.expand(index)
                 self._dsPath = dsFile
@@ -1015,7 +1027,8 @@ class Component(object):
         self.dialog.ui.widget.appendElement(dsNode2, index)
 
         self.view.model().emit(
-            SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"), index, index)
+            SIGNAL("dataChanged(const QModelIndex &,"
+                   " const QModelIndex &)"), index, index)
         self.view.expand(index)
         self.fetchElements()
         return True
@@ -1054,7 +1067,8 @@ class Component(object):
             index = self.view.model().index(index.row(), 0, index.parent())
 
         self.view.model().emit(
-            SIGNAL("dataChanged(const QModelIndex &, const QModelIndex &)"), index, index)
+            SIGNAL("dataChanged(const QModelIndex &,"
+                   " const QModelIndex &)"), index, index)
         self.view.expand(index)
         self.fetchElements()
         return True

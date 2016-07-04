@@ -9,7 +9,7 @@ Nexus Data Writer (NXS). The created XML elements can be saved
 in the extended Nexus XML format in Configuration Tango Server or in disk files.
 
 | Source code: https://github.com/nexdatas/configtool
-| Web page: http://www.desy.de/~jkotan/nxsconfigtool
+| Web page: https://nexdatas.github.io/configtool/
 
 ------------
 Installation

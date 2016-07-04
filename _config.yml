@@ -1,0 +1,4 @@
+title: NXSConfigTool
+email: jan.kotanski@desy.de
+description: "NXSConfigTool"
+include: ['_sources', '_static', '_modules', '_images']

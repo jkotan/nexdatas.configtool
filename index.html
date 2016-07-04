@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to nxsconfigtool’s documentation! &mdash; NXSConfigServer 1.10.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.10.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="NXSConfigServer 1.10.8 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">NXSConfigServer 1.10.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to nxsconfigtool&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#from-sources">From sources</a></li>
+<li><a class="reference internal" href="#debian-packages">Debian packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#general-overview">General overview</a></li>
+<li><a class="reference internal" href="#icons">Icons</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-nxsconfigtool-s-documentation">
+<h1>Welcome to nxsconfigtool&#8217;s documentation!<a class="headerlink" href="#welcome-to-nxsconfigtool-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Authors: Jan Kotanski, Eugen Wintersberger, Halil Pasic</p>
+<p>Component Designer is a GUI configuration tool dedicated to create components
+as well as datasources which constitute the XML configuration strings of
+Nexus Data Writer (NXS). The created XML elements can be saved
+in the extended Nexus XML format in Configuration Tango Server or in disk files.</p>
+<div class="line-block">
+<div class="line">Source code: <a class="reference external" href="https://github.com/nexdatas/configtool">https://github.com/nexdatas/configtool</a></div>
+<div class="line">Web page: <a class="reference external" href="https://nexdatas.github.io/configtool/">https://nexdatas.github.io/configtool/</a></div>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Install the dependencies:</p>
+<blockquote>
+<div>PyQt4, PyTango (optional)</div></blockquote>
+<p>PyTango is only needed if one wants to use Configuration Server</p>
+<div class="section" id="from-sources">
+<h3>From sources<a class="headerlink" href="#from-sources" title="Permalink to this headline">¶</a></h3>
+<p>Download the latest NXS Configuration Tool version from</p>
+<blockquote>
+<div><a class="reference external" href="https://github.com/nexdatas/configtool/">https://github.com/nexdatas/configtool/</a></div></blockquote>
+<p>and extract the sources.</p>
+<p>One can also download the lastest version directly from the git repository by</p>
+<p>git clone <a class="reference external" href="https://github.com/jkotan/nexdatas.configtool/">https://github.com/jkotan/nexdatas.configtool/</a></p>
+<p>Next, run the installation script</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ python setup.py install
+</pre></div>
+</div>
+<p>and launch</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ nxsdesigner
+</pre></div>
+</div>
+</div>
+<div class="section" id="debian-packages">
+<h3>Debian packages<a class="headerlink" href="#debian-packages" title="Permalink to this headline">¶</a></h3>
+<p>Debian Jessie (and Wheezy) packages can be found in the HDRI repository.</p>
+<p>To install the debian packages, add the PGP repository key</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo su
+$ wget -q -O - http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
+</pre></div>
+</div>
+<p>and then download the corresponding source list</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ cd /etc/apt/sources.list.d
+$ wget http://repos.pni-hdri.de/jessie-pni-hdri.list
+</pre></div>
+</div>
+<p>Finally,</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ apt-get update
+$ apt-get install nxsconfigtool
+</pre></div>
+</div>
+<p>To instal other NexDaTaS packages</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ apt-get install python-nxswriter python-nxsconfigserver nxsconfigserver-db nxstools
+</pre></div>
+</div>
+<p>and</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
+</pre></div>
+</div>
+<p>for Component Selector and Sardana related packages.</p>
+</div>
+</div>
+</div>
+<div class="section" id="general-overview">
+<h1>General overview<a class="headerlink" href="#general-overview" title="Permalink to this headline">¶</a></h1>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/designer2.png"><img alt="component designer" src="_images/designer2.png" style="width: 1164.75px; height: 822.0px;" /></a>
+<p class="caption">Component Designer</p>
+</div>
+<p>The <strong>NXS Component</strong> Designer program allows to creates <em>components</em> as well as
+<em>datasources</em> which constitute the XML configuration strings of
+Nexus Data Writer (NXS). The created XML elements can be saved
+in the extended Nexus XML format in Configuration Tango Server or in disk files.</p>
+<p>Collection Dock Window contains lists of the currently open components
+and datasources. Selecting one of the components or datasources from
+the lists causes opening either Component Window or DataSource Window.</p>
+<p>All the most commonly used menu options are also available on Toolbar.</p>
+<p>A short description of all actions can be found in <strong>Help</strong> menu.</p>
+</div>
+<div class="section" id="icons">
+<h1>Icons<a class="headerlink" href="#icons" title="Permalink to this headline">¶</a></h1>
+<p>Icons fetched from <a class="reference external" href="http://findicons.com/pack/990/vistaico_toolbar">http://findicons.com/pack/990/vistaico_toolbar</a>.</p>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">NXSConfigServer 1.10.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
+
+GNU GENERAL PUBLIC LICENSE, version 3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

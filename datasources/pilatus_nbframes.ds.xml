@@ -1,7 +1,0 @@
-<?xml version='1.0'?>
-<definition>
-  <datasource type="TANGO" name="pilatus_nbframes">
-    <device port="10000" hostname="haso228k" group="pilatus_" member="attribute" name="p09/pilatus/haso228k"/>
-    <record name="NbFrames"/>
-  </datasource>
-</definition>

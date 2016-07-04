@@ -1,6 +1,0 @@
-<?xml version='1.0'?>
-<definition>
-  <datasource type="CLIENT">
-    <record name="nowosc"/>
-  </datasource>
-</definition>

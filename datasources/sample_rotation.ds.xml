@@ -1,6 +1,0 @@
-<?xml version='1.0'?>
-<definition>
-  <datasource type="CLIENT" name="sample_rotation">
-    <record name="sample_rotation"/>
-  </datasource>
-</definition>

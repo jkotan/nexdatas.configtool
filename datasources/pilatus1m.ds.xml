@@ -1,7 +1,0 @@
-<?xml version='1.0'?>
-<definition>
-  <datasource type="TANGO" name="pilatus1m">
-    <record name="Value"/>
-    <device port="10000" hostname="haso107d1" group="__CLIENT__" member="attribute" name="expchan/vc_pilatus1m/1"/>
-  </datasource>
-</definition>

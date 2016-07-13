@@ -10,6 +10,7 @@ in the extended Nexus XML format in Configuration Tango Server or in disk files.
 
 | Source code: https://github.com/nexdatas/configtool
 | Web page: https://nexdatas.github.io/configtool/
+| NexDaTaS Web page: https://nexdatas.github.io
 
 ------------
 Installation
@@ -17,7 +18,7 @@ Installation
 
 Install the dependencies:
 
-    PyQt4, PyTango (optional) 
+|    PyQt4, PyTango (optional) 
 
 PyTango is only needed if one wants to use Configuration Server
 
@@ -26,7 +27,7 @@ From sources
 
 Download the latest NXS Configuration Tool version from
 
-    https://github.com/nexdatas/configtool/
+|    https://github.com/nexdatas/configtool/
 
 and extract the sources.
 
@@ -91,7 +92,6 @@ General overview
 ================
 
 .. figure:: png/designer2.png
-   :scale: 75 %
    :alt: component designer
 
    Component Designer

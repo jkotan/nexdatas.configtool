@@ -94,6 +94,7 @@ class StdCreatorDlg(QDialog):
         super(StdCreatorDlg, self).__init__(parent)
 
         ## host name of the configuration server
+        self.__parent = parent
         self.__types = []
         self.__creator = creator
         self.componentType = None
@@ -115,6 +116,8 @@ class StdCreatorDlg(QDialog):
 
         self.connect(self.ui.savePushButton, SIGNAL("clicked()"),
                      self.savePressed)
+        self.connect(self.ui.linkPushButton, SIGNAL("clicked()"),
+                     self.linkPressed)
         self.connect(self.ui.storePushButton, SIGNAL("clicked()"),
                      self.storePressed)
         self.connect(self.ui.applyPushButton, SIGNAL("clicked()"),
@@ -165,7 +168,7 @@ class StdCreatorDlg(QDialog):
             if value:
                 args.extend([name, value])
         self.__creator.args = args
-        
+
     def savePressed(self):
         self.componentName = unicode(self.ui.cpNameLineEdit.text())
         self.__creator.options.component = self.componentName or None
@@ -186,6 +189,25 @@ class StdCreatorDlg(QDialog):
         self.populateArgs()
         self.action = 'APPLY'
         QDialog.accept(self)
+
+    def linkPressed(self):
+        dsname = self.__parent.currentDataSourceName()
+        if not dsname:
+            QMessageBox.warning(
+                self, "DataSource not selected",
+                "Please select the required datasource from the list")
+            return
+
+        var = self.__currentTableVar()
+        if unicode(var) not in self.__vars.keys():
+            QMessageBox.warning(
+                self, "Variable not selected",
+                "Please select the required variable from the table")
+            return
+            return
+        self.__vars[unicode(var)] = unicode(dsname)
+        self.__oldvars[unicode(var)] = self.__vars[unicode(var)]
+        self.populateVars()
 
     ## calls updateUi when the name text is changing
     # \param text the edited text

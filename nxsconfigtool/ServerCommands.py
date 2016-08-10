@@ -125,9 +125,10 @@ class ServerCPCreate(QUndoCommand):
                                 dsid = self.__addDataSource(ds, xml, cc.action)
                             for cp, xml in cc.components.items():
                                 cpid = self.__addComponent(cp, xml, cc.action)
-                            if cpid:    
-                                self.receiver.componentList.populateElements(cpid)
-                            if dsid:    
+                            if cpid:
+                                self.receiver.componentList.populateElements(
+                                    cpid)
+                            if dsid:
                                 self.receiver.sourceList.populateElements(dsid)
 
                 except Exception, e:
@@ -258,9 +259,9 @@ class ServerSCPCreate(QUndoCommand):
                             dsid = self.__addDataSource(ds, xml, cc.action)
                         for cp, xml in cc.components.items():
                             cpid = self.__addComponent(cp, xml, cc.action)
-                        if cpid:    
+                        if cpid:
                             self.receiver.componentList.populateElements(cpid)
-                        if dsid:    
+                        if dsid:
                             self.receiver.sourceList.populateElements(dsid)
 
                 except Exception, e:

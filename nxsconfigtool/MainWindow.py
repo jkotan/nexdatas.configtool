@@ -569,6 +569,18 @@ class MainWindow(QMainWindow):
                     return
         return True
 
+    ## Provides a name of the currently selected datasource
+    def currentDataSourceName(self):
+        name = ""
+        if hasattr(self.sourceList.currentListElement(), "id"):
+            dsid = self.sourceList.currentListElement().id
+            ds = self.sourceList.elements[dsid]
+            if ds and ds.name:
+                name = ds.name
+                if ds and ds.name and ds.instance:
+                    name = ds.instance.name
+        return name
+
     ## Stores settings in QSettings object
     def __storeSettings(self):
         settings = QSettings()

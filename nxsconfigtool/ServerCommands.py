@@ -29,7 +29,8 @@ from .DataSourceDlg import (CommonDataSourceDlg)
 from . import DataSource
 from .ComponentDlg import ComponentDlg
 from .Component import Component
-from .ComponentCreator import (ComponentCreator, DataSourceCreator)
+from .ComponentCreator import (
+    StdComponentCreator, ComponentCreator, DataSourceCreator)
 from .LabeledObject import LabeledObject
 
 import logging
@@ -118,12 +119,16 @@ class ServerCPCreate(QUndoCommand):
                         self.receiver.onlineFile = cc.onlineFile
                         cc.create()
                         if cc.action:
+                            dsid = None
+                            cpid = None
                             for ds, xml in cc.datasources.items():
                                 dsid = self.__addDataSource(ds, xml, cc.action)
                             for cp, xml in cc.components.items():
                                 cpid = self.__addComponent(cp, xml, cc.action)
-                            self.receiver.componentList.populateElements(cpid)
-                            self.receiver.sourceList.populateElements(dsid)
+                            if cpid:    
+                                self.receiver.componentList.populateElements(cpid)
+                            if dsid:    
+                                self.receiver.sourceList.populateElements(dsid)
 
                 except Exception, e:
                     QMessageBox.warning(
@@ -224,6 +229,139 @@ class ServerCPCreate(QUndoCommand):
 
 
 ## Command which performs connection to the configuration server
+class ServerSCPCreate(QUndoCommand):
+
+    ## constructor
+    # \param receiver command receiver
+    # \param parent command parent
+    def __init__(self, receiver, parent=None):
+        QUndoCommand.__init__(self, parent)
+        ## main window
+        self.receiver = receiver
+        self.parent = parent
+#        self._oldstate = None
+#        self._state = None
+
+    ## executes the command
+    # \brief It perform connection to the configuration server
+    def redo(self):
+        if self.receiver.configServer:
+            if self.receiver.configServer.connected:
+                try:
+                    cc = StdComponentCreator(
+                        self.receiver.configServer, self.receiver)
+                    cc.create()
+                    if cc.action:
+                        dsid = None
+                        cpid = None
+                        for ds, xml in cc.datasources.items():
+                            dsid = self.__addDataSource(ds, xml, cc.action)
+                        for cp, xml in cc.components.items():
+                            cpid = self.__addComponent(cp, xml, cc.action)
+                        if cpid:    
+                            self.receiver.componentList.populateElements(cpid)
+                        if dsid:    
+                            self.receiver.sourceList.populateElements(dsid)
+
+                except Exception, e:
+                    QMessageBox.warning(
+                        self.receiver,
+                        "Error in creating Standard Component",
+                        unicode(e))
+        logger.debug("EXEC serverSCPCreate")
+
+    def __addComponent(self, name, xml, action):
+        cp = LabeledObject(name, None)
+        cpEdit = Component(self.receiver.componentList)
+        cpEdit.id = cp.id
+        cpEdit.directory = self.receiver.componentList.directory
+        cpEdit.createGUI()
+
+        cpEdit.name = name
+        cpEdit.set(QString(xml), True)
+        cpEdit.savedXML = None
+        cp.name = cpEdit.name
+        cp.instance = cpEdit
+        self.receiver.componentList.addElement(cp, False)
+        cpEdit.dialog.setWindowTitle(
+            "%s [Component]" % cp.name)
+
+        if action == "STORE":
+            self.receiver.configServer.storeComponent(name, xml)
+            cpEdit.savedXML = cp.instance.get()
+            cp.savedName = cp.name
+        elif action == "SAVE":
+            cp.instance.merge(False)
+            if cp.instance.save():
+                cp.savedName = cp.name
+                cpEdit.savedXML = cp.instance.get()
+
+        if hasattr(self.receiver.ui, 'mdi'):
+            subwindow = self.receiver.subWindow(
+                cp.instance, self.receiver.ui.mdi.subWindowList())
+            if subwindow:
+                self.receiver.setActiveSubWindow(subwindow)
+                cp.instance.dialog.setSaveFocus()
+            else:
+                subwindow = self.receiver.ui.mdi.addSubWindow(
+                    cpEdit.dialog)
+                subwindow.resize(680, 560)
+                cpEdit.dialog.setSaveFocus()
+                cpEdit.dialog.show()
+                cp.instance = cpEdit
+            cpEdit.dialog.show()
+        return cp.id
+
+    def __addDataSource(self, name, xml, action):
+        ds = LabeledObject(name, None)
+        dsEdit = DataSource.DataSource(self.receiver.sourceList)
+        dsEdit.id = ds.id
+        dsEdit.directory = self.receiver.sourceList.directory
+        dsEdit.name = name
+
+        dsEdit.set(QString(xml), True)
+        if hasattr(dsEdit, "connectExternalActions"):
+            dsEdit.connectExternalActions(
+                **self.receiver.externalDSActions)
+        ds.name = dsEdit.name
+        ds.instance = dsEdit
+        self.receiver.sourceList.addElement(ds, False)
+        dsEdit.dialog.setWindowTitle(
+            "%s [DataSource]" % ds.name)
+
+        if action == "STORE":
+            self.receiver.configServer.storeDataSource(name, xml)
+            ds.instance.savedXML = ds.instance.get()
+            ds.savedName = ds.name
+        elif action == "SAVE":
+            if ds.instance.save():
+                ds.savedName = ds.name
+                ds.instance.savedXML = ds.instance.get()
+
+        if hasattr(self.receiver.ui, 'mdi'):
+            subwindow = self.receiver.subWindow(
+                ds.instance,
+                self.receiver.ui.mdi.subWindowList())
+            if subwindow:
+                self.receiver.setActiveSubWindow(subwindow)
+                ds.instance.dialog.setSaveFocus()
+            else:
+                subwindow = self.receiver.ui.mdi.addSubWindow(
+                    dsEdit.dialog)
+                subwindow.resize(440, 550)
+                dsEdit.dialog.setSaveFocus()
+                dsEdit.dialog.show()
+            dsEdit.dialog.show()
+        return ds.id
+
+    ## unexecutes the command
+    # \brief It undo connection to the configuration server,
+    #        i.e. it close the connection to the server
+    def undo(self):
+        logger.debug("UNDO serverSCPCreate")
+
+
+## Command which performs connection to the configuration server
 class ServerDSCreate(QUndoCommand):
 
     ## constructor
@@ -260,13 +398,15 @@ class ServerDSCreate(QUndoCommand):
                             progress.show()
 
                             i = 0
+                            dsid = None
                             for ds, xml in cc.datasources.items():
                                 dsid = self.__addDataSource(ds, xml, cc.action)
                                 progress.setValue(i)
                                 i += 1
                             progress.setValue(len(keys))
                             progress.close()
-                            self.receiver.sourceList.populateElements(dsid)
+                            if dsid:
+                                self.receiver.sourceList.populateElements(dsid)
 
                 except Exception, e:
                     QMessageBox.warning(

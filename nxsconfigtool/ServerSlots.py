@@ -25,6 +25,7 @@
 from .ServerCommands import (
     ServerConnect,
     ServerCPCreate,
+    ServerSCPCreate,
     ServerDSCreate,
     ServerFetchComponents,
     ServerStoreComponent,
@@ -123,6 +124,10 @@ class ServerSlots(object):
                 "", "serverunsetmandatory",
                 "Unset the component as mandatory on"
                 " the configuration server"],
+            "actionCreateStdComponentServer": [
+                "&Create Standard Component ...", "serverSCPCreate",
+                "", "serverscpcreate",
+                "Create Component defined in online.xml file"],
             "actionCreateComponentServer": [
                 "&Create Online Component ...", "serverCPCreate",
                 "", "servercpcreate",
@@ -147,6 +152,13 @@ class ServerSlots(object):
     # \brief It creates components and datasources from online.xml
     def serverCPCreate(self):
         cmd = ServerCPCreate(self.main)
+        cmd.redo()
+        self.undoStack.clear()
+
+    ## create standard component action
+    # \brief It creates stamdard components and datasources from online.xml
+    def serverSCPCreate(self):
+        cmd = ServerSCPCreate(self.main)
         cmd.redo()
         self.undoStack.clear()
 

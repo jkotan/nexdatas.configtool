@@ -29,20 +29,21 @@ logger = logging.getLogger("nxsdesigner")
 
 try:
     import nxstools
-    from nxstools.nxscreator import OnlineCPCreator, OnlineDSCreator
+    from nxstools.nxscreator import (
+        OnlineCPCreator, OnlineDSCreator, StandardCPCreator)
     NXSTOOLS_AVAILABLE = True
     NXSTOOLS_MASTERVER, NXSTOOLS_MINORVER, NXSTOOLS_PATCHVER = \
         nxstools.__version__.split(".")
-    if int(NXSTOOLS_MASTERVER) <= 1:
-        if int(NXSTOOLS_MINORVER) <= 18:
-            raise ImportError("nxstools is below 1.19.0")
+    if int(NXSTOOLS_MASTERVER) <= 2:
+        if int(NXSTOOLS_MINORVER) <= 2:
+            raise ImportError("nxstools is below 2.3.0")
 except ImportError, e:
     NXSTOOLS_AVAILABLE = False
     logger.info("nxstools is not available: %s" % e)
 
 from PyQt4.QtGui import (QFileDialog)
 
-from .CreatorDlg import CreatorDlg
+from .CreatorDlg import CreatorDlg, StdCreatorDlg
 
 
 ## option class
@@ -52,7 +53,9 @@ class Options(object):
         self.overwrite = True
         self.lower = True
         self.component = None
+        self.cptype = None
         self.directory = None
+        self.xmlpackage = None
 
 
 ## configuration server
@@ -129,6 +132,49 @@ class ComponentCreator(object):
         if aform.exec_():
             action = aform.action
             self.componentName = aform.componentName
+        return action
+
+
+## configuration server
+class StdComponentCreator(object):
+
+    ## constructor
+    def __init__(self, configServer, parent):
+        ## configuration server
+        self.configServer = configServer
+
+        ## created components
+        self.components = {}
+        ## created components
+        self.datasources = {}
+        ## parent
+        self.parent = parent
+
+    ## creates component and datasources from online xml
+    def create(self):
+        self.action = None
+        self.componentName = None
+        self.components = {}
+        self.datasources = {}
+        if NXSTOOLS_AVAILABLE:
+            options = Options(self.configServer.getDeviceName())
+
+            scpc = StandardCPCreator(options, [], False)
+            self.action = self.selectComponent(scpc)
+            if self.action:
+                scpc.createXMLs()
+                self.components = dict(scpc.components)
+                self.datasources = dict(scpc.datasources)
+
+    ## runs Creator widget to select the required component
+    # \returns action to be performed with the components and datasources
+    def selectComponent(self, scpc):
+        aform = StdCreatorDlg(scpc, self.parent)
+        action = None
+        aform.createGUI()
+        aform.show()
+        if aform.exec_():
+            action = aform.action
         return action
 
 

@@ -635,6 +635,8 @@ class MainWindow(QMainWindow):
         self.ui.actionCloseServer.setDisabled(status)
         self.ui.actionCreateComponentServer.setDisabled(
             status or not NXSTOOLS_AVAILABLE)
+        self.ui.actionCreateStdComponentServer.setDisabled(
+            status or not NXSTOOLS_AVAILABLE)
         self.ui.actionCreateDataSourcesServer.setDisabled(
             status or not NXSTOOLS_AVAILABLE)
 

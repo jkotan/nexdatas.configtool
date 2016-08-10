@@ -1,3 +1,8 @@
+2016-08-XX Jan Kotanski <jankotan@gmail.com>
+	* add standard component creator
+	* add sphinx docu
+	* tagged as v1.11.0
+
 2016-05-30 Jan Kotanski <jankotan@gmail.com>
 	* add Help for online component creation
 	* add sphinx docu

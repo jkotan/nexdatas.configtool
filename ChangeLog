@@ -1,6 +1,7 @@
-2016-08-XX Jan Kotanski <jankotan@gmail.com>
+2016-08-11 Jan Kotanski <jankotan@gmail.com>
 	* add standard component creator
 	* add sphinx docu
+	* fix missing component command connections
 	* tagged as v1.11.0
 
 2016-05-30 Jan Kotanski <jankotan@gmail.com>

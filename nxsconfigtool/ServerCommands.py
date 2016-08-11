@@ -151,6 +151,9 @@ class ServerCPCreate(QUndoCommand):
         cp.name = cpEdit.name
         cp.instance = cpEdit
         self.receiver.componentList.addElement(cp, False)
+        if hasattr(cpEdit, "connectExternalActions"):
+            cpEdit.connectExternalActions(
+                **self.receiver.externalCPActions)
         cpEdit.dialog.setWindowTitle(
             "%s [Component]" % cp.name)
 
@@ -284,6 +287,9 @@ class ServerSCPCreate(QUndoCommand):
         cp.name = cpEdit.name
         cp.instance = cpEdit
         self.receiver.componentList.addElement(cp, False)
+        if hasattr(cpEdit, "connectExternalActions"):
+            cpEdit.connectExternalActions(
+                **self.receiver.externalCPActions)
         cpEdit.dialog.setWindowTitle(
             "%s [Component]" % cp.name)
 

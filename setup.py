@@ -184,7 +184,7 @@ def get_scripts(scripts):
 
 release = ITOOL.__version__
 version = ".".join(release.split(".")[:2])
-name = "NXSConfigServer"
+name = "NXS Component Designer"
 
 
 

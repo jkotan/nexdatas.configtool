@@ -51,6 +51,8 @@ class ComponentList(ElementList):
         self.clName = "Component"
         ## extention
         self.extention = ".xml"
+        ## excluded extention
+        self.disextention = "ds.xml"
 
     ## switches between all attributes in the try or only type attribute
     # \param status all attributes are shown if True

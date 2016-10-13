@@ -60,6 +60,10 @@ class ElementList(QWidget):
         self.clName = "Element"
         ## class name
         self.name = "elements"
+        ## extention
+        self.extention = ".xml"
+        ## excluded extention
+        self.disextention = None
 
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots
@@ -299,7 +303,10 @@ class ElementList(QWidget):
     def loadList(self, externalActions=None, itemActions=None):
         try:
             dirList = [l for l in os.listdir(self.directory)
-                       if l.endswith(self.extention)]
+                       if (l.endswith(self.extention)
+                           and (not self.disextention
+                                or not l.endswith(self.disextention))
+                       )]
         except:
             try:
                 if os.path.exists(os.path.join(os.getcwd(), self.name)):
@@ -307,9 +314,12 @@ class ElementList(QWidget):
                         os.path.join(os.getcwd(), self.name))
                 else:
                     self.directory = os.getcwd()
-
+                
                 dirList = [l for l in os.listdir(self.directory)
-                           if l.endswith(self.extention)]
+                           if (l.endswith(self.extention)
+                               and (not self.disextention
+                                    or not l.endswith(self.disextention))
+                           )]
             except:
                 return
 

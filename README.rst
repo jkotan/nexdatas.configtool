@@ -37,13 +37,13 @@ git clone https://github.com/jkotan/nexdatas.configtool/
 
 Next, run the installation script
 
-.. code:: bash
+.. code-block:: console
 
 	  $ python setup.py install
 
 and launch
 
-.. code:: bash
+.. code-block:: console
 
 	  $ nxsdesigner
 
@@ -54,34 +54,34 @@ Debian Jessie (and Wheezy) packages can be found in the HDRI repository.
 
 To install the debian packages, add the PGP repository key
 
-.. code:: bash
+.. code-block:: console
 
 	  $ sudo su
 	  $ wget -q -O - http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
 
 and then download the corresponding source list
 
-.. code:: bash
+.. code-block:: console
 
 	  $ cd /etc/apt/sources.list.d
 	  $ wget http://repos.pni-hdri.de/jessie-pni-hdri.list
 
 Finally,
 
-.. code:: bash
+.. code-block:: console
 
 	  $ apt-get update
 	  $ apt-get install nxsconfigtool 
 
 To instal other NexDaTaS packages
 
-.. code:: bash
+.. code-block:: console
 
 	  $ apt-get install python-nxswriter python-nxsconfigserver nxsconfigserver-db nxstools
 
 and
 
-.. code:: bash
+.. code-block:: console
 
 	  $ apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
 

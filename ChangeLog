@@ -1,3 +1,7 @@
+2017-01-17 Jan Kotanski <jankotan@gmail.com>
+	* add slitter into datasource widget
+	* tagged as v1.12.1
+
 2016-08-13 Jan Kotanski <jankotan@gmail.com>
 	* add excluded extension into element list
 	* tagged as v1.12.0

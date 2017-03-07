@@ -739,6 +739,8 @@ class ServerSetMandatoryComponent(QUndoCommand):
                 self.receiver.configServer.connect()
                 self.receiver.disableServer(False)
                 self.receiver.configServer.setMandatory(self._cp.name)
+                mandatory = self.receiver.configServer.getMandatory()
+                logger.info("Mandatory Components: \n %s" % str(mandatory))
             except Exception, e:
                 QMessageBox.warning(
                     self.receiver,
@@ -778,9 +780,11 @@ class ServerGetMandatoryComponents(QUndoCommand):
             self.receiver.configServer.connect()
             self.receiver.disableServer(False)
             mandatory = self.receiver.configServer.getMandatory()
+            logger.info("Mandatory Components: \n %s" % str(mandatory))
             QMessageBox.information(
                 self.receiver, "Mandatory",
                 "Mandatory Components: \n %s" % unicode(mandatory))
+
         except Exception, e:
             QMessageBox.warning(
                 self.receiver,
@@ -826,6 +830,8 @@ class ServerUnsetMandatoryComponent(QUndoCommand):
                 self.receiver.disableServer(False)
                 self.receiver.configServer.unsetMandatory(
                     self._cp.name)
+                mandatory = self.receiver.configServer.getMandatory()
+                logger.info("Mandatory Components: \n %s" % str(mandatory))
             except Exception, e:
                 QMessageBox.warning(
                     self.receiver,

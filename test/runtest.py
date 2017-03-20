@@ -196,7 +196,8 @@ def main():
     ## test runner
     runner = unittest.TextTestRunner()
     ## test result
-    result = runner.run(suite)
+    result = runner.run(suite).wasSuccessful()
+    sys.exit(not result)
 
  #   if ts:
  #       ts.tearDown()

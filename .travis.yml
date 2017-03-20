@@ -35,4 +35,4 @@ install:
   - python setup.py -q install
 
 script:
-  - python setup test
+  - python setup.py test

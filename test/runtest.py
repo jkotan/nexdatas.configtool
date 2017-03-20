@@ -20,7 +20,8 @@
 # the unittest runner
 #
 
-import os 
+import os
+import sys
 import unittest
 
 
@@ -60,33 +61,6 @@ except ImportError, e:
 ## list of available databases
 DB_AVAILABLE = []
     
-try:
-    import MySQLdb    
-    ## connection arguments to MYSQL DB
-    args = {}
-    args["db"] = 'tango'
-    args["host"] = 'localhost'
-    args["read_default_file"] = '/etc/my.cnf'
-    ## inscance of MySQLdb
-    mydb = MySQLdb.connect(**args)
-    mydb.close()
-    DB_AVAILABLE.append("MYSQL")
-except ImportError, e:
-    print "MYSQL not available: %s" % e
-except Exception, e:
-    print "MYSQL not available: %s" % e
-except:
-    print "MYSQL not available"
-
-
-
-if "MYSQL" in DB_AVAILABLE:
-    pass
-
-
-if PYTANGO_AVAILABLE:
-    if "MYSQL" in DB_AVAILABLE:
-        pass
 
     
 ## main function
@@ -181,17 +155,6 @@ def main():
 
 
 
-    if "MYSQL" in DB_AVAILABLE:
-        pass
-
-
-
-    if PYTANGO_AVAILABLE:
-        if "MYSQL" in DB_AVAILABLE:
-            pass
-
-
-    
     ## test runner
     runner = unittest.TextTestRunner()
     ## test result

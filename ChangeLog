@@ -1,3 +1,7 @@
+2017-03-20 Jan Kotanski <jankotan@gmail.com>
+	* add GNOME_DESKTOP_SESSION_ID if not defined
+	* tagged as v1.12.3
+
 2017-03-07 Jan Kotanski <jankotan@gmail.com>
 	* add information about mandatory components
 	* tagged as v1.12.2

@@ -3,42 +3,34 @@ language: python
 sudo: required
 dist: trusty
 
+env:
+  - OS_TYPE=debian8
+  - OS_TYPE=debian9
+  - OS_TYPE=ubuntu16.04
+
+services:
+  - docker
+
 python:
   - "2.7"
-  
-services:
-  - mysql
+
 
 before_install:
-  - sudo add-apt-repository "deb http://repos.pni-hdri.de/apt/debian jessie main" -y
-#  - sudo add-apt-repository "deb http://security.debian.org/ jessie/updates main" -y
-#  - sudo add-apt-repository "deb http://ftp.de.debian.org/debian/ jessie main" -y
-  - curl http://repos.pni-hdri.de/debian_repo.pub.gpg | sudo apt-key add -
-  - sudo apt-get -qq update
-# - sudo apt-get install -y  mysql-server mysql-client mysql-client-5.5  mysql-server-5.5
-  - sudo apt-get install -y  --force-yes tango-db tango-common 
-  - sleep 10
-  - sudo apt-get install -y  --force-yes  tango-starter tango-test 
-  - sleep 10
-#  - sudo apt-get install -y   --force-yes python-pni python-sardana liblog4j1.2-java 
-#  - sudo apt-get install -y   --force-yes python-h5py
-  - sudo apt-get install -y   --force-yes nxsconfigserver-db
-  - sleep 10
-  - sudo apt-get install -y    python-sphinx
-  - sudo apt-get install -y   --force-yes python-pytango
-  - sudo apt-get install -y   --force-yes python-nxsconfigserver  python-nxswriter 
-  - sudo apt-get install -y   pyqt4-dev-tools python-qt4 python-nxstools
-  - sleep 10
-  - export PYTHONPATH=$PYTHONPATH:$(pwd):/usr/lib/python2.7/dist-packages
-
-install:
-  - python setup.py -q install
-
+  - chmod +x .travis/run.sh
+  - chmod +x .travis/install.sh
 
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
+  - xhost +local:root
+  - docker build -t ndts .travis/${OS_TYPE}
+  - docker run  --name  ndts -d -it -v `pwd`:/home/tango -v /tmp/.X11-unix:/tmp/.X11-unix:ro  -e DISPLAY=$DISPLAY   ndts
+  - .travis/install.sh ${OS_TYPE}
 
 script:
-  - python setup.py test
+  - .travis/run.sh
+
+after-script:
+  - docker stop ndts
+  - docker rm ndts

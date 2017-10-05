@@ -56,6 +56,11 @@ class Options(object):
         self.cptype = None
         self.directory = None
         self.xmlpackage = None
+        self.external = ""
+        self.entryname= "scan"
+        self.insname = "instrument"
+        self.oldclientlike = False
+        self.clientlike = True
 
 
 ## configuration server

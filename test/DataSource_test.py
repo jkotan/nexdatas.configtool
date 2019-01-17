@@ -29,7 +29,7 @@ import binascii
 import time
 
 from PyQt5.QtCore import (QModelIndex)
-from PyQt5.QtGui import (QApplication, QMessageBox)
+from PyQt5.QtWidgets import (QApplication, QMessageBox)
 
 from nxsconfigtool.DataSourceDlg import CommonDataSourceDlg
 from nxsconfigtool.DataSource import CommonDataSource, DataSource

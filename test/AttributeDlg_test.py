@@ -29,9 +29,9 @@ import binascii
 import time
 
 from PyQt5.QtTest import QTest
-from PyQt5.QtGui import (QApplication, QMessageBox)
+from PyQt5.QtWidgets import (QApplication, QMessageBox)
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import Qt, QTimer, SIGNAL, QObject
+from PyQt5.QtCore import Qt, QTimer, QObject
 
 from nxsconfigtool.AttributeDlg import AttributeDlg
 

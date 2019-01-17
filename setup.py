@@ -19,7 +19,6 @@
 
 """ setup.py for NXS Component Designer """
 
-import codecs
 import os
 import sys
 from setuptools import setup
@@ -36,12 +35,14 @@ TOOL = "nxsconfigtool"
 #: package instance
 ITOOL = __import__(TOOL)
 
+
 def read(fname):
-    """ read the file 
+    """ read the file
 
     :param fname: readme file name
     """
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
 
 #: ui directory
 UIDIR = os.path.join(TOOL, "ui")
@@ -61,7 +62,7 @@ class toolBuild(build_py):
     @classmethod
     def makeqrc(cls, qfile, path):
         """  creates the python qrc files
-        
+
         :param qfile: qrc file name
         :param path:  qrc file path
         """
@@ -99,10 +100,10 @@ class toolBuild(build_py):
 class toolClean(clean):
     """ cleaner for python
     """
-    
+
     def run(self):
         """ runner
-        
+
         :brief: It is running during cleaning
         """
 
@@ -140,6 +141,7 @@ def get_scripts(scripts):
     if get_platform()[:3] == 'win':
         return scripts + [sc + '.pyw' for sc in scripts]
     return scripts
+
 
 release = ITOOL.__version__
 version = ".".join(release.split(".")[:2])
@@ -187,14 +189,11 @@ SETUPDATA = dict(
 
 
 def main():
-    """ the main function 
-
-    additionally:
-
-    find ./nxsconfigtool/help/ -iname "*.html" -type f -exec sh -c 'pandoc "${0}" -t rst -o "doc/nxs$(basename ${0%.html}.rst)"' {} \;
+    """ the main function
 
     """
     setup(**SETUPDATA)
+
 
 if __name__ == '__main__':
     main()

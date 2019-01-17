@@ -56,7 +56,7 @@ class LogActions(QObject):
     def updatelevel(self):
         levellist = ['no', 'debug', 'info', 'warning', 'error', 'critical']
         eflevel = logger.getEffectiveLevel()
-        ilv = eflevel / 10
+        ilv = eflevel // 10
         level = levellist[ilv]
         self.setlevel(level, True)
 

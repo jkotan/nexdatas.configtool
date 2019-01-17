@@ -66,6 +66,13 @@ if sys.version_info > (3,):
     unicode = str
 
 
+def iternext(it):
+    if sys.version_info > (3,):
+        return next(iter(it.values()))
+    else:
+        return it.itervalues().next()
+
+
 # main window class
 class MainWindow(QMainWindow):
 
@@ -688,7 +695,7 @@ class MainWindow(QMainWindow):
     # \brief It loads the datasource list from the default directory
     def loadDataSources(self):
         self.sourceList.loadList(self.externalDSActions)
-        ide = self.sourceList.elements.itervalues().next().id \
+        ide = iternext(self.sourceList.elements).id \
             if len(self.sourceList.elements) else None
 
         self.sourceList.populateElements(ide)
@@ -702,7 +709,7 @@ class MainWindow(QMainWindow):
             self.externalDSActions,
             None,
             new)
-        ide = self.sourceList.elements.itervalues().next().id \
+        ide = iternext(self.sourceList.elements).id \
             if len(self.sourceList.elements) else None
 
         self.sourceList.populateElements(ide)
@@ -716,7 +723,7 @@ class MainWindow(QMainWindow):
             self.externalCPActions,
             self.contextMenuActions
         )
-        ide = self.componentList.elements.itervalues().next().id \
+        ide = iternext(self.componentList.elements).id \
             if len(self.componentList.elements) else None
 
         self.componentList.populateElements(ide)
@@ -728,7 +735,7 @@ class MainWindow(QMainWindow):
             self.externalCPActions,
             self.contextMenuActions
         )
-        ide = self.componentList.elements.itervalues().next().id \
+        ide = iternext(self.componentList.elements).id \
             if len(self.componentList.elements) else None
 
         self.componentList.populateElements(ide)

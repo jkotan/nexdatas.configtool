@@ -27,10 +27,17 @@ from .DataSourceDlg import DataSourceDlg
 from . import DataSource
 from .Component import Component
 
-
+import sys
 import logging
 # message logger
 logger = logging.getLogger("nxsdesigner")
+
+
+def iternext(it):
+    if sys.version_info > (3,):
+        return next(iter(it.values()))
+    else:
+        return it.itervalues().next()
 
 
 # Command which opens dialog with the current component
@@ -633,8 +640,7 @@ class ComponentTakeDataSource(QUndoCommand):
 
         if not self._lids:
             self._lids = \
-                self.receiver.sourceList.elements.\
-                itervalues().next().id \
+                iternext(self.receiver.sourceList.elements).id \
                 if len(self.receiver.sourceList.elements) else None
         if self._ids and self._ds:
             self.receiver.sourceList.addElement(self._ds)

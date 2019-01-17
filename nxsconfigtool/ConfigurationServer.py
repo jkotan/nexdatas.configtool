@@ -92,11 +92,11 @@ class ConfigurationServer(object):
 
     def getDeviceName(self):
         if self.host and self.port:
-            return "%s:%s/%s" % (self.host.encode(),
+            return "%s:%s/%s" % (str(self.host),
                                  str(self.port),
-                                 self.device.encode())
+                                 str(self.device))
         else:
-            return self.device.encode()
+            return str(self.device)
 
     # connects to the configuration server
     # \brief It opens the configuration Tango device
@@ -123,7 +123,7 @@ class ConfigurationServer(object):
                 self._proxy.command_inout("Open")
                 self.connected = True
             else:
-                raise Exception("Cannot connect to: %s" % self.device.encode())
+                raise Exception("Cannot connect to: %s" % str(self.device))
 
     # opens connection to the configuration server
     # \brief It fetches parameters of tango device and calls connect() method

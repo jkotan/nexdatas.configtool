@@ -20,7 +20,6 @@
 # the unittest runner
 #
 
-import os
 import sys
 import unittest
 
@@ -49,30 +48,26 @@ import DataSource_test
 import DataSourceMethods_test
 
 
-
 try:
-    import PyTango
+    __import__("PyTango")
     # if module PyTango avalable
     PYTANGO_AVAILABLE = True
 except ImportError as e:
     PYTANGO_AVAILABLE = False
-    print "PyTango is not available: %s" % e
-    
+    print("PyTango is not available: %s" % e)
+
 # list of available databases
 DB_AVAILABLE = []
-    
 
-    
+
 # main function
 def main():
 
+    # test server
+    # ts = None
 
-    # test server    
-    ts = None    
-    
     # test suit
     suite = unittest.TestSuite()
-
 
     app = QApplication([])
     NodeDlg_test.app = app
@@ -93,67 +88,63 @@ def main():
     DataSource_test.app = app
     DataSourceMethods_test.app = app
 
-
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(AttributeDlg_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(AttributeDlg_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(LinkDlg_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(LinkDlg_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(StrategyDlg_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(StrategyDlg_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(ConnectDlg_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(ConnectDlg_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(DimensionsDlg_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DimensionsDlg_test) )
-
-
-    suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DefinitionDlg_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(DefinitionDlg_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(GroupDlg_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(GroupDlg_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(FieldDlg_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(FieldDlg_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(RichAttributeDlg_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(RichAttributeDlg_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(NodeDlg_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(NodeDlg_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(ComponentItem_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(ComponentItem_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(ComponentModel_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(ComponentModel_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DomTools_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(DomTools_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(LabeledObject_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(LabeledObject_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(CommonDataSourceDlg_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(
+            CommonDataSourceDlg_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DataSourceDlg_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceDlg_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(CommonDataSource_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(CommonDataSource_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DataSource_test) )
+        unittest.defaultTestLoader.loadTestsFromModule(DataSource_test))
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DataSourceMethods_test) )
-
-
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceMethods_test))
 
     # test runner
     runner = unittest.TextTestRunner()
@@ -161,8 +152,9 @@ def main():
     result = runner.run(suite).wasSuccessful()
     sys.exit(not result)
 
- #   if ts:
- #       ts.tearDown()
+    #   if ts:
+    #       ts.tearDown()
+
 
 if __name__ == "__main__":
     main()

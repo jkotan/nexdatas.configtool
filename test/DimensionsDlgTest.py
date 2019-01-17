@@ -27,10 +27,10 @@ import random
 import struct
 import binascii
 import time
-from PyQt4.QtTest import QTest
-from PyQt4.QtGui import (QApplication, QMessageBox, QTableWidgetItem)
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
+from PyQt5.QtTest import QTest
+from PyQt5.QtGui import (QApplication, QMessageBox, QTableWidgetItem)
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtCore import Qt, QTimer, SIGNAL, QObject
 
 
 from nxsconfigtool.DimensionsDlg import DimensionsDlg

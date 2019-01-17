@@ -21,9 +21,9 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox, QFileDialog, QUndoCommand,
+from PyQt5.QtWidgets import (QMessageBox, QFileDialog, QUndoCommand,
                          QProgressDialog)
-from PyQt4.QtCore import (Qt, QFileInfo, QString)
+from PyQt5.QtCore import (Qt, QFileInfo)
 
 from .DataSourceDlg import CommonDataSourceDlg
 from . import DataSource
@@ -293,7 +293,7 @@ class ComponentSaveAll(QUndoCommand):
         keys = self.receiver.componentList.elements.keys()
         progress = QProgressDialog(
             "Saving Component elements",
-            QString(), 0, len(keys), self.receiver.componentList)
+            str(), 0, len(keys), self.receiver.componentList)
         progress.setWindowTitle("Save All Components")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
@@ -444,7 +444,7 @@ class DataSourceSaveAll(QUndoCommand):
         keys = self.receiver.sourceList.elements.keys()
         progress = QProgressDialog(
             "Saving DataSource elements",
-            QString(), 0, len(keys), self.receiver.sourceList)
+            str(), 0, len(keys), self.receiver.sourceList)
         progress.setWindowTitle("Save All DataSources")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()

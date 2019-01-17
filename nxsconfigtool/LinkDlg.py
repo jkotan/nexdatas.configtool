@@ -21,10 +21,12 @@
 
 """ link widget """
 
-from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
-from PyQt4.QtGui import (QMessageBox)
+import os
 
-from .ui.ui_linkdlg import Ui_LinkDlg
+from PyQt5.QtCore import (QModelIndex)
+from PyQt5.QtWidgets import (QMessageBox)
+from PyQt5 import uic
+
 from .NodeDlg import NodeDlg
 from .Errors import CharacterError
 from .DomTools import DomTools
@@ -32,6 +34,10 @@ from .DomTools import DomTools
 import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
+
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "linkdlg.ui"))
 
 
 ## dialog defining a tag link
@@ -53,7 +59,7 @@ class LinkDlg(NodeDlg):
         self.subItems = ["doc", "datasource", "strategy"]
 
         ## user interface
-        self.ui = Ui_LinkDlg()
+        self.ui = _formclass()
 
     ## updates the link dialog
     # \brief It sets the form local variables
@@ -79,7 +85,7 @@ class LinkDlg(NodeDlg):
         self.connect(
             self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(
-            self.ui.nameLineEdit, SIGNAL("textEdited(QString)"),
+            self.ui.nameLineEdit, SIGNAL("textEdited(str)"),
             self._updateUi)
 
     ## provides the state of the link dialog
@@ -122,7 +128,7 @@ class LinkDlg(NodeDlg):
         if text and text.startswith("$datasources."):
             self.target = text
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
@@ -179,20 +185,20 @@ class LinkDlg(NodeDlg):
         for _ in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         if self.name:
-            elem.setAttribute(QString("name"), QString(self.name))
+            elem.setAttribute(str("name"), str(self.name))
         self.replaceText(mindex)
         if self.target:
             if self.target.startswith("$datasources."):
                 self.replaceText(mindex, unicode(self.target))
             else:
-                elem.setAttribute(QString("target"), QString(self.target))
+                elem.setAttribute(str("target"), str(self.target))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         if not self.doc and doc and doc.nodeName() == "doc":
             self.removeElement(doc, mindex)
         elif self.doc:
-            newDoc = self.root.createElement(QString("doc"))
-            newText = self.root.createTextNode(QString(self.doc))
+            newDoc = self.root.createElement(str("doc"))
+            newText = self.root.createTextNode(str(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc":
                 self.replaceElement(doc, newDoc, mindex)
@@ -202,7 +208,7 @@ class LinkDlg(NodeDlg):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 

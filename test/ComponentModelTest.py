@@ -28,8 +28,8 @@ import struct
 import binascii
 import time
 
-from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QAbstractItemModel, QModelIndex, QVariant
-from PyQt4.QtXml import QDomNode, QDomDocument
+from PyQt5.QtCore import Qt, QTimer, SIGNAL, QObject, QAbstractItemModel, QModelIndex, QVariant
+from PyQt5.QtXml import QDomNode, QDomDocument
 
 from nxsconfigtool.ComponentModel import ComponentModel
 from nxsconfigtool.ComponentItem import ComponentItem

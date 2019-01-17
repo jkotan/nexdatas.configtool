@@ -20,17 +20,23 @@
 # Component Creator dialog class
 
 """ server creator widget """
+import os
 
-from PyQt4.QtCore import SIGNAL, Qt, QVariant
-from PyQt4.QtGui import QDialog, QTableWidgetItem, QMessageBox
-
-from .ui.ui_creatordlg import Ui_CreatorDlg
-from .ui.ui_stdcreatordlg import Ui_StdCreatorDlg
+from PyQt5.QtCore import Qt, QVariant
+from PyQt5.QtWidgets import QDialog, QTableWidgetItem, QMessageBox
+from PyQt5 import uic
 
 import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "creatordlg.ui"))
+
+_stdformclass, _stdbaseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "stdcreatordlg.ui"))
 
 ## dialog defining a component creator dialog
 class CreatorDlg(QDialog):
@@ -44,7 +50,7 @@ class CreatorDlg(QDialog):
         self.components = []
         self.componentName = None
         ## user interface
-        self.ui = Ui_CreatorDlg()
+        self.ui = _formclass()
         self.action = ''
 
     ## creates GUI
@@ -100,7 +106,7 @@ class StdCreatorDlg(QDialog):
         self.componentType = None
         self.componentName = None
         ## user interface
-        self.ui = Ui_StdCreatorDlg()
+        self.ui = _stdformclass()
         self.action = ''
         self.__vars = {}
         self.__pardesc = {}
@@ -289,7 +295,7 @@ class StdCreatorDlg(QDialog):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 

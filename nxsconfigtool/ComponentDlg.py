@@ -21,14 +21,20 @@
 
 """ component widget """
 
-from PyQt4.QtGui import (QDialog, QWidget)
+from PyQt5.QtWidgets import (QDialog, QWidget)
+from PyQt5 import uic
 
-from .ui.ui_componentdlg import Ui_ComponentDlg
+# from .ui.ui_componentdlg import Ui_ComponentDlg
 from .DomTools import DomTools
 
 import logging
+import os
 ## message logger
 logger = logging.getLogger("nxsdesigner")
+
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "componentdlg.ui"))
 
 
 ## compoent dialog
@@ -43,7 +49,7 @@ class ComponentDlg(QDialog):
         self.component = component
 
         ## user interface
-        self.ui = Ui_ComponentDlg()
+        self.ui = _formclass()
 
         ## default widget
         self.ui.widget = QWidget(self)

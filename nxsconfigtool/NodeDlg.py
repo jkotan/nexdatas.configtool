@@ -21,8 +21,8 @@
 
 """ abstract Node widget """
 
-from PyQt4.QtGui import QDialog
-from PyQt4.QtCore import (SIGNAL, QModelIndex)
+from PyQt5.QtWidgets import QDialog
+from PyQt5.QtCore import (QModelIndex)
 
 from .DomTools import DomTools
 

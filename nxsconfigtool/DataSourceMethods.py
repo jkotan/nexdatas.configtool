@@ -22,13 +22,13 @@
 """ Provides datasource widget methods """
 
 
-from PyQt4.QtCore import (SIGNAL, QModelIndex, QString)
-from PyQt4.QtGui import (QApplication, QMessageBox,
-                         QWidget, QVBoxLayout)
-from PyQt4.QtXml import (QDomDocument)
+from PyQt5.QtCore import (QModelIndex)
+from PyQt5.QtWidgets import (QApplication, QMessageBox, QWidget, QVBoxLayout)
+from PyQt5.QtXml import (QDomDocument)
 
 from .DomTools import DomTools
 from .Errors import ParameterError
+
 
 import logging
 ## message logger
@@ -175,7 +175,7 @@ class DataSourceMethods(object):
         if value in self.__dialog.imp.keys():
             self.__dialog.imp[str(value)].setFromNode(self.__datasource)
 
-        doc = self.__dialog.node.firstChildElement(QString("doc"))
+        doc = self.__dialog.node.firstChildElement(str("doc"))
         text = DomTools.getText(doc)
         self.__datasource.doc = unicode(text).strip() if text else ""
 
@@ -241,14 +241,14 @@ class DataSourceMethods(object):
         return True
 
     def __createDOMNodes(self, root):
-        newDs = root.createElement(QString("datasource"))
+        newDs = root.createElement(str("datasource"))
         elem = newDs.toElement()
 #        attributeMap = self.__datasource.newDs.attributes()
-        elem.setAttribute(QString("type"),
-                          QString(self.__datasource.dataSourceType))
+        elem.setAttribute(str("type"),
+                          str(self.__datasource.dataSourceType))
         if self.__datasource.dataSourceName:
-            elem.setAttribute(QString("name"),
-                              QString(self.__datasource.dataSourceName))
+            elem.setAttribute(str("name"),
+                              str(self.__datasource.dataSourceName))
         else:
             logger.info("name not defined")
 
@@ -257,8 +257,8 @@ class DataSourceMethods(object):
                               ].createNodes(self.__datasource, root, elem)
 
         if(self.__datasource.doc):
-            newDoc = root.createElement(QString("doc"))
-            newText = root.createTextNode(QString(self.__datasource.doc))
+            newDoc = root.createElement(str("doc"))
+            newText = root.createTextNode(str(self.__datasource.doc))
             newDoc.appendChild(newText)
             elem.appendChild(newDoc)
         return elem
@@ -399,10 +399,10 @@ class DataSourceMethods(object):
             "xml", "version='1.0'")
         self.__dialog.root.appendChild(processing)
 
-        definition = self.__dialog.root.createElement(QString("definition"))
+        definition = self.__dialog.root.createElement(str("definition"))
         self.__dialog.root.appendChild(definition)
         self.__dialog.node = self.__dialog.root.createElement(
-            QString("datasource"))
+            str("datasource"))
         definition.appendChild(self.__dialog.node)
         return self.__dialog.node
 

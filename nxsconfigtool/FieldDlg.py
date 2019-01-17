@@ -23,10 +23,12 @@
 
 import copy
 
-from PyQt4.QtGui import (QMessageBox, QTableWidgetItem)
-from PyQt4.QtCore import (SIGNAL, QString, QVariant, Qt, QModelIndex)
+from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem)
+from PyQt5.QtCore import (QVariant, Qt, QModelIndex)
+from PyQt5 import uic
 
-from .ui.ui_fielddlg import Ui_FieldDlg
+import os
+
 from .AttributeDlg import AttributeDlg
 from .DimensionsDlg import DimensionsDlg
 from .NodeDlg import NodeDlg
@@ -35,6 +37,10 @@ from .DomTools import DomTools
 import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
+
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "fielddlg.ui"))
 
 
 ## dialog defining a field tag
@@ -70,7 +76,7 @@ class FieldDlg(NodeDlg):
                          "enumeration", "strategy"]
 
         ## user interface
-        self.ui = Ui_FieldDlg()
+        self.ui = _formclass()
 
     ## provides the state of the field dialog
     # \returns state of the field in tuple
@@ -179,10 +185,10 @@ class FieldDlg(NodeDlg):
         self.connect(self.ui.dimPushButton, SIGNAL("clicked()"),
                      self.__changeDimensions)
 
-        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(QString)"),
+        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(str)"),
                      self.__updateUi)
         self.connect(self.ui.typeComboBox,
-                     SIGNAL("currentIndexChanged(QString)"),
+                     SIGNAL("currentIndexChanged(str)"),
                      self.__currentIndexChanged)
 
         self.populateAttributes()
@@ -217,7 +223,7 @@ class FieldDlg(NodeDlg):
                 self.attributes[attrName] = unicode(attribute.nodeValue())
                 self.__attributes[attrName] = unicode(attribute.nodeValue())
 
-        dimens = self.node.firstChildElement(QString("dimensions"))
+        dimens = self.node.firstChildElement(str("dimensions"))
         attributeMap = dimens.attributes()
 
         self.dimensions = []
@@ -271,7 +277,7 @@ class FieldDlg(NodeDlg):
             self.__dimensions.extend(
                 [None] * (self.rank - len(self.__dimensions)))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
@@ -459,57 +465,57 @@ class FieldDlg(NodeDlg):
         for i in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         if self.name:
-            elem.setAttribute(QString("name"), QString(self.name))
+            elem.setAttribute(str("name"), str(self.name))
         if self.nexusType:
-            elem.setAttribute(QString("type"), QString(self.nexusType))
+            elem.setAttribute(str("type"), str(self.nexusType))
         if self.units:
-            elem.setAttribute(QString("units"), QString(self.units))
+            elem.setAttribute(str("units"), str(self.units))
 
         self.replaceText(mindex, unicode(self.value))
 
         for attr in self.attributes.keys():
-            elem.setAttribute(QString(attr), QString(self.attributes[attr]))
+            elem.setAttribute(str(attr), str(self.attributes[attr]))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         if not self.doc and doc and doc.nodeName() == "doc":
             self.removeElement(doc, mindex)
         elif self.doc:
-            newDoc = self.root.createElement(QString("doc"))
-            newText = self.root.createTextNode(QString(self.doc))
+            newDoc = self.root.createElement(str("doc"))
+            newText = self.root.createTextNode(str(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc":
                 self.replaceElement(doc, newDoc, mindex)
             else:
                 self.appendElement(newDoc, mindex)
 
-        dimens = self.node.firstChildElement(QString("dimensions"))
+        dimens = self.node.firstChildElement(str("dimensions"))
         if not self.dimensions and dimens \
                 and dimens.nodeName() == "dimensions":
             self.removeElement(dimens, mindex)
         elif self.dimensions:
-            newDimens = self.root.createElement(QString("dimensions"))
-            newDimens.setAttribute(QString("rank"),
-                                   QString(unicode(self.rank)))
+            newDimens = self.root.createElement(str("dimensions"))
+            newDimens.setAttribute(str("rank"),
+                                   str(unicode(self.rank)))
             dimDefined = True
             for i in range(min(self.rank, len(self.dimensions))):
                 if self.dimensions[i] is None:
                     dimDefined = False
             if dimDefined:
                 for i in range(min(self.rank, len(self.dimensions))):
-                    dim = self.root.createElement(QString("dim"))
-                    dim.setAttribute(QString("index"), QString(unicode(i + 1)))
+                    dim = self.root.createElement(str("dim"))
+                    dim.setAttribute(str("index"), str(unicode(i + 1)))
                     if "$datasources." not in unicode(self.dimensions[i]):
 
-                        dim.setAttribute(QString("value"),
-                                         QString(unicode(self.dimensions[i])))
+                        dim.setAttribute(str("value"),
+                                         str(unicode(self.dimensions[i])))
                     else:
                         dsText = self.root.createTextNode(
-                            QString(unicode(self.dimensions[i])))
+                            str(unicode(self.dimensions[i])))
                         dstrategy = self.root.createElement(
-                            QString("strategy"))
+                            str("strategy"))
                         dstrategy.setAttribute(
-                            QString("mode"),
-                            QString(unicode("CONFIG")))
+                            str("mode"),
+                            str(unicode("CONFIG")))
                         dim.appendChild(dsText)
                         dim.appendChild(dstrategy)
 
@@ -523,7 +529,7 @@ class FieldDlg(NodeDlg):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 

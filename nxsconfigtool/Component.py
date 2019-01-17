@@ -23,11 +23,11 @@
 
 import os
 
-from PyQt4.QtCore import (SIGNAL, QModelIndex, QString, Qt,
+from PyQt5.QtCore import (QModelIndex, Qt,
                           QFileInfo, QFile, QIODevice, QTextStream)
-from PyQt4.QtGui import (QWidget, QGridLayout, QApplication,
+from PyQt5.QtWidgets import (QWidget, QGridLayout, QApplication,
                          QMenu, QFileDialog, QMessageBox)
-from PyQt4.QtXml import (QDomDocument)
+from PyQt5.QtXml import (QDomDocument)
 
 
 from .FieldDlg import FieldDlg
@@ -482,7 +482,7 @@ class Component(object):
             return
         node = sel.node
         self.dialog.ui.widget.node = node
-        child = self.dialog.ui.widget.root.createElement(QString(name))
+        child = self.dialog.ui.widget.root.createElement(str(name))
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         status = self.dialog.ui.widget.appendElement(child, index)
@@ -872,7 +872,7 @@ class Component(object):
                     root = QDomDocument()
                     if not root.setContent(fh):
                         raise ValueError("could not parse XML")
-                    definition = root.firstChildElement(QString("definition"))
+                    definition = root.firstChildElement(str("definition"))
                     if definition.nodeName() != "definition":
                         QMessageBox.warning(
                             self.parent, "Corrupted SubComponent",
@@ -1204,7 +1204,7 @@ class Component(object):
         self.document = QDomDocument()
         self.document = self.document
 
-        definition = self.document.createElement(QString("definition"))
+        definition = self.document.createElement(str("definition"))
         self.document.appendChild(definition)
         if self.dialog and self.dialog.ui:
             newModel = ComponentModel(

@@ -21,7 +21,7 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox, QUndoCommand)
+from PyQt5.QtWidgets import (QUndoCommand, QMessageBox)
 
 from .DataSourceDlg import DataSourceDlg
 from . import DataSource

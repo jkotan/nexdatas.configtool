@@ -23,15 +23,17 @@
 
 import os
 
-from PyQt4.QtCore import (
-    SIGNAL, QSettings, Qt, QVariant, pyqtSlot)
-from PyQt4.QtGui import (
-    QMainWindow,
-    QMessageBox, QIcon,
-    QLabel, QFrame,
-    QUndoGroup, QUndoStack, QTextCursor)
+from PyQt5.QtCore import (
+    QSettings, Qt, QVariant, pyqtSlot)
+from PyQt5.QtGui import (
+    QIcon,
+    QTextCursor)
+from PyQt5.QtWidgets import (
+    QFrame, QUndoGroup, QUndoStack,
+    QMainWindow, QMessageBox, QLabel)
+from PyQt5 import uic
 
-from .ui.ui_mainwindow import Ui_MainWindow
+# from .ui.ui_mainwindow import Ui_MainWindow
 
 from .DataSourceList import DataSourceList
 from .ComponentList import ComponentList
@@ -55,6 +57,9 @@ import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "mainwindow.ui"))
 
 ## main window class
 class MainWindow(QMainWindow):
@@ -97,7 +102,7 @@ class MainWindow(QMainWindow):
         self.undoGroup = None
 
         ## user interface
-        self.ui = Ui_MainWindow()
+        self.ui = _formclass()
 
         ## configuration server
         self.configServer = None
@@ -260,7 +265,7 @@ class MainWindow(QMainWindow):
         if directory and os.path.exists(directory):
             return os.path.abspath(directory)
         ldir = ""
-        dsdir = unicode(settings.value(name).toString())
+        dsdir = unicode(settings.value(name))
         if dsdir:
             ldir = os.path.abspath(dsdir)
         else:
@@ -281,12 +286,12 @@ class MainWindow(QMainWindow):
             self.configServer.setServer(server)
         else:
             self.configServer.device = unicode(
-                settings.value("ConfigServer/device").toString())
+                settings.value("ConfigServer/device"))
             self.configServer.host = unicode(
-                settings.value("ConfigServer/host").toString())
+                settings.value("ConfigServer/host"))
             self.onlineFile = unicode(
-                settings.value("Online/filename").toString())
-            port = str(settings.value("ConfigServer/port").toString())
+                settings.value("Online/filename"))
+            port = str(settings.value("ConfigServer/port"))
             if port:
                 self.configServer.port = int(port)
 

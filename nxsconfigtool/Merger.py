@@ -22,11 +22,11 @@
 """ merger of different configuration trees """
 
 
-from PyQt4.QtXml import QDomNode
+from PyQt5.QtXml import QDomNode
 
 
-from PyQt4.QtCore import QThread, SIGNAL
-from PyQt4.QtGui import QDialog, QLabel, QVBoxLayout, QPushButton
+from PyQt5.QtCore import QThread
+from PyQt5.QtWidgets import QDialog, QLabel, QVBoxLayout, QPushButton
 
 from .Errors import IncompatibleNodeError
 from .DomTools import DomTools

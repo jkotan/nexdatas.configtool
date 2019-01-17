@@ -29,7 +29,7 @@ import binascii
 import time
 
 
-from PyQt4.QtGui import (QApplication)
+from PyQt5.QtGui import (QApplication)
 
 from nxsconfigtool.DataSource import CommonDataSource
 from nxsconfigtool.NodeDlg import NodeDlg

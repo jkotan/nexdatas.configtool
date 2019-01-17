@@ -22,11 +22,13 @@
 """ definition widget """
 
 import copy
+import os
 
-from PyQt4.QtCore import (SIGNAL, QString, Qt, QVariant, QModelIndex)
-from PyQt4.QtGui import (QMessageBox, QTableWidgetItem)
+from PyQt5.QtCore import (Qt, QVariant, QModelIndex)
+from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem)
+from PyQt5 import uic
 
-from .ui.ui_definitiondlg import Ui_DefinitionDlg
+# from .ui.ui_definitiondlg import Ui_DefinitionDlg
 from .AttributeDlg import AttributeDlg
 from .NodeDlg import NodeDlg
 from .DomTools import DomTools
@@ -34,6 +36,11 @@ from .DomTools import DomTools
 import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
+
+
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "definitiondlg.ui"))
 
 
 ## dialog defining a definition tag
@@ -59,7 +66,7 @@ class DefinitionDlg(NodeDlg):
                          "doc", "symbols"]
 
         ## user interface
-        self.ui = Ui_DefinitionDlg()
+        self.ui = _formclass()
 
     ## updates the definition dialog
     # \brief It sets the form local variables
@@ -149,7 +156,7 @@ class DefinitionDlg(NodeDlg):
         text = DomTools.getText(self.node)
         self.content = unicode(text).strip() if text else ""
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
@@ -268,19 +275,19 @@ class DefinitionDlg(NodeDlg):
         for _ in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         if self.name:
-            elem.setAttribute(QString("name"), QString(self.name))
+            elem.setAttribute(str("name"), str(self.name))
 
         self.replaceText(mindex, unicode(self.content))
 
         for attr in self.attributes.keys():
-            elem.setAttribute(QString(attr), QString(self.attributes[attr]))
+            elem.setAttribute(str(attr), str(self.attributes[attr]))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         if not self.doc and doc and doc.nodeName() == "doc":
             self.removeElement(doc, mindex)
         elif self.doc:
-            newDoc = self.root.createElement(QString("doc"))
-            newText = self.root.createTextNode(QString(self.doc))
+            newDoc = self.root.createElement(str("doc"))
+            newText = self.root.createTextNode(str(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc":
                 self.replaceElement(doc, newDoc, mindex)
@@ -290,7 +297,7 @@ class DefinitionDlg(NodeDlg):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 

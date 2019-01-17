@@ -23,8 +23,9 @@
 
 import platform
 
-from PyQt4.QtGui import (QKeySequence, QMessageBox)
-from PyQt4.QtCore import (QT_VERSION_STR, PYQT_VERSION_STR)
+from PyQt5.QtGui import (QKeySequence)
+from PyQt5.QtWidgets import (QMessageBox)
+from PyQt5.QtCore import (QT_VERSION_STR, PYQT_VERSION_STR)
 
 from . import __version__
 from .HelpForm import HelpForm

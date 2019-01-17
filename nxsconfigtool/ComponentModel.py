@@ -21,9 +21,8 @@
 
 """ component model for tree view """
 
-from PyQt4.QtCore import (QAbstractItemModel, QVariant, Qt, QModelIndex,
-                          QStringList, QString)
-from PyQt4.QtXml import QDomNode
+from PyQt5.QtCore import (QAbstractItemModel, QVariant, Qt, QModelIndex)
+from PyQt5.QtXml import QDomNode
 
 from . ComponentItem import ComponentItem
 
@@ -99,7 +98,7 @@ class ComponentModel(QAbstractItemModel):
                 return QVariant(node.nodeName())
         elif index.column() == 1:
             if self.__allAttributes:
-                attributes = QStringList()
+                attributes = []
                 for i in range(attributeMap.count()):
                     attribute = attributeMap.item(i)
                     attributes.append(attribute.nodeName() + "=\""
@@ -108,7 +107,7 @@ class ComponentModel(QAbstractItemModel):
             else:
                 return QVariant(
                     (attributeMap.namedItem("type").nodeValue() + "  ")
-                    if attributeMap.contains("type") else QString("  "))
+                    if attributeMap.contains("type") else str("  "))
 
         elif index.column() == 2:
             return QVariant(node.nodeValue().split("\n").join(" "))

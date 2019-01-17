@@ -21,8 +21,7 @@
 
 """  DOM parser and tree view tools"""
 
-from PyQt4.QtXml import QDomNode
-from PyQt4.QtCore import QString
+from PyQt5.QtXml import QDomNode
 import re
 
 
@@ -73,7 +72,7 @@ class DomTools(object):
     # \returns string with node texts
     @classmethod
     def getText(cls, node):
-        text = QString()
+        text = str()
         if node:
             child = node.firstChild()
             while not child.isNull():
@@ -115,14 +114,14 @@ class DomTools(object):
                 child = children.item(i)
                 if child.nodeType() == QDomNode.TextNode:
                     if j == 0 and text:
-                        child.toText().setData(QString(text))
+                        child.toText().setData(str(text))
                     else:
-                        child.toText().setData(QString(""))
+                        child.toText().setData(str(""))
                     j += 1
                 i += 1
 
             if j == 0 and text:
-                textNode = root.createTextNode(QString(text))
+                textNode = root.createTextNode(str(text))
                 cls.appendNode(textNode, index, model)
 
     ## removes node

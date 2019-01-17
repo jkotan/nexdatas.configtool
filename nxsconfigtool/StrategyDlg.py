@@ -21,9 +21,12 @@
 
 """ strategy widget """
 
-from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
+import os
 
-from .ui.ui_strategydlg import Ui_StrategyDlg
+from PyQt5.QtCore import (QModelIndex)
+from PyQt5 import uic
+
+# from .ui.ui_strategydlg import Ui_StrategyDlg
 from .NodeDlg import NodeDlg
 from .DomTools import DomTools
 
@@ -31,6 +34,9 @@ import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "strategydlg.ui"))
 
 ## dialog defining an attribute
 class StrategyDlg(NodeDlg):
@@ -64,7 +70,7 @@ class StrategyDlg(NodeDlg):
         self.canfail = False
 
         ## user interface
-        self.ui = Ui_StrategyDlg()
+        self.ui = _formclass()
 
     ## updates the field strategy
     # \brief It sets the form local variables
@@ -112,7 +118,7 @@ class StrategyDlg(NodeDlg):
 #        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
         self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
         self.connect(self.ui.modeComboBox,
-                     SIGNAL("currentIndexChanged(QString)"), self.setFrames)
+                     SIGNAL("currentIndexChanged(str)"), self.setFrames)
         self.connect(self.ui.compressionCheckBox,
                      SIGNAL("stateChanged(int)"), self.setCompression)
 
@@ -214,7 +220,7 @@ class StrategyDlg(NodeDlg):
         text = DomTools.getText(self.node)
         self.postrun = unicode(text).strip() if text else ""
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
@@ -268,30 +274,30 @@ class StrategyDlg(NodeDlg):
         attributeMap = self.node.attributes()
         for _ in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
-        elem.setAttribute(QString("mode"), QString(self.mode))
+        elem.setAttribute(str("mode"), str(self.mode))
 
         if self.mode == 'STEP':
             if self.trigger:
-                elem.setAttribute(QString("trigger"), QString(self.trigger))
+                elem.setAttribute(str("trigger"), str(self.trigger))
             if self.grows:
-                elem.setAttribute(QString("grows"), QString(str(self.grows)))
+                elem.setAttribute(str("grows"), str(str(self.grows)))
         if self.canfail:
-            elem.setAttribute(QString("canfail"), QString("true"))
+            elem.setAttribute(str("canfail"), str("true"))
         if self.compression:
-            elem.setAttribute(QString("compression"), QString("true"))
-            elem.setAttribute(QString("shuffle"), QString("true")
+            elem.setAttribute(str("compression"), str("true"))
+            elem.setAttribute(str("shuffle"), str("true")
                               if self.shuffle else "false")
-            elem.setAttribute(QString("rate"), QString(str(self.rate)))
+            elem.setAttribute(str("rate"), str(str(self.rate)))
 
         self.replaceText(mindex, unicode(self.postrun))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         if not self.doc and doc and doc.nodeName() == "doc":
             self.removeElement(doc, mindex)
 
         elif self.doc:
-            newDoc = self.root.createElement(QString("doc"))
-            newText = self.root.createTextNode(QString(self.doc))
+            newDoc = self.root.createElement(str("doc"))
+            newText = self.root.createTextNode(str(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc":
                 self.replaceElement(doc, newDoc, mindex)
@@ -301,7 +307,7 @@ class StrategyDlg(NodeDlg):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 

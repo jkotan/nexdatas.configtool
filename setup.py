@@ -19,21 +19,22 @@
 
 """ setup.py for NXS Component Designer """
 
+import codecs
 import os
 import sys
-from distutils.util import get_platform
-from distutils.core import setup, Command
-from distutils.command.build import build
+from setuptools import setup
+from setuptools.command.build_py import build_py
 from distutils.command.clean import clean
-from distutils.command.install_scripts import install_scripts
+from distutils.util import get_platform
 import shutil
+
+from sphinx.setup_command import BuildDoc
+
 
 #: package name
 TOOL = "nxsconfigtool"
 #: package instance
 ITOOL = __import__(TOOL)
-
-from sphinx.setup_command import BuildDoc
 
 def read(fname):
     """ read the file 
@@ -49,8 +50,11 @@ QRCDIR = os.path.join(TOOL, "qrc")
 #: executable scripts
 SCRIPTS = ['nxsdesigner']
 
+needs_pytest = set(['test']).intersection(sys.argv)
+pytest_runner = ['pytest-runner'] if needs_pytest else []
 
-class toolBuild(build):
+
+class toolBuild(build_py):
     """ ui and qrc builder for python
     """
 
@@ -62,28 +66,14 @@ class toolBuild(build):
         :param path:  qrc file path
         """
         qrcfile = os.path.join(path, "%s.qrc" % qfile)
-        pyfile = os.path.join(path, "qrc_%s.py" % qfile)
+        rccfile = os.path.join(path, "%s.rcc" % qfile)
 
-        compiled = os.system("pyrcc4 %s -o %s" % (qrcfile, pyfile))
+        compiled = os.system("rcc %s -o %s -binary" % (qrcfile, rccfile))
         if compiled == 0:
-            print "Built: %s -> %s" % (qrcfile, pyfile)
+            print("Built: %s -> %s" % (qrcfile, rccfile))
         else:
-            print >> sys.stderr, "Error: Cannot build  %s" % (pyfile)
-
-    @classmethod
-    def makeui(cls, ufile, path):
-        """ creates the python ui files
-
-        :param ufile: ui file name
-        :param path:  ui file path
-        """
-        uifile = os.path.join(path, "%s.ui" % ufile)
-        pyfile = os.path.join(path, "ui_%s.py" % ufile)
-        compiled = os.system("pyuic4 %s -o %s" % (uifile, pyfile))
-        if compiled == 0:
-            print "Compiled %s -> %s" % (uifile, pyfile)
-        else:
-            print >> sys.stderr,  "Error: Cannot build %s" % (pyfile)
+            sys.stderr.write("Error: Cannot build  %s\n" % (rccfile))
+            sys.stderr.flush()
 
     def run(self):
         """ runner
@@ -91,27 +81,19 @@ class toolBuild(build):
         :\brief: It is running during building
         """
         try:
-            ufiles = [(ufile[:-3], UIDIR) for ufile
-                      in os.listdir(UIDIR) if ufile.endswith('.ui')]
-            for ui in ufiles:
-                if not ui[0] in (".", ".."):
-                    self.makeui(ui[0], ui[1])
-        except TypeError as e:
-            print >> sys.stderr, "No .ui files to build", e
-
-        try:
             qfiles = [(qfile[:-4], QRCDIR) for qfile
                       in os.listdir(QRCDIR) if qfile.endswith('.qrc')]
             for qrc in qfiles:
                 if not qrc[0] in (".", ".."):
                     self.makeqrc(qrc[0], qrc[1])
         except TypeError:
-            print >> sys.stderr, "No .qrc files to build"
+            sys.stderr.write("No .qrc files to build\n")
+            sys.stderr.flush()
 
         if get_platform()[:3] == 'win':
             for script in SCRIPTS:
                 shutil.copy(script, script + ".pyw")
-        build.run(self)
+        build_py.run(self)
 
 
 class toolClean(clean):
@@ -150,29 +132,6 @@ class toolClean(clean):
         clean.run(self)
 
 
-class TestCommand(Command):
-    """ test command class
-    """
-    
-    #: user options
-    user_options = []
-
-    #: initializes options
-    def initialize_options(self):
-        pass
-
-    #: finalizes options
-    def finalize_options(self):
-        pass
-    
-    #: runs command
-    def run(self):
-        import sys
-        import subprocess
-        errno = subprocess.call([sys.executable, 'test/runtest.py'])
-        raise SystemExit(errno)
-
-
 def get_scripts(scripts):
     """ provides windows names of python scripts
 
@@ -205,8 +164,14 @@ SETUPDATA = dict(
     platforms=("Linux", " Windows", " MacOS "),
     packages=[TOOL, UIDIR, QRCDIR],
     scripts=get_scripts(SCRIPTS),
-    cmdclass={"build": toolBuild, "clean": toolClean,
-              "test": TestCommand, 'build_sphinx': BuildDoc},
+    zip_safe=False,
+    setup_requires=pytest_runner,
+    tests_require=['pytest'],
+    cmdclass={
+        "build_py": toolBuild,
+        "clean": toolClean,
+        "build_sphinx": BuildDoc
+    },
     command_options={
         'build_sphinx': {
             'project': ('setup.py', name),

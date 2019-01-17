@@ -21,14 +21,20 @@
 
 """ server connect widget """
 
-from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import (QDialog, QMessageBox)
+import os
 
-from .ui.ui_connectdlg import Ui_ConnectDlg
+from PyQt5.QtWidgets import (QDialog, QMessageBox)
+from PyQt5 import uic
+
+# from .ui.ui_connectdlg import Ui_ConnectDlg
 
 import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
+
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "connectdlg.ui"))
 
 
 ## dialog defining a tag connect
@@ -46,7 +52,7 @@ class ConnectDlg(QDialog):
         ## port of the configuration server
         self.port = None
         ## user interface
-        self.ui = Ui_ConnectDlg()
+        self.ui = _formclass()
 
     ## creates GUI
     # \brief It updates GUI and creates connection for required actions
@@ -120,7 +126,7 @@ class ConnectDlg(QDialog):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 

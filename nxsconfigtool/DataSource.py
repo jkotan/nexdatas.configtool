@@ -24,11 +24,11 @@
 import os
 import copy
 
-from PyQt4.QtCore import (QModelIndex, QString, QFileInfo, QFile,
+from PyQt5.QtCore import (QModelIndex, QFileInfo, QFile,
                           QIODevice, QTextStream)
-from PyQt4.QtGui import (QApplication, QFileDialog, QMessageBox,
+from PyQt5.QtWidgets import (QApplication, QFileDialog, QMessageBox,
                          QWidget)
-from PyQt4.QtXml import (QDomDocument)
+from PyQt5.QtXml import (QDomDocument)
 
 from .NodeDlg import NodeDlg
 from .DomTools import DomTools
@@ -293,9 +293,9 @@ class DataSource(CommonDataSource):
         if not olddoc.setContent(xml):
             raise ValueError("could not parse XML")
 
-        definition = olddoc.firstChildElement(QString("definition"))
+        definition = olddoc.firstChildElement(str("definition"))
         if definition and definition.nodeName() == "definition":
-            ds = definition.firstChildElement(QString("datasource"))
+            ds = definition.firstChildElement(str("datasource"))
             if ds and ds.nodeName() == "datasource":
                 return xml
 
@@ -305,13 +305,13 @@ class DataSource(CommonDataSource):
         processing = newdoc.createProcessingInstruction("xml", "version='1.0'")
         newdoc.appendChild(processing)
 
-        definition = newdoc.createElement(QString("definition"))
+        definition = newdoc.createElement(str("definition"))
         newdoc.appendChild(definition)
 
         if ds:
             newds = newdoc.importNode(ds, True)
         else:
-            newds = newdoc.createElement(QString("datasource"))
+            newds = newdoc.createElement(str("datasource"))
         definition.appendChild(newds)
         self.fetchElements()
         return newdoc.toString(0)

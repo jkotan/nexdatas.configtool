@@ -21,14 +21,23 @@
 
 """ Provides datasource widget """
 
-from PyQt4.QtCore import (SIGNAL, QModelIndex)
-from PyQt4.QtGui import QApplication
+from PyQt5.QtCore import QModelIndex
+from PyQt5.QtWidgets import QApplication
 
 from .NodeDlg import NodeDlg
 from .DataSources import ClientSource, TangoSource, DBSource, PyEvalSource
 from .DataSourceMethods import DataSourceMethods
+from PyQt5 import uic
 
-from .ui.ui_datasourcedlg import Ui_DataSourceDlg
+import os
+
+
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "datasourcedlg.ui"))
+
+
+# from .ui.ui_datasourcedlg import Ui_DataSourceDlg
 
 
 ## available datasources
@@ -68,7 +77,7 @@ class CommonDataSourceDlg(NodeDlg):
         self.imp = {}
 
         ## user interface
-        self.ui = Ui_DataSourceDlg()
+        self.ui = __formclass()
         ## datasource widget
         self.wg = {}
 
@@ -218,7 +227,7 @@ class DataSourceDlg(CommonDataSourceDlg):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QWidget
+    from PyQt5.QtGui import QWidget
     ## Qt application
     app = QApplication(sys.argv)
 

@@ -21,7 +21,7 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox, QUndoCommand)
+from PyQt5.QtWidgets import (QMessageBox, QUndoCommand)
 
 from .Component import Component
 from .LabeledObject import LabeledObject

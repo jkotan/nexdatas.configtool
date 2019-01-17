@@ -28,10 +28,10 @@ import struct
 import binascii
 import time
 
-from PyQt4.QtTest import QTest
-from PyQt4.QtGui import (QApplication, QMessageBox)
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject
+from PyQt5.QtTest import QTest
+from PyQt5.QtGui import (QApplication, QMessageBox)
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtCore import Qt, QTimer, SIGNAL, QObject
 
 from nxsconfigtool.ConnectDlg import ConnectDlg
 

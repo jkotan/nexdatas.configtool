@@ -21,7 +21,8 @@
 
 """ Provides connects to configuration server"""
 
-from PyQt4.QtGui import (QMessageBox)
+from PyQt5.QtWidgets import (QMessageBox, QFileDialog)
+from .CreatorDlg import CreatorDlg, StdCreatorDlg
 
 import logging
 ## message logger
@@ -41,9 +42,6 @@ except ImportError, e:
     NXSTOOLS_AVAILABLE = False
     logger.info("nxstools is not available: %s" % e)
 
-from PyQt4.QtGui import (QFileDialog)
-
-from .CreatorDlg import CreatorDlg, StdCreatorDlg
 
 
 ## option class
@@ -247,7 +245,7 @@ class DataSourceCreator(object):
 ## test function
 def test():
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     app = QApplication(sys.argv)
     app.exit()

@@ -22,11 +22,12 @@
 """ attribute widget """
 
 import copy
+import os
 
-from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
-from PyQt4.QtGui import QMessageBox
+from PyQt5.QtCore import (QModelIndex)
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5 import uic
 
-from .ui.ui_richattributedlg import Ui_RichAttributeDlg
 from .NodeDlg import NodeDlg
 from .DimensionsDlg import DimensionsDlg
 from .Errors import CharacterError
@@ -35,6 +36,10 @@ from .DomTools import DomTools
 import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
+
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "richattributedlg.ui"))
 
 
 ## dialog defining an attribute
@@ -65,7 +70,7 @@ class RichAttributeDlg(NodeDlg):
                          "strategy", "dimensions"]
 
         ## user interface
-        self.ui = Ui_RichAttributeDlg()
+        self.ui = _formclass()
 
     ## provides the state of the richattribute dialog
     # \returns state of the richattribute in tuple
@@ -154,10 +159,10 @@ class RichAttributeDlg(NodeDlg):
             self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
 
         self.connect(
-            self.ui.nameLineEdit, SIGNAL("textEdited(QString)"),
+            self.ui.nameLineEdit, SIGNAL("textEdited(str)"),
             self._updateUi)
         self.connect(
-            self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"),
+            self.ui.typeComboBox, SIGNAL("currentIndexChanged(str)"),
             self._currentIndexChanged)
         self.connect(
             self.ui.dimPushButton, SIGNAL("clicked()"),
@@ -181,7 +186,7 @@ class RichAttributeDlg(NodeDlg):
         text = DomTools.getText(self.node)
         self.value = unicode(text).strip() if text else ""
 
-        dimens = self.node.firstChildElement(QString("dimensions"))
+        dimens = self.node.firstChildElement(str("dimensions"))
         attributeMap = dimens.attributes()
 
         self.dimensions = []
@@ -234,7 +239,7 @@ class RichAttributeDlg(NodeDlg):
             self._dimensions.extend(
                 [None] * (self.rank - len(self._dimensions)))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
@@ -325,51 +330,51 @@ class RichAttributeDlg(NodeDlg):
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
-        elem.setAttribute(QString("name"), QString(self.name))
+        elem.setAttribute(str("name"), str(self.name))
         if self.nexusType:
-            elem.setAttribute(QString("type"), QString(self.nexusType))
+            elem.setAttribute(str("type"), str(self.nexusType))
 
         self.replaceText(mindex, unicode(self.value))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         if not self.doc and doc and doc.nodeName() == "doc":
             self.removeElement(doc, mindex)
         elif self.doc:
-            newDoc = self.root.createElement(QString("doc"))
-            newText = self.root.createTextNode(QString(self.doc))
+            newDoc = self.root.createElement(str("doc"))
+            newText = self.root.createTextNode(str(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc":
                 self.replaceElement(doc, newDoc, mindex)
             else:
                 self.appendElement(newDoc, mindex)
 
-        dimens = self.node.firstChildElement(QString("dimensions"))
+        dimens = self.node.firstChildElement(str("dimensions"))
         if not self.dimensions and dimens \
                 and dimens.nodeName() == "dimensions":
             self.removeElement(dimens, mindex)
         elif self.dimensions:
-            newDimens = self.root.createElement(QString("dimensions"))
-            newDimens.setAttribute(QString("rank"),
-                                   QString(unicode(self.rank)))
+            newDimens = self.root.createElement(str("dimensions"))
+            newDimens.setAttribute(str("rank"),
+                                   str(unicode(self.rank)))
             dimDefined = True
             for i in range(min(self.rank, len(self.dimensions))):
                 if self.dimensions[i] is None:
                     dimDefined = False
             if dimDefined:
                 for i in range(min(self.rank, len(self.dimensions))):
-                    dim = self.root.createElement(QString("dim"))
-                    dim.setAttribute(QString("index"), QString(unicode(i + 1)))
+                    dim = self.root.createElement(str("dim"))
+                    dim.setAttribute(str("index"), str(unicode(i + 1)))
                     if "$datasources." not in unicode(self.dimensions[i]):
 
-                        dim.setAttribute(QString("value"),
-                                         QString(unicode(self.dimensions[i])))
+                        dim.setAttribute(str("value"),
+                                         str(unicode(self.dimensions[i])))
                     else:
                         dsText = self.root.createTextNode(
-                            QString(unicode(self.dimensions[i])))
+                            str(unicode(self.dimensions[i])))
                         dstrategy = self.root.createElement(
-                            QString("strategy"))
-                        dstrategy.setAttribute(QString("mode"),
-                                               QString(unicode("CONFIG")))
+                            str("strategy"))
+                        dstrategy.setAttribute(str("mode"),
+                                               str(unicode("CONFIG")))
                         dim.appendChild(dsText)
                         dim.appendChild(dstrategy)
                     newDimens.appendChild(dim)
@@ -403,7 +408,7 @@ class RichAttributeDlg(NodeDlg):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 

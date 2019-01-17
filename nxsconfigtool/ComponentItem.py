@@ -97,7 +97,7 @@ class ComponentItem(object):
 
 if __name__ == "__main__":
 
-    from PyQt4.QtXml import QDomNode
+    from PyQt5.QtXml import QDomNode
 
     ## DOM node
     qdn = QDomNode()

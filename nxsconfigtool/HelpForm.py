@@ -22,10 +22,11 @@
 """ help widget """
 
 
-from PyQt4.QtCore import (QUrl, Qt, SIGNAL, SLOT)
-from PyQt4.QtGui import (
-    QAction, QApplication, QDialog, QIcon,
-    QKeySequence, QLabel, QTextBrowser, QToolBar, QVBoxLayout)
+from PyQt5.QtCore import (QUrl, Qt)
+from PyQt5.QtGui import (QKeySequence, QIcon)
+from PyQt5.QtWidgets import (
+    QAction, QApplication, QDialog,
+    QLabel, QTextBrowser, QToolBar, QVBoxLayout)
 
 
 ## detail help

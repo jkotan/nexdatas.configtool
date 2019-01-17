@@ -21,7 +21,7 @@
 
 """ File slots """
 
-from PyQt4.QtGui import QKeySequence
+from PyQt5.QtGui import QKeySequence
 
 from .FileCommands import (
     ComponentOpen,

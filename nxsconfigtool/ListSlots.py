@@ -21,7 +21,7 @@
 
 """ List slots """
 
-from PyQt4.QtGui import QKeySequence
+from PyQt5.QtGui import QKeySequence
 
 from .ListCommands import (
     ComponentNew,

@@ -21,17 +21,34 @@
 
 """ widget for different types of datasources """
 
-from PyQt4.QtCore import (SIGNAL, QString, Qt, QVariant)
-from PyQt4.QtGui import (QMessageBox, QTableWidgetItem)
-from PyQt4.QtXml import (QDomDocument)
+from PyQt5.QtCore import (Qt, QVariant)
+from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem)
+from PyQt5.QtXml import (QDomDocument)
+from PyQt5 import uic
+import os
 
-from .ui.ui_clientdsdlg import Ui_ClientDsDlg
-from .ui.ui_dbdsdlg import Ui_DBDsDlg
-from .ui.ui_tangodsdlg import Ui_TangoDsDlg
-from .ui.ui_pyevaldsdlg import Ui_PyEvalDsDlg
+# from .ui.ui_clientdsdlg import Ui_ClientDsDlg
+# from .ui.ui_dbdsdlg import Ui_DBDsDlg
+# from .ui.ui_tangodsdlg import Ui_TangoDsDlg
+# from .ui.ui_pyevaldsdlg import Ui_PyEvalDsDlg
 
 from .DomTools import DomTools
 
+_clientformclass, _clientbaseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "clientdsdlg.ui"))
+
+_dbformclass, _dbbaseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "dbdsdlg.ui"))
+
+_tangoformclass, _tangobaseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "tangodsdlg.ui"))
+
+_pyevalformclass, _pyevalbaseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "pyevaldsdlg.ui"))
 
 ## CLIENT dialog impementation
 class ClientSource(object):
@@ -46,7 +63,7 @@ class ClientSource(object):
     ## \param main datasource dialog
     def __init__(self, main):
         ## widget class
-        self.widgetClass = Ui_ClientDsDlg
+        self.widgetClass = _clientformclass
         ## widget
         self.ui = None
         ##  main datasource dialog
@@ -65,10 +82,10 @@ class ClientSource(object):
     ## connects the dialog actions
     def connectWidgets(self):
         self.main.disconnect(
-            self.ui.cRecNameLineEdit, SIGNAL("textChanged(QString)"),
+            self.ui.cRecNameLineEdit, SIGNAL("textChanged(str)"),
             self.__cRecNameLineEdit)
         self.main.connect(
-            self.ui.cRecNameLineEdit, SIGNAL("textChanged(QString)"),
+            self.ui.cRecNameLineEdit, SIGNAL("textChanged(str)"),
             self.__cRecNameLineEdit)
 
     ## sets the tab order of subframe
@@ -88,7 +105,7 @@ class ClientSource(object):
     ## sets the form from the DOM node
     # \param datasource class
     def setFromNode(self, datasource):
-        record = self.main.node.firstChildElement(QString("record"))
+        record = self.main.node.firstChildElement(str("record"))
         if record.nodeName() != "record":
             QMessageBox.warning(self.main, "Internal error",
                                 "Missing <record> tag")
@@ -115,9 +132,9 @@ class ClientSource(object):
     # \param root root node
     # \param elem datasource node
     def createNodes(self, datasource, root, elem):
-        record = root.createElement(QString("record"))
+        record = root.createElement(str("record"))
         record.setAttribute(
-            QString("name"), QString(datasource.var['CLIENT'].recordName))
+            str("name"), str(datasource.var['CLIENT'].recordName))
         elem.appendChild(record)
 
 
@@ -141,7 +158,7 @@ class DBSource(object):
     ## \param main datasource dialog
     def __init__(self, main):
         ## widget class
-        self.widgetClass = Ui_DBDsDlg
+        self.widgetClass = _dbformclass
         ## widget
         self.ui = None
         ## main datasource dialog
@@ -269,10 +286,10 @@ class DBSource(object):
     ## connects the dialog actions
     def connectWidgets(self):
         self.main.disconnect(
-            self.ui.dQueryLineEdit, SIGNAL("textChanged(QString)"),
+            self.ui.dQueryLineEdit, SIGNAL("textChanged(str)"),
             self.__dQueryLineEdit)
         self.main.disconnect(
-            self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"),
+            self.ui.dParamComboBox, SIGNAL("currentIndexChanged(str)"),
             self.__dParamComboBox)
         self.main.disconnect(
             self.ui.dAddPushButton, SIGNAL("clicked()"), self.__addParameter)
@@ -285,9 +302,9 @@ class DBSource(object):
             self.__tableItemChanged)
         self.main.connect(
             self.ui.dQueryLineEdit,
-            SIGNAL("textChanged(QString)"), self.__dQueryLineEdit)
+            SIGNAL("textChanged(str)"), self.__dQueryLineEdit)
         self.main.connect(
-            self.ui.dParamComboBox, SIGNAL("currentIndexChanged(QString)"),
+            self.ui.dParamComboBox, SIGNAL("currentIndexChanged(str)"),
             self.__dParamComboBox)
         self.main.connect(
             self.ui.dAddPushButton, SIGNAL("clicked()"), self.__addParameter)
@@ -356,7 +373,7 @@ class DBSource(object):
     ## sets the form from the DOM node
     # \param datasource class
     def setFromNode(self, datasource):
-        database = self.main.node.firstChildElement(QString("database"))
+        database = self.main.node.firstChildElement(str("database"))
         if database.nodeName() != "database":
             QMessageBox.warning(self.main, "Internal error",
                                 "Missing <database> tag")
@@ -382,7 +399,7 @@ class DBSource(object):
         self.dbParam['Oracle DSN'] = unicode(text).strip() \
             if text else ""
 
-        query = self.main.node.firstChildElement(QString("query"))
+        query = self.main.node.firstChildElement(str("query"))
         if query.nodeName() != "query":
             QMessageBox.warning(self.main, "Internal error",
                                 "Missing <query> tag")
@@ -420,24 +437,24 @@ class DBSource(object):
     # \param root root node
     # \param elem datasource node
     def createNodes(self, datasource, root, elem):
-        db = root.createElement(QString("database"))
+        db = root.createElement(str("database"))
         db.setAttribute(
-            QString("dbtype"), QString(datasource.var['DB'].dbtype))
+            str("dbtype"), str(datasource.var['DB'].dbtype))
         for par in datasource.var['DB'].parameters.keys():
             if par == 'Oracle DSN':
                 newText = root.createTextNode(
-                    QString(datasource.var['DB'].parameters[par]))
+                    str(datasource.var['DB'].parameters[par]))
                 db.appendChild(newText)
             else:
-                db.setAttribute(QString(self.__idbmap[par]),
-                                QString(datasource.var['DB'].parameters[par]))
+                db.setAttribute(str(self.__idbmap[par]),
+                                str(datasource.var['DB'].parameters[par]))
         elem.appendChild(db)
 
-        query = root.createElement(QString("query"))
-        query.setAttribute(QString("format"),
-                           QString(datasource.var['DB'].dataFormat))
+        query = root.createElement(str("query"))
+        query.setAttribute(str("format"),
+                           str(datasource.var['DB'].dataFormat))
         if datasource.var['DB'].query:
-            newText = root.createTextNode(QString(datasource.var['DB'].query))
+            newText = root.createTextNode(str(datasource.var['DB'].query))
             query.appendChild(newText)
 
         elem.appendChild(query)
@@ -469,7 +486,7 @@ class TangoSource(object):
     ## \param main datasource dialog
     def __init__(self, main):
         ## widget class
-        self.widgetClass = Ui_TangoDsDlg
+        self.widgetClass = _tangoformclass
         ## widget
         self.ui = None
         ## main datasource dialog
@@ -539,23 +556,23 @@ class TangoSource(object):
     def connectWidgets(self):
         self.main.disconnect(
             self.ui.tDevNameLineEdit,
-            SIGNAL("textChanged(QString)"),
+            SIGNAL("textChanged(str)"),
             self.__tDevNameLineEdit)
         self.main.disconnect(
-            self.ui.tMemberNameLineEdit, SIGNAL("textChanged(QString)"),
+            self.ui.tMemberNameLineEdit, SIGNAL("textChanged(str)"),
             self.__tMemberNameLineEdit)
 
         self.main.connect(
-            self.ui.tDevNameLineEdit, SIGNAL("textChanged(QString)"),
+            self.ui.tDevNameLineEdit, SIGNAL("textChanged(str)"),
             self.__tDevNameLineEdit)
         self.main.connect(
-            self.ui.tMemberNameLineEdit, SIGNAL("textChanged(QString)"),
+            self.ui.tMemberNameLineEdit, SIGNAL("textChanged(str)"),
             self.__tMemberNameLineEdit)
 
     ## sets the form from the DOM node
     # \param datasource class
     def setFromNode(self, datasource):
-        record = self.main.node.firstChildElement(QString("record"))
+        record = self.main.node.firstChildElement(str("record"))
         if record.nodeName() != "record":
             QMessageBox.warning(self.main, "Internal error",
                                 "Missing <record> tag")
@@ -565,7 +582,7 @@ class TangoSource(object):
                 attributeMap.namedItem("name").nodeValue()
                 if attributeMap.contains("name") else "")
 
-        device = self.main.node.firstChildElement(QString("device"))
+        device = self.main.node.firstChildElement(str("device"))
         if device.nodeName() != "device":
             QMessageBox.warning(self.main, "Internal error",
                                 "Missing <device> tag")
@@ -620,28 +637,28 @@ class TangoSource(object):
     # \param root root node
     # \param elem datasource node
     def createNodes(self, datasource, root, elem):
-        record = root.createElement(QString("record"))
-        record.setAttribute(QString("name"),
-                            QString(datasource.var['TANGO'].memberName))
+        record = root.createElement(str("record"))
+        record.setAttribute(str("name"),
+                            str(datasource.var['TANGO'].memberName))
         elem.appendChild(record)
 
-        device = root.createElement(QString("device"))
-        device.setAttribute(QString("name"),
-                            QString(datasource.var['TANGO'].deviceName))
-        device.setAttribute(QString("member"),
-                            QString(datasource.var['TANGO'].memberType))
+        device = root.createElement(str("device"))
+        device.setAttribute(str("name"),
+                            str(datasource.var['TANGO'].deviceName))
+        device.setAttribute(str("member"),
+                            str(datasource.var['TANGO'].memberType))
         if datasource.var['TANGO'].host:
-            device.setAttribute(QString("hostname"),
-                                QString(datasource.var['TANGO'].host))
+            device.setAttribute(str("hostname"),
+                                str(datasource.var['TANGO'].host))
         if datasource.var['TANGO'].port:
-            device.setAttribute(QString("port"),
-                                QString(datasource.var['TANGO'].port))
+            device.setAttribute(str("port"),
+                                str(datasource.var['TANGO'].port))
         if datasource.var['TANGO'].encoding:
-            device.setAttribute(QString("encoding"),
-                                QString(datasource.var['TANGO'].encoding))
+            device.setAttribute(str("encoding"),
+                                str(datasource.var['TANGO'].encoding))
         if datasource.var['TANGO'].group:
-            device.setAttribute(QString("group"),
-                                QString(datasource.var['TANGO'].group))
+            device.setAttribute(str("group"),
+                                str(datasource.var['TANGO'].group))
         elem.appendChild(device)
 
 
@@ -665,7 +682,7 @@ class PyEvalSource(object):
     ## \param main datasource dialog
     def __init__(self, main):
         ## widget class
-        self.widgetClass = Ui_PyEvalDsDlg
+        self.widgetClass = _pyevalformclass
         ## widget
         self.ui = None
         ## main datasource dialog
@@ -704,7 +721,7 @@ class PyEvalSource(object):
     ## sets the form from the DOM node
     # \param datasource class
     def setFromNode(self, datasource):
-        res = self.main.node.firstChildElement(QString("result"))
+        res = self.main.node.firstChildElement(str("result"))
         text = DomTools.getText(res)
         while len(text) > 0 and text[0] == '\n':
             text = text[1:]
@@ -719,7 +736,7 @@ class PyEvalSource(object):
             if unicode(ds).strip() else []
         datasource.var['PYEVAL'].dataSources = {}
         child = self.main.node.firstChildElement(
-            QString("datasource"))
+            str("datasource"))
         while not child.isNull():
             if child.nodeName() == 'datasource':
                 attributeMap = child.attributes()
@@ -760,15 +777,15 @@ class PyEvalSource(object):
     # \param root root node
     # \param elem datasource node
     def createNodes(self, datasource, root, elem):
-        res = root.createElement(QString("result"))
+        res = root.createElement(str("result"))
         rn = str(datasource.var['PYEVAL'].result).strip()
         if rn:
             res.setAttribute(
-                QString("name"),
-                QString(rn[3:] if (len(rn) > 3 and rn[:3] == 'ds.') else rn))
+                str("name"),
+                str(rn[3:] if (len(rn) > 3 and rn[:3] == 'ds.') else rn))
         if datasource.var['PYEVAL'].script:
             script = root.createTextNode(
-                QString(
+                str(
                     datasource.var['PYEVAL'].script if (
                         len(datasource.var['PYEVAL'].script) > 0 and
                         datasource.var['PYEVAL'].script[0] == '\n') else (
@@ -796,7 +813,7 @@ class PyEvalSource(object):
                 else:
                     newds = "\n ".join([newds, "$datasources." + name])
 
-            newText = root.createTextNode(QString(newds))
+            newText = root.createTextNode(str(newds))
             elem.appendChild(newText)
 
 

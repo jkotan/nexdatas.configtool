@@ -21,15 +21,19 @@
 
 """ dimensions widget """
 
-from PyQt4.QtCore import (SIGNAL, Qt, QVariant)
-from PyQt4.QtGui import (QTableWidgetItem, QMessageBox, QDialog)
+from PyQt5.QtCore import (Qt, QVariant)
+from PyQt5.QtWidgets import (QTableWidgetItem, QMessageBox, QDialog)
+from PyQt5 import uic
 
-from .ui.ui_dimensionsdlg import Ui_DimensionsDlg
+import os
 
 import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "dimensionsdlg.ui"))
 
 ## dialog defining a dimensions tag
 class DimensionsDlg(QDialog):
@@ -45,7 +49,7 @@ class DimensionsDlg(QDialog):
         self.lengths = []
 
         ## user interface
-        self.ui = Ui_DimensionsDlg()
+        self.ui = _formclass()
 
         ## allowed subitems
         self.subItems = ["dim"]
@@ -169,7 +173,7 @@ class DimensionsDlg(QDialog):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 

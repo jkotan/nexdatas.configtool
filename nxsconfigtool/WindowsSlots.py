@@ -21,8 +21,8 @@
 
 """ Windows slots """
 
-from PyQt4.QtGui import QKeySequence
-from PyQt4.QtCore import (QSignalMapper, Qt, SIGNAL, SLOT)
+from PyQt5.QtGui import QKeySequence
+from PyQt5.QtCore import (QSignalMapper, Qt)
 
 from .DataSourceDlg import CommonDataSourceDlg
 from .ComponentDlg import ComponentDlg

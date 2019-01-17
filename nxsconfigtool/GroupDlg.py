@@ -22,11 +22,13 @@
 """ group widget """
 
 import copy
+import os
 
-from PyQt4.QtCore import (SIGNAL, QString, Qt, QVariant, QModelIndex)
-from PyQt4.QtGui import (QMessageBox, QTableWidgetItem, QCompleter)
+from PyQt5.QtCore import (Qt, QVariant, QModelIndex)
+from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem, QCompleter)
+from PyQt5 import uic
 
-from .ui.ui_groupdlg import Ui_GroupDlg
+# from .ui.ui_groupdlg import Ui_GroupDlg
 from .AttributeDlg import AttributeDlg
 from .NodeDlg import NodeDlg
 from .DomTools import DomTools
@@ -35,6 +37,9 @@ import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "mainwindow.ui"))
 
 ## dialog defining a group tag
 class GroupDlg(NodeDlg):
@@ -117,7 +122,7 @@ class GroupDlg(NodeDlg):
         ]
 
         ## user interface
-        self.ui = Ui_GroupDlg()
+        self.ui = _formclass()
 
     ## updates the group dialog
     # \brief It sets the form local variables
@@ -141,7 +146,7 @@ class GroupDlg(NodeDlg):
     def createGUI(self):
         self.ui.setupUi(self)
         completer = QCompleter(
-            [QString(tp) for tp in self.typehelper],
+            [str(tp) for tp in self.typehelper],
             self)
         self.ui.typeLineEdit.setCompleter(completer)
         self.updateForm()
@@ -162,7 +167,7 @@ class GroupDlg(NodeDlg):
             self.__removeAttribute)
 
         self.connect(
-            self.ui.typeLineEdit, SIGNAL("textEdited(QString)"),
+            self.ui.typeLineEdit, SIGNAL("textEdited(str)"),
             self.__updateUi)
 
     ## provides the state of the group dialog
@@ -215,7 +220,7 @@ class GroupDlg(NodeDlg):
                 self.attributes[attrName] = unicode(attribute.nodeValue())
                 self.__attributes[attrName] = unicode(attribute.nodeValue())
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
@@ -339,19 +344,19 @@ class GroupDlg(NodeDlg):
         for _ in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         if self.name:
-            elem.setAttribute(QString("name"), QString(self.name))
+            elem.setAttribute(str("name"), str(self.name))
         if self.nexusType:
-            elem.setAttribute(QString("type"), QString(self.nexusType))
+            elem.setAttribute(str("type"), str(self.nexusType))
 
         for attr in self.attributes.keys():
-            elem.setAttribute(QString(attr), QString(self.attributes[attr]))
+            elem.setAttribute(str(attr), str(self.attributes[attr]))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         if not self.doc and doc and doc.nodeName() == "doc":
             self.removeElement(doc, mindex)
         elif self.doc:
-            newDoc = self.root.createElement(QString("doc"))
-            newText = self.root.createTextNode(QString(self.doc))
+            newDoc = self.root.createElement(str("doc"))
+            newText = self.root.createTextNode(str(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc":
                 self.replaceElement(doc, newDoc, mindex)
@@ -361,7 +366,7 @@ class GroupDlg(NodeDlg):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 

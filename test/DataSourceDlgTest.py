@@ -28,11 +28,11 @@ import struct
 import binascii
 import time
 
-from PyQt4.QtTest import QTest
-from PyQt4.QtGui import (QApplication, QMessageBox, QTableWidgetItem, QPushButton)
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString, QModelIndex
-from PyQt4.QtXml import QDomNode, QDomDocument, QDomElement
+from PyQt5.QtTest import QTest
+from PyQt5.QtGui import (QApplication, QMessageBox, QTableWidgetItem, QPushButton)
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtCore import Qt, QTimer, SIGNAL, QObject, QVariant, QString, QModelIndex
+from PyQt5.QtXml import QDomNode, QDomDocument, QDomElement
 
 
 from nxsconfigtool.DataSourceDlg import DataSourceDlg, CommonDataSourceDlg

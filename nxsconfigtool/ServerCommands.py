@@ -21,9 +21,9 @@
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox, QUndoCommand, QProgressDialog)
+from PyQt5.QtWidgets import (QMessageBox, QUndoCommand, QProgressDialog)
 
-from PyQt4.QtCore import (Qt, QString)
+from PyQt5.QtCore import (Qt)
 
 from .DataSourceDlg import (CommonDataSourceDlg)
 from . import DataSource
@@ -146,7 +146,7 @@ class ServerCPCreate(QUndoCommand):
         cpEdit.createGUI()
 
         cpEdit.name = name
-        cpEdit.set(QString(xml), True)
+        cpEdit.set(str(xml), True)
         cpEdit.savedXML = None
         cp.name = cpEdit.name
         cp.instance = cpEdit
@@ -190,7 +190,7 @@ class ServerCPCreate(QUndoCommand):
         dsEdit.directory = self.receiver.sourceList.directory
         dsEdit.name = name
 
-        dsEdit.set(QString(xml), True)
+        dsEdit.set(str(xml), True)
         if hasattr(dsEdit, "connectExternalActions"):
             dsEdit.connectExternalActions(
                 **self.receiver.externalDSActions)
@@ -282,7 +282,7 @@ class ServerSCPCreate(QUndoCommand):
         cpEdit.createGUI()
 
         cpEdit.name = name
-        cpEdit.set(QString(xml), True)
+        cpEdit.set(str(xml), True)
         cpEdit.savedXML = None
         cp.name = cpEdit.name
         cp.instance = cpEdit
@@ -326,7 +326,7 @@ class ServerSCPCreate(QUndoCommand):
         dsEdit.directory = self.receiver.sourceList.directory
         dsEdit.name = name
 
-        dsEdit.set(QString(xml), True)
+        dsEdit.set(str(xml), True)
         if hasattr(dsEdit, "connectExternalActions"):
             dsEdit.connectExternalActions(
                 **self.receiver.externalDSActions)
@@ -397,7 +397,7 @@ class ServerDSCreate(QUndoCommand):
                             keys = cc.datasources.keys()
                             progress = QProgressDialog(
                                 "Storing DataSource elements",
-                                QString(), 0, len(keys),
+                                str(), 0, len(keys),
                                 self.receiver.sourceList)
                             progress.setWindowTitle(
                                 "Store Created DataSources")
@@ -429,7 +429,7 @@ class ServerDSCreate(QUndoCommand):
         dsEdit.directory = self.receiver.sourceList.directory
         dsEdit.name = name
 
-        dsEdit.set(QString(xml), True)
+        dsEdit.set(str(xml), True)
         if hasattr(dsEdit, "connectExternalActions"):
             dsEdit.connectExternalActions(
                 **self.receiver.externalDSActions)
@@ -1113,7 +1113,7 @@ class ServerStoreAllComponents(QUndoCommand):
         keys = self.receiver.componentList.elements.keys()
         progress = QProgressDialog(
             "Storing Component elements",
-            QString(), 0, len(keys), self.receiver.componentList)
+            str(), 0, len(keys), self.receiver.componentList)
         progress.setWindowTitle("Store All Components")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
@@ -1191,7 +1191,7 @@ class ServerStoreAllDataSources(QUndoCommand):
         keys = self.receiver.sourceList.elements.keys()
         progress = QProgressDialog(
             "Storing DataSource elements",
-            QString(), 0, len(keys), self.receiver.sourceList)
+            str(), 0, len(keys), self.receiver.sourceList)
         progress.setWindowTitle("Store All DataSources")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()

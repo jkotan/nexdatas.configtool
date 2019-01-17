@@ -20,17 +20,21 @@
 # Attribute dialog class
 
 """ attribute dialog """
+import os
 
-from PyQt4.QtGui import (QDialog, QDialogButtonBox, QMessageBox)
-from PyQt4.QtCore import SIGNAL
+from PyQt5.QtWidgets import (QDialog, QDialogButtonBox, QMessageBox)
+from PyQt5 import uic
 
-from .ui.ui_attributedlg import Ui_AttributeDlg
+# from .ui.ui_attributedlg import Ui_AttributeDlg
 from .Errors import CharacterError
 
 import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "attributedlg.ui"))
 
 ## dialog defining a tag attribute
 class AttributeDlg(QDialog):
@@ -46,7 +50,7 @@ class AttributeDlg(QDialog):
         self.value = u''
 
         ## user interface
-        self.ui = Ui_AttributeDlg()
+        self.ui = _classform()
         self.ui.setupUi(self)
 
         self.__updateUi()
@@ -85,7 +89,7 @@ class AttributeDlg(QDialog):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 

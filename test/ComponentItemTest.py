@@ -28,7 +28,7 @@ import struct
 import binascii
 import time
 
-from PyQt4.QtXml import QDomNode, QDomDocument
+from PyQt5.QtXml import QDomNode, QDomDocument
 
 from nxsconfigtool.ComponentItem import ComponentItem
 

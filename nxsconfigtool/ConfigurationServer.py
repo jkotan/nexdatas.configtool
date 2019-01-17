@@ -243,7 +243,7 @@ class ConfigurationServer(object):
 ## test function
 def test():
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     app = QApplication(sys.argv)
     cs = ConfigurationServer()

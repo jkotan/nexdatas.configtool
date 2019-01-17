@@ -25,7 +25,7 @@ import sys
 import unittest
 
 
-from PyQt4.QtGui import QApplication
+from PyQt5.QtGui import QApplication
 
 
 import AttributeDlgTest

@@ -22,17 +22,23 @@
 """ datasource list widget """
 import os
 
-from PyQt4.QtCore import (Qt, QString, QVariant)
-from PyQt4.QtGui import (QWidget, QMenu, QMessageBox, QListWidgetItem,
-                         QProgressDialog)
+from PyQt5.QtCore import (Qt, QVariant)
+from PyQt5.QtWidgets import (QWidget, QMenu, QMessageBox, QListWidgetItem,
+                             QProgressDialog)
+from PyQt5 import uic
 
-from .ui.ui_elementlist import Ui_ElementList
+# from .ui.ui_elementlist import Ui_ElementList
 from .LabeledObject import LabeledObject
+
+
 
 import logging
 ## message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "elementlist.ui"))
 
 ## dialog defining a group tag
 class ElementList(QWidget):
@@ -52,7 +58,7 @@ class ElementList(QWidget):
         self._actions = []
 
         ## user interface
-        self.ui = Ui_ElementList()
+        self.ui = _formclass()
 
         ## widget title
         self.title = "Elements"
@@ -182,7 +188,7 @@ class ElementList(QWidget):
         slist.sort()
 
         for name, el in slist:
-            item = QListWidgetItem(QString("%s" % name))
+            item = QListWidgetItem(str("%s" % name))
             item.setData(Qt.UserRole, QVariant(self.elements[el].id))
             item.setFlags(item.flags() | Qt.ItemIsEditable)
             dirty = False
@@ -242,7 +248,7 @@ class ElementList(QWidget):
         keys = elements.keys()
         progress = QProgressDialog(
             "Setting %s elements" % self.clName,
-            QString(), 0, len(keys), self)
+            str(), 0, len(keys), self)
         progress.setWindowTitle("Set Elements")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
@@ -325,7 +331,7 @@ class ElementList(QWidget):
 
         progress = QProgressDialog(
             "Loading %s elements" % self.clName,
-            QString(), 0, len(dirList), self)
+            str(), 0, len(dirList), self)
         progress.setWindowTitle("Load Elements")
         progress.setWindowModality(Qt.WindowModal)
         progress.forceShow()
@@ -353,7 +359,7 @@ class ElementList(QWidget):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 

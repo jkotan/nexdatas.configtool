@@ -145,6 +145,10 @@ release = ITOOL.__version__
 version = ".".join(release.split(".")[:2])
 name = "NXS Component Designer"
 
+#: (:obj:`dict` <:obj:`str`, :obj:`list` <:obj:`str`> > ) package data
+package_data = {
+    'nxsconfigtool': ['ui/*.ui', 'qrc/*.rcc']
+}
 
 
 #: metadata for distutils
@@ -162,7 +166,8 @@ SETUPDATA = dict(
     keywords="configuration writer Tango component nexus data",
     url="https://github.com/jkotan/nexdatas/",
     platforms=("Linux", " Windows", " MacOS "),
-    packages=[TOOL, UIDIR, QRCDIR],
+    packages=[TOOL, QRCDIR],
+    package_data=package_data,
     scripts=get_scripts(SCRIPTS),
     zip_safe=False,
     setup_requires=pytest_runner,

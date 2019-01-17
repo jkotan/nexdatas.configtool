@@ -15,19 +15,20 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file DataSource.py
+# \package nxsconfigtool nexdatas
+# \file DataSource.py
 # Data Source data class
 
 """ Provides datasource widget data"""
 
 import os
 import copy
+import sys
 
 from PyQt5.QtCore import (QModelIndex, QFileInfo, QFile,
                           QIODevice, QTextStream)
 from PyQt5.QtWidgets import (QApplication, QFileDialog, QMessageBox,
-                         QWidget)
+                             QWidget)
 from PyQt5.QtXml import (QDomDocument)
 
 from .NodeDlg import NodeDlg
@@ -36,57 +37,60 @@ from . import DataSourceDlg
 from .DataSourceMethods import DataSourceMethods
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+if sys.version_info > (3,):
+    unicode = str
 
-## class with datasource variables
+
+# class with datasource variables
 class Variables(object):
     pass
 
 
-## dialog defining datasource
+# dialog defining datasource
 class CommonDataSource(object):
 
-    ## constructor
+    # constructor
     def __init__(self, parent):
 
-        ## data source type
+        # data source type
         self.dataSourceType = 'CLIENT'
-        ## attribute doc
+        # attribute doc
         self.doc = u''
 
-        ## datasource dialog
+        # datasource dialog
         self.dialog = NodeDlg(parent)
 
-        ## datasource name
+        # datasource name
         self.dataSourceName = u''
 
-        ## external save method
+        # external save method
         self.externalSave = None
-        ## external store method
+        # external store method
         self.externalStore = None
-        ## external close method
+        # external close method
         self.externalClose = None
-        ## external apply method
+        # external apply method
         self.externalApply = None
 
-        ## applied flag
+        # applied flag
         self.applied = False
 
-        ## datasource id
+        # datasource id
         self.id = None
 
-        ## if datasource in the component tree
+        # if datasource in the component tree
         self.tree = False
 
-        ## datasource variables
+        # datasource variables
         self.var = {}
 
-        ## creates variables dynamically
+        # creates variables dynamically
         self.clear()
 
-    ## clears the datasource content
+    # clears the datasource content
     # \brief It sets the datasource variables to default values
     def clear(self):
         for ds, cl in DataSourceDlg.dsTypes.items():
@@ -94,7 +98,7 @@ class CommonDataSource(object):
             for vr in cl.var.keys():
                 setattr(self.var[ds], vr, cl.var[vr])
 
-    ## provides the state of the datasource dialog
+    # provides the state of the datasource dialog
     # \returns state of the datasource in tuple
     def getState(self):
         state = [self.dataSourceType,
@@ -109,7 +113,7 @@ class CommonDataSource(object):
                     if ((type(vv) is list) or (type(vv) is dict)) else vv)
         return tuple(state)
 
-    ## sets the state of the datasource dialog
+    # sets the state of the datasource dialog
     # \brief note that ids, applied and tree are not in the state
     # \param state state datasource written in tuple
     def setState(self, state):
@@ -127,40 +131,40 @@ class CommonDataSource(object):
                 cnt += 1
 
 
-## dialog defining datasource
+# dialog defining datasource
 class DataSource(CommonDataSource):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(DataSource, self).__init__(parent)
 
-        ## dialog parent
+        # dialog parent
         self.parent = parent
 
-        ## datasource dialog
+        # datasource dialog
         self.dialog = DataSourceDlg.CommonDataSourceDlg(self, parent)
 
-        ## datasource methods
+        # datasource methods
         self.__methods = DataSourceMethods(self.dialog, self, self.parent)
 
-        ## datasource directory
+        # datasource directory
         self.directory = ""
 
-        ## datasource file name
+        # datasource file name
         self.name = None
 
-        ## DOM document
+        # DOM document
         self.document = None
-        ## saved XML
+        # saved XML
         self.savedXML = None
 
-        ## sub components
+        # sub components
         self.components = []
-        ## sub datasources
+        # sub datasources
         self.datasources = []
 
-    ## fetches $datasources and $components from xml
+    # fetches $datasources and $components from xml
     # \brief populate components and datasources
     def fetchElements(self):
         dss = set()
@@ -171,7 +175,7 @@ class DataSource(CommonDataSource):
             dss = set(DomTools.findElements(xml, "datasources"))
         self.datasources = list(dss)
 
-    ## creates dialog
+    # creates dialog
     # \brief It creates dialog, its GUI , updates Nodes and Form
     def createDialog(self):
         self.dialog = DataSourceDlg.CommonDataSourceDlg(self, self.parent)
@@ -181,7 +185,7 @@ class DataSource(CommonDataSource):
         self.updateForm()
         self.updateNode()
 
-    ## clears the datasource content
+    # clears the datasource content
     # \brief It sets the datasource variables to default values
     def clear(self):
         CommonDataSource.clear(self)
@@ -191,32 +195,32 @@ class DataSource(CommonDataSource):
                 if hasattr(ds, "clear"):
                     ds.clear()
 
-    ## checks if not saved
+    # checks if not saved
     # \returns True if it is not saved
     def isDirty(self):
         string = self.get()
         return False if string == self.savedXML else True
 
-    ## provides the datasource in xml string
+    # provides the datasource in xml string
     # \returns xml string
     def get(self, indent=0):
         if hasattr(self.document, "toString"):
             return unicode(self.document.toString(indent))
 
-    ## sets file name of the datasource and its directory
+    # sets file name of the datasource and its directory
     # \param name name of the datasource
     # \param directory directory of the datasources
     def setName(self, name, directory):
         self.name = unicode(name)
         if not self.dataSourceName:
-            ## datasource name
+            # datasource name
             self.dataSourceName = self.name
             self.dialog.ui.nameLineEdit.setText(self.name)
             self.dialog.imp['CLIENT'].ui.cRecNameLineEdit.setText(self.name)
         if directory:
             self.directory = unicode(directory)
 
-    ## loads datasources from default file directory
+    # loads datasources from default file directory
     # \param fname optional file name
     def load(self, fname=None):
         if fname is None:
@@ -265,17 +269,17 @@ class DataSource(CommonDataSource):
             try:
                 self.createGUI()
 
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(self.parent, "dialog not created",
                                     "Problems in creating a dialog %s :\n\n%s"
                                     % (self.name, unicode(e)))
 
-        except (IOError, OSError, ValueError), e:
+        except (IOError, OSError, ValueError) as e:
             error = "Failed to load: %s" % e
             logger.warn(error)
             QMessageBox.warning(self.parent, "Saving problem", error)
 
-        except Exception, e:
+        except Exception as e:
             QMessageBox.warning(self.parent, "Saving problem", e)
             logger.warn(str(e))
         finally:
@@ -285,7 +289,7 @@ class DataSource(CommonDataSource):
         if fh is not None:
             return filename
 
-    ## repairs xml datasources
+    # repairs xml datasources
     # \param xml xml string
     # \returns repaired xml
     def repair(self, xml):
@@ -316,7 +320,7 @@ class DataSource(CommonDataSource):
         self.fetchElements()
         return newdoc.toString(0)
 
-    ## sets datasources from xml string
+    # sets datasources from xml string
     # \param xml xml string
     # \param new True if datasource is not saved
     def set(self, xml, new=False):
@@ -337,13 +341,13 @@ class DataSource(CommonDataSource):
                 self.savedXML = self.document.toString(0)
         try:
             self.createGUI()
-        except Exception, e:
+        except Exception as e:
             QMessageBox.warning(self, "dialog not created",
                                 "Problems in creating a dialog %s :\n\n%s"
                                 % (self.name, unicode(e)))
         self.fetchElements()
 
-    ## accepts and save input text strings
+    # accepts and save input text strings
     # \brief It copies the parameters and saves the dialog
     def save(self):
 
@@ -363,7 +367,7 @@ class DataSource(CommonDataSource):
                 document.setContent(xml)
                 stream << document.toString(2)
                 self.savedXML = document.toString(0)
-            except (IOError, OSError, ValueError), e:
+            except (IOError, OSError, ValueError) as e:
                 error = "Failed to save: %s " % e \
                     + "Please try to use Save As command " \
                     + "or change the datasource directory"
@@ -376,7 +380,7 @@ class DataSource(CommonDataSource):
         if not error:
             return True
 
-    ## provides the datasource name with its path
+    # provides the datasource name with its path
     # \returns datasource name with its path
     def getNewName(self):
         filename = unicode(
@@ -387,56 +391,56 @@ class DataSource(CommonDataSource):
         logger.info("saving in %s" % (filename))
         return filename
 
-    ## gets the current view
+    # gets the current view
     # \returns the current view
     def __getview(self):
         if self.dialog and hasattr(self.parent, "view"):
             return self.dialog.view
 
-    ## sets the current view
+    # sets the current view
     # \param view value to be set
     def __setview(self, view):
         if self.dialog and hasattr(self.dialog, "view"):
             self.dialog.view = view
 
-    ## attribute value
+    # attribute value
     view = property(__getview, __setview)
 
-    ## gets the current root
+    # gets the current root
     # \returns the current root
     def __getroot(self):
         if self.dialog and hasattr(self.dialog, "root"):
             return self.dialog.root
 
-    ## sets the current root
+    # sets the current root
     # \param root value to be set
     def __setroot(self, root):
         if self.dialog and hasattr(self.dialog, "root"):
             self.dialog.root = root
 
-    ## attribute value
+    # attribute value
     root = property(__getroot, __setroot)
 
-    ## shows dialog
+    # shows dialog
     # \brief It adapts the dialog method
     def show(self):
         if hasattr(self, "datasource") and self.dialog:
             if self.dialog:
                 return self.dialog.show()
 
-    ## clears the dialog
+    # clears the dialog
     # \brief clears the dialog
     def clearDialog(self):
         if hasattr(self, "_DataSource__methods") and self.__methods:
             return self.__methods.setDialog(None)
 
-    ## updates the form
+    # updates the form
     # \brief abstract class
     def updateForm(self):
         if hasattr(self, "_DataSource__methods") and self.__methods:
             return self.__methods.updateForm()
 
-    ## updates the node
+    # updates the node
     # \brief abstract class
     def updateNode(self, index=QModelIndex()):
         if hasattr(self, "_DataSource__methods") and self.__methods:
@@ -444,19 +448,19 @@ class DataSource(CommonDataSource):
             self.fetchElements()
             return res
 
-    ## creates GUI
+    # creates GUI
     # \brief abstract class
     def createGUI(self):
         if hasattr(self, "_DataSource__methods") and self.__methods:
             return self.__methods.createGUI()
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         if hasattr(self, "_DataSource__methods") and self.__methods:
             return self.__methods.setFromNode(node)
 
-    ## creates datasource node
+    # creates datasource node
     # \param external True if it should be create on a local DOM root,
     #        i.e. in component tree
     # \returns created DOM node
@@ -466,7 +470,7 @@ class DataSource(CommonDataSource):
             self.fetchElements()
             return res
 
-    ## accepts input text strings
+    # accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
         if hasattr(self, "_DataSource__methods") and self.__methods:
@@ -474,13 +478,13 @@ class DataSource(CommonDataSource):
             self.fetchElements()
             return res
 
-    ## sets the tree mode used in ComponentDlg without save/close buttons
+    # sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode
     def treeMode(self, enable=True):
         if hasattr(self, "_DataSource__methods") and self.__methods:
             return self.__methods.treeMode(enable)
 
-    ## connects the save action and stores the apply action
+    # connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action
     # \param externalClose close action
@@ -491,19 +495,19 @@ class DataSource(CommonDataSource):
             return self.__methods.connectExternalActions(
                 externalApply, externalSave, externalClose, externalStore)
 
-    ## reconnects save actions
+    # reconnects save actions
     # \brief It reconnects the save action
     def reconnectSaveAction(self):
         if hasattr(self, "_DataSource__methods") and self.__methods:
             return self.__methods.reconnectSaveAction()
 
-    ## copies the datasource to the clipboard
+    # copies the datasource to the clipboard
     # \brief It copies the current datasource to the clipboard
     def copyToClipboard(self):
         if hasattr(self, "_DataSource__methods") and self.__methods:
             return self.__methods.copyToClipboard()
 
-    ## copies the datasource from the clipboard to the current
+    # copies the datasource from the clipboard to the current
     #  datasource dialog
     # \return status True on success
     def copyFromClipboard(self):
@@ -512,7 +516,7 @@ class DataSource(CommonDataSource):
             self.fetchElements()
             return res
 
-    ## creates the new empty header
+    # creates the new empty header
     # \brief It clean the DOM tree and put into it xml and definition nodes
     def createHeader(self):
         if hasattr(self, "_DataSource__methods") and self.__methods:
@@ -520,15 +524,16 @@ class DataSource(CommonDataSource):
             self.fetchElements()
             return res
 
+
 if __name__ == "__main__":
     import sys
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## data source form
+    # data source form
     w = QWidget()
     w.show()
-    ## the first datasource form
+    # the first datasource form
     form = DataSource(w)
 
 #    form.dataSourceType = 'CLIENT'
@@ -547,7 +552,7 @@ if __name__ == "__main__":
 #    form.dataSourceType = 'DB'
 #    form.dbType = 'PGSQL'
 #    form.dbDataFormat = 'SPECTRUM'
-##    form.dbParameters = {'DB name':'tango', 'DB user':'tangouser'}
+#    form.dbParameters = {'DB name':'tango', 'DB user':'tangouser'}
 
     form.createGUI()
 

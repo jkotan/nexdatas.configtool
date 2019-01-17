@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file ConnectDlgTest.py
+# \package test nexdatas
+# \file ConnectDlgTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -35,20 +35,20 @@ from PyQt5.QtCore import Qt, QTimer, SIGNAL, QObject
 
 from nxsconfigtool.ConnectDlg import ConnectDlg
 
-##  Qt-application
+#  Qt-application
 app = None
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
 
 
-## test fixture
+# test fixture
 class ConnectDlgTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
@@ -58,9 +58,9 @@ class ConnectDlgTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
-        ## MessageBox text
+        # MessageBox text
         self.text = None
-        ## MessageBox title
+        # MessageBox title
         self.title = None
 
         try:
@@ -71,19 +71,19 @@ class ConnectDlgTest(unittest.TestCase):
         self.__rnd = random.Random(self.__seed)
 
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
         print "SEED =", self.__seed 
         
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
@@ -96,7 +96,7 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.result(),0)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_createGUI_withhost(self):
         fun = sys._getframe().f_code.co_name
@@ -148,7 +148,7 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.result(),1)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_createGUI(self):
         fun = sys._getframe().f_code.co_name
@@ -208,7 +208,7 @@ class ConnectDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_createGUI_accept(self):
         fun = sys._getframe().f_code.co_name
@@ -260,7 +260,7 @@ class ConnectDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_createGUI_port(self):
         fun = sys._getframe().f_code.co_name
@@ -314,7 +314,7 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.result(),0)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_createGUI_nohost(self):
         fun = sys._getframe().f_code.co_name
@@ -366,7 +366,7 @@ class ConnectDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_createGUI_noport(self):
         fun = sys._getframe().f_code.co_name
@@ -421,7 +421,7 @@ class ConnectDlgTest(unittest.TestCase):
         
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_createGUI_updateForm(self):
         fun = sys._getframe().f_code.co_name

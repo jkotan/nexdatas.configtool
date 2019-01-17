@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file ComponentModelTest.py
+# \package test nexdatas
+# \file ComponentModelTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -36,14 +36,14 @@ from nxsconfigtool.ComponentItem import ComponentItem
 
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-## test fixture
+# test fixture
 class ComponentModelTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
@@ -53,11 +53,11 @@ class ComponentModelTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
-        ## MessageBox text
+        # MessageBox text
         self.text = None
-        ## MessageBox title
+        # MessageBox title
         self.title = None
-        ## action status
+        # action status
         self.performed = False
 
 
@@ -71,7 +71,7 @@ class ComponentModelTest(unittest.TestCase):
         self.__rnd = random.Random(self.__seed)
 
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
@@ -79,13 +79,13 @@ class ComponentModelTest(unittest.TestCase):
         
 
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
@@ -132,7 +132,7 @@ class ComponentModelTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_headerData(self):
         fun = sys._getframe().f_code.co_name
@@ -228,7 +228,7 @@ class ComponentModelTest(unittest.TestCase):
         self.assertEqual(hd.toString(), 'Attributes')
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_data(self):
         fun = sys._getframe().f_code.co_name
@@ -275,7 +275,7 @@ class ComponentModelTest(unittest.TestCase):
         self.assertEqual(dt.toString(), '#document')
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_data_name(self):
         fun = sys._getframe().f_code.co_name

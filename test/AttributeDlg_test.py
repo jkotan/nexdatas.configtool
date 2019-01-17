@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file AttributeDlgTest.py
+# \package test nexdatas
+# \file AttributeDlgTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -38,20 +38,20 @@ from nxsconfigtool.AttributeDlg import AttributeDlg
 from nxsconfigtool.ui.ui_attributedlg import Ui_AttributeDlg
 
 
-##  Qt-application
+#  Qt-application
 app = None
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
 
 
-## test fixture
+# test fixture
 class AttributeDlgTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
@@ -61,9 +61,9 @@ class AttributeDlgTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
-        ## MessageBox text
+        # MessageBox text
         self.text = None
-        ## MessageBox title
+        # MessageBox title
         self.title = None
 
 
@@ -75,7 +75,7 @@ class AttributeDlgTest(unittest.TestCase):
         self.__rnd = random.Random(self.__seed)
 
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
@@ -83,12 +83,12 @@ class AttributeDlgTest(unittest.TestCase):
         
 
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_accept(self):
         fun = sys._getframe().f_code.co_name
@@ -125,7 +125,7 @@ class AttributeDlgTest(unittest.TestCase):
         self.assertEqual(form.result(),1)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_reject(self):
         fun = sys._getframe().f_code.co_name
@@ -160,7 +160,7 @@ class AttributeDlgTest(unittest.TestCase):
         mb.close()
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_accept_dash(self):
         fun = sys._getframe().f_code.co_name
@@ -202,7 +202,7 @@ class AttributeDlgTest(unittest.TestCase):
         self.assertEqual(form.result(),0)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_accept_chars(self):
         fun = sys._getframe().f_code.co_name

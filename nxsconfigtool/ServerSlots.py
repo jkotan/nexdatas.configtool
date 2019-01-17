@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ServerSlots.py
+# \package nxsconfigtool nexdatas
+# \file ServerSlots.py
 # user pool commands of GUI application
 
 """ Server slots """
@@ -52,18 +52,18 @@ from .ItemCommands import (
 )
 
 
-## stack with the application commands
+# stack with the application commands
 class ServerSlots(object):
 
-    ## constructor
+    # constructor
     # \param main the main window dialog
     def __init__(self, main):
-        ## main window
+        # main window
         self.main = main
-        ## command stack
+        # command stack
         self.undoStack = main.undoStack
 
-        ## action data
+        # action data
         self.actions = {
             "actionConnectServer": [
                 "&Connect ...", "serverConnect",
@@ -142,41 +142,41 @@ class ServerSlots(object):
                 "Close connection to the configuration server"]
         }
 
-    ## connect server action
+    # connect server action
     # \brief It connects to configuration server
     def serverConnect(self):
         cmd = ServerConnect(self.main)
         self.undoStack.push(cmd)
 
-    ## create component action
+    # create component action
     # \brief It creates components and datasources from online.xml
     def serverCPCreate(self):
         cmd = ServerCPCreate(self.main)
         cmd.redo()
         self.undoStack.clear()
 
-    ## create standard component action
+    # create standard component action
     # \brief It creates stamdard components and datasources from online.xml
     def serverSCPCreate(self):
         cmd = ServerSCPCreate(self.main)
         cmd.redo()
         self.undoStack.clear()
 
-    ## create datasources action
+    # create datasources action
     # \brief It creates all known datasources from online.xml
     def serverDSCreate(self):
         cmd = ServerDSCreate(self.main)
         cmd.redo()
         self.undoStack.clear()
 
-    ## fetch server components action
+    # fetch server components action
     # \brief It fetches components from the configuration server
     def serverFetchComponents(self):
         cmd = ServerFetchComponents(self.main)
         cmd.redo()
         self.undoStack.clear()
 
-    ## store server component action executed by button
+    # store server component action executed by button
     # \brief It stores the current component
     #        in the configuration server executed by button
     def serverStoreComponentButton(self):
@@ -185,7 +185,7 @@ class ServerSlots(object):
             self.undoStack.push(cmd)
             self.serverStoreComponent(False)
 
-    ## store server component action
+    # store server component action
     # \brief It stores the current component in the configuration server
     def serverStoreComponent(self, focus=True):
         cmd = ComponentEdit(self.main)
@@ -197,7 +197,7 @@ class ServerSlots(object):
         if focus:
             self.main.componentList.setItemFocus()
 
-    ## store server all components action
+    # store server all components action
     # \brief It stores all components in the configuration server
     def serverStoreAllComponents(self):
         cmd = ComponentApplyItem(self.main)
@@ -205,39 +205,39 @@ class ServerSlots(object):
         cmd.redo()
         self.undoStack.clear()
 
-    ## delete server component action
+    # delete server component action
     # \brief It deletes the current component from the configuration server
     def serverDeleteComponent(self):
         cmd = ServerDeleteComponent(self.main)
         cmd.redo()
         self.main.componentList.setItemFocus()
 
-    ## set component mandatory action
+    # set component mandatory action
     # \brief It sets the current component as mandatory
     def serverSetMandatoryComponent(self):
         cmd = ServerSetMandatoryComponent(self.main)
         cmd.redo()
 
-    ## get mandatory components action
+    # get mandatory components action
     # \brief It fetches mandatory components
     def serverGetMandatoryComponents(self):
         cmd = ServerGetMandatoryComponents(self.main)
         cmd.redo()
 
-    ## unset component mandatory action
+    # unset component mandatory action
     # \brief It unsets the current component as mandatory
     def serverUnsetMandatoryComponent(self):
         cmd = ServerUnsetMandatoryComponent(self.main)
         cmd.redo()
 
-    ## fetch server datasources action
+    # fetch server datasources action
     # \brief It fetches datasources from the configuration server
     def serverFetchDataSources(self):
         cmd = ServerFetchDataSources(self.main)
         cmd.redo()
         self.undoStack.clear()
 
-    ## store server datasource action
+    # store server datasource action
     # \brief It stores the current datasource in the configuration server
     def serverStoreDataSource(self, focus=True):
         cmd = DataSourceEdit(self.main)
@@ -249,21 +249,21 @@ class ServerSlots(object):
         if focus:
             self.main.sourceList.setItemFocus()
 
-    ## store server datasource action executed by button
+    # store server datasource action executed by button
     # \brief It stores the current datasource in
     #        the configuration server executed by button
     def serverStoreDataSourceButton(self):
         if self.main.updateDataSourceListItem():
             self.serverStoreDataSource(False)
 
-    ## store server all datasources action
+    # store server all datasources action
     # \brief It stores all components in the configuration server
     def serverStoreAllDataSources(self):
         cmd = ServerStoreAllDataSources(self.main)
         cmd.redo()
         self.undoStack.clear()
 
-    ## delete server datasource action
+    # delete server datasource action
     # \brief It deletes the current datasource from the configuration server
     def serverDeleteDataSource(self):
         cmd = DataSourceEdit(self.main)
@@ -272,7 +272,7 @@ class ServerSlots(object):
         cmd.redo()
         self.main.sourceList.setItemFocus()
 
-    ## close server action
+    # close server action
     # \brief It closes the configuration server
     def serverClose(self):
         cmd = ServerClose(self.main)

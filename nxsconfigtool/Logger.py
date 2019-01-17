@@ -15,17 +15,21 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file Loggers.py
+# \package nxsconfigtool nexdatas
+# \file Loggers.py
 # Logger classes
 
 """ "Component Desigener Loggers  """
 
 import logging
+import sys
 
 from PyQt5.QtCore import (QObject, pyqtSignal)
 
 logger = logging.getLogger("nxsdesigner")
+
+if sys.version_info > (3,):
+    unicode = str
 
 
 class LogHandler(logging.Handler):

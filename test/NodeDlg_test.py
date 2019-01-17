@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file NodeDlgTest.py
+# \package test nexdatas
+# \file NodeDlgTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -41,12 +41,12 @@ from nxsconfigtool.ComponentItem import ComponentItem
 
 from nxsconfigtool.DomTools import DomTools
 
-##  Qt-application
+#  Qt-application
 app = None
 
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 class MyNodeDlg(NodeDlg):
@@ -82,7 +82,7 @@ class TestTools(object):
         self.stack.append(text)
 
 
-    ## appends node
+    # appends node
     # \param node DOM node to append
     # \param parent parent node index
     # \param model Component model            
@@ -93,7 +93,7 @@ class TestTools(object):
         self.stack.append(model)
    
 
-    ## removes node element
+    # removes node element
     # \param element DOM node element to remove
     # \param parent parent node index      
     # \param model Component model            
@@ -104,7 +104,7 @@ class TestTools(object):
         self.stack.append(model)
 
 
-    ## replaces node element
+    # replaces node element
     # \param oldElement old DOM node element 
     # \param newElement new DOM node element 
     # \param parent parent node index
@@ -179,10 +179,10 @@ class Ui_NodeDlg(object):
     pass
 
 
-## test fixture
+# test fixture
 class NodeDlgTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
@@ -192,13 +192,13 @@ class NodeDlgTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
-        ## MessageBox text
+        # MessageBox text
         self.text = None
-        ## MessageBox title
+        # MessageBox title
         self.title = None
-        ## action status
+        # action status
         self.performed = False
-        ## 2 action status
+        # 2 action status
         self.performed2 = False
 
 
@@ -210,7 +210,7 @@ class NodeDlgTest(unittest.TestCase):
         self.__rnd = random.Random(self.__seed)
 
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
@@ -218,7 +218,7 @@ class NodeDlgTest(unittest.TestCase):
         
 
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
@@ -239,7 +239,7 @@ class NodeDlgTest(unittest.TestCase):
     def myAction2(self):
         self.performed2 = True
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
@@ -258,7 +258,7 @@ class NodeDlgTest(unittest.TestCase):
         self.assertEqual(form.result(),0)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions(self):
         fun = sys._getframe().f_code.co_name
@@ -276,7 +276,7 @@ class NodeDlgTest(unittest.TestCase):
 
         self.assertEqual(form.result(),0)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action(self):
         fun = sys._getframe().f_code.co_name
@@ -297,7 +297,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_button(self):
         fun = sys._getframe().f_code.co_name
@@ -321,7 +321,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
@@ -348,7 +348,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_link_button(self):
         fun = sys._getframe().f_code.co_name
@@ -376,7 +376,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_link_and_apply_button(self):
         fun = sys._getframe().f_code.co_name
@@ -412,7 +412,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_reset(self):
         fun = sys._getframe().f_code.co_name
@@ -449,7 +449,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_reset_nozero(self):
         fun = sys._getframe().f_code.co_name
@@ -486,7 +486,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_reset_nozero_extended(self):
         fun = sys._getframe().f_code.co_name
@@ -526,7 +526,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_replaceText(self):
         fun = sys._getframe().f_code.co_name
@@ -602,7 +602,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_replaceText_noview(self):
         fun = sys._getframe().f_code.co_name
@@ -644,7 +644,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_replaceText_nomodel(self):
         fun = sys._getframe().f_code.co_name
@@ -687,7 +687,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_removeElement(self):
         fun = sys._getframe().f_code.co_name
@@ -766,7 +766,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_replaceElement(self):
         fun = sys._getframe().f_code.co_name
@@ -843,7 +843,7 @@ class NodeDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_appendElement(self):
         fun = sys._getframe().f_code.co_name

@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file NodeDlg.py
+# \package nxsconfigtool nexdatas
+# \file NodeDlg.py
 # Abstract Node dialog class
 
 """ abstract Node widget """
@@ -27,37 +27,37 @@ from PyQt5.QtCore import (QModelIndex)
 from .DomTools import DomTools
 
 
-## abstract node dialog
+# abstract node dialog
 class NodeDlg(QDialog):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(NodeDlg, self).__init__(parent)
 
-        ## DOM node
+        # DOM node
         self.node = None
-        ## DOM root
+        # DOM root
         self.root = None
-        ## component tree view
+        # component tree view
         self.view = None
 
-        ## allowed subitems
+        # allowed subitems
         self.subItems = []
 
-        ##  user interface
+        #  user interface
         self.ui = None
 
-        ## external apply action
+        # external apply action
         self.externalApply = None
 
-        ## external apply action
+        # external apply action
         self.externalDSLink = None
 
-        ## datasource label for templated XML
+        # datasource label for templated XML
         self.dsLabel = "datasources"
 
-    ## connects the save action and stores the apply action
+    # connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action
     # \param externalClose close action
@@ -77,7 +77,7 @@ class NodeDlg(QDialog):
             self.ui.linkDSPushButton.clicked.connect(externalDSLink)
             self.externalDSLink = externalDSLink
 
-    ## resets the dialog
+    # resets the dialog
     # \brief It sets forms and dialog from DOM
     def reset(self):
         if self.view and hasattr(self.view, "currentIndex"):
@@ -89,7 +89,7 @@ class NodeDlg(QDialog):
                 index = self.view.model().index(index.row(), 0, index.parent())
             self.view.model().dataChanged.emit(index, index)
 
-    ## replaces node text for the given node
+    # replaces node text for the given node
     # \param index of child text node
     # \param text string with text
     def replaceText(self, index, text=None):
@@ -97,7 +97,7 @@ class NodeDlg(QDialog):
             return DomTools.replaceText(
                 self.node, index, self.view.model(), text)
 
-    ## removes node element
+    # removes node element
     # \param element DOM node element to remove
     # \param parent parent node index
     def removeElement(self, element, parent):
@@ -105,7 +105,7 @@ class NodeDlg(QDialog):
             return DomTools.removeElement(
                 element, parent, self.view.model())
 
-    ## replaces node element
+    # replaces node element
     # \param oldElement old DOM node element
     # \param newElement new DOM node element
     # \param parent parent node index
@@ -114,7 +114,7 @@ class NodeDlg(QDialog):
             return DomTools.replaceElement(
                 oldElement, newElement, parent, self.view.model())
 
-    ## appends node element
+    # appends node element
     # \param newElement new DOM node element
     # \param parent parent node index
     def appendElement(self, newElement, parent):
@@ -123,22 +123,22 @@ class NodeDlg(QDialog):
                 newElement, parent, self.view.model())
         return False
 
-    ## updates the form
+    # updates the form
     # \brief abstract class
     def updateForm(self):
         pass
 
-    ## updates the node
+    # updates the node
     # \brief abstract class
     def updateNode(self, index=QModelIndex()):
         pass
 
-    ## creates GUI
+    # creates GUI
     # \brief abstract class
     def createGUI(self):
         pass
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         pass

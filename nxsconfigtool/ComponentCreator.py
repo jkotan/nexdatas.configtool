@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ComponentCreator.py
+# \package nxsconfigtool nexdatas
+# \file ComponentCreator.py
 # Class for connecting to configuration server
 
 """ Provides connects to configuration server"""
@@ -25,8 +25,12 @@ from PyQt5.QtWidgets import (QMessageBox, QFileDialog)
 from .CreatorDlg import CreatorDlg, StdCreatorDlg
 
 import logging
-## message logger
+import sys
+# message logger
 logger = logging.getLogger("nxsdesigner")
+
+if sys.version_info > (3,):
+    unicode = str
 
 try:
     import nxstools
@@ -38,13 +42,12 @@ try:
     if int(NXSTOOLS_MASTERVER) <= 2:
         if int(NXSTOOLS_MINORVER) <= 2:
             raise ImportError("nxstools is below 2.3.0")
-except ImportError, e:
+except ImportError as e:
     NXSTOOLS_AVAILABLE = False
     logger.info("nxstools is not available: %s" % e)
 
 
-
-## option class
+# option class
 class Options(object):
     def __init__(self, server=None):
         self.server = server
@@ -55,36 +58,36 @@ class Options(object):
         self.directory = None
         self.xmlpackage = None
         self.external = ""
-        self.entryname= "scan"
+        self.entryname = "scan"
         self.insname = "instrument"
         self.oldclientlike = False
         self.clientlike = True
 
 
-## configuration server
+# configuration server
 class ComponentCreator(object):
 
-    ## constructor
+    # constructor
     def __init__(self, configServer, parent):
-        ## configuration server
+        # configuration server
         self.configServer = configServer
 
-        ## online file name
+        # online file name
         self.onlineFile = None
 
-        ## componentName
+        # componentName
         self.componentName = None
 
-        ## created components
+        # created components
         self.components = {}
-        ## created components
+        # created components
         self.datasources = {}
-        ## available components
+        # available components
         self.avcomponents = []
-        ## parent
+        # parent
         self.parent = parent
 
-    ## sets onlineFile name and check if online file exists
+    # sets onlineFile name and check if online file exists
     def checkOnlineFile(self, onlineFile):
         onlineFile = onlineFile or '/online_dir/online.xml'
         onlineFile = unicode(QFileDialog.getOpenFileName(
@@ -96,7 +99,7 @@ class ComponentCreator(object):
         else:
             self.onlineFile = None
 
-    ## creates component and datasources from online xml
+    # creates component and datasources from online xml
     def create(self):
         self.action = None
         self.componentName = None
@@ -121,7 +124,7 @@ class ComponentCreator(object):
                     "Cannot find any known components in '%s'" %
                     self.onlineFile)
 
-    ## runs Creator widget to select the required component
+    # runs Creator widget to select the required component
     # \returns action to be performed with the components and datasources
     def selectComponent(self):
         aform = CreatorDlg(self.parent)
@@ -138,22 +141,22 @@ class ComponentCreator(object):
         return action
 
 
-## configuration server
+# configuration server
 class StdComponentCreator(object):
 
-    ## constructor
+    # constructor
     def __init__(self, configServer, parent):
-        ## configuration server
+        # configuration server
         self.configServer = configServer
 
-        ## created components
+        # created components
         self.components = {}
-        ## created components
+        # created components
         self.datasources = {}
-        ## parent
+        # parent
         self.parent = parent
 
-    ## creates component and datasources from online xml
+    # creates component and datasources from online xml
     def create(self):
         self.action = None
         self.componentName = None
@@ -169,7 +172,7 @@ class StdComponentCreator(object):
                 self.components = dict(scpc.components)
                 self.datasources = dict(scpc.datasources)
 
-    ## runs Creator widget to select the required component
+    # runs Creator widget to select the required component
     # \returns action to be performed with the components and datasources
     def selectComponent(self, scpc):
         aform = StdCreatorDlg(scpc, self.parent)
@@ -181,28 +184,28 @@ class StdComponentCreator(object):
         return action
 
 
-## configuration server
+# configuration server
 class DataSourceCreator(object):
 
-    ## constructor
+    # constructor
     def __init__(self, configServer, parent):
-        ## configuration server
+        # configuration server
         self.configServer = configServer
 
-        ## online file name
+        # online file name
         self.onlineFile = None
 
-        ## componentName
+        # componentName
         self.componentName = None
 
-        ## created components
+        # created components
         self.datasources = {}
-        ## available components
+        # available components
         self.avcomponents = []
-        ## parent
+        # parent
         self.parent = parent
 
-    ## sets onlineFile name and check if online file exists
+    # sets onlineFile name and check if online file exists
     def checkOnlineFile(self, onlineFile):
         onlineFile = onlineFile or '/online_dir/online.xml'
         onlineFile = unicode(QFileDialog.getOpenFileName(
@@ -214,7 +217,7 @@ class DataSourceCreator(object):
         else:
             self.onlineFile = None
 
-    ## creates component and datasources from online xml
+    # creates component and datasources from online xml
     def create(self):
         self.action = None
         self.datasources = {}
@@ -227,7 +230,7 @@ class DataSourceCreator(object):
                 occ.createXMLs()
                 self.datasources = dict(occ.datasources)
 
-    ## runs Creator widget to select the required component
+    # runs Creator widget to select the required component
     # \returns action to be performed with the components and datasources
     def selectAction(self):
         aform = CreatorDlg(self.parent)
@@ -242,13 +245,14 @@ class DataSourceCreator(object):
         return action
 
 
-## test function
+# test function
 def test():
     import sys
     from PyQt5.QtGui import QApplication
 
     app = QApplication(sys.argv)
     app.exit()
+
 
 if __name__ == "__main__":
     test()

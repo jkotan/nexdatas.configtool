@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ItemSlots.py
+# \package nxsconfigtool nexdatas
+# \file ItemSlots.py
 # user pool commands of GUI application
 
 """ Item slots """
@@ -53,18 +53,18 @@ from .DataSourceDlg import CommonDataSourceDlg
 from .ComponentDlg import ComponentDlg
 
 
-## stack with the application commands
+# stack with the application commands
 class ItemSlots(object):
 
-    ## constructor
+    # constructor
     # \param main the main window dialog
     def __init__(self, main):
-        ## main window
+        # main window
         self.main = main
-        ## command stack
+        # command stack
         self.undoStack = main.undoStack
 
-        ## action data
+        # action data
         self.actions = {
             "actionNewGroupItem": [
                 "Add &Group Item", "componentNewGroupItem",
@@ -143,26 +143,26 @@ class ItemSlots(object):
                 "paste", "Paste the component item"],
         }
 
-    ## copy component item action
+    # copy component item action
     # \brief It copies the  current component item into the clipboard
     def componentCopyItem(self):
         cmd = ComponentCopyItem(self.main)
         cmd.redo()
 
-    ## remove component item action
+    # remove component item action
     # \brief It removes the current component item and copies it
     #        into the clipboard
     def componentRemoveItem(self):
         cmd = ComponentRemoveItem(self.main)
         self.undoStack.push(cmd)
 
-    ## paste component item action
+    # paste component item action
     # \brief It pastes the component item from the clipboard
     def componentPasteItem(self):
         cmd = ComponentPasteItem(self.main)
         self.undoStack.push(cmd)
 
-    ## copy item action
+    # copy item action
     # \brief It copies the current item into the clipboard
     def copyItem(self):
         cmd = CopyItem(self.main)
@@ -180,7 +180,7 @@ class ItemSlots(object):
             return
         cmd.redo()
 
-    ## cuts item action
+    # cuts item action
     # \brief It removes the current item and copies it into the clipboard
     def cutItem(self):
         cmd = CutItem(self.main)
@@ -199,7 +199,7 @@ class ItemSlots(object):
             return
         self.undoStack.push(cmd)
 
-    ## paste item action
+    # paste item action
     # \brief It pastes the item from the clipboard
     def pasteItem(self):
         cmd = PasteItem(self.main)
@@ -217,7 +217,7 @@ class ItemSlots(object):
             return
         self.undoStack.push(cmd)
 
-    ## new group component item action
+    # new group component item action
     # \brief It adds a new group component item
     def componentNewGroupItem(self):
         if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
@@ -230,7 +230,7 @@ class ItemSlots(object):
             QMessageBox.warning(self.main, "Component not created",
                                 "Please edit one of the components")
 
-    ## new group component item action
+    # new group component item action
     # \brief It adds a new group component item
     def componentNewStrategyItem(self):
         if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
@@ -243,7 +243,7 @@ class ItemSlots(object):
             QMessageBox.warning(self.main, "Component not created",
                                 "Please edit one of the components")
 
-    ## new field component item action
+    # new field component item action
     # \brief It adds a new field component item
     def componentNewFieldItem(self):
         if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
@@ -256,7 +256,7 @@ class ItemSlots(object):
             QMessageBox.warning(self.main, "Component not created",
                                 "Please edit one of the components")
 
-    ## new attribute component item action
+    # new attribute component item action
     # \brief It adds a new attribute component item
     def componentNewAttributeItem(self):
         if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
@@ -269,7 +269,7 @@ class ItemSlots(object):
             QMessageBox.warning(self.main, "Component not created",
                                 "Please edit one of the components")
 
-    ## new link component item action
+    # new link component item action
     # \brief It adds a new link component item
     def componentNewLinkItem(self):
         if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
@@ -282,7 +282,7 @@ class ItemSlots(object):
             QMessageBox.warning(self.main, "Component not created",
                                 "Please edit one of the components")
 
-    ## new datasource component item action
+    # new datasource component item action
     # \brief It adds a new datasource component item
     def componentNewDataSourceItem(self):
         if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
@@ -295,7 +295,7 @@ class ItemSlots(object):
             QMessageBox.warning(self.main, "Component not created",
                                 "Please edit one of the components")
 
-    ## load sub-component item action
+    # load sub-component item action
     # \brief It loads a sub-component item from a file
     def componentLoadComponentItem(self):
         if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
@@ -307,7 +307,7 @@ class ItemSlots(object):
             QMessageBox.warning(self.main, "Component not created",
                                 "Please edit one of the components")
 
-    ## load datasource component item action
+    # load datasource component item action
     # \brief It loads a datasource component item from a file
     def componentLoadDataSourceItem(self):
         if hasattr(self.main.ui.mdi.activeSubWindow(), 'widget') and \
@@ -319,50 +319,50 @@ class ItemSlots(object):
             QMessageBox.warning(self.main, "Component not created",
                                 "Please edit one of the components")
 
-    ## add datasource component item action
+    # add datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentAddDataSourceItem(self):
         cmd = ComponentAddDataSourceItem(self.main)
         self.undoStack.push(cmd)
 
-    ## link datasource component item action
+    # link datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentLinkDataSourceItem(self):
         cmd = ComponentLinkDataSourceItem(self.main)
         self.undoStack.push(cmd)
 
-    ## link datasource component item action
+    # link datasource component item action
     # \brief It adds the current datasource item into component tree
     def componentLinkDataSourceItemButton(self):
         if self.main.updateComponentListItem():
             self.componentLinkDataSourceItem()
 
-    ## move-up component item action
+    # move-up component item action
     # \brief It moves the current component item up
     def componentMoveUpItem(self):
         cmd = ComponentMoveUpItem(self.main)
         self.undoStack.push(cmd)
 
-    ## move-down component item action
+    # move-down component item action
     # \brief It moves the current component item down
     def componentMoveDownItem(self):
         cmd = ComponentMoveDownItem(self.main)
         self.undoStack.push(cmd)
 
-    ## apply component item action
+    # apply component item action
     # \brief It applies the changes in the current component item
     def componentApplyItem(self):
         cmd = ComponentApplyItem(self.main)
         self.undoStack.push(cmd)
 
-    ## apply component item action executed by button
+    # apply component item action executed by button
     # \brief It applies the changes in the current component item
     #        executed by button
     def componentApplyItemButton(self):
         if self.main.updateComponentListItem():
             self.componentApplyItem()
 
-    ## merge component action
+    # merge component action
     # \brief It merges the current component
     def componentMerge(self):
         cmd = ComponentEdit(self.main)
@@ -370,7 +370,7 @@ class ItemSlots(object):
         cmd = ComponentMerge(self.main)
         self.undoStack.push(cmd)
 
-    ## clear component action
+    # clear component action
     # \brief It clears the current component
     def componentClear(self):
         cmd = ComponentClear(self.main)

@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file DomToolsTest.py
+# \package test nexdatas
+# \file DomToolsTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -37,14 +37,14 @@ from nxsconfigtool.DomTools import DomTools
 
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-## test fixture
+# test fixture
 class DomToolsTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
@@ -54,11 +54,11 @@ class DomToolsTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
-        ## MessageBox text
+        # MessageBox text
         self.text = None
-        ## MessageBox title
+        # MessageBox title
         self.title = None
-        ## action status
+        # action status
         self.performed = False
 
 
@@ -71,7 +71,7 @@ class DomToolsTest(unittest.TestCase):
         self.__rnd = random.Random(self.__seed)
 
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
@@ -79,7 +79,7 @@ class DomToolsTest(unittest.TestCase):
         
 
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."

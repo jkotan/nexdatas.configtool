@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ComponentList.py
+# \package nxsconfigtool nexdatas
+# \file ComponentList.py
 # Data component list class
 
 
@@ -27,34 +27,34 @@ from .Component import Component
 from .ElementList import ElementList
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
 
-## dialog defining a group tag
+# dialog defining a group tag
 class ComponentList(ElementList):
 
-    ## constructor
+    # constructor
     # \param directory element directory
     # \param parent patent instance
     def __init__(self, directory, parent=None):
         super(ComponentList, self).__init__(directory, parent)
 
-        ## show all attribures or only the type attribute
+        # show all attribures or only the type attribute
         self._allAttributes = False
 
-        ## widget title
+        # widget title
         self.title = "Components"
-        ## element name
+        # element name
         self.name = "components"
-        ## class name
+        # class name
         self.clName = "Component"
-        ## extention
+        # extention
         self.extention = ".xml"
-        ## excluded extention
+        # excluded extention
         self.disextention = "ds.xml"
 
-    ## switches between all attributes in the try or only type attribute
+    # switches between all attributes in the try or only type attribute
     # \param status all attributes are shown if True
     def viewAttributes(self, status=None):
         if status is None:
@@ -66,7 +66,7 @@ class ComponentList(ElementList):
                 self.elements[k].instance.viewAttributes(
                     self._allAttributes)
 
-    ## retrives element name from file name
+    # retrives element name from file name
     # \param fname filename
     # \returns element name
     @classmethod
@@ -77,7 +77,7 @@ class ComponentList(ElementList):
             name = fname
         return name
 
-    ## creates Element
+    # creates Element
     # \param name element name
     # \returns element instance
     def createElement(self, name):
@@ -96,15 +96,16 @@ class ComponentList(ElementList):
                         comps.add(cp.name)
         return list(comps)
 
+
 if __name__ == "__main__":
     import sys
     from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## group form
+    # group form
     form = ComponentList("../components")
     form.createGUI()
     form.show()

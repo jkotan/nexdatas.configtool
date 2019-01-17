@@ -811,7 +811,7 @@ class Component(object):
                 self._componentFile = unicode(QFileDialog.getOpenFileName(
                     self.parent, "Open File", self._xmlPath,
                     "XML files (*.xml);;HTML files (*.html);;"
-                    "SVG files (*.svg);;User Interface files (*.ui)"))
+                    "SVG files (*.svg);;User Interface files (*.ui)")[0])
             else:
                 self._componentFile = os.path.join(
                     self.directory, self.name + ".xml")
@@ -901,7 +901,7 @@ class Component(object):
                 QFileDialog.getOpenFileName(
                     self.parent, "Open File", self._xmlPath,
                     "XML files (*.xml);;HTML files (*.html);;"
-                    "SVG files (*.svg);;User Interface files (*.ui)"))
+                    "SVG files (*.svg);;User Interface files (*.ui)")[0])
         else:
             itemFile = filePath
 
@@ -975,7 +975,7 @@ class Component(object):
                 QFileDialog.getOpenFileName(
                     self.parent, "Open File", self._dsPath,
                     "XML files (*.xml);;HTML files (*.html);;"
-                    "SVG files (*.svg);;User Interface files (*.ui)"))
+                    "SVG files (*.svg);;User Interface files (*.ui)")[0])
         else:
             dsFile = filePath
         if dsFile:
@@ -1385,7 +1385,7 @@ class Component(object):
             QFileDialog.getSaveFileName(
                 self.parent, "Save Component As ...", self._componentFile,
                 "XML files (*.xml);;HTML files (*.html);;"
-                "SVG files (*.svg);;User Interface files (*.ui)"))
+                "SVG files (*.svg);;User Interface files (*.ui)")[0])
         return self._componentFile
 
 

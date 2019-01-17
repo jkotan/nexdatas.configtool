@@ -92,7 +92,7 @@ class ComponentCreator(object):
         onlineFile = onlineFile or '/online_dir/online.xml'
         onlineFile = unicode(QFileDialog.getOpenFileName(
             self.parent, "Open Online File", onlineFile,
-            "XML files (*.xml)"))
+            "XML files (*.xml)")[0])
         if onlineFile:
             self.onlineFile = onlineFile
             return True
@@ -210,7 +210,7 @@ class DataSourceCreator(object):
         onlineFile = onlineFile or '/online_dir/online.xml'
         onlineFile = unicode(QFileDialog.getOpenFileName(
             self.parent, "Open Online File", onlineFile,
-            "XML files (*.xml)"))
+            "XML files (*.xml)")[0])
         if onlineFile:
             self.onlineFile = onlineFile
             return True

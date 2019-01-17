@@ -117,10 +117,7 @@ class ElementList(QWidget):
     #  \brief It runs the Element Dialog and fetches element
     #         name and value
     def addElement(self, obj, flag=True):
-        print(obj.id)
-        print(type(obj.id))
         self.elements[obj.id] = obj
-
         self.populateElements(obj.id, flag)
 
     # takes a name of the current element

@@ -228,7 +228,7 @@ class DataSource(CommonDataSource):
                 filename = unicode(QFileDialog.getOpenFileName(
                     self.parent, "Open File", self.directory,
                     "XML files (*.xml);;HTML files (*.html);;"
-                    "SVG files (*.svg);;User Interface files (*.ui)"))
+                    "SVG files (*.svg);;User Interface files (*.ui)")[0])
                 fi = QFileInfo(filename)
                 fname = str(fi.fileName())
                 if fname[-4:] == '.xml':
@@ -387,7 +387,7 @@ class DataSource(CommonDataSource):
             QFileDialog.getSaveFileName(
                 self.parent, "Save DataSource As ...", self.directory,
                 "XML files (*.xml);;HTML files (*.html);;"
-                "SVG files (*.svg);;User Interface files (*.ui)"))
+                "SVG files (*.svg);;User Interface files (*.ui)")[0])
         logger.info("saving in %s" % (filename))
         return filename
 

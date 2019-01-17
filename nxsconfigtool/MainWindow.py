@@ -560,7 +560,7 @@ class MainWindow(QMainWindow):
                         and status != QMessageBox.NoToAll:
                     status = QMessageBox.question(
                         self, "%s - Save" % elementList.clName,
-                        "Do you want to save %s: %s".encode()
+                        "Do you want to save %s: %s"
                         % (elementList.clName, cp.name),
                         QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel
                         | QMessageBox.YesToAll | QMessageBox.NoToAll,
@@ -588,7 +588,6 @@ class MainWindow(QMainWindow):
                 elif status == QMessageBox.Cancel:
                     if event:
                         event.ignore()
-                        print("CANCEL")
                     return
         return True
 

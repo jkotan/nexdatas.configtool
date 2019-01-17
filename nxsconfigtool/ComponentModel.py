@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ComponentModel.py
+# \package nxsconfigtool nexdatas
+# \file ComponentModel.py
 # component classes
 
 """ component model for tree view """
@@ -27,24 +27,24 @@ from PyQt5.QtXml import QDomNode
 from . ComponentItem import ComponentItem
 
 
-## model for component tree
+# model for component tree
 class ComponentModel(QAbstractItemModel):
-    ## constuctor
+    # constuctor
     # \param document DOM document
     # \param parent widget
     # \param allAttributes True if show all attributes in the tree
     def __init__(self, document, allAttributes, parent=None):
         super(ComponentModel, self).__init__(parent)
 
-        ## show all attribures or only the type attribute
+        # show all attribures or only the type attribute
         self.__allAttributes = allAttributes
 
-        ## root item of the tree
+        # root item of the tree
         self.__rootItem = ComponentItem(document)
-        ## index of the root item
+        # index of the root item
         self.rootIndex = self.createIndex(0, 0, self.__rootItem)
 
-    ## provides access to the header data
+    # provides access to the header data
     # \param section integer index of the table column
     # \param orientation orientation of the header
     # \param role access type of the header data
@@ -64,12 +64,12 @@ class ComponentModel(QAbstractItemModel):
             else:
                 return QVariant()
 
-    ## switches between all attributes in the try or only type attribute
+    # switches between all attributes in the try or only type attribute
     # \param allAttributes all attributes are shown if True
     def setAttributeView(self, allAttributes):
         self.__allAttributes = allAttributes
 
-    ## provides read access to the model data
+    # provides read access to the model data
     # \param index of the model item
     # \param role access type of the data
     # \returns data defined for the given index and formated according
@@ -114,7 +114,7 @@ class ComponentModel(QAbstractItemModel):
         else:
             return QVariant()
 
-    ## provides flag of the model item
+    # provides flag of the model item
     # \param index of the model item
     # \returns flag defined for the given index and formated according
     #          to the role
@@ -124,7 +124,7 @@ class ComponentModel(QAbstractItemModel):
         return Qt.ItemFlags(QAbstractItemModel.flags(self, index) |
                             Qt.ItemIsEnabled | Qt.ItemIsSelectable)
 
-    ## provides access to the item index
+    # provides access to the item index
     # \param row integer index counting DOM child item
     # \param column integer index counting table column
     # \param parent index of the parent item
@@ -144,7 +144,7 @@ class ComponentModel(QAbstractItemModel):
         else:
             return QModelIndex()
 
-    ## provides access to the parent index
+    # provides access to the parent index
     # \param child  child index
     # \returns parent index for the given child
     def parent(self, child):
@@ -169,7 +169,7 @@ class ComponentModel(QAbstractItemModel):
 
         return self.createIndex(parentItem.childNumber(), 0, parentItem)
 
-    ## provides number of the model rows
+    # provides number of the model rows
     # \param parent parent index
     # \returns number of the children for the given parent
     def rowCount(self, parent=QModelIndex()):
@@ -185,14 +185,14 @@ class ComponentModel(QAbstractItemModel):
             return 0
         return parentItem.node.childNodes().count()
 
-    ## provides number of the model columns
+    # provides number of the model columns
     # \param parent parent index
     # \returns 3 which corresponds to component tag tree, tag attributes,
     #          tag values
     def columnCount(self, parent=QModelIndex()):
         return 3
 
-    ## inserts the given rows into the model
+    # inserts the given rows into the model
     # \param position row integer index where rows should be inserted
     # \param node DOM node to append
     # \param parent index of the parent item
@@ -215,7 +215,7 @@ class ComponentModel(QAbstractItemModel):
 
         return status
 
-    ## append the given DOM node into parent item
+    # append the given DOM node into parent item
     # \param node DOM node to append
     # \param parent index of the parent item
     # \returns True if parent exists
@@ -237,7 +237,7 @@ class ComponentModel(QAbstractItemModel):
 
         return status
 
-    ## removes the given rows from the model
+    # removes the given rows from the model
     # \param position row integer index of the first removed row
     # \param parent index of the parent item
     # \returns True if parent exists

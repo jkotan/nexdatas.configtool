@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file DataSourceMethodsTest.py
+# \package test nexdatas
+# \file DataSourceMethodsTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -46,11 +46,11 @@ from nxsconfigtool.DimensionsDlg import DimensionsDlg
 from nxsconfigtool.ui.ui_datasourcedlg import Ui_DataSourceDlg
 
 
-##  Qt-application
+#  Qt-application
 app = None
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 class FocusedWidget():
@@ -103,10 +103,10 @@ class ClassVar(object):
         self.applied = False
         self.ids = None
 
-## test fixture
+# test fixture
 class DataSourceMethodsTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
@@ -116,19 +116,19 @@ class DataSourceMethodsTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
-        ## MessageBox text
+        # MessageBox text
         self.text = None
-        ## MessageBox title
+        # MessageBox title
         self.title = None
 
-        ## attribute name
+        # attribute name
         self.aname = "myname"
-        ## attribute value
+        # attribute value
         self.avalue = "myentry"
 
         self.dimensions = [1,2,3,4]
 
-        ## action status
+        # action status
         self.performed = False
  
         self.meth = None
@@ -144,19 +144,19 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
         print "SEED =", self.__seed 
         
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-    ## Exception tester
+    # Exception tester
     # \param exception expected exception
     # \param method called method      
     # \param args list with method arguments
@@ -165,7 +165,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -271,7 +271,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_constructor(self):
         fun = sys._getframe().f_code.co_name
@@ -286,7 +286,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_constructor_accept_setFocus(self):
         fun = sys._getframe().f_code.co_name
@@ -944,7 +944,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_updateForm_errors(self):
         fun = sys._getframe().f_code.co_name
@@ -969,7 +969,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_updateForm(self):
         fun = sys._getframe().f_code.co_name
@@ -989,7 +989,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_reset(self):
         fun = sys._getframe().f_code.co_name
@@ -1018,7 +1018,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         QTimer.singleShot(10, self.messageWidgetClose)
         self.meth.close()
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_close_yes(self):
         fun = sys._getframe().f_code.co_name
@@ -1038,7 +1038,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_close_yes_tree(self):
         fun = sys._getframe().f_code.co_name
@@ -1063,7 +1063,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_reset_signal(self):
         fun = sys._getframe().f_code.co_name
@@ -1081,7 +1081,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.check_updateForm(self.meth, self.form, self.cds, "message_and_reset", self)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_reset_signal_tree(self):
         fun = sys._getframe().f_code.co_name
@@ -1101,7 +1101,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_close_no(self):
         fun = sys._getframe().f_code.co_name
@@ -1120,7 +1120,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.check_updateForm_no(self.meth, form, cds, "messageno_and_close", self)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_close_no_tree(self):
         fun = sys._getframe().f_code.co_name
@@ -1140,7 +1140,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_treeMode(self):
         fun = sys._getframe().f_code.co_name
@@ -1206,7 +1206,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_createGUI_updataForm_errors(self):
         fun = sys._getframe().f_code.co_name
@@ -1228,7 +1228,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_createGUI_updateForm(self):
         fun = sys._getframe().f_code.co_name
@@ -1247,7 +1247,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.check_updateForm(meth, form, cds, "createGUI")
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_createGUI_updateForm_tree(self):
         fun = sys._getframe().f_code.co_name
@@ -1302,7 +1302,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_createGUI_setFrames(self):
         fun = sys._getframe().f_code.co_name
@@ -1338,7 +1338,7 @@ class DataSourceMethodsTest(unittest.TestCase):
             self.assertEqual(item.data(Qt.UserRole).toString(),sel)
  
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_createGUI_setFrames(self, cds):
         parent = None
@@ -1455,7 +1455,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_createGUI_setFrames_signal(self):
         fun = sys._getframe().f_code.co_name
@@ -1475,7 +1475,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_createGUI_setFrames_signal(self, cds):
 
@@ -1592,7 +1592,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         
         
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_createGUI_cRecNameLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
@@ -1615,7 +1615,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_createGUI_cRecNameLineEdit_signal(self, cds):
 
@@ -1644,7 +1644,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_createGUI_dQueryLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
@@ -1666,7 +1666,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_createGUI_dQueryLineEdit_signal(self, cds):
 
@@ -1694,7 +1694,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.disableButtons()
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_createGUI_tDevNameLineEdit_tMemberNameLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
@@ -1717,7 +1717,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_createGUI_tDevNameLineEdit_tMemberNameLineEdit_signal(self, cds):
         self.meth.createGUI()
@@ -1759,7 +1759,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.enableButtons()
 
         
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_createGUI_populateParameters(self):
         fun = sys._getframe().f_code.co_name
@@ -1783,7 +1783,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_createGUI_populateParameters(self ,cds):
         self.meth.createGUI()
@@ -1836,7 +1836,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_createGUI_populateParameters_addremoveParamter(self):
         fun = sys._getframe().f_code.co_name
@@ -1855,7 +1855,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_createGUI_populateParameters_addremoveParamter(self, cds):
         self.meth.createGUI()
@@ -1957,7 +1957,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(self.form.dbParam, dict(myParam))
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_createGUI_populateParameters_changeParamter(self):
         fun = sys._getframe().f_code.co_name
@@ -1978,7 +1978,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_createGUI_populateParameters_changeParamter(self,cds):
         self.meth.createGUI()
@@ -2045,7 +2045,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(self.form.dbParam, dict(rparam))
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_createGUI_populateParameters_changeParamter_value(self):
         fun = sys._getframe().f_code.co_name
@@ -2065,7 +2065,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_createGUI_populateParameters_changeParamter_value(self,cds):
         self.meth.createGUI()
@@ -2151,7 +2151,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_client(self):
         fun = sys._getframe().f_code.co_name
@@ -2168,7 +2168,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_client(cds)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_client_tree(self):
         fun = sys._getframe().f_code.co_name
@@ -2187,7 +2187,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_client_node(self):
         fun = sys._getframe().f_code.co_name
@@ -2204,7 +2204,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_client(cds,False,True)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_client_tree_node(self):
         fun = sys._getframe().f_code.co_name
@@ -2222,7 +2222,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_setFromNode_client(self, cds, tree = False, node = None):
 
@@ -2283,7 +2283,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_tango(self):
         fun = sys._getframe().f_code.co_name
@@ -2300,7 +2300,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_tango(cds)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_tango_tree(self):
         fun = sys._getframe().f_code.co_name
@@ -2319,7 +2319,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_tango_node(self):
         fun = sys._getframe().f_code.co_name
@@ -2336,7 +2336,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_tango(cds,False,True)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_tango_tree_node(self):
         fun = sys._getframe().f_code.co_name
@@ -2355,7 +2355,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_setFromNode_tango(self, cds, tree = False, node = None):
 
@@ -2441,7 +2441,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_db(self):
         fun = sys._getframe().f_code.co_name
@@ -2459,7 +2459,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.check_setFromNode_db(cds)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_db_tree(self):
         fun = sys._getframe().f_code.co_name
@@ -2478,7 +2478,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_db_node(self):
         fun = sys._getframe().f_code.co_name
@@ -2496,7 +2496,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.check_setFromNode_db(cds,False,True)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_db_tree_node(self):
         fun = sys._getframe().f_code.co_name
@@ -2514,7 +2514,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_setFromNode_db(self, cds, tree = False, node = None):
 
@@ -2661,7 +2661,7 @@ class DataSourceMethodsTest(unittest.TestCase):
             self.form.ui.dParameterTableWidget.currentRow(), 0)
         self.assertEqual(item, None)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_nonode(self):
         fun = sys._getframe().f_code.co_name
@@ -2679,7 +2679,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.check_setFromNode_nonode(cds)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_nonode_tree(self):
         fun = sys._getframe().f_code.co_name
@@ -2698,7 +2698,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_nonode_node(self):
         fun = sys._getframe().f_code.co_name
@@ -2716,7 +2716,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.check_setFromNode_nonode(cds,False,True)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_nonode_tree_node(self):
         fun = sys._getframe().f_code.co_name
@@ -2734,7 +2734,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def check_setFromNode_nonode(self, cds, tree = False, node = None):
 
@@ -2822,13 +2822,13 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-##TODO setFromNode nonode/populateparameters
+#TODO setFromNode nonode/populateparameters
 
 
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_updateNode(self):
         fun = sys._getframe().f_code.co_name
@@ -3014,7 +3014,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_updateNode_withindex(self):
         fun = sys._getframe().f_code.co_name
@@ -3199,7 +3199,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_apply(self):
         fun = sys._getframe().f_code.co_name
@@ -3453,7 +3453,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_reset(self):
         fun = sys._getframe().f_code.co_name
@@ -3682,7 +3682,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_reset_button(self):
         fun = sys._getframe().f_code.co_name
@@ -3921,10 +3921,10 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.performed = True
 
 
-    ## constructor test
+    # constructor test
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_connect_actions(self):
         fun = sys._getframe().f_code.co_name
@@ -3942,7 +3942,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         self.assertEqual(form.result(),0)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_connect_actions_with_action(self):
         fun = sys._getframe().f_code.co_name
@@ -3962,7 +3962,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_connect_actions_with_button(self):
         fun = sys._getframe().f_code.co_name
@@ -3985,7 +3985,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
@@ -4012,7 +4012,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
@@ -4041,7 +4041,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_link_button(self):
         fun = sys._getframe().f_code.co_name
@@ -4066,7 +4066,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def tttttest_connect_actions_with_action_and_apply_button(self):
         fun = sys._getframe().f_code.co_name
@@ -4095,7 +4095,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_and_sapply_button(self):
         fun = sys._getframe().f_code.co_name
@@ -4124,7 +4124,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.result(),0)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_and_slink_button(self):
         fun = sys._getframe().f_code.co_name
@@ -4155,7 +4155,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name
@@ -4186,7 +4186,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_link_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name
@@ -4218,7 +4218,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_appendElement(self):
         fun = sys._getframe().f_code.co_name
@@ -4442,7 +4442,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_appendElement_error(self):
         fun = sys._getframe().f_code.co_name
@@ -4624,7 +4624,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_populateAttribute_setFromNode_selected_addAttribute(self):
         fun = sys._getframe().f_code.co_name
@@ -4802,7 +4802,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttttest_populateAttribute_setFromNode_selected_tableItemChanged(self):
         fun = sys._getframe().f_code.co_name

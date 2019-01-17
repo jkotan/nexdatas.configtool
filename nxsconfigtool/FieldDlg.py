@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file FieldDlg.py
+# \package nxsconfigtool nexdatas
+# \file FieldDlg.py
 # Field dialog class
 
 """ field widget """
@@ -28,6 +28,7 @@ from PyQt5.QtCore import (QVariant, Qt, QModelIndex)
 from PyQt5 import uic
 
 import os
+import sys
 
 from .AttributeDlg import AttributeDlg
 from .DimensionsDlg import DimensionsDlg
@@ -35,50 +36,53 @@ from .NodeDlg import NodeDlg
 from .DomTools import DomTools
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
 _formclass, _baseclass = uic.loadUiType(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
                  "ui", "fielddlg.ui"))
 
+if sys.version_info > (3,):
+    unicode = str
 
-## dialog defining a field tag
+
+# dialog defining a field tag
 class FieldDlg(NodeDlg):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(FieldDlg, self).__init__(parent)
 
-        ## field name
+        # field name
         self.name = u''
-        ## field type
+        # field type
         self.nexusType = u''
-        ## field units
+        # field units
         self.units = u''
-        ## field value
+        # field value
         self.value = u''
-        ## field doc
+        # field doc
         self.doc = u''
-        ## field attributes
+        # field attributes
         self.attributes = {}
         self.__attributes = {}
 
-        ## rank
+        # rank
         self.rank = 0
-        ## dimensions
+        # dimensions
         self.dimensions = []
         self.__dimensions = []
 
-        ## allowed subitems
+        # allowed subitems
         self.subItems = ["attribute", "datasource", "doc", "dimensions",
                          "enumeration", "strategy"]
 
-        ## user interface
+        # user interface
         self.ui = _formclass()
 
-    ## provides the state of the field dialog
+    # provides the state of the field dialog
     # \returns state of the field in tuple
     def getState(self):
         attributes = copy.copy(self.attributes)
@@ -95,7 +99,7 @@ class FieldDlg(NodeDlg):
                  )
         return state
 
-    ## sets the state of the field dialog
+    # sets the state of the field dialog
     # \param state field state written in tuple
     def setState(self, state):
 
@@ -111,13 +115,13 @@ class FieldDlg(NodeDlg):
         self.attributes = copy.copy(attributes)
         self.dimensions = copy.copy(dimensions)
 
-    ## links dataSource
+    # links dataSource
     # \param dsName datasource name
     def linkDataSource(self, dsName):
         self.value = "$%s.%s" % (self.dsLabel, dsName)
         self.updateForm()
 
-    ## updates the field dialog
+    # updates the field dialog
     # \brief It sets the form local variables
     def updateForm(self):
         if self.name is not None:
@@ -165,7 +169,7 @@ class FieldDlg(NodeDlg):
 
         self.populateAttributes()
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
         self.ui.setupUi(self)
@@ -191,11 +195,11 @@ class FieldDlg(NodeDlg):
 
         self.populateAttributes()
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         if node:
-            ## defined in NodeDlg
+            # defined in NodeDlg
             self.node = node
         if not self.node:
             return
@@ -279,7 +283,7 @@ class FieldDlg(NodeDlg):
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
-    ## adds an attribute
+    # adds an attribute
     #  \brief It runs the Field Dialog and fetches attribute name and value
     def __addAttribute(self):
         aform = AttributeDlg()
@@ -294,7 +298,7 @@ class FieldDlg(NodeDlg):
                     "To change the attribute value, "
                     "please edit the value in the attribute table")
 
-    ## changing dimensions of the field
+    # changing dimensions of the field
     #  \brief It runs the Dimensions Dialog and fetches rank
     #         and dimensions from it
     def __changeDimensions(self):
@@ -311,7 +315,7 @@ class FieldDlg(NodeDlg):
             label = self.__dimensions.__str__()
             self.ui.dimLabel.setText("%s" % label.replace('None', '*'))
 
-    ## takes a name of the current attribute
+    # takes a name of the current attribute
     # \returns name of the current attribute
     def __currentTableAttribute(self):
         item = self.ui.attributeTableWidget.item(
@@ -320,7 +324,7 @@ class FieldDlg(NodeDlg):
             return None
         return item.data(Qt.UserRole).toString()
 
-    ## removes an attribute
+    # removes an attribute
     #  \brief It removes the current attribute asking before about it
     def __removeAttribute(self):
         attr = self.__currentTableAttribute()
@@ -330,7 +334,7 @@ class FieldDlg(NodeDlg):
             self.__attributes.pop(unicode(attr))
             self.populateAttributes()
 
-    ## changes the current value of the attribute
+    # changes the current value of the attribute
     # \brief It changes the current value of the attribute and informs
     #        the user that attribute names arenot editable
     def __tableItemChanged(self, item):
@@ -347,7 +351,7 @@ class FieldDlg(NodeDlg):
                 "please remove the attribute and add the new one")
         self.populateAttributes()
 
-    ## fills in the attribute table
+    # fills in the attribute table
     # \param selectedAttribute selected attribute
     def populateAttributes(self, selectedAttribute=None):
         selected = None
@@ -373,7 +377,7 @@ class FieldDlg(NodeDlg):
             selected.setSelected(True)
             self.ui.attributeTableWidget.setCurrentItem(selected)
 
-    ## calls updateUi when the name text is changing
+    # calls updateUi when the name text is changing
     # \param text the edited text
     def __currentIndexChanged(self, text):
         if text == 'other ...':
@@ -382,13 +386,13 @@ class FieldDlg(NodeDlg):
         else:
             self.ui.otherFrame.hide()
 
-    ## updates field user interface
+    # updates field user interface
     # \brief It sets enable or disable the OK button
     def __updateUi(self):
         enable = bool(self.ui.nameLineEdit.text())
         self.ui.applyPushButton.setEnabled(enable)
 
-    ## appends newElement
+    # appends newElement
     # \param newElement DOM node to append
     # \param parent parent DOM node
     def appendElement(self, newElement, parent):
@@ -409,7 +413,7 @@ class FieldDlg(NodeDlg):
 
         return NodeDlg.appendElement(self, newElement, parent)
 
-    ## applys input text strings
+    # applys input text strings
     # \brief It copies the field name and type from lineEdit widgets
     #        and apply the dialog
     def apply(self):
@@ -448,7 +452,7 @@ class FieldDlg(NodeDlg):
         self.view.model().dataChanged.emit(index, finalIndex)
         self.view.model().dataChanged.emit(index, index)
 
-    ## updates the Node
+    # updates the Node
     # \brief It sets node from the dialog variables
     def updateNode(self, index=QModelIndex()):
         elem = self.node.toElement()
@@ -527,9 +531,9 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## field form
+    # field form
     form = FieldDlg()
     form.name = 'distance'
     form.nexusType = 'NX_FLOAT'

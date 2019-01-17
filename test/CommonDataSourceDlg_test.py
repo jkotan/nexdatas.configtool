@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file CommonDataSourceDlgTest.py
+# \package test nexdatas
+# \file CommonDataSourceDlgTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -46,11 +46,11 @@ from nxsconfigtool.DimensionsDlg import DimensionsDlg
 from nxsconfigtool.ui.ui_datasourcedlg import Ui_DataSourceDlg
 
 
-##  Qt-application
+#  Qt-application
 app = None
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 class FocusedWidget():
@@ -77,10 +77,10 @@ class TestView(object):
         self.stack.append("expand")
         self.stack.append(index)
 
-## test fixture
+# test fixture
 class CommonDataSourceDlgTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
@@ -90,19 +90,19 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
-        ## MessageBox text
+        # MessageBox text
         self.text = None
-        ## MessageBox title
+        # MessageBox title
         self.title = None
 
-        ## attribute name
+        # attribute name
         self.aname = "myname"
-        ## attribute value
+        # attribute value
         self.avalue = "myentry"
 
         self.dimensions = [1,2,3,4]
 
-        ## action status
+        # action status
         self.performed = False
 
         try:
@@ -116,14 +116,14 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
         self.form = None
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
         print "SEED =", self.__seed 
         
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
@@ -198,7 +198,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_constructor(self):
         fun = sys._getframe().f_code.co_name
@@ -226,7 +226,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.assertEqual(form.reset,super(CommonDataSourceDlg,form).reset )
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_constructor_accept_setFocus(self):
         fun = sys._getframe().f_code.co_name
@@ -316,7 +316,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_updateUi(self):
         fun = sys._getframe().f_code.co_name
@@ -372,7 +372,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFrames(self):
         fun = sys._getframe().f_code.co_name
@@ -477,7 +477,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_setFrames_signal(self):
         fun = sys._getframe().f_code.co_name
@@ -603,7 +603,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_cRecNameLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
@@ -636,7 +636,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_dQueryLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
@@ -671,7 +671,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_tDevNameLineEdit_tMemberNameLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
@@ -743,7 +743,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
  
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_populateParameters(self):
         fun = sys._getframe().f_code.co_name
@@ -799,7 +799,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_populateParameters_addremoveParamter(self):
         fun = sys._getframe().f_code.co_name
@@ -911,7 +911,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_populateParameters_changeParamter(self):
         fun = sys._getframe().f_code.co_name
@@ -988,7 +988,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_populateParameters_changeParamter_value(self):
         fun = sys._getframe().f_code.co_name
@@ -1076,7 +1076,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
         
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_closeEvent(self):
         fun = sys._getframe().f_code.co_name

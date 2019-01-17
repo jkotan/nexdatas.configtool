@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file DataSourceDlg.py
+# \package nxsconfigtool nexdatas
+# \file DataSourceDlg.py
 # Data Source dialog class
 
 """ Provides datasource widget """
@@ -40,7 +40,7 @@ _formclass, _baseclass = uic.loadUiType(
 # from .ui.ui_datasourcedlg import Ui_DataSourceDlg
 
 
-## available datasources
+# available datasources
 dsTypes = {'CLIENT': ClientSource,
            'TANGO': TangoSource,
            'DB': DBSource,
@@ -48,7 +48,7 @@ dsTypes = {'CLIENT': ClientSource,
            }
 
 
-## load user datasources
+# load user datasources
 # \param dsJSON json string with user datasources
 def appendUserDataSource(dsJSON):
     for dk in dsJSON.keys():
@@ -58,30 +58,30 @@ def appendUserDataSource(dsJSON):
         dsTypes[dk] = getattr(dec, pkl[-1])
 
 
-## dialog defining commmon datasource
+# dialog defining commmon datasource
 class CommonDataSourceDlg(NodeDlg):
 
-    ## constructor
+    # constructor
     # \param datasource instance
     # \param parent patent instance
     def __init__(self, datasource, parent=None):
         super(CommonDataSourceDlg, self).__init__(parent)
 
-        ##  datasource instance
+        #  datasource instance
         self.datasource = datasource
 
-        ## allowed subitems
+        # allowed subitems
         self.subItems = []
 
-        ## datasource dialog impementations
+        # datasource dialog impementations
         self.imp = {}
 
-        ## user interface
+        # user interface
         self.ui = _formclass()
-        ## datasource widget
+        # datasource widget
         self.wg = {}
 
-        ## QWidget instances
+        # QWidget instances
         self.qwg = {}
 
         for ds in dsTypes.keys():
@@ -90,13 +90,13 @@ class CommonDataSourceDlg(NodeDlg):
             self.wg[ds] = self.imp[ds].widgetClass()
             self.imp[ds].ui = self.wg[ds]
 
-    ## sets focus on save button
+    # sets focus on save button
     # \brief It sets focus on save button
     def setSaveFocus(self):
         if self.ui:
             self.ui.savePushButton.setFocus()
 
-    ## updates group user interface
+    # updates group user interface
     # \brief It sets enable or disable the OK button
     def updateUi(self, text):
         enable = True
@@ -114,7 +114,7 @@ class CommonDataSourceDlg(NodeDlg):
         self.setTabOrder(self.ui.applyPushButton, self.ui.resetPushButton)
         self.setTabOrder(self.ui.resetPushButton, self.ui.docTextEdit)
 
-    ## shows and hides frames according to typeComboBox
+    # shows and hides frames according to typeComboBox
     # \param text the edited text
     @pyqtSlot(str)
     def setFrames(self, text):
@@ -129,7 +129,7 @@ class CommonDataSourceDlg(NodeDlg):
 
         self.updateUi(text)
 
-    ## connects the dialog actions
+    # connects the dialog actions
     def connectWidgets(self):
         try:
             self.ui.typeComboBox.currentIndexChanged[str].disconnect(
@@ -137,14 +137,10 @@ class CommonDataSourceDlg(NodeDlg):
         except Exception:
             pass
         self.ui.typeComboBox.currentIndexChanged[str].connect(self.setFrames)
-        # self.disconnect(self.ui.typeComboBox,
-        #                 SIGNAL("currentIndexChanged(QString)"), self.setFrames)
-        # self.connect(self.ui.typeComboBox,
-        #              SIGNAL("currentIndexChanged(QString)"), self.setFrames)
         for k in self.imp.keys():
             self.imp[k].connectWidgets()
 
-    ## closes the window and cleans the dialog label
+    # closes the window and cleans the dialog label
     # \param event closing event
     def closeEvent(self, event):
         if hasattr(self.datasource.dialog, "clearDialog"):
@@ -154,70 +150,70 @@ class CommonDataSourceDlg(NodeDlg):
             self.datasource.clearDialog()
         event.accept()
 
-    ## rejects datasource changes
+    # rejects datasource changes
     def reject(self):
         self.parent().close()
         super(CommonDataSourceDlg, self).reject()
 
 
-## dialog defining separate datasource
+# dialog defining separate datasource
 class DataSourceDlg(CommonDataSourceDlg):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(DataSourceDlg, self).__init__(None, parent)
 
         from .DataSource import CommonDataSource
 
-        ## datasource data
+        # datasource data
         self.datasource = CommonDataSource(parent)
-        ## datasource methods
+        # datasource methods
         self.__methods = DataSourceMethods(self, self.datasource, parent)
 
-    ## updates the form
+    # updates the form
     # \brief updates the form
     def updateForm(self):
         if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.updateForm()
 
-    ## clears the dialog
+    # clears the dialog
     # \brief clears the dialog
     def clearDialog(self):
         if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.setDialog(None)
 
-    ## updates the node
+    # updates the node
     # \brief updates the node
     def updateNode(self, index=QModelIndex()):
         if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.updateNode(index)
 
-    ## creates GUI
+    # creates GUI
     # \brief creates GUI
     def createGUI(self):
         if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.createGUI()
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.setFromNode(node)
 
-    ## accepts input text strings
+    # accepts input text strings
     # \brief It copies the parameters and accept the dialog
     def apply(self):
         if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.apply()
 
-    ## sets the tree mode used in ComponentDlg without save/close buttons
+    # sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode
     def treeMode(self, enable=True):
         if hasattr(self, "_DataSourceDlg__methods") and self.__methods:
             return self.__methods.treeMode(enable)
 
-    ## connects the save action and stores the apply action
+    # connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action
     # \param externalClose close action
@@ -235,14 +231,14 @@ class DataSourceDlg(CommonDataSourceDlg):
 if __name__ == "__main__":
     import sys
     from PyQt5.QtGui import QWidget
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
 
-    ## the second datasource form
+    # the second datasource form
 
     w = QWidget()
     w.show()
-    ## datasource form
+    # datasource form
     form2 = DataSourceDlg(w)
     form2.createGUI()
     form2.treeMode(True)

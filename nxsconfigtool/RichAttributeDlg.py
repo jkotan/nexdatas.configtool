@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file RichAttributeDlg.py
+# \package nxsconfigtool nexdatas
+# \file RichAttributeDlg.py
 # Rich Attribute dialog class
 
 """ attribute widget """
@@ -34,45 +34,49 @@ from .Errors import CharacterError
 from .DomTools import DomTools
 
 import logging
-## message logger
+import sys
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
 _formclass, _baseclass = uic.loadUiType(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
                  "ui", "richattributedlg.ui"))
 
+if sys.version_info > (3,):
+    unicode = str
 
-## dialog defining an attribute
+
+# dialog defining an attribute
 class RichAttributeDlg(NodeDlg):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(RichAttributeDlg, self).__init__(parent)
 
-        ## attribute name
+        # attribute name
         self.name = u''
-        ## attribute value
+        # attribute value
         self.value = u''
-        ## attribute type
+        # attribute type
         self.nexusType = u''
-        ## attribute doc
+        # attribute doc
         self.doc = u''
 
-        ## rank
+        # rank
         self.rank = 0
-        ## dimensions
+        # dimensions
         self.dimensions = []
         self._dimensions = []
 
-        ## allowed subitems
+        # allowed subitems
         self.subItems = ["enumeration", "doc", "datasource",
                          "strategy", "dimensions"]
 
-        ## user interface
+        # user interface
         self.ui = _formclass()
 
-    ## provides the state of the richattribute dialog
+    # provides the state of the richattribute dialog
     # \returns state of the richattribute in tuple
     def getState(self):
         dimensions = copy.copy(self.dimensions)
@@ -86,7 +90,7 @@ class RichAttributeDlg(NodeDlg):
                  )
         return state
 
-    ## sets the state of the richattribute dialog
+    # sets the state of the richattribute dialog
     # \param state richattribute state written in tuple
     def setState(self, state):
 
@@ -99,13 +103,13 @@ class RichAttributeDlg(NodeDlg):
          ) = state
         self.dimensions = copy.copy(dimensions)
 
-    ## links dataSource
+    # links dataSource
     # \param dsName datasource name
     def linkDataSource(self, dsName):
         self.value = "$%s.%s" % (self.dsLabel, dsName)
         self.updateForm()
 
-    ## updates the richattribute dialog
+    # updates the richattribute dialog
     # \brief It sets the form local variables
     def updateForm(self):
         if self.name is not None:
@@ -146,7 +150,7 @@ class RichAttributeDlg(NodeDlg):
         for dm in self.dimensions:
             self._dimensions.append(dm)
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
         self.ui.setupUi(self)
@@ -162,11 +166,11 @@ class RichAttributeDlg(NodeDlg):
             self._currentIndexChanged)
         self.ui.dimPushButton.clicked.connect(self._changeDimensions)
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         if node:
-            ## defined in NodeDlg
+            # defined in NodeDlg
             self.node = node
         if not self.node:
             return
@@ -237,7 +241,7 @@ class RichAttributeDlg(NodeDlg):
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
-    ## changing dimensions of the field
+    # changing dimensions of the field
     #  \brief It runs the Dimensions Dialog and fetches rank
     #         and dimensions from it
     def _changeDimensions(self):
@@ -254,7 +258,7 @@ class RichAttributeDlg(NodeDlg):
             label = self._dimensions.__str__()
             self.ui.dimLabel.setText("%s" % label.replace('None', '*'))
 
-    ## calls updateUi when the name text is changing
+    # calls updateUi when the name text is changing
     # \param text the edited text
     def _currentIndexChanged(self, text):
         if text == 'other ...':
@@ -263,13 +267,13 @@ class RichAttributeDlg(NodeDlg):
         else:
             self.ui.otherFrame.hide()
 
-    ## updates attribute user interface
+    # updates attribute user interface
     # \brief It sets enable or disable the OK button
     def _updateUi(self):
         enable = bool(self.ui.nameLineEdit.text())
         self.ui.applyPushButton.setEnabled(enable)
 
-    ## accepts input text strings
+    # accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets
     #        and accept the dialog
     def apply(self):
@@ -282,7 +286,7 @@ class RichAttributeDlg(NodeDlg):
             if name[0] == '-':
                 raise CharacterError(
                     "The first character of Name is '-'")
-        except CharacterError, e:
+        except CharacterError as e:
             QMessageBox.warning(self, "Character Error", unicode(e))
             return
 
@@ -313,7 +317,7 @@ class RichAttributeDlg(NodeDlg):
         self.view.model().dataChanged.emit(index, finalIndex)
         self.view.expand(index)
 
-    ## updates the Node
+    # updates the Node
     # \brief It sets node from the dialog variables
     def updateNode(self, index=QModelIndex()):
         elem = self.node.toElement()
@@ -376,7 +380,7 @@ class RichAttributeDlg(NodeDlg):
             else:
                 self.appendElement(newDimens, mindex)
 
-    ## appends newElement
+    # appends newElement
     # \param newElement DOM node to append
     # \param parent parent DOM node
     def appendElement(self, newElement, parent):
@@ -404,9 +408,9 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## attribute form
+    # attribute form
     form = RichAttributeDlg()
     form.name = "pre_sample_flightpath"
     form.nexusType = 'NX_FLOAT'

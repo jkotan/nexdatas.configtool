@@ -15,14 +15,15 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file DefinitionDlg.py
+# \package nxsconfigtool nexdatas
+# \file DefinitionDlg.py
 # Definition dialog class
 
 """ definition widget """
 
 import copy
 import os
+import sys
 
 from PyQt5.QtCore import (Qt, QVariant, QModelIndex)
 from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem)
@@ -34,7 +35,7 @@ from .NodeDlg import NodeDlg
 from .DomTools import DomTools
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
 
@@ -42,33 +43,36 @@ _formclass, _baseclass = uic.loadUiType(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
                  "ui", "definitiondlg.ui"))
 
+if sys.version_info > (3,):
+    unicode = str
 
-## dialog defining a definition tag
+
+# dialog defining a definition tag
 class DefinitionDlg(NodeDlg):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(DefinitionDlg, self).__init__(parent)
 
-        ## definition name
+        # definition name
         self.name = u''
-        ## definition content
+        # definition content
         self.content = u''
-        ## definition doc
+        # definition doc
         self.doc = u''
-        ## definition attributes
+        # definition attributes
         self.attributes = {}
         self.__attributes = {}
 
-        ## allowed subitems
+        # allowed subitems
         self.subItems = ["group", "field", "attribute", "link", "component",
                          "doc", "symbols"]
 
-        ## user interface
+        # user interface
         self.ui = _formclass()
 
-    ## updates the definition dialog
+    # updates the definition dialog
     # \brief It sets the form local variables
     def updateForm(self):
 
@@ -85,7 +89,7 @@ class DefinitionDlg(NodeDlg):
 
         self.populateAttributes()
 
-    ## provides the state of the definition dialog
+    # provides the state of the definition dialog
     # \returns state of the definition in tuple
     def getState(self):
         attributes = copy.copy(self.attributes)
@@ -97,7 +101,7 @@ class DefinitionDlg(NodeDlg):
                  )
         return state
 
-    ## sets the state of the definition dialog
+    # sets the state of the definition dialog
     # \param state definition state written in tuple
     def setState(self, state):
 
@@ -108,7 +112,7 @@ class DefinitionDlg(NodeDlg):
          ) = state
         self.attributes = copy.copy(attributes)
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It calls ui.setupUi(self),  updateForm() and
     #        connects signals and slots
     def createGUI(self):
@@ -122,14 +126,14 @@ class DefinitionDlg(NodeDlg):
         self.ui.addPushButton.clicked.connect(self.__addAttribute)
         self.ui.removePushButton.clicked.connect(self.__removeAttribute)
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         if node:
-            ## defined in NodeDlg class
+            # defined in NodeDlg class
             self.node = node
         if not self.node:
-            ## exception?
+            # exception?
             return
         attributeMap = self.node.attributes()
 
@@ -153,7 +157,7 @@ class DefinitionDlg(NodeDlg):
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
-    ## adds an attribute
+    # adds an attribute
     #  \brief It runs the Definition Dialog and fetches attribute name and
     #     value
     def __addAttribute(self):
@@ -168,7 +172,7 @@ class DefinitionDlg(NodeDlg):
                     "To change the attribute value, please edit the value "
                     "in the attribute table")
 
-    ## takes a name of the current attribute
+    # takes a name of the current attribute
     # \returns name of the current attribute
     def __currentTableAttribute(self):
         item = self.ui.attributeTableWidget.item(
@@ -177,7 +181,7 @@ class DefinitionDlg(NodeDlg):
             return None
         return item.data(Qt.UserRole).toString()
 
-    ## removes an attribute
+    # removes an attribute
     #  \brief It removes the current attribute asking before about it
     def __removeAttribute(self):
         attr = self.__currentTableAttribute()
@@ -187,7 +191,7 @@ class DefinitionDlg(NodeDlg):
             self.__attributes.pop(unicode(attr))
             self.populateAttributes()
 
-    ## changes the current value of the attribute
+    # changes the current value of the attribute
     # \brief It changes the current value of the attribute and informs
     #        the user that attribute names arenot editable
     def __tableItemChanged(self, item):
@@ -204,7 +208,7 @@ class DefinitionDlg(NodeDlg):
                 "the attribute and add the new one")
         self.populateAttributes()
 
-    ## fills in the attribute table
+    # fills in the attribute table
     # \param selectedAttribute selected attribute
     def populateAttributes(self, selectedAttribute=None):
         selected = None
@@ -230,7 +234,7 @@ class DefinitionDlg(NodeDlg):
             selected.setSelected(True)
             self.ui.attributeTableWidget.setCurrentItem(selected)
 
-    ## applys input text strings
+    # applys input text strings
     # \brief It copies the definition name and type from lineEdit widgets
     #        and apply the dialog
     def apply(self):
@@ -256,7 +260,7 @@ class DefinitionDlg(NodeDlg):
         self.view.model().dataChanged.emit(index, finalIndex)
         self.view.expand(index)
 
-    ## updates the Node
+    # updates the Node
     # \param index current node index
     # \brief It sets node from the dialog variables
     def updateNode(self, index=QModelIndex()):
@@ -292,9 +296,9 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## definition form
+    # definition form
     form = DefinitionDlg()
     form.name = 'scan'
     form.content = '$components.default'

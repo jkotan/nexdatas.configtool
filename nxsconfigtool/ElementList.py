@@ -15,12 +15,13 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ElementList.py
+# \package nxsconfigtool nexdatas
+# \file ElementList.py
 # Data source list class
 
 """ datasource list widget """
 import os
+import sys
 
 from PyQt5.QtCore import (Qt, QVariant)
 from PyQt5.QtWidgets import (QWidget, QMenu, QMessageBox, QListWidgetItem,
@@ -31,47 +32,50 @@ from PyQt5 import uic
 from .LabeledObject import LabeledObject
 
 
-
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
 _formclass, _baseclass = uic.loadUiType(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
                  "ui", "elementlist.ui"))
 
-## dialog defining a group tag
+if sys.version_info > (3,):
+    unicode = str
+
+
+# dialog defining a group tag
 class ElementList(QWidget):
 
-    ## constructor
+    # constructor
     # \param directory datasource directory
     # \param parent patent instance
     def __init__(self, directory, parent=None):
         super(ElementList, self).__init__(parent)
-        ## directory from which components are loaded by default
+        # directory from which components are loaded by default
         self.directory = directory
 
-        ## group elements
+        # group elements
         self.elements = {}
 
-        ## actions
+        # actions
         self._actions = []
 
-        ## user interface
+        # user interface
         self.ui = _formclass()
 
-        ## widget title
+        # widget title
         self.title = "Elements"
-        ## singular name
+        # singular name
         self.clName = "Element"
-        ## class name
+        # class name
         self.name = "elements"
-        ## extention
+        # extention
         self.extention = ".xml"
-        ## excluded extention
+        # excluded extention
         self.disextention = None
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
 
@@ -82,7 +86,7 @@ class ElementList(QWidget):
 
         self.populateElements()
 
-    ## opens context Menu
+    # opens context Menu
     # \param position in the element list
     def _openMenu(self, position):
         menu = QMenu()
@@ -101,7 +105,7 @@ class ElementList(QWidget):
                 menu.addAction(action)
         menu.exec_(self.ui.elementListWidget.viewport().mapToGlobal(position))
 
-    ## sets context menu actions for the element list
+    # sets context menu actions for the element list
     # \param actions tuple with actions
     def setActions(self, actions):
         self.ui.elementListWidget.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -109,7 +113,7 @@ class ElementList(QWidget):
             self._openMenu)
         self._actions = actions
 
-    ## adds an element
+    # adds an element
     #  \brief It runs the Element Dialog and fetches element
     #         name and value
     def addElement(self, obj, flag=True):
@@ -119,7 +123,7 @@ class ElementList(QWidget):
 
         self.populateElements(obj.id, flag)
 
-    ## takes a name of the current element
+    # takes a name of the current element
     # \returns name of the current element
     def currentListElement(self):
         item = self.ui.elementListWidget.currentItem()
@@ -130,11 +134,11 @@ class ElementList(QWidget):
         else:
             return None
 
-    ## sets focus into element list
+    # sets focus into element list
     def setItemFocus(self):
         self.ui.elementListWidget.setFocus()
 
-    ## removes the current element
+    # removes the current element
     #  \brief It removes the current element asking before about it
     def removeElement(self, obj=None, question=True):
 
@@ -160,7 +164,7 @@ class ElementList(QWidget):
             self.elements.pop(oid)
             self.populateElements()
 
-    ## changes the current value of the element
+    # changes the current value of the element
     # \brief It changes the current value of the element and informs
     #        the user that element names arenot editable
     def listItemChanged(self, item, name=None):
@@ -178,7 +182,7 @@ class ElementList(QWidget):
                 return old, oname
         return None, None
 
-    ## fills in the element list
+    # fills in the element list
     # \param selectedElement selected element
     # \param edit flag if edit the selected item
     def populateElements(self, selectedElement=None, edit=False):
@@ -229,7 +233,7 @@ class ElementList(QWidget):
             if edit:
                 self.ui.elementListWidget.editItem(selected)
 
-    ## sets the elements
+    # sets the elements
     # \param elements dictionary with the elements, i.e. name:xml
     # \param externalActions dictionary with external actions
     # \param itemActions actions of the context menu
@@ -298,23 +302,24 @@ class ElementList(QWidget):
         progress.close()
         return ide
 
-    ## replaces name special characters by underscore
+    # replaces name special characters by underscore
     # \param name give name
     # \returns replaced element
     @classmethod
     def dashName(cls, name):
         return name
 
-    ## loads the element list from the given dictionary
+    # loads the element list from the given dictionary
     # \param externalActions dictionary with external actions
     # \param itemActions actions of the context menu
     def loadList(self, externalActions=None, itemActions=None):
         try:
-            dirList = [l for l in os.listdir(self.directory)
-                       if (l.endswith(self.extention)
-                           and (not self.disextention
-                                or not l.endswith(self.disextention))
-                       )]
+            dirList = [
+                l for l in os.listdir(self.directory)
+                if (l.endswith(self.extention)
+                    and (not self.disextention
+                         or not l.endswith(self.disextention)))
+            ]
         except:
             try:
                 if os.path.exists(os.path.join(os.getcwd(), self.name)):
@@ -322,12 +327,13 @@ class ElementList(QWidget):
                         os.path.join(os.getcwd(), self.name))
                 else:
                     self.directory = os.getcwd()
-                
-                dirList = [l for l in os.listdir(self.directory)
-                           if (l.endswith(self.extention)
-                               and (not self.disextention
-                                    or not l.endswith(self.disextention))
-                           )]
+
+                dirList = [
+                    l for l in os.listdir(self.directory)
+                    if (l.endswith(self.extention)
+                        and (not self.disextention
+                             or not l.endswith(self.disextention)))
+                ]
             except:
                 return
 
@@ -365,9 +371,9 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## group form
+    # group form
     form = ElementList("../datasources")
 #    form.elements={"title":"Test run 1", "run_cycle":"2012-1"}
     form.createGUI()

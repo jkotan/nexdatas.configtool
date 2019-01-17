@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file HelpForm.py
+# \package nxsconfigtool nexdatas
+# \file HelpForm.py
 # Detail help for Component Designer
 
 """ help widget """
@@ -29,10 +29,10 @@ from PyQt5.QtWidgets import (
     QLabel, QTextBrowser, QToolBar, QVBoxLayout)
 
 
-## detail help
+# detail help
 class HelpForm(QDialog):
 
-    ## constructor
+    # constructor
     # \param page the starting html page
     # \param parent parent widget
     def __init__(self, page, parent=None):
@@ -41,23 +41,23 @@ class HelpForm(QDialog):
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setAttribute(Qt.WA_GroupLeader)
 
-        ## help tool bar
+        # help tool bar
         self.toolBar = None
-        ## help text Browser
+        # help text Browser
         self.textBrowser = None
-        ## main label of the help
+        # main label of the help
         self.pageLabel = None
 
         self._page = page
         self.createGUI()
         self.createActions()
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It create dialogs for help dialog
     def createGUI(self):
-        ## help tool bar
+        # help tool bar
         self.toolBar = QToolBar(self)
-        ## help text Browser
+        # help text Browser
         self.textBrowser = QTextBrowser(self)
 
         layout = QVBoxLayout(self)
@@ -71,7 +71,7 @@ class HelpForm(QDialog):
         self.setWindowTitle("%s Help" % (
             QApplication.applicationName()))
 
-    ## creates actions
+    # creates actions
     # \brief It creates actions and sets the command pool and stack
     def createActions(self):
 
@@ -84,7 +84,7 @@ class HelpForm(QDialog):
         homeAction = QAction(QIcon(":/home.png"), "&Home", self)
         homeAction.setShortcut("Home")
 
-        ## main label of the help
+        # main label of the help
         self.pageLabel = QLabel(self)
 
         self.toolBar.addAction(backAction)
@@ -92,7 +92,6 @@ class HelpForm(QDialog):
         self.toolBar.addAction(homeAction)
         self.toolBar.addSeparator()
         self.toolBar.addWidget(self.pageLabel)
-
 
         try:
             backAction.triggered.disconnect(self.textBrowser.backward)
@@ -120,7 +119,7 @@ class HelpForm(QDialog):
 
         self.updatePageTitle()
 
-    ## updates the title page
+    # updates the title page
     # \brief It resets the pageLabel withg the document title
     def updatePageTitle(self):
         self.pageLabel.setText(
@@ -132,10 +131,9 @@ class HelpForm(QDialog):
 
 if __name__ == "__main__":
     import sys
-    from nxsconfigtool.qrc import qrc_resources
-    ## application instance
+    # application instance
     app = QApplication(sys.argv)
-    ## help form
+    # help form
     form = HelpForm("index.html")
     form.show()
     app.exec_()

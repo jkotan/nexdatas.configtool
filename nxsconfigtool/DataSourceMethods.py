@@ -15,12 +15,13 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file DataSourceMethods.py
+# \package nxsconfigtool nexdatas
+# \file DataSourceMethods.py
 # Data Source method class
 
 """ Provides datasource widget methods """
 
+import sys
 
 from PyQt5.QtCore import (QModelIndex)
 from PyQt5.QtWidgets import (QApplication, QMessageBox, QWidget, QVBoxLayout)
@@ -31,41 +32,44 @@ from .Errors import ParameterError
 
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+if sys.version_info > (3,):
+    unicode = str
 
-## dialog defining datasource
+
+# dialog defining datasource
 class DataSourceMethods(object):
 
-    ## constructor
+    # constructor
     # \param dialog datasource dialog
     # \param datasource data
     # \param parent qt parent
     def __init__(self, dialog, datasource, parent=None):
 
-        ## datasource dialog
+        # datasource dialog
         self.__dialog = dialog
 
-        ## datasource data
+        # datasource data
         self.__datasource = datasource
 
-        ## qt parent
+        # qt parent
         self.__parent = parent
 
-    ## clears the dialog
+    # clears the dialog
     # \brief It sets dialog to None
     def setDialog(self, dialog=None):
         self.__dialog = dialog
 
-    ## creates a new dialog
+    # creates a new dialog
     def createDialog(self):
         if self.__datasource.dialog:
             self.__dialog = self.__datasource.dialog
         else:
             self.__datasource.createDialog()
 
-    ## rejects the changes
+    # rejects the changes
     # \brief It asks for the cancellation  and reject the changes
     def close(self):
         if QMessageBox.question(self.__parent, "Close datasource",
@@ -78,12 +82,12 @@ class DataSourceMethods(object):
             self.createDialog()
         self.__dialog.reject()
 
-    ##  resets the form
+    #  resets the form
     # \brief It reverts form variables to the last accepted ones
     def reset(self):
         self.updateForm()
 
-    ## updates the datasource self.__dialog
+    # updates the datasource self.__dialog
     # \brief It sets the form local variables
     def updateForm(self):
         if not self.__dialog or not self.__datasource:
@@ -107,7 +111,7 @@ class DataSourceMethods(object):
 
         self.__dialog.setFrames(self.__datasource.dataSourceType)
 
-    ## sets the tree mode used in ComponentDlg without save/close buttons
+    # sets the tree mode used in ComponentDlg without save/close buttons
     # \param enable logical variable which dis-/enables mode
     def treeMode(self, enable=True):
         if enable:
@@ -117,7 +121,7 @@ class DataSourceMethods(object):
             self.__datasource.tree = False
             self.__dialog.ui.closeSaveFrame.show()
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
         if not self.__dialog:
@@ -138,10 +142,6 @@ class DataSourceMethods(object):
 
         if not self.__datasource.tree:
 
-            # self.__parent.disconnect(self.__dialog.ui.resetPushButton,
-            #                          SIGNAL("clicked()"), self.reset)
-            # self.__parent.connect(self.__dialog.ui.resetPushButton,
-            #                       SIGNAL("clicked()"), self.reset)
             try:
                 self.__dialog.ui.resetPushButton.clicked.disconnect(self.reset)
             except:
@@ -155,20 +155,16 @@ class DataSourceMethods(object):
                 pass
             self.__dialog.ui.resetPushButton.clicked.connect(
                 self.__dialog.reset)
-            # self.__parent.disconnect(self.__dialog.ui.resetPushButton,
-            #                          SIGNAL("clicked()"), self.__dialog.reset)
-            # self.__parent.connect(self.__dialog.ui.resetPushButton,
-            #                       SIGNAL("clicked()"), self.__dialog.reset)
         self.__dialog.connectWidgets()
         self.__dialog.setFrames(self.__datasource.dataSourceType)
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         if not self.__dialog:
             self.createDialog()
         if node:
-            ## defined in NodeDlg class
+            # defined in NodeDlg class
             self.__dialog.node = node
             if self.__dialog:
                 self.__dialog.node = node
@@ -192,7 +188,7 @@ class DataSourceMethods(object):
         text = DomTools.getText(doc)
         self.__datasource.doc = unicode(text).strip() if text else ""
 
-    ## accepts input text strings
+    # accepts input text strings
     # \brief It copies the parameters and accept the self.__dialog
     def apply(self):
         if not self.__dialog:
@@ -272,7 +268,7 @@ class DataSourceMethods(object):
             elem.appendChild(newDoc)
         return elem
 
-    ## creates datasource node
+    # creates datasource node
     # \param external True if it should be create on a local DOM root,
     #        i.e. in component tree
     # \returns created DOM node
@@ -294,7 +290,7 @@ class DataSourceMethods(object):
             rootDs = elem
         return rootDs
 
-    ## updates the Node
+    # updates the Node
     # \brief It sets node from the self.__dialog variables
     def updateNode(self, index=QModelIndex()):
         if not self.__dialog:
@@ -318,7 +314,7 @@ class DataSourceMethods(object):
             self.__dialog.node.replaceChild(newDs, oldDs)
         self.__dialog.node = newDs
 
-    ## reconnects save actions
+    # reconnects save actions
     # \brief It reconnects the save action
     def reconnectSaveAction(self):
         if not self.__dialog:
@@ -380,7 +376,7 @@ class DataSourceMethods(object):
             #                       SIGNAL("clicked()"),
             #                       self.__datasource.externalApply)
 
-    ## connects the save action and stores the apply action
+    # connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action
     # \param externalClose close action
@@ -450,7 +446,7 @@ class DataSourceMethods(object):
             #                       externalApply)
             self.__datasource.externalApply = externalApply
 
-    ## creates the new empty header
+    # creates the new empty header
     # \brief It clean the DOM tree and put into it xml and definition nodes
     def createHeader(self):
         if not self.__dialog:
@@ -458,7 +454,7 @@ class DataSourceMethods(object):
         if hasattr(self.__dialog, "view") and self.__dialog.view:
             self.__dialog.view.setModel(None)
         self.__datasource.document = QDomDocument()
-        ## defined in NodeDlg class
+        # defined in NodeDlg class
         self.__dialog.root = self.__datasource.document
         processing = self.__dialog.root.createProcessingInstruction(
             "xml", "version='1.0'")
@@ -471,7 +467,7 @@ class DataSourceMethods(object):
         definition.appendChild(self.__dialog.node)
         return self.__dialog.node
 
-    ## copies the datasource to the clipboard
+    # copies the datasource to the clipboard
     # \brief It copies the current datasource to the clipboard
     def copyToClipboard(self):
         dsNode = self.createNodes(True)
@@ -482,7 +478,7 @@ class DataSourceMethods(object):
         clipboard = QApplication.clipboard()
         clipboard.setText(text)
 
-    ## copies the datasource from the clipboard to the current datasource
+    # copies the datasource from the clipboard to the current datasource
     #       dialog
     # \return status True on success
     def copyFromClipboard(self):

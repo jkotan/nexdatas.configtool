@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file ComponentItemTest.py
+# \package test nexdatas
+# \file ComponentItemTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -34,14 +34,14 @@ from nxsconfigtool.ComponentItem import ComponentItem
 
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-## test fixture
+# test fixture
 class ComponentItemTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
@@ -51,11 +51,11 @@ class ComponentItemTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
-        ## MessageBox text
+        # MessageBox text
         self.text = None
-        ## MessageBox title
+        # MessageBox title
         self.title = None
-        ## action status
+        # action status
         self.performed = False
 
 
@@ -69,7 +69,7 @@ class ComponentItemTest(unittest.TestCase):
         self.__rnd = random.Random(self.__seed)
 
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
@@ -77,14 +77,14 @@ class ComponentItemTest(unittest.TestCase):
         
 
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
@@ -98,7 +98,7 @@ class ComponentItemTest(unittest.TestCase):
         self.assertEqual(ci.child(1),None)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_with_dom(self):
         fun = sys._getframe().f_code.co_name
@@ -130,7 +130,7 @@ class ComponentItemTest(unittest.TestCase):
             self.assertEqual(ci.child(k).parent, ci)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_with_dom_nested(self):
         fun = sys._getframe().f_code.co_name
@@ -188,7 +188,7 @@ class ComponentItemTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_with_dom_nested_reverse(self):
         fun = sys._getframe().f_code.co_name
@@ -246,7 +246,7 @@ class ComponentItemTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_remove_kids(self):
         fun = sys._getframe().f_code.co_name
@@ -332,7 +332,7 @@ class ComponentItemTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_remove_more_kids(self):
         fun = sys._getframe().f_code.co_name
@@ -417,7 +417,7 @@ class ComponentItemTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_insert_kids(self):
         fun = sys._getframe().f_code.co_name
@@ -513,7 +513,7 @@ class ComponentItemTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_insert_more_kids(self):
         fun = sys._getframe().f_code.co_name

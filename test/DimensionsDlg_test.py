@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file DimensionsDlgTest.py
+# \package test nexdatas
+# \file DimensionsDlgTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -37,21 +37,21 @@ from nxsconfigtool.DimensionsDlg import DimensionsDlg
 from nxsconfigtool.ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
 
-##  Qt-application
+#  Qt-application
 app = None
 
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
 
 
-## test fixture
+# test fixture
 class DimensionsDlgTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
@@ -61,9 +61,9 @@ class DimensionsDlgTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
-        ## MessageBox text
+        # MessageBox text
         self.text = None
-        ## MessageBox title
+        # MessageBox title
         self.title = None
 
         try:
@@ -74,19 +74,19 @@ class DimensionsDlgTest(unittest.TestCase):
         self.__rnd = random.Random(self.__seed)
 
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
         print "SEED =", self.__seed 
         
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
@@ -113,7 +113,7 @@ class DimensionsDlgTest(unittest.TestCase):
         mb.close()
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI(self):
         fun = sys._getframe().f_code.co_name
@@ -137,7 +137,7 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank(self):
         fun = sys._getframe().f_code.co_name
@@ -168,7 +168,7 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank_lengths(self):
         fun = sys._getframe().f_code.co_name
@@ -198,7 +198,7 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank_str_lengths_int(self):
         fun = sys._getframe().f_code.co_name
@@ -229,7 +229,7 @@ class DimensionsDlgTest(unittest.TestCase):
             self.assertEqual(it.text(), str(lengths[r]))
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank_neg_lengths_int(self):
         fun = sys._getframe().f_code.co_name
@@ -256,7 +256,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.dimTableWidget.rowCount(),0)
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank_lengths_int_doc(self):
         fun = sys._getframe().f_code.co_name
@@ -288,7 +288,7 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank_lengths_int(self):
         fun = sys._getframe().f_code.co_name
@@ -319,7 +319,7 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank_lengths_zero(self):
         fun = sys._getframe().f_code.co_name
@@ -350,7 +350,7 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_accept(self):
         fun = sys._getframe().f_code.co_name
@@ -384,7 +384,7 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank_ui(self):
         fun = sys._getframe().f_code.co_name
@@ -418,7 +418,7 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_doc_ui(self):
         fun = sys._getframe().f_code.co_name
@@ -461,7 +461,7 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_doc_ui_text(self):
         fun = sys._getframe().f_code.co_name
@@ -500,7 +500,7 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_len_ui_text(self):
         fun = sys._getframe().f_code.co_name
@@ -547,7 +547,7 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_len_ui_text_err(self):
         fun = sys._getframe().f_code.co_name
@@ -596,7 +596,7 @@ class DimensionsDlgTest(unittest.TestCase):
 
 
 
-    ## create GUI test
+    # create GUI test
     # \brief It tests default settings
     def test_createGUI_len_ui_text_err_2(self):
         fun = sys._getframe().f_code.co_name

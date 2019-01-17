@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file DataSourceList.py
+# \package nxsconfigtool nexdatas
+# \file DataSourceList.py
 # Data source list class
 
 """ datasource list widget """
@@ -26,29 +26,29 @@ from .DataSource import DataSource
 from .ElementList import ElementList
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
 
-## dialog defining a group tag
+# dialog defining a group tag
 class DataSourceList(ElementList):
 
-    ## constructor
+    # constructor
     # \param directory element directory
     # \param parent patent instance
     def __init__(self, directory, parent=None):
         super(DataSourceList, self).__init__(directory, parent)
 
-        ## widget title
+        # widget title
         self.title = "DataSources"
-        ## element name
+        # element name
         self.name = "datasources"
-        ## class name
+        # class name
         self.clName = "DataSource"
-        ## extention
+        # extention
         self.extention = ".ds.xml"
 
-    ## retrives element name from file name
+    # retrives element name from file name
     # \param fname filename
     # \returns element name
     @classmethod
@@ -61,7 +61,7 @@ class DataSourceList(ElementList):
             name = fname
         return name
 
-    ## creates Element
+    # creates Element
     # \param name element name
     # \returns element instance
     def createElement(self, name):
@@ -71,7 +71,7 @@ class DataSourceList(ElementList):
         dlg.createGUI()
         return dlg
 
-    ## replaces name special characters by underscore
+    # replaces name special characters by underscore
     # \param name give name
     # \returns replaced element
     @classmethod
@@ -88,9 +88,9 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## group form
+    # group form
     form = DataSourceList("../datasources")
 #    form.elements={"title":"Test run 1", "run_cycle":"2012-1"}
     form.createGUI()

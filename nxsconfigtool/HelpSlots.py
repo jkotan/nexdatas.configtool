@@ -15,13 +15,14 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file HelpSlots.py
+# \package nxsconfigtool nexdatas
+# \file HelpSlots.py
 # user pool commands of GUI application
 
 """ Help slots """
 
 import platform
+import sys
 
 from PyQt5.QtGui import (QKeySequence)
 from PyQt5.QtWidgets import (QMessageBox)
@@ -30,19 +31,22 @@ from PyQt5.QtCore import (QT_VERSION_STR, PYQT_VERSION_STR)
 from . import __version__
 from .HelpForm import HelpForm
 
+if sys.version_info > (3,):
+    unicode = str
 
-## stack with the application commands
+
+# stack with the application commands
 class HelpSlots(object):
 
-    ## constructor
+    # constructor
     # \param main the main window dialog
     def __init__(self, main):
-        ## main window
+        # main window
         self.main = main
-        ## command stack
+        # command stack
         self.undoStack = main.undoStack
 
-        ## action data
+        # action data
         self.actions = {
             "actionAboutComponentDesigner": [
                 "&About Component Designer",
@@ -52,7 +56,7 @@ class HelpSlots(object):
                 QKeySequence.HelpContents, "help", "Detail help"]
         }
 
-    ## shows help about
+    # shows help about
     # \brief It shows message box with help about
     def helpAbout(self):
         QMessageBox.about(
@@ -68,7 +72,7 @@ class HelpSlots(object):
                 unicode(PYQT_VERSION_STR),
                 unicode(platform.system())))
 
-    ## shows the detail help
+    # shows the detail help
     # \brief It shows the detail help from help directory
     def helpHelp(self):
         form = HelpForm("index.html", self.main)

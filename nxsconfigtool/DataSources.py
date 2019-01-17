@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file DataSources.py
+# \package nxsconfigtool nexdatas
+# \file DataSources.py
 # Data Sources for  datasource dialog class
 
 """ widget for different types of datasources """
@@ -26,6 +26,7 @@ from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem)
 from PyQt5.QtXml import (QDomDocument)
 from PyQt5 import uic
 import os
+import sys
 
 # from .ui.ui_clientdsdlg import Ui_ClientDsDlg
 # from .ui.ui_dbdsdlg import Ui_DBDsDlg
@@ -50,36 +51,40 @@ _pyevalformclass, _pyevalbaseclass = uic.loadUiType(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
                  "ui", "pyevaldsdlg.ui"))
 
-## CLIENT dialog impementation
+if sys.version_info > (3,):
+    unicode = str
+
+
+# CLIENT dialog impementation
 class ClientSource(object):
-    ## allowed subitems
+    # allowed subitems
     subItems = ["record", "doc"]
-    ## variables
+    # variables
     var = {
-        ## client record name
+        # client record name
         "recordName": u''}
 
-    ## constructor
-    ## \param main datasource dialog
+    # constructor
+    # \param main datasource dialog
     def __init__(self, main):
-        ## widget class
+        # widget class
         self.widgetClass = _clientformclass
-        ## widget
+        # widget
         self.ui = None
-        ##  main datasource dialog
+        #  main datasource dialog
         self.main = main
 
-    ## checks if widget button should be enable
+    # checks if widget button should be enable
     # \returns if widget button should be enable
     def isEnable(self):
         return bool(self.ui.cRecNameLineEdit.text())
 
-    ## calls updateUi when the name text is changing
+    # calls updateUi when the name text is changing
     def __cRecNameLineEdit(self):
         combo = unicode(self.main.ui.typeComboBox.currentText())
         self.main.updateUi(combo)
 
-    ## connects the dialog actions
+    # connects the dialog actions
     def connectWidgets(self):
         try:
             self.ui.cRecNameLineEdit.textChanged.disconnect(
@@ -95,21 +100,21 @@ class ClientSource(object):
         #     self.ui.cRecNameLineEdit, SIGNAL("textChanged(str)"),
         #     self.__cRecNameLineEdit)
 
-    ## sets the tab order of subframe
+    # sets the tab order of subframe
     # \param first first widget from the parent dialog
     # \param last last widget from the parent dialog
     def setTabOrder(self, first, last):
         self.main.setTabOrder(first, self.ui.cRecNameLineEdit)
         self.main.setTabOrder(self.ui.cRecNameLineEdit, last)
 
-    ## updates datasource ui
+    # updates datasource ui
     # \param datasource class
     def updateForm(self, datasource):
         if datasource.var['CLIENT'].recordName is not None:
             self.ui.cRecNameLineEdit.setText(
                 datasource.var['CLIENT'].recordName)
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param datasource class
     def setFromNode(self, datasource):
         record = self.main.node.firstChildElement(str("record"))
@@ -122,7 +127,7 @@ class ClientSource(object):
                 attributeMap.namedItem("name").nodeValue()
                 if attributeMap.contains("name") else "")
 
-    ## copies parameters from form to datasource instance
+    # copies parameters from form to datasource instance
     # \param datasource class
     def fromForm(self, datasource):
         recName = unicode(self.ui.cRecNameLineEdit.text())
@@ -134,7 +139,7 @@ class ClientSource(object):
             return
         datasource.var['CLIENT'].recordName = recName
 
-    ## creates datasource nodes
+    # creates datasource nodes
     # \param datasource class
     # \param root root node
     # \param elem datasource node
@@ -145,36 +150,36 @@ class ClientSource(object):
         elem.appendChild(record)
 
 
-## DB dialog impementation
+# DB dialog impementation
 class DBSource(object):
-    ## allowed subitems
+    # allowed subitems
     subItems = ["query", "database", "doc"]
-    ## variables
+    # variables
     var = {
-        ## database type
+        # database type
         'dbtype': 'MYSQL',
-        ## database format
+        # database format
         'dataFormat': 'SCALAR',
-        ## database query
+        # database query
         'query': "",
-        ## database parameters
+        # database parameters
         'parameters': {}
     }
 
-    ## constructor
-    ## \param main datasource dialog
+    # constructor
+    # \param main datasource dialog
     def __init__(self, main):
-        ## widget class
+        # widget class
         self.widgetClass = _dbformclass
-        ## widget
+        # widget
         self.ui = None
-        ## main datasource dialog
+        # main datasource dialog
         self.main = main
 
-        ## database parameters
+        # database parameters
         self.dbParam = {}
 
-        ## parameter map for xml tags
+        # parameter map for xml tags
         self.__dbmap = {
             "dbname": "DB name",
             "hostname": "DB host",
@@ -186,21 +191,21 @@ class DBSource(object):
         }
         self.__idbmap = dict(zip(self.__dbmap.values(), self.__dbmap.keys()))
 
-    ## clears widget parameters
+    # clears widget parameters
     def clear(self):
         self.dbParam = {}
 
-    ## checks if widget button should be enable
+    # checks if widget button should be enable
     # \returns if widget button should be enable
     def isEnable(self):
         return bool(self.ui.dQueryLineEdit.text())
 
-    ## calls updateUi when the name text is changing
+    # calls updateUi when the name text is changing
     def __dQueryLineEdit(self):
         combo = unicode(self.main.ui.typeComboBox.currentText())
         self.main.updateUi(combo)
 
-    ## calls updateUi when the name text is changing
+    # calls updateUi when the name text is changing
     # \param text the edited text
     def __dParamComboBox(self, text):
         param = unicode(text)
@@ -212,7 +217,7 @@ class DBSource(object):
 
         self.populateParameters(unicode(text))
 
-    ## adds an parameter
+    # adds an parameter
     #  \brief It runs the Parameter Dialog and fetches parameter name
     #         and value
     def __addParameter(self):
@@ -221,7 +226,7 @@ class DBSource(object):
             self.dbParam[name] = ""
         self.populateParameters(name)
 
-    ## takes a name of the current parameter
+    # takes a name of the current parameter
     # \returns name of the current parameter
     def __currentTableParameter(self):
         item = self.ui.dParameterTableWidget.item(
@@ -230,7 +235,7 @@ class DBSource(object):
             return None
         return item.data(Qt.UserRole).toString()
 
-    ## removes an parameter
+    # removes an parameter
     #  \brief It removes the current parameter asking before about it
     def __removeParameter(self):
         param = self.__currentTableParameter()
@@ -246,7 +251,7 @@ class DBSource(object):
             self.dbParam.pop(unicode(param))
             self.populateParameters()
 
-    ## changes the current value of the parameter
+    # changes the current value of the parameter
     # \brief It changes the current value of the parameter and informs
     #        the user that parameter names arenot editable
     def __tableItemChanged(self, item):
@@ -263,7 +268,7 @@ class DBSource(object):
                 "please remove the parameter and add the new one")
         self.populateParameters()
 
-    ## fills in the paramter table
+    # fills in the paramter table
     # \param selectedParameter selected parameter
     def populateParameters(self, selectedParameter=None):
         selected = None
@@ -290,7 +295,7 @@ class DBSource(object):
             self.ui.dParameterTableWidget.setCurrentItem(selected)
             self.ui.dParameterTableWidget.editItem(selected)
 
-    ## connects the dialog actions
+    # connects the dialog actions
     def connectWidgets(self):
         try:
             self.ui.dQueryLineEdit.textChanged.disconnect(
@@ -331,7 +336,7 @@ class DBSource(object):
         #     self.ui.dParameterTableWidget,
         #     SIGNAL("itemChanged(QTableWidgetItem*)"),
         #     self.__tableItemChanged)
-        
+
         self.ui.dQueryLineEdit.textChanged.connect(self.__dQueryLineEdit)
         self.ui.dParamComboBox.currentIndexChanged.connect(
             self.__dParamComboBox)
@@ -356,7 +361,7 @@ class DBSource(object):
         #     SIGNAL("itemChanged(QTableWidgetItem*)"),
         #     self.__tableItemChanged)
 
-    ## sets the tab order of subframe
+    # sets the tab order of subframe
     # \param first first widget from the parent dialog
     # \param last last widget from the parent dialog
     def setTabOrder(self, first, last):
@@ -375,7 +380,7 @@ class DBSource(object):
             self.ui.dRemovePushButton, self.ui.dParameterTableWidget)
         self.main.setTabOrder(self.ui.dParameterTableWidget, last)
 
-    ## updates datasource ui
+    # updates datasource ui
     # \param datasource class
     def updateForm(self, datasource):
         if datasource.var['DB'].dbtype is not None:
@@ -410,7 +415,7 @@ class DBSource(object):
                     (unicode(par))]
         self.populateParameters()
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param datasource class
     def setFromNode(self, datasource):
         database = self.main.node.firstChildElement(str("database"))
@@ -453,7 +458,7 @@ class DBSource(object):
         text = unicode(DomTools.getText(query))
         datasource.var['DB'].query = unicode(text).strip() if text else ""
 
-    ## copies parameters from form to datasource instance
+    # copies parameters from form to datasource instance
     # \param datasource class
     def fromForm(self, datasource):
         query = unicode(self.ui.dQueryLineEdit.text()).strip()
@@ -472,7 +477,7 @@ class DBSource(object):
         for par in self.dbParam.keys():
             datasource.var['DB'].parameters[par] = self.dbParam[par]
 
-    ## creates datasource nodes
+    # creates datasource nodes
     # \param datasource class
     # \param root root node
     # \param elem datasource node
@@ -500,45 +505,45 @@ class DBSource(object):
         elem.appendChild(query)
 
 
-## TANGO dialog impementation
+# TANGO dialog impementation
 class TangoSource(object):
-    ## allowed subitems
+    # allowed subitems
     subItems = ["device", "record", "doc"]
 
-    ## variables
+    # variables
     var = {
-        ## Tango device name
+        # Tango device name
         'deviceName': u'',
-        ## Tango member name
+        # Tango member name
         'memberName': u'',
-        ## Tango member name
+        # Tango member name
         'memberType': u'',
-        ## Tango host name
+        # Tango host name
         'host': u'',
-        ## Tango host name
+        # Tango host name
         'port': u'',
-        ## encoding for DevEncoded Tango types
+        # encoding for DevEncoded Tango types
         'encoding': u'',
-        ## group for Tango DataSources
+        # group for Tango DataSources
         'group': u''
     }
 
-    ## \param main datasource dialog
+    # \param main datasource dialog
     def __init__(self, main):
-        ## widget class
+        # widget class
         self.widgetClass = _tangoformclass
-        ## widget
+        # widget
         self.ui = None
-        ## main datasource dialog
+        # main datasource dialog
         self.main = main
 
-    ## checks if widget button should be enable
+    # checks if widget button should be enable
     # \returns if widget button should be enable
     def isEnable(self):
         return bool(self.ui.tDevNameLineEdit.text()) and \
             bool(self.ui.tMemberNameLineEdit.text())
 
-    ## sets the tab order of subframe
+    # sets the tab order of subframe
     # \param first first widget from the parent dialog
     # \param last last widget from the parent dialog
     def setTabOrder(self, first, last):
@@ -557,7 +562,7 @@ class TangoSource(object):
             self.ui.tEncodingLineEdit, self.ui.tGroupLineEdit)
         self.main.setTabOrder(self.ui.tGroupLineEdit, last)
 
-    ## updates datasource ui
+    # updates datasource ui
     # \param datasource class
     def updateForm(self, datasource):
         if datasource.var['TANGO'].deviceName is not None:
@@ -582,17 +587,17 @@ class TangoSource(object):
         if datasource.var['TANGO'].group is not None:
             self.ui.tGroupLineEdit.setText(datasource.var['TANGO'].group)
 
-    ## calls updateUi when the name text is changing
+    # calls updateUi when the name text is changing
     def __tDevNameLineEdit(self):
         combo = unicode(self.main.ui.typeComboBox.currentText())
         self.main.updateUi(combo)
 
-    ## calls updateUi when the name text is changing
+    # calls updateUi when the name text is changing
     def __tMemberNameLineEdit(self):
         combo = unicode(self.main.ui.typeComboBox.currentText())
         self.main.updateUi(combo)
 
-    ## connects the dialog actions
+    # connects the dialog actions
     def connectWidgets(self):
         try:
             self.ui.tDevNameLineEdit.textChanged.disconnect(
@@ -622,7 +627,7 @@ class TangoSource(object):
         #     self.ui.tMemberNameLineEdit, SIGNAL("textChanged(str)"),
         #     self.__tMemberNameLineEdit)
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param datasource class
     def setFromNode(self, datasource):
         record = self.main.node.firstChildElement(str("record"))
@@ -660,7 +665,7 @@ class TangoSource(object):
                 attributeMap.namedItem("group").nodeValue()
                 if attributeMap.contains("group") else "")
 
-    ## copies parameters from form to datasource instance
+    # copies parameters from form to datasource instance
     # \param datasource class
     def fromForm(self, datasource):
         devName = unicode(self.ui.tDevNameLineEdit.text())
@@ -685,7 +690,7 @@ class TangoSource(object):
             self.ui.tEncodingLineEdit.text())
         datasource.var['TANGO'].group = unicode(self.ui.tGroupLineEdit.text())
 
-    ## creates datasource nodes
+    # creates datasource nodes
     # \param datasource class
     # \param root root node
     # \param elem datasource node
@@ -715,42 +720,42 @@ class TangoSource(object):
         elem.appendChild(device)
 
 
-## PYEVAL dialog impementation
+# PYEVAL dialog impementation
 class PyEvalSource(object):
-    ## allowed subitems
+    # allowed subitems
     subItems = ["datasource", "result", "doc"]
 
-    ## variables
+    # variables
     var = {
-        ## pyeval result variable
+        # pyeval result variable
         'result': "ds.result",
-        ## pyeval datasource variables
+        # pyeval datasource variables
         'input': "",
-        ## pyeval python script
+        # pyeval python script
         'script': "",
-        ## pyeval datasources
+        # pyeval datasources
         'dataSources': {}
     }
 
-    ## \param main datasource dialog
+    # \param main datasource dialog
     def __init__(self, main):
-        ## widget class
+        # widget class
         self.widgetClass = _pyevalformclass
-        ## widget
+        # widget
         self.ui = None
-        ## main datasource dialog
+        # main datasource dialog
         self.main = main
 
-    ## checks if widget button should be enable
+    # checks if widget button should be enable
     # \returns if widget button should be enable
     def isEnable(self):
         return True
 
-    ## connects the dialog actions
+    # connects the dialog actions
     def connectWidgets(self):
         pass
 
-    ## sets the tab order of subframe
+    # sets the tab order of subframe
     # \param first first widget from the parent dialog
     # \param last last widget from the parent dialog
     def setTabOrder(self, first, last):
@@ -761,7 +766,7 @@ class PyEvalSource(object):
             self.ui.peScriptTextEdit, self.ui.peResultLineEdit)
         self.main.setTabOrder(self.ui.peResultLineEdit, last)
 
-    ## updates datasource ui
+    # updates datasource ui
     # \param datasource class
     def updateForm(self, datasource):
         if datasource.var['PYEVAL'].result is not None:
@@ -771,7 +776,7 @@ class PyEvalSource(object):
         if datasource.var['PYEVAL'].script is not None:
             self.ui.peScriptTextEdit.setText(datasource.var['PYEVAL'].script)
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param datasource class
     def setFromNode(self, datasource):
         res = self.main.node.firstChildElement(str("result"))
@@ -809,7 +814,7 @@ class PyEvalSource(object):
             "ds." + (d[13:] if (len(d) > 13 and d[:13] == "$datasources.")
                      else d) for d in dslist)
 
-    ## copies parameters from form to datasource instance
+    # copies parameters from form to datasource instance
     # \param datasource class
     def fromForm(self, datasource):
         datasource.var['PYEVAL'].input = \
@@ -825,7 +830,7 @@ class PyEvalSource(object):
             return
         datasource.var['PYEVAL'].script = script
 
-    ## creates datasource nodes
+    # creates datasource nodes
     # \param datasource class
     # \param root root node
     # \param elem datasource node

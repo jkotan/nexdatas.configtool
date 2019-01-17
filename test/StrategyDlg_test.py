@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file StrategyDlgTest.py
+# \package test nexdatas
+# \file StrategyDlgTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -45,11 +45,11 @@ from nxsconfigtool.ui.ui_strategydlg import Ui_StrategyDlg
 from nxsconfigtool.DomTools import DomTools
 
 
-##  Qt-application
+#  Qt-application
 app = None
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 class TestView(object):
@@ -68,10 +68,10 @@ class TestView(object):
         self.stack.append("expand")
         self.stack.append(index)
 
-## test fixture
+# test fixture
 class StrategyDlgTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
@@ -81,19 +81,19 @@ class StrategyDlgTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
-        ## MessageBox text
+        # MessageBox text
         self.text = None
-        ## MessageBox title
+        # MessageBox title
         self.title = None
 
-        ## attribute name
+        # attribute name
         self.aname = "myname"
-        ## attribute value
+        # attribute value
         self.avalue = "myentry"
 
         self.dimensions = [1,2,3,4]
 
-        ## action status
+        # action status
         self.performed = False
 
         try:
@@ -105,14 +105,14 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
         print "SEED =", self.__seed 
         
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
@@ -199,7 +199,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
@@ -231,7 +231,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.reset,super(StrategyDlg,form).reset )
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_accept(self):
         fun = sys._getframe().f_code.co_name
@@ -310,7 +310,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_updateForm(self):
         fun = sys._getframe().f_code.co_name
@@ -701,7 +701,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_getState(self):
         fun = sys._getframe().f_code.co_name
@@ -934,7 +934,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_setState(self):
         fun = sys._getframe().f_code.co_name
@@ -1269,7 +1269,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_createGUI(self):
         fun = sys._getframe().f_code.co_name
@@ -1682,7 +1682,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_setFromNode(self):
         fun = sys._getframe().f_code.co_name
@@ -1793,7 +1793,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_setFromNode_parameter(self):
         fun = sys._getframe().f_code.co_name
@@ -1904,7 +1904,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_setFromNode_nonode(self):
         fun = sys._getframe().f_code.co_name
@@ -2014,7 +2014,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_setFromNode_clean(self):
         fun = sys._getframe().f_code.co_name
@@ -2120,7 +2120,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_updateNode(self):
         fun = sys._getframe().f_code.co_name
@@ -2308,7 +2308,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_updateNode_withindex(self):
         fun = sys._getframe().f_code.co_name
@@ -2480,7 +2480,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_apply(self):
         fun = sys._getframe().f_code.co_name
@@ -2742,7 +2742,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_reset(self):
         fun = sys._getframe().f_code.co_name
@@ -3277,10 +3277,10 @@ class StrategyDlgTest(unittest.TestCase):
         self.performed = True
 
 
-    ## constructor test
+    # constructor test
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions(self):
         fun = sys._getframe().f_code.co_name
@@ -3298,7 +3298,7 @@ class StrategyDlgTest(unittest.TestCase):
 
         self.assertEqual(form.result(),0)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action(self):
         fun = sys._getframe().f_code.co_name
@@ -3318,7 +3318,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_button(self):
         fun = sys._getframe().f_code.co_name
@@ -3341,7 +3341,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
@@ -3368,7 +3368,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
@@ -3397,7 +3397,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_link_button(self):
         fun = sys._getframe().f_code.co_name
@@ -3422,7 +3422,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def ttest_connect_actions_with_action_and_apply_button(self):
         fun = sys._getframe().f_code.co_name
@@ -3451,7 +3451,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_and_sapply_button(self):
         fun = sys._getframe().f_code.co_name
@@ -3480,7 +3480,7 @@ class StrategyDlgTest(unittest.TestCase):
         self.assertEqual(form.result(),0)
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_and_slink_button(self):
         fun = sys._getframe().f_code.co_name
@@ -3511,7 +3511,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name
@@ -3542,7 +3542,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_link_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name

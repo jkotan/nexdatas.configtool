@@ -15,13 +15,14 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file LinkDlg.py
+# \package nxsconfigtool nexdatas
+# \file LinkDlg.py
 # Link dialog class
 
 """ link widget """
 
 import os
+import sys
 
 from PyQt5.QtCore import (QModelIndex)
 from PyQt5.QtWidgets import (QMessageBox)
@@ -32,36 +33,39 @@ from .Errors import CharacterError
 from .DomTools import DomTools
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
 _formclass, _baseclass = uic.loadUiType(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
                  "ui", "linkdlg.ui"))
 
+if sys.version_info > (3,):
+    unicode = str
 
-## dialog defining a tag link
+
+# dialog defining a tag link
 class LinkDlg(NodeDlg):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(LinkDlg, self).__init__(parent)
 
-        ## link name
+        # link name
         self.name = u''
-        ## link target
+        # link target
         self.target = u''
-        ## field doc
+        # field doc
         self.doc = u''
 
-        ## allowed subitems
+        # allowed subitems
         self.subItems = ["doc", "datasource", "strategy"]
 
-        ## user interface
+        # user interface
         self.ui = _formclass()
 
-    ## updates the link dialog
+    # updates the link dialog
     # \brief It sets the form local variables
     def updateForm(self):
         if self.name is not None:
@@ -72,7 +76,7 @@ class LinkDlg(NodeDlg):
         if self.target is not None:
             self.ui.targetLineEdit.setText(self.target)
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
 
@@ -86,7 +90,7 @@ class LinkDlg(NodeDlg):
         self.ui.nameLineEdit.textEdited[str].connect(
             self._updateUi)
 
-    ## provides the state of the link dialog
+    # provides the state of the link dialog
     # \returns state of the group in tuple
     def getState(self):
 
@@ -96,7 +100,7 @@ class LinkDlg(NodeDlg):
                  )
         return state
 
-    ## sets the state of the link dialog
+    # sets the state of the link dialog
     # \param state link state written in tuple
     def setState(self, state):
 
@@ -105,11 +109,11 @@ class LinkDlg(NodeDlg):
          self.doc
          ) = state
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         if node:
-            ## defined in NodeDlg
+            # defined in NodeDlg
             self.node = node
         if not self.node:
             return
@@ -130,13 +134,13 @@ class LinkDlg(NodeDlg):
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
-    ## updates link user interface
+    # updates link user interface
     # \brief It sets enable or disable the OK button
     def _updateUi(self):
         enable = bool(self.ui.nameLineEdit.text())
         self.ui.applyPushButton.setEnabled(enable)
 
-    ## accepts input text strings
+    # accepts input text strings
     # \brief It copies the link name and target from lineEdit widgets
     #        and accept the dialog
     def apply(self):
@@ -150,7 +154,7 @@ class LinkDlg(NodeDlg):
                 raise CharacterError(
                     "The first character of Name is '-'")
 
-        except CharacterError, e:
+        except CharacterError as e:
             QMessageBox.warning(self, "Character Error", unicode(e))
             return
         self.name = name
@@ -171,7 +175,7 @@ class LinkDlg(NodeDlg):
         self.view.model().dataChanged.emit(index, finalIndex)
         self.view.expand(index)
 
-    ## updates the Node
+    # updates the Node
     # \brief It sets node from the dialog variables
     def updateNode(self, index=QModelIndex()):
         elem = self.node.toElement()
@@ -208,9 +212,9 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## link form
+    # link form
     form = LinkDlg()
     form.name = 'data'
     form.target = '/NXentry/NXinstrument/NXdetector/data'

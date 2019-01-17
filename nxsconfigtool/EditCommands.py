@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file EditCommands.py
+# \package nxsconfigtool nexdatas
+# \file EditCommands.py
 # user commands of GUI application
 
 """ Component Designer commands """
@@ -29,25 +29,25 @@ from .Component import Component
 
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
 
-## Command which opens dialog with the current component
+# Command which opens dialog with the current component
 class ComponentEdit(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._cp = None
         self._cpEdit = None
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It opens dialog with the current component
     def redo(self):
         if self._cp is None:
@@ -103,28 +103,28 @@ class ComponentEdit(QUndoCommand):
 
         logger.debug("EXEC componentEdit")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It does nothing
     def undo(self):
         logger.debug("UNDO componentEdit")
 
 
-## Command which copies the current datasource into the clipboard
+# Command which copies the current datasource into the clipboard
 class DataSourceCopy(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._ds = None
         self._oldstate = None
         self._newstate = None
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It copies the current datasource into the clipboard
     def redo(self):
         if self._ds is None:
@@ -167,7 +167,7 @@ class DataSourceCopy(QUndoCommand):
 
         logger.debug("EXEC dsourceCopy")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It updates state of datasource to the old state
     def undo(self):
         if self._ds is not None and hasattr(self._ds, 'instance') \
@@ -202,22 +202,22 @@ class DataSourceCopy(QUndoCommand):
         logger.debug("UNDO dsourceCopy")
 
 
-## Command which moves the current datasource into the clipboard
+# Command which moves the current datasource into the clipboard
 class DataSourceCut(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._ds = None
         self._oldstate = None
         self._newstate = None
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It moves the current datasource into the clipboard
     def redo(self):
         if self._ds is None:
@@ -267,7 +267,7 @@ class DataSourceCut(QUndoCommand):
 
         logger.debug("EXEC dsourceCut")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It copy back the removed datasource
     def undo(self):
         if self._ds is not None and hasattr(self._ds, 'instance') \
@@ -307,22 +307,22 @@ class DataSourceCut(QUndoCommand):
         logger.debug("UNDO dsourceCut")
 
 
-## Command which pastes the current datasource from the clipboard
+# Command which pastes the current datasource from the clipboard
 class DataSourcePaste(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._ds = None
         self._oldstate = None
         self._newstate = None
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It pastes the current datasource from the clipboard
     def redo(self):
         if self._ds is None:
@@ -386,7 +386,7 @@ class DataSourcePaste(QUndoCommand):
                 self.receiver.sourceList.populateElements()
         logger.debug("EXEC dsourcePaste")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It remove the pasted datasource
     def undo(self):
         if self._ds is not None and hasattr(self._ds, 'instance') \
@@ -426,22 +426,22 @@ class DataSourcePaste(QUndoCommand):
         logger.debug("UNDO dsourcePaste")
 
 
-## Command which applies the changes from the form for the current datasource
+# Command which applies the changes from the form for the current datasource
 class DataSourceApply(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._ds = None
         self._oldstate = None
         self._newstate = None
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It applies the changes from the form for the current datasource
     def redo(self):
         if self._ds is None:
@@ -517,7 +517,7 @@ class DataSourceApply(QUndoCommand):
 
         logger.debug("EXEC dsourceApply")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It recovers the old state of the current datasource
     def undo(self):
         if self._ds is not None and hasattr(self._ds, 'instance') \
@@ -562,19 +562,19 @@ class DataSourceApply(QUndoCommand):
         logger.debug("UNDO dsourceApply")
 
 
-## Command which takes the datasources from the current component
+# Command which takes the datasources from the current component
 class ComponentTakeDataSources(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._cp = None
 
-    ## executes the command
+    # executes the command
     # \brief It reloads the datasources from the current datasource directory
     #        into the datasource list
     def redo(self):
@@ -605,28 +605,28 @@ class ComponentTakeDataSources(QUndoCommand):
 
         logger.debug("EXEC componentTakeDataSources")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It does nothing
     def undo(self):
         logger.debug("UNDO componentTakeDataSources")
 
 
-## Command which takes the datasources from the current component
+# Command which takes the datasources from the current component
 class ComponentTakeDataSource(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._cp = None
         self._ids = None
         self._ds = None
         self._lids = None
 
-    ## executes the command
+    # executes the command
     # \brief It reloads the datasources from the current datasource directory
     #        into the datasource list
     def redo(self):
@@ -672,7 +672,7 @@ class ComponentTakeDataSource(QUndoCommand):
 
         logger.debug("EXEC componentTakeDataSource")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It does nothing
     def undo(self):
         logger.debug("UNDO componentTakeDataSource")
@@ -689,21 +689,21 @@ class ComponentTakeDataSource(QUndoCommand):
         self.receiver.sourceList.populateElements(self._lids)
 
 
-## Command which opens the dialog with the current datasource
+# Command which opens the dialog with the current datasource
 class DataSourceEdit(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._ds = None
         self._dsEdit = None
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It opens the dialog with the current datasource
     def redo(self):
         if self._ds is None:

@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file DimensionsDlg.py
+# \package nxsconfigtool nexdatas
+# \file DimensionsDlg.py
 # Dimensions dialog class
 
 """ dimensions widget """
@@ -26,35 +26,41 @@ from PyQt5.QtWidgets import (QTableWidgetItem, QMessageBox, QDialog)
 from PyQt5 import uic
 
 import os
+import sys
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
 _formclass, _baseclass = uic.loadUiType(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
                  "ui", "dimensionsdlg.ui"))
 
-## dialog defining a dimensions tag
+if sys.version_info > (3,):
+    unicode = str
+    long = int
+
+
+# dialog defining a dimensions tag
 class DimensionsDlg(QDialog):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(DimensionsDlg, self).__init__(parent)
 
-        ## dimensions rank
+        # dimensions rank
         self.rank = 0
-        ## dimensions lengths
+        # dimensions lengths
         self.lengths = []
 
-        ## user interface
+        # user interface
         self.ui = _formclass()
 
-        ## allowed subitems
+        # allowed subitems
         self.subItems = ["dim"]
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
 
@@ -92,12 +98,12 @@ class DimensionsDlg(QDialog):
 
         self.ui.rankSpinBox.valueChanged[int].connect(self.__valueChanged)
 
-    ## takes a name of the current dim
+    # takes a name of the current dim
     # \returns name of the current dim
     def __currentTableDim(self):
         return self.ui.dimTableWidget.currentRow()
 
-    ## changes the current value of the dim
+    # changes the current value of the dim
     # \brief It changes the current value of the dim
     # and informs the user about wrong values
     def __tableItemChanged(self, item):
@@ -124,13 +130,13 @@ class DimensionsDlg(QDialog):
 
         self.__populateLengths()
 
-    ## calls updateUi when the name text is changing
+    # calls updateUi when the name text is changing
     # \param text the edited text
     def __valueChanged(self):
         self.rank = int(self.ui.rankSpinBox.value())
         self.__populateLengths(self.rank - 1)
 
-    ## fills in the dim table
+    # fills in the dim table
     # \param selectedDim selected dim
     def __populateLengths(self, selectedDim=None):
         selected = None
@@ -161,7 +167,7 @@ class DimensionsDlg(QDialog):
             self.ui.dimTableWidget.setCurrentItem(selected)
             self.ui.dimTableWidget.editItem(selected)
 
-    ## accepts input text strings
+    # accepts input text strings
     # \brief It copies the dimensions name and type from lineEdit widgets
     #        and accept the dialog
     def accept(self):
@@ -169,15 +175,16 @@ class DimensionsDlg(QDialog):
             self.lengths.pop()
         QDialog.accept(self)
 
+
 if __name__ == "__main__":
     import sys
     from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## dimensions form
+    # dimensions form
     form = DimensionsDlg()
     form.rank = 2
     form.lengths = [25, 27]

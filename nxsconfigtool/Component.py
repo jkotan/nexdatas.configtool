@@ -15,18 +15,19 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file Component.py
+# \package nxsconfigtool nexdatas
+# \file Component.py
 # component classes
 
 """ component widget data """
 
 import os
+import sys
 
 from PyQt5.QtCore import (QModelIndex, Qt,
                           QFileInfo, QFile, QIODevice, QTextStream)
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QApplication,
-                         QMenu, QFileDialog, QMessageBox)
+                             QMenu, QFileDialog, QMessageBox)
 from PyQt5.QtXml import (QDomDocument)
 
 
@@ -43,30 +44,33 @@ from .DomTools import DomTools
 from .ComponentDlg import ComponentDlg
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+if sys.version_info > (3,):
+    unicode = str
 
-## Component data
+
+# Component data
 class Component(object):
 
-    ## constructor
+    # constructor
     # \brief Sets variables
     def __init__(self, parent=None):
 
-        ## directory from which components are loaded by default
+        # directory from which components are loaded by default
         self.directory = ""
-        ## component view
+        # component view
         self.view = None
-        ## component id
+        # component id
         self.id = None
-        ## component name
+        # component name
         self.name = ""
-        ## component dialog
+        # component dialog
         self.dialog = None
-        ## component DOM document
+        # component DOM document
         self.document = None
-        ## parent node
+        # parent node
         self.parent = parent
 
         if os.path.exists(os.path.join(os.getcwd(), "components")):
@@ -83,23 +87,23 @@ class Component(object):
 
         self._componentFile = None
 
-#        ## item frame
+#        # item frame
 #        self.frame = None
-        ## component actions
+        # component actions
         self._actions = None
 
-        ## save action
+        # save action
         self.externalSave = None
-        ## strore action
+        # strore action
         self.externalStore = None
-        ## apply action
+        # apply action
         self.externalApply = None
-        ## close action
+        # close action
         self.externalClose = None
-        ## datasource link action
+        # datasource link action
         self.externalDSLink = None
 
-        ## item class shown in the frame
+        # item class shown in the frame
         self._tagClasses = {"field": FieldDlg,
                             "group": GroupDlg,
                             "definition": DefinitionDlg,
@@ -109,34 +113,34 @@ class Component(object):
                             "strategy": StrategyDlg
                             }
 
-        ## current component tag
+        # current component tag
         self._currentTag = None
         self._frameLayout = None
 
-        ## if merging compited
+        # if merging compited
         self._merged = False
 
-        ## merger dialog
+        # merger dialog
         self._mergerdlg = None
 
-        ## merger
+        # merger
         self._merger = None
 
-        ## show all attribures or only the type attribute
+        # show all attribures or only the type attribute
         self._allAttributes = False
 
-        ## saved XML
+        # saved XML
         self.savedXML = None
 
-        ## tag counter
+        # tag counter
         self._tagCnt = 0
 
-        ## sub components
+        # sub components
         self.components = []
-        ## sub datasources
+        # sub datasources
         self.datasources = []
 
-    ## fetches $datasources and $components from xml
+    # fetches $datasources and $components from xml
     # \brief populate components and datasources
     def fetchElements(self):
         dss = set()
@@ -148,18 +152,18 @@ class Component(object):
         self.components = list(cps)
         self.datasources = list(dss)
 
-    ## provides attribute flag
+    # provides attribute flag
     # \returns flag if all attributes have to be shown
     def getAttrFlag(self):
         return self._allAttributes
 
-    ## checks if not saved
+    # checks if not saved
     # \returns True if it is not saved
     def isDirty(self):
         string = self.get()
         return False if string == self.savedXML else True
 
-    ## provides the path of component tree for a given node
+    # provides the path of component tree for a given node
     # \param node DOM node
     # \returns path represented as a list with elements:
     #         (row number, node name)
@@ -189,7 +193,7 @@ class Component(object):
             path = [(0, 'definition')]
         return path
 
-    ## provides the current component tree item
+    # provides the current component tree item
     # \returns DOM node instance
     def _getCurrentNode(self):
         index = QModelIndex()
@@ -202,7 +206,7 @@ class Component(object):
             return
         return item.node
 
-    ## provides the current view index
+    # provides the current view index
     # \returns the current view index
     def currentIndex(self):
         index = QModelIndex()
@@ -213,7 +217,7 @@ class Component(object):
                 pass
         return index
 
-    ## provides the path of component tree for the current component tree item
+    # provides the path of component tree for the current component tree item
     # \returns path represented as a list with elements:
     #          (row number, node name)
     def _getPath(self):
@@ -237,14 +241,14 @@ class Component(object):
 
         return path
 
-    ## selects and opens the last nodes of the given list in the component tree
+    # selects and opens the last nodes of the given list in the component tree
     # \param nodes list of DOM nodes
     def _showNodes(self, nodes):
         for node in nodes:
             path = self._getPathFromNode(node)
             self._selectItem(path)
 
-    ## provides  index of the component item defined by the path
+    # provides  index of the component item defined by the path
     # \param path path represented as a list with elements:
     #        (row number, node name)
     # \returns component item index
@@ -258,7 +262,7 @@ class Component(object):
             self.view.expand(index)
         return index
 
-    ## selectes item defined by path in component tree
+    # selectes item defined by path in component tree
     # \param path path represented as a list with elements:
     #        (row number, node name)
     def _selectItem(self, path):
@@ -269,25 +273,25 @@ class Component(object):
             self.tagClicked(index)
             self.view.expand(index)
 
-    ## provides the state of the component dialog
+    # provides the state of the component dialog
     # \returns tuple with (xml string, path)
     def getState(self):
         path = self._getPath()
         return (self.document.toString(0), path)
 
-    ## sets the state of the component dialog
+    # sets the state of the component dialog
     # \param state tuple with (xml string, path)
     def setState(self, state):
         (xml, path) = state
         try:
             self._loadFromString(xml)
-        except (IOError, OSError, ValueError), e:
+        except (IOError, OSError, ValueError) as e:
             error = "Failed to load: %s" % e
             logger.warn(error)
         self._hideFrame()
         self._selectItem(path)
 
-    ## updates the component dialog
+    # updates the component dialog
     # \brief It creates model and frame item
     def updateForm(self):
         self.dialog.ui.splitter.setStretchFactor(0, 1)
@@ -302,7 +306,7 @@ class Component(object):
         self._frameLayout.addWidget(self.dialog.ui.widget)
         self.dialog.ui.frame.setLayout(self._frameLayout)
 
-    ## applies component item
+    # applies component item
     # \brief it checks if item widget exists and calls apply of the item widget
     def applyItem(self):
         if not self.view or not self.view.model() or not self.dialog \
@@ -319,7 +323,7 @@ class Component(object):
         self.fetchElements()
         return True
 
-    ## moving node up
+    # moving node up
     # \param node DOM node
     # \param parent parent node index
     # \returns the new row number if changed otherwise None
@@ -336,7 +340,7 @@ class Component(object):
                 self.view.model().insertItem(row - 1, node, parent)
                 return row - 1
 
-    ## moving node down
+    # moving node down
     # \param node DOM node
     # \param parent parent node index
     # \returns the new row number if changed otherwise None
@@ -356,7 +360,7 @@ class Component(object):
                     self.view.model().appendItem(node, parent)
                 return row + 1
 
-    ## moves component item up
+    # moves component item up
     # \returns the new row number if item move othewise None
     def moveUpItem(self):
         if not self.view or not self.dialog or not self.view.model():
@@ -377,7 +381,7 @@ class Component(object):
             self.view.model().dataChanged.emit(parent, parent)
             return row
 
-    ## moves component item up
+    # moves component item up
     # \returns the new row number if item move othewise None
     def moveDownItem(self):
         if not self.view or not self.dialog or not self.view.model():
@@ -398,7 +402,7 @@ class Component(object):
             self.view.model().dataChanged.emit(parent, parent)
             return row
 
-    ## converts DOM node to XML string
+    # converts DOM node to XML string
     # \param component DOM node
     # \returns XML string
     @classmethod
@@ -408,7 +412,7 @@ class Component(object):
         doc.appendChild(child)
         return unicode(doc.toString(0))
 
-    ## converts XML string to DOM node
+    # converts XML string to DOM node
     # \param xml XML string
     # \returns component DOM node
     def _stringToNode(self, xml):
@@ -421,7 +425,7 @@ class Component(object):
         if self.document and doc and doc.hasChildNodes():
             return self.document.importNode(doc.firstChild(), True)
 
-    ## pastes the component item from the clipboard into the component tree
+    # pastes the component item from the clipboard into the component tree
     # \returns True on success
     def pasteItem(self):
         if not self.view or not self.dialog or not self.view.model() \
@@ -459,7 +463,7 @@ class Component(object):
         self.fetchElements()
         return True
 
-    ## creates the component item with the given name in the component tree
+    # creates the component item with the given name in the component tree
     # \param name component item name
     # \returns component DOM node related to the new item
     def addItem(self, name):
@@ -487,7 +491,7 @@ class Component(object):
         if status:
             return child
 
-    ## removes the currenct component tree item if possible
+    # removes the currenct component tree item if possible
     # \returns True on success
     def removeSelectedItem(self):
 
@@ -526,7 +530,7 @@ class Component(object):
         self.fetchElements()
         return True
 
-    ## copies the currenct component tree item if possible
+    # copies the currenct component tree item if possible
     # \returns True on success
     def copySelectedItem(self):
         if not self.view or not self.dialog or not self.view.model() \
@@ -544,7 +548,7 @@ class Component(object):
         self.fetchElements()
         return True
 
-    ## creates GUI
+    # creates GUI
     # It calls setupUi and creates required action connections
     def createGUI(self):
         self.dialog = ComponentDlg(self, self.parent)
@@ -554,7 +558,7 @@ class Component(object):
         self.updateForm()
         self.connectView()
 
-    ## connects the view and model into resize and click command
+    # connects the view and model into resize and click command
     def connectView(self):
         try:
             self.view.selectionModel().currentChanged.disconnect(
@@ -594,7 +598,7 @@ class Component(object):
         #     self.view, SIGNAL("collapsed(QModelIndex)"),
         #     self._resizeColumns)
 
-    ## connects the save action and stores the apply action
+    # connects the save action and stores the apply action
     # \param externalApply apply action
     # \param externalSave save action
     # \param externalClose close action
@@ -629,7 +633,7 @@ class Component(object):
         if externalDSLink and self.externalDSLink is None:
             self.externalDSLink = externalDSLink
 
-    ## reconnects save actions
+    # reconnects save actions
     # \brief It reconnects the save action
     def reconnectSaveAction(self):
         self.connectView()
@@ -676,7 +680,7 @@ class Component(object):
             #     self.dialog.ui.closePushButton, SIGNAL("clicked()"),
             #     self.externalClose)
 
-    ## switches between all attributes in the try or only type attribute
+    # switches between all attributes in the try or only type attribute
     # \param status all attributes are shown if True
     def viewAttributes(self, status):
         if status == self._allAttributes:
@@ -695,7 +699,7 @@ class Component(object):
             if cNode:
                 self._showNodes([cNode])
 
-    ## sets selected component item in the item frame
+    # sets selected component item in the item frame
     # \brief It is executed  when component tree item is selected
     # \param index of component tree item
     def tagClicked(self, index):
@@ -747,7 +751,7 @@ class Component(object):
                 self.dialog.ui.widget.hide()
             self.dialog.ui.widget = None
 
-    ## opens context Menu
+    # opens context Menu
     # \param position in the component tree
     def _openMenu(self, position):
         if not self.dialog:
@@ -764,20 +768,20 @@ class Component(object):
                 menu.addAction(action)
         menu.exec_(self.view.viewport().mapToGlobal(position))
 
-    ## sets up context menu
+    # sets up context menu
     # \param actions list of the context menu actions
     def addContextMenu(self, actions):
         self.view.setContextMenuPolicy(Qt.CustomContextMenu)
         self.view.customContextMenuRequested.connect(self._openMenu)
         self._actions = actions
 
-    ## resizes column size after tree item expansion
+    # resizes column size after tree item expansion
     # \param index index of the expanded item
     def _resizeColumns(self, index):
         for column in range(self.view.model().columnCount(index)):
             self.view.resizeColumnToContents(column)
 
-    ## sets name and directory of the current component
+    # sets name and directory of the current component
     # \param name component name
     # \param directory component directory
     def setName(self, name, directory=None):
@@ -798,7 +802,7 @@ class Component(object):
         self.name = name
         self._xmlPath = self._componentFile
 
-    ## loads the component from the file
+    # loads the component from the file
     # \param filePath xml file name with full path
     def load(self, filePath=None):
 
@@ -831,7 +835,7 @@ class Component(object):
                         self.parent, "Cannot open the file",
                         "Cannot open the file: %s" % (self._componentFile))
 
-            except (IOError, OSError, ValueError), e:
+            except (IOError, OSError, ValueError) as e:
                 error = "Failed to load: %s" % e
                 QMessageBox.warning(self.parent, "Loading problem",
                                     error)
@@ -842,7 +846,7 @@ class Component(object):
                 if fh is not None:
                     fh.close()
 
-    ## sets component from XML string and reset component file name
+    # sets component from XML string and reset component file name
     # \param xml XML string
     # \param new logical variableset to True if element is not saved
     def set(self, xml, new=False):
@@ -854,7 +858,7 @@ class Component(object):
         self.fetchElements()
         return self._componentFile
 
-    ## sets component from XML string
+    # sets component from XML string
     # \param xml XML string
     def _loadFromString(self, xml):
         self.document = QDomDocument()
@@ -877,7 +881,7 @@ class Component(object):
             self.view.setModel(newModel)
             self.connectView()
 
-    ## loads the component item from the xml file
+    # loads the component item from the xml file
     # \param filePath xml file name with full path
     def loadComponentItem(self, filePath=None):
 
@@ -930,7 +934,7 @@ class Component(object):
                     index, index)
                 self.view.expand(index)
 
-            except (IOError, OSError, ValueError), e:
+            except (IOError, OSError, ValueError) as e:
                 error = "Failed to load: %s" % e
                 QMessageBox.warning(self.parent, "Loading problem",
                                     error)
@@ -942,7 +946,7 @@ class Component(object):
         self.fetchElements()
         return True
 
-    ## loads the datasource item from the xml file
+    # loads the datasource item from the xml file
     # \param filePath xml file name with full path
     def loadDataSourceItem(self, filePath=None):
 
@@ -1000,7 +1004,7 @@ class Component(object):
                 self.view.expand(index)
                 self._dsPath = dsFile
 
-            except (IOError, OSError, ValueError), e:
+            except (IOError, OSError, ValueError) as e:
                 error = "Failed to load: %s" % e
                 logger.warn(error)
             finally:
@@ -1010,7 +1014,7 @@ class Component(object):
         self.fetchElements()
         return True
 
-    ## add the datasource into the component tree
+    # add the datasource into the component tree
     # \param dsNode datasource DOM node
     def addDataSourceItem(self, dsNode):
 
@@ -1053,7 +1057,7 @@ class Component(object):
         self.fetchElements()
         return True
 
-    ## link the datasource into the component tree
+    # link the datasource into the component tree
     # \param dsName datasource name
     def linkDataSourceItem(self, dsName):
 
@@ -1091,7 +1095,7 @@ class Component(object):
         self.fetchElements()
         return True
 
-    ## accepts merger dialog and interrupts merging
+    # accepts merger dialog and interrupts merging
     # \brief It is connected to closing Merger dialog
     def _closeMergerDlg(self):
         if self._mergerdlg:
@@ -1099,13 +1103,13 @@ class Component(object):
 
             self._interruptMerger()
 
-    ## interrupts merging
+    # interrupts merging
     # \brief It sets running flag of Merger to False
     def _interruptMerger(self):
         if self._merger:
             self._merger.running = False
 
-    ## merges the component tree
+    # merges the component tree
     # \returns True on success
     def merge(self, showMergerDlg=True):
         document = None
@@ -1187,7 +1191,7 @@ class Component(object):
 
             self._merger = None
 
-        except IncompatibleNodeError, e:
+        except IncompatibleNodeError as e:
             logger.warn("Error in Merging: %s" % unicode(e.value))
             self._merger = None
             self._merged = False
@@ -1206,7 +1210,7 @@ class Component(object):
                     self.parent, "Merging problem",
                     "Error in %s Merging: %s" % (
                         unicode(self.name), unicode(e.value)))
-        except Exception, e:
+        except Exception as e:
             logger.warn("Exception: %s" % unicode(e))
             self._merged = False
             if dialog:
@@ -1221,7 +1225,7 @@ class Component(object):
                                     "%s" % unicode(e))
         return self._merged
 
-    ## hides the component item frame
+    # hides the component item frame
     # \brief It puts an empty widget into the widget frame
     def _hideFrame(self):
         if self.dialog and self.dialog.ui:
@@ -1235,7 +1239,7 @@ class Component(object):
             self.dialog.ui.widget.show()
             self.dialog.ui.frame.show()
 
-    ## creates the new empty header
+    # creates the new empty header
     # \brief It clean the DOM tree and put into it xml and definition nodes
     def createHeader(self):
         self.document = QDomDocument()
@@ -1251,7 +1255,7 @@ class Component(object):
         self.fetchElements()
         self._hideFrame()
 
-    ## fetches tags with a given name  from the node branch
+    # fetches tags with a given name  from the node branch
     # \param name of the
     # \returns dictionary with the required tags
     def _getTags(self, node, tagName):
@@ -1279,7 +1283,7 @@ class Component(object):
 
         return ds
 
-    ## fetches the datasources from the component
+    # fetches the datasources from the component
     # \returns dictionary with datasources
     def getDataSources(self):
         ds = {}
@@ -1288,7 +1292,7 @@ class Component(object):
             ds.update(self._getTags(self.document, "datasource"))
         return ds
 
-    ## fetches the datasources from the component
+    # fetches the datasources from the component
     # \returns dictionary with datasources
     def getCurrentDataSource(self):
         ds = {}
@@ -1313,7 +1317,7 @@ class Component(object):
         ds[name] = self._nodeToString(node)
         return ds
 
-    ## provides the component in xml string
+    # provides the component in xml string
     # \param indent number of added spaces during pretty printing
     # \returns xml string
     def get(self, indent=0):
@@ -1325,7 +1329,7 @@ class Component(object):
             self.document.removeChild(processing)
             return string
 
-    ## saves the component
+    # saves the component
     # \brief It saves the component in the xml file
     def save(self):
         if not self._merged:
@@ -1349,7 +1353,7 @@ class Component(object):
                 raise ValueError("Empty component")
 
             self.savedXML = self.get()
-        except (IOError, OSError, ValueError), e:
+        except (IOError, OSError, ValueError) as e:
             error = "Failed to save: %s Please try to use Save as "\
                 "or change the component directory" % e
             QMessageBox.warning(self.parent, "Saving problem",
@@ -1371,7 +1375,7 @@ class Component(object):
             return
         self.dialog.reject()
 
-    ## provides the component name with its path
+    # provides the component name with its path
     # \returns component name with its path
     def getNewName(self):
         if self._componentFile is None:
@@ -1385,11 +1389,11 @@ class Component(object):
         return self._componentFile
 
 
-## test function
+# test function
 def test():
     import sys
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
     component = Component()
     component.createGUI()
@@ -1399,6 +1403,7 @@ def test():
     component.dialog.setWindowTitle("%s [Component]" % component.name)
 
     app.exec_()
+
 
 if __name__ == "__main__":
     test()

@@ -266,7 +266,7 @@ class RichAttributeDlg(NodeDlg):
     ## updates attribute user interface
     # \brief It sets enable or disable the OK button
     def _updateUi(self):
-        enable = not self.ui.nameLineEdit.text().isEmpty()
+        enable = bool(self.ui.nameLineEdit.text())
         self.ui.applyPushButton.setEnabled(enable)
 
     ## accepts input text strings

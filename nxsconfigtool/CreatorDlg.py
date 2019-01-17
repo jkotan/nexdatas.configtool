@@ -279,7 +279,7 @@ class StdCreatorDlg(QDialog):
     ## updates group user interface
     # \brief It sets enable or disable the OK button
     def __updateUi(self):
-        enable = not self.ui.cpNameLineEdit.text().isEmpty()
+        enable = bool(self.ui.cpNameLineEdit.text())
         self.ui.applyPushButton.setEnabled(enable)
         self.ui.storePushButton.setEnabled(enable)
         self.ui.savePushButton.setEnabled(enable)

@@ -39,7 +39,7 @@ logger = logging.getLogger("nxsdesigner")
 
 _formclass, _baseclass = uic.loadUiType(
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                 "ui", "mainwindow.ui"))
+                 "ui", "groupdlg.ui"))
 
 ## dialog defining a group tag
 class GroupDlg(NodeDlg):
@@ -294,7 +294,7 @@ class GroupDlg(NodeDlg):
     ## updates group user interface
     # \brief It sets enable or disable the OK button
     def __updateUi(self):
-        enable = not self.ui.typeLineEdit.text().isEmpty()
+        enable = bool(self.ui.typeLineEdit.text())
         self.ui.applyPushButton.setEnabled(enable)
 
     ## applys input text strings

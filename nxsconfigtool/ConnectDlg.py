@@ -79,7 +79,7 @@ class ConnectDlg(QDialog):
     ## updates connect user interface
     # \brief It sets enable or disable the OK button
     def __updateUi(self):
-        enable = not self.ui.deviceLineEdit.text().isEmpty()
+        enable = bool(self.ui.deviceLineEdit.text())
         self.ui.connectPushButton.setEnabled(enable)
 
     ## accepts input text strings

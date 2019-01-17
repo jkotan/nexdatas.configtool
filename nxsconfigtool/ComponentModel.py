@@ -103,14 +103,14 @@ class ComponentModel(QAbstractItemModel):
                     attribute = attributeMap.item(i)
                     attributes.append(attribute.nodeName() + "=\""
                                       + attribute.nodeValue() + "\"")
-                return QVariant(attributes.join(" ") + "  ")
+                return QVariant(" ".join(attributes) + "  ")
             else:
                 return QVariant(
                     (attributeMap.namedItem("type").nodeValue() + "  ")
                     if attributeMap.contains("type") else str("  "))
 
         elif index.column() == 2:
-            return QVariant(node.nodeValue().split("\n").join(" "))
+            return QVariant(" ".join(node.nodeValue().split("\n")))
         else:
             return QVariant()
 

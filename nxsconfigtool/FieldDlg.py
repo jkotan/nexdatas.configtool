@@ -385,7 +385,7 @@ class FieldDlg(NodeDlg):
     ## updates field user interface
     # \brief It sets enable or disable the OK button
     def __updateUi(self):
-        enable = not self.ui.nameLineEdit.text().isEmpty()
+        enable = bool(self.ui.nameLineEdit.text())
         self.ui.applyPushButton.setEnabled(enable)
 
     ## appends newElement

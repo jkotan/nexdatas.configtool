@@ -174,22 +174,20 @@ class FieldDlg(NodeDlg):
 
         self.__updateUi()
 
-        self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(self.ui.attributeTableWidget,
-                     SIGNAL("itemChanged(QTableWidgetItem*)"),
-                     self.__tableItemChanged)
-        self.connect(self.ui.addPushButton, SIGNAL("clicked()"),
-                     self.__addAttribute)
-        self.connect(self.ui.removePushButton, SIGNAL("clicked()"),
-                     self.__removeAttribute)
-        self.connect(self.ui.dimPushButton, SIGNAL("clicked()"),
-                     self.__changeDimensions)
+        self.ui.resetPushButton.clicked.connect(self.reset)
+        self.ui.attributeTableWidget.itemChanged.connect(
+            self.__tableItemChanged)
+        self.ui.addPushButton.clicked.connect(
+            self.__addAttribute)
+        self.ui.removePushButton.clicked.connect(
+            self.__removeAttribute)
+        self.ui.dimPushButton.clicked.connect(
+            self.__changeDimensions)
 
-        self.connect(self.ui.nameLineEdit, SIGNAL("textEdited(str)"),
-                     self.__updateUi)
-        self.connect(self.ui.typeComboBox,
-                     SIGNAL("currentIndexChanged(str)"),
-                     self.__currentIndexChanged)
+        self.ui.nameLineEdit.textEdited[str].connect(
+            self.__updateUi)
+        self.ui.typeComboBox.currentIndexChanged[str].connect(
+            self.__currentIndexChanged)
 
         self.populateAttributes()
 
@@ -447,12 +445,8 @@ class FieldDlg(NodeDlg):
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         self.view.expand(index)
-        self.view.model().emit(SIGNAL("dataChanged(const QModelIndex &,"
-                                      " const QModelIndex &)"),
-                               index, finalIndex)
-        self.view.model().emit(SIGNAL("dataChanged(const QModelIndex &,"
-                                      " const QModelIndex &)"),
-                               index, index)
+        self.view.model().dataChanged.emit(index, finalIndex)
+        self.view.model().dataChanged.emit(index, index)
 
     ## updates the Node
     # \brief It sets node from the dialog variables

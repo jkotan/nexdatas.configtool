@@ -83,16 +83,14 @@ class DimensionsDlg(QDialog):
 
         self.ui.rankSpinBox.setValue(self.rank)
 
-        self.connect(self.ui.dimTableWidget,
-                     SIGNAL("itemChanged(QTableWidgetItem*)"),
-                     self.__tableItemChanged)
+        self.ui.dimTableWidget.itemChanged.connect(
+            self.__tableItemChanged)
 
         self.ui.dimTableWidget.setSortingEnabled(False)
         self.__populateLengths()
         self.ui.rankSpinBox.setFocus()
 
-        self.connect(self.ui.rankSpinBox,
-                     SIGNAL("valueChanged(int)"), self.__valueChanged)
+        self.ui.rankSpinBox.valueChanged[int].connect(self.__valueChanged)
 
     ## takes a name of the current dim
     # \returns name of the current dim

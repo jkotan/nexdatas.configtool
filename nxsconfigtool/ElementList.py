@@ -113,6 +113,8 @@ class ElementList(QWidget):
     #  \brief It runs the Element Dialog and fetches element
     #         name and value
     def addElement(self, obj, flag=True):
+        print(obj.id)
+        print(type(obj.id))
         self.elements[obj.id] = obj
 
         self.populateElements(obj.id, flag)
@@ -122,9 +124,9 @@ class ElementList(QWidget):
     def currentListElement(self):
         item = self.ui.elementListWidget.currentItem()
         if item is not None \
-           and item.data(Qt.UserRole).toLongLong()[0] \
+           and item.data(Qt.UserRole) \
            in self.elements.keys():
-            return self.elements[item.data(Qt.UserRole).toLongLong()[0]]
+            return self.elements[item.data(Qt.UserRole)]
         else:
             return None
 

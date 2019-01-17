@@ -155,18 +155,12 @@ class RichAttributeDlg(NodeDlg):
 
         self._updateUi()
 
-        self.connect(
-            self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.ui.resetPushButton.clicked.connect(self.reset)
 
-        self.connect(
-            self.ui.nameLineEdit, SIGNAL("textEdited(str)"),
-            self._updateUi)
-        self.connect(
-            self.ui.typeComboBox, SIGNAL("currentIndexChanged(str)"),
+        self.ui.nameLineEdit.textEdited[str].connect(self._updateUi)
+        self.ui.typeComboBox.currentIndexChanged[str].connect(
             self._currentIndexChanged)
-        self.connect(
-            self.ui.dimPushButton, SIGNAL("clicked()"),
-            self._changeDimensions)
+        self.ui.dimPushButton.clicked.connect(self._changeDimensions)
 
     ## sets the form from the DOM node
     # \param node DOM node
@@ -316,9 +310,7 @@ class RichAttributeDlg(NodeDlg):
             self.updateNode(index)
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(
-            SIGNAL("dataChanged(const QModelIndex &,"
-                   " const QModelIndex &)"), index, finalIndex)
+        self.view.model().dataChanged.emit(index, finalIndex)
         self.view.expand(index)
 
     ## updates the Node

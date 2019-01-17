@@ -59,14 +59,10 @@ class CreatorDlg(QDialog):
         self.ui.setupUi(self)
         self.updateForm()
 
-        self.connect(self.ui.savePushButton, SIGNAL("clicked()"),
-                     self.savePressed)
-        self.connect(self.ui.storePushButton, SIGNAL("clicked()"),
-                     self.storePressed)
-        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"),
-                     self.applyPressed)
-        self.connect(self.ui.cancelPushButton, SIGNAL("clicked()"),
-                     self.reject)
+        self.ui.savePushButton.clicked.connect(self.savePressed)
+        self.ui.storePushButton.clicked.connect(self.storePressed)
+        self.ui.applyPushButton.clicked.connect(self.applyPressed)
+        self.ui.cancelPushButton.clicked.connect(self.reject)
 
     ## updates the connect dialog
     # \brief It sets initial values of the connection form
@@ -120,26 +116,22 @@ class StdCreatorDlg(QDialog):
         self.updateForm()
         self.__updateUi()
 
-        self.connect(self.ui.savePushButton, SIGNAL("clicked()"),
-                     self.savePressed)
-        self.connect(self.ui.linkPushButton, SIGNAL("clicked()"),
-                     self.linkPressed)
-        self.connect(self.ui.storePushButton, SIGNAL("clicked()"),
-                     self.storePressed)
-        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"),
-                     self.applyPressed)
-        self.connect(self.ui.cancelPushButton, SIGNAL("clicked()"),
-                     self.reject)
-        self.connect(
-            self.ui.varTableWidget,
-            SIGNAL("itemChanged(QTableWidgetItem*)"),
+        self.ui.savePushButton.clicked.connect(
+            self.savePressed)
+        self.ui.linkPushButton.clicked.connect(
+            self.linkPressed)
+        self.ui.storePushButton.clicked.connect(
+            self.storePressed)
+        self.ui.applyPushButton.clicked.connect(
+            self.applyPressed)
+        self.ui.cancelPushButton.clicked.connect(
+            self.reject)
+        self.ui.varTableWidget.itemChanged.connect(
             self.__tableItemChanged)
-        self.connect(
-            self.ui.cpNameLineEdit, SIGNAL("textEdited(QString)"),
+        self.ui.cpNameLineEdit.textEdited[str].connect(
             self.__updateUi)
-        self.connect(self.ui.cpTypeComboBox,
-                     SIGNAL("currentIndexChanged(QString)"),
-                     self.__currentIndexChanged)
+        self.ui.cpTypeComboBox.currentIndexChanged[str].connect(
+            self.__currentIndexChanged)
 
     ## updates the connect dialog
     # \brief It sets initial values of the connection form

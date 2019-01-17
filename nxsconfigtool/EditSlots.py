@@ -22,7 +22,7 @@
 """ Edit slots """
 
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSlot
 
 
 from .EditCommands import (
@@ -102,13 +102,13 @@ class EditSlots(object):
 
     ## edit component action
     # \brief It opens a dialog with the current component
-    def componentEdit(self):
+    def componentEdit(self, _=None):
         cmd = ComponentEdit(self.main)
         cmd.redo()
 
     ## edit datasource action
     # \brief It opens a dialog with the current datasource
-    def dsourceEdit(self):
+    def dsourceEdit(self, _=None):
         cmd = DataSourceEdit(self.main)
         cmd.redo()
 

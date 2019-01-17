@@ -69,14 +69,12 @@ class NodeDlg(QDialog):
         if externalApply and self.externalApply is None and self.ui and \
                 hasattr(self.ui, "applyPushButton") and \
                 self.ui.applyPushButton:
-            self.connect(
-                self.ui.applyPushButton, SIGNAL("clicked()"), externalApply)
+            self.ui.applyPushButton.clicked.connect(externalApply)
             self.externalApply = externalApply
         if externalDSLink and self.externalDSLink is None and self.ui and \
                 hasattr(self.ui, "linkDSPushButton") \
                 and self.ui.linkDSPushButton:
-            self.connect(
-                self.ui.linkDSPushButton, SIGNAL("clicked()"), externalDSLink)
+            self.ui.linkDSPushButton.clicked.connect(externalDSLink)
             self.externalDSLink = externalDSLink
 
     ## resets the dialog
@@ -89,9 +87,7 @@ class NodeDlg(QDialog):
         if self.view:
             if index.column() != 0:
                 index = self.view.model().index(index.row(), 0, index.parent())
-            self.view.model().emit(
-                SIGNAL("dataChanged(const QModelIndex &,"
-                       " const QModelIndex &)"), index, index)
+            self.view.model().dataChanged.emit(index, index)
 
     ## replaces node text for the given node
     # \param index of child text node

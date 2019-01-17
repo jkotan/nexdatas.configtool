@@ -136,9 +136,9 @@ class MainWindow(QMainWindow):
         self.loadComponents()
 
         self.restoreGeometry(
-            settings.value("MainWindow/Geometry").toByteArray())
+            settings.value("MainWindow/Geometry"))
         self.restoreState(
-            settings.value("MainWindow/State").toByteArray())
+            settings.value("MainWindow/State"))
 
         if PYTANGO_AVAILABLE:
             self.setupServer(settings, server)
@@ -291,7 +291,7 @@ class MainWindow(QMainWindow):
                 settings.value("ConfigServer/host"))
             self.onlineFile = unicode(
                 settings.value("Online/filename"))
-            port = str(settings.value("ConfigServer/port"))
+            port = str(settings.value("ConfigServer/port") or "")
             if port:
                 self.configServer.port = int(port)
 
@@ -324,7 +324,7 @@ class MainWindow(QMainWindow):
     # \param checkable if command/action checkable
     # \param signal action signal
     def __setAction(self, action, _, slot=None, shortcut=None, icon=None,
-                    tip=None, checkable=False, signal="triggered()"):
+                    tip=None, checkable=False, signal="triggered"):
         if icon is not None:
             action.setIcon(QIcon(":/%s.png" % unicode(icon).strip()))
         if shortcut is not None:
@@ -333,7 +333,8 @@ class MainWindow(QMainWindow):
             action.setToolTip(tip)
             action.setStatusTip(tip)
         if slot is not None:
-            self.connect(action, SIGNAL(signal), slot)
+            # self.connect(action, SIGNAL(signal), slot)
+            getattr(action, signal).connect(slot)
         if checkable:
             action.setCheckable(True)
         return action
@@ -349,8 +350,9 @@ class MainWindow(QMainWindow):
     def __setTasks(self, slots):
         if hasattr(slots, "tasks"):
             for pars in slots.tasks:
-                self.connect(pars[1], SIGNAL(pars[2]),
-                             getattr(slots, pars[0]))
+                # self.connect(pars[1], SIGNAL(pars[2]),
+                #             getattr(slots, pars[0]))
+                getattr(pars[1], pars[2]).connect(getattr(slots, pars[0]))
 
     def __createUndoRedoActions(self):
         self.undoGroup.addStack(self.undoStack)
@@ -422,13 +424,18 @@ class MainWindow(QMainWindow):
             tip="Go to the component list", checkable=True)
 
         # Signals
-        self.connect(self.componentList.ui.elementListWidget,
-                     SIGNAL("itemDoubleClicked(QListWidgetItem*)"),
-                     self.slots["Edit"].componentEdit)
+        # self.connect(self.componentList.ui.elementListWidget,
+        #              SIGNAL("itemDoubleClicked(QListWidgetItem*)"),
+        #              self.slots["Edit"].componentEdit)
+        self.componentList.ui.elementListWidget.itemDoubleClicked.connect(
+            self.slots["Edit"].componentEdit)
 
-        self.connect(self.sourceList.ui.elementListWidget,
-                     SIGNAL("itemDoubleClicked(QListWidgetItem*)"),
-                     self.slots["Edit"].dsourceEdit)
+        # self.connect(self.sourceList.ui.elementListWidget,
+        #              SIGNAL("itemDoubleClicked(QListWidgetItem*)"),
+        #              self.slots["Edit"].dsourceEdit)
+        self.sourceList.ui.elementListWidget.itemDoubleClicked.connect(
+            self.slots["Edit"].dsourceEdit)
+
 
         ## Component context menu
         self.ui.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)

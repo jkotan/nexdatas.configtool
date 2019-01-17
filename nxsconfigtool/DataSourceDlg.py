@@ -21,7 +21,7 @@
 
 """ Provides datasource widget """
 
-from PyQt5.QtCore import QModelIndex
+from PyQt5.QtCore import QModelIndex, pyqtSlot
 from PyQt5.QtWidgets import QApplication
 
 from .NodeDlg import NodeDlg
@@ -77,7 +77,7 @@ class CommonDataSourceDlg(NodeDlg):
         self.imp = {}
 
         ## user interface
-        self.ui = __formclass()
+        self.ui = _formclass()
         ## datasource widget
         self.wg = {}
 
@@ -116,6 +116,7 @@ class CommonDataSourceDlg(NodeDlg):
 
     ## shows and hides frames according to typeComboBox
     # \param text the edited text
+    @pyqtSlot(str)
     def setFrames(self, text):
         for k in self.qwg.keys():
             if text == k:
@@ -130,10 +131,16 @@ class CommonDataSourceDlg(NodeDlg):
 
     ## connects the dialog actions
     def connectWidgets(self):
-        self.disconnect(self.ui.typeComboBox,
-                        SIGNAL("currentIndexChanged(QString)"), self.setFrames)
-        self.connect(self.ui.typeComboBox,
-                     SIGNAL("currentIndexChanged(QString)"), self.setFrames)
+        try:
+            self.ui.typeComboBox.currentIndexChanged[str].disconnect(
+                self.setFrames)
+        except Exception:
+            pass
+        self.ui.typeComboBox.currentIndexChanged[str].connect(self.setFrames)
+        # self.disconnect(self.ui.typeComboBox,
+        #                 SIGNAL("currentIndexChanged(QString)"), self.setFrames)
+        # self.connect(self.ui.typeComboBox,
+        #              SIGNAL("currentIndexChanged(QString)"), self.setFrames)
         for k in self.imp.keys():
             self.imp[k].connectWidgets()
 

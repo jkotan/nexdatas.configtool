@@ -72,7 +72,7 @@ class ClientSource(object):
     ## checks if widget button should be enable
     # \returns if widget button should be enable
     def isEnable(self):
-        return not self.ui.cRecNameLineEdit.text().isEmpty()
+        return bool(self.ui.cRecNameLineEdit.text())
 
     ## calls updateUi when the name text is changing
     def __cRecNameLineEdit(self):
@@ -81,12 +81,19 @@ class ClientSource(object):
 
     ## connects the dialog actions
     def connectWidgets(self):
-        self.main.disconnect(
-            self.ui.cRecNameLineEdit, SIGNAL("textChanged(str)"),
+        try:
+            self.ui.cRecNameLineEdit.textChanged.disconnect(
+                self.__cRecNameLineEdit)
+        except Exception:
+            pass
+        self.ui.cRecNameLineEdit.textChanged.connect(
             self.__cRecNameLineEdit)
-        self.main.connect(
-            self.ui.cRecNameLineEdit, SIGNAL("textChanged(str)"),
-            self.__cRecNameLineEdit)
+        # self.main.disconnect(
+        #     self.ui.cRecNameLineEdit, SIGNAL("textChanged(str)"),
+        #     self.__cRecNameLineEdit)
+        # self.main.connect(
+        #     self.ui.cRecNameLineEdit, SIGNAL("textChanged(str)"),
+        #     self.__cRecNameLineEdit)
 
     ## sets the tab order of subframe
     # \param first first widget from the parent dialog
@@ -186,7 +193,7 @@ class DBSource(object):
     ## checks if widget button should be enable
     # \returns if widget button should be enable
     def isEnable(self):
-        return not self.ui.dQueryLineEdit.text().isEmpty()
+        return bool(self.ui.dQueryLineEdit.text())
 
     ## calls updateUi when the name text is changing
     def __dQueryLineEdit(self):
@@ -285,36 +292,69 @@ class DBSource(object):
 
     ## connects the dialog actions
     def connectWidgets(self):
-        self.main.disconnect(
-            self.ui.dQueryLineEdit, SIGNAL("textChanged(str)"),
-            self.__dQueryLineEdit)
-        self.main.disconnect(
-            self.ui.dParamComboBox, SIGNAL("currentIndexChanged(str)"),
+        try:
+            self.ui.dQueryLineEdit.textChanged.disconnect(
+                self.__dQueryLineEdit)
+        except Exception:
+            pass
+        try:
+            self.ui.dParamComboBox.currentIndexChanged.disconnect(
+                self.__dParamComboBox)
+        except Exception:
+            pass
+        try:
+            self.ui.dAddPushButton.clicked.disconnect(self.__addParameter)
+        except Exception:
+            pass
+        try:
+            self.ui.dRemovePushButton.clicked.disconnect(
+                self.__removeParameter)
+        except Exception:
+            pass
+        try:
+            self.ui.dParameterTableWidget.itemChanged.disconnect(
+                self.__tableItemChanged)
+        except Exception:
+            pass
+        # self.main.disconnect(
+        #     self.ui.dQueryLineEdit, SIGNAL("textChanged(str)"),
+        #     self.__dQueryLineEdit)
+        # self.main.disconnect(
+        #     self.ui.dParamComboBox, SIGNAL("currentIndexChanged(str)"),
+        #     self.__dParamComboBox)
+        # self.main.disconnect(
+        #     self.ui.dAddPushButton, SIGNAL("clicked()"), self.__addParameter)
+        # self.main.disconnect(
+        #     self.ui.dRemovePushButton, SIGNAL("clicked()"),
+        #     self.__removeParameter)
+        # self.main.disconnect(
+        #     self.ui.dParameterTableWidget,
+        #     SIGNAL("itemChanged(QTableWidgetItem*)"),
+        #     self.__tableItemChanged)
+        
+        self.ui.dQueryLineEdit.textChanged.connect(self.__dQueryLineEdit)
+        self.ui.dParamComboBox.currentIndexChanged.connect(
             self.__dParamComboBox)
-        self.main.disconnect(
-            self.ui.dAddPushButton, SIGNAL("clicked()"), self.__addParameter)
-        self.main.disconnect(
-            self.ui.dRemovePushButton, SIGNAL("clicked()"),
-            self.__removeParameter)
-        self.main.disconnect(
-            self.ui.dParameterTableWidget,
-            SIGNAL("itemChanged(QTableWidgetItem*)"),
+        self.ui.dAddPushButton.clicked.connect(self.__addParameter)
+        self.ui.dRemovePushButton.clicked.connect(self.__removeParameter)
+        self.ui.dParameterTableWidget.itemChanged.connect(
             self.__tableItemChanged)
-        self.main.connect(
-            self.ui.dQueryLineEdit,
-            SIGNAL("textChanged(str)"), self.__dQueryLineEdit)
-        self.main.connect(
-            self.ui.dParamComboBox, SIGNAL("currentIndexChanged(str)"),
-            self.__dParamComboBox)
-        self.main.connect(
-            self.ui.dAddPushButton, SIGNAL("clicked()"), self.__addParameter)
-        self.main.connect(
-            self.ui.dRemovePushButton, SIGNAL("clicked()"),
-            self.__removeParameter)
-        self.main.connect(
-            self.ui.dParameterTableWidget,
-            SIGNAL("itemChanged(QTableWidgetItem*)"),
-            self.__tableItemChanged)
+
+        # self.main.connect(
+        #     self.ui.dQueryLineEdit,
+        #     SIGNAL("textChanged(str)"), self.__dQueryLineEdit)
+        # self.main.connect(
+        #     self.ui.dParamComboBox, SIGNAL("currentIndexChanged(str)"),
+        #     self.__dParamComboBox)
+        # self.main.connect(
+        #     self.ui.dAddPushButton, SIGNAL("clicked()"), self.__addParameter)
+        # self.main.connect(
+        #     self.ui.dRemovePushButton, SIGNAL("clicked()"),
+        #     self.__removeParameter)
+        # self.main.connect(
+        #     self.ui.dParameterTableWidget,
+        #     SIGNAL("itemChanged(QTableWidgetItem*)"),
+        #     self.__tableItemChanged)
 
     ## sets the tab order of subframe
     # \param first first widget from the parent dialog
@@ -495,8 +535,8 @@ class TangoSource(object):
     ## checks if widget button should be enable
     # \returns if widget button should be enable
     def isEnable(self):
-        return not self.ui.tDevNameLineEdit.text().isEmpty() and \
-            not self.ui.tMemberNameLineEdit.text().isEmpty()
+        return bool(self.ui.tDevNameLineEdit.text()) and \
+            bool(self.ui.tMemberNameLineEdit.text())
 
     ## sets the tab order of subframe
     # \param first first widget from the parent dialog
@@ -554,20 +594,33 @@ class TangoSource(object):
 
     ## connects the dialog actions
     def connectWidgets(self):
-        self.main.disconnect(
-            self.ui.tDevNameLineEdit,
-            SIGNAL("textChanged(str)"),
+        try:
+            self.ui.tDevNameLineEdit.textChanged.disconnect(
+                self.__tDevNameLineEdit)
+        except Exception:
+            pass
+        try:
+            self.ui.tMemberNameLineEdit.textChanged.disconnect(
+                self.__tMemberNameLineEdit)
+        except Exception:
+            pass
+        # self.main.disconnect(
+        #     self.ui.tDevNameLineEdit,
+        #     SIGNAL("textChanged(str)"),
+        #     self.__tDevNameLineEdit)
+        # self.main.disconnect(
+        #     self.ui.tMemberNameLineEdit, SIGNAL("textChanged(str)"),
+        #     self.__tMemberNameLineEdit)
+        self.ui.tDevNameLineEdit.textChanged.connect(
             self.__tDevNameLineEdit)
-        self.main.disconnect(
-            self.ui.tMemberNameLineEdit, SIGNAL("textChanged(str)"),
+        self.ui.tMemberNameLineEdit.textChanged.connect(
             self.__tMemberNameLineEdit)
-
-        self.main.connect(
-            self.ui.tDevNameLineEdit, SIGNAL("textChanged(str)"),
-            self.__tDevNameLineEdit)
-        self.main.connect(
-            self.ui.tMemberNameLineEdit, SIGNAL("textChanged(str)"),
-            self.__tMemberNameLineEdit)
+        # self.main.connect(
+        #     self.ui.tDevNameLineEdit, SIGNAL("textChanged(str)"),
+        #     self.__tDevNameLineEdit)
+        # self.main.connect(
+        #     self.ui.tMemberNameLineEdit, SIGNAL("textChanged(str)"),
+        #     self.__tMemberNameLineEdit)
 
     ## sets the form from the DOM node
     # \param datasource class

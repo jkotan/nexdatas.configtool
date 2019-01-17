@@ -305,7 +305,7 @@ class Merger(QThread):
             except Exception, e:
                 self.exception = e
 
-        self.emit(SIGNAL("finished"))
+        self.finished.emit()
 
 #       self.terminate()
 # communicate via signal , and QMutex

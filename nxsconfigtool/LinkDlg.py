@@ -82,10 +82,8 @@ class LinkDlg(NodeDlg):
 
         self._updateUi()
 
-        self.connect(
-            self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(
-            self.ui.nameLineEdit, SIGNAL("textEdited(str)"),
+        self.ui.resetPushButton.clicked.connect(self.reset)
+        self.ui.nameLineEdit.textEdited[str].connect(
             self._updateUi)
 
     ## provides the state of the link dialog
@@ -170,9 +168,7 @@ class LinkDlg(NodeDlg):
 
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(
-            SIGNAL("dataChanged(const QModelIndex &,"
-                   " const QModelIndex &)"), index, finalIndex)
+        self.view.model().dataChanged.emit(index, finalIndex)
         self.view.expand(index)
 
     ## updates the Node

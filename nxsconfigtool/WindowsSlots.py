@@ -83,14 +83,17 @@ class WindowsSlots(object):
         self.windows["Mapper"] = QSignalMapper(self.main)
         self.windows["Menu"] = self.main.ui.menuWindow
 
-        self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
-                          self.main.setActiveSubWindow)
+        # self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
+        #                   self.main.setActiveSubWindow)
+        self.windows["Mapper"].mapped.connect(self.main.setActiveSubWindow)
 
-        self.main.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
-                          self.updateWindowMenu)
-        self.main.connect(
-            self.main.ui.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"),
-            self.mdiWindowActivated)
+        # self.main.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
+        #                   self.updateWindowMenu)
+        self.windows["Menu"].aboutToShow.connect(self.updateWindowMenu)
+        # self.main.connect(
+        #     self.main.ui.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"),
+        #     self.mdiWindowActivated)
+        self.main.ui.mdi.subWindowActivated.connect(self.mdiWindowActivated)
 
     ## activated window action, i.e. it changes the current position
     #  of the component and datasource lists
@@ -193,8 +196,10 @@ class WindowsSlots(object):
             elif i < 36:
                 accel = "&%s " % unicode(chr(i + ord("@") - 9))
             action = menu.addAction("%s%s" % (accel, title))
-            self.main.connect(action, SIGNAL("triggered()"),
-                              self.windows["Mapper"], SLOT("map()"))
+
+            # self.main.connect(action, SIGNAL("triggered()"),
+            #                   self.windows["Mapper"], SLOT("map()"))
+            action.triggered.connect(self.windows["Mapper"].map)
             self.windows["Mapper"].setMapping(action, dialog)
             i += 1
 

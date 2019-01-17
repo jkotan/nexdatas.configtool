@@ -93,23 +93,30 @@ class HelpForm(QDialog):
         self.toolBar.addSeparator()
         self.toolBar.addWidget(self.pageLabel)
 
-        self.disconnect(backAction, SIGNAL("triggered()"),
-                        self.textBrowser, SLOT("backward()"))
-        self.disconnect(forwardAction, SIGNAL("triggered()"),
-                        self.textBrowser, SLOT("forward()"))
-        self.disconnect(homeAction, SIGNAL("triggered()"),
-                        self.textBrowser, SLOT("home()"))
-        self.disconnect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
-                        self.updatePageTitle)
 
-        self.connect(backAction, SIGNAL("triggered()"),
-                     self.textBrowser, SLOT("backward()"))
-        self.connect(forwardAction, SIGNAL("triggered()"),
-                     self.textBrowser, SLOT("forward()"))
-        self.connect(homeAction, SIGNAL("triggered()"),
-                     self.textBrowser, SLOT("home()"))
-        self.connect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
-                     self.updatePageTitle)
+        try:
+            backAction.triggered.disconnect(self.textBrowser.backward)
+        except Exception:
+            pass
+        try:
+            forwardAction.triggered.disconnect(self.textBrowser.forward)
+        except Exception:
+            pass
+        try:
+            homeAction.triggered.disconnect(self.textBrowser.home)
+        except Exception:
+            pass
+        try:
+            self.textBrowser.sourceChanged.disconnect(
+                        self.updatePageTitle)
+        except Exception:
+            pass
+
+        backAction.triggered.connect(self.textBrowser.backward)
+        forwardAction.triggered.connect(self.textBrowser.forward)
+        homeAction.triggered.connect(self.textBrowser.home)
+        self.textBrowser.sourceChanged.connect(
+                    self.updatePageTitle)
 
         self.updatePageTitle()
 

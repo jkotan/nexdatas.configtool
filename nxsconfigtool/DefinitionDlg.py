@@ -116,18 +116,11 @@ class DefinitionDlg(NodeDlg):
 
         self.updateForm()
 
-        self.connect(
-            self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(
-            self.ui.attributeTableWidget,
-            SIGNAL("itemChanged(QTableWidgetItem*)"),
+        self.ui.resetPushButton.clicked.connect(self.reset)
+        self.ui.attributeTableWidget.itemChanged.connect(
             self.__tableItemChanged)
-        self.connect(
-            self.ui.addPushButton,
-            SIGNAL("clicked()"), self.__addAttribute)
-        self.connect(
-            self.ui.removePushButton,
-            SIGNAL("clicked()"), self.__removeAttribute)
+        self.ui.addPushButton.clicked.connect(self.__addAttribute)
+        self.ui.removePushButton.clicked.connect(self.__removeAttribute)
 
     ## sets the form from the DOM node
     # \param node DOM node
@@ -260,9 +253,7 @@ class DefinitionDlg(NodeDlg):
 
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(
-            SIGNAL("dataChanged(const QModelIndex &,"
-                   " const QModelIndex &)"), index, finalIndex)
+        self.view.model().dataChanged.emit(index, finalIndex)
         self.view.expand(index)
 
     ## updates the Node

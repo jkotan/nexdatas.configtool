@@ -55,8 +55,9 @@ class AttributeDlg(QDialog):
 
         self.__updateUi()
 
-        self.connect(self.ui.nameLineEdit,
-                     SIGNAL("textEdited(QString)"), self.__updateUi)
+        self.ui.nameLineEdit.textEdited.connect(self.__updateUi)
+        # self.connect(self.ui.nameLineEdit,
+        #              SIGNAL("textEdited(QString)"), self.__updateUi)
 
     ## updates attribute user interface
     # \brief It sets enable or disable the OK button

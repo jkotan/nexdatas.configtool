@@ -61,12 +61,10 @@ class ConnectDlg(QDialog):
         self.updateForm()
         self.__updateUi()
 
-        self.connect(self.ui.connectPushButton, SIGNAL("clicked()"),
-                     self.accept)
-        self.connect(self.ui.cancelPushButton, SIGNAL("clicked()"),
-                     self.reject)
-        self.connect(self.ui.deviceLineEdit,
-                     SIGNAL("textEdited(QString)"), self.__updateUi)
+        self.ui.connectPushButton.clicked.connect(
+            self.accept)
+        self.ui.cancelPushButton.clicked.connect(self.reject)
+        self.ui.deviceLineEdit.textEdited[str].connect(self.__updateUi)
 
     ## updates the connect dialog
     # \brief It sets initial values of the connection form

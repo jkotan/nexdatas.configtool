@@ -137,15 +137,28 @@ class DataSourceMethods(object):
         self.__dialog.resize(460, 550)
 
         if not self.__datasource.tree:
-            self.__parent.disconnect(self.__dialog.ui.resetPushButton,
-                                     SIGNAL("clicked()"), self.reset)
-            self.__parent.connect(self.__dialog.ui.resetPushButton,
-                                  SIGNAL("clicked()"), self.reset)
+
+            # self.__parent.disconnect(self.__dialog.ui.resetPushButton,
+            #                          SIGNAL("clicked()"), self.reset)
+            # self.__parent.connect(self.__dialog.ui.resetPushButton,
+            #                       SIGNAL("clicked()"), self.reset)
+            try:
+                self.__dialog.ui.resetPushButton.clicked.disconnect(self.reset)
+            except:
+                pass
+            self.__dialog.ui.resetPushButton.clicked.connect(self.reset)
         else:
-            self.__parent.disconnect(self.__dialog.ui.resetPushButton,
-                                     SIGNAL("clicked()"), self.__dialog.reset)
-            self.__parent.connect(self.__dialog.ui.resetPushButton,
-                                  SIGNAL("clicked()"), self.__dialog.reset)
+            try:
+                self.__dialog.ui.resetPushButton.clicked.disconnect(
+                    self.__dialog.reset)
+            except:
+                pass
+            self.__dialog.ui.resetPushButton.clicked.connect(
+                self.__dialog.reset)
+            # self.__parent.disconnect(self.__dialog.ui.resetPushButton,
+            #                          SIGNAL("clicked()"), self.__dialog.reset)
+            # self.__parent.connect(self.__dialog.ui.resetPushButton,
+            #                       SIGNAL("clicked()"), self.__dialog.reset)
         self.__dialog.connectWidgets()
         self.__dialog.setFrames(self.__datasource.dataSourceType)
 
@@ -220,16 +233,12 @@ class DataSourceMethods(object):
 
             if hasattr(self.__dialog, "view") and self.__dialog.view \
                     and self.__dialog.view.model():
-                self.__dialog.view.model().emit(
-                    SIGNAL("dataChanged(const QModelIndex &,"
-                           " const QModelIndex &)"),
+                self.__dialog.view.model().dataChanged.emit(
                     index.parent(), index.parent())
                 if index.column() != 0:
                     index = self.__dialog.view.model().index(index.row(), 0,
                                                              index.parent())
-                self.__dialog.view.model().emit(
-                    SIGNAL("dataChanged(const QModelIndex &,"
-                           " const QModelIndex &)"),
+                self.__dialog.view.model().dataChanged.emit(
                     index, finalIndex)
                 self.__dialog.view.expand(index)
 
@@ -315,33 +324,61 @@ class DataSourceMethods(object):
         if not self.__dialog:
             self.createDialog()
         if self.__datasource.externalSave:
-            self.__parent.disconnect(self.__dialog.ui.savePushButton,
-                                     SIGNAL("clicked()"),
-                                     self.__datasource.externalSave)
-            self.__parent.connect(self.__dialog.ui.savePushButton,
-                                  SIGNAL("clicked()"),
-                                  self.__datasource.externalSave)
+            try:
+                self.__dialog.ui.savePushButton.clicked.disconnect(
+                    self.__datasource.externalSave)
+            except Exception:
+                pass
+            self.__dialog.ui.savePushButton.clicked.connect(
+                self.__datasource.externalSave)
+            # self.__parent.disconnect(self.__dialog.ui.savePushButton,
+            #                       SIGNAL("clicked()"),
+            #                       self.__datasource.externalSave)
+            # self.__parent.connect(self.__dialog.ui.savePushButton,
+            #                       SIGNAL("clicked()"),
+            #                       self.__datasource.externalSave)
         if self.__datasource.externalStore:
-            self.__parent.disconnect(self.__dialog.ui.storePushButton,
-                                     SIGNAL("clicked()"),
-                                     self.__datasource.externalStore)
-            self.__parent.connect(self.__dialog.ui.storePushButton,
-                                  SIGNAL("clicked()"),
-                                  self.__datasource.externalStore)
+            try:
+                self.__dialog.ui.storePushButton.clicked.disconnect(
+                    self.__datasource.externalStore)
+            except Exception:
+                pass
+            self.__dialog.ui.storePushButton.clicked.connect(
+                self.__datasource.externalStore)
+            # self.__parent.disconnect(self.__dialog.ui.storePushButton,
+            #                          SIGNAL("clicked()"),
+            #                          self.__datasource.externalStore)
+            # self.__parent.connect(self.__dialog.ui.storePushButton,
+            #                       SIGNAL("clicked()"),
+            #                       self.__datasource.externalStore)
         if self.__datasource.externalClose:
-            self.__parent.disconnect(self.__dialog.ui.closePushButton,
-                                     SIGNAL("clicked()"),
+            try:
+                self.__dialog.ui.closePushButton.clicked.disconnect(
+                    self.__datasource.externalClose)
+            except Exception:
+                pass
+            self.__dialog.ui.closePushButton.clicked.connect(
                                      self.__datasource.externalClose)
-            self.__parent.connect(self.__dialog.ui.closePushButton,
-                                  SIGNAL("clicked()"),
-                                  self.__datasource.externalClose)
+            # self.__parent.disconnect(self.__dialog.ui.closePushButton,
+            #                          SIGNAL("clicked()"),
+            #                          self.__datasource.externalClose)
+            # self.__parent.connect(self.__dialog.ui.closePushButton,
+            #                       SIGNAL("clicked()"),
+            #                       self.__datasource.externalClose)
         if self.__datasource.externalApply:
-            self.__parent.disconnect(self.__dialog.ui.applyPushButton,
-                                     SIGNAL("clicked()"),
-                                     self.__datasource.externalApply)
-            self.__parent.connect(self.__dialog.ui.applyPushButton,
-                                  SIGNAL("clicked()"),
-                                  self.__datasource.externalApply)
+            try:
+                self.__dialog.ui.applyPushButton.clicked.disconnect(
+                    self.__datasource.externalApply)
+            except Exception:
+                pass
+            self.__dialog.ui.applyPushButton.clicked.connect(
+                self.__datasource.externalApply)
+            # self.__parent.disconnect(self.__dialog.ui.applyPushButton,
+            #                          SIGNAL("clicked()"),
+            #                          self.__datasource.externalApply)
+            # self.__parent.connect(self.__dialog.ui.applyPushButton,
+            #                       SIGNAL("clicked()"),
+            #                       self.__datasource.externalApply)
 
     ## connects the save action and stores the apply action
     # \param externalApply apply action
@@ -353,36 +390,64 @@ class DataSourceMethods(object):
         if not self.__dialog:
             self.createDialog()
         if externalSave and self.__datasource.externalSave is None:
-            self.__parent.disconnect(self.__dialog.ui.savePushButton,
-                                     SIGNAL("clicked()"),
-                                     externalSave)
-            self.__parent.connect(self.__dialog.ui.savePushButton,
-                                  SIGNAL("clicked()"),
-                                  externalSave)
+            try:
+                self.__dialog.ui.savePushButton.clicked.disconnect(
+                    externalSave)
+            except Exception:
+                pass
+            self.__dialog.ui.savePushButton.clicked.connect(
+                externalSave)
+            # self.__parent.disconnect(self.__dialog.ui.savePushButton,
+            #                          SIGNAL("clicked()"),
+            #                          externalSave)
+            # self.__parent.connect(self.__dialog.ui.savePushButton,
+            #                       SIGNAL("clicked()"),
+            #                       externalSave)
             self.__datasource.externalSave = externalSave
         if externalStore and self.__datasource.externalStore is None:
-            self.__parent.disconnect(self.__dialog.ui.storePushButton,
-                                     SIGNAL("clicked()"),
-                                     externalStore)
-            self.__parent.connect(self.__dialog.ui.storePushButton,
-                                  SIGNAL("clicked()"),
-                                  externalStore)
+            try:
+                self.__dialog.ui.storePushButton.clicked.disconnect(
+                    externalStore)
+            except Exception:
+                pass
+            self.__dialog.ui.storePushButton.clicked.connect(
+                externalStore)
+            # self.__parent.disconnect(self.__dialog.ui.storePushButton,
+            #                          SIGNAL("clicked()"),
+            #                          externalStore)
+            # self.__parent.connect(self.__dialog.ui.storePushButton,
+            #                       SIGNAL("clicked()"),
+            #                       externalStore)
             self.__datasource.externalStore = externalStore
         if externalClose and self.__datasource.externalClose is None:
-            self.__parent.disconnect(self.__dialog.ui.closePushButton,
-                                     SIGNAL("clicked()"),
-                                     externalClose)
-            self.__parent.connect(self.__dialog.ui.closePushButton,
-                                  SIGNAL("clicked()"),
-                                  externalClose)
+            try:
+                self.__dialog.ui.closePushButton.clicked.disconnect(
+                    externalClose)
+            except Exception:
+                pass
+            self.__dialog.ui.closePushButton.clicked.connect(
+                externalClose)
+            # self.__parent.disconnect(self.__dialog.ui.closePushButton,
+            #                          SIGNAL("clicked()"),
+            #                          externalClose)
+            # self.__parent.connect(self.__dialog.ui.closePushButton,
+            #                       SIGNAL("clicked()"),
+            #                       externalClose)
             self.__datasource.externalClose = externalClose
         if externalApply and self.__datasource.externalApply is None:
-            self.__parent.disconnect(self.__dialog.ui.applyPushButton,
-                                     SIGNAL("clicked()"),
-                                     externalApply)
-            self.__parent.connect(self.__dialog.ui.applyPushButton,
-                                  SIGNAL("clicked()"),
-                                  externalApply)
+            try:
+                self.__dialog.ui.applyPushButton.clicked.disconnect(
+                    externalApply)
+            except Exception:
+                pass
+            self.__dialog.ui.applyPushButton.clicked.connect(
+                externalApply)
+            # self.__parent.disconnect(self.__dialog.ui.applyPushButton,
+            #                          SIGNAL("clicked()"),
+            #                          externalApply)
+            # self.__parent.connect(self.__dialog.ui.applyPushButton,
+            #                       SIGNAL("clicked()"),
+            #                       externalApply)
             self.__datasource.externalApply = externalApply
 
     ## creates the new empty header

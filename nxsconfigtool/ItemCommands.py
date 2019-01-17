@@ -525,13 +525,9 @@ class ComponentNewItem(ComponentItemCommand):
                     finalIndex = self._cp.instance.view.model().index(
                         0, 2, self._index.parent().parent())
 
-                self._cp.instance.view.model().emit(
-                    SIGNAL("dataChanged(const QModelIndex &,"
-                           " const QModelIndex &)"),
+                self._cp.instance.view.model().dataChanged.emit(
                     self._index, self._index)
-                self._cp.instance.view.model().emit(
-                    SIGNAL("dataChanged(const QModelIndex &,"
-                           " const QModelIndex &)"),
+                self._cp.instance.view.model().dataChanged.emit(
                     finalIndex, self._childIndex)
 
         self.postExecute()

@@ -115,12 +115,16 @@ class StrategyDlg(NodeDlg):
 
         self.updateForm()
 
-#        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
-        self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(self.ui.modeComboBox,
-                     SIGNAL("currentIndexChanged(str)"), self.setFrames)
-        self.connect(self.ui.compressionCheckBox,
-                     SIGNAL("stateChanged(int)"), self.setCompression)
+        # self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
+        self.ui.resetPushButton.clicked.connect(self.reset)
+        self.ui.modeComboBox.currentIndexChanged[str].connect(self.setFrames)
+        self.ui.compressionCheckBox.stateChanged[int].connect(self.setCompression)
+        
+        # self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
+        # self.connect(self.ui.modeComboBox,
+        #              SIGNAL("currentIndexChanged(str)"), self.setFrames)
+        # self.connect(self.ui.compressionCheckBox,
+        #              SIGNAL("stateChanged(int)"), self.setCompression)
 
         self.setCompression(self.ui.compressionCheckBox.isChecked())
 
@@ -259,9 +263,7 @@ class StrategyDlg(NodeDlg):
         if index.column() != 0:
             index = self.view.model().index(
                 index.row(), 0, index.parent())
-        self.view.model().emit(SIGNAL(
-            "dataChanged(const QModelIndex &,"
-            " const QModelIndex &)"), index, finalIndex)
+        self.view.model().dataChanged.emit(index, finalIndex)
         self.view.expand(index)
 
     ## updates the Node

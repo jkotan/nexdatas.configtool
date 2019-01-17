@@ -76,16 +76,16 @@ class ListSlots(object):
         self.tasks = [
             ["dsourceChanged",
              self.main.sourceList.ui.elementListWidget,
-             "itemChanged(QListWidgetItem*)"],
+             "itemChanged"],
             ["componentChanged",
              self.main.componentList.ui.elementListWidget,
-             "itemChanged(QListWidgetItem*)"],
+             "itemChanged"],
             ["componentRowChanged",
              self.main.componentList.ui.elementListWidget,
-             "currentRowChanged(int)"],
+             "currentRowChanged"],
             ["dsourceRowChanged",
              self.main.sourceList.ui.elementListWidget,
-             "currentRowChanged(int)"]
+             "currentRowChanged"]
         ]
 
     ## remove component action

@@ -373,10 +373,8 @@ class Component(object):
         if row is not None:
             index = self.view.model().index(row, 0, parent)
             self.view.setCurrentIndex(index)
-            self.view.model().emit(
-                SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
-            self.view.model().emit(
-                SIGNAL("dataChanged(QModelIndex,QModelIndex)"), parent, parent)
+            self.view.model().dataChanged.emit(index, index)
+            self.view.model().dataChanged.emit(parent, parent)
             return row
 
     ## moves component item up
@@ -396,10 +394,8 @@ class Component(object):
         if row is not None:
             index = self.view.model().index(row, 0, parent)
             self.view.setCurrentIndex(index)
-            self.view.model().emit(
-                SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
-            self.view.model().emit(
-                SIGNAL("dataChanged(QModelIndex,QModelIndex)"), parent, parent)
+            self.view.model().dataChanged.emit(index, index)
+            self.view.model().dataChanged.emit(parent, parent)
             return row
 
     ## converts DOM node to XML string
@@ -457,8 +453,7 @@ class Component(object):
             index = self.view.model().index(index.row(), 0, index.parent())
         self.dialog.ui.widget.appendElement(clipNode, index)
 
-        self.view.model().emit(
-            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+        self.view.model().dataChanged.emit(index, index)
 
         self.view.expand(index)
         self.fetchElements()
@@ -486,8 +481,7 @@ class Component(object):
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         status = self.dialog.ui.widget.appendElement(child, index)
-        self.view.model().emit(
-            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+        self.view.model().dataChanged.emit(index, index)
         self.view.expand(index)
         self.fetchElements()
         if status:
@@ -519,11 +513,9 @@ class Component(object):
 
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(
-            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+        self.view.model().dataChanged.emit(index, index)
         if index.parent().isValid():
-            self.view.model().emit(
-                SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+            self.view.model().dataChanged.emit(
                 index.parent(), index.parent())
 
             index = self.view.currentIndex()
@@ -564,26 +556,43 @@ class Component(object):
 
     ## connects the view and model into resize and click command
     def connectView(self):
-        self.dialog.disconnect(
-            self.view.selectionModel(),
-            SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
+        try:
+            self.view.selectionModel().currentChanged.disconnect(
+                self.tagClicked)
+        except Exception:
+            pass
+        self.view.selectionModel().currentChanged.connect(
             self.tagClicked)
-        self.parent.connect(
-            self.view.selectionModel(),
-            SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
-            self.tagClicked)
-        self.dialog.disconnect(
-            self.view, SIGNAL("expanded(QModelIndex)"),
-            self._resizeColumns)
-        self.parent.connect(
-            self.view, SIGNAL("expanded(QModelIndex)"),
-            self._resizeColumns)
-        self.dialog.disconnect(
-            self.view, SIGNAL("collapsed(QModelIndex)"),
-            self._resizeColumns)
-        self.parent.connect(
-            self.view, SIGNAL("collapsed(QModelIndex)"),
-            self._resizeColumns)
+        # self.dialog.disconnect(
+        #     self.view.selectionModel(),
+        #     SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
+        #     self.tagClicked)
+        # self.parent.connect(
+        #     self.view.selectionModel(),
+        #     SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
+        #     self.tagClicked)
+        try:
+            self.view.expanded.disconnect(self._resizeColumns)
+        except Exception:
+            pass
+        self.view.expanded.connect(self._resizeColumns)
+        # self.dialog.disconnect(
+        #     self.view, SIGNAL("expanded(QModelIndex)"),
+        #     self._resizeColumns)
+        # self.parent.connect(
+        #     self.view, SIGNAL("expanded(QModelIndex)"),
+        #     self._resizeColumns)
+        try:
+            self.view.collapsed.disconnect(self._resizeColumns)
+        except Exception:
+            pass
+        self.view.collapsed.connect(self._resizeColumns)
+        # self.dialog.disconnect(
+        #     self.view, SIGNAL("collapsed(QModelIndex)"),
+        #     self._resizeColumns)
+        # self.parent.connect(
+        #     self.view, SIGNAL("collapsed(QModelIndex)"),
+        #     self._resizeColumns)
 
     ## connects the save action and stores the apply action
     # \param externalApply apply action
@@ -595,19 +604,25 @@ class Component(object):
                                externalClose=None, externalStore=None,
                                externalDSLink=None):
         if externalSave and self.externalSave is None:
-            self.parent.connect(
-                self.dialog.ui.savePushButton, SIGNAL("clicked()"),
+            self.dialog.ui.savePushButton.clicked.connect(
                 externalSave)
+            # self.parent.connect(
+            #     self.dialog.ui.savePushButton, SIGNAL("clicked()"),
+            #     externalSave)
             self.externalSave = externalSave
         if externalStore and self.externalStore is None:
-            self.parent.connect(
-                self.dialog.ui.storePushButton, SIGNAL("clicked()"),
+            self.dialog.ui.storePushButton.clicked.connect(
                 externalStore)
+            # self.parent.connect(
+            #     self.dialog.ui.storePushButton, SIGNAL("clicked()"),
+            #     externalStore)
             self.externalStore = externalStore
         if externalClose and self.externalClose is None:
-            self.parent.connect(
-                self.dialog.ui.closePushButton, SIGNAL("clicked()"),
+            self.dialog.ui.closePushButton.clicked.connect(
                 externalClose)
+            # self.parent.connect(
+            #     self.dialog.ui.closePushButton, SIGNAL("clicked()"),
+            #     externalClose)
             self.externalClose = externalClose
         if externalApply and self.externalApply is None:
             self.externalApply = externalApply
@@ -619,26 +634,47 @@ class Component(object):
     def reconnectSaveAction(self):
         self.connectView()
         if self.externalSave:
-            self.dialog.disconnect(
-                self.dialog.ui.savePushButton, SIGNAL("clicked()"),
+            try:
+                self.dialog.ui.savePushButton.clicked.disconnect(
+                    self.externalSave)
+            except Exception:
+                pass
+            self.dialog.ui.savePushButton.clicked.connect(
                 self.externalSave)
-            self.parent.connect(
-                self.dialog.ui.savePushButton, SIGNAL("clicked()"),
-                self.externalSave)
+            # self.dialog.disconnect(
+            #     self.dialog.ui.savePushButton, SIGNAL("clicked()"),
+            #     self.externalSave)
+            # self.parent.connect(
+            #     self.dialog.ui.savePushButton, SIGNAL("clicked()"),
+            #     self.externalSave)
         if self.externalStore:
-            self.dialog.disconnect(
-                self.dialog.ui.storePushButton, SIGNAL("clicked()"),
+            try:
+                self.dialog.ui.storePushButton.clicked.disconnect(
+                    self.externalStore)
+            except Exception:
+                pass
+            self.dialog.ui.storePushButton.clicked.connect(
                 self.externalStore)
-            self.parent.connect(
-                self.dialog.ui.storePushButton, SIGNAL("clicked()"),
-                self.externalStore)
+            # self.dialog.disconnect(
+            #     self.dialog.ui.storePushButton, SIGNAL("clicked()"),
+            #     self.externalStore)
+            # self.parent.connect(
+            #     self.dialog.ui.storePushButton, SIGNAL("clicked()"),
+            #     self.externalStore)
         if self.externalClose:
-            self.dialog.disconnect(
-                self.dialog.ui.closePushButton, SIGNAL("clicked()"),
+            try:
+                self.dialog.ui.closePushButton.clicked.disconnect(
+                    self.externalClose)
+            except Exception:
+                pass
+            self.dialog.ui.closePushButton.clicked.connect(
                 self.externalClose)
-            self.parent.connect(
-                self.dialog.ui.closePushButton, SIGNAL("clicked()"),
-                self.externalClose)
+            # self.dialog.disconnect(
+            #     self.dialog.ui.closePushButton, SIGNAL("clicked()"),
+            #     self.externalClose)
+            # self.parent.connect(
+            #     self.dialog.ui.closePushButton, SIGNAL("clicked()"),
+            #     self.externalClose)
 
     ## switches between all attributes in the try or only type attribute
     # \param status all attributes are shown if True
@@ -890,8 +926,7 @@ class Component(object):
 
                         child = child.nextSibling()
 
-                self.view.model().emit(
-                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                self.view.model().dataChanged.emit(
                     index, index)
                 self.view.expand(index)
 
@@ -960,8 +995,7 @@ class Component(object):
                             self.parent, "Corrupted DataSource ",
                             "Missing <datasource> tag in %s" % dsFile)
 
-                self.view.model().emit(
-                    SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                self.view.model().dataChanged.emit(
                     index, index)
                 self.view.expand(index)
                 self._dsPath = dsFile
@@ -1014,8 +1048,7 @@ class Component(object):
             index = self.view.model().index(index.row(), 0, index.parent())
         self.dialog.ui.widget.appendElement(dsNode2, index)
 
-        self.view.model().emit(
-            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+        self.view.model().dataChanged.emit(index, index)
         self.view.expand(index)
         self.fetchElements()
         return True
@@ -1053,8 +1086,7 @@ class Component(object):
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
 
-        self.view.model().emit(
-            SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+        self.view.model().dataChanged.emit(index, index)
         self.view.expand(index)
         self.fetchElements()
         return True
@@ -1082,12 +1114,16 @@ class Component(object):
         if showMergerDlg:
             self._mergerdlg = MergerDlg(self.parent)
             self._mergerdlg.createGUI()
-            self.parent.connect(
-                self._mergerdlg, SIGNAL("finished(int)"),
+            self._mergerdlg.finished.connect(
                 self._interruptMerger)
-            self.parent.connect(
-                self._mergerdlg.interruptButton, SIGNAL("clicked()"),
+            self._mergerdlg.interruptButton.clicked.connect(
                 self._interruptMerger)
+            # self.parent.connect(
+            #     self._mergerdlg, SIGNAL("finished(int)"),
+            #     self._interruptMerger)
+            # self.parent.connect(
+            #     self._mergerdlg.interruptButton, SIGNAL("clicked()"),
+            #     self._interruptMerger)
 
         try:
             if self.view and self.dialog and self.dialog.ui \
@@ -1102,8 +1138,9 @@ class Component(object):
         try:
             self._merger = Merger(self.document)
             if showMergerDlg:
-                self.parent.connect(
-                    self._merger, SIGNAL("finished"), self._closeMergerDlg)
+                self._merger.finished.connect(self._closeMergerDlg)
+                # self.parent.connect(
+                #     self._merger, SIGNAL("finished"), self._closeMergerDlg)
 
             cNode = self._getCurrentNode()
             if cNode:

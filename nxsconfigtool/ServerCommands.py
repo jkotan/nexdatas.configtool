@@ -401,7 +401,7 @@ class ServerDSCreate(QUndoCommand):
                             keys = cc.datasources.keys()
                             progress = QProgressDialog(
                                 "Storing DataSource elements",
-                                str(), 0, len(keys),
+                                "", 0, len(keys),
                                 self.receiver.sourceList)
                             progress.setWindowTitle(
                                 "Store Created DataSources")
@@ -1117,7 +1117,7 @@ class ServerStoreAllComponents(QUndoCommand):
         keys = self.receiver.componentList.elements.keys()
         progress = QProgressDialog(
             "Storing Component elements",
-            str(), 0, len(keys), self.receiver.componentList)
+            "", 0, len(keys), self.receiver.componentList)
         progress.setWindowTitle("Store All Components")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
@@ -1195,7 +1195,7 @@ class ServerStoreAllDataSources(QUndoCommand):
         keys = self.receiver.sourceList.elements.keys()
         progress = QProgressDialog(
             "Storing DataSource elements",
-            str(), 0, len(keys), self.receiver.sourceList)
+            "", 0, len(keys), self.receiver.sourceList)
         progress.setWindowTitle("Store All DataSources")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()

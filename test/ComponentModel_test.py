@@ -170,18 +170,13 @@ class ComponentModelTest(unittest.TestCase):
         self.assertEqual(hd, 'Value')
 
         hd = cm.headerData(3, Qt.Horizontal)
-        self.assertTrue(isinstance(hd, str))
-        self.assertEqual(hd, '')
+        self.assertEqual(hd, None)
         hd = cm.headerData(3, Qt.Horizontal, Qt.DisplayRole)
-        self.assertTrue(isinstance(hd, str))
-        self.assertEqual(hd, '')
 
         hd = cm.headerData(-1, Qt.Horizontal)
-        self.assertTrue(isinstance(hd, str))
-        self.assertEqual(hd, '')
+        self.assertEqual(hd, None)
         hd = cm.headerData(-1, Qt.Horizontal, Qt.DisplayRole)
-        self.assertTrue(isinstance(hd, str))
-        self.assertEqual(hd, '')
+        self.assertEqual(hd, None)
 
         cm.setAttributeView(True)
 
@@ -237,13 +232,11 @@ class ComponentModelTest(unittest.TestCase):
         self.assertEqual(cm.headerData(0, Qt.Vertical), None)
 
         dt = cm.data(QModelIndex())
-        self.assertTrue(isinstance(dt, (unicode, str)))
-        self.assertEqual(dt, '')
+        self.assertEqual(dt, None)
 
         for role in range(1, 5):
             dt = cm.data(cm.rootIndex, role)
-            self.assertTrue(isinstance(dt, (unicode, str)))
-            self.assertEqual(dt, '')
+            self.assertEqual(dt, None)
 
         dt = cm.data(cm.rootIndex)
         self.assertTrue(isinstance(dt, (unicode, str)))
@@ -311,13 +304,13 @@ class ComponentModelTest(unittest.TestCase):
 
             ki2 = cm.index(n, -1, di)
             dt = cm.data(ki2)
-            self.assertTrue(isinstance(dt, (unicode, str)))
-            self.assertEqual(str(dt).strip(), '')
+            # self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(dt, None)
 
             ki2 = cm.index(n, 3, di)
             dt = cm.data(ki2)
-            self.assertTrue(isinstance(dt, (unicode, str)))
-            self.assertEqual(str(dt).strip(), '')
+            # self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(dt, None)
 
     def test_data_name_attr(self):
         fun = sys._getframe().f_code.co_name
@@ -377,13 +370,13 @@ class ComponentModelTest(unittest.TestCase):
 
             ki2 = cm.index(n, -1, di)
             dt = cm.data(ki2)
-            self.assertTrue(isinstance(dt, (unicode, str)))
-            self.assertEqual(str(dt).strip(), '')
+            # self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(dt, None)
 
             ki2 = cm.index(n, 3, di)
             dt = cm.data(ki2)
-            self.assertTrue(isinstance(dt, (unicode, str)))
-            self.assertEqual(str(dt).strip(), '')
+            # self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(dt, None)
 
             cm.setAttributeView(True)
 

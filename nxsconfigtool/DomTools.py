@@ -72,7 +72,7 @@ class DomTools(object):
     # \returns string with node texts
     @classmethod
     def getText(cls, node):
-        text = str()
+        text = ""
         if node:
             child = node.firstChild()
             while not child.isNull():

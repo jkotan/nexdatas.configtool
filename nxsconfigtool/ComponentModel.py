@@ -21,7 +21,7 @@
 
 """ component model for tree view """
 
-from PyQt5.QtCore import (QAbstractItemModel, Qt, QModelIndex)
+from PyQt5.QtCore import (QAbstractItemModel, QVariant, Qt, QModelIndex)
 from PyQt5.QtXml import QDomNode
 
 from . ComponentItem import ComponentItem
@@ -53,16 +53,16 @@ class ComponentModel(QAbstractItemModel):
     def headerData(self, section, orientation, role=Qt.DisplayRole):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
             if section == 0:
-                return ("Name")
+                return "Name"
             elif section == 1:
                 if self.__allAttributes:
-                    return ("Attributes")
+                    return "Attributes"
                 else:
-                    return ("Type")
+                    return "Type"
             elif section == 2:
-                return ("Value")
+                return "Value"
             else:
-                return ""
+                return None
 
     # switches between all attributes in the try or only type attribute
     # \param allAttributes all attributes are shown if True
@@ -76,9 +76,9 @@ class ComponentModel(QAbstractItemModel):
     #          to the role
     def data(self, index, role=Qt.DisplayRole):
         if not index.isValid():
-            return ""
+            return None
         if role != Qt.DisplayRole:
-            return ""
+            return None
 
         item = index.internalPointer()
         node = item.node
@@ -93,9 +93,9 @@ class ComponentModel(QAbstractItemModel):
                 name = attributeMap.namedItem("name").nodeValue()
 
             if name is not None:
-                return (node.nodeName() + ": " + name)
+                return str(node.nodeName() + ": " + name)
             else:
-                return (node.nodeName())
+                return str(node.nodeName())
         elif index.column() == 1:
             if self.__allAttributes:
                 attributes = []
@@ -103,14 +103,14 @@ class ComponentModel(QAbstractItemModel):
                     attribute = attributeMap.item(i)
                     attributes.append(attribute.nodeName() + "=\""
                                       + attribute.nodeValue() + "\"")
-                return (" ".join(attributes) + "  ")
+                return str(" ".join(attributes) + "  ")
             else:
-                return (
+                return str(
                     (attributeMap.namedItem("type").nodeValue() + "  ")
                     if attributeMap.contains("type") else str("  "))
 
         elif index.column() == 2:
-            return (" ".join(node.nodeValue().split("\n")))
+            return str(" ".join(node.nodeValue().split("\n")))
         else:
             return ""
 

@@ -38,7 +38,7 @@ if [ $2 = "2" ]; then
     docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y  python-pytango   nxsconfigserver-db; sleep 10; apt-get -qq install -y   python-nxsconfigserver python-nxstools python-pyqt5 python-setuptools'
 else
     echo "install python3 packages"
-    docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-pytango   nxsconfigserver-db; sleep 10; apt-get -qq install -y   python3-nxsconfigserver python3-nxstools python3-pyqt5 pythone-setuptools'
+    docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-pytango   nxsconfigserver-db; sleep 10; apt-get -qq install -y   python3-nxsconfigserver python3-nxstools python3-pyqt5 python3-setuptools'
 fi
 if [ $? -ne "0" ]
 then

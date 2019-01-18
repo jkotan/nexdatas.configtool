@@ -33,7 +33,7 @@ from PyQt5.QtWidgets import (
     #     QPushButton
 )
 # from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import (Qt, QTimer, QVariant)
+from PyQt5.QtCore import (Qt, QTimer, )
 # from PyQt5.QtXml import QDomNode, QDomDocument, QDomElement
 
 from nxsconfigtool.DataSourceDlg import CommonDataSourceDlg
@@ -776,8 +776,8 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         pname = str(item.data(Qt.UserRole).toString())
 
         it = QTableWidgetItem(unicode(pname))
-        it.setData(Qt.DisplayRole, QVariant("Myname2"))
-        it.setData(Qt.UserRole, QVariant(pname))
+        it.setData(Qt.DisplayRole, ("Myname2"))
+        it.setData(Qt.UserRole, (pname))
 
         table.setItem(ch, 0, it)
 
@@ -938,8 +938,8 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         pname = str(item.data(Qt.UserRole).toString())
 
         it = QTableWidgetItem(unicode(pname))
-        it.setData(Qt.DisplayRole, QVariant("Myname2"))
-        it.setData(Qt.UserRole, QVariant(pname))
+        it.setData(Qt.DisplayRole, ("Myname2"))
+        it.setData(Qt.UserRole, (pname))
 
         table.setItem(ch, 0, it)
 

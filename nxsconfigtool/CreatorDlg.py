@@ -23,7 +23,7 @@
 import os
 import sys
 
-from PyQt5.QtCore import Qt, QVariant
+from PyQt5.QtCore import Qt 
 from PyQt5.QtWidgets import QDialog, QTableWidgetItem, QMessageBox
 from PyQt5 import uic
 
@@ -259,7 +259,7 @@ class StdCreatorDlg(QDialog):
         self.ui.varTableWidget.setHorizontalHeaderLabels(headers)
         for row, name in enumerate(sorted(self.__vars.keys())):
             item = QTableWidgetItem(name)
-            item.setData(Qt.UserRole, QVariant(name))
+            item.setData(Qt.UserRole, (name))
             flags = item.flags()
             flags ^= Qt.ItemIsEditable
             item.setFlags(flags)

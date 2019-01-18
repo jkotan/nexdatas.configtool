@@ -28,7 +28,7 @@ import binascii
 import time
 
 from PyQt5.QtCore import (
-    Qt, QAbstractItemModel, QModelIndex, QVariant)
+    Qt, QAbstractItemModel, QModelIndex, )
 from PyQt5.QtXml import QDomDocument
 
 from nxsconfigtool.ComponentModel import ComponentModel
@@ -149,66 +149,66 @@ class ComponentModelTest(unittest.TestCase):
         self.assertEqual(cm.headerData(0, Qt.Vertical), None)
 
         hd = cm.headerData(0, Qt.Horizontal)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), 'Name')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, 'Name')
         hd = cm.headerData(0, Qt.Horizontal, Qt.DisplayRole)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), 'Name')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, 'Name')
 
         hd = cm.headerData(1, Qt.Horizontal)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), 'Type')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, 'Type')
         hd = cm.headerData(1, Qt.Horizontal, Qt.DisplayRole)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), 'Type')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, 'Type')
 
         hd = cm.headerData(2, Qt.Horizontal)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), 'Value')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, 'Value')
         hd = cm.headerData(2, Qt.Horizontal, Qt.DisplayRole)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), 'Value')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, 'Value')
 
         hd = cm.headerData(3, Qt.Horizontal)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), '')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, '')
         hd = cm.headerData(3, Qt.Horizontal, Qt.DisplayRole)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), '')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, '')
 
         hd = cm.headerData(-1, Qt.Horizontal)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), '')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, '')
         hd = cm.headerData(-1, Qt.Horizontal, Qt.DisplayRole)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), '')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, '')
 
         cm.setAttributeView(True)
 
         hd = cm.headerData(1, Qt.Horizontal)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), 'Attributes')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, 'Attributes')
         hd = cm.headerData(1, Qt.Horizontal, Qt.DisplayRole)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), 'Attributes')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, 'Attributes')
 
         cm.setAttributeView(False)
 
         hd = cm.headerData(1, Qt.Horizontal)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), 'Type')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, 'Type')
         hd = cm.headerData(1, Qt.Horizontal, Qt.DisplayRole)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), 'Type')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, 'Type')
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         hd = cm.headerData(1, Qt.Horizontal)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), 'Attributes')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, 'Attributes')
         hd = cm.headerData(1, Qt.Horizontal, Qt.DisplayRole)
-        self.assertTrue(isinstance(hd, QVariant))
-        self.assertEqual(hd.toString(), 'Attributes')
+        self.assertTrue(isinstance(hd, str))
+        self.assertEqual(hd, 'Attributes')
 
     # constructor test
     # \brief It tests default settings
@@ -237,21 +237,21 @@ class ComponentModelTest(unittest.TestCase):
         self.assertEqual(cm.headerData(0, Qt.Vertical), None)
 
         dt = cm.data(QModelIndex())
-        self.assertTrue(isinstance(dt, QVariant))
-        self.assertEqual(dt.toString(), '')
+        self.assertTrue(isinstance(dt, (unicode, str)))
+        self.assertEqual(dt, '')
 
         for role in range(1, 5):
             dt = cm.data(cm.rootIndex, role)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(dt.toString(), '')
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(dt, '')
 
         dt = cm.data(cm.rootIndex)
-        self.assertTrue(isinstance(dt, QVariant))
-        self.assertEqual(dt.toString(), '#document')
+        self.assertTrue(isinstance(dt, (unicode, str)))
+        self.assertEqual(dt, '#document')
 
         dt = cm.data(cm.rootIndex, Qt.DisplayRole)
-        self.assertTrue(isinstance(dt, QVariant))
-        self.assertEqual(dt.toString(), '#document')
+        self.assertTrue(isinstance(dt, (unicode, str)))
+        self.assertEqual(dt, '#document')
 
     # constructor test
     # \brief It tests default settings
@@ -275,7 +275,7 @@ class ComponentModelTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" % n))
             kds[-1].appendChild(tkds[-1])
 
-#        print doc.toString()
+#        print doc
 
         allAttr = False
         cm = ComponentModel(doc, allAttr)
@@ -296,28 +296,28 @@ class ComponentModelTest(unittest.TestCase):
 
             ki0 = cm.index(n, 0, di)
             dt = cm.data(ki0)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(dt.toString(), 'kid%s: myname%s' % (n, n))
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(dt, 'kid%s: myname%s' % (n, n))
 
             ki1 = cm.index(n, 1, di)
             dt = cm.data(ki1)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(str(dt.toString()).strip(), 'mytype%s' % n)
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(str(dt).strip(), 'mytype%s' % n)
 
             ki2 = cm.index(n, 2, di)
             dt = cm.data(ki2)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(str(dt.toString()).strip(), '')
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(str(dt).strip(), '')
 
             ki2 = cm.index(n, -1, di)
             dt = cm.data(ki2)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(str(dt.toString()).strip(), '')
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(str(dt).strip(), '')
 
             ki2 = cm.index(n, 3, di)
             dt = cm.data(ki2)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(str(dt.toString()).strip(), '')
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(str(dt).strip(), '')
 
     def test_data_name_attr(self):
         fun = sys._getframe().f_code.co_name
@@ -339,7 +339,7 @@ class ComponentModelTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" % n))
             kds[-1].appendChild(tkds[-1])
 
-#        print doc.toString()
+#        print doc
 
         allAttr = False
         cm = ComponentModel(doc, allAttr)
@@ -362,48 +362,50 @@ class ComponentModelTest(unittest.TestCase):
 
             ki0 = cm.index(n, 0, di)
             dt = cm.data(ki0)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(dt.toString(), 'kid%s: myname%s' % (n, n))
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(dt, 'kid%s: myname%s' % (n, n))
 
             ki1 = cm.index(n, 1, di)
             dt = cm.data(ki1)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(str(dt.toString()).strip(), 'mytype%s' % n)
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(str(dt).strip(), 'mytype%s' % n)
 
             ki2 = cm.index(n, 2, di)
             dt = cm.data(ki2)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(str(dt.toString()).strip(), '')
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(str(dt).strip(), '')
 
             ki2 = cm.index(n, -1, di)
             dt = cm.data(ki2)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(str(dt.toString()).strip(), '')
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(str(dt).strip(), '')
 
             ki2 = cm.index(n, 3, di)
             dt = cm.data(ki2)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(str(dt.toString()).strip(), '')
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(str(dt).strip(), '')
 
             cm.setAttributeView(True)
 
             ki0 = cm.index(n, 0, di)
             dt = cm.data(ki0)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(dt.toString(), 'kid%s: myname%s' % (n, n))
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(dt, 'kid%s: myname%s' % (n, n))
 
             ki1 = cm.index(n, 1, di)
             dt = cm.data(ki1)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(
-                str(dt.toString()).strip(),
-                'units="myunits%s" type="mytype%s" name="myname%s"' %
-                (n, n, n))
+            self.assertTrue(isinstance(dt, (unicode, str)))
+
+            s1 = set(str(dt).strip().split(" "))
+            s2 = set(('units="myunits%s" type="mytype%s" name="myname%s"' %
+            (n, n, n)).split(" "))
+
+            self.assertEqual(s1, s2)
 
             ki2 = cm.index(n, 2, di)
             dt = cm.data(ki2)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(str(dt.toString()).strip(), '')
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(str(dt).strip(), '')
 
     def test_data_name_attr_true(self):
         fun = sys._getframe().f_code.co_name
@@ -425,7 +427,7 @@ class ComponentModelTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" % n))
             kds[-1].appendChild(tkds[-1])
 
-#        print doc.toString()
+#        print doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
@@ -446,21 +448,21 @@ class ComponentModelTest(unittest.TestCase):
 
             ki0 = cm.index(n, 0, di)
             dt = cm.data(ki0)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(dt.toString(), 'kid%s: myname%s' % (n, n))
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(dt, 'kid%s: myname%s' % (n, n))
 
             ki1 = cm.index(n, 1, di)
             dt = cm.data(ki1)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(
-                str(dt.toString()).strip(),
-                'units="myunits%s" type="mytype%s" name="myname%s"' %
-                (n, n, n))
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            s1 = set(str(dt).strip().split(" "))
+            s2 = set(('units="myunits%s" type="mytype%s" name="myname%s"' %
+            (n, n, n)).split(" "))
 
+            self.assertEqual(s1, s2)
             ki2 = cm.index(n, 2, di)
             dt = cm.data(ki2)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(str(dt.toString()).strip(), '')
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(str(dt).strip(), '')
 
     def test_data_name_text(self):
         fun = sys._getframe().f_code.co_name
@@ -482,7 +484,7 @@ class ComponentModelTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" % n))
             kds[-1].appendChild(tkds[-1])
 
-        # print doc.toString()
+        # print doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
@@ -505,18 +507,18 @@ class ComponentModelTest(unittest.TestCase):
 
             ti = cm.index(0, 0, ki)
             dt = cm.data(ti)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(dt.toString(), '#text')
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(dt, '#text')
 
             ti = cm.index(0, 1, ki)
             dt = cm.data(ti)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(str(dt.toString()).strip(), '')
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(str(dt).strip(), '')
 
             ti = cm.index(0, 2, ki)
             dt = cm.data(ti)
-            self.assertTrue(isinstance(dt, QVariant))
-            self.assertEqual(str(dt.toString()).strip(), 'Text  %s' % n)
+            self.assertTrue(isinstance(dt, (unicode, str)))
+            self.assertEqual(str(dt).strip(), 'Text  %s' % n)
 
     def test_flags(self):
         fun = sys._getframe().f_code.co_name
@@ -538,7 +540,7 @@ class ComponentModelTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" % n))
             kds[-1].appendChild(tkds[-1])
 
-#        print doc.toString()
+#        print doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
@@ -620,7 +622,7 @@ class ComponentModelTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" % n))
             kds[-1].appendChild(tkds[-1])
 
-#        print doc.toString()
+#        print doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
@@ -731,7 +733,7 @@ class ComponentModelTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" % n))
             kds[-1].appendChild(tkds[-1])
 
-#        print doc.toString()
+#        print doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
@@ -827,7 +829,7 @@ class ComponentModelTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" % n))
             kds[-1].appendChild(tkds[-1])
 
-#        print doc.toString()
+#        print doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
@@ -898,7 +900,7 @@ class ComponentModelTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" % n))
             kds[-1].appendChild(tkds[-1])
 
-#        print doc.toString()
+#        print doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
@@ -969,7 +971,7 @@ class ComponentModelTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" % n))
             kds[-1].appendChild(tkds[-1])
 
-#        print doc.toString()
+#        print doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
@@ -1068,7 +1070,7 @@ class ComponentModelTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" % n))
             kds[-1].appendChild(tkds[-1])
 
-#        print doc.toString()
+#        print doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
@@ -1166,7 +1168,7 @@ class ComponentModelTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" % n))
             kds[-1].appendChild(tkds[-1])
 
-#        print doc.toString()
+#        print doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)

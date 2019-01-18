@@ -21,7 +21,7 @@
 
 """ widget for different types of datasources """
 
-from PyQt5.QtCore import (Qt, QVariant)
+from PyQt5.QtCore import (Qt, )
 from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem)
 from PyQt5.QtXml import (QDomDocument)
 from PyQt5 import uic
@@ -280,7 +280,7 @@ class DBSource(object):
         self.ui.dParameterTableWidget.setHorizontalHeaderLabels(headers)
         for row, name in enumerate(self.dbParam):
             item = QTableWidgetItem(name)
-            item.setData(Qt.UserRole, QVariant(name))
+            item.setData(Qt.UserRole, (name))
             self.ui.dParameterTableWidget.setItem(row, 0, item)
             item2 = QTableWidgetItem(self.dbParam[name])
             if selectedParameter is not None and selectedParameter == name:

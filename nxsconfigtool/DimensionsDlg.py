@@ -21,7 +21,7 @@
 
 """ dimensions widget """
 
-from PyQt5.QtCore import (Qt, QVariant)
+from PyQt5.QtCore import (Qt, )
 from PyQt5.QtWidgets import (QTableWidgetItem, QMessageBox, QDialog)
 from PyQt5 import uic
 
@@ -156,7 +156,7 @@ class DimensionsDlg(QDialog):
                 item = QTableWidgetItem(unicode(ln))
             else:
                 item = QTableWidgetItem("")
-            item.setData(Qt.UserRole, QVariant(long(row)))
+            item.setData(Qt.UserRole, (long(row)))
             if selectedDim is not None and selectedDim == row:
                 selected = item
             self.ui.dimTableWidget.setItem(row, 0, item)

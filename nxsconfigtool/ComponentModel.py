@@ -21,7 +21,7 @@
 
 """ component model for tree view """
 
-from PyQt5.QtCore import (QAbstractItemModel, QVariant, Qt, QModelIndex)
+from PyQt5.QtCore import (QAbstractItemModel, Qt, QModelIndex)
 from PyQt5.QtXml import QDomNode
 
 from . ComponentItem import ComponentItem
@@ -53,16 +53,16 @@ class ComponentModel(QAbstractItemModel):
     def headerData(self, section, orientation, role=Qt.DisplayRole):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
             if section == 0:
-                return QVariant("Name")
+                return ("Name")
             elif section == 1:
                 if self.__allAttributes:
-                    return QVariant("Attributes")
+                    return ("Attributes")
                 else:
-                    return QVariant("Type")
+                    return ("Type")
             elif section == 2:
-                return QVariant("Value")
+                return ("Value")
             else:
-                return QVariant()
+                return ""
 
     # switches between all attributes in the try or only type attribute
     # \param allAttributes all attributes are shown if True
@@ -76,9 +76,9 @@ class ComponentModel(QAbstractItemModel):
     #          to the role
     def data(self, index, role=Qt.DisplayRole):
         if not index.isValid():
-            return QVariant()
+            return ""
         if role != Qt.DisplayRole:
-            return QVariant()
+            return ""
 
         item = index.internalPointer()
         node = item.node
@@ -93,9 +93,9 @@ class ComponentModel(QAbstractItemModel):
                 name = attributeMap.namedItem("name").nodeValue()
 
             if name is not None:
-                return QVariant(node.nodeName() + ": " + name)
+                return (node.nodeName() + ": " + name)
             else:
-                return QVariant(node.nodeName())
+                return (node.nodeName())
         elif index.column() == 1:
             if self.__allAttributes:
                 attributes = []
@@ -103,16 +103,16 @@ class ComponentModel(QAbstractItemModel):
                     attribute = attributeMap.item(i)
                     attributes.append(attribute.nodeName() + "=\""
                                       + attribute.nodeValue() + "\"")
-                return QVariant(" ".join(attributes) + "  ")
+                return (" ".join(attributes) + "  ")
             else:
-                return QVariant(
+                return (
                     (attributeMap.namedItem("type").nodeValue() + "  ")
                     if attributeMap.contains("type") else str("  "))
 
         elif index.column() == 2:
-            return QVariant(" ".join(node.nodeValue().split("\n")))
+            return (" ".join(node.nodeValue().split("\n")))
         else:
-            return QVariant()
+            return ""
 
     # provides flag of the model item
     # \param index of the model item

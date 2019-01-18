@@ -31,7 +31,7 @@ import time
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (QApplication, QMessageBox, QTableWidgetItem, QPushButton)
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import Qt, QTimer, QObject, QVariant
+from PyQt5.QtCore import Qt, QTimer, QObject
 from PyQt5.QtXml import QDomNode, QDomDocument, QDomElement
 
 
@@ -1595,8 +1595,8 @@ class DefinitionDlgTest(unittest.TestCase):
         aname = str(item.data(Qt.UserRole).toString())
 
         it = QTableWidgetItem(unicode(aname))
-        it.setData(Qt.DisplayRole, QVariant(aname+"_"+attributes[aname]))
-        it.setData(Qt.UserRole, QVariant(aname))
+        it.setData(Qt.DisplayRole, (aname+"_"+attributes[aname]))
+        it.setData(Qt.UserRole, (aname))
 
         atw.setCurrentCell(ch,0)
 
@@ -1622,8 +1622,8 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         it = QTableWidgetItem(unicode(aname))
-        it.setData(Qt.DisplayRole, QVariant(aname+"_"+attributes[aname]))
-        it.setData(Qt.UserRole, QVariant(aname))
+        it.setData(Qt.DisplayRole, (aname+"_"+attributes[aname]))
+        it.setData(Qt.UserRole, (aname))
 
         atw.setCurrentCell(ch,1)
 
@@ -1644,7 +1644,7 @@ class DefinitionDlgTest(unittest.TestCase):
                 self.assertEqual(it2.text(), attributes[k])
             else:
                 it2 = atw.item(i, 1) 
-                self.assertEqual(it2.text(), QVariant(aname+"_"+attributes[aname]))
+                self.assertEqual(it2.text(), (aname+"_"+attributes[aname]))
 
 
 

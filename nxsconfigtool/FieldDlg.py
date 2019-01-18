@@ -24,7 +24,7 @@
 import copy
 
 from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem)
-from PyQt5.QtCore import (QVariant, Qt, QModelIndex)
+from PyQt5.QtCore import (Qt, QModelIndex)
 from PyQt5 import uic
 
 import os
@@ -363,7 +363,7 @@ class FieldDlg(NodeDlg):
         self.ui.attributeTableWidget.setHorizontalHeaderLabels(headers)
         for row, name in enumerate(self.__attributes):
             item = QTableWidgetItem(name)
-            item.setData(Qt.UserRole, QVariant(name))
+            item.setData(Qt.UserRole, (name))
             self.ui.attributeTableWidget.setItem(row, 0, item)
             item2 = QTableWidgetItem(self.__attributes[name])
             self.ui.attributeTableWidget.setItem(row, 1, item2)

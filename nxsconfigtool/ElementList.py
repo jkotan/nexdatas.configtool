@@ -23,7 +23,7 @@
 import os
 import sys
 
-from PyQt5.QtCore import (Qt, QVariant)
+from PyQt5.QtCore import (Qt, )
 from PyQt5.QtWidgets import (QWidget, QMenu, QMessageBox, QListWidgetItem,
                              QProgressDialog)
 from PyQt5 import uic
@@ -192,7 +192,7 @@ class ElementList(QWidget):
 
         for name, el in slist:
             item = QListWidgetItem(str("%s" % name))
-            item.setData(Qt.UserRole, QVariant(self.elements[el].id))
+            item.setData(Qt.UserRole, (self.elements[el].id))
             item.setFlags(item.flags() | Qt.ItemIsEditable)
             dirty = False
             if hasattr(self.elements[el], "isDirty") \

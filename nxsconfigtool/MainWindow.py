@@ -25,7 +25,7 @@ import os
 import sys
 
 from PyQt5.QtCore import (
-    QSettings, Qt, QVariant, pyqtSlot)
+    QSettings, Qt, pyqtSlot)
 from PyQt5.QtGui import (
     QIcon,
     QTextCursor)
@@ -608,28 +608,28 @@ class MainWindow(QMainWindow):
         settings = QSettings()
         settings.setValue(
             "MainWindow/Geometry",
-            QVariant(self.saveGeometry()))
+            (self.saveGeometry()))
         settings.setValue(
             "MainWindow/State",
-            QVariant(self.saveState()))
+            (self.saveState()))
         settings.setValue(
             "DataSources/directory",
-            QVariant(os.path.abspath(self.sourceList.directory)))
+            (os.path.abspath(self.sourceList.directory)))
         settings.setValue(
             "Components/directory",
-            QVariant(os.path.abspath(self.componentList.directory)))
+            (os.path.abspath(self.componentList.directory)))
 
         if self.configServer:
             settings.setValue("ConfigServer/device",
-                              QVariant(self.configServer.device))
+                              (self.configServer.device))
             settings.setValue("ConfigServer/host",
-                              QVariant(self.configServer.host))
+                              (self.configServer.host))
             settings.setValue("ConfigServer/port",
-                              QVariant(self.configServer.port))
+                              (self.configServer.port))
             settings.setValue("ConfigServer/port",
-                              QVariant(self.configServer.port))
+                              (self.configServer.port))
             settings.setValue("Online/filename",
-                              QVariant(self.onlineFile))
+                              (self.onlineFile))
             self.configServer.close()
 
     # stores the setting before finishing the application

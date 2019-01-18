@@ -233,7 +233,7 @@ class DBSource(object):
             self.ui.dParameterTableWidget.currentRow(), 0)
         if item is None:
             return None
-        return item.data(Qt.UserRole).toString()
+        return item.data(Qt.UserRole)
 
     # removes an parameter
     #  \brief It removes the current parameter asking before about it

@@ -179,7 +179,7 @@ class DefinitionDlg(NodeDlg):
             self.ui.attributeTableWidget.currentRow(), 0)
         if item is None:
             return None
-        return item.data(Qt.UserRole).toString()
+        return item.data(Qt.UserRole)
 
     # removes an attribute
     #  \brief It removes the current attribute asking before about it

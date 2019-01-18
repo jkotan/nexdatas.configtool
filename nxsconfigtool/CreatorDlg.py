@@ -224,7 +224,7 @@ class StdCreatorDlg(QDialog):
             self.ui.varTableWidget.currentRow(), 0)
         if item is None:
             return None
-        return item.data(Qt.UserRole).toString()
+        return item.data(Qt.UserRole)
 
     # changes the current value of the variable
     # \brief It changes the current value of the variable

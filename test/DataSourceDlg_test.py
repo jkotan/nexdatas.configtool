@@ -740,7 +740,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
         if sel is not None:    
             item = table.item(table.currentRow(), 0)
-            self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+            self.assertEqual(item.data(Qt.UserRole),sel)
  
 
 
@@ -843,7 +843,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
         item = table.item(table.currentRow(), 0)
         self.checkParam(dict(myParam,**{"DB name":""}), 
-                        self.form.ui.dParameterTableWidget, item.data(Qt.UserRole).toString())
+                        self.form.ui.dParameterTableWidget, item.data(Qt.UserRole))
         self.checkParam(dict(myParam,**{"DB name":""}), 
                         self.form.ui.dParameterTableWidget, "DB name")
         self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":""}))
@@ -871,7 +871,7 @@ class DataSourceDlgTest(unittest.TestCase):
         ch = table.currentRow()
         item = table.item(ch, 0)
 
-        pname = str(item.data(Qt.UserRole).toString())
+        pname = str(item.data(Qt.UserRole))
 
 
         it = QTableWidgetItem(unicode(pname))
@@ -961,7 +961,7 @@ class DataSourceDlgTest(unittest.TestCase):
 
         item = table.item(table.currentRow(), 0)
         self.checkParam(dict(myParam,**{str(sel):myParam[sel]}), 
-                        self.form.ui.dParameterTableWidget, item.data(Qt.UserRole).toString())
+                        self.form.ui.dParameterTableWidget, item.data(Qt.UserRole))
         self.checkParam(dict(myParam,**{str(sel):myParam[sel]}), 
                         self.form.ui.dParameterTableWidget, sel)
         self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):myParam[sel]}))
@@ -1035,7 +1035,7 @@ class DataSourceDlgTest(unittest.TestCase):
         
         item = table.item(ch, 0)
 
-        pname = str(item.data(Qt.UserRole).toString())
+        pname = str(item.data(Qt.UserRole))
 
 
         it = QTableWidgetItem(unicode(pname))

@@ -144,7 +144,7 @@ class ComponentItemTest(unittest.TestCase):
                 gkds[n].append(doc.createElement("grandkid%s" % g))
                 kds[-1].appendChild(gkds[n][-1])
 
-#        print doc.toString()
+#        print doc
 
         ci = ComponentItem(qdn)
 
@@ -198,7 +198,7 @@ class ComponentItemTest(unittest.TestCase):
                 gkds[n].append(doc.createElement("grandkid%s" % g))
                 kds[-1].appendChild(gkds[n][-1])
 
-#        print doc.toString()
+#        print doc
 
         ci = ComponentItem(qdn)
 
@@ -252,7 +252,7 @@ class ComponentItemTest(unittest.TestCase):
                 gkds[n].append(doc.createElement("grandkid%s" % g))
                 kds[-1].appendChild(gkds[n][-1])
 
-#        print doc.toString()
+#        print doc
 
         ci = ComponentItem(qdn)
 
@@ -330,7 +330,7 @@ class ComponentItemTest(unittest.TestCase):
                 gkds[n].append(doc.createElement("grandkid%s" % g))
                 kds[-1].appendChild(gkds[n][-1])
 
-#        print doc.toString()
+#        print doc
 
         ci = ComponentItem(qdn)
 
@@ -410,7 +410,7 @@ class ComponentItemTest(unittest.TestCase):
                 gkds[n].append(doc.createElement("grandkid%s" % g))
                 kds[-1].appendChild(gkds[n][-1])
 
-#        print doc.toString()
+#        print doc
 
         ci = ComponentItem(qdn)
 

@@ -1232,7 +1232,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
         
-        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+        self.assertEqual(item.data(Qt.UserRole),sel)
 
 
 
@@ -1326,7 +1326,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
         
-        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+        self.assertEqual(item.data(Qt.UserRole),sel)
 
         self.aname = "addedAttribute"
         self.avalue = "addedAttributeValue"
@@ -1350,7 +1350,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
         
-        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+        self.assertEqual(item.data(Qt.UserRole),sel)
 
         self.aname = "addedAttribute"
         self.avalue = "addedAttributeValue"
@@ -1373,7 +1373,7 @@ class DefinitionDlgTest(unittest.TestCase):
                 self.assertEqual(it2.text(), self.avalue)
                 
         item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)        
-        self.assertEqual(item.data(Qt.UserRole).toString(),self.aname)
+        self.assertEqual(item.data(Qt.UserRole),self.aname)
 
 
 
@@ -1470,7 +1470,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
         
-        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+        self.assertEqual(item.data(Qt.UserRole),sel)
 
         aname = self.__rnd.choice(attributes.keys())
         avalue = attributes[aname]
@@ -1591,12 +1591,12 @@ class DefinitionDlgTest(unittest.TestCase):
 
 
         item = atw.item(atw.currentRow(), 0)
-        self.assertEqual(item.data(Qt.UserRole).toString(), sel)
+        self.assertEqual(item.data(Qt.UserRole), sel)
 
         ch = self.__rnd.randint(0, len(attributes)-1)
         atw.setCurrentCell(ch,0)
         item = atw.item(atw.currentRow(), 0)
-        aname = str(item.data(Qt.UserRole).toString())
+        aname = str(item.data(Qt.UserRole))
 
         it = QTableWidgetItem(unicode(aname))
         it.setData(Qt.DisplayRole, (aname+"_"+attributes[aname]))

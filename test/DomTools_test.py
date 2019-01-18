@@ -110,7 +110,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -169,7 +169,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -228,7 +228,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -283,7 +283,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -350,7 +350,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -441,7 +441,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -531,7 +531,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -627,7 +627,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -735,7 +735,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -836,7 +836,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -931,7 +931,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -1033,7 +1033,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -1124,7 +1124,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -1214,7 +1214,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -1317,7 +1317,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -1425,7 +1425,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)
@@ -1526,7 +1526,7 @@ class DomToolsTest(unittest.TestCase):
             tkds.append(doc.createTextNode("\nText\n %s\n" %  n))
             kds[-1].appendChild(tkds[-1]) 
 
-#        print doc.toString()    
+#        print doc    
             
         allAttr = True
         cm = ComponentModel(doc,allAttr)

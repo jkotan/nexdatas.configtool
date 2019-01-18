@@ -1,4 +1,4 @@
- #!/usr/bin/env python
+#!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -22,18 +22,16 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
 import binascii
 import time
 
 from PyQt5.QtTest import QTest
-from PyQt5.QtWidgets import (QApplication, QMessageBox, QTableWidgetItem, QPushButton)
-from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import Qt, QTimer, QObject
-from PyQt5.QtXml import QDomNode, QDomDocument, QDomElement
-
+from PyQt5.QtWidgets import (QApplication, QMessageBox,
+                             QTableWidgetItem, QPushButton)
+from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtXml import QDomDocument
 
 from nxsconfigtool.GroupDlg import GroupDlg
 from nxsconfigtool.ComponentModel import ComponentModel
@@ -43,7 +41,6 @@ from nxsconfigtool.NodeDlg import NodeDlg
 # from nxsconfigtool.ui.ui_groupdlg import Ui_GroupDlg
 from nxsconfigtool.DomTools import DomTools
 
-
 #  Qt-application
 app = None
 
@@ -51,9 +48,9 @@ if sys.version_info > (3,):
     unicode = str
     long = int
 
-
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
 
 class TestView(object):
     def __init__(self, model):
@@ -62,7 +59,7 @@ class TestView(object):
         self.stack = []
 
     def currentIndex(self):
-        return self.testIndex 
+        return self.testIndex
 
     def model(self):
         return self.testModel
@@ -71,6 +68,7 @@ class TestView(object):
         self.stack.append("expand")
         self.stack.append(index)
 
+
 # test fixture
 class GroupDlgTest(unittest.TestCase):
 
@@ -78,8 +76,6 @@ class GroupDlgTest(unittest.TestCase):
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
-
-
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
@@ -98,18 +94,16 @@ class GroupDlgTest(unittest.TestCase):
         self.performed = False
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256) 
+            self.__seed = long(time.time() * 256)
         self.__rnd = random.Random(self.__seed)
-
 
     # test starter
     # \brief Common set up
     def setUp(self):
-        print("\nsetting up...")        
-        print("SEED = %s" % self.__seed) 
-        
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
@@ -117,17 +111,17 @@ class GroupDlgTest(unittest.TestCase):
         print("tearing down ...")
 
     def checkMessageBox(self):
-#        self.assertEqual(QApplication.activeWindow(),None)
+        #     self.assertEqual(QApplication.activeWindow(), None)
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
-#        print mb.text()
+        #    print mb.text()
         self.text = mb.text()
         self.title = mb.windowTitle()
         mb.close()
 
-
     def rmAttributeWidget(self):
-        aw = QApplication.activeWindow()
+        # aw =
+        QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
 #        print "CLASS", mb
 #        print "CLASS2", aw
@@ -137,9 +131,9 @@ class GroupDlgTest(unittest.TestCase):
 
         QTest.mouseClick(mb.button(QMessageBox.Yes), Qt.LeftButton)
 
-
     def rmAttributeWidgetClose(self):
-        aw = QApplication.activeWindow()
+        # aw =
+        QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
         self.text = mb.text()
@@ -147,41 +141,40 @@ class GroupDlgTest(unittest.TestCase):
 
         QTest.mouseClick(mb.button(QMessageBox.No), Qt.LeftButton)
 
-
     def attributeWidget(self):
-        aw = QApplication.activeWindow()
+        # aw =
+        QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, AttributeDlg))
 
         QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
-        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
+        self.assertEqual(mb.ui.nameLineEdit.text(), self.aname)
         QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
-        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
+        self.assertEqual(mb.ui.valueLineEdit.text(), self.avalue)
 
         mb.accept()
 
     def attributeWidgetClose(self):
-        aw = QApplication.activeWindow()
+        # aw =
+        QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, AttributeDlg))
 
         QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
-        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
+        self.assertEqual(mb.ui.nameLineEdit.text(), self.aname)
         QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
-        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
+        self.assertEqual(mb.ui.valueLineEdit.text(), self.avalue)
 
 #        mb.close()
         mb.reject()
 
 #        mb.accept()
 
-
-
     # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -191,51 +184,56 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field",
+                          "attribute", "link", "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
         self.assertTrue(isinstance(form, NodeDlg))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
-        
-        self.assertEqual(form.replaceText,super(GroupDlg,form).replaceText )
-        self.assertEqual(form.removeElement,super(GroupDlg,form).removeElement )
-        self.assertEqual(form.replaceElement,super(GroupDlg,form).replaceElement )
-        self.assertEqual(form.appendElement,super(GroupDlg,form).appendElement )
-        self.assertEqual(form.reset,super(GroupDlg,form).reset )
 
+        self.assertEqual(form.replaceText,
+                         super(GroupDlg, form).replaceText)
+        self.assertEqual(form.removeElement,
+                         super(GroupDlg, form).removeElement)
+        self.assertEqual(form.replaceElement,
+                         super(GroupDlg, form).replaceElement)
+        self.assertEqual(form.appendElement,
+                         super(GroupDlg, form).appendElement)
+        self.assertEqual(form.reset, super(GroupDlg, form).reset)
 
     # constructor test
     # \brief It tests default settings
     def test_constructor_accept(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
         form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems, ["group", "field", "attribute",
+                                         "link", "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+
         self.assertTrue(not form.ui.applyPushButton.isEnabled())
         self.assertTrue(form.ui.resetPushButton.isEnabled())
 
         name = "myname"
         nType = "NXEntry"
         QTest.keyClicks(form.ui.nameLineEdit, name)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         QTest.keyClicks(form.ui.typeLineEdit, nType)
         self.assertEqual(form.ui.typeLineEdit.text(), nType)
 
-        self.assertTrue(not form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.ui.typeLineEdit.text().isEmpty())
-
+        self.assertTrue(bool(form.ui.nameLineEdit.text()))
+        self.assertTrue(bool(form.ui.typeLineEdit.text()))
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
@@ -243,89 +241,82 @@ class GroupDlgTest(unittest.TestCase):
 #        self.assertEqual(form.name, name)
 #        self.assertEqual(form.nexusType, nType)
 
-        self.assertEqual(form.result(),0)
-
-
-
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_updateForm(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
         form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems, ["group", "field", "attribute",
+                                         "link", "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         name = "myname"
         nType = "NXEntry"
         doc = "My documentation: \n ble ble ble "
-        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
-        
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        attributes = {"myattr": "myvalue", "myattr2": "myvalue2",
+                      "myattr3": "myvalue3"}
+
+        self.assertEqual(form.updateForm(), None)
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.name = name
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.updateForm(), None)
+
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.ui.nameLineEdit.setText("")
 
         form.name = ""
         form.nexusType = nType
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertEqual(form.updateForm(), None)
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertEqual(form.ui.typeLineEdit.text(), nType)
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-
-
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.ui.typeLineEdit.setText("")
 
         form.doc = doc
         form.nexusType = ""
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+        self.assertEqual(form.updateForm(), None)
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
-
-
 
         form.ui.docTextEdit.setText("")
 
@@ -334,118 +325,104 @@ class GroupDlgTest(unittest.TestCase):
         form.nexusType = nType
         form.attributes = attributes
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.updateForm(),None)
-    
+        self.assertEqual(form.updateForm(), None)
+
         self.assertEqual(form.ui.typeLineEdit.text(), nType)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),
+                         len(attributes))
         for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
+            it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
             self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            it2 = form.ui.attributeTableWidget.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
-
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
-
-        self.assertEqual(form.result(),0)
-
-
-
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_getState(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
         form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems, ["group", "field", "attribute",
+                                         "link", "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
-
-
 
         name = "myname"
         nType = "NXEntry"
         doc = "My documentation: \n ble ble ble "
-        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
+        attributes = {"myattr": "myvalue", "myattr2": "myvalue2",
+                      "myattr3": "myvalue3"}
 
-        
-        self.assertEqual(form.getState(),('','','',{}))
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.getState(), ('', '', '', {}))
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.name = name
 
-        self.assertEqual(form.getState(),(name,'','',{}))
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.getState(), (name, '', '', {}))
 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.name = ""
         form.nexusType = nType
 
-        self.assertEqual(form.getState(),('',nType,'',{}))
+        self.assertEqual(form.getState(), ('', nType, '', {}))
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-
-
-
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.doc = doc
         form.nexusType = ""
 
-        self.assertEqual(form.getState(),('', '', doc, {}))
+        self.assertEqual(form.getState(), ('', '', doc, {}))
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.doc = ""
         form.nexusType = ""
-        
+
         form.attributes = attributes
         state = form.getState()
 
-        self.assertEqual(state[0],'')
-        self.assertEqual(state[1],'')
-        self.assertEqual(state[2],'')
-        self.assertEqual(len(state),4)
-        self.assertEqual(len(state[3]),len(attributes))
+        self.assertEqual(state[0], '')
+        self.assertEqual(state[1], '')
+        self.assertEqual(state[2], '')
+        self.assertEqual(len(state), 4)
+        self.assertEqual(len(state[3]), len(attributes))
         for at in attributes:
             self.assertEqual(attributes[at], state[3][at])
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.name = name
         form.doc = doc
@@ -454,168 +431,149 @@ class GroupDlgTest(unittest.TestCase):
 
         state = form.getState()
 
-        self.assertEqual(state[0],name)
-        self.assertEqual(state[1],nType)
-        self.assertEqual(state[2],doc)
-        self.assertEqual(len(state),4)
+        self.assertEqual(state[0], name)
+        self.assertEqual(state[1], nType)
+        self.assertEqual(state[2], doc)
+        self.assertEqual(len(state), 4)
         self.assertTrue(state[3] is not attributes)
-        self.assertEqual(len(state[3]),len(attributes))
+        self.assertEqual(len(state[3]), len(attributes))
         for at in attributes:
             self.assertEqual(attributes[at], state[3][at])
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
-
-        self.assertEqual(form.result(),0)
-
-
-
-
-
-
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_setState(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
         form.show()
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems, ["group", "field", "attribute",
+                                         "link", "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
-
-
 
         name = "myname"
         nType = "NXEntry"
         doc = "My documentation: \n ble ble ble "
-        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
+        attributes = {"myattr": "myvalue", "myattr2": "myvalue2",
+                      "myattr3": "myvalue3"}
 
-        
-        self.assertEqual(form.setState(['','','',{}]), None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.setState(['', '', '', {}]), None)
 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.setState([name,'','',{}]), None)
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.name,name) 
-        self.assertEqual(form.nexusType,'') 
-        self.assertEqual(form.doc,'') 
-        self.assertEqual(form.attributes,{}) 
+        self.assertEqual(form.setState([name, '', '', {}]), None)
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
+        self.assertEqual(form.name, name)
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
 
         form.name = ""
 
-        self.assertEqual(form.setState(['',nType,'',{}]), None)
- 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
+        self.assertEqual(form.setState(['', nType, '', {}]), None)
 
-        self.assertEqual(form.name,'') 
-        self.assertEqual(form.nexusType, nType) 
-        self.assertEqual(form.doc,'') 
-        self.assertEqual(form.attributes,{}) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
+
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, nType)
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, {})
 
         form.nexusType = ""
 
-        self.assertEqual(form.setState(['','',doc,{}]), None)
- 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.setState(['', '', doc, {}]), None)
 
-        self.assertEqual(form.name,'') 
-        self.assertEqual(form.nexusType, '') 
-        self.assertEqual(form.doc,doc) 
-        self.assertEqual(form.attributes,{}) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
+
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, doc)
+        self.assertEqual(form.attributes, {})
 
         form.doc = ""
-        
+
 #        form.attributes = attributes
-        self.assertEqual(form.setState(['','','',attributes]), None)
- 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.setState(['', '', '', attributes]), None)
 
-        self.assertEqual(form.name,'') 
-        self.assertEqual(form.nexusType, '') 
-        self.assertEqual(form.doc,'') 
-        self.assertEqual(form.attributes,attributes) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
+
+        self.assertEqual(form.name, '')
+        self.assertEqual(form.nexusType, '')
+        self.assertEqual(form.doc, '')
+        self.assertEqual(form.attributes, attributes)
         self.assertTrue(form.attributes is not attributes)
 
+        self.assertEqual(form.setState([name, nType, doc, attributes]), None)
 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.setState([name,nType,doc,attributes]), None)
- 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-        self.assertEqual(form.name,name) 
-        self.assertEqual(form.nexusType, nType) 
-        self.assertEqual(form.doc,doc) 
-        self.assertEqual(form.attributes,attributes) 
+        self.assertEqual(form.name, name)
+        self.assertEqual(form.nexusType, nType)
+        self.assertEqual(form.doc, doc)
+        self.assertEqual(form.attributes, attributes)
         self.assertTrue(form.attributes is not attributes)
 
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
-
-        self.assertEqual(form.result(),0)
-
-
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_createGUI(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
         form.show()
         form.createGUI()
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         name = "myname"
         nType = "NXEntry"
         doc = "My documentation: \n ble ble ble "
-        attributes = {"myattr":"myvalue","myattr2":"myvalue2","myattr3":"myvalue3" }
-        
+        attributes = {"myattr": "myvalue", "myattr2": "myvalue2",
+                      "myattr3": "myvalue3"}
+
         form = GroupDlg()
         form.show()
         form.createGUI()
- 
-        self.assertEqual(form.ui.nameLineEdit.text(), '') 
+
+        self.assertEqual(form.ui.nameLineEdit.text(), '')
         self.assertEqual(form.ui.typeLineEdit.text(), '')
         self.assertEqual(form.ui.docTextEdit.toPlainText(), '')
 
@@ -623,43 +581,33 @@ class GroupDlgTest(unittest.TestCase):
         form.show()
         form.name = name
 
-
         form.createGUI()
-    
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         self.assertEqual(form.ui.typeLineEdit.text(), '')
         self.assertEqual(form.ui.docTextEdit.toPlainText(), '')
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
         form = GroupDlg()
         form.show()
         form.nexusType = nType
 
-
         form.createGUI()
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertEqual(form.ui.typeLineEdit.text(), nType)
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-
-
-
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form = GroupDlg()
         form.show()
         form.doc = doc
 
         form.createGUI()
-    
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
-
-
-
 
         form = GroupDlg()
         form.show()
@@ -669,23 +617,22 @@ class GroupDlgTest(unittest.TestCase):
         form.attributes = attributes
 
         form.createGUI()
-    
+
         self.assertEqual(form.ui.typeLineEdit.text(), nType)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),
+                         len(attributes))
         for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
+            it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
             self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            it2 = form.ui.attributeTableWidget.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
-
-
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
@@ -693,38 +640,31 @@ class GroupDlgTest(unittest.TestCase):
 #        self.assertEqual(form.name, name)
 #        self.assertEqual(form.nexusType, nType)
 
-        self.assertEqual(form.result(),0)
-
-
-
-
-
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_setFromNode(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -733,66 +673,64 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+
         form.setFromNode()
 
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.nexusType, "mytype%s" % nn)
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn,
+                                           u'unit': u'myunits%s' % nn})
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-
-
-
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_setFromNode_parameter(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -801,64 +739,66 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+
         form.setFromNode(qdn)
         self.assertEqual(form.node, qdn)
 
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.nexusType, "mytype%s" % nn)
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(
+            form.attributes,
+            {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(
+            form.subItems,
+            ["group", "field", "attribute", "link", "component", "doc"])
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_setFromNode_noNode(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -867,50 +807,49 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+
         form.setFromNode()
 
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_setFromNode_clean(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-        dks = []
+        # dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        doc.appendChild(qdn) 
-
+        doc.appendChild(qdn)
 
         form = GroupDlg()
         form.show()
@@ -919,64 +858,61 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+
         form.setFromNode()
 
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_populateAttribute_setFromNode(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -985,84 +921,82 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        attributes = {u'shortname': u'mynshort%s' % nn,
+                      u'unit': u'myunits%s' % nn}
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.nexusType, "mytype%s" % nn)
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
         form.populateAttributes()
 
-
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(
+            form.ui.attributeTableWidget.rowCount(), len(attributes))
         for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
+            it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
             self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            it2 = form.ui.attributeTableWidget.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
-
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-        self.assertEqual(item,None)
-        
-
-
+        item = form.ui.attributeTableWidget.item(
+            form.ui.attributeTableWidget.currentRow(), 0)
+        self.assertEqual(item, None)
 
     # constructor test
     # \brief It tests default settings
     def test_populateAttribute_setFromNode_selected_wrong(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -1071,86 +1005,82 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute",
+                          "link", "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute",
+                          "link", "component", "doc"])
+
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        attributes = {u'shortname': u'mynshort%s' % nn,
+                      u'unit': u'myunits%s' % nn}
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.nexusType, "mytype%s" % nn)
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
         form.populateAttributes("ble")
 
-
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(
+            form.ui.attributeTableWidget.rowCount(), len(attributes))
         for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
+            it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
             self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            it2 = form.ui.attributeTableWidget.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
-
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-        self.assertEqual(item,None)
-        
-
-
-
-
+        item = form.ui.attributeTableWidget.item(
+            form.ui.attributeTableWidget.currentRow(), 0)
+        self.assertEqual(item, None)
 
     # constructor test
     # \brief It tests default settings
     def test_populateAttribute_setFromNode_selected(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -1159,88 +1089,85 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        attributes = {u'shortname': u'mynshort%s' % nn,
+                      u'unit': u'myunits%s' % nn}
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.nexusType, "mytype%s" % nn)
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-        
-        na =  self.__rnd.randint(0, len(attributes)-1) 
-        sel = attributes.keys()[na]
+        na = self.__rnd.randint(0, len(attributes) - 1)
+        sel = list(attributes.keys())[na]
         form.populateAttributes(sel)
 
-
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(
+            form.ui.attributeTableWidget.rowCount(), len(attributes))
         for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
+            it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
             self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            it2 = form.ui.attributeTableWidget.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
+        item = form.ui.attributeTableWidget.item(
+            form.ui.attributeTableWidget.currentRow(), 0)
 
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-        
-        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
-
-
-
+        self.assertEqual(item.data(Qt.UserRole), sel)
 
     # constructor test
     # \brief It tests default settings
     def test_populateAttribute_setFromNode_selected_addAttribute(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -1249,138 +1176,129 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        attributes = {u'shortname': u'mynshort%s' % nn,
+                      u'unit': u'myunits%s' % nn}
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.nexusType, "mytype%s" % nn)
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-        
-        na =  self.__rnd.randint(0, len(attributes)-1) 
-        sel = attributes.keys()[na]
+        na = self.__rnd.randint(0, len(attributes) - 1)
+        sel = list(attributes.keys())[na]
         form.populateAttributes(sel)
 
-
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(
+            form.ui.attributeTableWidget.rowCount(), len(attributes))
         for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
+            it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
             self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            it2 = form.ui.attributeTableWidget.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
+        item = form.ui.attributeTableWidget.item(
+            form.ui.attributeTableWidget.currentRow(), 0)
 
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-        
-        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+        self.assertEqual(item.data(Qt.UserRole), sel)
 
         self.aname = "addedAttribute"
         self.avalue = "addedAttributeValue"
 
-
         QTimer.singleShot(10, self.attributeWidgetClose)
         QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
-        
 
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(
+            form.ui.attributeTableWidget.rowCount(), len(attributes))
         for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
+            it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
             self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            it2 = form.ui.attributeTableWidget.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
+        item = form.ui.attributeTableWidget.item(
+            form.ui.attributeTableWidget.currentRow(), 0)
 
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-        
-        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+        self.assertEqual(item.data(Qt.UserRole), sel)
 
         self.aname = "addedAttribute"
         self.avalue = "addedAttributeValue"
 
         QTimer.singleShot(10, self.attributeWidget)
         QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
-        
 
-
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes)+1)
-        for i in range(len(attributes)+1):
-            it = form.ui.attributeTableWidget.item(i, 0) 
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(),
+                         len(attributes) + 1)
+        for i in range(len(attributes) + 1):
+            it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            it2 = form.ui.attributeTableWidget.item(i, 1)
             if k in attributes.keys():
                 self.assertEqual(it2.text(), attributes[k])
             else:
                 self.assertEqual(it2.text(), self.avalue)
-                
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)        
-        self.assertEqual(item.data(Qt.UserRole).toString(),self.aname)
 
-
-
-
-
+        item = form.ui.attributeTableWidget.item(
+            form.ui.attributeTableWidget.currentRow(), 0)
+        self.assertEqual(item.data(Qt.UserRole), self.aname)
 
     # constructor test
     # \brief It tests default settings
     def test_populateAttribute_setFromNode_selected_removeAttribute(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        qdn.setAttribute("logname","mynlong%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        qdn.setAttribute("logname", "mynlong%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -1389,115 +1307,113 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'logname': u'mynlong%s' %nn, u'unit': u'myunits%s' % nn}
+        attributes = {u'shortname': u'mynshort%s' % nn,
+                      u'logname': u'mynlong%s' % nn,
+                      u'unit': u'myunits%s' % nn}
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.nexusType, "mytype%s" % nn)
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),0)
-
-        
-        na =  self.__rnd.randint(0, len(attributes)-1) 
-        sel = attributes.keys()[na]
+        na = self.__rnd.randint(0, len(attributes) - 1)
+        sel = list(attributes.keys())[na]
         form.populateAttributes(sel)
 
-
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(),len(attributes))
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(
+            form.ui.attributeTableWidget.rowCount(), len(attributes))
         for i in range(len(attributes)):
-            it = form.ui.attributeTableWidget.item(i, 0) 
+            it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
             self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            it2 = form.ui.attributeTableWidget.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
+        item = form.ui.attributeTableWidget.item(
+            form.ui.attributeTableWidget.currentRow(), 0)
 
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-        
-        self.assertEqual(item.data(Qt.UserRole).toString(),sel)
+        self.assertEqual(item.data(Qt.UserRole), sel)
 
-        aname = self.__rnd.choice(attributes.keys())
-        avalue = attributes[aname]
-        
-        
-        
+        aname = self.__rnd.choice(list(attributes.keys()))
+        # avalue =
+        attributes[aname]
+
         form.populateAttributes(aname)
 
-        
-
-#        QTimer.singleShot(10, self.rmAttributeWidget)
+        #        QTimer.singleShot(10, self.rmAttributeWidget)
         QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
-        
-#        self.assertEqual(self.text,"Remove attribute: %s = '%s'" % (aname,avalue))
 
-        self.assertEqual(form.ui.attributeTableWidget.columnCount(),2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(), len(attributes)-1)
-        for i in range(len(attributes)-1):
-            it = form.ui.attributeTableWidget.item(i, 0) 
+        #        self.assertEqual(self.text,
+        #             "Remove attribute: %s = '%s'" % (aname, avalue))
+
+        self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
+        self.assertEqual(
+            form.ui.attributeTableWidget.rowCount(), len(attributes) - 1)
+        for i in range(len(attributes) - 1):
+            it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
             self.assertTrue(k in attributes.keys())
-            it2 = form.ui.attributeTableWidget.item(i, 1) 
+            it2 = form.ui.attributeTableWidget.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
-
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
+        item = form.ui.attributeTableWidget.item(
+            form.ui.attributeTableWidget.currentRow(), 0)
         self.assertEqual(item, None)
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
     def test_populateAttribute_setFromNode_selected_tableItemChanged(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        qdn.setAttribute("logname","mynlong%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        qdn.setAttribute("logname", "mynlong%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -1506,143 +1422,139 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.createGUI()
 
-        atw = form.ui.attributeTableWidget        
+        atw = form.ui.attributeTableWidget
         self.assertEqual(form.name, '')
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute",
+                          "link", "component", "doc"])
+
         form.setFromNode()
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'logname': u'mynlong%s' %nn, u'unit': u'myunits%s' % nn}
+        attributes = {u'shortname': u'mynshort%s' % nn,
+                      u'logname': u'mynlong%s' % nn,
+                      u'unit': u'myunits%s' % nn}
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.nexusType, "mytype%s" % nn)
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
         self.assertEqual(form.attributes, attributes)
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertEqual(
+            form.subItems,
+            ["group", "field", "attribute", "link", "component", "doc"])
 
+        self.assertTrue(not form.ui.nameLineEdit.text())
+        self.assertTrue(not form.ui.typeLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.typeLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertEqual(atw.columnCount(), 2)
+        self.assertEqual(atw.rowCount(), 0)
 
-        self.assertEqual(atw.columnCount(),2)
-        self.assertEqual(atw.rowCount(),0)
-
-        
-        na =  self.__rnd.randint(0, len(attributes)-1) 
-        sel = attributes.keys()[na]
+        na = self.__rnd.randint(0, len(attributes) - 1)
+        sel = list(attributes.keys())[na]
         form.populateAttributes(sel)
 
-
-        self.assertEqual(atw.columnCount(),2)
-        self.assertEqual(atw.rowCount(),len(attributes))
+        self.assertEqual(atw.columnCount(), 2)
+        self.assertEqual(atw.rowCount(), len(attributes))
         for i in range(len(attributes)):
-            it = atw.item(i, 0) 
+            it = atw.item(i, 0)
             k = str(it.text())
             self.assertTrue(k in attributes.keys())
-            it2 = atw.item(i, 1) 
+            it2 = atw.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
-
         item = atw.item(atw.currentRow(), 0)
-        self.assertEqual(item.data(Qt.UserRole).toString(), sel)
+        self.assertEqual(item.data(Qt.UserRole), sel)
 
-        ch = self.__rnd.randint(0, len(attributes)-1)
-        atw.setCurrentCell(ch,0)
+        ch = self.__rnd.randint(0, len(attributes) - 1)
+        atw.setCurrentCell(ch, 0)
         item = atw.item(atw.currentRow(), 0)
-        aname = str(item.data(Qt.UserRole).toString())
+        aname = str(item.data(Qt.UserRole))
 
         it = QTableWidgetItem(unicode(aname))
-        it.setData(Qt.DisplayRole, (aname+"_"+attributes[aname]))
+        it.setData(Qt.DisplayRole, (aname + "_" + attributes[aname]))
         it.setData(Qt.UserRole, (aname))
 
-        atw.setCurrentCell(ch,0)
+        atw.setCurrentCell(ch, 0)
 
         QTimer.singleShot(10, self.checkMessageBox)
-        atw.setItem(ch,0,it)
-        self.assertEqual(self.text, 
-                         "To change the attribute name, please remove the attribute and add the new one")
-        
+        atw.setItem(ch, 0, it)
+        self.assertEqual(
+            self.text,
+            "To change the attribute name, please remove the attribute "
+            "and add the new one")
 
-        avalue = attributes[str(aname)]
-                
+        # avalue =
+        attributes[str(aname)]
 
-        self.assertEqual(atw.columnCount(),2)
-        self.assertEqual(atw.rowCount(),len(attributes))
+        self.assertEqual(atw.columnCount(), 2)
+        self.assertEqual(atw.rowCount(), len(attributes))
         for i in range(len(attributes)):
-            it = atw.item(i, 0) 
+            it = atw.item(i, 0)
             k = str(it.text())
             self.assertTrue(k in attributes.keys())
-            it2 = atw.item(i, 1) 
+            it2 = atw.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
-
-
-
 
         it = QTableWidgetItem(unicode(aname))
         it.setData(Qt.DisplayRole, (aname+"_"+attributes[aname]))
         it.setData(Qt.UserRole, (aname))
 
-        atw.setCurrentCell(ch,1)
+        atw.setCurrentCell(ch, 1)
 
-        atw.setItem(ch,1,it)
-        
+        atw.setItem(ch, 1, it)
 
-        avalue = attributes[str(aname)]
-                
+        # avalue =
+        attributes[str(aname)]
 
-        self.assertEqual(atw.columnCount(),2)
-        self.assertEqual(atw.rowCount(),len(attributes))
+        self.assertEqual(atw.columnCount(), 2)
+        self.assertEqual(atw.rowCount(), len(attributes))
         for i in range(len(attributes)):
             it = atw.item(i, 0)
             k = str(it.text())
             if k != aname:
                 self.assertTrue(k in attributes.keys())
-                it2 = atw.item(i, 1) 
+                it2 = atw.item(i, 1)
                 self.assertEqual(it2.text(), attributes[k])
             else:
-                it2 = atw.item(i, 1) 
-                self.assertEqual(it2.text(), (aname+"_"+attributes[aname]))
-
-
-
+                it2 = atw.item(i, 1)
+                self.assertEqual(
+                    it2.text(), (aname + "_" + attributes[aname]))
 
     # constructor test
     # \brief It tests default settings
     def test_updateNode(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -1651,55 +1563,53 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.setFromNode()
         form.createGUI()
 
         allAttr = True
-        cm = ComponentModel(doc,allAttr)
+        cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
         nname = "newname"
         ntype = "newtype"
-        attrs = {"unit":"newunit","longname":"newlogname"}
+        attrs = {"unit": "newunit", "longname": "newlogname"}
         mdoc = "New text \nNew text"
 
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
-                cnt += 1 
+                self.assertEqual(vl, form.nexusType)
+                cnt += 1
             else:
-                self.assertEqual(vl,form.attributes[str(nm)])
-        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+                self.assertEqual(vl, form.attributes[str(nm)])
+        self.assertEqual(len(form.attributes), attributeMap.count() - cnt)
 
-
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
-        self.assertEqual(olddoc,form.doc)
-
-
+        self.assertEqual(olddoc, form.doc)
 
         form.name = nname
         form.nexusType = ntype
         form.attributes.clear()
-        for at in attrs.keys() :
-            form.attributes[at] =  attrs[at]
+        for at in attrs.keys():
+            form.attributes[at] = attrs[at]
         form.doc = mdoc
 
         form.root = doc
@@ -1707,7 +1617,7 @@ class GroupDlgTest(unittest.TestCase):
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -1719,48 +1629,43 @@ class GroupDlgTest(unittest.TestCase):
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
                 self.assertEqual(vl, nname)
-                cnt += 1 
+                cnt += 1
             elif nm == "type":
                 self.assertEqual(vl, ntype)
-                cnt += 1 
+                cnt += 1
             else:
-                self.assertEqual(vl,attrs[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
+                self.assertEqual(vl, attrs[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
-
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
-        self.assertEqual(olddoc,mdoc)
-
-
+        self.assertEqual(olddoc, mdoc)
 
     # constructor test
     # \brief It tests default settings
     def test_updateNode_withindex(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -1769,55 +1674,53 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute",
+                          "link", "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.setFromNode()
         form.createGUI()
 
         allAttr = True
-        cm = ComponentModel(doc,allAttr)
+        cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
         nname = "newname"
         ntype = "newtype"
-        attrs = {"unit":"newunit","longname":"newlogname"}
+        attrs = {"unit": "newunit", "longname": "newlogname"}
         mdoc = "New text \nNew text"
 
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
-                cnt += 1 
+                self.assertEqual(vl, form.nexusType)
+                cnt += 1
             else:
-                self.assertEqual(vl,form.attributes[str(nm)])
-        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+                self.assertEqual(vl, form.attributes[str(nm)])
+        self.assertEqual(len(form.attributes), attributeMap.count() - cnt)
 
-
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
-        self.assertEqual(olddoc,form.doc)
-
-
+        self.assertEqual(olddoc, form.doc)
 
         form.name = nname
         form.nexusType = ntype
         form.attributes.clear()
-        for at in attrs.keys() :
-            form.attributes[at] =  attrs[at]
+        for at in attrs.keys():
+            form.attributes[at] = attrs[at]
         form.doc = mdoc
 
         form.root = doc
@@ -1825,7 +1728,7 @@ class GroupDlgTest(unittest.TestCase):
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -1837,49 +1740,43 @@ class GroupDlgTest(unittest.TestCase):
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
                 self.assertEqual(vl, nname)
-                cnt += 1 
+                cnt += 1
             elif nm == "type":
                 self.assertEqual(vl, ntype)
-                cnt += 1 
+                cnt += 1
             else:
-                self.assertEqual(vl,attrs[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
+                self.assertEqual(vl, attrs[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
-
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
-        self.assertEqual(olddoc,mdoc)
-
-
-
+        self.assertEqual(olddoc, mdoc)
 
     # constructor test
     # \brief It tests default settings
     def test_apply(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -1888,84 +1785,76 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.subItems,
+                         ["group", "field", "attribute", "link",
+                          "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.setFromNode()
         form.createGUI()
 
         allAttr = True
-        cm = ComponentModel(doc,allAttr)
+        cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
-
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
-                cnt += 1 
+                self.assertEqual(vl, form.nexusType)
+                cnt += 1
             else:
-                self.assertEqual(vl,form.attributes[str(nm)])
-        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+                self.assertEqual(vl, form.attributes[str(nm)])
+        self.assertEqual(len(form.attributes), attributeMap.count() - cnt)
 
-
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
-        self.assertEqual(olddoc,form.doc)
-
+        self.assertEqual(olddoc, form.doc)
 
         nname = "newname"
         ntype = "newtype"
-        attrs = {"unit":"newunit","longname":"newlogname", "mynew":"newvalue"}
+        attrs = {"unit": "newunit", "longname": "newlogname",
+                 "mynew": "newvalue"}
         mdoc = "New text New text"
-
-
 
         form.root = doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
-
 
         form.ui.nameLineEdit.setText(nname)
         form.ui.typeLineEdit.setText(ntype)
 
         form.ui.docTextEdit.setText(str(mdoc))
         form.ui.docTextEdit.setText(str(mdoc))
-        
-        
-        
-        for r in form.attributes:
-            form.ui.attributeTableWidget.setCurrentCell(0,1)
-            item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0) 
-            print(item.text())
 
+        for r in form.attributes:
+            form.ui.attributeTableWidget.setCurrentCell(0, 1)
+            item = form.ui.attributeTableWidget.item(
+                form.ui.attributeTableWidget.currentRow(), 0)
+            print(item.text())
 
 #            QTimer.singleShot(10, self.rmAttributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
 
-
-
         i = 0
         for r in attrs:
-            form.ui.attributeTableWidget.setCurrentCell(i,1)
+            form.ui.attributeTableWidget.setCurrentCell(i, 1)
             self.aname = r
             self.avalue = attrs[r]
             QTimer.singleShot(10, self.attributeWidget)
@@ -1974,12 +1863,10 @@ class GroupDlgTest(unittest.TestCase):
 
         form.apply()
 
-
         self.assertEqual(form.name, nname)
         self.assertEqual(form.nexusType, ntype)
         self.assertEqual(form.doc, mdoc)
         self.assertEqual(form.attributes, attrs)
-
 
         cnt = 0
         for i in range(attributeMap.count()):
@@ -1987,50 +1874,43 @@ class GroupDlgTest(unittest.TestCase):
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
                 self.assertEqual(vl, nname)
-                cnt += 1 
+                cnt += 1
             elif nm == "type":
                 self.assertEqual(vl, ntype)
-                cnt += 1 
+                cnt += 1
             else:
-                self.assertEqual(vl,attrs[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
+                self.assertEqual(vl, attrs[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
-
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
-        self.assertEqual(olddoc,mdoc)
-
-
-
-
+        self.assertEqual(olddoc, mdoc)
 
     # constructor test
     # \brief It tests default settings
     def test_reset(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -2039,84 +1919,76 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(
+            form.subItems,
+            ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.setFromNode()
         form.createGUI()
 
         allAttr = True
-        cm = ComponentModel(doc,allAttr)
+        cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
-
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
-                cnt += 1 
+                self.assertEqual(vl, form.nexusType)
+                cnt += 1
             else:
-                self.assertEqual(vl,form.attributes[str(nm)])
-        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+                self.assertEqual(vl, form.attributes[str(nm)])
+        self.assertEqual(len(form.attributes), attributeMap.count() - cnt)
 
-
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
-        self.assertEqual(olddoc,form.doc)
-
+        self.assertEqual(olddoc, form.doc)
 
         nname = "newname"
         ntype = "newtype"
-        attrs = {"unit":"newunit","longname":"newlogname", "mynew":"newvalue"}
+        attrs = {"unit": "newunit", "longname": "newlogname",
+                 "mynew": "newvalue"}
         mdoc = "New text New text"
-
-
 
         form.root = doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
-
 
         form.ui.nameLineEdit.setText(nname)
         form.ui.typeLineEdit.setText(ntype)
 
         form.ui.docTextEdit.setText(str(mdoc))
         form.ui.docTextEdit.setText(str(mdoc))
-        
-        
-        
-        for r in form.attributes:
-            form.ui.attributeTableWidget.setCurrentCell(0,1)
-            item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0) 
-            print(item.text())
 
+        for r in form.attributes:
+            form.ui.attributeTableWidget.setCurrentCell(0, 1)
+            item = form.ui.attributeTableWidget.item(
+                form.ui.attributeTableWidget.currentRow(), 0)
+            print(item.text())
 
 #            QTimer.singleShot(10, self.rmAttributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
 
-
-
         i = 0
         for r in attrs:
-            form.ui.attributeTableWidget.setCurrentCell(i,1)
+            form.ui.attributeTableWidget.setCurrentCell(i, 1)
             self.aname = r
             self.avalue = attrs[r]
             QTimer.singleShot(10, self.attributeWidget)
@@ -2125,12 +1997,13 @@ class GroupDlgTest(unittest.TestCase):
 
         form.reset()
 
-        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.doc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip()) 
-        self.assertEqual(form.attributes,  ats )
-
+        ats = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.nexusType, "mytype%s" % nn)
+        self.assertEqual(
+            form.doc,
+            ("".join(["\nText\n %s\n" % i for i in range(ndcs)])).strip())
+        self.assertEqual(form.attributes,  ats)
 
         cnt = 0
         for i in range(attributeMap.count()):
@@ -2138,48 +2011,44 @@ class GroupDlgTest(unittest.TestCase):
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
                 self.assertEqual(vl, "myname%s" % nn)
-                cnt += 1 
+                cnt += 1
             elif nm == "type":
                 self.assertEqual(vl, "mytype%s" % nn)
-                cnt += 1 
+                cnt += 1
             else:
-                self.assertEqual(vl,ats[str(nm)])
-        self.assertEqual(len(ats),attributeMap.count() - cnt)
+                self.assertEqual(vl, ats[str(nm)])
+        self.assertEqual(len(ats), attributeMap.count() - cnt)
 
-
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip())
-
-
-
+        self.assertEqual(
+            olddoc,
+            ("".join(["\nText\n %s\n" % i for i in range(ndcs)])).strip())
 
     # constructor test
     # \brief It tests default settings
     def test_reset_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "group"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("type","mytype%s" %  nn)
-        qdn.setAttribute("unit","myunits%s" %  nn)
-        qdn.setAttribute("shortname","mynshort%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
-
-
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
         form = GroupDlg()
         form.show()
@@ -2188,84 +2057,76 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, '')
         self.assertEqual(form.doc, '')
         self.assertEqual(form.attributes, {})
-        self.assertEqual(form.subItems, 
-                         ["group", "field", "attribute", "link", "component", "doc"])
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(
+            form.subItems,
+            ["group", "field", "attribute", "link", "component", "doc"])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
 
         form.setFromNode()
         form.createGUI()
 
         allAttr = True
-        cm = ComponentModel(doc,allAttr)
+        cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
-
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "type":
-                self.assertEqual(vl,form.nexusType)
-                cnt += 1 
+                self.assertEqual(vl, form.nexusType)
+                cnt += 1
             else:
-                self.assertEqual(vl,form.attributes[str(nm)])
-        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+                self.assertEqual(vl, form.attributes[str(nm)])
+        self.assertEqual(len(form.attributes), attributeMap.count() - cnt)
 
-
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
-        self.assertEqual(olddoc,form.doc)
-
+        self.assertEqual(olddoc, form.doc)
 
         nname = "newname"
         ntype = "newtype"
-        attrs = {"unit":"newunit","longname":"newlogname", "mynew":"newvalue"}
+        attrs = {"unit": "newunit", "longname": "newlogname",
+                 "mynew": "newvalue"}
         mdoc = "New text New text"
-
-
 
         form.root = doc
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
-
 
         form.ui.nameLineEdit.setText(nname)
         form.ui.typeLineEdit.setText(ntype)
 
         form.ui.docTextEdit.setText(str(mdoc))
         form.ui.docTextEdit.setText(str(mdoc))
-        
-        
-        
-        for r in form.attributes:
-            form.ui.attributeTableWidget.setCurrentCell(0,1)
-            item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0) 
-            print(item.text())
 
+        for r in form.attributes:
+            form.ui.attributeTableWidget.setCurrentCell(0, 1)
+            item = form.ui.attributeTableWidget.item(
+                form.ui.attributeTableWidget.currentRow(), 0)
+            print(item.text())
 
 #            QTimer.singleShot(10, self.rmAttributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
 
-
-
         i = 0
         for r in attrs:
-            form.ui.attributeTableWidget.setCurrentCell(i,1)
+            form.ui.attributeTableWidget.setCurrentCell(i, 1)
             self.aname = r
             self.avalue = attrs[r]
             QTimer.singleShot(10, self.attributeWidget)
@@ -2274,12 +2135,13 @@ class GroupDlgTest(unittest.TestCase):
 
         QTest.mouseClick(form.ui.resetPushButton, Qt.LeftButton)
 
-        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.nexusType, "mytype%s" %  nn)
-        self.assertEqual(form.doc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip()) 
-        self.assertEqual(form.attributes,  ats )
-
+        ats = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.nexusType, "mytype%s" % nn)
+        self.assertEqual(
+            form.doc,
+            ("".join(["\nText\n %s\n" % i for i in range(ndcs)])).strip())
+        self.assertEqual(form.attributes,  ats)
 
         cnt = 0
         for i in range(attributeMap.count()):
@@ -2287,182 +2149,159 @@ class GroupDlgTest(unittest.TestCase):
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
                 self.assertEqual(vl, "myname%s" % nn)
-                cnt += 1 
+                cnt += 1
             elif nm == "type":
                 self.assertEqual(vl, "mytype%s" % nn)
-                cnt += 1 
+                cnt += 1
             else:
-                self.assertEqual(vl,ats[str(nm)])
-        self.assertEqual(len(ats),attributeMap.count() - cnt)
+                self.assertEqual(vl, ats[str(nm)])
+        self.assertEqual(len(ats), attributeMap.count() - cnt)
 
-
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip())
-
-
-
-
+        self.assertEqual(
+            olddoc,
+            ("".join(["\nText\n %s\n" % i for i in range(ndcs)])).strip())
 
     def myAction(self):
         self.performed = True
 
-
     # constructor test
-
 
     # constructor test
     # \brief It tests default settings
     def test_connect_actions(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
         form.show()
-        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.connectExternalActions(), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
 #        self.assertTrue(isinstance(DomTools, DomTools))
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction),None)
+        self.assertEqual(form.connectExternalActions(self.myAction), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui, Ui_GroupDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
         self.assertEqual(form.externalApply, None)
 
-
-        self.assertEqual(form.result(),0)
-
-
-
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
-        form.ui = Ui_GroupDlg() 
+        # form.ui = Ui_GroupDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
-        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.connectExternalActions(), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_GroupDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
 
-
-        self.assertEqual(form.result(),0)
-
-
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
-        form.ui = Ui_GroupDlg() 
+        # form.ui = Ui_GroupDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction),None)
+        self.assertEqual(form.connectExternalActions(self.myAction), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_GroupDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
         self.assertEqual(form.externalApply, self.myAction)
         self.performed = False
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
         self.assertEqual(self.performed, True)
 
-
-        self.assertEqual(form.result(),0)
-
-
-
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
-    def test_connect_actions_with_action_button(self):
+    def test_connect_actions_with_action_button_2(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
-        form.ui = Ui_GroupDlg() 
+        # form.ui = Ui_GroupDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction),None)
+        self.assertEqual(form.connectExternalActions(self.myAction), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_GroupDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
         self.assertEqual(form.externalApply, self.myAction)
         self.performed = False
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
         self.assertEqual(self.performed, True)
 
-
-        self.assertEqual(form.result(),0)
-
-
-
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_link_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
         form.createGUI()
         form.show()
-        self.assertEqual(form.connectExternalActions(None,self.myAction),None)
+        self.assertEqual(
+            form.connectExternalActions(None, self.myAction), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_GroupDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
 
-
-
-        self.assertEqual(form.result(),0)
-
-
-
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_link_and_apply_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
-        form.ui = Ui_GroupDlg() 
+        # form.ui = Ui_GroupDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.createGUI()
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction,None),None)
+        self.assertEqual(
+            form.connectExternalActions(self.myAction, None), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_GroupDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
         self.assertEqual(form.externalApply, self.myAction)
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
@@ -2470,29 +2309,26 @@ class GroupDlgTest(unittest.TestCase):
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
         self.assertEqual(self.performed, False)
 
-
-        self.assertEqual(form.result(),0)
-
-
-
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
-    def test_connect_actions_with_action_link_and_apply_button(self):
+    def test_connect_actions_with_action_link_and_apply_button_2(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = GroupDlg()
-        form.ui = Ui_GroupDlg() 
+        # form.ui = Ui_GroupDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.createGUI()
         QTest.keyClicks(form.ui.typeLineEdit, "namename")
 
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction,None),None)
+        self.assertEqual(
+            form.connectExternalActions(self.myAction, None), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_GroupDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_GroupDlg")
         self.assertEqual(form.externalApply, self.myAction)
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
@@ -2500,14 +2336,7 @@ class GroupDlgTest(unittest.TestCase):
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
         self.assertEqual(self.performed, True)
 
-
-        self.assertEqual(form.result(),0)
-
-
-
-
-
-
+        self.assertEqual(form.result(), 0)
 
 
 if __name__ == '__main__':

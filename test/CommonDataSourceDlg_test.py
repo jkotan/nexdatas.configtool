@@ -695,7 +695,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
         if sel is not None:
             item = table.item(table.currentRow(), 0)
-            self.assertEqual(item.data(Qt.UserRole).toString(), sel)
+            self.assertEqual(item.data(Qt.UserRole), sel)
 
     # constructor test
     # \brief It tests default settings
@@ -773,7 +773,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         ch = table.currentRow()
         item = table.item(ch, 0)
 
-        pname = str(item.data(Qt.UserRole).toString())
+        pname = str(item.data(Qt.UserRole))
 
         it = QTableWidgetItem(unicode(pname))
         it.setData(Qt.DisplayRole, ("Myname2"))
@@ -860,7 +860,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         self.checkParam(
             dict(myParam, **{str(sel): myParam[sel]}),
             self.form.ui.dParameterTableWidget,
-            item.data(Qt.UserRole).toString())
+            item.data(Qt.UserRole))
 
         self.checkParam(dict(myParam, **{str(sel): myParam[sel]}),
                         self.form.ui.dParameterTableWidget, sel)
@@ -935,7 +935,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
 
         item = table.item(ch, 0)
 
-        pname = str(item.data(Qt.UserRole).toString())
+        pname = str(item.data(Qt.UserRole))
 
         it = QTableWidgetItem(unicode(pname))
         it.setData(Qt.DisplayRole, ("Myname2"))

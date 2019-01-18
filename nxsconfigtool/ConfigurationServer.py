@@ -69,7 +69,7 @@ class ConfigurationServer(object):
             if len(adev) > 1:
                 try:
                     self.port = int(adev[0])
-                except:
+                except Exception:
                     self.port = 10000
                 self.device = "/".join(adev[1:])
             else:
@@ -154,13 +154,13 @@ class ConfigurationServer(object):
 
             try:
                 comps = self._proxy.command_inout("Components", names)
-            except:
+            except Exception:
                 comps = []
                 for n in names:
                     try:
                         xml = self._proxy.command_inout("Components", [n])
                         comps.append(xml[0])
-                    except:
+                    except Exception:
                         comps.append("")
             return dict(zip(names, comps))
 
@@ -173,13 +173,13 @@ class ConfigurationServer(object):
             names = self._proxy.command_inout("AvailableDataSources")
             try:
                 ds = self._proxy.command_inout("DataSources", names)
-            except:
+            except Exception:
                 ds = []
                 for n in names:
                     try:
                         xml = self._proxy.command_inout("DataSources", [n])
                         ds.extend(xml)
-                    except:
+                    except Exception:
                         ds.append("")
 
             return dict(zip(names, ds))

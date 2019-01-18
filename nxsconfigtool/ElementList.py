@@ -221,7 +221,7 @@ class ElementList(QWidget):
                     else:
                         self.elements[el].instance.dialog.\
                             setWindowTitle("%s [%s]" % (name, self.clName))
-                except:
+                except Exception:
                     self.elements[el].instance.dialog = None
 
         if selected is not None:
@@ -244,7 +244,7 @@ class ElementList(QWidget):
                         os.path.join(os.getcwd(), self.name))
                 else:
                     self.directory = os.getcwd()
-            except:
+            except Exception:
                 return
 
         ide = None
@@ -268,7 +268,7 @@ class ElementList(QWidget):
                     QMessageBox.warning(
                         self, "%s cannot be loaded" % self.clName,
                         "%s %s without content" % (self.clName, elname))
-            except:
+            except Exception:
                 QMessageBox.warning(
                     self, "%s cannot be loaded" % self.clName,
                     "%s %s cannot be loaded" % (self.clName, elname))
@@ -317,7 +317,7 @@ class ElementList(QWidget):
                     and (not self.disextention
                          or not l.endswith(self.disextention)))
             ]
-        except:
+        except Exception:
             try:
                 if os.path.exists(os.path.join(os.getcwd(), self.name)):
                     self.directory = os.path.abspath(
@@ -331,7 +331,7 @@ class ElementList(QWidget):
                         and (not self.disextention
                              or not l.endswith(self.disextention)))
                 ]
-            except:
+            except Exception:
                 return
 
         progress = QProgressDialog(

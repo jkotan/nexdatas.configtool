@@ -105,7 +105,7 @@ class StrategyDlg(NodeDlg):
                 grows = int(self.grows)
                 if grows < 0:
                     grows = 0
-            except:
+            except Exception:
                 grows = 0
             self.ui.growsSpinBox.setValue(grows)
         if self.postrun is not None:

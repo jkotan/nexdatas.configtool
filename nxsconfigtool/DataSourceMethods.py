@@ -144,14 +144,14 @@ class DataSourceMethods(object):
 
             try:
                 self.__dialog.ui.resetPushButton.clicked.disconnect(self.reset)
-            except:
+            except Exception:
                 pass
             self.__dialog.ui.resetPushButton.clicked.connect(self.reset)
         else:
             try:
                 self.__dialog.ui.resetPushButton.clicked.disconnect(
                     self.__dialog.reset)
-            except:
+            except Exception:
                 pass
             self.__dialog.ui.resetPushButton.clicked.connect(
                 self.__dialog.reset)

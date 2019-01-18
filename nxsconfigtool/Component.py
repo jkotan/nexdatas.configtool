@@ -213,7 +213,7 @@ class Component(object):
         if self.view and self.dialog:
             try:
                 index = self.view.currentIndex()
-            except:
+            except Exception:
                 pass
         return index
 
@@ -1133,7 +1133,7 @@ class Component(object):
             if self.view and self.dialog and self.dialog.ui \
                     and self.view.model():
                 dialog = True
-        except:
+        except Exception:
             pass
 
         if not self.document:

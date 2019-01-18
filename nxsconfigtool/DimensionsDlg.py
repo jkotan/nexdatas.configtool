@@ -78,7 +78,7 @@ class DimensionsDlg(QDialog):
                             self.lengths[i] = ln
                     else:
                         self.lengths[i] = None
-        except:
+        except Exception:
             self.rank = 1
             self.lengths = []
 
@@ -124,7 +124,7 @@ class DimensionsDlg(QDialog):
                     self.lengths[row] = ln
                 else:
                     self.lengths[row] = None
-            except:
+            except Exception:
                 QMessageBox.warning(
                     self, "Value Error", "Wrong value of the edited length")
 

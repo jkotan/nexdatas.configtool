@@ -42,7 +42,7 @@ class DomTools(object):
                     r"[\w]+",
                     text[(index + len(label) + 2):]
                 ).next().group(0)
-            except:
+            except Exception:
                 subc = ""
             name = subc.strip() if subc else ""
             if name:

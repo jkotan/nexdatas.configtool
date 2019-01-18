@@ -105,7 +105,7 @@ class ConnectDlg(QDialog):
             port = str(self.ui.portLineEdit.text())
             if port:
                 self.port = int(port)
-        except:
+        except Exception:
             QMessageBox.warning(self, "Wrong port number",
                                 "Please define the port number")
             self.ui.portLineEdit.setFocus()

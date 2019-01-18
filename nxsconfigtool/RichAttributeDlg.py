@@ -194,7 +194,7 @@ class RichAttributeDlg(NodeDlg):
                 self.rank = int(attributeMap.namedItem("rank").nodeValue())
                 if self.rank < 0:
                     self.rank = 0
-            except:
+            except Exception:
                 self.rank = 0
         else:
             self.rank = 0
@@ -212,7 +212,7 @@ class RichAttributeDlg(NodeDlg):
                         if attributeMap.contains("value"):
                             value = str(attributeMap.namedItem(
                                 "value").nodeValue())
-                    except:
+                    except Exception:
                         pass
                     text = DomTools.getText(child)
                     if text and "$datasources." in text:

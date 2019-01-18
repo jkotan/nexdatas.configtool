@@ -147,14 +147,14 @@ class DataSourceMethodsTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED = %s" % self.__seed) 
         
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -275,7 +275,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         dsd = DataSourceDlg()
         ds = dsd.datasource
         form = DataSourceMethods(dsd, ds)
@@ -290,7 +290,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_constructor_accept_setFocus(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DataSourceDlg()
         cls = form.datasource
         meth = DataSourceMethods(form, cls)
@@ -948,7 +948,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_updateForm_errors(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         meth = DataSourceMethods(None, None)
         self.myAssertRaise(Exception, meth.updateForm)
@@ -973,7 +973,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_updateForm(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         form = DataSourceDlg()
@@ -993,7 +993,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_reset(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         form = DataSourceDlg()
@@ -1022,7 +1022,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_close_yes(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         form = DataSourceDlg()
@@ -1042,7 +1042,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_close_yes_tree(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         form = DataSourceDlg()
@@ -1067,7 +1067,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_reset_signal(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         self.cds = DataSource()
         self.form = self.cds.dialog
@@ -1085,7 +1085,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_reset_signal_tree(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         self.cds = DataSource()
         self.form = self.cds.dialog
@@ -1105,7 +1105,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_close_no(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         form = DataSourceDlg()
@@ -1124,7 +1124,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_close_no_tree(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         form = DataSourceDlg()
@@ -1144,7 +1144,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_treeMode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         meth = DataSourceMethods(None, None)
         self.myAssertRaise(Exception, meth.treeMode)
@@ -1210,7 +1210,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_createGUI_updataForm_errors(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         meth = DataSourceMethods(None, None)
         self.myAssertRaise(Exception, meth.updateForm)
@@ -1232,7 +1232,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_createGUI_updateForm(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         form = DataSourceDlg()
@@ -1251,7 +1251,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_createGUI_updateForm_tree(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         form = DataSourceDlg()
@@ -1306,7 +1306,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_createGUI_setFrames(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -1459,7 +1459,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_createGUI_setFrames_signal(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -1596,7 +1596,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_createGUI_cRecNameLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -1648,7 +1648,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_createGUI_dQueryLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -1698,7 +1698,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_createGUI_tDevNameLineEdit_tMemberNameLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -1763,7 +1763,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_createGUI_populateParameters(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -1840,7 +1840,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_createGUI_populateParameters_addremoveParamter(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -1961,7 +1961,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_createGUI_populateParameters_changeParamter(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -2049,7 +2049,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_createGUI_populateParameters_changeParamter_value(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -2155,7 +2155,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_client(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -2172,7 +2172,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_client_tree(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2191,7 +2191,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_client_node(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -2208,7 +2208,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_client_tree_node(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2287,7 +2287,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_tango(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -2304,7 +2304,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_tango_tree(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2323,7 +2323,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_tango_node(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -2340,7 +2340,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_tango_tree_node(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2445,7 +2445,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_db(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -2463,7 +2463,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_db_tree(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2482,7 +2482,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_db_node(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -2500,7 +2500,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_db_tree_node(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2665,7 +2665,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_nonode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -2683,7 +2683,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_nonode_tree(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2702,7 +2702,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_nonode_node(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         self.form = DataSourceDlg()
@@ -2720,7 +2720,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFromNode_nonode_tree_node(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2832,7 +2832,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_updateNode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -3018,7 +3018,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_updateNode_withindex(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -3203,7 +3203,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_apply(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -3457,7 +3457,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_reset(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -3686,7 +3686,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_reset_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -3928,7 +3928,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_connect_actions(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DataSourceMethods()
         form.show()
         self.assertEqual(form.connectExternalActions(),None)
@@ -3946,7 +3946,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_connect_actions_with_action(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DataSourceMethods()
         form.show()
         self.assertEqual(form.connectExternalActions(self.myAction),None)
@@ -3966,7 +3966,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_connect_actions_with_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DataSourceMethods()
         form.ui = Ui_DataSourceMethods() 
         form.ui.applyPushButton = QPushButton(form)
@@ -3989,7 +3989,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DataSourceMethods()
         form.ui = Ui_DataSourceMethods() 
         form.ui.applyPushButton = QPushButton(form)
@@ -4016,7 +4016,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DataSourceMethods()
         form.ui = Ui_DataSourceMethods() 
         form.ui.applyPushButton = QPushButton(form)
@@ -4045,7 +4045,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_link_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DataSourceMethods()
         form.createGUI()
         form.ui.applyPushButton = QPushButton(form)
@@ -4070,7 +4070,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def tttttest_connect_actions_with_action_and_apply_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DataSourceMethods()
         form.ui = Ui_DataSourceMethods() 
         form.ui.applyPushButton = QPushButton(form)
@@ -4099,7 +4099,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_and_sapply_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DataSourceMethods()
         form.ui = Ui_DataSourceMethods() 
         form.ui.applyPushButton = QPushButton(form)
@@ -4128,7 +4128,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_and_slink_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DataSourceMethods()
         form.ui = Ui_DataSourceMethods() 
         form.ui.applyPushButton = QPushButton(form)
@@ -4159,7 +4159,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DataSourceMethods()
         form.ui = Ui_DataSourceMethods() 
         form.ui.applyPushButton = QPushButton(form)
@@ -4190,7 +4190,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_connect_actions_with_action_link_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DataSourceMethods()
         form.ui = Ui_DataSourceMethods() 
         form.ui.applyPushButton = QPushButton(form)
@@ -4222,7 +4222,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_appendElement(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -4421,7 +4421,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         for i in range(attributeMap.count()):
             nm = attributeMap2.item(i).nodeName()
             vl = attributeMap2.item(i).nodeValue()
-            print "nv",nm,vl
+            # print "nv",nm,vl
             if nm == "name":
                 self.assertEqual(vl,  "my2name%s" %  nn)
                 cnt += 1 
@@ -4432,7 +4432,7 @@ class DataSourceMethodsTest(unittest.TestCase):
                 self.assertEqual(vl, "my2units%s" % nn)
                 cnt += 1 
             else:
-                print ats2, nm
+                # print ats2, nm
                 self.assertEqual(vl,ats2[str(nm)])
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
@@ -4446,7 +4446,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_appendElement_error(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -4628,7 +4628,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_populateAttribute_setFromNode_selected_addAttribute(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dks = []
         doc = QDomDocument()
@@ -4806,7 +4806,7 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \brief It tests default settings
     def ttttest_populateAttribute_setFromNode_selected_tableItemChanged(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dks = []
         doc = QDomDocument()

@@ -46,6 +46,10 @@ app = None
 IS64BIT = (struct.calcsize("P") == 8)
 
 
+if sys.version_info > (3,):
+    unicode = str
+    long = int
+
 
 
 # test fixture
@@ -77,20 +81,20 @@ class DimensionsDlgTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED = %s" % self.__seed) 
         
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, []) 
@@ -117,7 +121,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, []) 
@@ -141,7 +145,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_rank(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(1, 6) 
 
         form = DimensionsDlg()
@@ -172,7 +176,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_rank_lengths(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
         form = DimensionsDlg()
@@ -202,7 +206,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_rank_str_lengths_int(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  str(self.__rnd.randint(0, 6) )
         lengths = [str(self.__rnd.randint(1, 6)) for r in range(int(rank)) ]
         form = DimensionsDlg()
@@ -233,7 +237,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_rank_neg_lengths_int(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(-6, -1) 
         lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
         form = DimensionsDlg()
@@ -260,7 +264,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_rank_lengths_int_doc(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
         doc = 'My Document'*self.__rnd.randint(1, 10) 
@@ -292,7 +296,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_rank_lengths_int(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
         form = DimensionsDlg()
@@ -323,7 +327,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_rank_lengths_zero(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [0 for r in range(rank) ]
         form = DimensionsDlg()
@@ -354,7 +358,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_accept(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
         form = DimensionsDlg()
@@ -388,7 +392,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_rank_ui(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
         form = DimensionsDlg()
@@ -422,7 +426,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_doc_ui(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
         form = DimensionsDlg()
@@ -465,7 +469,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_doc_ui_text(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
         form = DimensionsDlg()
@@ -504,7 +508,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_len_ui_text(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
         form = DimensionsDlg()
@@ -551,7 +555,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_len_ui_text_err(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
         form = DimensionsDlg()
@@ -600,7 +604,7 @@ class DimensionsDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI_len_ui_text_err_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         rank =  self.__rnd.randint(1, 6) 
         lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
         form = DimensionsDlg()

@@ -48,6 +48,10 @@ from nxsconfigtool.DomTools import DomTools
 #  Qt-application
 app = None
 
+if sys.version_info > (3,):
+    unicode = str
+    long = int
+
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -108,14 +112,14 @@ class StrategyDlgTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED = %s" % self.__seed) 
         
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     def checkMessageBox(self):
 #        self.assertEqual(QApplication.activeWindow(),None)
@@ -203,7 +207,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.show()
         self.assertEqual(form.mode, '')
@@ -235,7 +239,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_accept(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.show()
         self.assertEqual(form.mode, '')
@@ -314,7 +318,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_updateForm(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.show()
         self.assertEqual(form.mode, '')
@@ -705,7 +709,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getState(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.show()
 
@@ -938,7 +942,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setState(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.show()
 
@@ -1273,7 +1277,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.show()
 
@@ -1686,7 +1690,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
@@ -1797,7 +1801,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode_parameter(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
@@ -1908,7 +1912,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode_nonode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
@@ -2018,7 +2022,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode_clean(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
@@ -2124,7 +2128,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_updateNode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
@@ -2312,7 +2316,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_updateNode_withindex(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
         compr = self.__rnd.choice([True, False])
@@ -2484,7 +2488,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_apply(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
@@ -2746,7 +2750,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_reset(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
@@ -3007,7 +3011,7 @@ class StrategyDlgTest(unittest.TestCase):
 
     def test_reset_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         mode = self.__rnd.choice(['INIT','STEP', 'FINAL', 'POSTRUN'])
@@ -3284,7 +3288,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.show()
         self.assertEqual(form.connectExternalActions(),None)
@@ -3302,7 +3306,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.show()
         self.assertEqual(form.connectExternalActions(self.myAction),None)
@@ -3322,7 +3326,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.ui = Ui_StrategyDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -3345,7 +3349,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.ui = Ui_StrategyDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -3372,7 +3376,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.ui = Ui_StrategyDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -3401,7 +3405,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_link_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.createGUI()
         form.ui.applyPushButton = QPushButton(form)
@@ -3426,7 +3430,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_connect_actions_with_action_and_apply_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.ui = Ui_StrategyDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -3455,7 +3459,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_and_sapply_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.ui = Ui_StrategyDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -3484,7 +3488,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_and_slink_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.ui = Ui_StrategyDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -3515,7 +3519,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.ui = Ui_StrategyDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -3546,7 +3550,7 @@ class StrategyDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_link_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = StrategyDlg()
         form.ui = Ui_StrategyDlg() 
         form.ui.applyPushButton = QPushButton(form)

@@ -128,14 +128,14 @@ class DataSourceDlgTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED = %s" % self.__seed) 
         
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     def checkMessageBox(self):
 #        self.assertEqual(QApplication.activeWindow(),None)
@@ -211,7 +211,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = QMessageBox()
         form = DataSourceDlg(parent)
         form.show()
@@ -239,7 +239,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_constructor_accept_setFocus(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         form = DataSourceDlg(parent)
         form.show()
@@ -327,7 +327,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_updateUi(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         self.form = DataSourceDlg(parent)
         self.form.show()
@@ -382,7 +382,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFrames(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         self.form = DataSourceDlg(parent)
         self.form.show()
@@ -486,7 +486,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_setFrames_signal(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         self.form = DataSourceDlg(parent)
         self.form.show()
@@ -611,7 +611,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_cRecNameLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         self.form = DataSourceDlg(parent)
         self.form.show()
@@ -643,7 +643,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_dQueryLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         self.form = DataSourceDlg(parent)
         self.form.show()
@@ -677,7 +677,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_tDevNameLineEdit_tMemberNameLineEdit_signal(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         self.form = DataSourceDlg(parent)
         self.form.show()
@@ -748,7 +748,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_populateParameters(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         self.form = DataSourceDlg(parent)
         self.form.show()
@@ -803,7 +803,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_populateParameters_addremoveParamter(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         self.form = DataSourceDlg(parent)
         self.form.show()
@@ -914,7 +914,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_populateParameters_changeParamter(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         self.form = DataSourceDlg(parent)
         self.form.show()
@@ -989,7 +989,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_populateParameters_changeParamter_value(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         self.form = DataSourceDlg(parent)
         self.form.show()
@@ -1078,7 +1078,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_closeEvent(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         self.form = DataSourceDlg(parent)
         self.form.show()
@@ -1104,7 +1104,7 @@ class DataSourceDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def tttest_updateForm(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         self.form = DataSourceDlg(parent)
         self.form.show()

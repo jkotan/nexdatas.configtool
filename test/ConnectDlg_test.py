@@ -43,6 +43,10 @@ app = None
 IS64BIT = (struct.calcsize("P") == 8)
 
 
+if sys.version_info > (3,):
+    unicode = str
+    long = int
+
 
 
 # test fixture
@@ -74,20 +78,20 @@ class ConnectDlgTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED = %s" % self.__seed) 
         
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -100,7 +104,7 @@ class ConnectDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_createGUI_withhost(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -152,7 +156,7 @@ class ConnectDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_createGUI(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -212,7 +216,7 @@ class ConnectDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_createGUI_accept(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -264,7 +268,7 @@ class ConnectDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_createGUI_port(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -318,7 +322,7 @@ class ConnectDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_createGUI_nohost(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -370,7 +374,7 @@ class ConnectDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_createGUI_noport(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -425,7 +429,7 @@ class ConnectDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_createGUI_updateForm(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = ConnectDlg()
 
         device = "my/device/1"

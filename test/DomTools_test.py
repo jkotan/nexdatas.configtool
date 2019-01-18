@@ -40,6 +40,10 @@ from nxsconfigtool.DomTools import DomTools
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    unicode = str
+    long = int
+
 
 # test fixture
 class DomToolsTest(unittest.TestCase):
@@ -74,21 +78,21 @@ class DomToolsTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED = %s" % self.__seed) 
         
 
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
 
 
     def test_getFirstElement(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         doc = QDomDocument()
         nname = "definition"
@@ -147,7 +151,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_getText(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         doc = QDomDocument()
         nname = "definition"
@@ -205,7 +209,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_getNodeRow(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         doc = QDomDocument()
         nname = "definition"
@@ -261,7 +265,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_replaceText(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         doc = QDomDocument()
         nname = "definition"
@@ -326,7 +330,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_removeNode_noparent(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 
@@ -417,7 +421,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_removeNode_nonode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 
@@ -507,7 +511,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_removeNode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 
@@ -603,7 +607,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_replaceNode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 
@@ -711,7 +715,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_replaceNode_noold(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 
@@ -812,7 +816,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_replaceNode_noparent(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 
@@ -907,7 +911,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_appendNode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 
@@ -1009,7 +1013,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_removeElement_noparent(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 
@@ -1100,7 +1104,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_removeElement_nonode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 
@@ -1190,7 +1194,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_removeElement(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 
@@ -1293,7 +1297,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_replaceElement(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 
@@ -1401,7 +1405,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_replaceElement_noold(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 
@@ -1502,7 +1506,7 @@ class DomToolsTest(unittest.TestCase):
 
     def test_replaceElement_noparent(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dts = DomTools()
 

@@ -40,6 +40,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 if sys.version_info > (3,):
     long = int
+    unicode = str
 
 
 # test fixture

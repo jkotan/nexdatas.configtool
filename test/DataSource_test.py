@@ -114,15 +114,15 @@ class DataSourceTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED = %s" % self.__seed) 
         
 
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
 
 
@@ -130,7 +130,7 @@ class DataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         cds = DataSource()
         self.assertEqual(cds.dataSourceType, 'CLIENT')
         self.assertEqual(cds.doc, '')
@@ -179,7 +179,7 @@ class DataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_constructor_parent(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         parent = QMessageBox()
 
@@ -231,7 +231,7 @@ class DataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_set_get_clean_State(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         cds = CommonDataSource()
         nn =  self.__rnd.randint(0, 10) 
 
@@ -450,7 +450,7 @@ class DataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def tttest_createDialog(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         parent = None
         form = DataSource(parent)
 

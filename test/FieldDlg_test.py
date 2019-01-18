@@ -48,6 +48,10 @@ from nxsconfigtool.DomTools import DomTools
 #  Qt-application
 app = None
 
+if sys.version_info > (3,):
+    unicode = str
+    long = int
+
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -109,14 +113,14 @@ class FieldDlgTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED = %s" % self.__seed) 
         
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     def checkMessageBox(self):
 #        self.assertEqual(QApplication.activeWindow(),None)
@@ -204,7 +208,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -235,7 +239,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_accept(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -287,7 +291,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_accept_long(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -363,7 +367,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_updateForm(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -692,7 +696,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getState(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.show()
 
@@ -916,7 +920,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setState(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.show()
 
@@ -1210,7 +1214,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_linkDataSource(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.show()
         form.createGUI()
@@ -1280,7 +1284,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createGUI(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -1542,7 +1546,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dks = []
         doc = QDomDocument()
@@ -1640,7 +1644,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode_parameter(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dks = []
         doc = QDomDocument()
@@ -1739,7 +1743,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode_parameter_nodim(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dks = []
         doc = QDomDocument()
@@ -1833,7 +1837,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode_nonode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dks = []
         doc = QDomDocument()
@@ -1925,7 +1929,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode_clean(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dks = []
         doc = QDomDocument()
@@ -1992,7 +1996,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_populateAttribute_setFromNode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dks = []
         doc = QDomDocument()
@@ -2115,7 +2119,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_populateAttribute_setFromNode_selected_wrong(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dks = []
         doc = QDomDocument()
@@ -2233,7 +2237,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_populateAttribute_setFromNode_selected(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dks = []
         doc = QDomDocument()
@@ -2362,7 +2366,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_populateAttribute_setFromNode_selected_addAttribute(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dks = []
         doc = QDomDocument()
@@ -2540,7 +2544,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_populateAttribute_setFromNode_selected_tableItemChanged(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         dks = []
         doc = QDomDocument()
@@ -2724,7 +2728,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_updateNode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -2910,7 +2914,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_updateNode_withindex(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -3095,7 +3099,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_apply(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -3349,7 +3353,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_reset(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -3578,7 +3582,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_reset_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -3819,7 +3823,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.show()
         self.assertEqual(form.connectExternalActions(),None)
@@ -3837,7 +3841,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.show()
         self.assertEqual(form.connectExternalActions(self.myAction),None)
@@ -3857,7 +3861,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.ui = Ui_FieldDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -3880,7 +3884,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.ui = Ui_FieldDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -3907,7 +3911,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.ui = Ui_FieldDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -3936,7 +3940,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_link_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.createGUI()
         form.ui.applyPushButton = QPushButton(form)
@@ -3961,7 +3965,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_connect_actions_with_action_and_apply_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.ui = Ui_FieldDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -3990,7 +3994,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_and_sapply_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.ui = Ui_FieldDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -4019,7 +4023,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_and_slink_button(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.ui = Ui_FieldDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -4050,7 +4054,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.ui = Ui_FieldDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -4081,7 +4085,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_link_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = FieldDlg()
         form.ui = Ui_FieldDlg() 
         form.ui.applyPushButton = QPushButton(form)
@@ -4113,7 +4117,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_appendElement(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []
@@ -4312,7 +4316,7 @@ class FieldDlgTest(unittest.TestCase):
         for i in range(attributeMap.count()):
             nm = attributeMap2.item(i).nodeName()
             vl = attributeMap2.item(i).nodeValue()
-            print "nv",nm,vl
+            # print "nv",nm,vl
             if nm == "name":
                 self.assertEqual(vl,  "my2name%s" %  nn)
                 cnt += 1 
@@ -4323,7 +4327,7 @@ class FieldDlgTest(unittest.TestCase):
                 self.assertEqual(vl, "my2units%s" % nn)
                 cnt += 1 
             else:
-                print ats2, nm
+                # print ats2, nm
                 self.assertEqual(vl,ats2[str(nm)])
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
@@ -4337,7 +4341,7 @@ class FieldDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_appendElement_error(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
 
         dks = []

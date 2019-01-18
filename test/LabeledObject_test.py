@@ -35,6 +35,10 @@ from nxsconfigtool.LabeledObject import LabeledObject
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    unicode = str
+    long = int
+
 
 # test fixture
 class LabeledObjectTest(unittest.TestCase):
@@ -69,21 +73,21 @@ class LabeledObjectTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED = %s" % self.__seed) 
         
 
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
 
 
     def test_isdirty(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
 
         name = "name1"
         newname = "name2"

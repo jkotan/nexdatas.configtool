@@ -21,7 +21,7 @@
 
 """ component model for tree view """
 
-from PyQt5.QtCore import (QAbstractItemModel, QVariant, Qt, QModelIndex)
+from PyQt5.QtCore import (QAbstractItemModel, Qt, QModelIndex)
 from PyQt5.QtXml import QDomNode
 
 from . ComponentItem import ComponentItem

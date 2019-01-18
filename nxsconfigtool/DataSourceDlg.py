@@ -38,7 +38,6 @@ _formclass, _baseclass = uic.loadUiType(
                  "ui", "datasourcedlg.ui"))
 
 
-
 # available datasources
 dsTypes = {'CLIENT': ClientSource,
            'TANGO': TangoSource,

@@ -31,7 +31,7 @@ import time
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (QApplication, QMessageBox, QTableWidgetItem, QPushButton)
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import Qt, QTimer, QObject, QVariant, QString
+from PyQt5.QtCore import Qt, QTimer, QObject, QVariant
 from PyQt5.QtXml import QDomNode, QDomDocument, QDomElement
 
 
@@ -41,7 +41,7 @@ from nxsconfigtool.AttributeDlg import AttributeDlg
 from nxsconfigtool.NodeDlg import NodeDlg
 from nxsconfigtool.DimensionsDlg import DimensionsDlg
 
-from nxsconfigtool.ui.ui_fielddlg import Ui_FieldDlg
+# from nxsconfigtool.ui.ui_fielddlg import Ui_FieldDlg
 from nxsconfigtool.DomTools import DomTools
 
 
@@ -1574,12 +1574,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -1672,12 +1672,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -1771,7 +1771,7 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
                 
         qdn.appendChild(mdim) 
@@ -1865,12 +1865,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -2025,12 +2025,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -2148,12 +2148,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -2267,12 +2267,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -2395,12 +2395,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -2574,12 +2574,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -2758,12 +2758,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -2822,7 +2822,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
@@ -2874,7 +2874,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
 
-        mydm = form.node.firstChildElement(QString("dimensions"))           
+        mydm = form.node.firstChildElement(str("dimensions"))           
          
         atdim = mydm.attributes()
             
@@ -2895,7 +2895,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
@@ -2944,12 +2944,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -3008,7 +3008,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
@@ -3060,7 +3060,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
 
-        mydm = form.node.firstChildElement(QString("dimensions"))           
+        mydm = form.node.firstChildElement(str("dimensions"))           
          
         atdim = mydm.attributes()
             
@@ -3081,7 +3081,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
@@ -3129,12 +3129,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -3194,7 +3194,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
@@ -3288,7 +3288,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,mdoc)
@@ -3297,7 +3297,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,mvalue)
 
-        mydm = form.node.firstChildElement(QString("dimensions"))           
+        mydm = form.node.firstChildElement(str("dimensions"))           
 
         atdim = mydm.attributes()
         trank = atdim.namedItem("rank").nodeValue()
@@ -3335,7 +3335,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
@@ -3383,12 +3383,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -3448,7 +3448,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
@@ -3546,7 +3546,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -3555,7 +3555,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
-        mydm = form.node.firstChildElement(QString("dimensions"))           
+        mydm = form.node.firstChildElement(str("dimensions"))           
          
         atdim = mydm.attributes()
         self.assertEqual(rn, int(atdim.namedItem("rank").nodeValue()))
@@ -3612,12 +3612,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -3677,7 +3677,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.value)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
@@ -3774,7 +3774,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -3783,7 +3783,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
-        mydm = form.node.firstChildElement(QString("dimensions"))           
+        mydm = form.node.firstChildElement(str("dimensions"))           
          
         atdim = mydm.attributes()
         self.assertEqual(rn, int(atdim.namedItem("rank").nodeValue()))
@@ -4147,12 +4147,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -4218,7 +4218,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -4227,7 +4227,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
-        mydm = form.node.firstChildElement(QString("dimensions"))           
+        mydm = form.node.firstChildElement(str("dimensions"))           
          
         atdim = mydm.attributes()
         self.assertEqual(rn, int(atdim.namedItem("rank").nodeValue()))
@@ -4279,7 +4279,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -4288,7 +4288,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
-        mydm = form.node.firstChildElement(QString("dimensions"))           
+        mydm = form.node.firstChildElement(str("dimensions"))           
          
         atdim = mydm.attributes()
         self.assertEqual(rn, int(atdim.namedItem("rank").nodeValue()))
@@ -4306,7 +4306,7 @@ class FieldDlgTest(unittest.TestCase):
 
         ats2= {u'shortname2': u'my2nshort%s' % nn, u'unit2': u'my2units%s' % nn}
 
-        ds = form.node.firstChildElement(QString("datasource"))           
+        ds = form.node.firstChildElement(str("datasource"))           
         attributeMap2 = ds.attributes()
         cnt = 0
         for i in range(attributeMap.count()):
@@ -4371,12 +4371,12 @@ class FieldDlgTest(unittest.TestCase):
         dimensions = [str(self.__rnd.randint(1, 40))  for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
-        mdim.setAttribute("rank", QString(unicode(rn)))
+        mdim.setAttribute("rank", str(unicode(rn)))
         
         for i in range(rn):
-            dim = doc.createElement(QString("dim"))
-            dim.setAttribute(QString("index"), QString(unicode(i+1)))
-            dim.setAttribute(QString("value"), QString(unicode(dimensions[i])))
+            dim = doc.createElement(str("dim"))
+            dim.setAttribute(str("index"), str(unicode(i+1)))
+            dim.setAttribute(str("value"), str(unicode(dimensions[i])))
             mdim.appendChild(dim)
                 
         qdn.appendChild(mdim) 
@@ -4442,7 +4442,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -4451,7 +4451,7 @@ class FieldDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval, "".join(["\nVAL\n %s\n" %  n for n in range(nval)]).strip())
 
-        mydm = form.node.firstChildElement(QString("dimensions"))           
+        mydm = form.node.firstChildElement(str("dimensions"))           
          
         atdim = mydm.attributes()
         self.assertEqual(rn, int(atdim.namedItem("rank").nodeValue()))

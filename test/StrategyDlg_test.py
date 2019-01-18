@@ -31,7 +31,7 @@ import time
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (QApplication, QMessageBox, QTableWidgetItem, QPushButton)
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import Qt, QTimer, QObject, QVariant, QString
+from PyQt5.QtCore import Qt, QTimer, QObject, QVariant
 from PyQt5.QtXml import QDomNode, QDomDocument, QDomElement
 
 
@@ -41,7 +41,7 @@ from nxsconfigtool.AttributeDlg import AttributeDlg
 from nxsconfigtool.NodeDlg import NodeDlg
 from nxsconfigtool.DimensionsDlg import DimensionsDlg
 
-from nxsconfigtool.ui.ui_strategydlg import Ui_StrategyDlg
+# from nxsconfigtool.ui.ui_strategydlg import Ui_StrategyDlg
 from nxsconfigtool.DomTools import DomTools
 
 
@@ -2241,7 +2241,7 @@ class StrategyDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.postrun)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
@@ -2283,12 +2283,12 @@ class StrategyDlgTest(unittest.TestCase):
         form.view = TestView(cm)
         form.view.testIndex = di
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
 
         form.updateNode()
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
 
 
@@ -2296,7 +2296,7 @@ class StrategyDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.postrun)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
@@ -2394,7 +2394,7 @@ class StrategyDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.postrun)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
@@ -2469,7 +2469,7 @@ class StrategyDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.postrun)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
 
         olddoc = unicode(text).strip() if text else ""
@@ -2607,7 +2607,7 @@ class StrategyDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.postrun)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
@@ -2726,7 +2726,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,nmdoc.strip())
@@ -2870,7 +2870,7 @@ class StrategyDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.postrun)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
@@ -2989,7 +2989,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,"".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
@@ -3131,7 +3131,7 @@ class StrategyDlgTest(unittest.TestCase):
         oldval = unicode(vtext).strip() if vtext else ""
         self.assertEqual(oldval,form.postrun)
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,form.doc)
@@ -3250,7 +3250,7 @@ class StrategyDlgTest(unittest.TestCase):
 
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,"".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())

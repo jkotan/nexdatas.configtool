@@ -33,6 +33,10 @@ import os
 
 
 # from .ui.ui_datasourcedlg import Ui_DataSourceDlg
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "datasourcedlg.ui"))
+
 
 
 # available datasources

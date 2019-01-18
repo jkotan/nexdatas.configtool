@@ -31,7 +31,7 @@ import time
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (QApplication, QMessageBox, QTableWidgetItem, QPushButton)
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import Qt, QTimer, QObject, QVariant, QString, QModelIndex
+from PyQt5.QtCore import Qt, QTimer, QObject, QVariant, QModelIndex
 from PyQt5.QtXml import QDomNode, QDomDocument, QDomElement
 
 
@@ -43,7 +43,7 @@ from nxsconfigtool.AttributeDlg import AttributeDlg
 from nxsconfigtool.NodeDlg import NodeDlg
 from nxsconfigtool.DimensionsDlg import DimensionsDlg
 
-from nxsconfigtool.ui.ui_datasourcedlg import Ui_DataSourceDlg
+# from nxsconfigtool.ui.ui_datasourcedlg import Ui_DataSourceDlg
 
 
 #  Qt-application

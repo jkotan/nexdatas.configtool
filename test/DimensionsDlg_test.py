@@ -34,7 +34,7 @@ from PyQt5.QtCore import Qt, QTimer, QObject
 
 
 from nxsconfigtool.DimensionsDlg import DimensionsDlg
-from nxsconfigtool.ui.ui_dimensionsdlg import Ui_DimensionsDlg
+#from nxsconfigtool.ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
 
 #  Qt-application

@@ -122,9 +122,6 @@ class ConnectDlg(QDialog):
                                 "Please define the port")
             self.ui.portLineEdit.setFocus()
             return
-        print(self.host)
-        print(self.port)
-        print(self.device)
         QDialog.accept(self)
 
 

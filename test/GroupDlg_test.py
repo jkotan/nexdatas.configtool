@@ -31,7 +31,7 @@ import time
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (QApplication, QMessageBox, QTableWidgetItem, QPushButton)
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import Qt, QTimer, QObject, QVariant, QString
+from PyQt5.QtCore import Qt, QTimer, QObject, QVariant
 from PyQt5.QtXml import QDomNode, QDomDocument, QDomElement
 
 
@@ -40,7 +40,7 @@ from nxsconfigtool.ComponentModel import ComponentModel
 from nxsconfigtool.AttributeDlg import AttributeDlg
 from nxsconfigtool.NodeDlg import NodeDlg
 
-from nxsconfigtool.ui.ui_groupdlg import Ui_GroupDlg
+# from nxsconfigtool.ui.ui_groupdlg import Ui_GroupDlg
 from nxsconfigtool.DomTools import DomTools
 
 
@@ -1683,7 +1683,7 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
@@ -1724,7 +1724,7 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
@@ -1801,7 +1801,7 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
@@ -1842,7 +1842,7 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
@@ -1916,7 +1916,7 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
@@ -1992,7 +1992,7 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(len(attrs),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
@@ -2067,7 +2067,7 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
@@ -2143,7 +2143,7 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(len(ats),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip())
@@ -2216,7 +2216,7 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
 
@@ -2292,7 +2292,7 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(len(ats),attributeMap.count() - cnt)
 
 
-        mydoc = form.node.firstChildElement(QString("doc"))           
+        mydoc = form.node.firstChildElement(str("doc"))           
         text = DomTools.getText(mydoc)    
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, ("".join(["\nText\n %s\n" %  i  for i in range(ndcs)])).strip())

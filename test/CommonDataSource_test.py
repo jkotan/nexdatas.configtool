@@ -65,7 +65,7 @@ class CommonDataSourceTest(unittest.TestCase):
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256) 
+            self.__seed  = long(time.time() * 256)
 #        self.__seed =335783554629280825854815889576355181078
 #        self.__seed =56405821691954067238837069340540387163
 
@@ -75,9 +75,9 @@ class CommonDataSourceTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print("\nsetting up...")        
-        print("SEED = %s" % self.__seed) 
-        
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
+
 
 
     # test closer
@@ -91,7 +91,7 @@ class CommonDataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         cds = CommonDataSource()
         self.assertEqual(cds.dataSourceType, 'CLIENT')
         self.assertEqual(cds.doc, '')
@@ -120,9 +120,9 @@ class CommonDataSourceTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-        
+
         self.assertEqual(cds.tree, False)
-        
+
 
 
 
@@ -130,9 +130,9 @@ class CommonDataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_set_get_clean_State(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         cds = CommonDataSource()
-        nn =  self.__rnd.randint(0, 10) 
+        nn = self.__rnd.randint(0, 10)
 
         dataSourceType = 'TANGO%s' % nn
         dataSourceName = 'mot_01%s' %nn
@@ -155,16 +155,16 @@ class CommonDataSourceTest(unittest.TestCase):
         for i in range(nn):
             dbParameters["param%s" % i] = "value%s" %i
 
-        peResult = "ds.result%s" %nn 
-        peInput =  "ds.source%s ds.source1%s ds.source2%s" %(nn,nn,nn)
+        peResult = "ds.result%s" %nn
+        peInput = "ds.source%s ds.source1%s ds.source2%s" %(nn, nn, nn)
         peScript = "import math\n ds.result= sin(ds.x)"
         peDataSources = {}
         for i in range(nn):
             peDataSources["param%s" % i] = "<datasource%s/>" %i
-            
+
         cds.setState((dataSourceType,
                       doc,
-                      clientRecordName, 
+                      clientRecordName,
                       tangoDeviceName,
                       tangoMemberName,
                       tangoMemberType,
@@ -182,7 +182,7 @@ class CommonDataSourceTest(unittest.TestCase):
                       peDataSources,
                       dataSourceName
                       ))
-        
+
 
         self.assertEqual(cds.dataSourceType, dataSourceType)
         self.assertEqual(cds.doc, doc)
@@ -217,13 +217,13 @@ class CommonDataSourceTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-        
+
         self.assertEqual(cds.tree, False)
-        
+
 
         state = cds.getState()
 
-    
+
 
 
         self.assertEqual(cds.dataSourceType, dataSourceType)
@@ -258,13 +258,13 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.applied, False)
         self.assertEqual(cds.ids, None)
         self.assertEqual(cds.tree, False)
-        
+
         cds.clear()
 
         self.assertEqual(cds.applied, False)
         self.assertEqual(cds.ids, None)
         self.assertEqual(cds.tree, False)
-        
+
         cds.applied = True
         cds.ids = nn
         cds.tree = True
@@ -301,13 +301,13 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.externalApply, None)
 
         self.assertEqual(cds.applied, True)
-        self.assertEqual(cds.ids, nn)        
+        self.assertEqual(cds.ids, nn)
         self.assertEqual(cds.tree, True)
 
 
         cds.setState(state)
 
-    
+
 
 
         self.assertEqual(cds.dataSourceType, dataSourceType)
@@ -341,8 +341,8 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.applied, True)
         self.assertEqual(cds.ids, nn)
         self.assertEqual(cds.tree, True)
-        
-        
+
+
 
 if __name__ == '__main__':
     if not app:

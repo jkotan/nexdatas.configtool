@@ -70,17 +70,17 @@ class ConnectDlgTest(unittest.TestCase):
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256) 
-         
+            self.__seed  = long(time.time() * 256)
+
         self.__rnd = random.Random(self.__seed)
 
 
     # test starter
     # \brief Common set up
     def setUp(self):
-        print("\nsetting up...")        
-        print("SEED = %s" % self.__seed) 
-        
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
+
 
     # test closer
     # \brief Common tear down
@@ -91,20 +91,20 @@ class ConnectDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
         self.assertEqual(form.port, None)
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
     # constructor test
     # \brief It tests default settings
     def test_constructor_createGUI_withhost(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -112,7 +112,7 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(not form.ui.deviceLineEdit.text()) 
+        self.assertTrue(not form.ui.deviceLineEdit.text())
         self.assertTrue(not form.ui.hostLineEdit.text())
         self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(not form.ui.connectPushButton.isEnabled())
@@ -136,7 +136,7 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.portLineEdit, port)
         self.assertEqual(form.ui.portLineEdit.text(), port)
 
-        self.assertTrue(bool(form.ui.deviceLineEdit.text())) 
+        self.assertTrue(bool(form.ui.deviceLineEdit.text()))
         self.assertTrue(bool(form.ui.hostLineEdit.text()))
         self.assertTrue(bool(form.ui.portLineEdit.text()))
         self.assertTrue(form.ui.connectPushButton.isEnabled())
@@ -149,14 +149,14 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.host, host)
         self.assertEqual(form.port, int(port))
 
-        self.assertEqual(form.result(),1)
+        self.assertEqual(form.result(), 1)
 
 
     # constructor test
     # \brief It tests default settings
     def test_constructor_createGUI(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -164,7 +164,7 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(not form.ui.deviceLineEdit.text()) 
+        self.assertTrue(not form.ui.deviceLineEdit.text())
         self.assertTrue(not form.ui.hostLineEdit.text())
         self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(not form.ui.connectPushButton.isEnabled())
@@ -184,7 +184,7 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.portLineEdit, port)
         self.assertEqual(form.ui.portLineEdit.text(), port)
 
-        self.assertTrue(bool(form.ui.deviceLineEdit.text())) 
+        self.assertTrue(bool(form.ui.deviceLineEdit.text()))
         self.assertTrue(not form.ui.hostLineEdit.text())
         self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(form.ui.connectPushButton.isEnabled())
@@ -197,10 +197,10 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.host, host)
         self.assertEqual(form.port, None)
 
-        self.assertEqual(form.result(),1)
+        self.assertEqual(form.result(), 1)
 
 
-    
+
     def checkMessageBox(self):
 #        self.assertEqual(QApplication.activeWindow(), None)
         mb = QApplication.activeModalWidget()
@@ -216,7 +216,7 @@ class ConnectDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_createGUI_accept(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -224,7 +224,7 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(not form.ui.deviceLineEdit.text()) 
+        self.assertTrue(not form.ui.deviceLineEdit.text())
         self.assertTrue(not form.ui.hostLineEdit.text())
         self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(not form.ui.connectPushButton.isEnabled())
@@ -244,7 +244,7 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.portLineEdit, port)
         self.assertEqual(form.ui.portLineEdit.text(), port)
 
-        self.assertTrue(bool(form.ui.deviceLineEdit.text())) 
+        self.assertTrue(bool(form.ui.deviceLineEdit.text()))
         self.assertTrue(bool(form.ui.hostLineEdit.text()))
         self.assertTrue(bool(form.ui.portLineEdit.text()))
         self.assertTrue(form.ui.connectPushButton.isEnabled())
@@ -254,13 +254,13 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.mouseClick(form.ui.connectPushButton, Qt.LeftButton)
         self.assertEqual(self.text, 'Please define the device name')
 #        self.assertEqual(self.title, 'Empty device name')
-        
+
 
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
         self.assertEqual(form.port, None)
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -268,7 +268,7 @@ class ConnectDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_createGUI_port(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -276,7 +276,7 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(not form.ui.deviceLineEdit.text()) 
+        self.assertTrue(not form.ui.deviceLineEdit.text())
         self.assertTrue(not form.ui.hostLineEdit.text())
         self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(not form.ui.connectPushButton.isEnabled())
@@ -298,7 +298,7 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.portLineEdit, port)
         self.assertEqual(form.ui.portLineEdit.text(), port)
 
-        self.assertTrue(bool(form.ui.deviceLineEdit.text())) 
+        self.assertTrue(bool(form.ui.deviceLineEdit.text()))
         self.assertTrue(bool(form.ui.hostLineEdit.text()))
         self.assertTrue(bool(form.ui.portLineEdit.text()))
         self.assertTrue(form.ui.connectPushButton.isEnabled())
@@ -308,21 +308,21 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.mouseClick(form.ui.connectPushButton, Qt.LeftButton)
         self.assertEqual(self.text, 'Please define the port number')
 #        self.assertEqual(self.title, 'Wrong port number')
-        
+
 
         self.assertEqual(form.device, device.strip())
         self.assertEqual(form.host, host.strip())
         self.assertEqual(form.port, None)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
     # constructor test
     # \brief It tests default settings
     def test_constructor_createGUI_nohost(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -330,7 +330,7 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(not form.ui.deviceLineEdit.text()) 
+        self.assertTrue(not form.ui.deviceLineEdit.text())
         self.assertTrue(not form.ui.hostLineEdit.text())
         self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(not form.ui.connectPushButton.isEnabled())
@@ -350,7 +350,7 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.portLineEdit, port)
         self.assertEqual(form.ui.portLineEdit.text(), port)
 
-        self.assertTrue(bool(form.ui.deviceLineEdit.text())) 
+        self.assertTrue(bool(form.ui.deviceLineEdit.text()))
         self.assertTrue(not form.ui.hostLineEdit.text())
         self.assertTrue(bool(form.ui.portLineEdit.text()))
         self.assertTrue(form.ui.connectPushButton.isEnabled())
@@ -360,13 +360,13 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.mouseClick(form.ui.connectPushButton, Qt.LeftButton)
         self.assertEqual(self.text, 'Please define the host name')
 #        self.assertEqual(self.title, 'Empty host name')
-        
+
 
         self.assertEqual(form.device, device.strip())
         self.assertEqual(form.host, "")
         self.assertEqual(form.port, int(port))
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -374,7 +374,7 @@ class ConnectDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_createGUI_noport(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = ConnectDlg()
         self.assertEqual(form.device, '')
         self.assertEqual(form.host, '')
@@ -382,7 +382,7 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(not form.ui.deviceLineEdit.text()) 
+        self.assertTrue(not form.ui.deviceLineEdit.text())
         self.assertTrue(not form.ui.hostLineEdit.text())
         self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(not form.ui.connectPushButton.isEnabled())
@@ -402,7 +402,7 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.portLineEdit, port)
         self.assertEqual(form.ui.portLineEdit.text(), port)
 
-        self.assertTrue(bool(form.ui.deviceLineEdit.text())) 
+        self.assertTrue(bool(form.ui.deviceLineEdit.text()))
         self.assertTrue(bool(form.ui.hostLineEdit.text()))
         self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(form.ui.connectPushButton.isEnabled())
@@ -411,7 +411,7 @@ class ConnectDlgTest(unittest.TestCase):
         QTimer.singleShot(0, self.checkMessageBox)
         QTest.mouseClick(form.ui.connectPushButton, Qt.LeftButton)
         self.assertEqual(self.text, 'Please define the port')
-#        self.assertEqual(self.title, 'Empty port')                
+#        self.assertEqual(self.title, 'Empty port')
 
 #        print form.portLineEdit.hasFocus()
 #        self.assertTrue(form.portLineEdit.hasFocus())
@@ -421,15 +421,15 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.port, None)
 
 
-        self.assertEqual(form.result(),0)
-        
+        self.assertEqual(form.result(), 0)
+
 
 
     # constructor test
     # \brief It tests default settings
     def test_constructor_createGUI_updateForm(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = ConnectDlg()
 
         device = "my/device/1"
@@ -447,7 +447,7 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(form.ui.deviceLineEdit.text()) 
+        self.assertTrue(form.ui.deviceLineEdit.text())
         self.assertTrue(form.ui.hostLineEdit.text())
         self.assertTrue(form.ui.portLineEdit.text())
 
@@ -460,7 +460,7 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.port, port)
 
 
-        self.assertTrue(form.ui.deviceLineEdit.text()) 
+        self.assertTrue(form.ui.deviceLineEdit.text())
         self.assertTrue(form.ui.hostLineEdit.text())
         self.assertTrue(form.ui.portLineEdit.text())
         self.assertTrue(form.ui.connectPushButton.isEnabled())
@@ -473,8 +473,8 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.host, host)
         self.assertEqual(form.port, int(port))
 
-        
-        self.assertEqual(form.result(),1)
+
+        self.assertEqual(form.result(), 1)
 
 if __name__ == '__main__':
     if not app:

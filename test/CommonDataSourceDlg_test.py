@@ -133,7 +133,7 @@ class CommonDataSourceDlgTest(unittest.TestCase):
         print("tearing down ...")
 
     def checkMessageBox(self):
-        # self.assertEqual(QApplication.activeWindow(),None)
+        # self.assertEqual(QApplication.activeWindow(), None)
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
         self.text = mb.text()

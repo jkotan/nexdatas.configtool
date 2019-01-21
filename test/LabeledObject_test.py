@@ -64,7 +64,7 @@ class LabeledObjectTest(unittest.TestCase):
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256) 
+            self.__seed  = long(time.time() * 256)
 
 
         self.__rnd = random.Random(self.__seed)
@@ -73,9 +73,9 @@ class LabeledObjectTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print("\nsetting up...")        
-        print("SEED = %s" % self.__seed) 
-        
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
+
 
 
     # test closer
@@ -87,7 +87,7 @@ class LabeledObjectTest(unittest.TestCase):
 
     def test_isdirty(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         name = "name1"
         newname = "name2"

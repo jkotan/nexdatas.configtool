@@ -63,7 +63,7 @@ class TestView(object):
         self.stack = []
 
     def currentIndex(self):
-        return self.testIndex 
+        return self.testIndex
 
     def model(self):
         return self.testModel
@@ -95,7 +95,7 @@ class LinkDlgTest(unittest.TestCase):
         # attribute value
         self.avalue = "myentry"
 
-        self.dimensions = [1,2,3,4]
+        self.dimensions = [1, 2, 3, 4]
 
         # action status
         self.performed = False
@@ -103,7 +103,7 @@ class LinkDlgTest(unittest.TestCase):
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256) 
+            self.__seed  = long(time.time() * 256)
 
         self.__seed= 309284324384944322060160783760382990541
 
@@ -114,9 +114,9 @@ class LinkDlgTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print("\nsetting up...")        
-        print("SEED = %s" % self.__seed) 
-        
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
+
 
     # test closer
     # \brief Common tear down
@@ -124,7 +124,7 @@ class LinkDlgTest(unittest.TestCase):
         print("tearing down ...")
 
     def checkMessageBox(self):
-#        self.assertEqual(QApplication.activeWindow(),None)
+#        self.assertEqual(QApplication.activeWindow(), None)
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
 #        print mb.text()
@@ -159,9 +159,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertTrue(isinstance(mb, AttributeDlg))
 
         QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
-        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
+        self.assertEqual(mb.ui.nameLineEdit.text(), self.aname)
         QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
-        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
+        self.assertEqual(mb.ui.valueLineEdit.text(), self.avalue)
 
         mb.accept()
 
@@ -174,16 +174,16 @@ class LinkDlgTest(unittest.TestCase):
         self.assertTrue(hasattr(mb, "ui"))
 
         mb.ui.rankSpinBox.setValue(len(self.dimensions))
-        
+
         for r in range(len(self.dimensions)):
-            mb.ui.dimTableWidget.setCurrentCell(r,0)
+            mb.ui.dimTableWidget.setCurrentCell(r, 0)
             it = QTableWidgetItem(unicode(self.dimensions[r]))
-            mb.ui.dimTableWidget.setItem(r,0,it)
+            mb.ui.dimTableWidget.setItem(r, 0,it)
 
 #        QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
-#        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
+#        self.assertEqual(mb.ui.nameLineEdit.text(), self.aname)
 #        QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
-#        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
+#        self.assertEqual(mb.ui.valueLineEdit.text(), self.avalue)
 
         mb.accept()
 
@@ -194,9 +194,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertTrue(isinstance(mb, AttributeDlg))
 
         QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
-        self.assertEqual(mb.ui.nameLineEdit.text(),self.aname)
+        self.assertEqual(mb.ui.nameLineEdit.text(), self.aname)
         QTest.keyClicks(mb.ui.valueLineEdit, self.avalue)
-        self.assertEqual(mb.ui.valueLineEdit.text(),self.avalue)
+        self.assertEqual(mb.ui.valueLineEdit.text(), self.avalue)
 
 #        mb.close()
         mb.reject()
@@ -209,7 +209,7 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -223,19 +223,19 @@ class LinkDlgTest(unittest.TestCase):
         self.assertTrue(isinstance(form, NodeDlg))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
-        
-        self.assertEqual(form.replaceText,super(LinkDlg,form).replaceText )
-        self.assertEqual(form.removeElement,super(LinkDlg,form).removeElement )
-        self.assertEqual(form.replaceElement,super(LinkDlg,form).replaceElement )
-        self.assertTrue(form.appendElement is not super(LinkDlg,form).appendElement )
-        self.assertEqual(form.reset,super(LinkDlg,form).reset )
+
+        self.assertEqual(form.replaceText, super(LinkDlg, form).replaceText )
+        self.assertEqual(form.removeElement, super(LinkDlg, form).removeElement )
+        self.assertEqual(form.replaceElement, super(LinkDlg, form).replaceElement )
+        self.assertTrue(form.appendElement is not super(LinkDlg, form).appendElement )
+        self.assertEqual(form.reset, super(LinkDlg, form).reset )
 
 
     # constructor test
     # \brief It tests default settings
     def test_constructor_accept(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -249,20 +249,20 @@ class LinkDlgTest(unittest.TestCase):
 
         form.createGUI()
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
-        
+
         self.assertTrue(not form.ui.applyPushButton.isEnabled())
         self.assertTrue(form.ui.resetPushButton.isEnabled())
 
         name = "myname"
         target = "NXEntry/NXinstrument"
         QTest.keyClicks(form.ui.nameLineEdit, name)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         QTest.keyClicks(form.ui.targetLineEdit, target)
-        self.assertEqual(form.ui.targetLineEdit.text(),target)
+        self.assertEqual(form.ui.targetLineEdit.text(), target)
 
-        self.assertTrue(form.ui.nameLineEdit.text()) 
+        self.assertTrue(form.ui.nameLineEdit.text())
         self.assertTrue(form.ui.targetLineEdit.text())
 
 
@@ -272,7 +272,7 @@ class LinkDlgTest(unittest.TestCase):
 #        self.assertEqual(form.name, name)
 #        self.assertEqual(form.target, target)
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -282,7 +282,7 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_accept_long(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -296,10 +296,10 @@ class LinkDlgTest(unittest.TestCase):
 
         form.createGUI()
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
-        
+
         self.assertTrue(not form.ui.applyPushButton.isEnabled())
         self.assertTrue(form.ui.resetPushButton.isEnabled())
 
@@ -307,17 +307,17 @@ class LinkDlgTest(unittest.TestCase):
         target = "/entry/instrument/"
         value = "14:45"
         QTest.keyClicks(form.ui.nameLineEdit, name)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         QTest.keyClicks(form.ui.targetLineEdit, target)
         self.assertEqual(form.ui.targetLineEdit.text(), target)
 
 
 
-     
-        self.assertTrue(form.ui.nameLineEdit.text()) 
+
+        self.assertTrue(form.ui.nameLineEdit.text())
         self.assertTrue(form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
-        
+
 
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
@@ -326,7 +326,7 @@ class LinkDlgTest(unittest.TestCase):
 #        self.assertEqual(form.name, name)
 #        self.assertEqual(form.target, target)
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -335,7 +335,7 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_updateForm(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -349,7 +349,7 @@ class LinkDlgTest(unittest.TestCase):
 
         form.createGUI()
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -359,22 +359,22 @@ class LinkDlgTest(unittest.TestCase):
         target2 = "entry/instrument"
         doc = "My documentation: \n ble ble ble "
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertEqual(form.updateForm(), None)
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
         form.name = name
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.updateForm(), None)
+
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -384,13 +384,13 @@ class LinkDlgTest(unittest.TestCase):
 
         form.target = target
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertEqual(form.updateForm(), None)
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertEqual(form.ui.targetLineEdit.text(), target)
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -402,13 +402,13 @@ class LinkDlgTest(unittest.TestCase):
 
         form.doc = doc
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertEqual(form.updateForm(), None)
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
@@ -425,14 +425,14 @@ class LinkDlgTest(unittest.TestCase):
         form.doc = doc
         form.target = target
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.updateForm(),None)
-    
+        self.assertEqual(form.updateForm(), None)
+
         self.assertEqual(form.ui.targetLineEdit.text(), target)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
 
@@ -443,7 +443,7 @@ class LinkDlgTest(unittest.TestCase):
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -451,7 +451,7 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_updateForm_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -465,7 +465,7 @@ class LinkDlgTest(unittest.TestCase):
 
         form.createGUI()
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -475,22 +475,22 @@ class LinkDlgTest(unittest.TestCase):
         target2 = "$datasources.instrument"
         doc = "My documentation: \n ble ble ble "
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertEqual(form.updateForm(), None)
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
         form.name = name
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.updateForm(), None)
+
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -500,13 +500,13 @@ class LinkDlgTest(unittest.TestCase):
 
         form.target = target
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertEqual(form.updateForm(), None)
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertEqual(form.ui.targetLineEdit.text(), target)
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -518,13 +518,13 @@ class LinkDlgTest(unittest.TestCase):
 
         form.doc = doc
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.updateForm(),None)
-    
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertEqual(form.updateForm(), None)
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
@@ -541,14 +541,14 @@ class LinkDlgTest(unittest.TestCase):
         form.doc = doc
         form.target = target
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        self.assertEqual(form.updateForm(),None)
-    
+        self.assertEqual(form.updateForm(), None)
+
         self.assertEqual(form.ui.targetLineEdit.text(), target)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
 
@@ -559,7 +559,7 @@ class LinkDlgTest(unittest.TestCase):
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -571,7 +571,7 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getState(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
 
@@ -590,15 +590,15 @@ class LinkDlgTest(unittest.TestCase):
         target = "NXEntry"
         doc = "My documentation: \n ble ble ble "
 
-        
+
         self.assertEqual(form.getState(), (u'', u'', u''))
-    
+
 
         form.name = name
 
         self.assertEqual(form.getState(),(name,u'',u''))
-    
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -608,7 +608,7 @@ class LinkDlgTest(unittest.TestCase):
         form.target = target
         self.assertEqual(form.getState(),('', target,''))
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
         form.target = ""
@@ -618,7 +618,7 @@ class LinkDlgTest(unittest.TestCase):
 
         form.doc = doc
         self.assertEqual(form.getState(),('','',doc))
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -633,19 +633,19 @@ class LinkDlgTest(unittest.TestCase):
 
         state = form.getState()
 
-        self.assertEqual(state[0],name)
-        self.assertEqual(state[1],target)
+        self.assertEqual(state[0], name)
+        self.assertEqual(state[1], target)
         self.assertEqual(state[2],doc)
 
-        self.assertEqual(len(state),3)
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertEqual(len(state), 3)
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -653,7 +653,7 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getState_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
 
@@ -672,15 +672,15 @@ class LinkDlgTest(unittest.TestCase):
         target = "$datasources.entry"
         doc = "My documentation: \n ble ble ble "
 
-        
+
         self.assertEqual(form.getState(), (u'', u'', u''))
-    
+
 
         form.name = name
 
         self.assertEqual(form.getState(),(name,u'',u''))
-    
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -690,7 +690,7 @@ class LinkDlgTest(unittest.TestCase):
         form.target = target
         self.assertEqual(form.getState(),('', target,''))
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
         form.target = ""
@@ -700,7 +700,7 @@ class LinkDlgTest(unittest.TestCase):
 
         form.doc = doc
         self.assertEqual(form.getState(),('','',doc))
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -715,21 +715,21 @@ class LinkDlgTest(unittest.TestCase):
 
         state = form.getState()
 
-        self.assertEqual(state[0],name)
-        self.assertEqual(state[1],target)
+        self.assertEqual(state[0], name)
+        self.assertEqual(state[1], target)
         self.assertEqual(state[2],doc)
 
-        self.assertEqual(len(state),3)
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertEqual(len(state), 3)
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
-       
+
 
 
 
@@ -739,7 +739,7 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setState(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
 
@@ -761,11 +761,11 @@ class LinkDlgTest(unittest.TestCase):
         target = "NXEntry"
         doc = "My documentation: \n ble ble ble "
 
-        
-        self.assertEqual(form.setState(['','','']), None)
-    
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertEqual(form.setState(['','','']), None)
+
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -775,9 +775,9 @@ class LinkDlgTest(unittest.TestCase):
 
 
         self.assertEqual(form.setState([name,'','']), None)
-    
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -789,10 +789,10 @@ class LinkDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['',target,'']), None)
-    
+        self.assertEqual(form.setState(['', target,'']), None)
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -807,9 +807,9 @@ class LinkDlgTest(unittest.TestCase):
 
 
         self.assertEqual(form.setState(['','',doc]), None)
-    
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -827,10 +827,10 @@ class LinkDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState([name,target,doc]), None)
-    
+        self.assertEqual(form.setState([name, target,doc]), None)
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -843,7 +843,7 @@ class LinkDlgTest(unittest.TestCase):
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -853,7 +853,7 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setState_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
 
@@ -875,11 +875,11 @@ class LinkDlgTest(unittest.TestCase):
         target = "$datasources.NXEntry"
         doc = "My documentation: \n ble ble ble "
 
-        
-        self.assertEqual(form.setState(['','','']), None)
-    
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertEqual(form.setState(['','','']), None)
+
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -889,9 +889,9 @@ class LinkDlgTest(unittest.TestCase):
 
 
         self.assertEqual(form.setState([name,'','']), None)
-    
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -903,10 +903,10 @@ class LinkDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState(['',target,'']), None)
-    
+        self.assertEqual(form.setState(['', target,'']), None)
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -921,9 +921,9 @@ class LinkDlgTest(unittest.TestCase):
 
 
         self.assertEqual(form.setState(['','',doc]), None)
-    
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -941,10 +941,10 @@ class LinkDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.setState([name,target,doc]), None)
-    
+        self.assertEqual(form.setState([name, target,doc]), None)
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -957,7 +957,7 @@ class LinkDlgTest(unittest.TestCase):
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -968,12 +968,12 @@ class LinkDlgTest(unittest.TestCase):
 
 
 
-        
+
     # constructor test
     # \brief It tests default settings
     def test_createGUI(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -987,9 +987,9 @@ class LinkDlgTest(unittest.TestCase):
 
         form = LinkDlg()
         form.show()
-        self.assertEqual(form.createGUI(),None)
+        self.assertEqual(form.createGUI(), None)
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -998,17 +998,17 @@ class LinkDlgTest(unittest.TestCase):
         target2 = "NX_INT64"
         doc = "My documentation: \n ble ble ble "
 
-        self.assertEqual(form.updateForm(),None)
-    
+        self.assertEqual(form.updateForm(), None)
+
 
         form = LinkDlg()
         form.show()
         form.name = name
 
 
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.createGUI(), None)
+
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -1021,9 +1021,9 @@ class LinkDlgTest(unittest.TestCase):
         form.target = target
 
 
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertEqual(form.createGUI(), None)
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertEqual(form.ui.targetLineEdit.text(), target)
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -1043,10 +1043,10 @@ class LinkDlgTest(unittest.TestCase):
         form.target = target
 
 
-        self.assertEqual(form.createGUI(),None)
-    
+        self.assertEqual(form.createGUI(), None)
+
         self.assertEqual(form.ui.targetLineEdit.text(), target)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
 
@@ -1056,14 +1056,14 @@ class LinkDlgTest(unittest.TestCase):
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
      # constructor test
     # \brief It tests default settings
     def test_createGUI_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
         self.assertEqual(form.name, '')
@@ -1077,9 +1077,9 @@ class LinkDlgTest(unittest.TestCase):
 
         form = LinkDlg()
         form.show()
-        self.assertEqual(form.createGUI(),None)
+        self.assertEqual(form.createGUI(), None)
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -1088,17 +1088,17 @@ class LinkDlgTest(unittest.TestCase):
         target2 = "$datasources.NX_INT64"
         doc = "My documentation: \n ble ble ble "
 
-        self.assertEqual(form.updateForm(),None)
-    
+        self.assertEqual(form.updateForm(), None)
+
 
         form = LinkDlg()
         form.show()
         form.name = name
 
 
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.createGUI(), None)
+
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -1111,9 +1111,9 @@ class LinkDlgTest(unittest.TestCase):
         form.target = target
 
 
-        self.assertEqual(form.createGUI(),None)
-    
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertEqual(form.createGUI(), None)
+
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertEqual(form.ui.targetLineEdit.text(), target)
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -1133,10 +1133,10 @@ class LinkDlgTest(unittest.TestCase):
         form.target = target
 
 
-        self.assertEqual(form.createGUI(),None)
-    
+        self.assertEqual(form.createGUI(), None)
+
         self.assertEqual(form.ui.targetLineEdit.text(), target)
-        self.assertEqual(form.ui.nameLineEdit.text(),name)
+        self.assertEqual(form.ui.nameLineEdit.text(), name)
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
 
@@ -1146,34 +1146,34 @@ class LinkDlgTest(unittest.TestCase):
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
-       
+
 
     # constructor test
     # \brief It tests default settings
     def test_setFromNode(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("target","mytarget%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+        qdn.setAttribute("target","mytarget%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
 
 
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
 
@@ -1184,28 +1184,28 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
-        
+
         form.setFromNode()
 
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.target, "mytarget%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.target, "mytarget%s" % nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
         self.assertEqual(form.subItems, ['doc', 'datasource', 'strategy'])
 
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -1215,26 +1215,26 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-#        qdn.setAttribute("target","mytarget%s" %  nn)
-        tg =  doc.createTextNode("$datasources.mytarget%s" %  nn)
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+#        qdn.setAttribute("target","mytarget%s" % nn)
+        tg = doc.createTextNode("$datasources.mytarget%s" % nn)
         qdn.appendChild(tg)
-        doc.appendChild(qdn) 
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
 
@@ -1245,28 +1245,28 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
-        
+
         form.setFromNode()
 
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.target, "$datasources.mytarget%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.target, "$datasources.mytarget%s" % nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
         self.assertEqual(form.subItems, ['doc', 'datasource', 'strategy'])
 
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -1278,24 +1278,24 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode_parameter(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("target","target%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+        qdn.setAttribute("target","target%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
 
@@ -1307,29 +1307,29 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
-        
+
         form.setFromNode(qdn)
 
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.target, "target%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.target, "target%s" % nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
 
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -1339,26 +1339,26 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode_parameter_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-#        qdn.setAttribute("target","mytarget%s" %  nn)
-        tg =  doc.createTextNode("$datasources.mytarget%s" %  nn)
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+#        qdn.setAttribute("target","mytarget%s" % nn)
+        tg = doc.createTextNode("$datasources.mytarget%s" % nn)
         qdn.appendChild(tg)
-        doc.appendChild(qdn) 
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
 
@@ -1370,34 +1370,34 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
-        
+
         form.setFromNode(qdn)
 
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.target, "$datasources.mytarget%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.target, "$datasources.mytarget%s" % nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
 
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
-       
+
 
 
 
@@ -1406,24 +1406,24 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode_nonode(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("target","target%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+        qdn.setAttribute("target","target%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
 
@@ -1435,27 +1435,27 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
-        
+
         form.setFromNode()
 
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -1466,26 +1466,26 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setFromNode_nonode_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-#        qdn.setAttribute("target","target%s" %  nn)
-        tg =  doc.createTextNode("$datasources.target%s" %  nn)
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+#        qdn.setAttribute("target","target%s" % nn)
+        tg = doc.createTextNode("$datasources.target%s" % nn)
         qdn.appendChild(tg)
-        doc.appendChild(qdn) 
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
 
@@ -1497,43 +1497,43 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
-        
+
         form.setFromNode()
 
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
-        
+
 
     # constructor test
     # \brief It tests default settings
     def test_setFromNode_clean(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        doc.appendChild(qdn) 
+        doc.appendChild(qdn)
 
 
 
@@ -1544,35 +1544,35 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
-        
+
         form.setFromNode()
 
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
 
 
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
 
-        
+
 
 
 
@@ -1582,24 +1582,24 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_populateAttribute_setFromNode(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("target","target%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+        qdn.setAttribute("target","target%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
 
@@ -1611,29 +1611,29 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
-        
+
         form.setFromNode()
 
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.target, "target%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.target, "target%s" % nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
 
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
@@ -1645,26 +1645,26 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_populateAttribute_setFromNode_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-#        qdn.setAttribute("target","target%s" %  nn)
-        tg =  doc.createTextNode("$datasources.target%s" %  nn)
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+#        qdn.setAttribute("target","target%s" % nn)
+        tg = doc.createTextNode("$datasources.target%s" % nn)
         qdn.appendChild(tg)
-        doc.appendChild(qdn) 
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
 
@@ -1676,37 +1676,37 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
-        
+
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
-        
+
         form.setFromNode()
 
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.target, "$datasources.target%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.target, "$datasources.target%s" % nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
 
 
-        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.nameLineEdit.text())
         self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
 
 
-        
-        
+
+
 
 
 
@@ -1718,26 +1718,26 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_updateNode(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("target","target%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+        qdn.setAttribute("target","target%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
 
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
         form = LinkDlg()
@@ -1746,18 +1746,18 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
-        
+
 
         allAttr = True
         cm = ComponentModel(doc,allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -1767,24 +1767,24 @@ class LinkDlgTest(unittest.TestCase):
 
 
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,form.target)
-                cnt += 1 
+                self.assertEqual(vl, form.target)
+                cnt += 1
 
 
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc,form.doc)
+        self.assertEqual(olddoc, form.doc)
 
 
 
@@ -1796,20 +1796,20 @@ class LinkDlgTest(unittest.TestCase):
         form.doc = mdoc
 
         form.root = doc
-        
+
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
 
         form.updateNode()
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -1820,28 +1820,28 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_updateNode_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-#        qdn.setAttribute("target","target%s" %  nn)
-        tg =  doc.createTextNode("$datasources.target%s" %  nn)
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+#        qdn.setAttribute("target","target%s" % nn)
+        tg = doc.createTextNode("$datasources.target%s" % nn)
         qdn.appendChild(tg)
-        doc.appendChild(qdn) 
+        doc.appendChild(qdn)
         dname = "doc"
 
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
         form = LinkDlg()
@@ -1850,18 +1850,18 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
-        
+
 
         allAttr = True
         cm = ComponentModel(doc,allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -1871,24 +1871,24 @@ class LinkDlgTest(unittest.TestCase):
 
 
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,form.target)
-                cnt += 1 
+                self.assertEqual(vl, form.target)
+                cnt += 1
 
 
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc,form.doc)
+        self.assertEqual(olddoc, form.doc)
 
 
 
@@ -1900,23 +1900,23 @@ class LinkDlgTest(unittest.TestCase):
         form.doc = mdoc
 
         form.root = doc
-        
+
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
 
         form.updateNode()
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
-        tgtext = DomTools.getText(form.node)    
+        tgtext = DomTools.getText(form.node)
         self.assertEqual(target,unicode(tgtext).strip())
         self.assertEqual(olddoc,mdoc)
 
@@ -1924,32 +1924,32 @@ class LinkDlgTest(unittest.TestCase):
 
 
 
-        
+
 
 
     # constructor test
     # \brief It tests default settings
     def test_updateNode_withindex(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("target","target%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+        qdn.setAttribute("target","target%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
         form = LinkDlg()
@@ -1958,18 +1958,18 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
-        
+
 
         allAttr = True
         cm = ComponentModel(doc,allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -1977,10 +1977,10 @@ class LinkDlgTest(unittest.TestCase):
         target = "newtype"
         mdoc = "New text \nNew text"
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc,form.doc)
+        self.assertEqual(olddoc, form.doc)
 
 
 
@@ -1991,34 +1991,34 @@ class LinkDlgTest(unittest.TestCase):
         form.doc = mdoc
 
         form.root = doc
-        
+
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
         form.updateNode(di)
 
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,form.target)
-                cnt += 1 
+                self.assertEqual(vl, form.target)
+                cnt += 1
 
 
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -2027,27 +2027,27 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_updateNode_withindex_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-#        qdn.setAttribute("target","target%s" %  nn)
-        tg =  doc.createTextNode("$datasources.target%s" %  nn)
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+#        qdn.setAttribute("target","target%s" % nn)
+        tg = doc.createTextNode("$datasources.target%s" % nn)
         qdn.appendChild(tg)
-        doc.appendChild(qdn) 
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
         form = LinkDlg()
@@ -2056,18 +2056,18 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
-        
+
 
         allAttr = True
         cm = ComponentModel(doc,allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2075,13 +2075,13 @@ class LinkDlgTest(unittest.TestCase):
         target = "$datasources.newtype"
         mdoc = "New text \nNew text"
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc,form.doc)
+        self.assertEqual(olddoc, form.doc)
 
-        tgtext = DomTools.getText(form.node)    
-        self.assertEqual("$datasources.target%s" %  nn, unicode(tgtext).strip())
+        tgtext = DomTools.getText(form.node)
+        self.assertEqual("$datasources.target%s" % nn, unicode(tgtext).strip())
 
 
         form.name = nname
@@ -2091,39 +2091,39 @@ class LinkDlgTest(unittest.TestCase):
         form.doc = mdoc
 
         form.root = doc
-        
+
 
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
         form.updateNode(di)
 
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,form.target)
-                cnt += 1 
+                self.assertEqual(vl, form.target)
+                cnt += 1
 
 
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
 
-        tgtext = DomTools.getText(form.node)    
+        tgtext = DomTools.getText(form.node)
         self.assertEqual(target,unicode(tgtext).strip())
 
 
@@ -2134,26 +2134,26 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_apply(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         dks = []
         doc = QDomDocument()
         nname = "field"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("target","target%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+        qdn.setAttribute("target","target%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
 
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
         form = LinkDlg()
@@ -2161,18 +2161,18 @@ class LinkDlgTest(unittest.TestCase):
         form.node = qdn
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
-        
+
 
         allAttr = True
         cm = ComponentModel(doc,allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2182,23 +2182,23 @@ class LinkDlgTest(unittest.TestCase):
         mvalue = "My new value ble ble"
 
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,form.target)
-                cnt += 1 
+                self.assertEqual(vl, form.target)
+                cnt += 1
 
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc,form.doc)
+        self.assertEqual(olddoc, form.doc)
 
 
 
@@ -2213,7 +2213,7 @@ class LinkDlgTest(unittest.TestCase):
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2223,8 +2223,8 @@ class LinkDlgTest(unittest.TestCase):
         form.ui.nameLineEdit.setText(nname)
         form.ui.targetLineEdit.setText(target)
         form.ui.docTextEdit.setText(str(mdoc))
-        
-        
+
+
         form.apply()
 
 
@@ -2238,17 +2238,17 @@ class LinkDlgTest(unittest.TestCase):
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
                 self.assertEqual(vl, nname)
-                cnt += 1 
+                cnt += 1
             elif nm == "target":
                 self.assertEqual(vl, target)
-                cnt += 1 
+                cnt += 1
 
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,mdoc)
-        
+
 
 
         cnt = 0
@@ -2257,13 +2257,13 @@ class LinkDlgTest(unittest.TestCase):
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
                 self.assertEqual(vl, nname)
-                cnt += 1 
+                cnt += 1
             elif nm == "target":
                 self.assertEqual(vl, target)
-                cnt += 1 
+                cnt += 1
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
@@ -2274,28 +2274,28 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_apply_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         dks = []
         doc = QDomDocument()
         nname = "field"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-#        qdn.setAttribute("target","target%s" %  nn)
-        tg =  doc.createTextNode("$datasources.target%s" %  nn)
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+#        qdn.setAttribute("target","target%s" % nn)
+        tg = doc.createTextNode("$datasources.target%s" % nn)
         qdn.appendChild(tg)
-        doc.appendChild(qdn) 
+        doc.appendChild(qdn)
         dname = "doc"
 
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
         form = LinkDlg()
@@ -2303,18 +2303,18 @@ class LinkDlgTest(unittest.TestCase):
         form.node = qdn
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
-        
+
 
         allAttr = True
         cm = ComponentModel(doc,allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2324,23 +2324,23 @@ class LinkDlgTest(unittest.TestCase):
         mvalue = "My new value ble ble"
 
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,form.target)
-                cnt += 1 
+                self.assertEqual(vl, form.target)
+                cnt += 1
 
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc,form.doc)
+        self.assertEqual(olddoc, form.doc)
 
 
 
@@ -2355,7 +2355,7 @@ class LinkDlgTest(unittest.TestCase):
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2365,8 +2365,8 @@ class LinkDlgTest(unittest.TestCase):
         form.ui.nameLineEdit.setText(nname)
         form.ui.targetLineEdit.setText(target)
         form.ui.docTextEdit.setText(str(mdoc))
-        
-        
+
+
         form.apply()
 
 
@@ -2380,17 +2380,17 @@ class LinkDlgTest(unittest.TestCase):
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
                 self.assertEqual(vl, nname)
-                cnt += 1 
+                cnt += 1
             elif nm == "target":
                 self.assertEqual(vl, target)
-                cnt += 1 
+                cnt += 1
 
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc,mdoc)
-        
+
 
 
         cnt = 0
@@ -2399,47 +2399,47 @@ class LinkDlgTest(unittest.TestCase):
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
                 self.assertEqual(vl, nname)
-                cnt += 1 
+                cnt += 1
             elif nm == "target":
                 self.assertEqual(vl, target)
-                cnt += 1 
+                cnt += 1
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
         self.assertEqual(olddoc,mdoc)
-        tgtext = DomTools.getText(form.node)    
+        tgtext = DomTools.getText(form.node)
         self.assertEqual(target,unicode(tgtext).strip())
 
 
 
 
-        
+
 
     # constructor test
     # \brief It tests default settings
     def test_reset(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("target","mytype%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+        qdn.setAttribute("target","mytype%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
         form = LinkDlg()
@@ -2448,18 +2448,18 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
-        
+
 
         allAttr = True
         cm = ComponentModel(doc,allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2468,22 +2468,22 @@ class LinkDlgTest(unittest.TestCase):
         mdoc = "New text \nNew text"
 
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,form.target)
-                cnt += 1 
+                self.assertEqual(vl, form.target)
+                cnt += 1
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc,form.doc)
+        self.assertEqual(olddoc, form.doc)
 
 
 
@@ -2497,7 +2497,7 @@ class LinkDlgTest(unittest.TestCase):
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2507,18 +2507,18 @@ class LinkDlgTest(unittest.TestCase):
         form.ui.nameLineEdit.setText(nname)
         form.ui.targetLineEdit.setText(target)
         form.ui.docTextEdit.setText(str(mdoc))
-        
-        
-        
+
+
+
 
 
         form.reset()
 
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.target, "mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.target, "mytype%s" % nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
 
 
@@ -2529,43 +2529,43 @@ class LinkDlgTest(unittest.TestCase):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,  "myname%s" %  nn)
-                cnt += 1 
+                self.assertEqual(vl,  "myname%s" % nn)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,  "mytype%s" %  nn)
-                cnt += 1 
+                self.assertEqual(vl,  "mytype%s" % nn)
+                cnt += 1
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        
+        self.assertEqual(olddoc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+
 
     # constructor test
     # \brief It tests default settings
     def test_reset_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-#        qdn.setAttribute("target","mytype%s" %  nn)
-        tg =  doc.createTextNode("$datasources.mytype%s" %  nn)
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+#        qdn.setAttribute("target","mytype%s" % nn)
+        tg = doc.createTextNode("$datasources.mytype%s" % nn)
         qdn.appendChild(tg)
-        doc.appendChild(qdn) 
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
         form = LinkDlg()
@@ -2574,18 +2574,18 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
-        
+
 
         allAttr = True
         cm = ComponentModel(doc,allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2594,22 +2594,22 @@ class LinkDlgTest(unittest.TestCase):
         mdoc = "New text \nNew text"
 
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,form.target)
-                cnt += 1 
+                self.assertEqual(vl, form.target)
+                cnt += 1
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc,form.doc)
+        self.assertEqual(olddoc, form.doc)
 
 
 
@@ -2623,7 +2623,7 @@ class LinkDlgTest(unittest.TestCase):
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2633,18 +2633,18 @@ class LinkDlgTest(unittest.TestCase):
         form.ui.nameLineEdit.setText(nname)
         form.ui.targetLineEdit.setText(target)
         form.ui.docTextEdit.setText(str(mdoc))
-        
-        
-        
+
+
+
 
 
         form.reset()
 
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.target, "$datasources.mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.target, "$datasources.mytype%s" % nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
 
 
@@ -2655,45 +2655,45 @@ class LinkDlgTest(unittest.TestCase):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,  "myname%s" %  nn)
-                cnt += 1 
+                self.assertEqual(vl,  "myname%s" % nn)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,  "mytype%s" %  nn)
-                cnt += 1 
+                self.assertEqual(vl,  "mytype%s" % nn)
+                cnt += 1
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        
-        tgtext = DomTools.getText(form.node)    
-        self.assertEqual("$datasources.mytype%s" %  nn,unicode(tgtext).strip())
-        
+        self.assertEqual(olddoc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+
+        tgtext = DomTools.getText(form.node)
+        self.assertEqual("$datasources.mytype%s" % nn,unicode(tgtext).strip())
+
 
 
     # constructor test
     # \brief It tests default settings
     def test_reset_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-        qdn.setAttribute("target","mytype%s" %  nn)
-        doc.appendChild(qdn) 
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+        qdn.setAttribute("target","mytype%s" % nn)
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
         form = LinkDlg()
@@ -2702,18 +2702,18 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
-        
+
 
         allAttr = True
         cm = ComponentModel(doc,allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2722,23 +2722,23 @@ class LinkDlgTest(unittest.TestCase):
         mdoc = "New text \nNew text"
 
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,form.target)
-                cnt += 1 
+                self.assertEqual(vl, form.target)
+                cnt += 1
 
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc,form.doc)
+        self.assertEqual(olddoc, form.doc)
 
 
 
@@ -2752,7 +2752,7 @@ class LinkDlgTest(unittest.TestCase):
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2762,17 +2762,17 @@ class LinkDlgTest(unittest.TestCase):
         form.ui.nameLineEdit.setText(nname)
         form.ui.targetLineEdit.setText(target)
         form.ui.docTextEdit.setText(str(mdoc))
-        
-        
-        
+
+
+
 
         QTest.mouseClick(form.ui.resetPushButton, Qt.LeftButton)
 
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.target, "mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.target, "mytype%s" % nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
 
 
@@ -2781,43 +2781,43 @@ class LinkDlgTest(unittest.TestCase):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,  "myname%s" %  nn)
-                cnt += 1 
+                self.assertEqual(vl,  "myname%s" % nn)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,  "mytype%s" %  nn)
-                cnt += 1 
+                self.assertEqual(vl,  "mytype%s" % nn)
+                cnt += 1
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        
+        self.assertEqual(olddoc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+
 
     # constructor test
     # \brief It tests default settings
     def test_reset_button_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         dks = []
         doc = QDomDocument()
         nname = "link"
         qdn = doc.createElement(nname)
-        nn =  self.__rnd.randint(0, 9) 
-        qdn.setAttribute("name","myname%s" %  nn)
-#        qdn.setAttribute("target","mytype%s" %  nn)
-        tg =  doc.createTextNode("$datasources.mytype%s" %  nn)
+        nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name","myname%s" % nn)
+#        qdn.setAttribute("target","mytype%s" % nn)
+        tg = doc.createTextNode("$datasources.mytype%s" % nn)
         qdn.appendChild(tg)
-        doc.appendChild(qdn) 
+        doc.appendChild(qdn)
         dname = "doc"
 
         mdoc = doc.createElement(dname)
-        qdn.appendChild(mdoc) 
-        ndcs =  self.__rnd.randint(0, 10) 
+        qdn.appendChild(mdoc)
+        ndcs = self.__rnd.randint(0, 10)
         for n in range(ndcs):
-            dks.append(doc.createTextNode("\nText\n %s\n" %  n))
-            mdoc.appendChild(dks[-1]) 
+            dks.append(doc.createTextNode("\nText\n %s\n" % n))
+            mdoc.appendChild(dks[-1])
 
 
         form = LinkDlg()
@@ -2826,18 +2826,18 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
         self.assertEqual(form.doc, '')
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
-        
+
 
         allAttr = True
         cm = ComponentModel(doc,allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2846,23 +2846,23 @@ class LinkDlgTest(unittest.TestCase):
         mdoc = "New text \nNew text"
 
         attributeMap = form.node.attributes()
-        
+
         cnt = 0
         for i in range(attributeMap.count()):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,form.name)
-                cnt += 1 
+                self.assertEqual(vl, form.name)
+                cnt += 1
             elif nm == "target":
-                self.assertEqual(vl,form.target)
-                cnt += 1 
+                self.assertEqual(vl, form.target)
+                cnt += 1
 
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc,form.doc)
+        self.assertEqual(olddoc, form.doc)
 
 
         form.name = nname
@@ -2875,7 +2875,7 @@ class LinkDlgTest(unittest.TestCase):
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0,0,ri)
+        di = cm.index(0, 0,ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2885,17 +2885,17 @@ class LinkDlgTest(unittest.TestCase):
         form.ui.nameLineEdit.setText(nname)
         form.ui.targetLineEdit.setText(target)
         form.ui.docTextEdit.setText(str(mdoc))
-        
-        
-        
+
+
+
 
         QTest.mouseClick(form.ui.resetPushButton, Qt.LeftButton)
 
 
-        self.assertEqual(form.name, "myname%s" %  nn)
-        self.assertEqual(form.target, "$datasources.mytype%s" %  nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        self.assertEqual(form.subItems, 
+        self.assertEqual(form.name, "myname%s" % nn)
+        self.assertEqual(form.target, "$datasources.mytype%s" % nn)
+        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(form.subItems,
                          ['doc', 'datasource', 'strategy'])
 
 
@@ -2904,22 +2904,22 @@ class LinkDlgTest(unittest.TestCase):
             nm = attributeMap.item(i).nodeName()
             vl = attributeMap.item(i).nodeValue()
             if nm == "name":
-                self.assertEqual(vl,  "myname%s" %  nn)
-                cnt += 1 
+                self.assertEqual(vl,  "myname%s" % nn)
+                cnt += 1
             elif nm == "target":
                 self.assertTrue(False)
-                self.assertEqual(vl,  "mytype%s" %  nn)
-                cnt += 1 
+                self.assertEqual(vl,  "mytype%s" % nn)
+                cnt += 1
 
-        mydoc = form.node.firstChildElement(str("doc"))           
-        text = DomTools.getText(mydoc)    
+        mydoc = form.node.firstChildElement(str("doc"))
+        text = DomTools.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, "".join(["\nText\n %s\n" %  n for n in range(ndcs)]).strip())
-        
-        tgtext = DomTools.getText(form.node)    
-        self.assertEqual("$datasources.mytype%s" %  nn,unicode(tgtext).strip())
-        
-         
+        self.assertEqual(olddoc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+
+        tgtext = DomTools.getText(form.node)
+        self.assertEqual("$datasources.mytype%s" % nn,unicode(tgtext).strip())
+
+
 
 
 
@@ -2935,10 +2935,10 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
-        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.connectExternalActions(), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -2947,16 +2947,16 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.externalDSLink, None)
 #        self.assertTrue(isinstance(DomTools, DomTools))
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
     # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction),None)
+        self.assertEqual(form.connectExternalActions(self.myAction), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -2964,7 +2964,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.externalApply, None)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -2973,13 +2973,13 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
-        self.assertEqual(form.connectExternalActions(),None)
+        self.assertEqual(form.connectExternalActions(), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -2988,7 +2988,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.externalDSLink, None)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -2996,13 +2996,13 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction),None)
+        self.assertEqual(form.connectExternalActions(self.myAction), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -3014,7 +3014,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(self.performed, True)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -3023,13 +3023,13 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction),None)
+        self.assertEqual(form.connectExternalActions(self.myAction), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -3041,7 +3041,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(self.performed, True)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -3052,13 +3052,13 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_link_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         form.createGUI()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
-        self.assertEqual(form.connectExternalActions(externalDSLink=self.myAction),None)
+        self.assertEqual(form.connectExternalActions(externalDSLink=self.myAction), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -3068,7 +3068,7 @@ class LinkDlgTest(unittest.TestCase):
 
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -3077,13 +3077,13 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_connect_actions_with_action_and_apply_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.createGUI()
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction,None),None)
+        self.assertEqual(form.connectExternalActions(self.myAction, None), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -3096,7 +3096,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(self.performed, False)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -3106,7 +3106,7 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_and_sapply_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
@@ -3115,7 +3115,7 @@ class LinkDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.nameLineEdit, "namename")
 
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction,None),None)
+        self.assertEqual(form.connectExternalActions(self.myAction, None), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -3128,14 +3128,14 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(self.performed, True)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
     # constructor test
     # \brief It tests default settings
     def test_connect_actions_with_action_and_slink_button(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
@@ -3144,12 +3144,12 @@ class LinkDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.nameLineEdit, "namename")
 
         form.show()
-        self.assertEqual(form.connectExternalActions(externalDSLink=self.myAction),None)
+        self.assertEqual(form.connectExternalActions(externalDSLink=self.myAction), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
-        self.assertEqual(form.externalApply,None)
+        self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, self.myAction)
         self.performed = False
 
@@ -3157,7 +3157,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(self.performed, True)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -3166,7 +3166,7 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
@@ -3174,7 +3174,7 @@ class LinkDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.targetLineEdit, "namename")
 
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction,None),None)
+        self.assertEqual(form.connectExternalActions(self.myAction, None), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -3187,7 +3187,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(self.performed, False)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -3195,7 +3195,7 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_and_apply_button_noname_ds(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
@@ -3203,7 +3203,7 @@ class LinkDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.targetLineEdit, "$datasources.namename")
 
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction,None),None)
+        self.assertEqual(form.connectExternalActions(self.myAction, None), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -3216,7 +3216,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(self.performed, False)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 
@@ -3226,7 +3226,7 @@ class LinkDlgTest(unittest.TestCase):
     # \brief It tests default settings
     def test_connect_actions_with_action_link_and_apply_button_noname(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = LinkDlg()
         # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
@@ -3234,7 +3234,7 @@ class LinkDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.targetLineEdit, "namename")
 
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction,None),None)
+        self.assertEqual(form.connectExternalActions(self.myAction, None), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
@@ -3247,7 +3247,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(self.performed, False)
 
 
-        self.assertEqual(form.result(),0)
+        self.assertEqual(form.result(), 0)
 
 
 

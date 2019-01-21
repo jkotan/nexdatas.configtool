@@ -74,8 +74,8 @@ class TestMethods(object):
     def connectExternalActions(self, externalApply, externalSave, externalClose, externalStore):
         self.stack.append("connectExternalActions")
         self.stack.append(externalApply)
-        self.stack.append(externalSave) 
-        self.stack.append(externalClose) 
+        self.stack.append(externalSave)
+        self.stack.append(externalClose)
         self.stack.append(externalStore)
 
 
@@ -104,7 +104,7 @@ class DataSourceTest(unittest.TestCase):
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256) 
+            self.__seed  = long(time.time() * 256)
 #        self.__seed =335783554629280825854815889576355181078
 #        self.__seed =56405821691954067238837069340540387163
 
@@ -114,9 +114,9 @@ class DataSourceTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print("\nsetting up...")        
-        print("SEED = %s" % self.__seed) 
-        
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
+
 
 
     # test closer
@@ -130,7 +130,7 @@ class DataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def ttest_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         cds = DataSource()
         self.assertEqual(cds.dataSourceType, 'CLIENT')
         self.assertEqual(cds.doc, '')
@@ -170,16 +170,16 @@ class DataSourceTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-        
+
         self.assertEqual(cds.tree, False)
-        
+
 
 
     # constructor test
     # \brief It tests default settings
     def ttest_constructor_parent(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         parent = QMessageBox()
 
@@ -223,17 +223,17 @@ class DataSourceTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-        
+
         self.assertEqual(cds.tree, False)
-        
+
 
     # constructor test
     # \brief It tests default settings
     def ttest_set_get_clean_State(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         cds = CommonDataSource()
-        nn =  self.__rnd.randint(0, 10) 
+        nn = self.__rnd.randint(0, 10)
 
         dataSourceType = 'TANGO%s' % nn
         dataSourceName = 'mot_01%s' %nn
@@ -256,16 +256,16 @@ class DataSourceTest(unittest.TestCase):
         for i in range(nn):
             dbParameters["param%s" % i] = "value%s" %i
 
-        peResult = "ds.result%s" %nn 
-        peInput =  "ds.source%s ds.source1%s ds.source2%s" %(nn,nn,nn)
+        peResult = "ds.result%s" %nn
+        peInput = "ds.source%s ds.source1%s ds.source2%s" %(nn, nn, nn)
         peScript = "import math\n ds.result= sin(ds.x)"
         peDataSources = {}
         for i in range(nn):
             peDataSources["param%s" % i] = "<datasource%s/>" %i
-            
+
         cds.setState((dataSourceType,
                       doc,
-                      clientRecordName, 
+                      clientRecordName,
                       tangoDeviceName,
                       tangoMemberName,
                       tangoMemberType,
@@ -283,7 +283,7 @@ class DataSourceTest(unittest.TestCase):
                       peDataSources,
                       dataSourceName
                       ))
-        
+
 
         self.assertEqual(cds.dataSourceType, dataSourceType)
         self.assertEqual(cds.doc, doc)
@@ -318,13 +318,13 @@ class DataSourceTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-        
+
         self.assertEqual(cds.tree, False)
-        
+
 
         state = cds.getState()
 
-    
+
 
 
         self.assertEqual(cds.dataSourceType, dataSourceType)
@@ -359,13 +359,13 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.applied, False)
         self.assertEqual(cds.ids, None)
         self.assertEqual(cds.tree, False)
-        
+
         cds.clear()
 
         self.assertEqual(cds.applied, False)
         self.assertEqual(cds.ids, None)
         self.assertEqual(cds.tree, False)
-        
+
         cds.applied = True
         cds.ids = nn
         cds.tree = True
@@ -402,13 +402,13 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.externalApply, None)
 
         self.assertEqual(cds.applied, True)
-        self.assertEqual(cds.ids, nn)        
+        self.assertEqual(cds.ids, nn)
         self.assertEqual(cds.tree, True)
 
 
         cds.setState(state)
 
-    
+
 
 
         self.assertEqual(cds.dataSourceType, dataSourceType)
@@ -442,7 +442,7 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.applied, True)
         self.assertEqual(cds.ids, nn)
         self.assertEqual(cds.tree, True)
-        
+
 
 
 
@@ -450,7 +450,7 @@ class DataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def tttest_createDialog(self):
         fun = sys._getframe().f_code.co_name
-        print("Run: %s.%s() " % (self.__class__.__name__, fun))  
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         parent = None
         form = DataSource(parent)
 
@@ -464,7 +464,7 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(form.methods.stack[-4], "createGUI")
 
 
-   
+
 
 if __name__ == '__main__':
     if not app:

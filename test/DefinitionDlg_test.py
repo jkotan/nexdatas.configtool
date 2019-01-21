@@ -1158,7 +1158,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
         na = self.__rnd.randint(0, len(attributes)-1)
-        sel = attributes.keys()[na]
+        sel = list(attributes.keys())[na]
         form.populateAttributes(sel)
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
@@ -1250,7 +1250,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
         na = self.__rnd.randint(0, len(attributes)-1)
-        sel = attributes.keys()[na]
+        sel = list(attributes.keys())[na]
         form.populateAttributes(sel)
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
@@ -1387,7 +1387,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
         na = self.__rnd.randint(0, len(attributes)-1)
-        sel = attributes.keys()[na]
+        sel = list(attributes.keys())[na]
         form.populateAttributes(sel)
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
@@ -1507,7 +1507,7 @@ class DefinitionDlgTest(unittest.TestCase):
         self.assertEqual(atw.rowCount(), 0)
 
         na = self.__rnd.randint(0, len(attributes)-1)
-        sel = attributes.keys()[na]
+        sel = list(attributes.keys())[na]
         form.populateAttributes(sel)
 
         self.assertEqual(atw.columnCount(), 2)

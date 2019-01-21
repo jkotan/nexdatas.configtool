@@ -219,7 +219,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, ['doc', 'datasource', 'strategy'] )
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertTrue(isinstance(form, NodeDlg))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
@@ -245,12 +245,12 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
         
         self.assertTrue(not form.ui.applyPushButton.isEnabled())
         self.assertTrue(form.ui.resetPushButton.isEnabled())
@@ -262,8 +262,8 @@ class LinkDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.targetLineEdit, target)
         self.assertEqual(form.ui.targetLineEdit.text(),target)
 
-        self.assertTrue(not form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.ui.targetLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.nameLineEdit.text()) 
+        self.assertTrue(form.ui.targetLineEdit.text())
 
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
@@ -292,13 +292,13 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems,  ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
         
         self.assertTrue(not form.ui.applyPushButton.isEnabled())
         self.assertTrue(form.ui.resetPushButton.isEnabled())
@@ -314,9 +314,9 @@ class LinkDlgTest(unittest.TestCase):
 
 
      
-        self.assertTrue(not form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(form.ui.nameLineEdit.text()) 
+        self.assertTrue(form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
         
 
 
@@ -345,13 +345,13 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems,['doc', 'datasource', 'strategy'] )
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
         name = "myname"
@@ -361,22 +361,22 @@ class LinkDlgTest(unittest.TestCase):
 
         self.assertEqual(form.updateForm(),None)
     
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
         form.name = name
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.updateForm(),None)
     
         self.assertEqual(form.ui.nameLineEdit.text(),name)
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.ui.nameLineEdit.setText("")
 
@@ -384,15 +384,15 @@ class LinkDlgTest(unittest.TestCase):
 
         form.target = target
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.updateForm(),None)
     
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
         self.assertEqual(form.ui.targetLineEdit.text(), target)
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.ui.targetLineEdit.setText("")
         form.target = ""
@@ -402,14 +402,14 @@ class LinkDlgTest(unittest.TestCase):
 
         form.doc = doc
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.updateForm(),None)
     
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
 
@@ -425,9 +425,9 @@ class LinkDlgTest(unittest.TestCase):
         form.doc = doc
         form.target = target
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.updateForm(),None)
     
@@ -461,13 +461,13 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems,['doc', 'datasource', 'strategy'] )
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
         name = "myname"
@@ -477,22 +477,22 @@ class LinkDlgTest(unittest.TestCase):
 
         self.assertEqual(form.updateForm(),None)
     
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
         form.name = name
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.updateForm(),None)
     
         self.assertEqual(form.ui.nameLineEdit.text(),name)
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.ui.nameLineEdit.setText("")
 
@@ -500,15 +500,15 @@ class LinkDlgTest(unittest.TestCase):
 
         form.target = target
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.updateForm(),None)
     
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
         self.assertEqual(form.ui.targetLineEdit.text(), target)
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.ui.targetLineEdit.setText("")
         form.target = ""
@@ -518,14 +518,14 @@ class LinkDlgTest(unittest.TestCase):
 
         form.doc = doc
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.updateForm(),None)
     
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
         self.assertEqual(form.ui.docTextEdit.toPlainText(), doc)
 
 
@@ -541,9 +541,9 @@ class LinkDlgTest(unittest.TestCase):
         form.doc = doc
         form.target = target
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.updateForm(),None)
     
@@ -582,7 +582,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, ["doc", 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
 
@@ -598,9 +598,9 @@ class LinkDlgTest(unittest.TestCase):
 
         self.assertEqual(form.getState(),(name,u'',u''))
     
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
         form.name = ""
@@ -608,9 +608,9 @@ class LinkDlgTest(unittest.TestCase):
         form.target = target
         self.assertEqual(form.getState(),('', target,''))
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
         form.target = ""
 
 
@@ -618,9 +618,9 @@ class LinkDlgTest(unittest.TestCase):
 
         form.doc = doc
         self.assertEqual(form.getState(),('','',doc))
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.doc = ""
 
@@ -638,9 +638,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(state[2],doc)
 
         self.assertEqual(len(state),3)
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
@@ -664,7 +664,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, ["doc", 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
 
@@ -680,9 +680,9 @@ class LinkDlgTest(unittest.TestCase):
 
         self.assertEqual(form.getState(),(name,u'',u''))
     
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
         form.name = ""
@@ -690,9 +690,9 @@ class LinkDlgTest(unittest.TestCase):
         form.target = target
         self.assertEqual(form.getState(),('', target,''))
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
         form.target = ""
 
 
@@ -700,9 +700,9 @@ class LinkDlgTest(unittest.TestCase):
 
         form.doc = doc
         self.assertEqual(form.getState(),('','',doc))
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.doc = ""
 
@@ -720,9 +720,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(state[2],doc)
 
         self.assertEqual(len(state),3)
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
@@ -752,7 +752,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
 
@@ -765,9 +765,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.setState(['','','']), None)
     
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
@@ -777,9 +777,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.setState([name,'','']), None)
     
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.name, name)
         self.assertEqual(form.target, '')
@@ -792,9 +792,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.setState(['',target,'']), None)
     
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, target)
@@ -809,9 +809,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.setState(['','',doc]), None)
     
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
 
@@ -830,9 +830,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.setState([name,target,doc]), None)
     
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
         self.assertEqual(form.name, name)
@@ -866,7 +866,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems, ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
 
@@ -879,9 +879,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.setState(['','','']), None)
     
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, '')
@@ -891,9 +891,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.setState([name,'','']), None)
     
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.name, name)
         self.assertEqual(form.target, '')
@@ -906,9 +906,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.setState(['',target,'']), None)
     
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         self.assertEqual(form.name, '')
         self.assertEqual(form.target, target)
@@ -923,9 +923,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.setState(['','',doc]), None)
     
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
 
@@ -944,9 +944,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.setState([name,target,doc]), None)
     
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
         self.assertEqual(form.name, name)
@@ -983,15 +983,15 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems,['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form = LinkDlg()
         form.show()
         self.assertEqual(form.createGUI(),None)
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         name = "myname"
         target = "NXEntry"
@@ -1009,8 +1009,8 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.createGUI(),None)
     
         self.assertEqual(form.ui.nameLineEdit.text(),name)
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.ui.nameLineEdit.setText("")
 
@@ -1023,9 +1023,9 @@ class LinkDlgTest(unittest.TestCase):
 
         self.assertEqual(form.createGUI(),None)
     
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
         self.assertEqual(form.ui.targetLineEdit.text(), target)
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.ui.targetLineEdit.setText("")
         form.target = ""
@@ -1073,15 +1073,15 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
         self.assertEqual(form.subItems,['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form = LinkDlg()
         form.show()
         self.assertEqual(form.createGUI(),None)
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         name = "myname"
         target = "$datasources.NXEntry"
@@ -1099,8 +1099,8 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.createGUI(),None)
     
         self.assertEqual(form.ui.nameLineEdit.text(),name)
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.ui.nameLineEdit.setText("")
 
@@ -1113,9 +1113,9 @@ class LinkDlgTest(unittest.TestCase):
 
         self.assertEqual(form.createGUI(),None)
     
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
         self.assertEqual(form.ui.targetLineEdit.text(), target)
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         form.ui.targetLineEdit.setText("")
         form.target = ""
@@ -1186,7 +1186,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
         
@@ -1205,9 +1205,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.subItems, ['doc', 'datasource', 'strategy'])
 
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
 
@@ -1247,7 +1247,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
         
@@ -1266,9 +1266,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.subItems, ['doc', 'datasource', 'strategy'])
 
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
 
@@ -1309,7 +1309,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
         
@@ -1329,9 +1329,9 @@ class LinkDlgTest(unittest.TestCase):
                          ['doc', 'datasource', 'strategy'])
 
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
 
@@ -1372,7 +1372,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
         
@@ -1392,9 +1392,9 @@ class LinkDlgTest(unittest.TestCase):
                          ['doc', 'datasource', 'strategy'])
 
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
        
@@ -1437,7 +1437,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
         
@@ -1455,9 +1455,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
 
@@ -1499,7 +1499,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
         
@@ -1517,9 +1517,9 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
         
 
@@ -1546,7 +1546,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
         
@@ -1566,9 +1566,9 @@ class LinkDlgTest(unittest.TestCase):
 
 
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
 
@@ -1613,7 +1613,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
         
@@ -1633,9 +1633,9 @@ class LinkDlgTest(unittest.TestCase):
                          ['doc', 'datasource', 'strategy'])
 
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
 
@@ -1678,7 +1678,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.createGUI()
         
@@ -1698,9 +1698,9 @@ class LinkDlgTest(unittest.TestCase):
                          ['doc', 'datasource', 'strategy'])
 
 
-        self.assertTrue(form.ui.nameLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.targetLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.docTextEdit.toPlainText().isEmpty())
+        self.assertTrue(not form.ui.nameLineEdit.text()) 
+        self.assertTrue(not form.ui.targetLineEdit.text())
+        self.assertTrue(not form.ui.docTextEdit.toPlainText())
 
 
 
@@ -1748,7 +1748,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
@@ -1852,7 +1852,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
@@ -1960,7 +1960,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
@@ -2058,7 +2058,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
@@ -2163,7 +2163,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.target, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
@@ -2305,7 +2305,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.target, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
@@ -2450,7 +2450,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
@@ -2576,7 +2576,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
@@ -2704,7 +2704,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
@@ -2828,7 +2828,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.doc, '')
         self.assertEqual(form.subItems, 
                          ['doc', 'datasource', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
 
         form.setFromNode()
         form.createGUI()
@@ -2942,7 +2942,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
 #        self.assertTrue(isinstance(DomTools, DomTools))
@@ -2960,7 +2960,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui, Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertEqual(form.externalApply, None)
 
 
@@ -2975,7 +2975,7 @@ class LinkDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = LinkDlg()
-        form.ui = Ui_LinkDlg() 
+        # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
@@ -2983,7 +2983,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
 
@@ -2998,7 +2998,7 @@ class LinkDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = LinkDlg()
-        form.ui = Ui_LinkDlg() 
+        # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
@@ -3006,7 +3006,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertEqual(form.externalApply, self.myAction)
         self.performed = False
 
@@ -3025,7 +3025,7 @@ class LinkDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = LinkDlg()
-        form.ui = Ui_LinkDlg() 
+        # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
@@ -3033,7 +3033,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertEqual(form.externalApply, self.myAction)
         self.performed = False
 
@@ -3062,7 +3062,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertEqual(form.externalDSLink, self.myAction)
         self.performed = False
 
@@ -3079,7 +3079,7 @@ class LinkDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = LinkDlg()
-        form.ui = Ui_LinkDlg() 
+        # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.createGUI()
         form.show()
@@ -3087,7 +3087,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertEqual(form.externalApply, self.myAction)
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
@@ -3108,7 +3108,7 @@ class LinkDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = LinkDlg()
-        form.ui = Ui_LinkDlg() 
+        # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.createGUI()
@@ -3119,7 +3119,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertEqual(form.externalApply, self.myAction)
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
@@ -3137,7 +3137,7 @@ class LinkDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = LinkDlg()
-        form.ui = Ui_LinkDlg() 
+        # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.createGUI()
@@ -3148,7 +3148,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertEqual(form.externalApply,None)
         self.assertEqual(form.externalDSLink, self.myAction)
         self.performed = False
@@ -3168,7 +3168,7 @@ class LinkDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = LinkDlg()
-        form.ui = Ui_LinkDlg() 
+        # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.createGUI()
         QTest.keyClicks(form.ui.targetLineEdit, "namename")
@@ -3178,7 +3178,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertEqual(form.externalApply, self.myAction)
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
@@ -3197,7 +3197,7 @@ class LinkDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = LinkDlg()
-        form.ui = Ui_LinkDlg() 
+        # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.createGUI()
         QTest.keyClicks(form.ui.targetLineEdit, "$datasources.namename")
@@ -3207,7 +3207,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertEqual(form.externalApply, self.myAction)
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
@@ -3228,7 +3228,7 @@ class LinkDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))  
         form = LinkDlg()
-        form.ui = Ui_LinkDlg() 
+        # form.ui = Ui_LinkDlg()
         form.ui.applyPushButton = QPushButton(form)
         form.createGUI()
         QTest.keyClicks(form.ui.targetLineEdit, "namename")
@@ -3238,7 +3238,7 @@ class LinkDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_LinkDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_LinkDlg")
         self.assertEqual(form.externalApply, self.myAction)
         self.assertEqual(form.externalDSLink, None)
         self.performed = False

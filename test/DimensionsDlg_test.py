@@ -99,7 +99,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, []) 
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.result(), 0)
 
@@ -126,7 +126,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, []) 
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -153,7 +153,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, []) 
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -184,7 +184,7 @@ class DimensionsDlgTest(unittest.TestCase):
         form.lengths = lengths
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -215,7 +215,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -246,7 +246,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -274,7 +274,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -305,7 +305,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -336,7 +336,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -367,7 +367,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -399,7 +399,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -433,7 +433,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -476,7 +476,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -515,7 +515,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -562,7 +562,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()
@@ -611,7 +611,7 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
         self.assertEqual(form.subItems, ["dim"])
-        self.assertTrue(isinstance(form.ui, Ui_DimensionsDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DimensionsDlg")
 
         self.assertEqual(form.createGUI(), None)
         form.show()

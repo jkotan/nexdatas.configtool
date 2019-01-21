@@ -112,9 +112,9 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.deviceLineEdit.text()) 
+        self.assertTrue(not form.ui.hostLineEdit.text())
+        self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(not form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 
@@ -136,9 +136,9 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.portLineEdit, port)
         self.assertEqual(form.ui.portLineEdit.text(), port)
 
-        self.assertTrue(not form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(not form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(bool(form.ui.deviceLineEdit.text())) 
+        self.assertTrue(bool(form.ui.hostLineEdit.text()))
+        self.assertTrue(bool(form.ui.portLineEdit.text()))
         self.assertTrue(form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 
@@ -164,9 +164,9 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.deviceLineEdit.text()) 
+        self.assertTrue(not form.ui.hostLineEdit.text())
+        self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(not form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 
@@ -184,9 +184,9 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.portLineEdit, port)
         self.assertEqual(form.ui.portLineEdit.text(), port)
 
-        self.assertTrue(not form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(bool(form.ui.deviceLineEdit.text())) 
+        self.assertTrue(not form.ui.hostLineEdit.text())
+        self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 
@@ -224,9 +224,9 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.deviceLineEdit.text()) 
+        self.assertTrue(not form.ui.hostLineEdit.text())
+        self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(not form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 
@@ -244,9 +244,9 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.portLineEdit, port)
         self.assertEqual(form.ui.portLineEdit.text(), port)
 
-        self.assertTrue(not form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(not form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(bool(form.ui.deviceLineEdit.text())) 
+        self.assertTrue(bool(form.ui.hostLineEdit.text()))
+        self.assertTrue(bool(form.ui.portLineEdit.text()))
         self.assertTrue(form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 
@@ -276,9 +276,9 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.deviceLineEdit.text()) 
+        self.assertTrue(not form.ui.hostLineEdit.text())
+        self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(not form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 
@@ -298,9 +298,9 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.portLineEdit, port)
         self.assertEqual(form.ui.portLineEdit.text(), port)
 
-        self.assertTrue(not form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(not form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(bool(form.ui.deviceLineEdit.text())) 
+        self.assertTrue(bool(form.ui.hostLineEdit.text()))
+        self.assertTrue(bool(form.ui.portLineEdit.text()))
         self.assertTrue(form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 
@@ -330,9 +330,9 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.deviceLineEdit.text()) 
+        self.assertTrue(not form.ui.hostLineEdit.text())
+        self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(not form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 
@@ -350,9 +350,9 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.portLineEdit, port)
         self.assertEqual(form.ui.portLineEdit.text(), port)
 
-        self.assertTrue(not form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(not form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(bool(form.ui.deviceLineEdit.text())) 
+        self.assertTrue(not form.ui.hostLineEdit.text())
+        self.assertTrue(bool(form.ui.portLineEdit.text()))
         self.assertTrue(form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 
@@ -382,9 +382,9 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(not form.ui.deviceLineEdit.text()) 
+        self.assertTrue(not form.ui.hostLineEdit.text())
+        self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(not form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 
@@ -402,9 +402,9 @@ class ConnectDlgTest(unittest.TestCase):
         QTest.keyClicks(form.ui.portLineEdit, port)
         self.assertEqual(form.ui.portLineEdit.text(), port)
 
-        self.assertTrue(not form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(bool(form.ui.deviceLineEdit.text())) 
+        self.assertTrue(bool(form.ui.hostLineEdit.text()))
+        self.assertTrue(not form.ui.portLineEdit.text())
         self.assertTrue(form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 
@@ -447,9 +447,9 @@ class ConnectDlgTest(unittest.TestCase):
 
         form.show()
         form.createGUI()
-        self.assertTrue(not form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(not form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.deviceLineEdit.text()) 
+        self.assertTrue(form.ui.hostLineEdit.text())
+        self.assertTrue(form.ui.portLineEdit.text())
 
         self.assertTrue(form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
@@ -460,9 +460,9 @@ class ConnectDlgTest(unittest.TestCase):
         self.assertEqual(form.port, port)
 
 
-        self.assertTrue(not form.ui.deviceLineEdit.text().isEmpty()) 
-        self.assertTrue(not form.ui.hostLineEdit.text().isEmpty())
-        self.assertTrue(not form.ui.portLineEdit.text().isEmpty())
+        self.assertTrue(form.ui.deviceLineEdit.text()) 
+        self.assertTrue(form.ui.hostLineEdit.text())
+        self.assertTrue(form.ui.portLineEdit.text())
         self.assertTrue(form.ui.connectPushButton.isEnabled())
         self.assertTrue(form.ui.cancelPushButton.isEnabled())
 

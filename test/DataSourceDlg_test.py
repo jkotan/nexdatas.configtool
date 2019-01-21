@@ -22,43 +22,43 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
 import binascii
 import time
 
 from PyQt5.QtTest import QTest
-from PyQt5.QtWidgets import (QApplication, QMessageBox, QTableWidgetItem, QPushButton)
-from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import Qt, QTimer, QObject, QModelIndex
-from PyQt5.QtXml import QDomNode, QDomDocument, QDomElement
-
+from PyQt5.QtWidgets import (QApplication, QMessageBox, QTableWidgetItem)
+from PyQt5.QtCore import Qt, QTimer, QModelIndex
 
 from nxsconfigtool.DataSourceDlg import DataSourceDlg, CommonDataSourceDlg
-from nxsconfigtool.DataSourceMethods import DataSourceMethods
+# from nxsconfigtool.DataSourceMethods import DataSourceMethods
 from nxsconfigtool.DataSource import CommonDataSource
-from nxsconfigtool.ComponentModel import ComponentModel
+# from nxsconfigtool.ComponentModel import ComponentModel
 from nxsconfigtool.AttributeDlg import AttributeDlg
 from nxsconfigtool.NodeDlg import NodeDlg
-from nxsconfigtool.DimensionsDlg import DimensionsDlg
+# from nxsconfigtool.DimensionsDlg import DimensionsDlg
 
 # from nxsconfigtool.ui.ui_datasourcedlg import Ui_DataSourceDlg
-
 
 #  Qt-application
 app = None
 
-
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+
+if sys.version_info > (3,):
+    unicode = str
+    long = int
+
 
 class FocusedWidget():
     def __init__(self):
         self.focused = False
+
     def setFocus(self):
         self.focused = True
-
 
 
 class TestView(object):
@@ -94,8 +94,6 @@ class DataSourceDlgTest(unittest.TestCase):
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
-
-
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
@@ -115,13 +113,11 @@ class DataSourceDlgTest(unittest.TestCase):
         self.performed = False
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256)
-
+            self.__seed = long(time.time() * 256)
 
         self.__rnd = random.Random(self.__seed)
-
 
         self.form = None
 
@@ -131,23 +127,22 @@ class DataSourceDlgTest(unittest.TestCase):
         print("\nsetting up...")
         print("SEED = %s" % self.__seed)
 
-
     # test closer
     # \brief Common tear down
     def tearDown(self):
         print("tearing down ...")
 
     def checkMessageBox(self):
-#        self.assertEqual(QApplication.activeWindow(), None)
+        # self.assertEqual(QApplication.activeWindow(), None)
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
         self.text = mb.text()
         self.title = mb.windowTitle()
         mb.close()
 
-
     def rmParamWidget(self):
-        aw = QApplication.activeWindow()
+        # aw =
+        QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
         self.text = mb.text()
@@ -155,9 +150,9 @@ class DataSourceDlgTest(unittest.TestCase):
 
         QTest.mouseClick(mb.button(QMessageBox.Yes), Qt.LeftButton)
 
-
     def rmParamWidgetClose(self):
-        aw = QApplication.activeWindow()
+        # aw =
+        QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
         self.text = mb.text()
@@ -165,9 +160,9 @@ class DataSourceDlgTest(unittest.TestCase):
 
         QTest.mouseClick(mb.button(QMessageBox.No), Qt.LeftButton)
 
-
     def attributeWidget(self):
-        aw = QApplication.activeWindow()
+        # aw =
+        QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, AttributeDlg))
 
@@ -178,10 +173,9 @@ class DataSourceDlgTest(unittest.TestCase):
 
         mb.accept()
 
-
-
     def attributeWidgetClose(self):
-        aw = QApplication.activeWindow()
+        # aw =
+        QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, AttributeDlg))
 
@@ -191,10 +185,10 @@ class DataSourceDlgTest(unittest.TestCase):
         self.assertEqual(mb.ui.valueLineEdit.text(), self.avalue)
 
         mb.reject()
-
 
     def paramWidgetClose(self):
-        aw = QApplication.activeWindow()
+        # aw =
+        QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, AttributeDlg))
 
@@ -204,8 +198,6 @@ class DataSourceDlgTest(unittest.TestCase):
         self.assertEqual(mb.ui.valueLineEdit.text(), self.avalue)
 
         mb.reject()
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -220,20 +212,25 @@ class DataSourceDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertEqual(form.subItems, ['record', 'doc', 'device', 'database', 'query', 'datasource', 'result'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceDlg))
+        self.assertEqual(form.subItems,
+                         ['record', 'doc', 'device', 'database', 'query',
+                          'datasource', 'result'])
+        self.assertEqaul(form.ui.__class__.__name__, "Ui_DataSourceDlg")
         self.assertTrue(isinstance(form, NodeDlg))
         self.assertTrue(isinstance(form, CommonDataSourceDlg))
         self.assertTrue(isinstance(form.datasource, CommonDataSource))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
 
-        self.assertEqual(form.replaceText, super(DataSourceDlg, form).replaceText )
-        self.assertEqual(form.removeElement, super(DataSourceDlg, form).removeElement )
-        self.assertEqual(form.replaceElement, super(DataSourceDlg, form).replaceElement )
-        self.assertTrue(form.appendElement is not super(DataSourceDlg, form).appendElement )
-        self.assertEqual(form.reset, super(DataSourceDlg, form).reset )
-
+        self.assertEqual(form.replaceText,
+                         super(DataSourceDlg, form).replaceText)
+        self.assertEqual(form.removeElement,
+                         super(DataSourceDlg, form).removeElement)
+        self.assertEqual(form.replaceElement,
+                         super(DataSourceDlg, form).replaceElement)
+        self.assertTrue(form.appendElement is not
+                        super(DataSourceDlg, form).appendElement)
+        self.assertEqual(form.reset, super(DataSourceDlg, form).reset)
 
     # constructor test
     # \brief It tests default settings
@@ -248,18 +245,23 @@ class DataSourceDlgTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertEqual(form.subItems, ['record', 'doc', 'device', 'database', 'query', 'datasource', 'result']  )
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceDlg))
+        self.assertEqual(form.subItems,
+                         ['record', 'doc', 'device', 'database', 'query',
+                          'datasource', 'result'])
+        self.assertEqaul(form.ui.__class__.__name__, "Ui_DataSourceDlg")
         self.assertTrue(isinstance(form, NodeDlg))
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
 
-        self.assertEqual(form.replaceText, super(DataSourceDlg, form).replaceText )
-        self.assertEqual(form.removeElement, super(DataSourceDlg, form).removeElement )
-        self.assertEqual(form.replaceElement, super(DataSourceDlg, form).replaceElement )
-        self.assertTrue(form.appendElement is not super(DataSourceDlg, form).appendElement )
-        self.assertEqual(form.reset, super(DataSourceDlg, form).reset )
-
+        self.assertEqual(form.replaceText,
+                         super(DataSourceDlg, form).replaceText)
+        self.assertEqual(form.removeElement,
+                         super(DataSourceDlg, form).removeElement)
+        self.assertEqual(form.replaceElement,
+                         super(DataSourceDlg, form).replaceElement)
+        self.assertTrue(form.appendElement is not
+                        super(DataSourceDlg, form).appendElement)
+        self.assertEqual(form.reset, super(DataSourceDlg, form).reset)
 
         form.ui.setupUi(form)
         form.show()
@@ -270,15 +272,13 @@ class DataSourceDlgTest(unittest.TestCase):
         self.assertTrue(form.ui.applyPushButton.isEnabled())
         self.assertTrue(form.ui.resetPushButton.isEnabled())
         name = "myname"
-        nType = "NXEntry"
+        # nType = "NXEntry"
         QTest.keyClicks(form.ui.nameLineEdit, name)
         self.assertEqual(form.ui.nameLineEdit.text(), name)
 
         self.assertTrue(not form.ui.nameLineEdit.text().isEmpty())
 
-
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
-
 
         self.assertEqual(form.result(), 0)
 
@@ -286,7 +286,6 @@ class DataSourceDlgTest(unittest.TestCase):
         self.assertTrue(not form.ui.savePushButton.focused)
         form.setSaveFocus()
         self.assertTrue(form.ui.savePushButton.focused)
-
 
     def enableButtons(self):
         self.assertTrue(self.form.ui.savePushButton.isEnabled())
@@ -303,12 +302,10 @@ class DataSourceDlgTest(unittest.TestCase):
         self.assertTrue(not self.form.ui.dbFrame.isVisible())
         self.assertTrue(not self.form.ui.tangoFrame.isVisible())
 
-
     def dbVisible(self):
         self.assertTrue(not self.form.ui.clientFrame.isVisible())
         self.assertTrue(self.form.ui.dbFrame.isVisible())
         self.assertTrue(not self.form.ui.tangoFrame.isVisible())
-
 
     def tangoVisible(self):
         self.assertTrue(not self.form.ui.clientFrame.isVisible())
@@ -319,9 +316,6 @@ class DataSourceDlgTest(unittest.TestCase):
         self.assertTrue(not self.form.ui.clientFrame.isVisible())
         self.assertTrue(not self.form.ui.dbFrame.isVisible())
         self.assertTrue(not self.form.ui.tangoFrame.isVisible())
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -337,7 +331,7 @@ class DataSourceDlgTest(unittest.TestCase):
         self.enableButtons()
         self.form.updateUi("")
         self.enableButtons()
-        tm = QTimer()
+        # tm = QTimer()
         self.enableButtons()
 
         self.form.updateUi("CLIENT")
@@ -347,18 +341,13 @@ class DataSourceDlgTest(unittest.TestCase):
         self.form.updateUi("CLIENT")
         self.enableButtons()
 
-
         self.form.ui.cRecNameLineEdit.setText("")
         self.form.updateUi("CLIENT")
         self.disableButtons()
 
-
         self.form.ui.dQueryLineEdit.setText("name")
         self.form.updateUi("DB")
         self.enableButtons()
-
-
-
 
         self.form.ui.tDevNameLineEdit.setText("name")
         self.form.updateUi("TANGO")
@@ -371,12 +360,6 @@ class DataSourceDlgTest(unittest.TestCase):
         self.form.ui.tDevNameLineEdit.setText("")
         self.form.updateUi("TANGO")
         self.disableButtons()
-
-
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -389,7 +372,6 @@ class DataSourceDlgTest(unittest.TestCase):
 
         self.form.ui.setupUi(self.form)
 
-
         self.enableButtons()
         self.noneVisible()
 
@@ -397,11 +379,9 @@ class DataSourceDlgTest(unittest.TestCase):
         self.enableButtons()
         self.noneVisible()
 
-
         self.form.setFrames("CLIENT")
         self.clientVisible()
         self.disableButtons()
-
 
         self.form.ui.cRecNameLineEdit.setText("")
         self.form.setFrames("CLIENT")
@@ -413,56 +393,41 @@ class DataSourceDlgTest(unittest.TestCase):
         self.clientVisible()
         self.enableButtons()
 
-
-
-
-
-
         self.form.ui.dQueryLineEdit.setText("")
         self.form.setFrames("DB")
         self.dbVisible()
         self.disableButtons()
-
 
         self.form.ui.dQueryLineEdit.setText("name")
         self.form.setFrames("DB")
         self.dbVisible()
         self.enableButtons()
 
-
-
-        myParam = {"DB name":"sdfsdf",
-                   "DB host":"werwer",
-                   "DB port":"werwer",
-                   "DB user":"werwer",
-                   "DB password":"werwer",
-                   "Mysql cnf":"werwer",
-                   "Oracle mode":"werwer",
-                   "Oracle DSN":"asdasdf"}
-
-
-
+        myParam = {"DB name": "sdfsdf",
+                   "DB host": "werwer",
+                   "DB port": "werwer",
+                   "DB user": "werwer",
+                   "DB password": "werwer",
+                   "Mysql cnf": "werwer",
+                   "Oracle mode": "werwer",
+                   "Oracle DSN": "asdasdf"}
 
         self.form.ui.dQueryLineEdit.setText("name")
         na = self.__rnd.randint(0, len(myParam)-1)
         sel = myParam.keys()[na]
         self.form.dbParam = myParam
         self.form.populateParameters(sel)
-        self.assertEqual(self.form.dbParam,myParam)
+        self.assertEqual(self.form.dbParam, myParam)
 
         self.form.setFrames("DB")
-        self.assertEqual(self.form.dbParam,myParam)
+        self.assertEqual(self.form.dbParam, myParam)
         self.dbVisible()
         self.enableButtons()
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
 
-
-
-
         self.form.setFrames("TANGO")
         self.tangoVisible()
         self.disableButtons()
-
 
         self.form.ui.tDevNameLineEdit.setText("name")
         self.form.setFrames("TANGO")
@@ -478,9 +443,6 @@ class DataSourceDlgTest(unittest.TestCase):
         self.form.setFrames("TANGO")
         self.tangoVisible()
         self.disableButtons()
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -493,119 +455,109 @@ class DataSourceDlgTest(unittest.TestCase):
 
         self.form.ui.setupUi(self.form)
 
+        self.enableButtons()
+        self.noneVisible()
+
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("CLIENT"))
 
         self.enableButtons()
         self.noneVisible()
 
-
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
-
-        self.enableButtons()
-        self.noneVisible()
-
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
-
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("DB"))
 
         self.enableButtons()
         self.noneVisible()
 
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
-
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("TANGO"))
 
         self.enableButtons()
         self.noneVisible()
 
         self.form.connectWidgets()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
-
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
 
         self.enableButtons()
         self.noneVisible()
 
-
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("CLIENT"))
         self.clientVisible()
         self.disableButtons()
 
         self.form.ui.cRecNameLineEdit.setText("")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("CLIENT"))
         self.clientVisible()
         self.disableButtons()
 
         self.form.ui.cRecNameLineEdit.setText("name")
 
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("CLIENT"))
         self.clientVisible()
         self.enableButtons()
 
-
-
-
-
-
         self.form.ui.dQueryLineEdit.setText("")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("DB"))
         self.dbVisible()
         self.disableButtons()
 
-
         self.form.ui.dQueryLineEdit.setText("name")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("DB"))
         self.dbVisible()
         self.enableButtons()
 
-
-        myParam = {"DB name":"sdfsdf",
-                   "DB host":"werwer",
-                   "DB port":"werwer",
-                   "DB user":"werwer",
-                   "DB password":"werwer",
-                   "Mysql cnf":"werwer",
-                   "Oracle mode":"werwer",
-                   "Oracle DSN":"asdasdf"}
-
-
-
+        myParam = {"DB name": "sdfsdf",
+                   "DB host": "werwer",
+                   "DB port": "werwer",
+                   "DB user": "werwer",
+                   "DB password": "werwer",
+                   "Mysql cnf": "werwer",
+                   "Oracle mode": "werwer",
+                   "Oracle DSN": "asdasdf"}
 
         self.form.ui.dQueryLineEdit.setText("name")
         na = self.__rnd.randint(0, len(myParam)-1)
         sel = myParam.keys()[na]
         self.form.dbParam = myParam
         self.form.populateParameters(sel)
-        self.assertEqual(self.form.dbParam,myParam)
+        self.assertEqual(self.form.dbParam, myParam)
 
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
-        self.assertEqual(self.form.dbParam,myParam)
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("DB"))
+        self.assertEqual(self.form.dbParam, myParam)
         self.dbVisible()
         self.enableButtons()
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
 
-
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("TANGO"))
         self.tangoVisible()
         self.disableButtons()
 
-
         self.form.ui.tDevNameLineEdit.setText("name")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("TANGO"))
         self.tangoVisible()
         self.disableButtons()
 
         self.form.ui.tMemberNameLineEdit.setText("name")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("TANGO"))
         self.tangoVisible()
         self.enableButtons()
 
         self.form.ui.tDevNameLineEdit.setText("")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("TANGO"))
         self.tangoVisible()
         self.disableButtons()
-
-
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -618,26 +570,24 @@ class DataSourceDlgTest(unittest.TestCase):
 
         self.form.ui.setupUi(self.form)
 
-
         self.enableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.cRecNameLineEdit.setText("")
         self.enableButtons()
 
         self.form.connectWidgets()
 
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("CLIENT"))
         self.form.ui.cRecNameLineEdit.setText("")
         self.disableButtons()
 
         self.form.ui.cRecNameLineEdit.setText("name")
         self.enableButtons()
 
-
         self.form.ui.cRecNameLineEdit.setText("")
         self.disableButtons()
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -650,28 +600,24 @@ class DataSourceDlgTest(unittest.TestCase):
 
         self.form.ui.setupUi(self.form)
 
-
         self.enableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.dQueryLineEdit.setText("")
         self.enableButtons()
 
         self.form.connectWidgets()
 
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("DB"))
         self.form.ui.dQueryLineEdit.setText("")
         self.disableButtons()
 
         self.form.ui.dQueryLineEdit.setText("name")
         self.enableButtons()
 
-
         self.form.ui.dQueryLineEdit.setText("")
         self.disableButtons()
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -684,19 +630,20 @@ class DataSourceDlgTest(unittest.TestCase):
 
         self.form.ui.setupUi(self.form)
 
-
         self.enableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.tDevNameLineEdit.setText("")
         self.enableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.tMemberNameLineEdit.setText("")
         self.enableButtons()
 
-
         self.form.connectWidgets()
 
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("TANGO"))
         self.form.ui.tDevNameLineEdit.setText("")
         self.disableButtons()
 
@@ -706,13 +653,11 @@ class DataSourceDlgTest(unittest.TestCase):
         self.form.ui.tMemberNameLineEdit.setText("name2")
         self.enableButtons()
 
-
         self.form.ui.tDevNameLineEdit.setText("")
         self.disableButtons()
 
         self.form.ui.tMemberNameLineEdit.setText("name2")
         self.disableButtons()
-
 
         self.form.ui.tMemberNameLineEdit.setText("name2")
         self.disableButtons()
@@ -720,14 +665,7 @@ class DataSourceDlgTest(unittest.TestCase):
         self.form.ui.tDevNameLineEdit.setText("name")
         self.enableButtons()
 
-
-
-
-
-
-
-
-    def checkParam(self, param, table, sel = None):
+    def checkParam(self, param, table, sel=None):
 
         self.assertEqual(table.columnCount(), 2)
         self.assertEqual(table.rowCount(), len(param))
@@ -742,8 +680,6 @@ class DataSourceDlgTest(unittest.TestCase):
             item = table.item(table.currentRow(), 0)
             self.assertEqual(item.data(Qt.UserRole), sel)
 
-
-
     # constructor test
     # \brief It tests default settings
     def ttest_populateParameters(self):
@@ -755,9 +691,9 @@ class DataSourceDlgTest(unittest.TestCase):
 
         self.form.ui.setupUi(self.form)
 
-
         self.enableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.dQueryLineEdit.setText("")
         self.enableButtons()
 
@@ -768,36 +704,32 @@ class DataSourceDlgTest(unittest.TestCase):
         self.form.populateParameters()
         self.checkParam(myParam, self.form.ui.dParameterTableWidget)
 
-
-        myParam = {"user":"sdfsdf","sdfsd":"werwer", "asdas":"asdasdf"}
+        myParam = {"user": "sdfsdf", "sdfsd": "werwer", "asdas": "asdasdf"}
         self.form.dbParam = myParam
         self.form.populateParameters()
         self.checkParam(myParam, self.form.ui.dParameterTableWidget)
 
-
-        myParam = {"user":"sdfsdf","sdfsd":"werwer", "asdas":"asdasdf"}
+        myParam = {"user": "sdfsdf", "sdfsd": "werwer", "asdas": "asdasdf"}
         na = self.__rnd.randint(0, len(myParam)-1)
         sel = myParam.keys()[na]
         self.form.dbParam = myParam
         self.form.populateParameters(sel)
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
 
-
-        myParam = {"DB name":"sdfsdf",
-                   "DB host":"werwer",
-                   "DB port":"werwer",
-                   "DB user":"werwer",
-                   "DB password":"werwer",
-                   "Mysql cnf":"werwer",
-                   "Oracle mode":"werwer",
-                   "Oracle DSN":"asdasdf"}
+        myParam = {"DB name": "sdfsdf",
+                   "DB host": "werwer",
+                   "DB port": "werwer",
+                   "DB user": "werwer",
+                   "DB password": "werwer",
+                   "Mysql cnf": "werwer",
+                   "Oracle mode": "werwer",
+                   "Oracle DSN": "asdasdf"}
 
         na = self.__rnd.randint(0, len(myParam)-1)
         sel = myParam.keys()[na]
         self.form.dbParam = myParam
         self.form.populateParameters(sel)
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
-
 
     # constructor test
     # \brief It tests default settings
@@ -810,24 +742,23 @@ class DataSourceDlgTest(unittest.TestCase):
 
         self.form.ui.setupUi(self.form)
 
-
         self.enableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.dQueryLineEdit.setText("")
         self.enableButtons()
 
         self.form.connectWidgets()
 
-
         myParam = {
-#            "DB name":"sdfsdf",
-            "DB host":"wer",
-            "DB port":"wwer",
-            "DB user":"erwer",
-            "DB password":"weer",
-            "Mysql cnf":"weer",
-            "Oracle mode":"wwer",
-            "Oracle DSN":"aasdf"}
+            # "DB name": "sdfsdf",
+            "DB host": "wer",
+            "DB port": "wwer",
+            "DB user": "erwer",
+            "DB password": "weer",
+            "Mysql cnf": "weer",
+            "Oracle mode": "wwer",
+            "Oracle DSN": "aasdf"}
 
         na = self.__rnd.randint(0, len(myParam)-1)
         sel = myParam.keys()[na]
@@ -835,34 +766,30 @@ class DataSourceDlgTest(unittest.TestCase):
         self.form.populateParameters(sel)
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
 
-
-
         QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
 
         table = self.form.ui.dParameterTableWidget
 
         item = table.item(table.currentRow(), 0)
-        self.checkParam(dict(myParam,**{"DB name":""}),
-                        self.form.ui.dParameterTableWidget, item.data(Qt.UserRole))
-        self.checkParam(dict(myParam,**{"DB name":""}),
+        self.checkParam(dict(myParam, **{"DB name": ""}),
+                        self.form.ui.dParameterTableWidget,
+                        item.data(Qt.UserRole))
+        self.checkParam(dict(myParam, **{"DB name": ""}),
                         self.form.ui.dParameterTableWidget, "DB name")
-        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":""}))
+        self.assertEqual(self.form.dbParam, dict(myParam, **{"DB name": ""}))
 
         QTimer.singleShot(10, self.rmParamWidgetClose)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
 
-        self.checkParam(dict(myParam,**{"DB name":""}),
+        self.checkParam(dict(myParam, **{"DB name": ""}),
                         self.form.ui.dParameterTableWidget, "DB name")
-        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":""}))
+        self.assertEqual(self.form.dbParam, dict(myParam, **{"DB name": ""}))
 
         QTimer.singleShot(10, self.rmParamWidget)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
 
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
         self.assertEqual(self.form.dbParam, dict(myParam))
-
-
-
 
         QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
 
@@ -873,42 +800,38 @@ class DataSourceDlgTest(unittest.TestCase):
 
         pname = str(item.data(Qt.UserRole))
 
-
         it = QTableWidgetItem(unicode(pname))
         it.setData(Qt.DisplayRole, ("Myname2"))
         it.setData(Qt.UserRole, (pname))
 
+        table.setItem(ch, 0, it)
 
-        table.setItem(ch, 0,it)
-
-        self.checkParam(dict(myParam,**{"DB name":"Myname2"}),
+        self.checkParam(dict(myParam, **{"DB name": "Myname2"}),
                         self.form.ui.dParameterTableWidget, None)
-        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":"Myname2"}))
+        self.assertEqual(self.form.dbParam,
+                         dict(myParam, **{"DB name": "Myname2"}))
 
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
         table.setCurrentCell(ch, 0)
 
-        self.checkParam(dict(myParam,**{"DB name":"Myname2"}),
+        self.checkParam(dict(myParam, **{"DB name": "Myname2"}),
                         self.form.ui.dParameterTableWidget, None)
-        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":"Myname2"}))
+        self.assertEqual(self.form.dbParam,
+                         dict(myParam, **{"DB name": "Myname2"}))
 
         QTimer.singleShot(10, self.rmParamWidgetClose)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
 
-        self.checkParam(dict(myParam,**{"DB name":"Myname2"}),
+        self.checkParam(dict(myParam, **{"DB name": "Myname2"}),
                         self.form.ui.dParameterTableWidget, None)
-        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":"Myname2"}))
+        self.assertEqual(self.form.dbParam,
+                         dict(myParam, **{"DB name": "Myname2"}))
 
         QTimer.singleShot(10, self.rmParamWidget)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
 
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
         self.assertEqual(self.form.dbParam, dict(myParam))
-
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -921,24 +844,23 @@ class DataSourceDlgTest(unittest.TestCase):
 
         self.form.ui.setupUi(self.form)
 
-
         self.enableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.dQueryLineEdit.setText("")
         self.enableButtons()
 
         self.form.connectWidgets()
 
-
         myParam = {
-            "DB name":"sdfsdf",
-            "DB host":"wer",
-            "DB port":"wwer",
-            "DB user":"erwer",
-            "DB password":"weer",
-            "Mysql cnf":"weer",
-            "Oracle mode":"wwer",
-            "Oracle DSN":"aasdf"}
+            "DB name": "sdfsdf",
+            "DB host": "wer",
+            "DB port": "wwer",
+            "DB user": "erwer",
+            "DB password": "weer",
+            "Mysql cnf": "weer",
+            "Oracle mode": "wwer",
+            "Oracle DSN": "aasdf"}
 
         table = self.form.ui.dParameterTableWidget
 
@@ -950,28 +872,30 @@ class DataSourceDlgTest(unittest.TestCase):
 
         if sel == "DB password":
             QTimer.singleShot(10, self.checkMessageBox)
-        self.form.ui.dParamComboBox.setCurrentIndex(self.form.ui.dParamComboBox.findText(str(sel)))
+        self.form.ui.dParamComboBox.setCurrentIndex(
+            self.form.ui.dParamComboBox.findText(str(sel)))
 
-        ch = table.currentRow()
-
+        # ch =
+        table.currentRow()
 
         QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
 
-
-
         item = table.item(table.currentRow(), 0)
-        self.checkParam(dict(myParam,**{str(sel):myParam[sel]}),
-                        self.form.ui.dParameterTableWidget, item.data(Qt.UserRole))
-        self.checkParam(dict(myParam,**{str(sel):myParam[sel]}),
+        self.checkParam(dict(myParam, **{str(sel): myParam[sel]}),
+                        self.form.ui.dParameterTableWidget,
+                        item.data(Qt.UserRole))
+        self.checkParam(dict(myParam, **{str(sel): myParam[sel]}),
                         self.form.ui.dParameterTableWidget, sel)
-        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):myParam[sel]}))
+        self.assertEqual(
+            self.form.dbParam, dict(myParam, **{str(sel): myParam[sel]}))
 
         QTimer.singleShot(10, self.rmParamWidgetClose)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
 
-        self.checkParam(dict(myParam,**{str(sel):myParam[sel]}),
+        self.checkParam(dict(myParam, **{str(sel): myParam[sel]}),
                         self.form.ui.dParameterTableWidget, str(sel))
-        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):myParam[sel]}))
+        self.assertEqual(self.form.dbParam,
+                         dict(myParam, **{str(sel): myParam[sel]}))
 
         QTimer.singleShot(10, self.rmParamWidget)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
@@ -980,10 +904,6 @@ class DataSourceDlgTest(unittest.TestCase):
         del rparam[sel]
         self.checkParam(rparam, self.form.ui.dParameterTableWidget, None)
         self.assertEqual(self.form.dbParam, dict(rparam))
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -996,24 +916,23 @@ class DataSourceDlgTest(unittest.TestCase):
 
         self.form.ui.setupUi(self.form)
 
-
         self.enableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.dQueryLineEdit.setText("")
         self.enableButtons()
 
         self.form.connectWidgets()
 
-
         myParam = {
-            "DB name":"sdfsdf",
-            "DB host":"wer",
-            "DB port":"wwer",
-            "DB user":"erwer",
-            "DB password":"weer",
-            "Mysql cnf":"weer",
-            "Oracle mode":"wwer",
-            "Oracle DSN":"aasdf"}
+            "DB name": "sdfsdf",
+            "DB host": "wer",
+            "DB port": "wwer",
+            "DB user": "erwer",
+            "DB password": "weer",
+            "Mysql cnf": "weer",
+            "Oracle mode": "wwer",
+            "Oracle DSN": "aasdf"}
 
         table = self.form.ui.dParameterTableWidget
 
@@ -1026,10 +945,10 @@ class DataSourceDlgTest(unittest.TestCase):
 
         if sel == "DB password":
             QTimer.singleShot(10, self.checkMessageBox)
-        self.form.ui.dParamComboBox.setCurrentIndex(self.form.ui.dParamComboBox.findText(str(sel)))
+        self.form.ui.dParamComboBox.setCurrentIndex(
+            self.form.ui.dParamComboBox.findText(str(sel)))
 
         ch = table.currentRow()
-
 
         QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
 
@@ -1037,27 +956,27 @@ class DataSourceDlgTest(unittest.TestCase):
 
         pname = str(item.data(Qt.UserRole))
 
-
         it = QTableWidgetItem(unicode(pname))
         it.setData(Qt.DisplayRole, ("Myname2"))
         it.setData(Qt.UserRole, (pname))
 
-        table.setItem(ch, 0,it)
+        table.setItem(ch, 0, it)
 
-
-        self.checkParam(dict(myParam,**{str(sel):"Myname2"}),
+        self.checkParam(dict(myParam, **{str(sel): "Myname2"}),
                         self.form.ui.dParameterTableWidget, None)
-        self.checkParam(dict(myParam,**{str(sel):"Myname2"}),
+        self.checkParam(dict(myParam, **{str(sel): "Myname2"}),
                         self.form.ui.dParameterTableWidget, None)
-        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):"Myname2"}))
+        self.assertEqual(
+            self.form.dbParam, dict(myParam, **{str(sel): "Myname2"}))
 
         table.setCurrentCell(ch, 0)
         QTimer.singleShot(10, self.rmParamWidgetClose)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
 
-        self.checkParam(dict(myParam,**{str(sel):"Myname2"}),
+        self.checkParam(dict(myParam, **{str(sel): "Myname2"}),
                         self.form.ui.dParameterTableWidget, str(sel))
-        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):"Myname2"}))
+        self.assertEqual(
+            self.form.dbParam, dict(myParam, **{str(sel): "Myname2"}))
 
         QTimer.singleShot(10, self.rmParamWidget)
         it = table.item(table.currentRow(), 0)
@@ -1068,11 +987,6 @@ class DataSourceDlgTest(unittest.TestCase):
         del rparam[sel]
         self.checkParam(rparam, self.form.ui.dParameterTableWidget, None)
         self.assertEqual(self.form.dbParam, dict(rparam))
-
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -1088,8 +1002,9 @@ class DataSourceDlgTest(unittest.TestCase):
         ev = TestEvent()
         self.assertTrue(not ev.accepted)
         self.assertTrue(self.form.datasource.dialog is not None)
-#        self.assertTrue(isinstance(self.form.methods, DataSourceMethods))
-#        self.assertTrue(isinstance(self.form.methods.dialog, CommonDataSourceDlg))
+        # self.assertTrue(isinstance(self.form.methods, DataSourceMethods))
+        # self.assertTrue(isinstance(
+        #          self.form.methods.dialog, CommonDataSourceDlg))
         self.assertTrue(isinstance(self.form.datasource.dialog, NodeDlg))
 
         self.form.closeEvent(ev)
@@ -1097,8 +1012,6 @@ class DataSourceDlgTest(unittest.TestCase):
 #        self.assertTrue(self.form.methods.dialog is  not None)
 
         self.assertTrue(ev.accepted)
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -1121,17 +1034,14 @@ class DataSourceDlgTest(unittest.TestCase):
         self.assertEqual(self.form.methods.stack[-2], "updateNode")
         self.assertTrue(self.form.methods.stack[-1] is index)
 
-
         self.form.updateNode()
         self.assertEqual(len(self.form.methods.stack), 5)
         self.assertEqual(self.form.methods.stack[-2], "updateNode")
         self.assertTrue(isinstance(self.form.methods.stack[-1], QModelIndex))
 
-
         self.form.createGUI()
         self.assertEqual(len(self.form.methods.stack), 6)
         self.assertEqual(self.form.methods.stack[-1], "createGUI")
-
 
         node = "my node"
         self.form.setFromNode(node)
@@ -1139,17 +1049,14 @@ class DataSourceDlgTest(unittest.TestCase):
         self.assertEqual(self.form.methods.stack[-2], "setFromNode")
         self.assertTrue(self.form.methods.stack[-1] is node)
 
-
         self.form.setFromNode()
         self.assertEqual(len(self.form.methods.stack), 10)
         self.assertEqual(self.form.methods.stack[-2], "setFromNode")
         self.assertEqual(self.form.methods.stack[-1], None)
 
-
         self.form.apply()
         self.assertEqual(len(self.form.methods.stack), 11)
         self.assertEqual(self.form.methods.stack[-1], "apply")
-
 
         enable = "my node"
         self.form.treeMode(enable)
@@ -1157,12 +1064,10 @@ class DataSourceDlgTest(unittest.TestCase):
         self.assertEqual(self.form.methods.stack[-2], "treeMode")
         self.assertTrue(self.form.methods.stack[-1] is enable)
 
-
         self.form.treeMode()
         self.assertEqual(len(self.form.methods.stack), 15)
         self.assertEqual(self.form.methods.stack[-2], "treeMode")
         self.assertEqual(self.form.methods.stack[-1], True)
-
 
         self.form.connectExternalActions()
         self.assertEqual(len(self.form.methods.stack), 20)
@@ -1171,8 +1076,6 @@ class DataSourceDlgTest(unittest.TestCase):
         self.assertEqual(self.form.methods.stack[-3], None)
         self.assertEqual(self.form.methods.stack[-2], None)
         self.assertEqual(self.form.methods.stack[-1], None)
-
-
 
         eapply = "my apply"
         self.form.connectExternalActions(eapply)
@@ -1221,11 +1124,9 @@ class TestMethods(object):
     def updateForm(self):
         self.stack.append("updateForm")
 
-
     def updateNode(self, index):
         self.stack.append("updateNode")
         self.stack.append(index)
-
 
     def setFromNode(self, node):
         self.stack.append("setFromNode")
@@ -1238,14 +1139,13 @@ class TestMethods(object):
         self.stack.append("treeMode")
         self.stack.append(enable)
 
-
-    def connectExternalActions(self, externalApply, externalSave, externalClose, externalStore):
+    def connectExternalActions(self, externalApply, externalSave,
+                               externalClose, externalStore):
         self.stack.append("connectExternalActions")
         self.stack.append(externalApply)
         self.stack.append(externalSave)
         self.stack.append(externalClose)
         self.stack.append(externalStore)
-
 
 
 if __name__ == '__main__':

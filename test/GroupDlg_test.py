@@ -1374,7 +1374,7 @@ class GroupDlgTest(unittest.TestCase):
         QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
 
         #        self.assertEqual(self.text,
-        #             "Remove attribute: %s = '%s'" % (aname, avalue))
+        #             "Remove attribute: %s = ' %s'" % (aname, avalue))
 
         self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
         self.assertEqual(

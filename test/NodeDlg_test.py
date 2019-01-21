@@ -734,7 +734,7 @@ class NodeDlgTest(unittest.TestCase):
 
         for i in range(vw.nkids):
             ks = di.internalPointer().child(i)
-#            print "N",i, ks.node.nodeName(), ks.node
+#            print "N", i, ks.node.nodeName(), ks.node
 
         for k in range(vw.nkids):
             if k == n:

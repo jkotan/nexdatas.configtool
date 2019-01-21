@@ -22,12 +22,10 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
 import binascii
 import time
-
 
 from PyQt5.QtWidgets import (QApplication)
 
@@ -40,6 +38,10 @@ app = None
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    unicode = str
+    long = int
+
 
 # test fixture
 class CommonDataSourceTest(unittest.TestCase):
@@ -48,8 +50,6 @@ class CommonDataSourceTest(unittest.TestCase):
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
-
-
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
@@ -61,16 +61,14 @@ class CommonDataSourceTest(unittest.TestCase):
         # action status
         self.performed = False
 
-
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256)
+            self.__seed = long(time.time() * 256)
 #        self.__seed =335783554629280825854815889576355181078
 #        self.__seed =56405821691954067238837069340540387163
 
         self.__rnd = random.Random(self.__seed)
-
 
     # test starter
     # \brief Common set up
@@ -78,14 +76,10 @@ class CommonDataSourceTest(unittest.TestCase):
         print("\nsetting up...")
         print("SEED = %s" % self.__seed)
 
-
-
     # test closer
     # \brief Common tear down
     def tearDown(self):
         print("tearing down ...")
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -120,11 +114,7 @@ class CommonDataSourceTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-
         self.assertEqual(cds.tree, False)
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -135,54 +125,54 @@ class CommonDataSourceTest(unittest.TestCase):
         nn = self.__rnd.randint(0, 10)
 
         dataSourceType = 'TANGO%s' % nn
-        dataSourceName = 'mot_01%s' %nn
-        doc = u'Documentation: motor %s' %nn
+        dataSourceName = 'mot_01%s' % nn
+        doc = u'Documentation: motor %s' % nn
 
-        clientRecordName = 'MyRecord%s' %nn
+        clientRecordName = 'MyRecord%s' % nn
 
-        tangoDeviceName = 'mydevice%s' %nn
-        tangoMemberName = 'position%s' %nn
-        tangoMemberType = 'attribute%s' %nn
-        tangoHost = 'haso.desy.de%s' %nn
-        tangoGroup = 'group%s' %nn
-        tangoPort = '100%s' %nn
-        tangoEncoding = 'UTF%s' %nn
+        tangoDeviceName = 'mydevice%s' % nn
+        tangoMemberName = 'position%s' % nn
+        tangoMemberType = 'attribute%s' % nn
+        tangoHost = 'haso.desy.de%s' % nn
+        tangoGroup = 'group%s' % nn
+        tangoPort = '100%s' % nn
+        tangoEncoding = 'UTF%s' % nn
 
-        dbType = 'ORACLE%s' %nn
-        dbDataFormat = 'SPECTRUM%s' %nn
-        dbQuery = "SELET name from device limit %s" %nn
+        dbType = 'ORACLE%s' % nn
+        dbDataFormat = 'SPECTRUM%s' % nn
+        dbQuery = "SELET name from device limit %s" % nn
         dbParameters = {}
         for i in range(nn):
-            dbParameters["param%s" % i] = "value%s" %i
+            dbParameters["param%s" % i] = "value%s" % i
 
-        peResult = "ds.result%s" %nn
-        peInput = "ds.source%s ds.source1%s ds.source2%s" %(nn, nn, nn)
+        peResult = "ds.result%s" % nn
+        peInput = "ds.source%s ds.source1%s ds.source2%s" % (nn, nn, nn)
         peScript = "import math\n ds.result= sin(ds.x)"
         peDataSources = {}
         for i in range(nn):
-            peDataSources["param%s" % i] = "<datasource%s/>" %i
+            peDataSources["param%s" % i] = "<datasource%s/>" % i
 
-        cds.setState((dataSourceType,
-                      doc,
-                      clientRecordName,
-                      tangoDeviceName,
-                      tangoMemberName,
-                      tangoMemberType,
-                      tangoHost,
-                      tangoPort,
-                      tangoEncoding,
-                      tangoGroup,
-                      dbType,
-                      dbDataFormat,
-                      dbQuery,
-                      dbParameters,
-                      peResult,
-                      peInput,
-                      peScript,
-                      peDataSources,
-                      dataSourceName
-                      ))
-
+        cds.setState(
+            (dataSourceType,
+             doc,
+             clientRecordName,
+             tangoDeviceName,
+             tangoMemberName,
+             tangoMemberType,
+             tangoHost,
+             tangoPort,
+             tangoEncoding,
+             tangoGroup,
+             dbType,
+             dbDataFormat,
+             dbQuery,
+             dbParameters,
+             peResult,
+             peInput,
+             peScript,
+             peDataSources,
+             dataSourceName)
+        )
 
         self.assertEqual(cds.dataSourceType, dataSourceType)
         self.assertEqual(cds.doc, doc)
@@ -206,7 +196,6 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.peInput, peInput)
         self.assertEqual(cds.peScript, peScript)
         self.assertEqual(cds.peDataSources, peDataSources)
-
 
         self.assertEqual(cds.externalSave, None)
         self.assertEqual(cds.externalStore, None)
@@ -217,14 +206,9 @@ class CommonDataSourceTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-
         self.assertEqual(cds.tree, False)
 
-
         state = cds.getState()
-
-
-
 
         self.assertEqual(cds.dataSourceType, dataSourceType)
         self.assertEqual(cds.doc, doc)
@@ -248,7 +232,6 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.peInput, peInput)
         self.assertEqual(cds.peScript, peScript)
         self.assertEqual(cds.peDataSources, peDataSources)
-
 
         self.assertEqual(cds.externalSave, None)
         self.assertEqual(cds.externalStore, None)
@@ -270,7 +253,6 @@ class CommonDataSourceTest(unittest.TestCase):
         cds.tree = True
 
         cds.clear()
-
 
         self.assertEqual(cds.dataSourceType, 'CLIENT')
         self.assertEqual(cds.doc, '')
@@ -304,11 +286,7 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.ids, nn)
         self.assertEqual(cds.tree, True)
 
-
         cds.setState(state)
-
-
-
 
         self.assertEqual(cds.dataSourceType, dataSourceType)
         self.assertEqual(cds.doc, doc)
@@ -341,7 +319,6 @@ class CommonDataSourceTest(unittest.TestCase):
         self.assertEqual(cds.applied, True)
         self.assertEqual(cds.ids, nn)
         self.assertEqual(cds.tree, True)
-
 
 
 if __name__ == '__main__':

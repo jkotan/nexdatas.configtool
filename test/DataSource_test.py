@@ -102,9 +102,9 @@ class DataSourceTest(unittest.TestCase):
 
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256)
+            self.__seed = long(time.time() * 256)
 #        self.__seed =335783554629280825854815889576355181078
 #        self.__seed =56405821691954067238837069340540387163
 
@@ -236,32 +236,32 @@ class DataSourceTest(unittest.TestCase):
         nn = self.__rnd.randint(0, 10)
 
         dataSourceType = 'TANGO%s' % nn
-        dataSourceName = 'mot_01%s' %nn
-        doc = u'Documentation: motor %s' %nn
+        dataSourceName = 'mot_01%s' % nn
+        doc = u'Documentation: motor %s' % nn
 
-        clientRecordName = 'MyRecord%s' %nn
+        clientRecordName = 'MyRecord%s' % nn
 
-        tangoDeviceName = 'mydevice%s' %nn
-        tangoMemberName = 'position%s' %nn
-        tangoMemberType = 'attribute%s' %nn
-        tangoHost = 'haso.desy.de%s' %nn
-        tangoGroup = 'group%s' %nn
-        tangoPort = '100%s' %nn
-        tangoEncoding = 'UTF%s' %nn
+        tangoDeviceName = 'mydevice%s' % nn
+        tangoMemberName = 'position%s' % nn
+        tangoMemberType = 'attribute%s' % nn
+        tangoHost = 'haso.desy.de%s' % nn
+        tangoGroup = 'group%s' % nn
+        tangoPort = '100%s' % nn
+        tangoEncoding = 'UTF%s' % nn
 
-        dbType = 'ORACLE%s' %nn
-        dbDataFormat = 'SPECTRUM%s' %nn
-        dbQuery = "SELET name from device limit %s" %nn
+        dbType = 'ORACLE%s' % nn
+        dbDataFormat = 'SPECTRUM%s' % nn
+        dbQuery = "SELET name from device limit %s" % nn
         dbParameters = {}
         for i in range(nn):
-            dbParameters["param%s" % i] = "value%s" %i
+            dbParameters["param%s" % i] = "value%s" % i
 
-        peResult = "ds.result%s" %nn
-        peInput = "ds.source%s ds.source1%s ds.source2%s" %(nn, nn, nn)
+        peResult = "ds.result%s" % nn
+        peInput = "ds.source%s ds.source1%s ds.source2%s" % (nn, nn, nn)
         peScript = "import math\n ds.result= sin(ds.x)"
         peDataSources = {}
         for i in range(nn):
-            peDataSources["param%s" % i] = "<datasource%s/>" %i
+            peDataSources["param%s" % i] = "<datasource%s/>" % i
 
         cds.setState((dataSourceType,
                       doc,
@@ -282,7 +282,7 @@ class DataSourceTest(unittest.TestCase):
                       peScript,
                       peDataSources,
                       dataSourceName
-                      ))
+                    ))
 
 
         self.assertEqual(cds.dataSourceType, dataSourceType)

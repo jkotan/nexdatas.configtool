@@ -71,9 +71,9 @@ class DimensionsDlgTest(unittest.TestCase):
         self.title = None
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256)
+            self.__seed = long(time.time() * 256)
 
         self.__rnd = random.Random(self.__seed)
 
@@ -162,9 +162,9 @@ class DimensionsDlgTest(unittest.TestCase):
 
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, [None]*rank)
-        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
-        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), rank)
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), "")
@@ -193,9 +193,9 @@ class DimensionsDlgTest(unittest.TestCase):
 
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
-        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), rank)
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), str(lengths[r]))
@@ -207,7 +207,7 @@ class DimensionsDlgTest(unittest.TestCase):
     def test_createGUI_rank_str_lengths_int(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        rank = str(self.__rnd.randint(0, 6) )
+        rank = str(self.__rnd.randint(0, 6))
         lengths = [str(self.__rnd.randint(1, 6)) for r in range(int(rank)) ]
         form = DimensionsDlg()
         form.rank = rank
@@ -283,9 +283,9 @@ class DimensionsDlgTest(unittest.TestCase):
 
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
-        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), rank)
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), str(lengths[r]))
@@ -314,9 +314,9 @@ class DimensionsDlgTest(unittest.TestCase):
 
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
-        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), rank)
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), str(lengths[r]))
@@ -345,9 +345,9 @@ class DimensionsDlgTest(unittest.TestCase):
 
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
-        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), rank)
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), '')
@@ -377,9 +377,9 @@ class DimensionsDlgTest(unittest.TestCase):
 
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
-        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), rank)
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), str(lengths[r]))
@@ -413,9 +413,9 @@ class DimensionsDlgTest(unittest.TestCase):
 
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, [None]*rank)
-        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
-        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), rank)
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), '')
@@ -441,9 +441,9 @@ class DimensionsDlgTest(unittest.TestCase):
 #        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
         form.ui.rankSpinBox.setValue(rank)
 
-        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
-        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), rank)
 
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
@@ -484,9 +484,9 @@ class DimensionsDlgTest(unittest.TestCase):
 #        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
         form.ui.rankSpinBox.setValue(rank)
 
-        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
-        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), rank)
 
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
@@ -524,9 +524,9 @@ class DimensionsDlgTest(unittest.TestCase):
 #        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
 
 
-        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
-        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), rank)
 
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
@@ -536,7 +536,7 @@ class DimensionsDlgTest(unittest.TestCase):
             form.ui.dimTableWidget.setCurrentCell(r, 0)
 #            QTest.keyClicks(form.ui.dimTableWidget, str(lengths[r]))
             it = QTableWidgetItem(unicode(lengths[r]))
-            form.ui.dimTableWidget.setItem(r, 0,it)
+            form.ui.dimTableWidget.setItem(r, 0, it)
 
 
 
@@ -571,9 +571,9 @@ class DimensionsDlgTest(unittest.TestCase):
 #        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
 
 
-        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
-        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), rank)
 
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
@@ -584,7 +584,7 @@ class DimensionsDlgTest(unittest.TestCase):
             QTimer.singleShot(10, self.checkMessageBox)
             form.ui.dimTableWidget.setCurrentCell(r, 0)
             it = QTableWidgetItem("blew")
-            form.ui.dimTableWidget.setItem(r, 0,it)
+            form.ui.dimTableWidget.setItem(r, 0, it)
             self.assertEqual(self.text, 'Wrong value of the edited length')
 
 
@@ -620,9 +620,9 @@ class DimensionsDlgTest(unittest.TestCase):
 #        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
 
 
-        self.assertEqual(form.ui.rankSpinBox.value(),rank)
+        self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
-        self.assertEqual(form.ui.dimTableWidget.rowCount(),rank)
+        self.assertEqual(form.ui.dimTableWidget.rowCount(), rank)
 
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
@@ -631,14 +631,14 @@ class DimensionsDlgTest(unittest.TestCase):
         for r in range(rank):
             form.ui.dimTableWidget.setCurrentCell(r, 0)
             it = QTableWidgetItem(unicode(lengths[r]))
-            form.ui.dimTableWidget.setItem(r, 0,it)
+            form.ui.dimTableWidget.setItem(r, 0, it)
 
         for r in range(rank):
             QTimer.singleShot(10, self.checkMessageBox)
             form.ui.dimTableWidget.setCurrentCell(r, 0)
 #            QTest.keyClicks(form.ui.dimTableWidget, str(lengths[r]))
             it = QTableWidgetItem("blew")
-            form.ui.dimTableWidget.setItem(r, 0,it)
+            form.ui.dimTableWidget.setItem(r, 0, it)
             self.assertEqual(self.text, 'Wrong value of the edited length')
 
         okWidget = form.ui.buttonBox.button(form.ui.buttonBox.Ok)

@@ -33,7 +33,7 @@ from PyQt5.QtWidgets import (
     #     QPushButton
 )
 # from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import (Qt, QTimer, )
+from PyQt5.QtCore import (Qt, QTimer,)
 # from PyQt5.QtXml import QDomNode, QDomDocument, QDomElement
 
 from nxsconfigtool.DataSourceDlg import CommonDataSourceDlg

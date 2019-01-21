@@ -22,18 +22,16 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
 import binascii
 import time
 
 from PyQt5.QtTest import QTest
-from PyQt5.QtWidgets import (QApplication, QMessageBox, QTableWidgetItem, QPushButton)
-from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import Qt, QTimer, QObject
-from PyQt5.QtXml import QDomNode, QDomDocument, QDomElement
-
+from PyQt5.QtWidgets import (QApplication, QMessageBox,
+                             QTableWidgetItem, QPushButton)
+from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtXml import QDomDocument
 
 from nxsconfigtool.DataSourceMethods import DataSourceMethods
 from nxsconfigtool.DataSourceDlg import DataSourceDlg, CommonDataSourceDlg
@@ -45,20 +43,23 @@ from nxsconfigtool.DimensionsDlg import DimensionsDlg
 
 # from nxsconfigtool.ui.ui_datasourcedlg import Ui_DataSourceDlg
 
-
 #  Qt-application
 app = None
 
+if sys.version_info > (3,):
+    unicode = str
+    long = int
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+
 class FocusedWidget():
     def __init__(self):
         self.focused = False
+
     def setFocus(self):
         self.focused = True
-
 
 
 class TestView(object):
@@ -103,6 +104,7 @@ class ClassVar(object):
         self.applied = False
         self.ids = None
 
+
 # test fixture
 class DataSourceMethodsTest(unittest.TestCase):
 
@@ -110,8 +112,6 @@ class DataSourceMethodsTest(unittest.TestCase):
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
-
-
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
@@ -135,21 +135,17 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.form = None
         self.cds = None
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256)
-
+            self.__seed = long(time.time() * 256)
 
         self.__rnd = random.Random(self.__seed)
-
-
 
     # test starter
     # \brief Common set up
     def setUp(self):
         print("\nsetting up...")
         print("SEED = %s" % self.__seed)
-
 
     # test closer
     # \brief Common tear down
@@ -169,9 +165,8 @@ class DataSourceMethodsTest(unittest.TestCase):
             error = True
         self.assertEqual(error, True)
 
-
     def rmParamWidget(self):
-        aw = QApplication.activeWindow()
+        # aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
         self.text = mb.text()
@@ -179,9 +174,8 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         QTest.mouseClick(mb.button(QMessageBox.Yes), Qt.LeftButton)
 
-
     def rmParamWidgetClose(self):
-        aw = QApplication.activeWindow()
+        # aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
         self.text = mb.text()
@@ -190,17 +184,16 @@ class DataSourceMethodsTest(unittest.TestCase):
         QTest.mouseClick(mb.button(QMessageBox.No), Qt.LeftButton)
 
     def checkMessageBox(self):
-#        self.assertEqual(QApplication.activeWindow(), None)
+        #        self.assertEqual(QApplication.activeWindow(), None)
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
-#        print mb.text()
+        #        print mb.text()
         self.text = mb.text()
         self.title = mb.windowTitle()
         mb.close()
 
-
     def messageWidget(self):
-        aw = QApplication.activeWindow()
+        # aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
         self.text = mb.text()
@@ -208,9 +201,8 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         QTest.mouseClick(mb.button(QMessageBox.Yes), Qt.LeftButton)
 
-
     def messageWidgetClose(self):
-        aw = QApplication.activeWindow()
+        # aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
         self.text = mb.text()
@@ -218,9 +210,8 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         QTest.mouseClick(mb.button(QMessageBox.No), Qt.LeftButton)
 
-
     def attributeWidget(self):
-        aw = QApplication.activeWindow()
+        # aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, AttributeDlg))
 
@@ -231,10 +222,8 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         mb.accept()
 
-
-
     def dimensionsWidget(self):
-        aw = QApplication.activeWindow()
+        # aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, DimensionsDlg))
         self.assertTrue(hasattr(mb, "ui"))
@@ -244,7 +233,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         for r in range(len(self.dimensions)):
             mb.ui.dimTableWidget.setCurrentCell(r, 0)
             it = QTableWidgetItem(unicode(self.dimensions[r]))
-            mb.ui.dimTableWidget.setItem(r, 0,it)
+            mb.ui.dimTableWidget.setItem(r, 0, it)
 
 #        QTest.keyClicks(mb.ui.nameLineEdit, self.aname)
 #        self.assertEqual(mb.ui.nameLineEdit.text(), self.aname)
@@ -253,9 +242,8 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         mb.accept()
 
-
     def attributeWidgetClose(self):
-        aw = QApplication.activeWindow()
+        # aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, AttributeDlg))
 
@@ -269,8 +257,6 @@ class DataSourceMethodsTest(unittest.TestCase):
 
 #        mb.accept()
 
-
-
     # constructor test
     # \brief It tests default settings
     def ttest_constructor(self):
@@ -278,13 +264,13 @@ class DataSourceMethodsTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         dsd = DataSourceDlg()
         ds = dsd.datasource
-        form = DataSourceMethods(dsd, ds)
+        # form =
+        DataSourceMethods(dsd, ds)
 
         ds = DataSource()
         dsd = ds.dialog
-        form = DataSourceMethods(dsd, ds)
-
-
+        # form =
+        DataSourceMethods(dsd, ds)
 
     # constructor test
     # \brief It tests default settings
@@ -303,15 +289,13 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertTrue(not form.ui.applyPushButton.isEnabled())
         self.assertTrue(form.ui.resetPushButton.isEnabled())
         name = "myname"
-        nType = "NXEntry"
+        # nType = "NXEntry"
         QTest.keyClicks(form.ui.nameLineEdit, name)
         self.assertEqual(form.ui.nameLineEdit.text(), name)
 
         self.assertTrue(not form.ui.nameLineEdit.text().isEmpty())
 
-
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
-
 
         self.assertEqual(form.result(), 0)
 
@@ -320,18 +304,14 @@ class DataSourceMethodsTest(unittest.TestCase):
         form.setSaveFocus()
         self.assertTrue(form.ui.savePushButton.focused)
 
-
-
     def check_cds(self, cds, params={}):
 
         cv = ClassVar()
         for key in params.keys():
             setattr(cv, key, params[key])
 
-
         self.assertEqual(cds.tree, cv.tree)
         self.assertEqual(cds.dataSourceName, cv.dataSourceName)
-
 
         self.assertEqual(cds.dataSourceType, cv.dataSourceType)
         self.assertEqual(cds.doc, cv.doc)
@@ -359,23 +339,21 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, cv.ids)
 
-
-
     def check_form(self, form, params={}):
 
         cv = ClassVar()
         for key in params.keys():
             setattr(cv, key, params[key])
 
-
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceDlg")
         self.assertEqual(form.ui.nameLineEdit.text(), cv.dataSourceName)
-        self.assertEqual(form.ui.docTextEdit.toPlainText(),cv.doc)
+        self.assertEqual(form.ui.docTextEdit.toPlainText(), cv.doc)
         self.assertEqual(form.ui.typeComboBox.currentIndex(),
                          form.ui.typeComboBox.findText(cv.dataSourceType))
         self.assertEqual(form.ui.cRecNameLineEdit.text(), cv.clientRecordName)
         self.assertEqual(form.ui.tDevNameLineEdit.text(), cv.tangoDeviceName)
-        self.assertEqual(form.ui.tMemberNameLineEdit.text(), cv.tangoMemberName)
+        self.assertEqual(
+            form.ui.tMemberNameLineEdit.text(), cv.tangoMemberName)
         self.assertEqual(form.ui.tHostLineEdit.text(), cv.tangoHost)
         self.assertEqual(form.ui.tPortLineEdit.text(), cv.tangoPort)
         self.assertEqual(form.ui.tEncodingLineEdit.text(), cv.tangoEncoding)
@@ -388,7 +366,8 @@ class DataSourceMethodsTest(unittest.TestCase):
                          form.ui.dParamComboBox.findText(cv.dbCurrentParam))
 
         self.assertEqual(form.ui.dParameterTableWidget.columnCount(), 2)
-        self.assertEqual(form.ui.dParameterTableWidget.rowCount(), len(cv.dbParameters))
+        self.assertEqual(form.ui.dParameterTableWidget.rowCount(),
+                         len(cv.dbParameters))
 
         for i in range(len(cv.dbParameters)):
             it = form.ui.dParameterTableWidget.item(i, 0)
@@ -398,12 +377,9 @@ class DataSourceMethodsTest(unittest.TestCase):
             self.assertEqual(it2.text(), cv.dbParameters[k])
             self.assertEqual(form.dbParam[k], cv.dbParameters[k])
 
-
-
-
-    def check_updateForm(self, meth, form, cds, func = "updateForm", inst = None, tree = False):
+    def check_updateForm(self, meth, form, cds, fun="updateForm",
+                         inst=None, tree=False):
         ins = inst if inst else meth
-
 
         self.assertEqual(cds.dataSourceType, 'CLIENT')
         self.assertEqual(cds.doc, '')
@@ -434,14 +410,12 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         self.assertEqual(cds.tree, False)
 
-
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceDlg")
 
         meth.createGUI()
         meth.treeMode(tree)
 
         self.assertEqual(cds.tree, tree)
-
 
         self.assertEqual(cds.dataSourceType, 'CLIENT')
         self.assertEqual(cds.doc, '')
@@ -470,173 +444,159 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-
         self.assertEqual(cds.tree, tree)
 
         self.check_form(form)
 
-
-
-
         n1 = self.__rnd.randint(1, 9)
 
         doc = "My document %s" % n1
-        dataSourceType = self.__rnd.choice(["CLIENT","TANGO","DB"])
+        dataSourceType = self.__rnd.choice(["CLIENT", "TANGO", "DB"])
         dataSourceName = "mydatasource%s" % n1
         clientRecordName = "Myname%s" % n1
         tangoDeviceName = "Mydevice %s" % n1
         tangoMemberName = "Mymemeber %s" % n1
-        tangoMemberType = self.__rnd.choice(["property","command","attribute"])
+        tangoMemberType = self.__rnd.choice(
+            ["property", "command", "attribute"])
         tangoHost = "haso.desy.de %s" % n1
         tangoPort = "1000%s" % n1
         tangoEncoding = "UTF%s" % n1
-        dbType = self.__rnd.choice(["MYSQL","ORACLE","PGSQL"])
-        dbDataFormat = self.__rnd.choice(["SCALAR","SPECTRUM","IMAGE"])
+        dbType = self.__rnd.choice(["MYSQL", "ORACLE", "PGSQL"])
+        dbDataFormat = self.__rnd.choice(["SCALAR", "SPECTRUM", "IMAGE"])
         dbQuery = "select name from device limit %s" % n1
-        dbParameters = {"DB name":"sdfsdf%s" % n1,
-                         "DB host":"werwer%s" % n1,
-                         "DB port":"werwer%s" % n1,
-                         "DB user":"werwer%s" % n1,
-                         "DB password":"werwer%s" % n1,
-                         "Mysql cnf":"werwer%s" % n1,
-                         "Oracle mode":"werwer%s" % n1,
-                         "Oracle DSN":"asdasdf%s" % n1}
+        dbParameters = {"DB name": "sdfsdf%s" % n1,
+                        "DB host": "werwer%s" % n1,
+                        "DB port": "werwer%s" % n1,
+                        "DB user": "werwer%s" % n1,
+                        "DB password": "werwer%s" % n1,
+                        "Mysql cnf": "werwer%s" % n1,
+                        "Oracle mode": "werwer%s" % n1,
+                        "Oracle DSN": "asdasdf%s" % n1}
 
-        dbParameters2 = {"DB name":"sdfsdf%s" % n1,
-                         "DB user":"werwer%s" % n1,
-                         "DB password":"werwer%s" % n1,
-                         "Oracle DSN":"asdasdf%s" % n1}
+        dbParameters2 = {"DB name": "sdfsdf%s" % n1,
+                         "DB user": "werwer%s" % n1,
+                         "DB password": "werwer%s" % n1,
+                         "Oracle DSN": "asdasdf%s" % n1}
 
+        # dbCurrentParam = self.__rnd.choice(dbParameters.keys())
 
-        dbCurrentParam = self.__rnd.choice(dbParameters.keys())
-
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
 
         cds.doc = doc
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"doc":doc})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"doc": doc})
         form.ui.docTextEdit.setText("")
         cds.doc = ''
 
         cds.dataSourceType = dataSourceType
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"dataSourceType":dataSourceType})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"dataSourceType": dataSourceType})
         index = form.ui.typeComboBox.findText('CLIENT')
         form.ui.typeComboBox.setCurrentIndex(index)
         cds.dataSourceType = 'CLIENT'
 
         cds.dataSourceName = dataSourceName
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"dataSourceName":dataSourceName})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"dataSourceName": dataSourceName})
         form.ui.nameLineEdit.setText("")
         cds.dataSourceName = ''
 
-
-
         cds.clientRecordName = clientRecordName
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"clientRecordName":clientRecordName})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"clientRecordName": clientRecordName})
         form.ui.cRecNameLineEdit.setText("")
         cds.clientRecordName = ''
 
-
-
         cds.tangoDeviceName = tangoDeviceName
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"tangoDeviceName":tangoDeviceName})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"tangoDeviceName": tangoDeviceName})
         form.ui.tDevNameLineEdit.setText("")
         cds.tangoDeviceName = ''
 
         cds.tangoMemberName = tangoMemberName
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"tangoMemberName":tangoMemberName})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"tangoMemberName": tangoMemberName})
         form.ui.tMemberNameLineEdit.setText("")
         cds.tangoMemberName = ''
 
         cds.tangoMemberType = tangoMemberType
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"tangoMemberType":tangoMemberType})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"tangoMemberType": tangoMemberType})
         index = form.ui.tMemberComboBox.findText('attribute')
         form.ui.tMemberComboBox.setCurrentIndex(index)
         cds.tangoMemberType = ''
 
-
         cds.tangoHost = tangoHost
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"tangoHost":tangoHost})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"tangoHost": tangoHost})
         form.ui.tHostLineEdit.setText("")
         cds.tangoHost = ''
 
         cds.tangoPort = tangoPort
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"tangoPort":tangoPort})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"tangoPort": tangoPort})
         form.ui.tPortLineEdit.setText("")
         cds.tangoPort = ''
 
         cds.tangoEncoding = tangoEncoding
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"tangoEncoding":tangoEncoding})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"tangoEncoding": tangoEncoding})
         form.ui.tEncodingLineEdit.setText("")
         cds.tangoEncoding = ''
 
-
-
-
         cds.dbType = dbType
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"dbType":dbType})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"dbType": dbType})
         index = form.ui.dTypeComboBox.findText('MYSQL')
         form.ui.dTypeComboBox.setCurrentIndex(index)
         cds.dbType = ''
 
         cds.dbDataFormat = dbDataFormat
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"dbDataFormat":dbDataFormat})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"dbDataFormat": dbDataFormat})
         index = form.ui.dFormatComboBox.findText('SCALAR')
         form.ui.dFormatComboBox.setCurrentIndex(index)
         cds.dbDataFormat = ''
 
         cds.dbQuery = dbQuery
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"dbQuery":dbQuery})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"dbQuery": dbQuery})
         form.ui.dQueryLineEdit.setText("")
         cds.dbQuery = ''
 
         cds.dbParameters = dict(dbParameters)
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"dbParameters":dbParameters})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"dbParameters": dbParameters})
         while form.ui.dParameterTableWidget.rowCount():
             form.ui.dParameterTableWidget.removeRow(0)
         form.ui.dParameterTableWidget.clear()
         cds.dbParameters = {}
-        form.dbParam ={}
-
+        form.dbParam = {}
 
         cds.dbParameters = dict(dbParameters2)
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
-        self.check_form(form, {"dbParameters":dbParameters2})
+        self.assertEqual(getattr(ins, "func")(), None)
+        self.check_form(form, {"dbParameters": dbParameters2})
         while form.ui.dParameterTableWidget.rowCount():
             form.ui.dParameterTableWidget.removeRow(0)
         form.ui.dParameterTableWidget.clear()
         cds.dbParameters = {}
-        form.dbParam ={}
-
+        form.dbParam = {}
 
         cds.doc = doc
         cds.dataSourceType = dataSourceType
@@ -653,38 +613,30 @@ class DataSourceMethodsTest(unittest.TestCase):
         cds.dbQuery = dbQuery
         cds.dbParameters = dict(dbParameters)
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form, {
-                "doc":doc,
-                "dataSourceType":dataSourceType,
-                "dataSourceName":dataSourceName,
-                "clientRecordName":clientRecordName,
-                "tangoDeviceName":tangoDeviceName,
-                "tangoMemberName":tangoMemberName,
-                "tangoMemberType":tangoMemberType,
-                "tangoHost":tangoHost,
-                "tangoPort":tangoPort,
-                "tangoEncoding":tangoEncoding,
-                "dbType":dbType,
-                "dbDataFormat":dbDataFormat,
-                "dbQuery":dbQuery,
-                "dbParameters":dbParameters})
-
-
-
+                "doc": doc,
+                "dataSourceType": dataSourceType,
+                "dataSourceName": dataSourceName,
+                "clientRecordName": clientRecordName,
+                "tangoDeviceName": tangoDeviceName,
+                "tangoMemberName": tangoMemberName,
+                "tangoMemberType": tangoMemberType,
+                "tangoHost": tangoHost,
+                "tangoPort": tangoPort,
+                "tangoEncoding": tangoEncoding,
+                "dbType": dbType,
+                "dbDataFormat": dbDataFormat,
+                "dbQuery": dbQuery,
+                "dbParameters": dbParameters})
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
-
         self.assertEqual(form.result(), 0)
 
-
-
-
-
-    def check_updateForm_no(self, meth, form, cds, func = "updateForm", inst = None, tree = False):
+    def check_updateForm_no(self, meth, form, cds,
+                            func="updateForm", inst=None, tree=False):
         ins = inst if inst else meth
-
 
         self.assertEqual(cds.dataSourceType, 'CLIENT')
         self.assertEqual(cds.doc, '')
@@ -715,13 +667,11 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         self.assertEqual(cds.tree, False)
 
-
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceDlg))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceDlg")
 
         meth.createGUI()
         meth.treeMode(tree)
         self.assertEqual(cds.tree, tree)
-
 
         self.assertEqual(cds.dataSourceType, 'CLIENT')
         self.assertEqual(cds.doc, '')
@@ -750,59 +700,56 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-
         self.assertEqual(cds.tree, tree)
 
         self.check_form(form)
 
-
-
-
         n1 = self.__rnd.randint(1, 9)
 
         doc = "My document %s" % n1
-        dataSourceType = self.__rnd.choice(["CLIENT","TANGO","DB"])
+        dataSourceType = self.__rnd.choice(
+            ["CLIENT", "TANGO", "DB"])
         dataSourceName = "mydatasource%s" % n1
         clientRecordName = "Myname%s" % n1
         tangoDeviceName = "Mydevice %s" % n1
         tangoMemberName = "Mymemeber %s" % n1
-        tangoMemberType = self.__rnd.choice(["property","command","attribute"])
+        tangoMemberType = self.__rnd.choice(
+            ["property", "command", "attribute"])
         tangoHost = "haso.desy.de %s" % n1
         tangoPort = "1000%s" % n1
         tangoEncoding = "UTF%s" % n1
-        dbType = self.__rnd.choice(["MYSQL","ORACLE","PGSQL"])
-        dbDataFormat = self.__rnd.choice(["SCALAR","SPECTRUM","IMAGE"])
+        dbType = self.__rnd.choice(["MYSQL", "ORACLE", "PGSQL"])
+        dbDataFormat = self.__rnd.choice(["SCALAR", "SPECTRUM", "IMAGE"])
         dbQuery = "select name from device limit %s" % n1
-        dbParameters = {"DB name":"sdfsdf%s" % n1,
-                         "DB host":"werwer%s" % n1,
-                         "DB port":"werwer%s" % n1,
-                         "DB user":"werwer%s" % n1,
-                         "DB password":"werwer%s" % n1,
-                         "Mysql cnf":"werwer%s" % n1,
-                         "Oracle mode":"werwer%s" % n1,
-                         "Oracle DSN":"asdasdf%s" % n1}
+        dbParameters = {"DB name": "sdfsdf%s" % n1,
+                        "DB host": "werwer%s" % n1,
+                        "DB port": "werwer%s" % n1,
+                        "DB user": "werwer%s" % n1,
+                        "DB password": "werwer%s" % n1,
+                        "Mysql cnf": "werwer%s" % n1,
+                        "Oracle mode": "werwer%s" % n1,
+                        "Oracle DSN": "asdasdf%s" % n1}
 
-        dbParameters2 = {"DB name":"sdfsdf%s" % n1,
-                         "DB user":"werwer%s" % n1,
-                         "DB password":"werwer%s" % n1,
-                         "Oracle DSN":"asdasdf%s" % n1}
+        dbParameters2 = {"DB name": "sdfsdf%s" % n1,
+                         "DB user": "werwer%s" % n1,
+                         "DB password": "werwer%s" % n1,
+                         "Oracle DSN": "asdasdf%s" % n1}
 
+        # dbCurrentParam = self.__rnd.choice(list(dbParameters.keys()))
 
-        dbCurrentParam = self.__rnd.choice(dbParameters.keys())
-
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
 
         cds.doc = doc
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         form.ui.docTextEdit.setText("")
         cds.doc = ''
 
         cds.dataSourceType = dataSourceType
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         index = form.ui.typeComboBox.findText('CLIENT')
         form.ui.typeComboBox.setCurrentIndex(index)
@@ -810,72 +757,64 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dataSourceName = dataSourceName
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         form.ui.nameLineEdit.setText("")
         cds.dataSourceName = ''
 
-
-
         cds.clientRecordName = clientRecordName
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         form.ui.cRecNameLineEdit.setText("")
         cds.clientRecordName = ''
 
-
-
         cds.tangoDeviceName = tangoDeviceName
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         form.ui.tDevNameLineEdit.setText("")
         cds.tangoDeviceName = ''
 
         cds.tangoMemberName = tangoMemberName
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         form.ui.tMemberNameLineEdit.setText("")
         cds.tangoMemberName = ''
 
         cds.tangoMemberType = tangoMemberType
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         index = form.ui.tMemberComboBox.findText('attribute')
         form.ui.tMemberComboBox.setCurrentIndex(index)
         cds.tangoMemberType = ''
 
-
         cds.tangoHost = tangoHost
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         form.ui.tHostLineEdit.setText("")
         cds.tangoHost = ''
 
         cds.tangoPort = tangoPort
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         form.ui.tPortLineEdit.setText("")
         cds.tangoPort = ''
 
         cds.tangoEncoding = tangoEncoding
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         form.ui.tEncodingLineEdit.setText("")
         cds.tangoEncoding = ''
 
-
-
-
         cds.dbType = dbType
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         index = form.ui.dTypeComboBox.findText('MYSQL')
         form.ui.dTypeComboBox.setCurrentIndex(index)
@@ -883,7 +822,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dbDataFormat = dbDataFormat
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         index = form.ui.dFormatComboBox.findText('SCALAR')
         form.ui.dFormatComboBox.setCurrentIndex(index)
@@ -891,31 +830,29 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         cds.dbQuery = dbQuery
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         form.ui.dQueryLineEdit.setText("")
         cds.dbQuery = ''
 
         cds.dbParameters = dict(dbParameters)
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         while form.ui.dParameterTableWidget.rowCount():
             form.ui.dParameterTableWidget.removeRow(0)
         form.ui.dParameterTableWidget.clear()
         cds.dbParameters = {}
-        form.dbParam ={}
-
+        form.dbParam = {}
 
         cds.dbParameters = dict(dbParameters2)
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
         while form.ui.dParameterTableWidget.rowCount():
             form.ui.dParameterTableWidget.removeRow(0)
         form.ui.dParameterTableWidget.clear()
         cds.dbParameters = {}
-        form.dbParam ={}
-
+        form.dbParam = {}
 
         cds.doc = doc
         cds.dataSourceType = dataSourceType
@@ -932,17 +869,12 @@ class DataSourceMethodsTest(unittest.TestCase):
         cds.dbQuery = dbQuery
         cds.dbParameters = dict(dbParameters)
         self.check_form(form)
-        self.assertEqual(getattr(ins, func)(), None)
+        self.assertEqual(getattr(ins, "func")(), None)
         self.check_form(form)
-
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
 
-
         self.assertEqual(form.result(), 0)
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -952,7 +884,6 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         meth = DataSourceMethods(None, None)
         self.myAssertRaise(Exception, meth.updateForm)
-
 
         form = CommonDataSourceDlg(None)
         cds = None
@@ -967,27 +898,21 @@ class DataSourceMethodsTest(unittest.TestCase):
         form = DataSourceDlg()
         cds = form.datasource
 
-
-
     # constructor test
     # \brief It tests default settings
     def ttest_updateForm(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         form = DataSourceDlg()
         cds = form.datasource
         meth = DataSourceMethods(form, cds)
         self.check_updateForm(meth, form, cds)
 
-
         cds = DataSource()
         form = cds.dialog
         meth = DataSourceMethods(form, cds)
         self.check_updateForm(meth, form, cds)
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -995,24 +920,19 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         form = DataSourceDlg()
         cds = form.datasource
         meth = DataSourceMethods(form, cds)
         self.check_updateForm(meth, form, cds, "reset")
-
 
         cds = DataSource()
         form = cds.dialog
         meth = DataSourceMethods(form, cds)
         self.check_updateForm(meth, form, cds, "reset")
 
-
-
     def message_and_close(self):
         QTimer.singleShot(10, self.messageWidget)
         self.meth.close()
-
 
     def messageno_and_close(self):
         QTimer.singleShot(10, self.messageWidgetClose)
@@ -1024,19 +944,15 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         form = DataSourceDlg()
         cds = form.datasource
         self.meth = DataSourceMethods(form, cds)
         self.check_updateForm(self.meth, form, cds, "message_and_close", self)
 
-
         cds = DataSource()
         form = cds.dialog
         self.meth = DataSourceMethods(form, cds)
         self.check_updateForm(self.meth, form, cds, "message_and_close", self)
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -1044,24 +960,20 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         form = DataSourceDlg()
         cds = form.datasource
         self.meth = DataSourceMethods(form, cds)
-        self.check_updateForm(self.meth, form, cds, "message_and_close", self, True)
-
+        self.check_updateForm(
+            self.meth, form, cds, "message_and_close", self, True)
 
         cds = DataSource()
         form = cds.dialog
         self.meth = DataSourceMethods(form, cds)
-        self.check_updateForm(self.meth, form, cds, "message_and_close", self, True)
-
-
+        self.check_updateForm(
+            self.meth, form, cds, "message_and_close", self, True)
 
     def message_and_reset(self):
         QTest.mouseClick(self.form.ui.resetPushButton, Qt.LeftButton)
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -1072,14 +984,14 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.cds = DataSource()
         self.form = self.cds.dialog
         self.meth = DataSourceMethods(self.form, self.cds)
-        self.check_updateForm(self.meth, self.form, self.cds, "message_and_reset", self)
-
+        self.check_updateForm(
+            self.meth, self.form, self.cds, "message_and_reset", self)
 
         form = DataSourceDlg()
         self.cds = form.datasource
         self.meth = DataSourceMethods(self.form, self.cds)
-        self.check_updateForm(self.meth, self.form, self.cds, "message_and_reset", self)
-
+        self.check_updateForm(
+            self.meth, self.form, self.cds, "message_and_reset", self)
 
     # constructor test
     # \brief It tests default settings
@@ -1090,16 +1002,14 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.cds = DataSource()
         self.form = self.cds.dialog
         self.meth = DataSourceMethods(self.form, self.cds)
-        self.check_updateForm(self.meth, self.form, self.cds, "message_and_reset", self, True)
-
+        self.check_updateForm(
+            self.meth, self.form, self.cds, "message_and_reset", self, True)
 
         form = DataSourceDlg()
         self.cds = form.datasource
         self.meth = DataSourceMethods(self.form, self.cds)
-        self.check_updateForm(self.meth, self.form, self.cds, "message_and_reset", self, True)
-
-
-
+        self.check_updateForm(
+            self.meth, self.form, self.cds, "message_and_reset", self, True)
 
     # constructor test
     # \brief It tests default settings
@@ -1107,18 +1017,17 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         form = DataSourceDlg()
         cds = form.datasource
         self.meth = DataSourceMethods(form, cds)
-        self.check_updateForm_no(self.meth, form, cds, "messageno_and_close", self)
-
+        self.check_updateForm_no(
+            self.meth, form, cds, "messageno_and_close", self)
 
         cds = DataSource()
         form = cds.dialog
         self.meth = DataSourceMethods(form, cds)
-        self.check_updateForm_no(self.meth, form, cds, "messageno_and_close", self)
-
+        self.check_updateForm_no(
+            self.meth, form, cds, "messageno_and_close", self)
 
     # constructor test
     # \brief It tests default settings
@@ -1126,19 +1035,17 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         form = DataSourceDlg()
         cds = form.datasource
         self.meth = DataSourceMethods(form, cds)
-        self.check_updateForm_no(self.meth, form, cds, "messageno_and_close", self, True)
-
+        self.check_updateForm_no(self.meth, form, cds,
+                                 "messageno_and_close", self, True)
 
         cds = DataSource()
         form = cds.dialog
         self.meth = DataSourceMethods(form, cds)
-        self.check_updateForm_no(self.meth, form, cds, "messageno_and_close", self, True)
-
-
+        self.check_updateForm_no(self.meth, form, cds,
+                                 "messageno_and_close", self, True)
 
     # constructor test
     # \brief It tests default settings
@@ -1149,7 +1056,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         meth = DataSourceMethods(None, None)
         self.myAssertRaise(Exception, meth.treeMode)
 
-
         form = CommonDataSourceDlg(None)
         cds = None
         meth = DataSourceMethods(form, cds)
@@ -1182,7 +1088,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(cds.tree, True)
         self.assertEqual(form.ui.closeSaveFrame.isVisible(), False)
 
-
         cds = DataSource()
         form = cds.dialog
         meth = DataSourceMethods(form, cds)
@@ -1199,12 +1104,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         meth.treeMode(True)
         self.assertEqual(cds.tree, True)
         self.assertEqual(form.ui.closeSaveFrame.isVisible(), False)
-
-
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -1215,7 +1114,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         meth = DataSourceMethods(None, None)
         self.myAssertRaise(Exception, meth.updateForm)
 
-
         form = CommonDataSourceDlg(None)
         cds = None
         meth = DataSourceMethods(form, cds)
@@ -1226,26 +1124,21 @@ class DataSourceMethodsTest(unittest.TestCase):
         meth = DataSourceMethods(form, cds)
         self.myAssertRaise(Exception, meth.createGUI)
 
-
-
     # constructor test
     # \brief It tests default settings
     def ttest_createGUI_updateForm(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         form = DataSourceDlg()
         cds = form.datasource
         meth = DataSourceMethods(form, cds)
         self.check_updateForm(meth, form, cds, "createGUI")
 
-
         cds = DataSource()
         form = cds.dialog
         meth = DataSourceMethods(form, cds)
         self.check_updateForm(meth, form, cds, "createGUI")
-
 
     # constructor test
     # \brief It tests default settings
@@ -1253,19 +1146,15 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         form = DataSourceDlg()
         cds = form.datasource
         meth = DataSourceMethods(form, cds)
         self.check_updateForm(meth, form, cds, "createGUI", None, True)
 
-
         cds = DataSource()
         form = cds.dialog
         meth = DataSourceMethods(form, cds)
         self.check_updateForm(meth, form, cds, "createGUI", None, True)
-
-
 
     def enableButtons(self):
         self.assertTrue(self.form.ui.savePushButton.isEnabled())
@@ -1282,12 +1171,10 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertTrue(not self.form.ui.dbFrame.isVisible())
         self.assertTrue(not self.form.ui.tangoFrame.isVisible())
 
-
     def dbVisible(self):
         self.assertTrue(not self.form.ui.clientFrame.isVisible())
         self.assertTrue(self.form.ui.dbFrame.isVisible())
         self.assertTrue(not self.form.ui.tangoFrame.isVisible())
-
 
     def tangoVisible(self):
         self.assertTrue(not self.form.ui.clientFrame.isVisible())
@@ -1299,30 +1186,23 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertTrue(not self.form.ui.dbFrame.isVisible())
         self.assertTrue(not self.form.ui.tangoFrame.isVisible())
 
-
-
-
     # constructor test
     # \brief It tests default settings
     def ttest_createGUI_setFrames(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         self.form = DataSourceDlg()
         cds = self.form.datasource
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_setFrames(cds)
-
 
         cds = DataSource()
         self.form = cds.dialog
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_setFrames(cds)
 
-
-
-    def checkParam(self, param, table, sel = None):
+    def checkParam(self, param, table, sel=None):
 
         self.assertEqual(table.columnCount(), 2)
         self.assertEqual(table.rowCount(), len(param))
@@ -1337,13 +1217,10 @@ class DataSourceMethodsTest(unittest.TestCase):
             item = table.item(table.currentRow(), 0)
             self.assertEqual(item.data(Qt.UserRole), sel)
 
-
     # constructor test
     # \brief It tests default settings
     def check_createGUI_setFrames(self, cds):
-        parent = None
-
-
+        # parent = None
 
         cds.dataSourceType = ""
         self.meth.createGUI()
@@ -1351,76 +1228,62 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.disableButtons()
         self.clientVisible()
 
-
         cds.dataSourceType = "CLIENT"
         self.meth.createGUI()
         self.form.show()
         self.clientVisible()
         self.disableButtons()
 
-        cds.clientRecordName =""
+        cds.clientRecordName = ""
         cds.dataSourceType = "CLIENT"
         self.meth.createGUI()
         self.form.show()
         self.clientVisible()
         self.disableButtons()
 
-        cds.clientRecordName ="name"
+        cds.clientRecordName = "name"
         cds.dataSourceType = "CLIENT"
         self.meth.createGUI()
         self.form.show()
         self.clientVisible()
         self.enableButtons()
 
-
-
-
-
-
-        cds.dbQuery =""
+        cds.dbQuery = ""
         cds.dataSourceType = "DB"
         self.meth.createGUI()
         self.form.show()
         self.dbVisible()
         self.disableButtons()
 
-
-        cds.dbQuery ="name"
+        cds.dbQuery = "name"
         cds.dataSourceType = "DB"
         self.meth.createGUI()
         self.form.show()
         self.dbVisible()
         self.enableButtons()
 
+        myParam = {"DB name": "sdfsdf",
+                   "DB host": "werwer",
+                   "DB port": "werwer",
+                   "DB user": "werwer",
+                   "DB password": "werwer",
+                   "Mysql cnf": "werwer",
+                   "Oracle mode": "werwer",
+                   "Oracle DSN": "asdasdf"}
 
-
-        myParam = {"DB name":"sdfsdf",
-                   "DB host":"werwer",
-                   "DB port":"werwer",
-                   "DB user":"werwer",
-                   "DB password":"werwer",
-                   "Mysql cnf":"werwer",
-                   "Oracle mode":"werwer",
-                   "Oracle DSN":"asdasdf"}
-
-
-
-
-        cds.dbQuery ="name"
-        na = self.__rnd.randint(0, len(myParam)-1)
-        sel = myParam.keys()[na]
+        cds.dbQuery = "name"
+        # na = self.__rnd.randint(0, len(myParam) - 1)
+        # sel = list(myParam.keys())[na]
         cds.dbParameters = dict(myParam)
 
         cds.dataSourceType = "DB"
         self.meth.createGUI()
         self.form.show()
-        self.assertEqual(self.form.dbParam,myParam)
-        self.assertEqual(cds.dbParameters,myParam)
+        self.assertEqual(self.form.dbParam, myParam)
+        self.assertEqual(cds.dbParameters, myParam)
         self.dbVisible()
         self.enableButtons()
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
-
-
 
         cds.dataSourceType = "TANGO"
         cds.tangoDeviceName = ""
@@ -1428,7 +1291,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.form.show()
         self.tangoVisible()
         self.disableButtons()
-
 
         cds.tangoDeviceName = "name"
         cds.dataSourceType = "TANGO"
@@ -1451,29 +1313,21 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.tangoVisible()
         self.disableButtons()
 
-
-
-
-
     # constructor test
     # \brief It tests default settings
     def ttest_createGUI_setFrames_signal(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         self.form = DataSourceDlg()
         cds = self.form.datasource
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_setFrames_signal(cds)
 
-
         cds = DataSource()
         self.form = cds.dialog
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_setFrames_signal(cds)
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -1483,114 +1337,109 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         self.form.show()
 
+        self.disableButtons()
+        self.clientVisible()
+
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("CLIENT"))
 
         self.disableButtons()
         self.clientVisible()
 
-
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
-
-        self.disableButtons()
-        self.clientVisible()
-
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("DB"))
 
         self.disableButtons()
         self.dbVisible()
 
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
-
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("TANGO"))
 
         self.disableButtons()
         self.tangoVisible()
 
         self.form.connectWidgets()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
-
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
 
         self.enableButtons()
         self.tangoVisible()
 
-
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("CLIENT"))
         self.clientVisible()
         self.disableButtons()
 
         self.form.ui.cRecNameLineEdit.setText("")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("CLIENT"))
         self.clientVisible()
         self.disableButtons()
 
         self.form.ui.cRecNameLineEdit.setText("name")
 
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("CLIENT"))
         self.clientVisible()
         self.enableButtons()
 
-
-
-
-
-
         self.form.ui.dQueryLineEdit.setText("")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("DB"))
         self.dbVisible()
         self.disableButtons()
 
-
         self.form.ui.dQueryLineEdit.setText("name")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("DB"))
         self.dbVisible()
         self.enableButtons()
 
-
-        myParam = {"DB name":"sdfsdf",
-                   "DB host":"werwer",
-                   "DB port":"werwer",
-                   "DB user":"werwer",
-                   "DB password":"werwer",
-                   "Mysql cnf":"werwer",
-                   "Oracle mode":"werwer",
-                   "Oracle DSN":"asdasdf"}
-
-
-
+        myParam = {"DB name": "sdfsdf",
+                   "DB host": "werwer",
+                   "DB port": "werwer",
+                   "DB user": "werwer",
+                   "DB password": "werwer",
+                   "Mysql cnf": "werwer",
+                   "Oracle mode": "werwer",
+                   "Oracle DSN": "asdasdf"}
 
         self.form.ui.dQueryLineEdit.setText("name")
         na = self.__rnd.randint(0, len(myParam)-1)
         sel = myParam.keys()[na]
         self.form.dbParam = myParam
         self.form.populateParameters(sel)
-        self.assertEqual(self.form.dbParam,myParam)
+        self.assertEqual(self.form.dbParam, myParam)
 
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
-        self.assertEqual(self.form.dbParam,myParam)
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("DB"))
+        self.assertEqual(self.form.dbParam, myParam)
         self.dbVisible()
         self.enableButtons()
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
 
-
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("TANGO"))
         self.tangoVisible()
         self.disableButtons()
 
-
         self.form.ui.tDevNameLineEdit.setText("name")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("TANGO"))
         self.tangoVisible()
         self.disableButtons()
 
         self.form.ui.tMemberNameLineEdit.setText("name")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("TANGO"))
         self.tangoVisible()
         self.enableButtons()
 
         self.form.ui.tDevNameLineEdit.setText("")
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("TANGO"))
         self.tangoVisible()
         self.disableButtons()
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -1598,22 +1447,15 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         self.form = DataSourceDlg()
         cds = self.form.datasource
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_cRecNameLineEdit_signal(cds)
 
-
         cds = DataSource()
         self.form = cds.dialog
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_cRecNameLineEdit_signal(cds)
-
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -1622,27 +1464,24 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth.createGUI()
         self.form.show()
 
-
         self.disableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.cRecNameLineEdit.setText("")
         self.enableButtons()
 
         self.form.connectWidgets()
 
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("CLIENT"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("CLIENT"))
         self.form.ui.cRecNameLineEdit.setText("")
         self.disableButtons()
 
         self.form.ui.cRecNameLineEdit.setText("name")
         self.enableButtons()
 
-
         self.form.ui.cRecNameLineEdit.setText("")
         self.disableButtons()
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -1650,49 +1489,41 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         self.form = DataSourceDlg()
         cds = self.form.datasource
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_dQueryLineEdit_signal(cds)
-
 
         cds = DataSource()
         self.form = cds.dialog
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_dQueryLineEdit_signal(cds)
 
-
-
-
-
     # constructor test
     # \brief It tests default settings
     def check_createGUI_dQueryLineEdit_signal(self, cds):
-
-
 
         self.meth.createGUI()
         self.form.show()
 
         self.disableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.dQueryLineEdit.setText("")
         self.enableButtons()
 
         self.form.connectWidgets()
 
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("DB"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("DB"))
         self.form.ui.dQueryLineEdit.setText("")
         self.disableButtons()
 
         self.form.ui.dQueryLineEdit.setText("name")
         self.enableButtons()
 
-
         self.form.ui.dQueryLineEdit.setText("")
         self.disableButtons()
-
 
     # constructor test
     # \brief It tests default settings
@@ -1700,22 +1531,15 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         self.form = DataSourceDlg()
         cds = self.form.datasource
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_tDevNameLineEdit_tMemberNameLineEdit_signal(cds)
 
-
         cds = DataSource()
         self.form = cds.dialog
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_tDevNameLineEdit_tMemberNameLineEdit_signal(cds)
-
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -1724,17 +1548,19 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.form.show()
 
         self.disableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.tDevNameLineEdit.setText("")
         self.enableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.tMemberNameLineEdit.setText("")
         self.enableButtons()
 
-
         self.form.connectWidgets()
 
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText("TANGO"))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText("TANGO"))
         self.form.ui.tDevNameLineEdit.setText("")
         self.disableButtons()
 
@@ -1744,20 +1570,17 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.form.ui.tMemberNameLineEdit.setText("name2")
         self.enableButtons()
 
-
         self.form.ui.tDevNameLineEdit.setText("")
         self.disableButtons()
 
         self.form.ui.tMemberNameLineEdit.setText("name2")
         self.disableButtons()
 
-
         self.form.ui.tMemberNameLineEdit.setText("name2")
         self.disableButtons()
 
         self.form.ui.tDevNameLineEdit.setText("name")
         self.enableButtons()
-
 
     # constructor test
     # \brief It tests default settings
@@ -1765,32 +1588,25 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         self.form = DataSourceDlg()
         cds = self.form.datasource
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_populateParameters(cds)
-
 
         cds = DataSource()
         self.form = cds.dialog
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_populateParameters(cds)
 
-
-
-
-
-
-
     # constructor test
     # \brief It tests default settings
-    def check_createGUI_populateParameters(self ,cds):
+    def check_createGUI_populateParameters(self, cds):
         self.meth.createGUI()
         self.form.show()
 
         self.disableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.dQueryLineEdit.setText("")
         self.enableButtons()
 
@@ -1801,47 +1617,38 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.form.populateParameters()
         self.checkParam(myParam, self.form.ui.dParameterTableWidget)
 
-
-        myParam = {"user":"sdfsdf","sdfsd":"werwer", "asdas":"asdasdf"}
+        myParam = {"user": "sdfsdf", "sdfsd": "werwer", "asdas": "asdasdf"}
         self.form.dbParam = myParam
         self.form.populateParameters()
         self.checkParam(myParam, self.form.ui.dParameterTableWidget)
 
-
-        myParam = {"user":"sdfsdf","sdfsd":"werwer", "asdas":"asdasdf"}
+        myParam = {"user": "sdfsdf", "sdfsd": "werwer", "asdas": "asdasdf"}
         na = self.__rnd.randint(0, len(myParam)-1)
         sel = myParam.keys()[na]
         self.form.dbParam = myParam
         self.form.populateParameters(sel)
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
 
-
-        myParam = {"DB name":"sdfsdf",
-                   "DB host":"werwer",
-                   "DB port":"werwer",
-                   "DB user":"werwer",
-                   "DB password":"werwer",
-                   "Mysql cnf":"werwer",
-                   "Oracle mode":"wwer",
-                   "Oracle DSN":"asdasdf"}
+        myParam = {"DB name": "sdfsdf",
+                   "DB host": "werwer",
+                   "DB port": "werwer",
+                   "DB user": "werwer",
+                   "DB password": "werwer",
+                   "Mysql cnf": "werwer",
+                   "Oracle mode": "wwer",
+                   "Oracle DSN": "asdasdf"}
 
         na = self.__rnd.randint(0, len(myParam)-1)
         sel = myParam.keys()[na]
         self.form.dbParam = myParam
         self.form.populateParameters(sel)
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
-
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
     def ttest_createGUI_populateParameters_addremoveParamter(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -1853,8 +1660,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_populateParameters_addremoveParamter(cds)
 
-
-
     # constructor test
     # \brief It tests default settings
     def check_createGUI_populateParameters_addremoveParamter(self, cds):
@@ -1862,22 +1667,22 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.form.show()
 
         self.disableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.dQueryLineEdit.setText("")
         self.enableButtons()
 
         self.form.connectWidgets()
 
-
         myParam = {
-#            "DB name":"sdfsdf",
-            "DB host":"wer",
-            "DB port":"wwer",
-            "DB user":"erwer",
-            "DB password":"weer",
-            "Mysql cnf":"weer",
-            "Oracle mode":"wwer",
-            "Oracle DSN":"aasdf"}
+            # "DB name": "sdfsdf",
+            "DB host": "wer",
+            "DB port": "wwer",
+            "DB user": "erwer",
+            "DB password": "weer",
+            "Mysql cnf": "weer",
+            "Oracle mode": "wwer",
+            "Oracle DSN": "aasdf"}
 
         na = self.__rnd.randint(0, len(myParam)-1)
         sel = myParam.keys()[na]
@@ -1885,35 +1690,30 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.form.populateParameters(sel)
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, sel)
 
-
         QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
 
         table = self.form.ui.dParameterTableWidget
 
         item = table.item(table.currentRow(), 0)
-        self.checkParam(dict(myParam,**{"DB name":""}),
-                        self.form.ui.dParameterTableWidget, item.data(Qt.UserRole))
-        self.checkParam(dict(myParam,**{"DB name":""}),
+        self.checkParam(dict(myParam, **{"DB name": ""}),
+                        self.form.ui.dParameterTableWidget,
+                        item.data(Qt.UserRole))
+        self.checkParam(dict(myParam, **{"DB name": ""}),
                         self.form.ui.dParameterTableWidget, "DB name")
-        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":""}))
+        self.assertEqual(self.form.dbParam, dict(myParam, **{"DB name": ""}))
 
         QTimer.singleShot(10, self.rmParamWidgetClose)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
 
-        self.checkParam(dict(myParam,**{"DB name":""}),
+        self.checkParam(dict(myParam, **{"DB name": ""}),
                         self.form.ui.dParameterTableWidget, "DB name")
-        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":""}))
-
+        self.assertEqual(self.form.dbParam, dict(myParam, **{"DB name": ""}))
 
         QTimer.singleShot(10, self.rmParamWidget)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
 
-
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
         self.assertEqual(self.form.dbParam, dict(myParam))
-
-
-
 
         QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
 
@@ -1924,31 +1724,32 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         pname = str(item.data(Qt.UserRole))
 
-
         it = QTableWidgetItem(unicode(pname))
         it.setData(Qt.DisplayRole, ("Myname2"))
         it.setData(Qt.UserRole, (pname))
 
+        table.setItem(ch, 0, it)
 
-        table.setItem(ch, 0,it)
-
-        self.checkParam(dict(myParam,**{"DB name":"Myname2"}),
+        self.checkParam(dict(myParam, **{"DB name": "Myname2"}),
                         self.form.ui.dParameterTableWidget, None)
-        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":"Myname2"}))
+        self.assertEqual(self.form.dbParam,
+                         dict(myParam, **{"DB name": "Myname2"}))
 
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
         table.setCurrentCell(ch, 0)
 
-        self.checkParam(dict(myParam,**{"DB name":"Myname2"}),
+        self.checkParam(dict(myParam, **{"DB name": "Myname2"}),
                         self.form.ui.dParameterTableWidget, None)
-        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":"Myname2"}))
+        self.assertEqual(self.form.dbParam,
+                         dict(myParam, **{"DB name": "Myname2"}))
 
         QTimer.singleShot(10, self.rmParamWidgetClose)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
 
-        self.checkParam(dict(myParam,**{"DB name":"Myname2"}),
+        self.checkParam(dict(myParam, **{"DB name": "Myname2"}),
                         self.form.ui.dParameterTableWidget, None)
-        self.assertEqual(self.form.dbParam, dict(myParam,**{"DB name":"Myname2"}))
+        self.assertEqual(self.form.dbParam,
+                         dict(myParam, **{"DB name": "Myname2"}))
 
         QTimer.singleShot(10, self.rmParamWidget)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
@@ -1956,13 +1757,11 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.checkParam(myParam, self.form.ui.dParameterTableWidget, None)
         self.assertEqual(self.form.dbParam, dict(myParam))
 
-
     # constructor test
     # \brief It tests default settings
     def ttest_createGUI_populateParameters_changeParamter(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -1974,33 +1773,29 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_populateParameters_changeParamter(cds)
 
-
-
-
-
     # constructor test
     # \brief It tests default settings
-    def check_createGUI_populateParameters_changeParamter(self,cds):
+    def check_createGUI_populateParameters_changeParamter(self, cds):
         self.meth.createGUI()
         self.form.show()
 
         self.disableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.dQueryLineEdit.setText("")
         self.enableButtons()
 
         self.form.connectWidgets()
 
-
         myParam = {
-            "DB name":"sdfsdf",
-            "DB host":"wer",
-            "DB port":"wwer",
-            "DB user":"erwer",
-            "DB password":"weer",
-            "Mysql cnf":"weer",
-            "Oracle mode":"wwer",
-            "Oracle DSN":"aasdf"}
+            "DB name": "sdfsdf",
+            "DB host": "wer",
+            "DB port": "wwer",
+            "DB user": "erwer",
+            "DB password": "weer",
+            "Mysql cnf": "weer",
+            "Oracle mode": "wwer",
+            "Oracle DSN": "aasdf"}
 
         table = self.form.ui.dParameterTableWidget
 
@@ -2012,29 +1807,31 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         if sel == "DB password":
             QTimer.singleShot(10, self.checkMessageBox)
-        self.form.ui.dParamComboBox.setCurrentIndex(self.form.ui.dParamComboBox.findText(str(sel)))
+        self.form.ui.dParamComboBox.setCurrentIndex(
+            self.form.ui.dParamComboBox.findText(str(sel)))
 
-        ch = table.currentRow()
-
+        # ch =
+        table.currentRow()
 
         QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
 
-
-
         item = table.item(table.currentRow(), 0)
-        self.checkParam(dict(myParam,**{str(sel):myParam[sel]}),
-                        self.form.ui.dParameterTableWidget, item.data(Qt.UserRole))
+        self.checkParam(dict(myParam, **{str(sel): myParam[sel]}),
+                        self.form.ui.dParameterTableWidget,
+                        item.data(Qt.UserRole))
 
-        self.checkParam(dict(myParam,**{str(sel):myParam[sel]}),
+        self.checkParam(dict(myParam, **{str(sel): myParam[sel]}),
                         self.form.ui.dParameterTableWidget, sel)
-        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):myParam[sel]}))
+        self.assertEqual(self.form.dbParam,
+                         dict(myParam, **{str(sel): myParam[sel]}))
 
         QTimer.singleShot(10, self.rmParamWidgetClose)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
 
-        self.checkParam(dict(myParam,**{str(sel):myParam[sel]}),
+        self.checkParam(dict(myParam, **{str(sel): myParam[sel]}),
                         self.form.ui.dParameterTableWidget, str(sel))
-        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):myParam[sel]}))
+        self.assertEqual(self.form.dbParam,
+                         dict(myParam, **{str(sel): myParam[sel]}))
 
         QTimer.singleShot(10, self.rmParamWidget)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
@@ -2044,13 +1841,11 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.checkParam(rparam, self.form.ui.dParameterTableWidget, None)
         self.assertEqual(self.form.dbParam, dict(rparam))
 
-
     # constructor test
     # \brief It tests default settings
     def ttest_createGUI_populateParameters_changeParamter_value(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2062,32 +1857,29 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_createGUI_populateParameters_changeParamter_value(cds)
 
-
-
-
     # constructor test
     # \brief It tests default settings
-    def check_createGUI_populateParameters_changeParamter_value(self,cds):
+    def check_createGUI_populateParameters_changeParamter_value(self, cds):
         self.meth.createGUI()
         self.form.show()
 
         self.disableButtons()
-        self.form.ui.typeComboBox.setCurrentIndex(self.form.ui.typeComboBox.findText(""))
+        self.form.ui.typeComboBox.setCurrentIndex(
+            self.form.ui.typeComboBox.findText(""))
         self.form.ui.dQueryLineEdit.setText("")
         self.enableButtons()
 
         self.form.connectWidgets()
 
-
         myParam = {
-            "DB name":"sdfsdf",
-            "DB host":"wer",
-            "DB port":"wwer",
-            "DB user":"erwer",
-            "DB password":"weer",
-            "Mysql cnf":"weer",
-            "Oracle mode":"wwer",
-            "Oracle DSN":"aasdf"}
+            "DB name": "sdfsdf",
+            "DB host": "wer",
+            "DB port": "wwer",
+            "DB user": "erwer",
+            "DB password": "weer",
+            "Mysql cnf": "weer",
+            "Oracle mode": "wwer",
+            "Oracle DSN": "aasdf"}
 
         table = self.form.ui.dParameterTableWidget
 
@@ -2100,10 +1892,10 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         if sel == "DB password":
             QTimer.singleShot(10, self.checkMessageBox)
-        self.form.ui.dParamComboBox.setCurrentIndex(self.form.ui.dParamComboBox.findText(str(sel)))
+        self.form.ui.dParamComboBox.setCurrentIndex(
+            self.form.ui.dParamComboBox.findText(str(sel)))
 
         ch = table.currentRow()
-
 
         QTest.mouseClick(self.form.ui.dAddPushButton, Qt.LeftButton)
 
@@ -2111,27 +1903,27 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         pname = str(item.data(Qt.UserRole))
 
-
         it = QTableWidgetItem(unicode(pname))
         it.setData(Qt.DisplayRole, ("Myname2"))
         it.setData(Qt.UserRole, (pname))
 
-        table.setItem(ch, 0,it)
+        table.setItem(ch, 0, it)
 
-
-        self.checkParam(dict(myParam,**{str(sel):"Myname2"}),
+        self.checkParam(dict(myParam, **{str(sel): "Myname2"}),
                         self.form.ui.dParameterTableWidget, None)
-        self.checkParam(dict(myParam,**{str(sel):"Myname2"}),
+        self.checkParam(dict(myParam, **{str(sel): "Myname2"}),
                         self.form.ui.dParameterTableWidget, None)
-        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):"Myname2"}))
+        self.assertEqual(self.form.dbParam,
+                         dict(myParam, **{str(sel): "Myname2"}))
 
         table.setCurrentCell(ch, 0)
         QTimer.singleShot(10, self.rmParamWidgetClose)
         QTest.mouseClick(self.form.ui.dRemovePushButton, Qt.LeftButton)
 
-        self.checkParam(dict(myParam,**{str(sel):"Myname2"}),
+        self.checkParam(dict(myParam, **{str(sel): "Myname2"}),
                         self.form.ui.dParameterTableWidget, str(sel))
-        self.assertEqual(self.form.dbParam, dict(myParam,**{str(sel):"Myname2"}))
+        self.assertEqual(self.form.dbParam,
+                         dict(myParam, **{str(sel): "Myname2"}))
 
         QTimer.singleShot(10, self.rmParamWidget)
         it = table.item(table.currentRow(), 0)
@@ -2143,20 +1935,15 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.checkParam(rparam, self.form.ui.dParameterTableWidget, None)
         self.assertEqual(self.form.dbParam, dict(rparam))
 
-
         QTest.mouseClick(self.form.ui.applyPushButton, Qt.LeftButton)
 
-
         self.assertEqual(self.form.result(), 0)
-
-
 
     # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_client(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2184,15 +1971,11 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_client(cds, True)
 
-
-
-
     # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_client_node(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2220,13 +2003,9 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_client(cds, True, True)
 
-
-
     # constructor test
     # \brief It tests default settings
-    def check_setFromNode_client(self, cds, tree = False, node = None):
-
-
+    def check_setFromNode_client(self, cds, tree=False, node=None):
 
         n1 = self.__rnd.randint(1, 9)
 
@@ -2239,13 +2018,12 @@ class DataSourceMethodsTest(unittest.TestCase):
         doc = QDomDocument()
         nname = "datasource"
         qdn = doc.createElement(nname)
-        nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name",dataSourceName)
-        qdn.setAttribute("type",dataSourceType)
-
+        # nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", dataSourceName)
+        qdn.setAttribute("type", dataSourceType)
 
         rec = doc.createElement("record")
-        rec.setAttribute("name",clientRecordName)
+        rec.setAttribute("name", clientRecordName)
         qdn.appendChild(rec)
 
         dname = "doc"
@@ -2265,30 +2043,28 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth.treeMode(tree)
         self.form.show()
         self.check_form(self.form)
-        self.check_cds(cds,{"tree":tree})
-
+        self.check_cds(cds, {"tree": tree})
 
         if node:
             self.meth.setFromNode(qdn)
         else:
             self.meth.setFromNode()
 
-        self.check_cds(cds,{"doc":"".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip(),
-                            "dataSourceType":dataSourceType,
-                            "dataSourceName":dataSourceName,
-                            "clientRecordName":clientRecordName,
-                            "tree":tree})
+        self.check_cds(
+            cds,
+            {"doc":
+             "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip(),
+             "dataSourceType": dataSourceType,
+             "dataSourceName": dataSourceName,
+             "clientRecordName": clientRecordName,
+             "tree": tree})
         self.check_form(self.form)
-
-
-
 
     # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_tango(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2316,15 +2092,11 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_tango(cds, True)
 
-
-
-
     # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_tango_node(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2352,14 +2124,9 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_tango(cds, True, True)
 
-
-
-
     # constructor test
     # \brief It tests default settings
-    def check_setFromNode_tango(self, cds, tree = False, node = None):
-
-
+    def check_setFromNode_tango(self, cds, tree=False, node=None):
 
         n1 = self.__rnd.randint(1, 9)
 
@@ -2367,29 +2134,25 @@ class DataSourceMethodsTest(unittest.TestCase):
         dataSourceType = "TANGO"
         dataSourceName = "mydatasource%s" % n1
 
-
         tangoDeviceName = 'my/device/%s' % n1
         tangoMemberName = 'position%s' % n1
-        tangoMemberType = self.__rnd.choice(["attribute","command","property"])
+        tangoMemberType = self.__rnd.choice(
+            ["attribute", "command", "property"])
         tangoHost = 'haso%s.desy.de' % n1
         tangoPort = '100%s' % n1
         tangoEncoding = 'UTF%s' % n1
-
-
 
         dks = []
         doc = QDomDocument()
         nname = "datasource"
         qdn = doc.createElement(nname)
-        nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name",dataSourceName)
-        qdn.setAttribute("type",dataSourceType)
-
+        # nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", dataSourceName)
+        qdn.setAttribute("type", dataSourceType)
 
         rec = doc.createElement("record")
         rec.setAttribute("name", tangoMemberName)
         qdn.appendChild(rec)
-
 
         dev = doc.createElement("device")
         dev.setAttribute("hostname", tangoHost)
@@ -2416,37 +2179,33 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth.treeMode(tree)
         self.form.show()
         self.check_form(self.form)
-        self.check_cds(cds,{"tree":tree})
-
+        self.check_cds(cds, {"tree": tree})
 
         if node:
             self.meth.setFromNode(qdn)
         else:
             self.meth.setFromNode()
 
-        self.check_cds(cds,{"doc":"".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip(),
-                            "dataSourceType":dataSourceType,
-                            "dataSourceName":dataSourceName,
-                            "tangoDeviceName":tangoDeviceName,
-                            "tangoMemberName":tangoMemberName,
-                            "tangoMemberType":tangoMemberType,
-                            "tangoHost":tangoHost,
-                            "tangoPort":tangoPort,
-                            "tangoEncoding":tangoEncoding,
-                            "tree":tree})
+        self.check_cds(
+            cds,
+            {"doc":
+             "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip(),
+             "dataSourceType": dataSourceType,
+             "dataSourceName": dataSourceName,
+             "tangoDeviceName": tangoDeviceName,
+             "tangoMemberName": tangoMemberName,
+             "tangoMemberType": tangoMemberType,
+             "tangoHost": tangoHost,
+             "tangoPort": tangoPort,
+             "tangoEncoding": tangoEncoding,
+             "tree": tree})
         self.check_form(self.form)
-
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_db(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2457,7 +2216,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.form = cds.dialog
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_db(cds)
-
 
     # constructor test
     # \brief It tests default settings
@@ -2475,15 +2233,11 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_db(cds, True)
 
-
-
-
     # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_db_node(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2494,7 +2248,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.form = cds.dialog
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_db(cds, False, True)
-
 
     # constructor test
     # \brief It tests default settings
@@ -2512,12 +2265,9 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_db(cds, True, True)
 
-
-
     # constructor test
     # \brief It tests default settings
-    def check_setFromNode_db(self, cds, tree = False, node = None):
-
+    def check_setFromNode_db(self, cds, tree=False, node=None):
 
         n1 = self.__rnd.randint(1, 9)
 
@@ -2525,48 +2275,40 @@ class DataSourceMethodsTest(unittest.TestCase):
         dataSourceType = "DB"
         dataSourceName = "mydatasource%s" % n1
 
-        dbType = self.__rnd.choice(["MYSQL","ORACLE","PGSQL"])
-        dbDataFormat = self.__rnd.choice(["SCALAR","SPECTRUM","IMAGE"])
+        dbType = self.__rnd.choice(["MYSQL", "ORACLE", "PGSQL"])
+        dbDataFormat = self.__rnd.choice(["SCALAR", "SPECTRUM", "IMAGE"])
         dbQuery = "select name from device limit %s" % n1
-        dbParameters = {"DB name":"tango%s" % n1,
-                         "DB host":"haso%s.desy.de" % n1,
-                         "DB port":"100000%s" % n1,
-                         "DB user":"smith%s" % n1,
-                         "DB password":"FJFJDv%s" % n1,
-                         "Mysql cnf":"/etc/my%s.cnf" % n1,
-                         "Oracle mode":"m%s" % n1,
-                         "Oracle DSN":"(some dns%s)" % n1}
-        dbmap = {"dbname":"DB name",
-                 "hostname":"DB host",
-                 "port":"DB port",
-                 "user":"DB user",
-                 "passwd":"DB password",
-                 "mycnf":"Mysql cnf",
-                 "mode":"Oracle mode"
+        dbParameters = {"DB name": "tango%s" % n1,
+                        "DB host": "haso%s.desy.de" % n1,
+                        "DB port": "100000%s" % n1,
+                        "DB user": "smith%s" % n1,
+                        "DB password": "FJFJDv%s" % n1,
+                        "Mysql cnf": "/etc/my%s.cnf" % n1,
+                        "Oracle mode": "m%s" % n1,
+                        "Oracle DSN": "(some dns%s)" % n1}
+        dbmap = {"dbname": "DB name",
+                 "hostname": "DB host",
+                 "port": "DB port",
+                 "user": "DB user",
+                 "passwd": "DB password",
+                 "mycnf": "Mysql cnf",
+                 "mode": "Oracle mode"
                  }
-
-
-
 
         dks = []
         doc = QDomDocument()
         nname = "datasource"
         qdn = doc.createElement(nname)
-        nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name",dataSourceName)
-        qdn.setAttribute("type",dataSourceType)
-
-
-
-
+        # nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", dataSourceName)
+        qdn.setAttribute("type", dataSourceType)
 
         db = doc.createElement("database")
-        db.setAttribute("dbtype",dbType)
+        db.setAttribute("dbtype", dbType)
         for dm in dbmap.keys():
-            db.setAttribute(dm,dbParameters[dbmap[dm]])
+            db.setAttribute(dm, dbParameters[dbmap[dm]])
         db.appendChild(doc.createTextNode(dbParameters["Oracle DSN"]))
         qdn.appendChild(db)
-
 
         qr = doc.createElement("query")
         qr.setAttribute("format", dbDataFormat)
@@ -2583,8 +2325,6 @@ class DataSourceMethodsTest(unittest.TestCase):
             dks.append(doc.createTextNode("\nText\n %s\n" % n))
             mdoc.appendChild(dks[-1])
 
-
-
         doc.appendChild(qdn)
 
         if not node:
@@ -2594,69 +2334,75 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth.treeMode(tree)
         self.form.show()
         self.check_form(self.form)
-        self.check_cds(cds,{"tree":tree})
-
+        self.check_cds(cds, {"tree": tree})
 
         if node:
             self.meth.setFromNode(qdn)
         else:
             self.meth.setFromNode()
 
-        self.check_cds(cds,{"doc":"".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip(),
-                            "dataSourceType":dataSourceType,
-                            "dataSourceName":dataSourceName,
-                            "dbType":dbType,
-                            "dbDataFormat":dbDataFormat,
-                            "dbQuery":dbQuery,
-                            "dbParameters":dbParameters,
-                            "tree":tree})
+        self.check_cds(
+            cds,
+            {"doc":
+             "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip(),
+             "dataSourceType": dataSourceType,
+             "dataSourceName": dataSourceName,
+             "dbType": dbType,
+             "dbDataFormat": dbDataFormat,
+             "dbQuery": dbQuery,
+             "dbParameters": dbParameters,
+             "tree": tree})
         self.check_form(self.form)
         self.form.populateParameters()
 
-
-        self.check_cds(cds,{"doc":"".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip(),
-                            "dataSourceType":dataSourceType,
-                            "dataSourceName":dataSourceName,
-                            "dbType":dbType,
-                            "dbDataFormat":dbDataFormat,
-                            "dbQuery":dbQuery,
-                            "dbParameters":dbParameters,
-                            "tree":tree})
-        self.check_form(self.form,{"dbParameters":dbParameters})
+        self.check_cds(
+            cds, {"doc":
+                  "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip(),
+                  "dataSourceType": dataSourceType,
+                  "dataSourceName": dataSourceName,
+                  "dbType": dbType,
+                  "dbDataFormat": dbDataFormat,
+                  "dbQuery": dbQuery,
+                  "dbParameters": dbParameters,
+                  "tree": tree})
+        self.check_form(self.form, {"dbParameters": dbParameters})
         item = self.form.ui.dParameterTableWidget.item(
             self.form.ui.dParameterTableWidget.currentRow(), 0)
         self.assertEqual(item, None)
 
-
-        sel  = self.__rnd.choice(dbParameters.keys())
+        sel = self.__rnd.choice(dbParameters.keys())
         self.form.populateParameters(sel)
 
-
-        self.check_cds(cds,{"doc":"".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip(),
-                            "dataSourceType":dataSourceType,
-                            "dataSourceName":dataSourceName,
-                            "dbType":dbType,
-                            "dbDataFormat":dbDataFormat,
-                            "dbQuery":dbQuery,
-                            "dbParameters":dbParameters,
-                            "tree":tree})
-        self.check_form(self.form,{"dbParameters":dbParameters})
+        self.check_cds(
+            cds,
+            {"doc":
+             "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip(),
+             "dataSourceType": dataSourceType,
+             "dataSourceName": dataSourceName,
+             "dbType": dbType,
+             "dbDataFormat": dbDataFormat,
+             "dbQuery": dbQuery,
+             "dbParameters": dbParameters,
+             "tree": tree})
+        self.check_form(self.form, {"dbParameters": dbParameters})
         item = self.form.ui.dParameterTableWidget.item(
             self.form.ui.dParameterTableWidget.currentRow(), 0)
         self.assertEqual(item.data(Qt.UserRole), sel)
 
         self.form.populateParameters("bleble")
 
-
-        self.check_cds(cds,{"doc":"".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip(),
-                            "dataSourceType":dataSourceType,
-                            "dataSourceName":dataSourceName,
-                            "dbType":dbType,
-                            "dbDataFormat":dbDataFormat,
-                            "dbQuery":dbQuery,
-                            "dbParameters":dbParameters,
-                            "tree":tree})
-        self.check_form(self.form,{"dbParameters":dbParameters})
+        self.check_cds(
+            cds,
+            {"doc":
+             "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip(),
+             "dataSourceType": dataSourceType,
+             "dataSourceName": dataSourceName,
+             "dbType": dbType,
+             "dbDataFormat": dbDataFormat,
+             "dbQuery": dbQuery,
+             "dbParameters": dbParameters,
+             "tree": tree})
+        self.check_form(self.form, {"dbParameters": dbParameters})
         item = self.form.ui.dParameterTableWidget.item(
             self.form.ui.dParameterTableWidget.currentRow(), 0)
         self.assertEqual(item, None)
@@ -2667,7 +2413,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         self.form = DataSourceDlg()
         cds = self.form.datasource
         self.meth = DataSourceMethods(self.form, cds)
@@ -2677,7 +2422,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.form = cds.dialog
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_nonode(cds)
-
 
     # constructor test
     # \brief It tests default settings
@@ -2695,15 +2439,11 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_nonode(cds, True)
 
-
-
-
     # constructor test
     # \brief It tests default settings
     def ttest_setFromNode_nonode_node(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-
 
         self.form = DataSourceDlg()
         cds = self.form.datasource
@@ -2714,7 +2454,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.form = cds.dialog
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_nonode(cds, False, True)
-
 
     # constructor test
     # \brief It tests default settings
@@ -2732,12 +2471,9 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.meth = DataSourceMethods(self.form, cds)
         self.check_setFromNode_nonode(cds, True, True)
 
-
-
     # constructor test
     # \brief It tests default settings
-    def check_setFromNode_nonode(self, cds, tree = False, node = None):
-
+    def check_setFromNode_nonode(self, cds, tree=False, node=None):
 
         n1 = self.__rnd.randint(1, 9)
 
@@ -2745,48 +2481,40 @@ class DataSourceMethodsTest(unittest.TestCase):
         dataSourceType = "DB"
         dataSourceName = "mydatasource%s" % n1
 
-        dbType = self.__rnd.choice(["MYSQL","ORACLE","PGSQL"])
-        dbDataFormat = self.__rnd.choice(["SCALAR","SPECTRUM","IMAGE"])
+        dbType = self.__rnd.choice(["MYSQL", "ORACLE", "PGSQL"])
+        dbDataFormat = self.__rnd.choice(["SCALAR", "SPECTRUM", "IMAGE"])
         dbQuery = "select name from device limit %s" % n1
-        dbParameters = {"DB name":"tango%s" % n1,
-                         "DB host":"haso%s.desy.de" % n1,
-                         "DB port":"100000%s" % n1,
-                         "DB user":"smith%s" % n1,
-                         "DB password":"FJFJDv%s" % n1,
-                         "Mysql cnf":"/etc/my%s.cnf" % n1,
-                         "Oracle mode":"m%s" % n1,
-                         "Oracle DSN":"(some dns%s)" % n1}
-        dbmap = {"dbname":"DB name",
-                 "hostname":"DB host",
-                 "port":"DB port",
-                 "user":"DB user",
-                 "passwd":"DB password",
-                 "mycnf":"Mysql cnf",
-                 "mode":"Oracle mode"
+        dbParameters = {"DB name": "tango%s" % n1,
+                        "DB host": "haso%s.desy.de" % n1,
+                        "DB port": "100000%s" % n1,
+                        "DB user": "smith%s" % n1,
+                        "DB password": "FJFJDv%s" % n1,
+                        "Mysql cnf": "/etc/my%s.cnf" % n1,
+                        "Oracle mode": "m%s" % n1,
+                        "Oracle DSN": "(some dns%s)" % n1}
+        dbmap = {"dbname": "DB name",
+                 "hostname": "DB host",
+                 "port": "DB port",
+                 "user": "DB user",
+                 "passwd": "DB password",
+                 "mycnf": "Mysql cnf",
+                 "mode": "Oracle mode"
                  }
-
-
-
 
         dks = []
         doc = QDomDocument()
         nname = "datasource"
         qdn = doc.createElement(nname)
-        nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name",dataSourceName)
-        qdn.setAttribute("type",dataSourceType)
-
-
-
-
+        # nn = self.__rnd.randint(0, 9)
+        qdn.setAttribute("name", dataSourceName)
+        qdn.setAttribute("type", dataSourceType)
 
         db = doc.createElement("database")
-        db.setAttribute("dbtype",dbType)
+        db.setAttribute("dbtype", dbType)
         for dm in dbmap.keys():
-            db.setAttribute(dm,dbParameters[dbmap[dm]])
+            db.setAttribute(dm, dbParameters[dbmap[dm]])
         db.appendChild(doc.createTextNode(dbParameters["Oracle DSN"]))
         qdn.appendChild(db)
-
 
         qr = doc.createElement("query")
         qr.setAttribute("format", dbDataFormat)
@@ -2803,30 +2531,20 @@ class DataSourceMethodsTest(unittest.TestCase):
             dks.append(doc.createTextNode("\nText\n %s\n" % n))
             mdoc.appendChild(dks[-1])
 
-
-
         doc.appendChild(qdn)
-
 
         self.meth.createGUI()
         self.meth.treeMode(tree)
         self.form.show()
         self.check_form(self.form)
-        self.check_cds(cds,{"tree":tree})
-
+        self.check_cds(cds, {"tree": tree})
 
         self.meth.setFromNode()
 
         self.check_form(self.form)
-        self.check_cds(cds,{"tree":tree})
+        self.check_cds(cds, {"tree": tree})
 
-
-
-#TODO setFromNode nonode/populateparameters
-
-
-
-
+    # TODO setFromNode nonode/populateparameters
 
     # constructor test
     # \brief It tests default settings
@@ -2834,17 +2552,16 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         dks = []
         doc = QDomDocument()
         nname = "field"
         qdn = doc.createElement(nname)
         nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name","myname%s" % nn)
-        qdn.setAttribute("type","mytype%s" % nn)
-        qdn.setAttribute("unit","myunits%s" % nn)
-        qdn.setAttribute("units","myunits%s" % nn)
-        qdn.setAttribute("shortname","mynshort%s" % nn)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("units", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
         doc.appendChild(qdn)
         dname = "doc"
 
@@ -2863,7 +2580,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         rn = self.__rnd.randint(1, 9)
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [self.__rnd.randint(1, 40) for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", str(unicode(rn)))
@@ -2876,7 +2593,6 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         qdn.appendChild(mdim)
 
-
         form = DataSourceMethods()
         form.show()
         form.node = qdn
@@ -2887,24 +2603,24 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
+                         ['attribute', 'datasource', 'doc', 'dimensions',
+                          'enumeration', 'strategy'])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
 
         form.setFromNode()
         form.createGUI()
 
-
         allAttr = True
-        cm = ComponentModel(doc,allAttr)
+        cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0, 0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
         nname = "newname"
         ntype = "newtype"
         units = "myunits"
-        attrs = {"longname":"newlogname"}
+        attrs = {"longname": "newlogname"}
         mdoc = "New text \nNew text"
 
         attributeMap = form.node.attributes()
@@ -2924,7 +2640,7 @@ class DataSourceMethodsTest(unittest.TestCase):
                 cnt += 1
             else:
                 self.assertEqual(vl, form.attributes[str(nm)])
-        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+        self.assertEqual(len(form.attributes), attributeMap.count() - cnt)
 
         vtext = form.dts.getText(qdn)
         oldval = unicode(vtext).strip() if vtext else ""
@@ -2935,30 +2651,27 @@ class DataSourceMethodsTest(unittest.TestCase):
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, form.doc)
 
-
-
         form.name = nname
         form.nexusType = ntype
         form.units = units
         form.value = "My new value ble ble"
 
         form.attributes.clear()
-        for at in attrs.keys() :
+        for at in attrs.keys():
             form.attributes[at] = attrs[at]
 
         mrnk = self.__rnd.randint(0, 5)
-        mdimensions = [self.__rnd.randint(1, 40)  for n in range(mrnk)]
+        mdimensions = [self.__rnd.randint(1, 40) for n in range(mrnk)]
         form.rank = mrnk
         form.dimensions = mdimensions
         form.doc = mdoc
 
         form.root = doc
 
-
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0, 0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -2975,12 +2688,11 @@ class DataSourceMethodsTest(unittest.TestCase):
                 self.assertEqual(vl, ntype)
                 cnt += 1
             elif nm == "units":
-                self.assertEqual(vl,units)
+                self.assertEqual(vl, units)
                 cnt += 1
             else:
-                self.assertEqual(vl,attrs[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
-
+                self.assertEqual(vl, attrs[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
         mydm = form.node.firstChildElement(str("dimensions"))
 
@@ -2994,8 +2706,8 @@ class DataSourceMethodsTest(unittest.TestCase):
                 at = child.attributes()
                 ind = int(at.namedItem("index").nodeValue())
                 vl = int(at.namedItem("value").nodeValue())
-                self.assertTrue(ind >0 )
-                self.assertTrue(ind <= mrnk )
+                self.assertTrue(ind > 0)
+                self.assertTrue(ind <= mrnk)
                 self.assertEqual(mdimensions[ind-1], vl)
             child = child.nextSibling()
 
@@ -3007,12 +2719,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         text = form.dts.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
-        self.assertEqual(olddoc,mdoc)
-
-
-
-
-
+        self.assertEqual(olddoc, mdoc)
 
     # constructor test
     # \brief It tests default settings
@@ -3020,17 +2727,16 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         dks = []
         doc = QDomDocument()
         nname = "field"
         qdn = doc.createElement(nname)
         nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name","myname%s" % nn)
-        qdn.setAttribute("type","mytype%s" % nn)
-        qdn.setAttribute("unit","myunits%s" % nn)
-        qdn.setAttribute("units","myunits%s" % nn)
-        qdn.setAttribute("shortname","mynshort%s" % nn)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("units", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
         doc.appendChild(qdn)
         dname = "doc"
 
@@ -3049,7 +2755,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         rn = self.__rnd.randint(1, 9)
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [self.__rnd.randint(1, 40) for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", str(unicode(rn)))
@@ -3062,7 +2768,6 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         qdn.appendChild(mdim)
 
-
         form = DataSourceMethods()
         form.show()
         form.node = qdn
@@ -3073,24 +2778,24 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
+                         ['attribute', 'datasource', 'doc', 'dimensions',
+                          'enumeration', 'strategy'])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
 
         form.setFromNode()
         form.createGUI()
 
-
         allAttr = True
-        cm = ComponentModel(doc,allAttr)
+        cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0, 0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
         nname = "newname"
         ntype = "newtype"
         units = "myunits"
-        attrs = {"longname":"newlogname"}
+        attrs = {"longname": "newlogname"}
         mdoc = "New text \nNew text"
 
         attributeMap = form.node.attributes()
@@ -3110,7 +2815,7 @@ class DataSourceMethodsTest(unittest.TestCase):
                 cnt += 1
             else:
                 self.assertEqual(vl, form.attributes[str(nm)])
-        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+        self.assertEqual(len(form.attributes), attributeMap.count() - cnt)
 
         vtext = form.dts.getText(qdn)
         oldval = unicode(vtext).strip() if vtext else ""
@@ -3121,30 +2826,27 @@ class DataSourceMethodsTest(unittest.TestCase):
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, form.doc)
 
-
-
         form.name = nname
         form.nexusType = ntype
         form.units = units
         form.value = "My new value ble ble"
 
         form.attributes.clear()
-        for at in attrs.keys() :
+        for at in attrs.keys():
             form.attributes[at] = attrs[at]
 
         mrnk = self.__rnd.randint(0, 5)
-        mdimensions = [self.__rnd.randint(1, 40)  for n in range(mrnk)]
+        mdimensions = [self.__rnd.randint(1, 40) for n in range(mrnk)]
         form.rank = mrnk
         form.dimensions = mdimensions
         form.doc = mdoc
 
         form.root = doc
 
-
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0, 0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
@@ -3161,12 +2863,11 @@ class DataSourceMethodsTest(unittest.TestCase):
                 self.assertEqual(vl, ntype)
                 cnt += 1
             elif nm == "units":
-                self.assertEqual(vl,units)
+                self.assertEqual(vl, units)
                 cnt += 1
             else:
-                self.assertEqual(vl,attrs[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
-
+                self.assertEqual(vl, attrs[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
         mydm = form.node.firstChildElement(str("dimensions"))
 
@@ -3180,8 +2881,8 @@ class DataSourceMethodsTest(unittest.TestCase):
                 at = child.attributes()
                 ind = int(at.namedItem("index").nodeValue())
                 vl = int(at.namedItem("value").nodeValue())
-                self.assertTrue(ind >0 )
-                self.assertTrue(ind <= mrnk )
+                self.assertTrue(ind > 0)
+                self.assertTrue(ind <= mrnk)
                 self.assertEqual(mdimensions[ind-1], vl)
             child = child.nextSibling()
 
@@ -3193,11 +2894,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         text = form.dts.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
-        self.assertEqual(olddoc,mdoc)
-
-
-
-
+        self.assertEqual(olddoc, mdoc)
 
     # constructor test
     # \brief It tests default settings
@@ -3205,17 +2902,16 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         dks = []
         doc = QDomDocument()
         nname = "field"
         qdn = doc.createElement(nname)
         nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name","myname%s" % nn)
-        qdn.setAttribute("type","mytype%s" % nn)
-        qdn.setAttribute("unit","myunits%s" % nn)
-        qdn.setAttribute("units","myunits%s" % nn)
-        qdn.setAttribute("shortname","mynshort%s" % nn)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("units", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
         doc.appendChild(qdn)
         dname = "doc"
 
@@ -3234,7 +2930,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         rn = self.__rnd.randint(1, 9)
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [self.__rnd.randint(1, 40) for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", str(unicode(rn)))
@@ -3247,7 +2943,6 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         qdn.appendChild(mdim)
 
-
         form = DataSourceMethods()
         form.show()
         form.node = qdn
@@ -3257,25 +2952,26 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.value, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
+        self.assertEqual(
+            form.subItems,
+            ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration',
+             'strategy'])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
 
         form.setFromNode()
         form.createGUI()
 
-
         allAttr = True
-        cm = ComponentModel(doc,allAttr)
+        cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0, 0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
         nname = "newname"
         ntype = "newtype"
         units = "myunits"
-        attrs = {"longname":"newlogname","unit":"myunits%s" % nn}
+        attrs = {"longname": "newlogname", "unit": "myunits%s" % nn}
         mdoc = "New text \nNew text"
         mvalue = "My new value ble ble"
 
@@ -3296,7 +2992,7 @@ class DataSourceMethodsTest(unittest.TestCase):
                 cnt += 1
             else:
                 self.assertEqual(vl, form.attributes[str(nm)])
-        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+        self.assertEqual(len(form.attributes), attributeMap.count() - cnt)
 
         vtext = form.dts.getText(qdn)
         oldval = unicode(vtext).strip() if vtext else ""
@@ -3307,15 +3003,13 @@ class DataSourceMethodsTest(unittest.TestCase):
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, form.doc)
 
-
-
         form.name = nname
         form.nexusType = ntype
         form.units = units
         form.value = mvalue
 
         form.attributes.clear()
-        for at in attrs.keys() :
+        for at in attrs.keys():
             form.attributes[at] = attrs[at]
         form.doc = mdoc
 
@@ -3324,12 +3018,9 @@ class DataSourceMethodsTest(unittest.TestCase):
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0, 0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
-
-
-
 
         form.ui.nameLineEdit.setText(nname)
         form.ui.typeLineEdit.setText(ntype)
@@ -3337,18 +3028,14 @@ class DataSourceMethodsTest(unittest.TestCase):
         form.ui.valueLineEdit.setText(mvalue)
         form.ui.docTextEdit.setText(str(mdoc))
 
-
-
         for r in form.attributes:
             form.ui.attributeTableWidget.setCurrentCell(0, 1)
-            item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-
+            # item =
+            form.ui.attributeTableWidget.item(
+                form.ui.attributeTableWidget.currentRow(), 0)
 
             QTimer.singleShot(10, self.rmAttributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
-
-
-
 
         i = 0
         for r in attrs:
@@ -3360,13 +3047,12 @@ class DataSourceMethodsTest(unittest.TestCase):
             i += 1
 
         mrnk = self.__rnd.randint(0, 5)
-        self.dimensions = [self.__rnd.randint(1, 40)  for n in range(mrnk)]
+        self.dimensions = [self.__rnd.randint(1, 40) for n in range(mrnk)]
 
         QTimer.singleShot(10, self.dimensionsWidget)
         QTest.mouseClick(form.ui.dimPushButton, Qt.LeftButton)
 
         form.apply()
-
 
         self.assertEqual(form.name, nname)
         self.assertEqual(form.nexusType, ntype)
@@ -3376,7 +3062,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.attributes, attrs)
         self.assertEqual(form.rank, len(self.dimensions))
         self.assertEqual(form.dimensions, self.dimensions)
-
 
         cnt = 0
         for i in range(attributeMap.count()):
@@ -3389,21 +3074,20 @@ class DataSourceMethodsTest(unittest.TestCase):
                 self.assertEqual(vl, ntype)
                 cnt += 1
             elif nm == "units":
-                self.assertEqual(vl,units)
+                self.assertEqual(vl, units)
                 cnt += 1
             else:
-                self.assertEqual(vl,attrs[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
-
+                self.assertEqual(vl, attrs[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
         mydoc = form.node.firstChildElement(str("doc"))
         text = form.dts.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc,mdoc)
+        self.assertEqual(olddoc, mdoc)
 
         vtext = form.dts.getText(qdn)
         oldval = unicode(vtext).strip() if vtext else ""
-        self.assertEqual(oldval,mvalue)
+        self.assertEqual(oldval, mvalue)
 
         mydm = form.node.firstChildElement(str("dimensions"))
 
@@ -3416,11 +3100,10 @@ class DataSourceMethodsTest(unittest.TestCase):
                 at = child.attributes()
                 ind = int(at.namedItem("index").nodeValue())
                 vl = int(at.namedItem("value").nodeValue())
-                self.assertTrue(ind >0 )
-                self.assertTrue(ind <= mrnk )
+                self.assertTrue(ind > 0)
+                self.assertTrue(ind <= mrnk)
                 self.assertEqual(self.dimensions[ind-1], vl)
             child = child.nextSibling()
-
 
         cnt = 0
         for i in range(attributeMap.count()):
@@ -3433,11 +3116,11 @@ class DataSourceMethodsTest(unittest.TestCase):
                 self.assertEqual(vl, ntype)
                 cnt += 1
             elif nm == "units":
-                self.assertEqual(vl,units)
+                self.assertEqual(vl, units)
                 cnt += 1
             else:
-                self.assertEqual(vl,attrs[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
+                self.assertEqual(vl, attrs[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
         vtext = form.dts.getText(qdn)
         oldval = unicode(vtext).strip() if vtext else ""
@@ -3447,11 +3130,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         text = form.dts.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
 
-        self.assertEqual(olddoc,mdoc)
-
-
-
-
+        self.assertEqual(olddoc, mdoc)
 
     # constructor test
     # \brief It tests default settings
@@ -3459,17 +3138,16 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         dks = []
         doc = QDomDocument()
         nname = "field"
         qdn = doc.createElement(nname)
         nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name","myname%s" % nn)
-        qdn.setAttribute("type","mytype%s" % nn)
-        qdn.setAttribute("unit","myunits%s" % nn)
-        qdn.setAttribute("units","myunits%s" % nn)
-        qdn.setAttribute("shortname","mynshort%s" % nn)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("units", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
         doc.appendChild(qdn)
         dname = "doc"
 
@@ -3488,7 +3166,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         rn = self.__rnd.randint(1, 9)
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [self.__rnd.randint(1, 40) for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", str(unicode(rn)))
@@ -3501,7 +3179,6 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         qdn.appendChild(mdim)
 
-
         form = DataSourceMethods()
         form.show()
         form.node = qdn
@@ -3511,25 +3188,26 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.value, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
+        self.assertEqual(
+            form.subItems,
+            ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration',
+             'strategy'])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
 
         form.setFromNode()
         form.createGUI()
 
-
         allAttr = True
-        cm = ComponentModel(doc,allAttr)
+        cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0, 0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
         nname = "newname"
         ntype = "newtype"
         units = "myunits"
-        attrs = {"longname":"newlogname","unit":"myunits%s" % nn}
+        attrs = {"longname": "newlogname", "unit": "myunits%s" % nn}
         mdoc = "New text \nNew text"
         mvalue = "My new value ble ble"
 
@@ -3550,7 +3228,7 @@ class DataSourceMethodsTest(unittest.TestCase):
                 cnt += 1
             else:
                 self.assertEqual(vl, form.attributes[str(nm)])
-        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+        self.assertEqual(len(form.attributes), attributeMap.count() - cnt)
 
         vtext = form.dts.getText(qdn)
         oldval = unicode(vtext).strip() if vtext else ""
@@ -3561,15 +3239,13 @@ class DataSourceMethodsTest(unittest.TestCase):
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, form.doc)
 
-
-
         form.name = nname
         form.nexusType = ntype
         form.units = units
         form.value = mvalue
 
         form.attributes.clear()
-        for at in attrs.keys() :
+        for at in attrs.keys():
             form.attributes[at] = attrs[at]
         form.doc = mdoc
 
@@ -3578,12 +3254,9 @@ class DataSourceMethodsTest(unittest.TestCase):
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0, 0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
-
-
-
 
         form.ui.nameLineEdit.setText(nname)
         form.ui.typeLineEdit.setText(ntype)
@@ -3591,18 +3264,14 @@ class DataSourceMethodsTest(unittest.TestCase):
         form.ui.valueLineEdit.setText(mvalue)
         form.ui.docTextEdit.setText(str(mdoc))
 
-
-
         for r in form.attributes:
             form.ui.attributeTableWidget.setCurrentCell(0, 1)
-            item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-
+            # item =
+            form.ui.attributeTableWidget.item(
+                form.ui.attributeTableWidget.currentRow(), 0)
 
             QTimer.singleShot(10, self.rmAttributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
-
-
-
 
         i = 0
         for r in attrs:
@@ -3614,27 +3283,31 @@ class DataSourceMethodsTest(unittest.TestCase):
             i += 1
 
         mrnk = self.__rnd.randint(0, 5)
-        self.dimensions = [self.__rnd.randint(1, 40)  for n in range(mrnk)]
+        self.dimensions = [self.__rnd.randint(1, 40) for n in range(mrnk)]
 
         QTimer.singleShot(10, self.dimensionsWidget)
         QTest.mouseClick(form.ui.dimPushButton, Qt.LeftButton)
 
         form.reset()
-        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
-
+        ats = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" % nn)
         self.assertEqual(form.nexusType, "mytype%s" % nn)
         self.assertEqual(form.units, "myunits%s" % nn)
-        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" % i  for i in range(nval)])).strip())
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(
+            form.value,
+            ("".join(["\nVAL\n %s\n" % i for i in range(nval)])).strip())
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(
+            form.attributes,
+            {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
         self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+                         ['attribute', 'datasource', 'doc', 'dimensions',
+                          'enumeration', 'strategy'])
 
         self.assertEqual(form.dimensions, dimensions)
-
-
 
         cnt = 0
         for i in range(attributeMap.count()):
@@ -3650,18 +3323,21 @@ class DataSourceMethodsTest(unittest.TestCase):
                 self.assertEqual(vl, "myunits%s" % nn)
                 cnt += 1
             else:
-                self.assertEqual(vl,ats[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
-
+                self.assertEqual(vl, ats[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
         mydoc = form.node.firstChildElement(str("doc"))
         text = form.dts.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(
+            olddoc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
 
         vtext = form.dts.getText(qdn)
         oldval = unicode(vtext).strip() if vtext else ""
-        self.assertEqual(oldval, "".join(["\nVAL\n %s\n" % n for n in range(nval)]).strip())
+        self.assertEqual(
+            oldval,
+            "".join(["\nVAL\n %s\n" % n for n in range(nval)]).strip())
 
         mydm = form.node.firstChildElement(str("dimensions"))
 
@@ -3673,14 +3349,10 @@ class DataSourceMethodsTest(unittest.TestCase):
                 at = child.attributes()
                 ind = int(at.namedItem("index").nodeValue())
                 vl = int(at.namedItem("value").nodeValue())
-                self.assertTrue(ind >0 )
-                self.assertTrue(ind <= rn )
+                self.assertTrue(ind > 0)
+                self.assertTrue(ind <= rn)
                 self.assertEqual(dimensions[ind-1], vl)
             child = child.nextSibling()
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -3688,17 +3360,16 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         dks = []
         doc = QDomDocument()
         nname = "field"
         qdn = doc.createElement(nname)
         nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name","myname%s" % nn)
-        qdn.setAttribute("type","mytype%s" % nn)
-        qdn.setAttribute("unit","myunits%s" % nn)
-        qdn.setAttribute("units","myunits%s" % nn)
-        qdn.setAttribute("shortname","mynshort%s" % nn)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("units", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
         doc.appendChild(qdn)
         dname = "doc"
 
@@ -3717,7 +3388,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         rn = self.__rnd.randint(1, 9)
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [self.__rnd.randint(1, 40) for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", str(unicode(rn)))
@@ -3730,7 +3401,6 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         qdn.appendChild(mdim)
 
-
         form = DataSourceMethods()
         form.show()
         form.node = qdn
@@ -3741,24 +3411,24 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
+                         ['attribute', 'datasource', 'doc', 'dimensions',
+                          'enumeration', 'strategy'])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
 
         form.setFromNode()
         form.createGUI()
 
-
         allAttr = True
-        cm = ComponentModel(doc,allAttr)
+        cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0, 0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
         nname = "newname"
         ntype = "newtype"
         units = "myunits"
-        attrs = {"longname":"newlogname","unit":"myunits%s" % nn}
+        attrs = {"longname": "newlogname", "unit": "myunits%s" % nn}
         mdoc = "New text \nNew text"
         mvalue = "My new value ble ble"
 
@@ -3779,7 +3449,7 @@ class DataSourceMethodsTest(unittest.TestCase):
                 cnt += 1
             else:
                 self.assertEqual(vl, form.attributes[str(nm)])
-        self.assertEqual(len(form.attributes),attributeMap.count() - cnt)
+        self.assertEqual(len(form.attributes), attributeMap.count() - cnt)
 
         vtext = form.dts.getText(qdn)
         oldval = unicode(vtext).strip() if vtext else ""
@@ -3790,15 +3460,13 @@ class DataSourceMethodsTest(unittest.TestCase):
         olddoc = unicode(text).strip() if text else ""
         self.assertEqual(olddoc, form.doc)
 
-
-
         form.name = nname
         form.nexusType = ntype
         form.units = units
         form.value = mvalue
 
         form.attributes.clear()
-        for at in attrs.keys() :
+        for at in attrs.keys():
             form.attributes[at] = attrs[at]
         form.doc = mdoc
 
@@ -3807,12 +3475,9 @@ class DataSourceMethodsTest(unittest.TestCase):
         allAttr = True
         cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0, 0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
-
-
-
 
         form.ui.nameLineEdit.setText(nname)
         form.ui.typeLineEdit.setText(ntype)
@@ -3820,18 +3485,14 @@ class DataSourceMethodsTest(unittest.TestCase):
         form.ui.valueLineEdit.setText(mvalue)
         form.ui.docTextEdit.setText(str(mdoc))
 
-
-
         for r in form.attributes:
             form.ui.attributeTableWidget.setCurrentCell(0, 1)
-            item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
-
+            # item =
+            form.ui.attributeTableWidget.item(
+                form.ui.attributeTableWidget.currentRow(), 0)
 
             QTimer.singleShot(10, self.rmAttributeWidget)
             QTest.mouseClick(form.ui.removePushButton, Qt.LeftButton)
-
-
-
 
         i = 0
         for r in attrs:
@@ -3843,27 +3504,32 @@ class DataSourceMethodsTest(unittest.TestCase):
             i += 1
 
         mrnk = self.__rnd.randint(0, 5)
-        self.dimensions = [self.__rnd.randint(1, 40)  for n in range(mrnk)]
+        self.dimensions = [self.__rnd.randint(1, 40) for n in range(mrnk)]
 
         QTimer.singleShot(10, self.dimensionsWidget)
         QTest.mouseClick(form.ui.dimPushButton, Qt.LeftButton)
 
         QTest.mouseClick(form.ui.resetPushButton, Qt.LeftButton)
-        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
-
+        ats = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" % nn)
         self.assertEqual(form.nexusType, "mytype%s" % nn)
         self.assertEqual(form.units, "myunits%s" % nn)
-        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" % i  for i in range(nval)])).strip())
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
-        self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+        self.assertEqual(
+            form.value,
+            ("".join(["\nVAL\n %s\n" % i for i in range(nval)])).strip())
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(
+            form.attributes,
+            {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(
+            form.subItems,
+            ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration',
+             'strategy'])
 
         self.assertEqual(form.dimensions, dimensions)
-
-
 
         cnt = 0
         for i in range(attributeMap.count()):
@@ -3879,18 +3545,21 @@ class DataSourceMethodsTest(unittest.TestCase):
                 self.assertEqual(vl, "myunits%s" % nn)
                 cnt += 1
             else:
-                self.assertEqual(vl,ats[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
-
+                self.assertEqual(vl, ats[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
         mydoc = form.node.firstChildElement(str("doc"))
         text = form.dts.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(
+            olddoc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
 
         vtext = form.dts.getText(qdn)
         oldval = unicode(vtext).strip() if vtext else ""
-        self.assertEqual(oldval, "".join(["\nVAL\n %s\n" % n for n in range(nval)]).strip())
+        self.assertEqual(
+            oldval,
+            "".join(["\nVAL\n %s\n" % n for n in range(nval)]).strip())
 
         mydm = form.node.firstChildElement(str("dimensions"))
 
@@ -3902,27 +3571,15 @@ class DataSourceMethodsTest(unittest.TestCase):
                 at = child.attributes()
                 ind = int(at.namedItem("index").nodeValue())
                 vl = int(at.namedItem("value").nodeValue())
-                self.assertTrue(ind >0 )
-                self.assertTrue(ind <= rn )
+                self.assertTrue(ind > 0)
+                self.assertTrue(ind <= rn)
                 self.assertEqual(dimensions[ind-1], vl)
             child = child.nextSibling()
-
-
-
-
-
-
-
-
-
-
 
     def myAction(self):
         self.performed = True
 
-
     # constructor test
-
 
     # constructor test
     # \brief It tests default settings
@@ -3935,7 +3592,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
 #        self.assertTrue(isinstance(form.dts, DomTools))
@@ -3953,14 +3610,10 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
         self.assertEqual(form.externalApply, None)
 
-
         self.assertEqual(form.result(), 0)
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -3968,7 +3621,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = DataSourceMethods()
-        form.ui = Ui_DataSourceMethods()
+        # form.ui = Ui_DataSourceMethods()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
@@ -3976,14 +3629,11 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DataSourceMethods))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, None)
 
-
         self.assertEqual(form.result(), 0)
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -3991,7 +3641,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = DataSourceMethods()
-        form.ui = Ui_DataSourceMethods()
+        # form.ui = Ui_DataSourceMethods()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
@@ -3999,26 +3649,22 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DataSourceMethods))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
         self.assertEqual(form.externalApply, self.myAction)
         self.performed = False
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
         self.assertEqual(self.performed, True)
 
-
         self.assertEqual(form.result(), 0)
-
-
-
 
     # constructor test
     # \brief It tests default settings
-    def ttttest_connect_actions_with_action_button(self):
+    def ttttest_connect_actions_with_action_button_2(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = DataSourceMethods()
-        form.ui = Ui_DataSourceMethods()
+        # form.ui = Ui_DataSourceMethods()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
@@ -4026,20 +3672,14 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DataSourceMethods))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
         self.assertEqual(form.externalApply, self.myAction)
         self.performed = False
 
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
         self.assertEqual(self.performed, True)
 
-
         self.assertEqual(form.result(), 0)
-
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -4051,20 +3691,16 @@ class DataSourceMethodsTest(unittest.TestCase):
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.show()
-        self.assertEqual(form.connectExternalActions(None, self.myAction), None)
+        self.assertEqual(
+            form.connectExternalActions(None, self.myAction), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DataSourceMethods))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
         self.assertEqual(form.externalDSLink, self.myAction)
         self.performed = False
 
-
-
         self.assertEqual(form.result(), 0)
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -4072,15 +3708,16 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = DataSourceMethods()
-        form.ui = Ui_DataSourceMethods()
+        # form.ui = Ui_DataSourceMethods()
         form.ui.applyPushButton = QPushButton(form)
         form.createGUI()
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction, None), None)
+        self.assertEqual(
+            form.connectExternalActions(self.myAction, None), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DataSourceMethods))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
         self.assertEqual(form.externalApply, self.myAction)
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
@@ -4088,12 +3725,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
         self.assertEqual(self.performed, False)
 
-
         self.assertEqual(form.result(), 0)
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -4101,18 +3733,19 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = DataSourceMethods()
-        form.ui = Ui_DataSourceMethods()
+        # form.ui = Ui_DataSourceMethods()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.createGUI()
         QTest.keyClicks(form.ui.nameLineEdit, "namename")
 
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction, None), None)
+        self.assertEqual(
+            form.connectExternalActions(self.myAction, None), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DataSourceMethods))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
         self.assertEqual(form.externalApply, self.myAction)
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
@@ -4120,9 +3753,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
         self.assertEqual(self.performed, True)
 
-
         self.assertEqual(form.result(), 0)
-
 
     # constructor test
     # \brief It tests default settings
@@ -4130,18 +3761,19 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = DataSourceMethods()
-        form.ui = Ui_DataSourceMethods()
+        # form.ui = Ui_DataSourceMethods()
         form.ui.applyPushButton = QPushButton(form)
         form.ui.linkDSPushButton = QPushButton(form)
         form.createGUI()
         QTest.keyClicks(form.ui.nameLineEdit, "namename")
 
         form.show()
-        self.assertEqual(form.connectExternalActions(None, self.myAction), None)
+        self.assertEqual(
+            form.connectExternalActions(None, self.myAction), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DataSourceMethods))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
         self.assertEqual(form.externalApply, None)
         self.assertEqual(form.externalDSLink, self.myAction)
         self.performed = False
@@ -4149,11 +3781,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         QTest.mouseClick(form.ui.linkDSPushButton, Qt.LeftButton)
         self.assertEqual(self.performed, True)
 
-
         self.assertEqual(form.result(), 0)
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -4161,17 +3789,18 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = DataSourceMethods()
-        form.ui = Ui_DataSourceMethods()
+        # form.ui = Ui_DataSourceMethods()
         form.ui.applyPushButton = QPushButton(form)
         form.createGUI()
         QTest.keyClicks(form.ui.typeLineEdit, "namename")
 
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction, None), None)
+        self.assertEqual(
+            form.connectExternalActions(self.myAction, None), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DataSourceMethods))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
         self.assertEqual(form.externalApply, self.myAction)
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
@@ -4179,12 +3808,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
         self.assertEqual(self.performed, False)
 
-
         self.assertEqual(form.result(), 0)
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -4192,17 +3816,18 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         form = DataSourceMethods()
-        form.ui = Ui_DataSourceMethods()
+        # form.ui = Ui_DataSourceMethods()
         form.ui.applyPushButton = QPushButton(form)
         form.createGUI()
         QTest.keyClicks(form.ui.typeLineEdit, "namename")
 
         form.show()
-        self.assertEqual(form.connectExternalActions(self.myAction, None), None)
+        self.assertEqual(
+            form.connectExternalActions(self.myAction, None), None)
         self.assertEqual(form.node, None)
         self.assertEqual(form.root, None)
         self.assertEqual(form.view, None)
-        self.assertTrue(isinstance(form.ui,Ui_DataSourceMethods))
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
         self.assertEqual(form.externalApply, self.myAction)
         self.assertEqual(form.externalDSLink, None)
         self.performed = False
@@ -4210,13 +3835,7 @@ class DataSourceMethodsTest(unittest.TestCase):
         QTest.mouseClick(form.ui.applyPushButton, Qt.LeftButton)
         self.assertEqual(self.performed, False)
 
-
         self.assertEqual(form.result(), 0)
-
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -4224,17 +3843,16 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         dks = []
         doc = QDomDocument()
         nname = "field"
         qdn = doc.createElement(nname)
         nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name","myname%s" % nn)
-        qdn.setAttribute("type","mytype%s" % nn)
-        qdn.setAttribute("unit","myunits%s" % nn)
-        qdn.setAttribute("units","myunits%s" % nn)
-        qdn.setAttribute("shortname","mynshort%s" % nn)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("units", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
         doc.appendChild(qdn)
         dname = "doc"
 
@@ -4253,7 +3871,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         rn = self.__rnd.randint(1, 9)
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [self.__rnd.randint(1, 40) for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", str(unicode(rn)))
@@ -4266,7 +3884,6 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         qdn.appendChild(mdim)
 
-
         form = DataSourceMethods()
         form.show()
         form.node = qdn
@@ -4276,38 +3893,45 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.value, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
+        self.assertEqual(
+            form.subItems,
+            ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration',
+             'strategy'])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
 
         form.setFromNode()
         form.createGUI()
 
         attributeMap = form.node.attributes()
-        attrs = {"longname":"newlogname","unit":"myunits%s" % nn}
+        attrs = {"longname": "newlogname", "unit": "myunits%s" % nn}
 
         allAttr = True
-        cm = ComponentModel(doc,allAttr)
+        cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0, 0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
-        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
-
+        ats = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" % nn)
         self.assertEqual(form.nexusType, "mytype%s" % nn)
         self.assertEqual(form.units, "myunits%s" % nn)
-        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" % i  for i in range(nval)])).strip())
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
-        self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+        self.assertEqual(
+            form.value,
+            ("".join(["\nVAL\n %s\n" % i for i in range(nval)])).strip())
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(
+            form.attributes,
+            {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(
+            form.subItems,
+            ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration',
+             'strategy'])
 
         self.assertEqual(form.dimensions, dimensions)
-
-
 
         cnt = 0
         for i in range(attributeMap.count()):
@@ -4323,18 +3947,21 @@ class DataSourceMethodsTest(unittest.TestCase):
                 self.assertEqual(vl, "myunits%s" % nn)
                 cnt += 1
             else:
-                self.assertEqual(vl,ats[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
-
+                self.assertEqual(vl, ats[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
         mydoc = form.node.firstChildElement(str("doc"))
         text = form.dts.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(
+            olddoc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
 
         vtext = form.dts.getText(qdn)
         oldval = unicode(vtext).strip() if vtext else ""
-        self.assertEqual(oldval, "".join(["\nVAL\n %s\n" % n for n in range(nval)]).strip())
+        self.assertEqual(
+            oldval,
+            "".join(["\nVAL\n %s\n" % n for n in range(nval)]).strip())
 
         mydm = form.node.firstChildElement(str("dimensions"))
 
@@ -4346,29 +3973,22 @@ class DataSourceMethodsTest(unittest.TestCase):
                 at = child.attributes()
                 ind = int(at.namedItem("index").nodeValue())
                 vl = int(at.namedItem("value").nodeValue())
-                self.assertTrue(ind >0 )
-                self.assertTrue(ind <= rn )
+                self.assertTrue(ind > 0)
+                self.assertTrue(ind <= rn)
                 self.assertEqual(dimensions[ind-1], vl)
             child = child.nextSibling()
-
-
-
-
 
         doc2 = QDomDocument()
         nname2 = "datasource"
         qdn2 = doc2.createElement(nname2)
-        qdn2.setAttribute("name","my2name%s" % nn)
-        qdn2.setAttribute("type","my2type%s" % nn)
-        qdn2.setAttribute("unit2","my2units%s" % nn)
-        qdn2.setAttribute("units","my2units%s" % nn)
-        qdn2.setAttribute("shortname2","my2nshort%s" % nn)
+        qdn2.setAttribute("name", "my2name%s" % nn)
+        qdn2.setAttribute("type", "my2type%s" % nn)
+        qdn2.setAttribute("unit2", "my2units%s" % nn)
+        qdn2.setAttribute("units", "my2units%s" % nn)
+        qdn2.setAttribute("shortname2", "my2nshort%s" % nn)
         doc2.appendChild(qdn2)
 
-
-
-        form.appendElement(qdn2,di)
-
+        form.appendElement(qdn2, di)
 
         cnt = 0
         for i in range(attributeMap.count()):
@@ -4384,18 +4004,21 @@ class DataSourceMethodsTest(unittest.TestCase):
                 self.assertEqual(vl, "myunits%s" % nn)
                 cnt += 1
             else:
-                self.assertEqual(vl,ats[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
-
+                self.assertEqual(vl, ats[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
         mydoc = form.node.firstChildElement(str("doc"))
         text = form.dts.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(
+            olddoc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
 
         vtext = form.dts.getText(qdn)
         oldval = unicode(vtext).strip() if vtext else ""
-        self.assertEqual(oldval, "".join(["\nVAL\n %s\n" % n for n in range(nval)]).strip())
+        self.assertEqual(
+            oldval,
+            "".join(["\nVAL\n %s\n" % n for n in range(nval)]).strip())
 
         mydm = form.node.firstChildElement(str("dimensions"))
 
@@ -4407,13 +4030,13 @@ class DataSourceMethodsTest(unittest.TestCase):
                 at = child.attributes()
                 ind = int(at.namedItem("index").nodeValue())
                 vl = int(at.namedItem("value").nodeValue())
-                self.assertTrue(ind >0 )
-                self.assertTrue(ind <= rn )
+                self.assertTrue(ind > 0)
+                self.assertTrue(ind <= rn)
                 self.assertEqual(dimensions[ind-1], vl)
             child = child.nextSibling()
 
-
-        ats2= {u'shortname2': u'my2nshort%s' % nn, u'unit2': u'my2units%s' % nn}
+        ats2 = {u'shortname2': u'my2nshort%s' % nn,
+                u'unit2': u'my2units%s' % nn}
 
         ds = form.node.firstChildElement(str("datasource"))
         attributeMap2 = ds.attributes()
@@ -4433,14 +4056,8 @@ class DataSourceMethodsTest(unittest.TestCase):
                 cnt += 1
             else:
                 # print ats2, nm
-                self.assertEqual(vl,ats2[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
-
-
-
-
-
-
+                self.assertEqual(vl, ats2[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
     # constructor test
     # \brief It tests default settings
@@ -4448,17 +4065,16 @@ class DataSourceMethodsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-
         dks = []
         doc = QDomDocument()
         nname = "field"
         qdn = doc.createElement(nname)
         nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name","myname%s" % nn)
-        qdn.setAttribute("type","mytype%s" % nn)
-        qdn.setAttribute("unit","myunits%s" % nn)
-        qdn.setAttribute("units","myunits%s" % nn)
-        qdn.setAttribute("shortname","mynshort%s" % nn)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("units", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
         doc.appendChild(qdn)
         dname = "doc"
 
@@ -4477,7 +4093,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         rn = self.__rnd.randint(1, 9)
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [self.__rnd.randint(1, 40) for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", str(unicode(rn)))
@@ -4490,7 +4106,6 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         qdn.appendChild(mdim)
 
-
         form = DataSourceMethods()
         form.show()
         form.node = qdn
@@ -4500,38 +4115,44 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.value, '')
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.dimensions, [])
-        self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
+        self.assertEqual(
+            form.subItems,
+            ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration',
+             'strategy'])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
 
         form.setFromNode()
         form.createGUI()
 
         attributeMap = form.node.attributes()
-        attrs = {"longname":"newlogname","unit":"myunits%s" % nn}
+        attrs = {"longname": "newlogname", "unit": "myunits%s" % nn}
 
         allAttr = True
-        cm = ComponentModel(doc,allAttr)
+        cm = ComponentModel(doc, allAttr)
         ri = cm.rootIndex
-        di = cm.index(0, 0,ri)
+        di = cm.index(0, 0, ri)
         form.view = TestView(cm)
         form.view.testIndex = di
 
-        ats= {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
-
+        ats = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
 
         self.assertEqual(form.name, "myname%s" % nn)
         self.assertEqual(form.nexusType, "mytype%s" % nn)
         self.assertEqual(form.units, "myunits%s" % nn)
-        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" % i  for i in range(nval)])).strip())
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(
+            form.value,
+            ("".join(["\nVAL\n %s\n" % i for i in range(nval)])).strip())
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(
+            form.attributes,
+            {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
         self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+                         ['attribute', 'datasource', 'doc', 'dimensions',
+                          'enumeration', 'strategy'])
 
         self.assertEqual(form.dimensions, dimensions)
-
-
 
         cnt = 0
         for i in range(attributeMap.count()):
@@ -4547,18 +4168,21 @@ class DataSourceMethodsTest(unittest.TestCase):
                 self.assertEqual(vl, "myunits%s" % nn)
                 cnt += 1
             else:
-                self.assertEqual(vl,ats[str(nm)])
-        self.assertEqual(len(attrs),attributeMap.count() - cnt)
-
+                self.assertEqual(vl, ats[str(nm)])
+        self.assertEqual(len(attrs), attributeMap.count() - cnt)
 
         mydoc = form.node.firstChildElement(str("doc"))
         text = form.dts.getText(mydoc)
         olddoc = unicode(text).strip() if text else ""
-        self.assertEqual(olddoc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(
+            olddoc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
 
         vtext = form.dts.getText(qdn)
         oldval = unicode(vtext).strip() if vtext else ""
-        self.assertEqual(oldval, "".join(["\nVAL\n %s\n" % n for n in range(nval)]).strip())
+        self.assertEqual(
+            oldval,
+            "".join(["\nVAL\n %s\n" % n for n in range(nval)]).strip())
 
         mydm = form.node.firstChildElement(str("dimensions"))
 
@@ -4570,59 +4194,48 @@ class DataSourceMethodsTest(unittest.TestCase):
                 at = child.attributes()
                 ind = int(at.namedItem("index").nodeValue())
                 vl = int(at.namedItem("value").nodeValue())
-                self.assertTrue(ind >0 )
-                self.assertTrue(ind <= rn )
+                self.assertTrue(ind > 0)
+                self.assertTrue(ind <= rn)
                 self.assertEqual(dimensions[ind-1], vl)
             child = child.nextSibling()
 
-
-        tags = ["datasource","strategy"]
+        tags = ["datasource", "strategy"]
         wtext = "To add a new %s please remove the old one"
         for tg in tags:
-
-
 
             doc2 = QDomDocument()
             nname2 = tg
             qdn2 = doc2.createElement(nname2)
-            qdn2.setAttribute("name","my2name%s" % nn)
-            qdn2.setAttribute("type","my2type%s" % nn)
-            qdn2.setAttribute("unit2","my2units%s" % nn)
-            qdn2.setAttribute("units","my2units%s" % nn)
-            qdn2.setAttribute("shortname2","my2nshort%s" % nn)
+            qdn2.setAttribute("name", "my2name%s" % nn)
+            qdn2.setAttribute("type", "my2type%s" % nn)
+            qdn2.setAttribute("unit2", "my2units%s" % nn)
+            qdn2.setAttribute("units", "my2units%s" % nn)
+            qdn2.setAttribute("shortname2", "my2nshort%s" % nn)
             doc2.appendChild(qdn2)
 
-            form.appendElement(qdn2,di)
+            form.appendElement(qdn2, di)
 
             QTimer.singleShot(10, self.checkMessageBox)
-            form.appendElement(qdn2,di)
+            form.appendElement(qdn2, di)
             self.assertEqual(self.text, wtext % nname2)
 
-
-
-        tags = ["mydatasource","mystrategy","random"]
+        tags = ["mydatasource", "mystrategy", "random"]
         wtext = "To add a new %s please remove the old one"
         for tg in tags:
-
-
 
             doc2 = QDomDocument()
             nname2 = tg
             qdn2 = doc2.createElement(nname2)
-            qdn2.setAttribute("name","my2name%s" % nn)
-            qdn2.setAttribute("type","my2type%s" % nn)
-            qdn2.setAttribute("unit2","my2units%s" % nn)
-            qdn2.setAttribute("units","my2units%s" % nn)
-            qdn2.setAttribute("shortname2","my2nshort%s" % nn)
+            qdn2.setAttribute("name", "my2name%s" % nn)
+            qdn2.setAttribute("type", "my2type%s" % nn)
+            qdn2.setAttribute("unit2", "my2units%s" % nn)
+            qdn2.setAttribute("units", "my2units%s" % nn)
+            qdn2.setAttribute("shortname2", "my2nshort%s" % nn)
             doc2.appendChild(qdn2)
 
-            form.appendElement(qdn2,di)
+            form.appendElement(qdn2, di)
 
-            form.appendElement(qdn2,di)
-
-
-
-
+            form.appendElement(qdn2, di)
 
     # constructor test
     # \brief It tests default settings
@@ -4635,11 +4248,11 @@ class DataSourceMethodsTest(unittest.TestCase):
         nname = "field"
         qdn = doc.createElement(nname)
         nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name","myname%s" % nn)
-        qdn.setAttribute("type","mytype%s" % nn)
-        qdn.setAttribute("unit","myunits%s" % nn)
-        qdn.setAttribute("units","mmyunits%s" % nn)
-        qdn.setAttribute("shortname","mynshort%s" % nn)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("units", "mmyunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
         doc.appendChild(qdn)
         dname = "doc"
 
@@ -4658,7 +4271,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         rn = self.__rnd.randint(1, 9)
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [self.__rnd.randint(1, 40) for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", str(unicode(rn)))
@@ -4671,9 +4284,6 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         qdn.appendChild(mdim)
 
-
-
-
         form = DataSourceMethods()
         form.show()
         form.node = qdn
@@ -4685,8 +4295,9 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.units, '')
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
+                         ['attribute', 'datasource', 'doc', 'dimensions',
+                          'enumeration', 'strategy'])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
 
         form.createGUI()
 
@@ -4698,19 +4309,25 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+                         ['attribute', 'datasource', 'doc', 'dimensions',
+                          'enumeration', 'strategy'])
 
         form.setFromNode()
 
-
         self.assertEqual(form.name, "myname%s" % nn)
         self.assertEqual(form.nexusType, "mytype%s" % nn)
-        self.assertEqual(form.units, 'mmyunits%s'%nn)
-        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" % i  for i in range(nval)])).strip())
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(form.units, 'mmyunits%s' % nn)
+        self.assertEqual(
+            form.value,
+            ("".join(["\nVAL\n %s\n" % i for i in range(nval)])).strip())
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn,
+                                           u'unit': u'myunits%s' % nn})
         self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+                         ['attribute', 'datasource', 'doc', 'dimensions',
+                          'enumeration', 'strategy'])
 
         self.assertEqual(form.dimensions, dimensions)
 
@@ -4722,18 +4339,16 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
         self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
-
+        attributes = {u'shortname': u'mynshort%s' % nn,
+                      u'unit': u'myunits%s' % nn}
 
         na = self.__rnd.randint(0, len(attributes)-1)
         sel = list(attributes.keys())[na]
         form.populateAttributes(sel)
 
-
-
-
         self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(), len(attributes))
+        self.assertEqual(
+            form.ui.attributeTableWidget.rowCount(), len(attributes))
         for i in range(len(attributes)):
             it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
@@ -4741,25 +4356,20 @@ class DataSourceMethodsTest(unittest.TestCase):
             it2 = form.ui.attributeTableWidget.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
-
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
+        item = form.ui.attributeTableWidget.item(
+            form.ui.attributeTableWidget.currentRow(), 0)
 
         self.assertEqual(item.data(Qt.UserRole), sel)
-
-
 
         self.aname = "addedAttribute"
         self.avalue = "addedAttributeValue"
 
-
         QTimer.singleShot(10, self.attributeWidgetClose)
         QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
 
-
-
-
         self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(), len(attributes))
+        self.assertEqual(
+            form.ui.attributeTableWidget.rowCount(), len(attributes))
         for i in range(len(attributes)):
             it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
@@ -4767,8 +4377,8 @@ class DataSourceMethodsTest(unittest.TestCase):
             it2 = form.ui.attributeTableWidget.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
-
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
+        item = form.ui.attributeTableWidget.item(
+            form.ui.attributeTableWidget.currentRow(), 0)
 
         self.assertEqual(item.data(Qt.UserRole), sel)
 
@@ -4778,11 +4388,9 @@ class DataSourceMethodsTest(unittest.TestCase):
         QTimer.singleShot(10, self.attributeWidget)
         QTest.mouseClick(form.ui.addPushButton, Qt.LeftButton)
 
-
-
-
         self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
-        self.assertEqual(form.ui.attributeTableWidget.rowCount(), len(attributes)+1)
+        self.assertEqual(
+            form.ui.attributeTableWidget.rowCount(), len(attributes)+1)
         for i in range(len(attributes)+1):
             it = form.ui.attributeTableWidget.item(i, 0)
             k = str(it.text())
@@ -4792,15 +4400,9 @@ class DataSourceMethodsTest(unittest.TestCase):
             else:
                 self.assertEqual(it2.text(), self.avalue)
 
-        item = form.ui.attributeTableWidget.item(form.ui.attributeTableWidget.currentRow(), 0)
+        item = form.ui.attributeTableWidget.item(
+            form.ui.attributeTableWidget.currentRow(), 0)
         self.assertEqual(item.data(Qt.UserRole), self.aname)
-
-
-
-
-
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -4813,11 +4415,11 @@ class DataSourceMethodsTest(unittest.TestCase):
         nname = "field"
         qdn = doc.createElement(nname)
         nn = self.__rnd.randint(0, 9)
-        qdn.setAttribute("name","myname%s" % nn)
-        qdn.setAttribute("type","mytype%s" % nn)
-        qdn.setAttribute("units","mmyunits%s" % nn)
-        qdn.setAttribute("unit","myunits%s" % nn)
-        qdn.setAttribute("shortname","mynshort%s" % nn)
+        qdn.setAttribute("name", "myname%s" % nn)
+        qdn.setAttribute("type", "mytype%s" % nn)
+        qdn.setAttribute("units", "mmyunits%s" % nn)
+        qdn.setAttribute("unit", "myunits%s" % nn)
+        qdn.setAttribute("shortname", "mynshort%s" % nn)
         doc.appendChild(qdn)
         dname = "doc"
 
@@ -4826,7 +4428,6 @@ class DataSourceMethodsTest(unittest.TestCase):
         for n in range(nval):
             dval.append(doc.createTextNode("\nVAL\n %s\n" % n))
             qdn.appendChild(dval[-1])
-
 
         mdoc = doc.createElement(dname)
         qdn.appendChild(mdoc)
@@ -4837,7 +4438,7 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         rn = self.__rnd.randint(1, 9)
 
-        dimensions = [self.__rnd.randint(1, 40)  for n in range(rn)]
+        dimensions = [self.__rnd.randint(1, 40) for n in range(rn)]
 
         mdim = doc.createElement('dimensions')
         mdim.setAttribute("rank", str(unicode(rn)))
@@ -4850,9 +4451,6 @@ class DataSourceMethodsTest(unittest.TestCase):
 
         qdn.appendChild(mdim)
 
-
-
-
         form = DataSourceMethods()
         form.show()
         form.node = qdn
@@ -4864,8 +4462,9 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.attributes, {})
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
-        self.assertTrue(isinstance(form.ui, Ui_DataSourceMethods))
+                         ['attribute', 'datasource', 'doc', 'dimensions',
+                          'enumeration', 'strategy'])
+        self.assertEqual(form.ui.__class__.__name__, "Ui_DataSourceMethods")
 
         form.createGUI()
 
@@ -4878,19 +4477,25 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.units, '')
         self.assertEqual(form.dimensions, [])
         self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+                         ['attribute', 'datasource', 'doc', 'dimensions',
+                          'enumeration', 'strategy'])
 
         form.setFromNode()
 
-
         self.assertEqual(form.name, "myname%s" % nn)
         self.assertEqual(form.nexusType, "mytype%s" % nn)
-        self.assertEqual(form.value, ("".join(["\nVAL\n %s\n" % i  for i in range(nval)])).strip())
-        self.assertEqual(form.units, 'mmyunits%s'%nn)
-        self.assertEqual(form.doc, "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
-        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn})
+        self.assertEqual(
+            form.value,
+            ("".join(["\nVAL\n %s\n" % i for i in range(nval)])).strip())
+        self.assertEqual(form.units, 'mmyunits%s' % nn)
+        self.assertEqual(
+            form.doc,
+            "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
+        self.assertEqual(form.attributes, {u'shortname': u'mynshort%s' % nn,
+                                           u'unit': u'myunits%s' % nn})
         self.assertEqual(form.subItems,
-                         ['attribute', 'datasource', 'doc', 'dimensions', 'enumeration', 'strategy'])
+                         ['attribute', 'datasource', 'doc', 'dimensions',
+                          'enumeration', 'strategy'])
 
         self.assertEqual(form.dimensions, dimensions)
 
@@ -4902,14 +4507,12 @@ class DataSourceMethodsTest(unittest.TestCase):
         self.assertEqual(form.ui.attributeTableWidget.columnCount(), 2)
         self.assertEqual(form.ui.attributeTableWidget.rowCount(), 0)
 
-        attributes = {u'shortname': u'mynshort%s' % nn, u'unit': u'myunits%s' % nn}
-
-
+        attributes = {u'shortname': u'mynshort%s' % nn,
+                      u'unit': u'myunits%s' % nn}
 
         na = self.__rnd.randint(0, len(attributes)-1)
         sel = list(attributes.keys())[na]
         form.populateAttributes(sel)
-
 
         self.assertEqual(atw.columnCount(), 2)
         self.assertEqual(atw.rowCount(), len(attributes))
@@ -4919,7 +4522,6 @@ class DataSourceMethodsTest(unittest.TestCase):
             self.assertTrue(k in attributes.keys())
             it2 = atw.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
-
 
         item = atw.item(atw.currentRow(), 0)
         self.assertEqual(item.data(Qt.UserRole), sel)
@@ -4936,13 +4538,14 @@ class DataSourceMethodsTest(unittest.TestCase):
         atw.setCurrentCell(ch, 0)
 
         QTimer.singleShot(10, self.checkMessageBox)
-        atw.setItem(ch, 0,it)
-        self.assertEqual(self.text,
-                         "To change the attribute name, please remove the attribute and add the new one")
+        atw.setItem(ch, 0, it)
+        self.assertEqual(
+            self.text,
+            "To change the attribute name, please remove the attribute "
+            "and add the new one")
 
-
-        avalue = attributes[str(aname)]
-
+        # avalue =
+        attributes[str(aname)]
 
         self.assertEqual(atw.columnCount(), 2)
         self.assertEqual(atw.rowCount(), len(attributes))
@@ -4953,20 +4556,16 @@ class DataSourceMethodsTest(unittest.TestCase):
             it2 = atw.item(i, 1)
             self.assertEqual(it2.text(), attributes[k])
 
-
-
-
         it = QTableWidgetItem(unicode(aname))
         it.setData(Qt.DisplayRole, (aname+"_"+attributes[aname]))
         it.setData(Qt.UserRole, (aname))
 
         atw.setCurrentCell(ch, 1)
 
-        atw.setItem(ch, 1,it)
+        atw.setItem(ch, 1, it)
 
-
-        avalue = attributes[str(aname)]
-
+        # avalue =
+        attributes[str(aname)]
 
         self.assertEqual(atw.columnCount(), 2)
         self.assertEqual(atw.rowCount(), len(attributes))
@@ -4980,10 +4579,6 @@ class DataSourceMethodsTest(unittest.TestCase):
             else:
                 it2 = atw.item(i, 1)
                 self.assertEqual(it2.text(), (aname+"_"+attributes[aname]))
-
-
-
-
 
 
 if __name__ == '__main__':

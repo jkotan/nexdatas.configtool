@@ -28,7 +28,7 @@ import binascii
 import time
 
 from PyQt5.QtCore import (
-    Qt, QAbstractItemModel, QModelIndex, )
+    Qt, QAbstractItemModel, QModelIndex,)
 from PyQt5.QtXml import QDomDocument
 
 from nxsconfigtool.ComponentModel import ComponentModel
@@ -392,7 +392,7 @@ class ComponentModelTest(unittest.TestCase):
 
             s1 = set(str(dt).strip().split(" "))
             s2 = set(('units="myunits%s" type="mytype%s" name="myname%s"' %
-            (n, n, n)).split(" "))
+                      (n, n, n)).split(" "))
 
             self.assertEqual(s1, s2)
 
@@ -450,7 +450,7 @@ class ComponentModelTest(unittest.TestCase):
             self.assertTrue(isinstance(dt, (unicode, str)))
             s1 = set(str(dt).strip().split(" "))
             s2 = set(('units="myunits%s" type="mytype%s" name="myname%s"' %
-            (n, n, n)).split(" "))
+                      (n, n, n)).split(" "))
 
             self.assertEqual(s1, s2)
             ki2 = cm.index(n, 2, di)

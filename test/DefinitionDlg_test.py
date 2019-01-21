@@ -1405,7 +1405,7 @@ class DefinitionDlgTest(unittest.TestCase):
 
         self.assertEqual(item.data(Qt.UserRole), sel)
 
-        aname = self.__rnd.choice(attributes.keys())
+        aname = self.__rnd.choice(list(attributes.keys()))
         # avalue =
         attributes[aname]
 

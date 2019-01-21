@@ -22,7 +22,6 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
 import binascii
@@ -33,7 +32,7 @@ from PyQt5.QtWidgets import (QApplication, QMessageBox)
 
 from nxsconfigtool.DataSourceDlg import CommonDataSourceDlg
 from nxsconfigtool.DataSource import CommonDataSource, DataSource
-from nxsconfigtool.DataSourceMethods import DataSourceMethods
+# from nxsconfigtool.DataSourceMethods import DataSourceMethods
 from nxsconfigtool.NodeDlg import NodeDlg
 
 #  Qt-application
@@ -41,6 +40,10 @@ app = None
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    unicode = str
+    long = int
 
 
 class TestMethods(object):
@@ -53,11 +56,9 @@ class TestMethods(object):
     def updateForm(self):
         self.stack.append("updateForm")
 
-
     def updateNode(self, index):
         self.stack.append("updateNode")
         self.stack.append(index)
-
 
     def setFromNode(self, node):
         self.stack.append("setFromNode")
@@ -70,14 +71,13 @@ class TestMethods(object):
         self.stack.append("treeMode")
         self.stack.append(enable)
 
-
-    def connectExternalActions(self, externalApply, externalSave, externalClose, externalStore):
+    def connectExternalActions(self, externalApply, externalSave,
+                               externalClose, externalStore):
         self.stack.append("connectExternalActions")
         self.stack.append(externalApply)
         self.stack.append(externalSave)
         self.stack.append(externalClose)
         self.stack.append(externalStore)
-
 
 
 # test fixture
@@ -87,8 +87,6 @@ class DataSourceTest(unittest.TestCase):
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
-
-
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
@@ -100,7 +98,6 @@ class DataSourceTest(unittest.TestCase):
         # action status
         self.performed = False
 
-
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
@@ -110,21 +107,16 @@ class DataSourceTest(unittest.TestCase):
 
         self.__rnd = random.Random(self.__seed)
 
-
     # test starter
     # \brief Common set up
     def setUp(self):
         print("\nsetting up...")
         print("SEED = %s" % self.__seed)
 
-
-
     # test closer
     # \brief Common tear down
     def tearDown(self):
         print("tearing down ...")
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -139,7 +131,6 @@ class DataSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(cds.dialog, NodeDlg))
         self.assertTrue(isinstance(cds.dialog, CommonDataSourceDlg))
 #        self.assertTrue(isinstance(cds.methods, DataSourceMethods))
-
 
         self.assertEqual(cds.directory, '')
         self.assertEqual(cds.name, None)
@@ -170,10 +161,7 @@ class DataSourceTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-
         self.assertEqual(cds.tree, False)
-
-
 
     # constructor test
     # \brief It tests default settings
@@ -192,13 +180,11 @@ class DataSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(cds.dialog, CommonDataSourceDlg))
 #        self.assertTrue(isinstance(cds.methods, DataSourceMethods))
 
-
         self.assertEqual(cds.directory, '')
         self.assertEqual(cds.name, None)
         self.assertEqual(cds.document, None)
         self.assertEqual(cds.savedXML, None)
         self.assertTrue(cds.parent is parent)
-
 
         self.assertEqual(cds.dataSourceName, u'')
         self.assertEqual(cds.clientRecordName, u'')
@@ -223,9 +209,7 @@ class DataSourceTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-
         self.assertEqual(cds.tree, False)
-
 
     # constructor test
     # \brief It tests default settings
@@ -263,27 +247,27 @@ class DataSourceTest(unittest.TestCase):
         for i in range(nn):
             peDataSources["param%s" % i] = "<datasource%s/>" % i
 
-        cds.setState((dataSourceType,
-                      doc,
-                      clientRecordName,
-                      tangoDeviceName,
-                      tangoMemberName,
-                      tangoMemberType,
-                      tangoHost,
-                      tangoPort,
-                      tangoEncoding,
-                      tangoGroup,
-                      dbType,
-                      dbDataFormat,
-                      dbQuery,
-                      dbParameters,
-                      peResult,
-                      peInput,
-                      peScript,
-                      peDataSources,
-                      dataSourceName
-                    ))
-
+        cds.setState(
+            (dataSourceType,
+             doc,
+             clientRecordName,
+             tangoDeviceName,
+             tangoMemberName,
+             tangoMemberType,
+             tangoHost,
+             tangoPort,
+             tangoEncoding,
+             tangoGroup,
+             dbType,
+             dbDataFormat,
+             dbQuery,
+             dbParameters,
+             peResult,
+             peInput,
+             peScript,
+             peDataSources,
+             dataSourceName)
+        )
 
         self.assertEqual(cds.dataSourceType, dataSourceType)
         self.assertEqual(cds.doc, doc)
@@ -307,7 +291,6 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.peInput, peInput)
         self.assertEqual(cds.peScript, peScript)
         self.assertEqual(cds.peDataSources, peDataSources)
-
 
         self.assertEqual(cds.externalSave, None)
         self.assertEqual(cds.externalStore, None)
@@ -318,14 +301,9 @@ class DataSourceTest(unittest.TestCase):
 
         self.assertEqual(cds.ids, None)
 
-
         self.assertEqual(cds.tree, False)
 
-
         state = cds.getState()
-
-
-
 
         self.assertEqual(cds.dataSourceType, dataSourceType)
         self.assertEqual(cds.doc, doc)
@@ -349,7 +327,6 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.peInput, peInput)
         self.assertEqual(cds.peScript, peScript)
         self.assertEqual(cds.peDataSources, peDataSources)
-
 
         self.assertEqual(cds.externalSave, None)
         self.assertEqual(cds.externalStore, None)
@@ -371,7 +348,6 @@ class DataSourceTest(unittest.TestCase):
         cds.tree = True
 
         cds.clear()
-
 
         self.assertEqual(cds.dataSourceType, 'CLIENT')
         self.assertEqual(cds.doc, '')
@@ -405,11 +381,7 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.ids, nn)
         self.assertEqual(cds.tree, True)
 
-
         cds.setState(state)
-
-
-
 
         self.assertEqual(cds.dataSourceType, dataSourceType)
         self.assertEqual(cds.doc, doc)
@@ -443,9 +415,6 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(cds.ids, nn)
         self.assertEqual(cds.tree, True)
 
-
-
-
     # constructor test
     # \brief It tests default settings
     def tttest_createDialog(self):
@@ -459,11 +428,9 @@ class DataSourceTest(unittest.TestCase):
         form.createDialog()
         self.assertEqual(len(form.methods.stack), 4)
         self.assertEqual(form.methods.stack[-1], "updateForm")
-        self.assertTrue(isinstance(form.methods.stack[-2],QModelIndex))
+        self.assertTrue(isinstance(form.methods.stack[-2], QModelIndex))
         self.assertEqual(form.methods.stack[-3], "updateNode")
         self.assertEqual(form.methods.stack[-4], "createGUI")
-
-
 
 
 if __name__ == '__main__':

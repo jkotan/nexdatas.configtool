@@ -22,34 +22,26 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
 import binascii
 import time
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (QApplication, QMessageBox, QTableWidgetItem)
-from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import Qt, QTimer, QObject
-
+from PyQt5.QtCore import Qt, QTimer
 
 from nxsconfigtool.DimensionsDlg import DimensionsDlg
-#from nxsconfigtool.ui.ui_dimensionsdlg import Ui_DimensionsDlg
-
+# from nxsconfigtool.ui.ui_dimensionsdlg import Ui_DimensionsDlg
 
 #  Qt-application
 app = None
 
-
-
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
-
 
 if sys.version_info > (3,):
     unicode = str
     long = int
-
 
 
 # test fixture
@@ -59,8 +51,6 @@ class DimensionsDlgTest(unittest.TestCase):
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
-
-
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
@@ -77,13 +67,11 @@ class DimensionsDlgTest(unittest.TestCase):
 
         self.__rnd = random.Random(self.__seed)
 
-
     # test starter
     # \brief Common set up
     def setUp(self):
         print("\nsetting up...")
         print("SEED = %s" % self.__seed)
-
 
     # test closer
     # \brief Common tear down
@@ -103,9 +91,8 @@ class DimensionsDlgTest(unittest.TestCase):
 
         self.assertEqual(form.result(), 0)
 
-
     def checkMessageBox(self):
-        aw = QApplication.activeWindow()
+        # aw = QApplication.activeWindow()
         mb = QApplication.activeModalWidget()
         self.assertTrue(isinstance(mb, QMessageBox))
 #        print mb.text()
@@ -115,7 +102,6 @@ class DimensionsDlgTest(unittest.TestCase):
         self.title = mb.windowTitle()
         mb.accept()
         mb.close()
-
 
     # create GUI test
     # \brief It tests default settings
@@ -138,8 +124,6 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.rankSpinBox.value(), 0)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(), 0)
-
-
 
     # create GUI test
     # \brief It tests default settings
@@ -169,16 +153,13 @@ class DimensionsDlgTest(unittest.TestCase):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), "")
 
-
-
-
     # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank_lengths(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = self.__rnd.randint(1, 6)
-        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
+        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank)]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
@@ -200,15 +181,13 @@ class DimensionsDlgTest(unittest.TestCase):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), str(lengths[r]))
 
-
-
     # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank_str_lengths_int(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = str(self.__rnd.randint(0, 6))
-        lengths = [str(self.__rnd.randint(1, 6)) for r in range(int(rank)) ]
+        lengths = [str(self.__rnd.randint(1, 6)) for r in range(int(rank))]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
@@ -232,14 +211,13 @@ class DimensionsDlgTest(unittest.TestCase):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), str(lengths[r]))
 
-
     # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank_neg_lengths_int(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = self.__rnd.randint(-6, -1)
-        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        lengths = [self.__rnd.randint(1, 100) for r in range(rank)]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
@@ -259,15 +237,14 @@ class DimensionsDlgTest(unittest.TestCase):
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
         self.assertEqual(form.ui.dimTableWidget.rowCount(), 0)
 
-
     # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank_lengths_int_doc(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = self.__rnd.randint(1, 6)
-        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
-        doc = 'My Document'*self.__rnd.randint(1, 10)
+        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank)]
+        # doc = 'My Document' * self.__rnd.randint(1, 10)
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
@@ -289,8 +266,6 @@ class DimensionsDlgTest(unittest.TestCase):
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), str(lengths[r]))
-
-
 
     # create GUI test
     # \brief It tests default settings
@@ -298,7 +273,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = self.__rnd.randint(1, 6)
-        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
+        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank)]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
@@ -320,8 +295,6 @@ class DimensionsDlgTest(unittest.TestCase):
         for r in range(rank):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), str(lengths[r]))
-
-
 
     # create GUI test
     # \brief It tests default settings
@@ -329,7 +302,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = self.__rnd.randint(1, 6)
-        lengths = [0 for r in range(rank) ]
+        lengths = [0 for r in range(rank)]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
@@ -352,15 +325,13 @@ class DimensionsDlgTest(unittest.TestCase):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), '')
 
-
-
     # create GUI test
     # \brief It tests default settings
     def test_createGUI_accept(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = self.__rnd.randint(1, 6)
-        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
+        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank)]
         form = DimensionsDlg()
         form.rank = rank
         form.lengths = lengths
@@ -384,17 +355,13 @@ class DimensionsDlgTest(unittest.TestCase):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), str(lengths[r]))
 
-
-
-
-
     # create GUI test
     # \brief It tests default settings
     def test_createGUI_rank_ui(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = self.__rnd.randint(1, 6)
-        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        # lengths = [self.__rnd.randint(1, 100) for r in range(rank)]
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
@@ -420,15 +387,13 @@ class DimensionsDlgTest(unittest.TestCase):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), '')
 
-
-
     # create GUI test
     # \brief It tests default settings
     def test_createGUI_doc_ui(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = self.__rnd.randint(1, 6)
-        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        # lengths = [self.__rnd.randint(1, 100) for r in range(rank)]
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
@@ -449,21 +414,13 @@ class DimensionsDlgTest(unittest.TestCase):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), '')
 
-
-
         okWidget = form.ui.buttonBox.button(form.ui.buttonBox.Ok)
         QTest.mouseClick(okWidget, Qt.LeftButton)
-
 
         self.assertEqual(form.result(), 1)
 
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, [None]*rank)
-
-
-
-
-
 
     # create GUI test
     # \brief It tests default settings
@@ -471,7 +428,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = self.__rnd.randint(1, 6)
-        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        # lengths = [self.__rnd.randint(1, 100) for r in range(rank)]
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
@@ -492,17 +449,13 @@ class DimensionsDlgTest(unittest.TestCase):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), '')
 
-
         cancelWidget = form.ui.buttonBox.button(form.ui.buttonBox.Cancel)
         QTest.mouseClick(cancelWidget, Qt.LeftButton)
-
 
         self.assertEqual(form.result(), 0)
 
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, [None]*rank)
-
-
 
     # create GUI test
     # \brief It tests default settings
@@ -510,7 +463,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = self.__rnd.randint(1, 6)
-        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
+        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank)]
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
@@ -522,7 +475,6 @@ class DimensionsDlgTest(unittest.TestCase):
 
         form.ui.rankSpinBox.setValue(rank)
 #        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
-
 
         self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
@@ -538,18 +490,13 @@ class DimensionsDlgTest(unittest.TestCase):
             it = QTableWidgetItem(unicode(lengths[r]))
             form.ui.dimTableWidget.setItem(r, 0, it)
 
-
-
         cancelWidget = form.ui.buttonBox.button(form.ui.buttonBox.Cancel)
         QTest.mouseClick(cancelWidget, Qt.LeftButton)
-
 
         self.assertEqual(form.result(), 0)
 
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-
-
 
     # create GUI test
     # \brief It tests default settings
@@ -557,7 +504,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = self.__rnd.randint(1, 6)
-        lengths = [self.__rnd.randint(1, 100) for r in range(rank) ]
+        # lengths = [self.__rnd.randint(1, 100) for r in range(rank)]
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
@@ -569,7 +516,6 @@ class DimensionsDlgTest(unittest.TestCase):
 
         form.ui.rankSpinBox.setValue(rank)
 #        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
-
 
         self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
@@ -579,7 +525,6 @@ class DimensionsDlgTest(unittest.TestCase):
             it = form.ui.dimTableWidget.item(r, 0)
             self.assertEqual(it.text(), '')
 
-
         for r in range(rank):
             QTimer.singleShot(10, self.checkMessageBox)
             form.ui.dimTableWidget.setCurrentCell(r, 0)
@@ -587,18 +532,13 @@ class DimensionsDlgTest(unittest.TestCase):
             form.ui.dimTableWidget.setItem(r, 0, it)
             self.assertEqual(self.text, 'Wrong value of the edited length')
 
-
         okWidget = form.ui.buttonBox.button(form.ui.buttonBox.Ok)
         QTest.mouseClick(okWidget, Qt.LeftButton)
-
 
         self.assertEqual(form.result(), 1)
 
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, [None]*rank)
-
-
-
 
     # create GUI test
     # \brief It tests default settings
@@ -606,7 +546,7 @@ class DimensionsDlgTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         rank = self.__rnd.randint(1, 6)
-        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank) ]
+        lengths = [str(self.__rnd.randint(1, 100)) for r in range(rank)]
         form = DimensionsDlg()
         self.assertEqual(form.rank, 0)
         self.assertEqual(form.lengths, [])
@@ -618,7 +558,6 @@ class DimensionsDlgTest(unittest.TestCase):
 
         form.ui.rankSpinBox.setValue(rank)
 #        QTest.keyClicks(form.ui.rankSpinBox, str(rank))
-
 
         self.assertEqual(form.ui.rankSpinBox.value(), rank)
         self.assertEqual(form.ui.dimTableWidget.columnCount(), 1)
@@ -644,12 +583,10 @@ class DimensionsDlgTest(unittest.TestCase):
         okWidget = form.ui.buttonBox.button(form.ui.buttonBox.Ok)
         QTest.mouseClick(okWidget, Qt.LeftButton)
 
-
         self.assertEqual(form.result(), 1)
 
         self.assertEqual(form.rank, rank)
         self.assertEqual(form.lengths, lengths)
-
 
 
 if __name__ == '__main__':

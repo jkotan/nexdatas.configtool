@@ -31,10 +31,11 @@ from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
 
 
+import nxsconfigtool
 from nxsconfigtool.MainWindow import MainWindow
 from nxsconfigtool.Logger import LogHandler, LogActions
 from nxsconfigtool import __version__
-import nxsconfigtool.qrc as qrc
+# import nxsconfigtool.qrc as qrc
 
 def main():
     """ the main function """
@@ -50,7 +51,7 @@ def main():
 
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_X11InitThreads)
     QtCore.QResource.registerResource(
-        os.path.join(qrc.__path__[0], "resources.rcc"))
+        os.path.join(nxsconfigtool.__path__[0], "qrc", "resources.rcc"))
     
     parser = OptionParser(usage=usage)
 

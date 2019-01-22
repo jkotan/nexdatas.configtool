@@ -112,20 +112,6 @@ class toolClean(clean):
         for fl in cfiles:
             os.remove(str(fl))
 
-        cfiles = [os.path.join(UIDIR, cfile) for cfile
-                  in os.listdir(UIDIR) if cfile.endswith('.pyc') or
-                  (cfile.endswith('.py')
-                   and cfile.endswith('__init_.py'))]
-        for fl in cfiles:
-            os.remove(str(fl))
-
-        cfiles = [os.path.join(QRCDIR, cfile) for cfile
-                  in os.listdir(QRCDIR) if cfile.endswith('.pyc')
-                  or (cfile.endswith('.py')
-                      and cfile.endswith('__init_.py'))]
-        for fl in cfiles:
-            os.remove(str(fl))
-
         if get_platform()[:3] == 'win':
             for script in SCRIPTS:
                 if os.path.exists(script + ".pyw"):
@@ -168,7 +154,7 @@ SETUPDATA = dict(
     keywords="configuration writer Tango component nexus data",
     url="https://github.com/jkotan/nexdatas/",
     platforms=("Linux", " Windows", " MacOS "),
-    packages=[TOOL, QRCDIR],
+    packages=[TOOL],
     package_data=package_data,
     scripts=get_scripts(SCRIPTS),
     zip_safe=False,

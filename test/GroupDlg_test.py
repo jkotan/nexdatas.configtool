@@ -2002,7 +2002,7 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, "mytype%s" % nn)
         self.assertEqual(
             form.doc,
-            ("".join(["\nText\n %s\n" % i for i in range(ndcs)])).strip())
+            ("".join(["\nText\n %s\n" % ii for ii in range(ndcs)])).strip())
         self.assertEqual(form.attributes,  ats)
 
         cnt = 0
@@ -2140,7 +2140,7 @@ class GroupDlgTest(unittest.TestCase):
         self.assertEqual(form.nexusType, "mytype%s" % nn)
         self.assertEqual(
             form.doc,
-            ("".join(["\nText\n %s\n" % i for i in range(ndcs)])).strip())
+            ("".join(["\nText\n %s\n" % ii for ii in range(ndcs)])).strip())
         self.assertEqual(form.attributes,  ats)
 
         cnt = 0

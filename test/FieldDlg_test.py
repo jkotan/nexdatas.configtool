@@ -3364,7 +3364,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.units, "myunits%s" % nn)
         self.assertEqual(
             form.value,
-            ("".join(["\nVAL\n %s\n" % i for i in range(nval)])).strip())
+            ("".join(["\nVAL\n %s\n" % ii for ii in range(nval)])).strip())
         self.assertEqual(
             form.doc,
             "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())
@@ -3587,7 +3587,7 @@ class FieldDlgTest(unittest.TestCase):
         self.assertEqual(form.units, "myunits%s" % nn)
         self.assertEqual(
             form.value,
-            ("".join(["\nVAL\n %s\n" % i for i in range(nval)])).strip())
+            ("".join(["\nVAL\n %s\n" % ii for ii in range(nval)])).strip())
         self.assertEqual(
             form.doc,
             "".join(["\nText\n %s\n" % n for n in range(ndcs)]).strip())

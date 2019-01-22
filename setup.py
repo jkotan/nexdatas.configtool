@@ -135,7 +135,7 @@ name = "NXS Component Designer"
 
 #: (:obj:`dict` <:obj:`str`, :obj:`list` <:obj:`str`> > ) package data
 package_data = {
-    'nxsconfigtool': ['ui/*.ui', 'qrc/*.rcc']
+    'nxsconfigtool': ['ui/*.ui', 'qrc/*.rcc', 'qrc/*.qrc']
 }
 
 

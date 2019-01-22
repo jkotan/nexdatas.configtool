@@ -15,51 +15,61 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file GroupDlg.py
+# \package nxsconfigtool nexdatas
+# \file GroupDlg.py
 # Group dialog class
 
 """ group widget """
 
 import copy
+import os
+import sys
 
-from PyQt4.QtCore import (SIGNAL, QString, Qt, QVariant, QModelIndex)
-from PyQt4.QtGui import (QMessageBox, QTableWidgetItem, QCompleter)
+from PyQt5.QtCore import (Qt, QModelIndex)
+from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem, QCompleter)
+from PyQt5 import uic
 
-from .ui.ui_groupdlg import Ui_GroupDlg
+# from .ui.ui_groupdlg import Ui_GroupDlg
 from .AttributeDlg import AttributeDlg
 from .NodeDlg import NodeDlg
 from .DomTools import DomTools
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "groupdlg.ui"))
 
-## dialog defining a group tag
+if sys.version_info > (3,):
+    unicode = str
+
+
+# dialog defining a group tag
 class GroupDlg(NodeDlg):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(GroupDlg, self).__init__(parent)
 
-        ## group name
+        # group name
         self.name = u''
-        ## group type
+        # group type
         self.nexusType = u''
-        ## group doc
+        # group doc
         self.doc = u''
-        ## group attributes
+        # group attributes
         self.attributes = {}
-        ## group attributes
+        # group attributes
         self.__attributes = {}
 
-        ## allowed subitems
+        # allowed subitems
         self.subItems = ["group", "field", "attribute", "link",
                          "component", "doc"]
 
-        ## list of NeXus types
+        # list of NeXus types
         self.typehelper = [
             'NXaperture',
             'NXattenuator',
@@ -116,10 +126,10 @@ class GroupDlg(NodeDlg):
             'NXxraylens'
         ]
 
-        ## user interface
-        self.ui = Ui_GroupDlg()
+        # user interface
+        self.ui = _formclass()
 
-    ## updates the group dialog
+    # updates the group dialog
     # \brief It sets the form local variables
     def updateForm(self):
 
@@ -136,36 +146,27 @@ class GroupDlg(NodeDlg):
 
         self.populateAttributes()
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
         self.ui.setupUi(self)
         completer = QCompleter(
-            [QString(tp) for tp in self.typehelper],
+            [str(tp) for tp in self.typehelper],
             self)
         self.ui.typeLineEdit.setCompleter(completer)
         self.updateForm()
 
         self.__updateUi()
 
-        self.connect(
-            self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(
-            self.ui.attributeTableWidget,
-            SIGNAL("itemChanged(QTableWidgetItem*)"),
+        self.ui.resetPushButton.clicked.connect(self.reset)
+        self.ui.attributeTableWidget.itemChanged.connect(
             self.__tableItemChanged)
-        self.connect(
-            self.ui.addPushButton, SIGNAL("clicked()"),
-            self.__addAttribute)
-        self.connect(
-            self.ui.removePushButton, SIGNAL("clicked()"),
-            self.__removeAttribute)
+        self.ui.addPushButton.clicked.connect(self.__addAttribute)
+        self.ui.removePushButton.clicked.connect(self.__removeAttribute)
 
-        self.connect(
-            self.ui.typeLineEdit, SIGNAL("textEdited(QString)"),
-            self.__updateUi)
+        self.ui.typeLineEdit.textEdited[str].connect(self.__updateUi)
 
-    ## provides the state of the group dialog
+    # provides the state of the group dialog
     # \returns state of the group in tuple
     def getState(self):
         attributes = copy.copy(self.attributes)
@@ -177,7 +178,7 @@ class GroupDlg(NodeDlg):
                  )
         return state
 
-    ## sets the state of the group dialog
+    # sets the state of the group dialog
     # \param state group state written in tuple
     def setState(self, state):
 
@@ -188,14 +189,14 @@ class GroupDlg(NodeDlg):
          ) = state
         self.attributes = copy.copy(attributes)
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         if node:
-            ## defined in NodeDlg class
+            # defined in NodeDlg class
             self.node = node
         if not self.node:
-            ## exception?
+            # exception?
             return
         attributeMap = self.node.attributes()
 
@@ -215,11 +216,11 @@ class GroupDlg(NodeDlg):
                 self.attributes[attrName] = unicode(attribute.nodeValue())
                 self.__attributes[attrName] = unicode(attribute.nodeValue())
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
-    ## adds an attribute
+    # adds an attribute
     #  \brief It runs the Group Dialog and fetches attribute name and value
     def __addAttribute(self):
         aform = AttributeDlg()
@@ -233,16 +234,16 @@ class GroupDlg(NodeDlg):
                     "To change the attribute value, please edit the value "
                     "in the attribute table")
 
-    ## takes a name of the current attribute
+    # takes a name of the current attribute
     # \returns name of the current attribute
     def __currentTableAttribute(self):
         item = self.ui.attributeTableWidget.item(
             self.ui.attributeTableWidget.currentRow(), 0)
         if item is None:
             return None
-        return item.data(Qt.UserRole).toString()
+        return item.data(Qt.UserRole)
 
-    ## removes an attribute
+    # removes an attribute
     #  \brief It removes the current attribute asking before about it
     def __removeAttribute(self):
         attr = self.__currentTableAttribute()
@@ -252,7 +253,7 @@ class GroupDlg(NodeDlg):
             self.__attributes.pop(unicode(attr))
             self.populateAttributes()
 
-    ## changes the current value of the attribute
+    # changes the current value of the attribute
     # \brief It changes the current value of the attribute
     #        and informs the user that attribute names arenot editable
     def __tableItemChanged(self, item):
@@ -269,7 +270,7 @@ class GroupDlg(NodeDlg):
                 "please remove the attribute and add the new one")
         self.populateAttributes()
 
-    ## fills in the attribute table
+    # fills in the attribute table
     # \param selectedAttribute selected attribute
     def populateAttributes(self, selectedAttribute=None):
         selected = None
@@ -281,7 +282,7 @@ class GroupDlg(NodeDlg):
         self.ui.attributeTableWidget.setHorizontalHeaderLabels(headers)
         for row, name in enumerate(self.__attributes):
             item = QTableWidgetItem(name)
-            item.setData(Qt.UserRole, QVariant(name))
+            item.setData(Qt.UserRole, (name))
             self.ui.attributeTableWidget.setItem(row, 0, item)
             item2 = QTableWidgetItem(self.__attributes[name])
             self.ui.attributeTableWidget.setItem(row, 1, item2)
@@ -295,13 +296,13 @@ class GroupDlg(NodeDlg):
             selected.setSelected(True)
             self.ui.attributeTableWidget.setCurrentItem(selected)
 
-    ## updates group user interface
+    # updates group user interface
     # \brief It sets enable or disable the OK button
     def __updateUi(self):
-        enable = not self.ui.typeLineEdit.text().isEmpty()
+        enable = bool(self.ui.typeLineEdit.text())
         self.ui.applyPushButton.setEnabled(enable)
 
-    ## applys input text strings
+    # applys input text strings
     # \brief It copies the group name and type from lineEdit widgets
     #        and apply the dialog
     def apply(self):
@@ -325,11 +326,9 @@ class GroupDlg(NodeDlg):
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
         self.view.expand(index)
-        self.view.model().emit(SIGNAL("dataChanged(const QModelIndex &,"
-                                      " const QModelIndex &)"),
-                               index, finalIndex)
+        self.view.model().dataChanged.emit(index, finalIndex)
 
-    ## updates the Node
+    # updates the Node
     # \brief It sets node from the dialog variables
     def updateNode(self, index=QModelIndex()):
         elem = self.node.toElement()
@@ -339,19 +338,19 @@ class GroupDlg(NodeDlg):
         for _ in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         if self.name:
-            elem.setAttribute(QString("name"), QString(self.name))
+            elem.setAttribute(str("name"), str(self.name))
         if self.nexusType:
-            elem.setAttribute(QString("type"), QString(self.nexusType))
+            elem.setAttribute(str("type"), str(self.nexusType))
 
         for attr in self.attributes.keys():
-            elem.setAttribute(QString(attr), QString(self.attributes[attr]))
+            elem.setAttribute(str(attr), str(self.attributes[attr]))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         if not self.doc and doc and doc.nodeName() == "doc":
             self.removeElement(doc, mindex)
         elif self.doc:
-            newDoc = self.root.createElement(QString("doc"))
-            newText = self.root.createTextNode(QString(self.doc))
+            newDoc = self.root.createElement(str("doc"))
+            newText = self.root.createTextNode(str(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc":
                 self.replaceElement(doc, newDoc, mindex)
@@ -361,13 +360,13 @@ class GroupDlg(NodeDlg):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## group form
+    # group form
     form = GroupDlg()
     form.name = 'entry'
     form.nexusType = 'NXentry'

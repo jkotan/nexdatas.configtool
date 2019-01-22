@@ -15,14 +15,13 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ItemCommands.py
+# \package nxsconfigtool nexdatas
+# \file ItemCommands.py
 # user commands of GUI application
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import QMessageBox, QUndoCommand
-from PyQt4.QtCore import SIGNAL
+from PyQt5.QtWidgets import QMessageBox, QUndoCommand
 
 from . import DataSource
 from .Component import Component
@@ -30,20 +29,20 @@ from .ComponentModel import ComponentModel
 from .EditCommands import (DataSourceCut, DataSourceCopy, DataSourcePaste)
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
 
-## Abstract Command which helps in defing commands related to
+# Abstract Command which helps in defing commands related to
 #  Component item operations
 class ComponentItemCommand(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._cp = None
         self._oldstate = None
@@ -51,7 +50,7 @@ class ComponentItemCommand(QUndoCommand):
         self._newstate = None
         self._subwindow = None
 
-    ## helps to construct the execute component item command as a pre-executor
+    # helps to construct the execute component item command as a pre-executor
     # \brief It stores the old states of the current component
     def preExecute(self):
         if self._cp is None:
@@ -73,7 +72,7 @@ class ComponentItemCommand(QUndoCommand):
                 self.receiver, "Component not selected",
                 "Please select one of the components")
 
-    ## helps to construct the execute component item command as a post-executor
+    # helps to construct the execute component item command as a post-executor
     # \brief It stores the new states of the current component
     def postExecute(self):
         if self._cp is not None:
@@ -132,7 +131,7 @@ class ComponentItemCommand(QUndoCommand):
         else:
             self.receiver.componentList.populateElements()
 
-    ## executes the command
+    # executes the command
     # \brief It execute pre- and post- executors
     def redo(self):
         if self._cp is None:
@@ -141,7 +140,7 @@ class ComponentItemCommand(QUndoCommand):
         self.postExecute()
         logger.debug("EXEC componentItemCommand")
 
-    ## helps to construct the unexecute component item command
+    # helps to construct the unexecute component item command
     # \brief It changes back the states of the current component
     #        to the old state
     def undo(self):
@@ -179,16 +178,16 @@ class ComponentItemCommand(QUndoCommand):
         logger.debug("UNDO componentItemComponent")
 
 
-## Command which clears the whole current component
+# Command which clears the whole current component
 class ComponentClear(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
 
-    ## executes the command
+    # executes the command
     # \brief It clears the whole current component
     def redo(self):
         if self._cp is None:
@@ -226,19 +225,19 @@ class ComponentClear(ComponentItemCommand):
         logger.debug("EXEC componentClear")
 
 
-## Command which loads sub-components into the current component tree
+# Command which loads sub-components into the current component tree
 #  from the file
 class ComponentLoadComponentItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
-        ##
+        #
         self._itemName = ""
 
-    ## executes the command
+    # executes the command
     # \brief It loads sub-components into the current component
     #        tree from the file
     def redo(self):
@@ -263,16 +262,16 @@ class ComponentLoadComponentItem(ComponentItemCommand):
         logger.debug("EXEC componentLoadcomponentItem")
 
 
-## Command which moves the current component item into the clipboard
+# Command which moves the current component item into the clipboard
 class ComponentRemoveItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
 
-    ## executes the command
+    # executes the command
     # \brief It moves the current component item into the clipboard
     def redo(self):
         if self._cp is None:
@@ -289,16 +288,16 @@ class ComponentRemoveItem(ComponentItemCommand):
         logger.debug("EXEC componentRemoveItem")
 
 
-## Command which copies the current component item into the clipboard
+# Command which copies the current component item into the clipboard
 class ComponentCopyItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
 
-    ## executes the command
+    # executes the command
     # \brief It copies the current component item into the clipboard
     def redo(self):
         if self._cp is None:
@@ -315,17 +314,17 @@ class ComponentCopyItem(ComponentItemCommand):
         logger.debug("EXEC componentCopyItem")
 
 
-## Command which pastes the component item from the clipboard into
+# Command which pastes the component item from the clipboard into
 #  the current component tree
 class ComponentPasteItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
 
-    ## executes the command
+    # executes the command
     # \brief It pastes the component item from the clipboard into
     #        the current component tree
     def redo(self):
@@ -343,22 +342,22 @@ class ComponentPasteItem(ComponentItemCommand):
         logger.debug("EXEC componentPasteItem")
 
 
-## Command which moves the current, i.e. datasource or component item,
+# Command which moves the current, i.e. datasource or component item,
 #  into the clipboard
 class CutItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
-        ## type of the cutting item with values: component of datasource
+        # type of the cutting item with values: component of datasource
         self.type = None
 
         self._ds = DataSourceCut(receiver, parent)
         self._cp = ComponentRemoveItem(receiver, parent)
 
-    ## executes the command
+    # executes the command
     # \brief It moves the current, i.e. datasource or component item,
     #        into the clipboard
     def redo(self):
@@ -367,7 +366,7 @@ class CutItem(ComponentItemCommand):
         elif self.type == 'datasource':
             self._ds.redo()
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It adds back the current, i.e. datasource or component item
     def undo(self):
         if self.type == 'component':
@@ -376,22 +375,22 @@ class CutItem(ComponentItemCommand):
             self._ds.undo()
 
 
-## Command which copies the current item, i.e. datasource or component item,
+# Command which copies the current item, i.e. datasource or component item,
 #  into the clipboard
 class CopyItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
-        ## type of the coping item with values: component of datasource
+        # type of the coping item with values: component of datasource
         self.type = None
 
         self._ds = DataSourceCopy(receiver, parent)
         self._cp = ComponentCopyItem(receiver, parent)
 
-    ## executes the command
+    # executes the command
     # \brief It copies the current item, i.e. datasource or component item,
     #        into the clipboard
     def redo(self):
@@ -400,7 +399,7 @@ class CopyItem(ComponentItemCommand):
         elif self.type == 'datasource':
             self._ds.redo()
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It unexecutes copy commands for datasources or components
     def undo(self):
         if self.type == 'component':
@@ -409,25 +408,25 @@ class CopyItem(ComponentItemCommand):
             self._ds.undo()
 
 
-## Command which pastes the current item from the clipboard
+# Command which pastes the current item from the clipboard
 #  into the current dialog, i.e. the current datasource or
 #  the current component item tree
 class PasteItem(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
-        ## element type
+        # element type
         self.type = None
 
         self._ds = DataSourcePaste(receiver, parent)
         self._cp = ComponentPasteItem(receiver, parent)
 
-    ## executes the command
+    # executes the command
     # \brief It pastes the current item from the clipboard into
     #        the current dialog, i.e. the current datasource or
     #        the current component item tree
@@ -437,7 +436,7 @@ class PasteItem(QUndoCommand):
         elif self.type == 'datasource':
             self._ds.redo()
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It unexecutes paste commands for datasources or components
     def undo(self):
         if self.type == 'component':
@@ -446,16 +445,16 @@ class PasteItem(QUndoCommand):
             self._ds.undo()
 
 
-## Command which merges the current component
+# Command which merges the current component
 class ComponentMerge(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
 
-    ## executes the command
+    # executes the command
     # \brief It merges the current component
     def redo(self):
         if self._cp is None:
@@ -468,21 +467,21 @@ class ComponentMerge(ComponentItemCommand):
         logger.debug("EXEC componentMerge")
 
 
-## Command which creates a new item in the current component tree
+# Command which creates a new item in the current component tree
 class ComponentNewItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
-        ## name of the new component item
+        # name of the new component item
         self.itemName = ""
         self._index = None
         self._childIndex = None
         self._child = None
 
-    ## executes the command
+    # executes the command
     # \brief It creates a new item in the current component tree
     def redo(self):
         if self._cp is None:
@@ -526,32 +525,28 @@ class ComponentNewItem(ComponentItemCommand):
                     finalIndex = self._cp.instance.view.model().index(
                         0, 2, self._index.parent().parent())
 
-                self._cp.instance.view.model().emit(
-                    SIGNAL("dataChanged(const QModelIndex &,"
-                           " const QModelIndex &)"),
+                self._cp.instance.view.model().dataChanged.emit(
                     self._index, self._index)
-                self._cp.instance.view.model().emit(
-                    SIGNAL("dataChanged(const QModelIndex &,"
-                           " const QModelIndex &)"),
+                self._cp.instance.view.model().dataChanged.emit(
                     finalIndex, self._childIndex)
 
         self.postExecute()
         logger.debug("EXEC componentNewItem")
 
 
-## Command which loads a datasource from a file into the current component tree
+# Command which loads a datasource from a file into the current component tree
 class ComponentLoadDataSourceItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
         self._cp = None
-        ## name of the new datasource item
+        # name of the new datasource item
         self.itemName = ""
 
-    ## executes the command
+    # executes the command
     # \brief It loads a datasource from a file into the current component tree
     def redo(self):
         if self._cp is None:
@@ -575,16 +570,16 @@ class ComponentLoadDataSourceItem(ComponentItemCommand):
         logger.debug("EXEC componentMerge")
 
 
-## Command which adds the current datasource into the current component tree
+# Command which adds the current datasource into the current component tree
 class ComponentAddDataSourceItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
 
-    ## executes the command
+    # executes the command
     # \brief It adds the current datasource into the current component tree
     def redo(self):
         if self._cp is None:
@@ -658,16 +653,16 @@ class ComponentAddDataSourceItem(ComponentItemCommand):
         logger.debug("EXEC componentAddDataSourceItem")
 
 
-## Command which links the current datasource into the current component tree
+# Command which links the current datasource into the current component tree
 class ComponentLinkDataSourceItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
 
-    ## executes the command
+    # executes the command
     # \brief It links the current datasource into the current component tree
     def redo(self):
         if self._cp is None:
@@ -741,17 +736,17 @@ class ComponentLinkDataSourceItem(ComponentItemCommand):
         logger.debug("EXEC componentLinkDataSourceItem")
 
 
-## Command which applies the changes from the form for
+# Command which applies the changes from the form for
 #  the current component item
 class ComponentApplyItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
 
-    ## executes the command
+    # executes the command
     # \brief It applies the changes from the form for
     #        the current component item
     def redo(self):
@@ -770,17 +765,17 @@ class ComponentApplyItem(ComponentItemCommand):
         logger.debug("EXEC componentApplyItem")
 
 
-## Command which move the current component item up
+# Command which move the current component item up
 class ComponentMoveUpItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
         self._index = None
 
-    ## executes the command
+    # executes the command
     # \brief It applies the changes from the form for the current
     #    component item
     def redo(self):
@@ -800,17 +795,17 @@ class ComponentMoveUpItem(ComponentItemCommand):
         logger.debug("EXEC componentMoveUpItem")
 
 
-## Command which move the current component item down
+# Command which move the current component item down
 class ComponentMoveDownItem(ComponentItemCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         ComponentItemCommand.__init__(self, receiver, parent)
         self._index = None
 
-    ## executes the command
+    # executes the command
     # \brief It applies the changes from the form for the current
     #    component item
     def redo(self):

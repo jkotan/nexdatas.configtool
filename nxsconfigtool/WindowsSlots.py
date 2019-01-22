@@ -15,34 +15,39 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file WindowsSlots.py
+# \package nxsconfigtool nexdatas
+# \file WindowsSlots.py
 # user pool commands of GUI application
 
 """ Windows slots """
+import sys
 
-from PyQt4.QtGui import QKeySequence
-from PyQt4.QtCore import (QSignalMapper, Qt, SIGNAL, SLOT)
+from PyQt5.QtGui import QKeySequence
+from PyQt5.QtCore import (QSignalMapper, Qt)
 
 from .DataSourceDlg import CommonDataSourceDlg
 from .ComponentDlg import ComponentDlg
 
 
-## stack with the application commands
+if sys.version_info > (3,):
+    unicode = str
+
+
+# stack with the application commands
 class WindowsSlots(object):
 
-    ## constructor
+    # constructor
     # \param main the main window dialog
     def __init__(self, main):
-        ## main window
+        # main window
         self.main = main
-        ## command stack
+        # command stack
         self.undoStack = main.undoStack
 
-        ## dictionary with window actions
+        # dictionary with window actions
         self.windows = {}
 
-        ## action data
+        # action data
         self.actions = {
             "actionNextWindows": [
                 "&Next", "activateNextSubWindow",
@@ -83,16 +88,19 @@ class WindowsSlots(object):
         self.windows["Mapper"] = QSignalMapper(self.main)
         self.windows["Menu"] = self.main.ui.menuWindow
 
-        self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
-                          self.main.setActiveSubWindow)
+        # self.main.connect(self.windows["Mapper"], SIGNAL("mapped(QWidget*)"),
+        #                   self.main.setActiveSubWindow)
+        self.windows["Mapper"].mapped.connect(self.main.setActiveSubWindow)
 
-        self.main.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
-                          self.updateWindowMenu)
-        self.main.connect(
-            self.main.ui.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"),
-            self.mdiWindowActivated)
+        # self.main.connect(self.windows["Menu"], SIGNAL("aboutToShow()"),
+        #                   self.updateWindowMenu)
+        self.windows["Menu"].aboutToShow.connect(self.updateWindowMenu)
+        # self.main.connect(
+        #     self.main.ui.mdi, SIGNAL("subWindowActivated(QMdiSubWindow*)"),
+        #     self.mdiWindowActivated)
+        self.main.ui.mdi.subWindowActivated.connect(self.mdiWindowActivated)
 
-    ## activated window action, i.e. it changes the current position
+    # activated window action, i.e. it changes the current position
     #  of the component and datasource lists
     # \param subwindow selected subwindow
     def mdiWindowActivated(self, subwindow):
@@ -112,53 +120,53 @@ class WindowsSlots(object):
                         self.main.componentList.populateElements(
                             widget.component.id)
 
-    ## restores all windows
+    # restores all windows
     # \brief It restores all windows in MDI
     def windowRestoreAll(self):
         for dialog in self.main.ui.mdi.subWindowList():
             dialog.showNormal()
 
-    ## minimizes all windows
+    # minimizes all windows
     # \brief It minimizes all windows in MDI
     def windowMinimizeAll(self):
         for dialog in self.main.ui.mdi.subWindowList():
             dialog.showMinimized()
 
-    ## restores all windows
+    # restores all windows
     # \brief It restores all windows in MDI
     def gotoComponentList(self):
         self.main.componentList.ui.elementListWidget.setFocus()
 
-    ## restores all windows
+    # restores all windows
     # \brief It restores all windows in MDI
     def gotoDataSourceList(self):
         self.main.sourceList.ui.elementListWidget.setFocus()
 
-    ## activates the next subwindow
+    # activates the next subwindow
     def activateNextSubWindow(self):
         self.main.ui.mdi.activateNextSubWindow()
 
-    ## activates the previous subwindow
+    # activates the previous subwindow
     def activatePreviousSubWindow(self):
         self.main.ui.mdi.activatePreviousSubWindow()
 
-    ## cascades the subwindows
+    # cascades the subwindows
     def cascadeSubWindows(self):
         self.main.ui.mdi.cascadeSubWindows()
 
-    ## tiles the subwindows
+    # tiles the subwindows
     def tileSubWindows(self):
         self.main.ui.mdi.tileSubWindows()
 
-    ## closes all subwindows
+    # closes all subwindows
     def closeAllSubWindows(self):
         self.main.ui.mdi.closeAllSubWindows()
 
-    ## closes the active subwindow
+    # closes the active subwindow
     def closeActiveSubWindow(self):
         self.main.ui.mdi.closeActiveSubWindow()
 
-    ## updates the window menu
+    # updates the window menu
     # \brief It updates the window menu with the open windows
     def updateWindowMenu(self):
         self.windows["Menu"].clear()
@@ -193,12 +201,14 @@ class WindowsSlots(object):
             elif i < 36:
                 accel = "&%s " % unicode(chr(i + ord("@") - 9))
             action = menu.addAction("%s%s" % (accel, title))
-            self.main.connect(action, SIGNAL("triggered()"),
-                              self.windows["Mapper"], SLOT("map()"))
+
+            # self.main.connect(action, SIGNAL("triggered()"),
+            #                   self.windows["Mapper"], SLOT("map()"))
+            action.triggered.connect(self.windows["Mapper"].map)
             self.windows["Mapper"].setMapping(action, dialog)
             i += 1
 
-    ## adds actions to target
+    # adds actions to target
     # \param target action target
     # \param actions actions to be added
     @classmethod
@@ -211,7 +221,7 @@ class WindowsSlots(object):
             else:
                 target.addAction(action)
 
-    ## closes the current window
+    # closes the current window
     # \brief Is closes the current datasource window
     def dsourceClose(self):
         subwindow = self.main.ui.mdi.activeSubWindow()
@@ -227,7 +237,7 @@ class WindowsSlots(object):
             self.main.setActiveSubWindow(subwindow)
             self.main.ui.mdi.closeActiveSubWindow()
 
-    ## closes the current window
+    # closes the current window
     # \brief Is closes the current component window
     def componentClose(self):
         subwindow = self.main.ui.mdi.activeSubWindow()

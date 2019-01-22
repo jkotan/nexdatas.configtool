@@ -15,59 +15,68 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file RichAttributeDlg.py
+# \package nxsconfigtool nexdatas
+# \file RichAttributeDlg.py
 # Rich Attribute dialog class
 
 """ attribute widget """
 
 import copy
+import os
 
-from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
-from PyQt4.QtGui import QMessageBox
+from PyQt5.QtCore import (QModelIndex)
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5 import uic
 
-from .ui.ui_richattributedlg import Ui_RichAttributeDlg
 from .NodeDlg import NodeDlg
 from .DimensionsDlg import DimensionsDlg
 from .Errors import CharacterError
 from .DomTools import DomTools
 
 import logging
-## message logger
+import sys
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "richattributedlg.ui"))
 
-## dialog defining an attribute
+if sys.version_info > (3,):
+    unicode = str
+
+
+# dialog defining an attribute
 class RichAttributeDlg(NodeDlg):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(RichAttributeDlg, self).__init__(parent)
 
-        ## attribute name
+        # attribute name
         self.name = u''
-        ## attribute value
+        # attribute value
         self.value = u''
-        ## attribute type
+        # attribute type
         self.nexusType = u''
-        ## attribute doc
+        # attribute doc
         self.doc = u''
 
-        ## rank
+        # rank
         self.rank = 0
-        ## dimensions
+        # dimensions
         self.dimensions = []
         self._dimensions = []
 
-        ## allowed subitems
+        # allowed subitems
         self.subItems = ["enumeration", "doc", "datasource",
                          "strategy", "dimensions"]
 
-        ## user interface
-        self.ui = Ui_RichAttributeDlg()
+        # user interface
+        self.ui = _formclass()
 
-    ## provides the state of the richattribute dialog
+    # provides the state of the richattribute dialog
     # \returns state of the richattribute in tuple
     def getState(self):
         dimensions = copy.copy(self.dimensions)
@@ -81,7 +90,7 @@ class RichAttributeDlg(NodeDlg):
                  )
         return state
 
-    ## sets the state of the richattribute dialog
+    # sets the state of the richattribute dialog
     # \param state richattribute state written in tuple
     def setState(self, state):
 
@@ -94,13 +103,13 @@ class RichAttributeDlg(NodeDlg):
          ) = state
         self.dimensions = copy.copy(dimensions)
 
-    ## links dataSource
+    # links dataSource
     # \param dsName datasource name
     def linkDataSource(self, dsName):
         self.value = "$%s.%s" % (self.dsLabel, dsName)
         self.updateForm()
 
-    ## updates the richattribute dialog
+    # updates the richattribute dialog
     # \brief It sets the form local variables
     def updateForm(self):
         if self.name is not None:
@@ -141,7 +150,7 @@ class RichAttributeDlg(NodeDlg):
         for dm in self.dimensions:
             self._dimensions.append(dm)
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
         self.ui.setupUi(self)
@@ -150,24 +159,18 @@ class RichAttributeDlg(NodeDlg):
 
         self._updateUi()
 
-        self.connect(
-            self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
+        self.ui.resetPushButton.clicked.connect(self.reset)
 
-        self.connect(
-            self.ui.nameLineEdit, SIGNAL("textEdited(QString)"),
-            self._updateUi)
-        self.connect(
-            self.ui.typeComboBox, SIGNAL("currentIndexChanged(QString)"),
+        self.ui.nameLineEdit.textEdited[str].connect(self._updateUi)
+        self.ui.typeComboBox.currentIndexChanged[str].connect(
             self._currentIndexChanged)
-        self.connect(
-            self.ui.dimPushButton, SIGNAL("clicked()"),
-            self._changeDimensions)
+        self.ui.dimPushButton.clicked.connect(self._changeDimensions)
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         if node:
-            ## defined in NodeDlg
+            # defined in NodeDlg
             self.node = node
         if not self.node:
             return
@@ -181,7 +184,7 @@ class RichAttributeDlg(NodeDlg):
         text = DomTools.getText(self.node)
         self.value = unicode(text).strip() if text else ""
 
-        dimens = self.node.firstChildElement(QString("dimensions"))
+        dimens = self.node.firstChildElement(str("dimensions"))
         attributeMap = dimens.attributes()
 
         self.dimensions = []
@@ -191,7 +194,7 @@ class RichAttributeDlg(NodeDlg):
                 self.rank = int(attributeMap.namedItem("rank").nodeValue())
                 if self.rank < 0:
                     self.rank = 0
-            except:
+            except Exception:
                 self.rank = 0
         else:
             self.rank = 0
@@ -209,7 +212,7 @@ class RichAttributeDlg(NodeDlg):
                         if attributeMap.contains("value"):
                             value = str(attributeMap.namedItem(
                                 "value").nodeValue())
-                    except:
+                    except Exception:
                         pass
                     text = DomTools.getText(child)
                     if text and "$datasources." in text:
@@ -234,11 +237,11 @@ class RichAttributeDlg(NodeDlg):
             self._dimensions.extend(
                 [None] * (self.rank - len(self._dimensions)))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
-    ## changing dimensions of the field
+    # changing dimensions of the field
     #  \brief It runs the Dimensions Dialog and fetches rank
     #         and dimensions from it
     def _changeDimensions(self):
@@ -255,7 +258,7 @@ class RichAttributeDlg(NodeDlg):
             label = self._dimensions.__str__()
             self.ui.dimLabel.setText("%s" % label.replace('None', '*'))
 
-    ## calls updateUi when the name text is changing
+    # calls updateUi when the name text is changing
     # \param text the edited text
     def _currentIndexChanged(self, text):
         if text == 'other ...':
@@ -264,13 +267,13 @@ class RichAttributeDlg(NodeDlg):
         else:
             self.ui.otherFrame.hide()
 
-    ## updates attribute user interface
+    # updates attribute user interface
     # \brief It sets enable or disable the OK button
     def _updateUi(self):
-        enable = not self.ui.nameLineEdit.text().isEmpty()
+        enable = bool(self.ui.nameLineEdit.text())
         self.ui.applyPushButton.setEnabled(enable)
 
-    ## accepts input text strings
+    # accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets
     #        and accept the dialog
     def apply(self):
@@ -283,7 +286,7 @@ class RichAttributeDlg(NodeDlg):
             if name[0] == '-':
                 raise CharacterError(
                     "The first character of Name is '-'")
-        except CharacterError, e:
+        except CharacterError as e:
             QMessageBox.warning(self, "Character Error", unicode(e))
             return
 
@@ -311,12 +314,10 @@ class RichAttributeDlg(NodeDlg):
             self.updateNode(index)
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(
-            SIGNAL("dataChanged(const QModelIndex &,"
-                   " const QModelIndex &)"), index, finalIndex)
+        self.view.model().dataChanged.emit(index, finalIndex)
         self.view.expand(index)
 
-    ## updates the Node
+    # updates the Node
     # \brief It sets node from the dialog variables
     def updateNode(self, index=QModelIndex()):
         elem = self.node.toElement()
@@ -325,51 +326,51 @@ class RichAttributeDlg(NodeDlg):
         attributeMap = self.node.attributes()
         for i in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
-        elem.setAttribute(QString("name"), QString(self.name))
+        elem.setAttribute(str("name"), str(self.name))
         if self.nexusType:
-            elem.setAttribute(QString("type"), QString(self.nexusType))
+            elem.setAttribute(str("type"), str(self.nexusType))
 
         self.replaceText(mindex, unicode(self.value))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         if not self.doc and doc and doc.nodeName() == "doc":
             self.removeElement(doc, mindex)
         elif self.doc:
-            newDoc = self.root.createElement(QString("doc"))
-            newText = self.root.createTextNode(QString(self.doc))
+            newDoc = self.root.createElement(str("doc"))
+            newText = self.root.createTextNode(str(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc":
                 self.replaceElement(doc, newDoc, mindex)
             else:
                 self.appendElement(newDoc, mindex)
 
-        dimens = self.node.firstChildElement(QString("dimensions"))
+        dimens = self.node.firstChildElement(str("dimensions"))
         if not self.dimensions and dimens \
                 and dimens.nodeName() == "dimensions":
             self.removeElement(dimens, mindex)
         elif self.dimensions:
-            newDimens = self.root.createElement(QString("dimensions"))
-            newDimens.setAttribute(QString("rank"),
-                                   QString(unicode(self.rank)))
+            newDimens = self.root.createElement(str("dimensions"))
+            newDimens.setAttribute(str("rank"),
+                                   str(unicode(self.rank)))
             dimDefined = True
             for i in range(min(self.rank, len(self.dimensions))):
                 if self.dimensions[i] is None:
                     dimDefined = False
             if dimDefined:
                 for i in range(min(self.rank, len(self.dimensions))):
-                    dim = self.root.createElement(QString("dim"))
-                    dim.setAttribute(QString("index"), QString(unicode(i + 1)))
+                    dim = self.root.createElement(str("dim"))
+                    dim.setAttribute(str("index"), str(unicode(i + 1)))
                     if "$datasources." not in unicode(self.dimensions[i]):
 
-                        dim.setAttribute(QString("value"),
-                                         QString(unicode(self.dimensions[i])))
+                        dim.setAttribute(str("value"),
+                                         str(unicode(self.dimensions[i])))
                     else:
                         dsText = self.root.createTextNode(
-                            QString(unicode(self.dimensions[i])))
+                            str(unicode(self.dimensions[i])))
                         dstrategy = self.root.createElement(
-                            QString("strategy"))
-                        dstrategy.setAttribute(QString("mode"),
-                                               QString(unicode("CONFIG")))
+                            str("strategy"))
+                        dstrategy.setAttribute(str("mode"),
+                                               str(unicode("CONFIG")))
                         dim.appendChild(dsText)
                         dim.appendChild(dstrategy)
                     newDimens.appendChild(dim)
@@ -379,7 +380,7 @@ class RichAttributeDlg(NodeDlg):
             else:
                 self.appendElement(newDimens, mindex)
 
-    ## appends newElement
+    # appends newElement
     # \param newElement DOM node to append
     # \param parent parent DOM node
     def appendElement(self, newElement, parent):
@@ -403,13 +404,13 @@ class RichAttributeDlg(NodeDlg):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## attribute form
+    # attribute form
     form = RichAttributeDlg()
     form.name = "pre_sample_flightpath"
     form.nexusType = 'NX_FLOAT'

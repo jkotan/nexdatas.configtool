@@ -15,41 +15,41 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ComponentItem.py
+# \package nxsconfigtool nexdatas
+# \file ComponentItem.py
 # dom item
 
 """ DOM item for component model"""
 
 
-## dialog defining a tag link
+# dialog defining a tag link
 class ComponentItem(object):
 
-    ## constructor
+    # constructor
     # \param node DOM node of item
     # \param parent patent instance
     def __init__(self, node, parent=None):
-        ## DOM node
+        # DOM node
         self.node = node
-        ## list with child items
+        # list with child items
         self.__childItems = []
-        ## the parent ComponentItem of the item
+        # the parent ComponentItem of the item
         self.parent = parent
 
-    ## provides indexs of given child
+    # provides indexs of given child
     # \param child
     # \returns child index
     def index(self, child):
         return self.__childItems.index(child)
 
-    ## provides a number of the current item
+    # provides a number of the current item
     # \returns a number of the current item
     def childNumber(self):
         if self.parent:
             return self.parent.index(self)
         return 0
 
-    ## provides the child item for the given list index
+    # provides the child item for the given list index
     # \param i child index
     # \returns requested child Item
     def child(self, i):
@@ -63,7 +63,7 @@ class ComponentItem(object):
                 self.__childItems.append(childItem)
             return childItem
 
-    ## removes the given children from the child item list
+    # removes the given children from the child item list
     # \param position list index of the first child to remove
     # \param count number of children to remove
     # \returns if indices not out of range
@@ -77,7 +77,7 @@ class ComponentItem(object):
 
         return True
 
-    ## inserts the given children into the child item list
+    # inserts the given children into the child item list
     # \param position list index of the first child to remove
     # \param count number of children to remove
     # \returns if indices not out of range
@@ -97,10 +97,10 @@ class ComponentItem(object):
 
 if __name__ == "__main__":
 
-    from PyQt4.QtXml import QDomNode
+    from PyQt5.QtXml import QDomNode
 
-    ## DOM node
+    # DOM node
     qdn = QDomNode()
-    ## instance of component item
+    # instance of component item
     di = ComponentItem(qdn, None)
     di.child(0)

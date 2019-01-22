@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file nxsconfigtool/__init__.py
+# \package nxsconfigtool nexdatas
+# \file nxsconfigtool/__init__.py
 # package constructor
 
 """ --- Component Designer --
@@ -25,3 +25,5 @@ GUI configuration tool for creating input files for Tango Data Writer
 
 # package version
 from .Release import __version__
+
+__all__ = [__version__]

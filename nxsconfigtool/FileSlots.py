@@ -15,13 +15,13 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file FileSlots.py
+# \package nxsconfigtool nexdatas
+# \file FileSlots.py
 # user pool commands of GUI application
 
 """ File slots """
 
-from PyQt4.QtGui import QKeySequence
+from PyQt5.QtGui import QKeySequence
 
 from .FileCommands import (
     ComponentOpen,
@@ -55,18 +55,18 @@ from .ListCommands import (
 )
 
 
-## stack with the application commands
+# stack with the application commands
 class FileSlots(object):
 
-    ## constructor
+    # constructor
     # \param main the main window dialog
     def __init__(self, main):
-        ## main window
+        # main window
         self.main = main
-        ## command stack
+        # command stack
         self.undoStack = main.undoStack
 
-        ## action data
+        # action data
         self.actions = {
             "actionLoad": [
                 "&Load...", "componentOpen",
@@ -114,19 +114,19 @@ class FileSlots(object):
                 "Change the data-source list directory"]
         }
 
-    ## open component action
+    # open component action
     # \brief It opens component from the file
     def componentOpen(self):
         cmd = ComponentOpen(self.main)
         self.undoStack.push(cmd)
 
-    ## open datasource action
+    # open datasource action
     # \brief It opens datasource from the file
     def dsourceOpen(self):
         cmd = DataSourceOpen(self.main)
         self.undoStack.push(cmd)
 
-    ## save component action
+    # save component action
     # \brief It saves the current component
     def componentSave(self, focus=True):
         cmd = ComponentEdit(self.main)
@@ -138,7 +138,7 @@ class FileSlots(object):
         if focus:
             self.main.componentList.setItemFocus()
 
-    ## save component action executed by button
+    # save component action executed by button
     # \brief It saves the current component executed by button
     def componentSaveButton(self):
         if self.main.updateComponentListItem():
@@ -146,7 +146,7 @@ class FileSlots(object):
             self.undoStack.push(cmd)
             self.componentSave(False)
 
-    ## save datasource item action
+    # save datasource item action
     # \brief It saves the changes in the current datasource item
     def dsourceSave(self, focus=True):
         cmd = DataSourceEdit(self.main)
@@ -158,14 +158,14 @@ class FileSlots(object):
         if focus:
             self.main.sourceList.setItemFocus()
 
-    ## save datasource item action executed by button
+    # save datasource item action executed by button
     # \brief It saves the changes in the current datasource item executed
     #        by button
     def dsourceSaveButton(self):
         if self.main.updateDataSourceListItem():
             self.dsourceSave(False)
 
-    ## save component item as action
+    # save component item as action
     # \brief It saves the changes in the current component item with a new name
     def componentSaveAs(self):
         cmd = ComponentApplyItem(self.main)
@@ -184,7 +184,7 @@ class FileSlots(object):
         cmd = ComponentSave(self.main)
         cmd.redo()
 
-    ## save datasource item as action
+    # save datasource item as action
     # \brief It saves the changes in the current datasource item with
     #        a new name
     def dsourceSaveAs(self):
@@ -202,42 +202,42 @@ class FileSlots(object):
         cmd = DataSourceSave(self.main)
         cmd.redo()
 
-    ## save all components item action
+    # save all components item action
     # \brief It saves the changes in all components item
     def componentSaveAll(self):
         cmd = ComponentSaveAll(self.main)
         cmd.redo()
         self.undoStack.clear()
 
-    ## save all datasource item action
+    # save all datasource item action
     # \brief It saves the changes in all datasources item
     def dsourceSaveAll(self):
         cmd = DataSourceSaveAll(self.main)
         cmd.redo()
         self.undoStack.clear()
 
-    ## change component directory action
+    # change component directory action
     # \brief It changes the default component directory
     def componentChangeDirectory(self):
         cmd = ComponentChangeDirectory(self.main)
         cmd.redo()
         self.undoStack.clear()
 
-    ## change datasource directory action
+    # change datasource directory action
     # \brief It changes the default datasource directory
     def dsourceChangeDirectory(self):
         cmd = DataSourceChangeDirectory(self.main)
         cmd.redo()
         self.undoStack.clear()
 
-    ## reload component list
+    # reload component list
     # \brief It changes the default component directory and reload components
     def componentReloadList(self):
         cmd = ComponentReloadList(self.main)
         cmd.redo()
         self.undoStack.clear()
 
-    ## reload datasource list
+    # reload datasource list
     # \brief It changes the default datasource directory and reload datasources
     def dsourceReloadList(self):
         cmd = DataSourceReloadList(self.main)

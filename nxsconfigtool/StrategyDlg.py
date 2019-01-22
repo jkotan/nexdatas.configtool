@@ -15,58 +15,69 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file StrategyDlg.py
+# \package nxsconfigtool nexdatas
+# \file StrategyDlg.py
 # Strategy dialog class
 
 """ strategy widget """
 
-from PyQt4.QtCore import (SIGNAL, QString, QModelIndex)
+import os
+import sys
 
-from .ui.ui_strategydlg import Ui_StrategyDlg
+from PyQt5.QtCore import (QModelIndex)
+from PyQt5 import uic
+
+# from .ui.ui_strategydlg import Ui_StrategyDlg
 from .NodeDlg import NodeDlg
 from .DomTools import DomTools
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "strategydlg.ui"))
 
-## dialog defining an attribute
+if sys.version_info > (3,):
+    unicode = str
+
+
+# dialog defining an attribute
 class StrategyDlg(NodeDlg):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(StrategyDlg, self).__init__(parent)
 
-        ## strategy mode
+        # strategy mode
         self.mode = u''
-        ## trigger label
+        # trigger label
         self.trigger = u''
-        ## growing dimension
+        # growing dimension
         self.grows = u''
-        ## postrun  label
+        # postrun  label
         self.postrun = u''
-        ## attribute doc
+        # attribute doc
         self.doc = u''
-        ## compression flag
+        # compression flag
         self.compression = False
-        ## compression rate
+        # compression rate
         self.rate = 5
-        ## compression shuffle
+        # compression shuffle
         self.shuffle = True
 
-        ## allowed subitems
+        # allowed subitems
         self.subItems = ["doc"]
 
-        ## writing can fail
+        # writing can fail
         self.canfail = False
 
-        ## user interface
-        self.ui = Ui_StrategyDlg()
+        # user interface
+        self.ui = _formclass()
 
-    ## updates the field strategy
+    # updates the field strategy
     # \brief It sets the form local variables
     def updateForm(self):
         index = -1
@@ -94,7 +105,7 @@ class StrategyDlg(NodeDlg):
                 grows = int(self.grows)
                 if grows < 0:
                     grows = 0
-            except:
+            except Exception:
                 grows = 0
             self.ui.growsSpinBox.setValue(grows)
         if self.postrun is not None:
@@ -102,23 +113,21 @@ class StrategyDlg(NodeDlg):
         if self.doc is not None:
             self.ui.docTextEdit.setText(self.doc)
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It calls setupUi and  connects signals and slots
     def createGUI(self):
         self.ui.setupUi(self)
 
         self.updateForm()
 
-#        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"), self.apply)
-        self.connect(self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(self.ui.modeComboBox,
-                     SIGNAL("currentIndexChanged(QString)"), self.setFrames)
-        self.connect(self.ui.compressionCheckBox,
-                     SIGNAL("stateChanged(int)"), self.setCompression)
+        self.ui.resetPushButton.clicked.connect(self.reset)
+        self.ui.modeComboBox.currentIndexChanged[str].connect(self.setFrames)
+        self.ui.compressionCheckBox.stateChanged[int].connect(
+            self.setCompression)
 
         self.setCompression(self.ui.compressionCheckBox.isChecked())
 
-    ## provides the state of the strategy dialog
+    # provides the state of the strategy dialog
     # \returns state of the strategy in tuple
     def getState(self):
         state = (self.mode,
@@ -133,7 +142,7 @@ class StrategyDlg(NodeDlg):
                  )
         return state
 
-    ## sets the state of the strategy dialog
+    # sets the state of the strategy dialog
     # \param state strategy state written in tuple
     def setState(self, state):
 
@@ -148,7 +157,7 @@ class StrategyDlg(NodeDlg):
          self.doc
          ) = state
 
-    ## shows and hides frames according to modeComboBox
+    # shows and hides frames according to modeComboBox
     # \param text the edited text
     def setFrames(self, text):
         if text == 'STEP':
@@ -163,7 +172,7 @@ class StrategyDlg(NodeDlg):
             self.ui.postFrame.hide()
             self.ui.triggerFrame.hide()
 
-    ## shows and hides compression widgets according to compressionCheckBox
+    # shows and hides compression widgets according to compressionCheckBox
     # \param state value from compressionCheckBox
     def setCompression(self, state):
         enable = bool(state)
@@ -171,11 +180,11 @@ class StrategyDlg(NodeDlg):
         self.ui.rateSpinBox.setEnabled(enable)
         self.ui.shuffleCheckBox.setEnabled(enable)
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         if node:
-            ## defined in NodeDlg class
+            # defined in NodeDlg class
             self.node = node
         if not self.node:
             return
@@ -214,11 +223,11 @@ class StrategyDlg(NodeDlg):
         text = DomTools.getText(self.node)
         self.postrun = unicode(text).strip() if text else ""
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
-    ## accepts input text strings
+    # accepts input text strings
     # \brief It copies the attribute name and value from
     #        lineEdit widgets and accept the dialog
     def apply(self):
@@ -253,12 +262,10 @@ class StrategyDlg(NodeDlg):
         if index.column() != 0:
             index = self.view.model().index(
                 index.row(), 0, index.parent())
-        self.view.model().emit(SIGNAL(
-            "dataChanged(const QModelIndex &,"
-            " const QModelIndex &)"), index, finalIndex)
+        self.view.model().dataChanged.emit(index, finalIndex)
         self.view.expand(index)
 
-    ## updates the Node
+    # updates the Node
     # \brief It sets node from the dialog variables
     def updateNode(self, index=QModelIndex()):
         elem = self.node.toElement()
@@ -268,30 +275,30 @@ class StrategyDlg(NodeDlg):
         attributeMap = self.node.attributes()
         for _ in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
-        elem.setAttribute(QString("mode"), QString(self.mode))
+        elem.setAttribute(str("mode"), str(self.mode))
 
         if self.mode == 'STEP':
             if self.trigger:
-                elem.setAttribute(QString("trigger"), QString(self.trigger))
+                elem.setAttribute(str("trigger"), str(self.trigger))
             if self.grows:
-                elem.setAttribute(QString("grows"), QString(str(self.grows)))
+                elem.setAttribute(str("grows"), str(str(self.grows)))
         if self.canfail:
-            elem.setAttribute(QString("canfail"), QString("true"))
+            elem.setAttribute(str("canfail"), str("true"))
         if self.compression:
-            elem.setAttribute(QString("compression"), QString("true"))
-            elem.setAttribute(QString("shuffle"), QString("true")
+            elem.setAttribute(str("compression"), str("true"))
+            elem.setAttribute(str("shuffle"), str("true")
                               if self.shuffle else "false")
-            elem.setAttribute(QString("rate"), QString(str(self.rate)))
+            elem.setAttribute(str("rate"), str(str(self.rate)))
 
         self.replaceText(mindex, unicode(self.postrun))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         if not self.doc and doc and doc.nodeName() == "doc":
             self.removeElement(doc, mindex)
 
         elif self.doc:
-            newDoc = self.root.createElement(QString("doc"))
-            newText = self.root.createTextNode(QString(self.doc))
+            newDoc = self.root.createElement(str("doc"))
+            newText = self.root.createTextNode(str(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc":
                 self.replaceElement(doc, newDoc, mindex)
@@ -301,13 +308,13 @@ class StrategyDlg(NodeDlg):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## attribute form
+    # attribute form
     form = StrategyDlg()
 
     form.mode = "pre_sample_flightpath"

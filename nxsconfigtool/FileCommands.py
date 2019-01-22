@@ -15,15 +15,15 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file FileCommands.py
+# \package nxsconfigtool nexdatas
+# \file FileCommands.py
 # user commands of GUI application
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox, QFileDialog, QUndoCommand,
-                         QProgressDialog)
-from PyQt4.QtCore import (Qt, QFileInfo, QString)
+from PyQt5.QtWidgets import (QMessageBox, QFileDialog, QUndoCommand,
+                             QProgressDialog)
+from PyQt5.QtCore import (Qt, QFileInfo)
 
 from .DataSourceDlg import CommonDataSourceDlg
 from . import DataSource
@@ -31,27 +31,31 @@ from .ComponentDlg import ComponentDlg
 from .Component import Component
 from .LabeledObject import LabeledObject
 
+import sys
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+if sys.version_info > (3,):
+    unicode = str
 
-## Command which loads an existing component from the file
+
+# Command which loads an existing component from the file
 class ComponentOpen(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._cpEdit = None
         self._cp = None
         self._fpath = None
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It loads an existing component from the file
     def redo(self):
         if hasattr(self.receiver.ui, 'mdi'):
@@ -99,7 +103,7 @@ class ComponentOpen(QUndoCommand):
                 self._cpEdit.dialog.show()
                 logger.debug("EXEC componentOpen")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It removes the loaded component from the component list
     def undo(self):
         if hasattr(self._cp, "instance"):
@@ -119,22 +123,22 @@ class ComponentOpen(QUndoCommand):
         logger.debug("UNDO componentOpen")
 
 
-## Command which loads an existing datasource from the file
+# Command which loads an existing datasource from the file
 class DataSourceOpen(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._dsEdit = None
         self._ds = None
         self._fpath = None
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It loads an existing datasource from the file
     def redo(self):
         if hasattr(self.receiver.ui, 'mdi'):
@@ -180,7 +184,7 @@ class DataSourceOpen(QUndoCommand):
                 self._dsEdit.dialog.show()
                 logger.debug("EXEC dsourceOpen")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It removes the loaded datasource from the datasource list
     def undo(self):
         if hasattr(self._ds, "instance"):
@@ -200,21 +204,21 @@ class DataSourceOpen(QUndoCommand):
         logger.debug("UNDO dsourceOpen")
 
 
-## Command which saves with the current component in the file
+# Command which saves with the current component in the file
 class ComponentSave(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._cp = None
         self._cpEdit = None
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It saves with the current component in the file
     def redo(self):
         if self._cp is None:
@@ -265,7 +269,7 @@ class ComponentSave(QUndoCommand):
 
         logger.debug("EXEC componentSave")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It populates the component list
     def undo(self):
         if hasattr(self._cp, "id"):
@@ -275,25 +279,25 @@ class ComponentSave(QUndoCommand):
         logger.debug("UNDO componentSave")
 
 
-## Command which saves all components in the file
+# Command which saves all components in the file
 class ComponentSaveAll(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
 
-    ## executes the command
+    # executes the command
     # \brief It saves all components in the file
     def redo(self):
 
         keys = self.receiver.componentList.elements.keys()
         progress = QProgressDialog(
             "Saving Component elements",
-            QString(), 0, len(keys), self.receiver.componentList)
+            "", 0, len(keys), self.receiver.componentList)
         progress.setWindowTitle("Save All Components")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
@@ -323,26 +327,26 @@ class ComponentSaveAll(QUndoCommand):
         logger.debug("EXEC componentSaveAll")
 
 
-## Command which saves the current components in the file with a different name
+# Command which saves the current components in the file with a different name
 class ComponentSaveAs(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
-        ## new name of component
+        # new name of component
         self.name = None
-        ## directory of the component file
+        # directory of the component file
         self.directory = None
 
         self._cp = None
         self._pathFile = None
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It saves the current components in the file with a different name
     def redo(self):
         if self._cp is None:
@@ -367,7 +371,7 @@ class ComponentSaveAs(QUndoCommand):
             self.receiver.componentList.populateElements()
         logger.debug("EXEC componentSaveAs")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It populates the Component list
     def undo(self):
         if hasattr(self._cp, "id"):
@@ -377,18 +381,18 @@ class ComponentSaveAs(QUndoCommand):
         logger.debug("UNDO componentSaveAs")
 
 
-## Command which changes the current component file directory
+# Command which changes the current component file directory
 class ComponentChangeDirectory(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
 
-    ## executes the command
+    # executes the command
     # \brief It changes the current component file directory
     def redo(self):
         failures = []
@@ -427,24 +431,24 @@ class ComponentChangeDirectory(QUndoCommand):
         logger.debug("EXEC componentChangeDirectory")
 
 
-## Command which saves all the datasources in files
+# Command which saves all the datasources in files
 class DataSourceSaveAll(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
 
-    ## executes the command
+    # executes the command
     # \brief It saves all the datasources in files
     def redo(self):
         keys = self.receiver.sourceList.elements.keys()
         progress = QProgressDialog(
             "Saving DataSource elements",
-            QString(), 0, len(keys), self.receiver.sourceList)
+            "", 0, len(keys), self.receiver.sourceList)
         progress.setWindowTitle("Save All DataSources")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
@@ -476,18 +480,18 @@ class DataSourceSaveAll(QUndoCommand):
         logger.debug("EXEC dsourceSaveAll")
 
 
-## Command which saves the current datasource in files
+# Command which saves the current datasource in files
 class DataSourceSave(QUndoCommand):
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._ds = None
 
-    ## executes the command
+    # executes the command
     # \brief It saves the current datasource in files
     def redo(self):
         if self._ds is None:
@@ -517,7 +521,7 @@ class DataSourceSave(QUndoCommand):
 
         logger.debug("EXEC dsourceSave")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It populates the datasource list
     def undo(self):
         ds = self.receiver.sourceList.currentListElement()
@@ -528,25 +532,25 @@ class DataSourceSave(QUndoCommand):
         logger.debug("UNDO dsourceSave")
 
 
-## Command which saves the current datasource in files with a different name
+# Command which saves the current datasource in files with a different name
 class DataSourceSaveAs(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
-        ## new datasource name
+        # new datasource name
         self.name = None
-        ## new file directory
+        # new file directory
         self.directory = None
 
         self._ds = None
         self._pathFile = None
 
-    ## executes the command
+    # executes the command
     # \brief It saves the current datasource in files with a different name
     def redo(self):
         if self._ds is None:
@@ -577,18 +581,18 @@ class DataSourceSaveAs(QUndoCommand):
         logger.debug("EXEC dsourceSaveAs")
 
 
-## Command which changes the current file directory with datasources
+# Command which changes the current file directory with datasources
 class DataSourceChangeDirectory(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
 
-    ## executes the command
+    # executes the command
     # \brief It changes the current file directory with datasources
     def redo(self):
         failures = []
@@ -628,19 +632,19 @@ class DataSourceChangeDirectory(QUndoCommand):
         logger.debug("EXEC dsourceChangeDirectory")
 
 
-## Command which reloads the components from the current component directory
+# Command which reloads the components from the current component directory
 #  into the component list
 class ComponentReloadList(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
 
-    ## executes the command
+    # executes the command
     # \brief It reloads the components from the current component directory
     #        into the component list
     def redo(self):
@@ -670,19 +674,19 @@ class ComponentReloadList(QUndoCommand):
         logger.debug("EXEC componentReloadList")
 
 
-## Command which reloads the datasources from the current datasource directory
+# Command which reloads the datasources from the current datasource directory
 #  into the datasource list
 class DataSourceReloadList(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
 
-    ## executes the command
+    # executes the command
     # \brief It reloads the datasources from the current datasource directory
     #        into the datasource list
     def redo(self):

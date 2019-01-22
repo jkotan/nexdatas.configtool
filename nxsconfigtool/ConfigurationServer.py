@@ -15,50 +15,50 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ConfigurationServer.py
+# \package nxsconfigtool nexdatas
+# \file ConfigurationServer.py
 # Class for connecting to configuration server
 
 """ Provides connects to configuration server"""
 
 import logging
-## message logger
-logger = logging.getLogger("nxsdesigner")
-
-try:
-    import PyTango
-    ## if module PyTango avalable
-    PYTANGO_AVAILABLE = True
-except ImportError, e:
-    PYTANGO_AVAILABLE = False
-    logger.info("PyTango is not available: %s" % e)
-
 import time
 
 from .ConnectDlg import ConnectDlg
 
 
-## configuration server
+try:
+    import PyTango
+    # if module PyTango avalable
+    PYTANGO_AVAILABLE = True
+    logger = logging.getLogger("nxsdesigner")
+except ImportError as e:
+    PYTANGO_AVAILABLE = False
+    logger = logging.getLogger("nxsdesigner")
+    logger.info("PyTango is not available: %s" % e)
+
+
+# configuration server
 class ConfigurationServer(object):
 
-    ## constructor
+    # constructor
     def __init__(self):
-        ## name of tango device
+        # name of tango device
         self.device = None
 
-        ## host name of tango device
+        # host name of tango device
         self.host = None
 
-        ## port of tango device
+        # port of tango device
         self.port = None
 
-        ## connection status
+        # connection status
         self.connected = False
 
-        ## device proxy
+        # device proxy
         self._proxy = None
 
-    ## sets server from string
+    # sets server from string
     # \param device string
     def setServer(self, device):
         logger.debug(device)
@@ -69,7 +69,7 @@ class ConfigurationServer(object):
             if len(adev) > 1:
                 try:
                     self.port = int(adev[0])
-                except:
+                except Exception:
                     self.port = 10000
                 self.device = "/".join(adev[1:])
             else:
@@ -80,25 +80,25 @@ class ConfigurationServer(object):
             self.host = 'localhost'
             self.port = 10000
 
-    ## allows to store the server state
+    # allows to store the server state
     # \returns the state of the server
     def getState(self):
         return (self.device, self.host, self.port, self.connected)
 
-    ## allows to store the server state
+    # allows to store the server state
     # \param state the state of the server
     def setState(self, state):
         (self.device, self.host, self.port, self.connected) = state
 
     def getDeviceName(self):
         if self.host and self.port:
-            return "%s:%s/%s" % (self.host.encode(),
+            return "%s:%s/%s" % (str(self.host),
                                  str(self.port),
-                                 self.device.encode())
+                                 str(self.device))
         else:
-            return self.device.encode()
+            return str(self.device)
 
-    ## connects to the configuration server
+    # connects to the configuration server
     # \brief It opens the configuration Tango device
     def connect(self):
         self._proxy = PyTango.DeviceProxy(self.getDeviceName())
@@ -123,9 +123,9 @@ class ConfigurationServer(object):
                 self._proxy.command_inout("Open")
                 self.connected = True
             else:
-                raise Exception("Cannot connect to: %s" % self.device.encode())
+                raise Exception("Cannot connect to: %s" % str(self.device))
 
-    ## opens connection to the configuration server
+    # opens connection to the configuration server
     # \brief It fetches parameters of tango device and calls connect() method
     def open(self):
         aform = ConnectDlg()
@@ -144,7 +144,7 @@ class ConfigurationServer(object):
             self.port = aform.port
             self.connect()
 
-    ## fetch all components
+    # fetch all components
     # \returns dictionary with names : xml of components
     def fetchComponents(self):
         names = []
@@ -154,17 +154,17 @@ class ConfigurationServer(object):
 
             try:
                 comps = self._proxy.command_inout("Components", names)
-            except:
+            except Exception:
                 comps = []
                 for n in names:
                     try:
                         xml = self._proxy.command_inout("Components", [n])
                         comps.append(xml[0])
-                    except:
+                    except Exception:
                         comps.append("")
             return dict(zip(names, comps))
 
-    ## fetch all datasources
+    # fetch all datasources
     # \returns dictionary with names : xml of datasources
     def fetchDataSources(self):
         names = []
@@ -173,18 +173,18 @@ class ConfigurationServer(object):
             names = self._proxy.command_inout("AvailableDataSources")
             try:
                 ds = self._proxy.command_inout("DataSources", names)
-            except:
+            except Exception:
                 ds = []
                 for n in names:
                     try:
                         xml = self._proxy.command_inout("DataSources", [n])
                         ds.extend(xml)
-                    except:
+                    except Exception:
                         ds.append("")
 
             return dict(zip(names, ds))
 
-    ## stores the component
+    # stores the component
     # \param name component name
     # \param xml XML content of the component
     def storeComponent(self, name, xml):
@@ -192,7 +192,7 @@ class ConfigurationServer(object):
             self._proxy.XMLString = str(xml)
             self._proxy.command_inout("StoreComponent", str(name))
 
-    ## stores the datasource
+    # stores the datasource
     # \param name datasource name
     # \param xml XML content of the datasource
     def storeDataSource(self, name, xml):
@@ -200,38 +200,38 @@ class ConfigurationServer(object):
             self._proxy.XMLString = str(xml)
             self._proxy.command_inout("StoreDataSource", str(name))
 
-    ## stores the component
+    # stores the component
     # \param name component name
     def deleteComponent(self, name):
         if self._proxy and self.connected:
             self._proxy.command_inout("DeleteComponent", str(name))
 
-    ## stores the datasource
+    # stores the datasource
     # \param name datasource name
     def deleteDataSource(self, name):
         if self._proxy and self.connected:
             self._proxy.command_inout("DeleteDataSource", str(name))
 
-    ## set the given component mandatory
+    # set the given component mandatory
     # \param name component name
     def setMandatory(self, name):
         if self._proxy and self.connected:
             self._proxy.command_inout("SetMandatoryComponents",
                                       [str(name)])
 
-    ## get the mandatory components
+    # get the mandatory components
     # returns list of the mandatory components
     def getMandatory(self):
         if self._proxy and self.connected:
             return self._proxy.command_inout("MandatoryComponents")
 
-    ## unset the given component mandatory
+    # unset the given component mandatory
     # \param name component name
     def unsetMandatory(self, name):
         if self._proxy and self.connected:
             self._proxy.command_inout("UnsetMandatoryComponents", [str(name)])
 
-    ## closes connecion
+    # closes connecion
     # \brief It closes connecion to configuration server
     def close(self):
         if self._proxy and self.connected:
@@ -240,10 +240,10 @@ class ConfigurationServer(object):
                 self.connected = False
 
 
-## test function
+# test function
 def test():
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     app = QApplication(sys.argv)
     cs = ConfigurationServer()
@@ -253,6 +253,7 @@ def test():
     cs.open()
     cs.close()
     app.exit()
+
 
 if __name__ == "__main__":
     test()

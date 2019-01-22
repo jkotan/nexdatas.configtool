@@ -15,14 +15,14 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file EditSlots.py
+# \package nxsconfigtool nexdatas
+# \file EditSlots.py
 # user pool commands of GUI application
 
 """ Edit slots """
 
-from PyQt4.QtGui import QKeySequence
-from PyQt4.QtCore import Qt
+from PyQt5.QtGui import QKeySequence
+from PyQt5.QtCore import Qt
 
 
 from .EditCommands import (
@@ -37,18 +37,18 @@ from .EditCommands import (
 )
 
 
-## stack with the application commands
+# stack with the application commands
 class EditSlots(object):
 
-    ## constructor
+    # constructor
     # \param main the main window dialog
     def __init__(self, main):
-        ## main window
+        # main window
         self.main = main
-        ## command stack
+        # command stack
         self.undoStack = main.undoStack
 
-        ## action data
+        # action data
         self.actions = {
             "actionEditComponent": [
                 "&Edit Component", "componentEdit",
@@ -83,7 +83,7 @@ class EditSlots(object):
                 "paste", "Paste the data source"]
         }
 
-    ## take datasources
+    # take datasources
     # \brief It takes datasources from the current component
     def componentTakeDataSources(self):
         cmd = ComponentEdit(self.main)
@@ -92,7 +92,7 @@ class EditSlots(object):
         cmd.redo()
         self.undoStack.clear()
 
-    ## take datasources
+    # take datasources
     # \brief It takes datasources from the current component
     def componentTakeDataSource(self):
         cmd = ComponentEdit(self.main)
@@ -100,49 +100,50 @@ class EditSlots(object):
         cmd = ComponentTakeDataSource(self.main)
         self.undoStack.push(cmd)
 
-    ## edit component action
+    # edit component action
     # \brief It opens a dialog with the current component
-    def componentEdit(self):
+    def componentEdit(self, _=None):
         cmd = ComponentEdit(self.main)
         cmd.redo()
 
-    ## edit datasource action
+    # edit datasource action
     # \brief It opens a dialog with the current datasource
-    def dsourceEdit(self):
+    def dsourceEdit(self, _=None):
         cmd = DataSourceEdit(self.main)
         cmd.redo()
 
-    ## apply datasource item action executed by button
+    # apply datasource item action executed by button
     # \brief It applies the changes in the current datasource item
     #        executed by button
     def dsourceApplyButton(self):
         if self.main.updateDataSourceListItem():
             self.dsourceApply()
 
-    ## apply datasource item action
+    # apply datasource item action
     # \brief It applies the changes in the current datasource item
     def dsourceApply(self):
         cmd = DataSourceApply(self.main)
         self.undoStack.push(cmd)
 
-    ## copy datasource item action
+    # copy datasource item action
     # \brief It copies the  current datasource item into the clipboard
     def dsourceCopy(self):
         cmd = DataSourceCopy(self.main)
         cmd.redo()
 
-    ## cuts datasource item action
+    # cuts datasource item action
     # \brief It removes the current datasources item and copies it
     #        into the clipboard
     def dsourceCut(self):
         cmd = DataSourceCut(self.main)
         self.undoStack.push(cmd)
 
-    ## paste datasource item action
+    # paste datasource item action
     # \brief It pastes the datasource item from the clipboard
     def dsourcePaste(self):
         cmd = DataSourcePaste(self.main)
         self.undoStack.push(cmd)
+
 
 if __name__ == "__main__":
     pass

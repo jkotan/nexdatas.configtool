@@ -15,13 +15,13 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ListSlots.py
+# \package nxsconfigtool nexdatas
+# \file ListSlots.py
 # user pool commands of GUI application
 
 """ List slots """
 
-from PyQt4.QtGui import QKeySequence
+from PyQt5.QtGui import QKeySequence
 
 from .ListCommands import (
     ComponentNew,
@@ -39,18 +39,18 @@ from .EditCommands import (
 )
 
 
-## stack with the application commands
+# stack with the application commands
 class ListSlots(object):
 
-    ## constructor
+    # constructor
     # \param main the main window dialog
     def __init__(self, main):
-        ## main window
+        # main window
         self.main = main
-        ## command stack
+        # command stack
         self.undoStack = main.undoStack
 
-        ## action data
+        # action data
         self.actions = {
             "actionClose": [
                 "&Remove", "componentRemove",
@@ -72,53 +72,53 @@ class ListSlots(object):
 
         }
 
-        ## task data
+        # task data
         self.tasks = [
             ["dsourceChanged",
              self.main.sourceList.ui.elementListWidget,
-             "itemChanged(QListWidgetItem*)"],
+             "itemChanged"],
             ["componentChanged",
              self.main.componentList.ui.elementListWidget,
-             "itemChanged(QListWidgetItem*)"],
+             "itemChanged"],
             ["componentRowChanged",
              self.main.componentList.ui.elementListWidget,
-             "currentRowChanged(int)"],
+             "currentRowChanged"],
             ["dsourceRowChanged",
              self.main.sourceList.ui.elementListWidget,
-             "currentRowChanged(int)"]
+             "currentRowChanged"]
         ]
 
-    ## remove component action
+    # remove component action
     # \brief It removes from the component list the current component
     def componentRemove(self):
         cmd = ComponentRemove(self.main)
         self.undoStack.push(cmd)
 
-    ## remove datasource action
+    # remove datasource action
     # \brief It removes the current datasource
     def dsourceRemove(self):
         cmd = DataSourceRemove(self.main)
         self.undoStack.push(cmd)
 
-    ## new component action
+    # new component action
     # \brief It creates a new component
     def componentNew(self):
         cmd = ComponentNew(self.main)
         self.undoStack.push(cmd)
 
-    ## new datasource action
+    # new datasource action
     # \brief It creates a new datasource
     def dsourceNew(self):
         cmd = DataSourceNew(self.main)
         self.undoStack.push(cmd)
 
-    ## close application action
+    # close application action
     # \brief It closes the main application
     def closeApp(self):
         cmd = CloseApplication(self.main)
         self.undoStack.push(cmd)
 
-    ## component change action
+    # component change action
     # \param item new selected item on the component list
     def componentChanged(self, item):
         cmd = ComponentEdit(self.main)
@@ -127,7 +127,7 @@ class ListSlots(object):
         cmd.item = item
         self.undoStack.push(cmd)
 
-    ## datasource change action
+    # datasource change action
     # \param item new selected item ond the datasource list
     def dsourceChanged(self, item):
         cmd = DataSourceEdit(self.main)
@@ -136,7 +136,7 @@ class ListSlots(object):
         cmd.item = item
         self.undoStack.push(cmd)
 
-    ## component row change action
+    # component row change action
     # \param row row Changed
     def componentRowChanged(self, row):
         self.main.deselectComponentSubWindow()
@@ -145,12 +145,14 @@ class ListSlots(object):
         if did and hasattr(did, 'id'):
             self.main.componentContent(did.id)
 
-    ## dsource row change action
+    # dsource row change action
     # \param row row Changed
     def dsourceRowChanged(self, row):
         self.main.deselectDataSourceSubWindow()
         did = self.main.sourceList.currentListElement()
         if did and hasattr(did, 'id'):
             self.main.dataSourceContent(did.id)
+
+
 if __name__ == "__main__":
     pass

@@ -15,54 +15,61 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file CreatorDlg.py
+# \package nxsconfigtool nexdatas
+# \file CreatorDlg.py
 # Component Creator dialog class
 
 """ server creator widget """
+import os
+import sys
 
-from PyQt4.QtCore import SIGNAL, Qt, QVariant
-from PyQt4.QtGui import QDialog, QTableWidgetItem, QMessageBox
-
-from .ui.ui_creatordlg import Ui_CreatorDlg
-from .ui.ui_stdcreatordlg import Ui_StdCreatorDlg
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QDialog, QTableWidgetItem, QMessageBox
+from PyQt5 import uic
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "creatordlg.ui"))
 
-## dialog defining a component creator dialog
+_stdformclass, _stdbaseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "stdcreatordlg.ui"))
+
+if sys.version_info > (3,):
+    unicode = str
+
+
+# dialog defining a component creator dialog
 class CreatorDlg(QDialog):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(CreatorDlg, self).__init__(parent)
 
-        ## host name of the configuration server
+        # host name of the configuration server
         self.components = []
         self.componentName = None
-        ## user interface
-        self.ui = Ui_CreatorDlg()
+        # user interface
+        self.ui = _formclass()
         self.action = ''
 
-    ## creates GUI
+    # creates GUI
     # \brief It updates GUI and creates creatorion for required actions
     def createGUI(self):
         self.ui.setupUi(self)
         self.updateForm()
 
-        self.connect(self.ui.savePushButton, SIGNAL("clicked()"),
-                     self.savePressed)
-        self.connect(self.ui.storePushButton, SIGNAL("clicked()"),
-                     self.storePressed)
-        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"),
-                     self.applyPressed)
-        self.connect(self.ui.cancelPushButton, SIGNAL("clicked()"),
-                     self.reject)
+        self.ui.savePushButton.clicked.connect(self.savePressed)
+        self.ui.storePushButton.clicked.connect(self.storePressed)
+        self.ui.applyPushButton.clicked.connect(self.applyPressed)
+        self.ui.cancelPushButton.clicked.connect(self.reject)
 
-    ## updates the connect dialog
+    # updates the connect dialog
     # \brief It sets initial values of the connection form
     def updateForm(self):
         self.ui.compComboBox.clear()
@@ -85,28 +92,28 @@ class CreatorDlg(QDialog):
         QDialog.accept(self)
 
 
-## dialog defining a component creator dialog
+# dialog defining a component creator dialog
 class StdCreatorDlg(QDialog):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, creator, parent=None):
         super(StdCreatorDlg, self).__init__(parent)
 
-        ## host name of the configuration server
+        # host name of the configuration server
         self.__parent = parent
         self.__types = []
         self.__creator = creator
         self.componentType = None
         self.componentName = None
-        ## user interface
-        self.ui = Ui_StdCreatorDlg()
+        # user interface
+        self.ui = _stdformclass()
         self.action = ''
         self.__vars = {}
         self.__pardesc = {}
         self.__oldvars = {}
 
-    ## creates GUI
+    # creates GUI
     # \brief It updates GUI and creates creatorion for required actions
     def createGUI(self):
         self.ui.setupUi(self)
@@ -114,28 +121,24 @@ class StdCreatorDlg(QDialog):
         self.updateForm()
         self.__updateUi()
 
-        self.connect(self.ui.savePushButton, SIGNAL("clicked()"),
-                     self.savePressed)
-        self.connect(self.ui.linkPushButton, SIGNAL("clicked()"),
-                     self.linkPressed)
-        self.connect(self.ui.storePushButton, SIGNAL("clicked()"),
-                     self.storePressed)
-        self.connect(self.ui.applyPushButton, SIGNAL("clicked()"),
-                     self.applyPressed)
-        self.connect(self.ui.cancelPushButton, SIGNAL("clicked()"),
-                     self.reject)
-        self.connect(
-            self.ui.varTableWidget,
-            SIGNAL("itemChanged(QTableWidgetItem*)"),
+        self.ui.savePushButton.clicked.connect(
+            self.savePressed)
+        self.ui.linkPushButton.clicked.connect(
+            self.linkPressed)
+        self.ui.storePushButton.clicked.connect(
+            self.storePressed)
+        self.ui.applyPushButton.clicked.connect(
+            self.applyPressed)
+        self.ui.cancelPushButton.clicked.connect(
+            self.reject)
+        self.ui.varTableWidget.itemChanged.connect(
             self.__tableItemChanged)
-        self.connect(
-            self.ui.cpNameLineEdit, SIGNAL("textEdited(QString)"),
+        self.ui.cpNameLineEdit.textEdited[str].connect(
             self.__updateUi)
-        self.connect(self.ui.cpTypeComboBox,
-                     SIGNAL("currentIndexChanged(QString)"),
-                     self.__currentIndexChanged)
+        self.ui.cpTypeComboBox.currentIndexChanged[str].connect(
+            self.__currentIndexChanged)
 
-    ## updates the connect dialog
+    # updates the connect dialog
     # \brief It sets initial values of the connection form
     def updateForm(self):
         self.ui.cpTypeComboBox.clear()
@@ -209,21 +212,21 @@ class StdCreatorDlg(QDialog):
         self.__oldvars[unicode(var)] = self.__vars[unicode(var)]
         self.populateVars()
 
-    ## calls updateUi when the name text is changing
+    # calls updateUi when the name text is changing
     # \param text the edited text
     def __currentIndexChanged(self, text):
         self.updateParams()
 
-    ## takes a name of the current variable
+    # takes a name of the current variable
     # \returns name of the current variable
     def __currentTableVar(self):
         item = self.ui.varTableWidget.item(
             self.ui.varTableWidget.currentRow(), 0)
         if item is None:
             return None
-        return item.data(Qt.UserRole).toString()
+        return item.data(Qt.UserRole)
 
-    ## changes the current value of the variable
+    # changes the current value of the variable
     # \brief It changes the current value of the variable
     #        and informs the user that variable names arenot editable
     def __tableItemChanged(self, item):
@@ -244,7 +247,7 @@ class StdCreatorDlg(QDialog):
                 "You cannot change it")
         self.populateVars()
 
-    ## fills in the variable table
+    # fills in the variable table
     # \param selectedVariable selected variable
     def populateVars(self, selectedVar=None):
         selected = None
@@ -256,7 +259,7 @@ class StdCreatorDlg(QDialog):
         self.ui.varTableWidget.setHorizontalHeaderLabels(headers)
         for row, name in enumerate(sorted(self.__vars.keys())):
             item = QTableWidgetItem(name)
-            item.setData(Qt.UserRole, QVariant(name))
+            item.setData(Qt.UserRole, (name))
             flags = item.flags()
             flags ^= Qt.ItemIsEditable
             item.setFlags(flags)
@@ -278,10 +281,10 @@ class StdCreatorDlg(QDialog):
             selected.setSelected(True)
             self.ui.varTableWidget.setCurrentItem(selected)
 
-    ## updates group user interface
+    # updates group user interface
     # \brief It sets enable or disable the OK button
     def __updateUi(self):
-        enable = not self.ui.cpNameLineEdit.text().isEmpty()
+        enable = bool(self.ui.cpNameLineEdit.text())
         self.ui.applyPushButton.setEnabled(enable)
         self.ui.storePushButton.setEnabled(enable)
         self.ui.savePushButton.setEnabled(enable)
@@ -289,13 +292,13 @@ class StdCreatorDlg(QDialog):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## connect form
+    # connect form
     form = CreatorDlg()
     form.createGUI()
     form.show()

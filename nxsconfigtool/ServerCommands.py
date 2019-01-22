@@ -15,15 +15,15 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ServerCommands.py
+# \package nxsconfigtool nexdatas
+# \file ServerCommands.py
 # user commands of GUI application
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox, QUndoCommand, QProgressDialog)
+from PyQt5.QtWidgets import (QMessageBox, QUndoCommand, QProgressDialog)
 
-from PyQt4.QtCore import (Qt, QString)
+from PyQt5.QtCore import (Qt)
 
 from .DataSourceDlg import (CommonDataSourceDlg)
 from . import DataSource
@@ -34,24 +34,28 @@ from .ComponentCreator import (
 from .LabeledObject import LabeledObject
 
 import logging
-## message logger
+import sys
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+if sys.version_info > (3,):
+    unicode = str
 
-## Command which performs connection to the configuration server
+
+# Command which performs connection to the configuration server
 class ServerConnect(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._oldstate = None
         self._state = None
 
-    ## executes the command
+    # executes the command
     # \brief It perform connection to the configuration server
     def redo(self):
         if self.receiver.configServer:
@@ -66,7 +70,7 @@ class ServerConnect(QUndoCommand):
                     self.receiver.configServer.connect()
                 if self.receiver.configServer.connected:
                     self.receiver.disableServer(False)
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver,
                     "Error in connecting to Configuration Server",
@@ -74,7 +78,7 @@ class ServerConnect(QUndoCommand):
 
         logger.debug("EXEC serverConnect")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It undo connection to the configuration server,
     #        i.e. it close the connection to the server
     def undo(self):
@@ -84,7 +88,7 @@ class ServerConnect(QUndoCommand):
                 if self._oldstate is None:
                     self.receiver.configServer.setState(self._oldstate)
                 self.receiver.disableServer(True)
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver,
                     "Error in Closing Configuration Server Connection",
@@ -93,21 +97,21 @@ class ServerConnect(QUndoCommand):
         logger.debug("UNDO serverConnect")
 
 
-## Command which performs connection to the configuration server
+# Command which performs connection to the configuration server
 class ServerCPCreate(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self.parent = parent
 #        self._oldstate = None
 #        self._state = None
 
-    ## executes the command
+    # executes the command
     # \brief It perform connection to the configuration server
     def redo(self):
         if self.receiver.configServer:
@@ -131,7 +135,7 @@ class ServerCPCreate(QUndoCommand):
                             if dsid:
                                 self.receiver.sourceList.populateElements(dsid)
 
-                except Exception, e:
+                except Exception as e:
                     QMessageBox.warning(
                         self.receiver,
                         "Error in creating Component",
@@ -146,7 +150,7 @@ class ServerCPCreate(QUndoCommand):
         cpEdit.createGUI()
 
         cpEdit.name = name
-        cpEdit.set(QString(xml), True)
+        cpEdit.set(str(xml), True)
         cpEdit.savedXML = None
         cp.name = cpEdit.name
         cp.instance = cpEdit
@@ -190,7 +194,7 @@ class ServerCPCreate(QUndoCommand):
         dsEdit.directory = self.receiver.sourceList.directory
         dsEdit.name = name
 
-        dsEdit.set(QString(xml), True)
+        dsEdit.set(str(xml), True)
         if hasattr(dsEdit, "connectExternalActions"):
             dsEdit.connectExternalActions(
                 **self.receiver.externalDSActions)
@@ -225,28 +229,28 @@ class ServerCPCreate(QUndoCommand):
             dsEdit.dialog.show()
         return ds.id
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It undo connection to the configuration server,
     #        i.e. it close the connection to the server
     def undo(self):
         logger.debug("UNDO serverCPCreate")
 
 
-## Command which performs connection to the configuration server
+# Command which performs connection to the configuration server
 class ServerSCPCreate(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self.parent = parent
 #        self._oldstate = None
 #        self._state = None
 
-    ## executes the command
+    # executes the command
     # \brief It perform connection to the configuration server
     def redo(self):
         if self.receiver.configServer:
@@ -267,7 +271,7 @@ class ServerSCPCreate(QUndoCommand):
                         if dsid:
                             self.receiver.sourceList.populateElements(dsid)
 
-                except Exception, e:
+                except Exception as e:
                     QMessageBox.warning(
                         self.receiver,
                         "Error in creating Standard Component",
@@ -282,7 +286,7 @@ class ServerSCPCreate(QUndoCommand):
         cpEdit.createGUI()
 
         cpEdit.name = name
-        cpEdit.set(QString(xml), True)
+        cpEdit.set(str(xml), True)
         cpEdit.savedXML = None
         cp.name = cpEdit.name
         cp.instance = cpEdit
@@ -326,7 +330,7 @@ class ServerSCPCreate(QUndoCommand):
         dsEdit.directory = self.receiver.sourceList.directory
         dsEdit.name = name
 
-        dsEdit.set(QString(xml), True)
+        dsEdit.set(str(xml), True)
         if hasattr(dsEdit, "connectExternalActions"):
             dsEdit.connectExternalActions(
                 **self.receiver.externalDSActions)
@@ -361,28 +365,28 @@ class ServerSCPCreate(QUndoCommand):
             dsEdit.dialog.show()
         return ds.id
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It undo connection to the configuration server,
     #        i.e. it close the connection to the server
     def undo(self):
         logger.debug("UNDO serverSCPCreate")
 
 
-## Command which performs connection to the configuration server
+# Command which performs connection to the configuration server
 class ServerDSCreate(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self.parent = parent
 #        self._oldstate = None
 #        self._state = None
 
-    ## executes the command
+    # executes the command
     # \brief It perform connection to the configuration server
     def redo(self):
         if self.receiver.configServer:
@@ -397,7 +401,7 @@ class ServerDSCreate(QUndoCommand):
                             keys = cc.datasources.keys()
                             progress = QProgressDialog(
                                 "Storing DataSource elements",
-                                QString(), 0, len(keys),
+                                "", 0, len(keys),
                                 self.receiver.sourceList)
                             progress.setWindowTitle(
                                 "Store Created DataSources")
@@ -415,7 +419,7 @@ class ServerDSCreate(QUndoCommand):
                             if dsid:
                                 self.receiver.sourceList.populateElements(dsid)
 
-                except Exception, e:
+                except Exception as e:
                     QMessageBox.warning(
                         self.receiver,
                         "Error in creating Component",
@@ -429,7 +433,7 @@ class ServerDSCreate(QUndoCommand):
         dsEdit.directory = self.receiver.sourceList.directory
         dsEdit.name = name
 
-        dsEdit.set(QString(xml), True)
+        dsEdit.set(str(xml), True)
         if hasattr(dsEdit, "connectExternalActions"):
             dsEdit.connectExternalActions(
                 **self.receiver.externalDSActions)
@@ -464,25 +468,25 @@ class ServerDSCreate(QUndoCommand):
             dsEdit.dialog.show()
         return ds.id
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It undo connection to the configuration server,
     #        i.e. it close the connection to the server
     def undo(self):
         logger.debug("UNDO serverDSCreate")
 
 
-## Command which fetches the components from the configuration server
+# Command which fetches the components from the configuration server
 class ServerFetchComponents(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
 
-    ## executes the command
+    # executes the command
     # \brief It fetches the components from the configuration server
     def redo(self):
         failures = []
@@ -525,33 +529,33 @@ class ServerFetchComponents(QUndoCommand):
                 self.receiver.disableServer(False)
                 cdict = self.receiver.configServer.fetchComponents()
                 self.receiver.setComponents(cdict)
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver,
                     "Error in fetching components", unicode(e))
 
         logger.debug("EXEC serverFetchComponents")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It does nothing
     def undo(self):
         logger.debug("UNDO serverFetchComponents")
 
 
-## Command which stores the current component in the configuration server
+# Command which stores the current component in the configuration server
 class ServerStoreComponent(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._cp = None
         self._cpEdit = None
 
-    ## executes the command
+    # executes the command
     # \brief It stores the current component in the configuration server
     def redo(self):
         if self._cp is None:
@@ -626,7 +630,7 @@ class ServerStoreComponent(QUndoCommand):
                     self._cpEdit.name, xml)
                 self._cpEdit.savedXML = xml
                 self._cp.savedName = self._cp.name
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(self.receiver,
                                     "Error in storing the component",
                                     unicode(e))
@@ -637,7 +641,7 @@ class ServerStoreComponent(QUndoCommand):
 
         logger.debug("EXEC serverStoreComponent")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It populates only the component list
     def undo(self):
         if hasattr(self._cp, "id"):
@@ -647,19 +651,19 @@ class ServerStoreComponent(QUndoCommand):
         logger.debug("UNDO serverStoreComponent")
 
 
-## Command which deletes the current component from the configuration server
+# Command which deletes the current component from the configuration server
 class ServerDeleteComponent(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._cp = None
 
-    ## executes the command
+    # executes the command
     # \brief It deletes the current component from the configuration server
     def redo(self):
         if self._cp is None:
@@ -684,7 +688,7 @@ class ServerDeleteComponent(QUndoCommand):
                 self._cp.savedName = ""
                 if hasattr(self._cp, "instance"):
                     self._cp.instance.savedXML = ""
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver, "Error in deleting the component",
                     unicode(e))
@@ -694,7 +698,7 @@ class ServerDeleteComponent(QUndoCommand):
 
         logger.debug("EXEC serverDeleteComponent")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It populates only the component list
     def undo(self):
         if hasattr(self._cp, "id"):
@@ -704,20 +708,20 @@ class ServerDeleteComponent(QUndoCommand):
         logger.debug("UNDO serverDeleteComponent")
 
 
-## Command which sets on the configuration server the current component
+# Command which sets on the configuration server the current component
 #  as mandatory
 class ServerSetMandatoryComponent(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._cp = None
 
-    ## executes the command
+    # executes the command
     # \brief It sets on the configuration server the current component
     #        as mandatory
     def redo(self):
@@ -741,7 +745,7 @@ class ServerSetMandatoryComponent(QUndoCommand):
                 self.receiver.configServer.setMandatory(self._cp.name)
                 mandatory = self.receiver.configServer.getMandatory()
                 logger.info("Mandatory Components: \n %s" % str(mandatory))
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver,
                     "Error in setting the component as mandatory",
@@ -749,19 +753,19 @@ class ServerSetMandatoryComponent(QUndoCommand):
         logger.debug("EXEC serverSetMandatoryComponent")
 
 
-## Command which fetches a list of the mandatory components from
+# Command which fetches a list of the mandatory components from
 #  the configuration server
 class ServerGetMandatoryComponents(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
 
-    ## executes the command
+    # executes the command
     # \brief It fetches a list of the mandatory components from
     #        the configuration server
     def redo(self):
@@ -785,7 +789,7 @@ class ServerGetMandatoryComponents(QUndoCommand):
                 self.receiver, "Mandatory",
                 "Mandatory Components: \n %s" % unicode(mandatory))
 
-        except Exception, e:
+        except Exception as e:
             QMessageBox.warning(
                 self.receiver,
                 "Error in getting the mandatory components",
@@ -793,20 +797,20 @@ class ServerGetMandatoryComponents(QUndoCommand):
         logger.debug("EXEC serverGetMandatoryComponent")
 
 
-## Command which sets on the configuration server the current component
+# Command which sets on the configuration server the current component
 #  as not mandatory
 class ServerUnsetMandatoryComponent(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._cp = None
 
-    ## executes the command
+    # executes the command
     # \brief It sets on the configuration server the current component
     #        as not mandatory
     def redo(self):
@@ -832,30 +836,30 @@ class ServerUnsetMandatoryComponent(QUndoCommand):
                     self._cp.name)
                 mandatory = self.receiver.configServer.getMandatory()
                 logger.info("Mandatory Components: \n %s" % str(mandatory))
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver,
                     "Error in setting the component as mandatory",
                     unicode(e))
         logger.debug("EXEC serverUnsetMandatoryComponent")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It does nothing
     def undo(self):
         logger.debug("UNDO serverUnsetMandatoryComponent")
 
 
-## Command which fetches the datasources from the configuration server
+# Command which fetches the datasources from the configuration server
 class ServerFetchDataSources(QUndoCommand):
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
 
-    ## executes the command
+    # executes the command
     # \brief It fetches the datasources from the configuration server
     def redo(self):
         failures = []
@@ -897,32 +901,32 @@ class ServerFetchDataSources(QUndoCommand):
                 self.receiver.disableServer(False)
                 cdict = self.receiver.configServer.fetchDataSources()
                 self.receiver.setDataSources(cdict)
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver,
                     "Error in fetching datasources", unicode(e))
 
         logger.debug("EXEC serverFetchDataSources")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It does nothing
     def undo(self):
         logger.debug("UNDO serverFetchDataSources")
 
 
-## Command which stores the current datasource in the configuration server
+# Command which stores the current datasource in the configuration server
 class ServerStoreDataSource(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._ds = None
 
-    ## executes the command
+    # executes the command
     # \brief It fetches the datasources from the configuration server
     def redo(self):
         if self._ds is None:
@@ -956,7 +960,7 @@ class ServerStoreDataSource(QUndoCommand):
                         self._ds.instance.name, xml)
                 self._ds.instance.savedXML = xml
                 self._ds.savedName = self._ds.name
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver,
                     "Error in datasource storing", unicode(e))
@@ -969,7 +973,7 @@ class ServerStoreDataSource(QUndoCommand):
 
         logger.debug("EXEC serverStoreDataSource")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It populates the datasource list
     def undo(self):
         ds = self.receiver.sourceList.currentListElement()
@@ -980,19 +984,19 @@ class ServerStoreDataSource(QUndoCommand):
         logger.debug("UNDO serverStoreDataSource")
 
 
-## Command which deletes the current datasource in the configuration server
+# Command which deletes the current datasource in the configuration server
 class ServerDeleteDataSource(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._ds = None
 
-    ## executes the command
+    # executes the command
     # \brief It deletes the current datasource in the configuration server
     def redo(self):
         if self._ds is None:
@@ -1020,7 +1024,7 @@ class ServerDeleteDataSource(QUndoCommand):
                     self.receiver.configServer.deleteDataSource(name)
                     self._ds.savedName = ""
 
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver,
                     "Error in datasource deleting", unicode(e))
@@ -1032,7 +1036,7 @@ class ServerDeleteDataSource(QUndoCommand):
             self.receiver.sourceList.populateElements()
         logger.debug("EXEC serverDeleteDataSource")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It populates the datasource list
     def undo(self):
         ds = self.receiver.sourceList.currentListElement()
@@ -1043,19 +1047,19 @@ class ServerDeleteDataSource(QUndoCommand):
         logger.debug("UNDO serverDeleteDataSource")
 
 
-## Command which closes connection to the configuration server
+# Command which closes connection to the configuration server
 class ServerClose(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._state = None
 
-    ## executes the command
+    # executes the command
     # \brief It closes connection to the configuration server
     def redo(self):
         if self.receiver.configServer:
@@ -1067,7 +1071,7 @@ class ServerClose(QUndoCommand):
                     self._state = self.receiver.configServer.getState()
                 self.receiver.configServer.close()
                 self.receiver.disableServer(True)
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver,
                     "Error in closing connection to Configuration Server",
@@ -1075,7 +1079,7 @@ class ServerClose(QUndoCommand):
 
         logger.debug("EXEC serverClose")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It reopen the connection to the configuration server
     def undo(self):
         if self.receiver.configServer:
@@ -1086,7 +1090,7 @@ class ServerClose(QUndoCommand):
                     self.receiver.configServer.setState(self._state)
                     self.receiver.configServer.connect()
                 self.receiver.disableServer(False)
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver,
                     "Error in connecting to Configuration Server",
@@ -1094,26 +1098,26 @@ class ServerClose(QUndoCommand):
         logger.debug("UNDO serverClose")
 
 
-## Command which saves all components in the file
+# Command which saves all components in the file
 class ServerStoreAllComponents(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It saves all components in the file
     def redo(self):
 
         keys = self.receiver.componentList.elements.keys()
         progress = QProgressDialog(
             "Storing Component elements",
-            QString(), 0, len(keys), self.receiver.componentList)
+            "", 0, len(keys), self.receiver.componentList)
         progress.setWindowTitle("Store All Components")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
@@ -1153,7 +1157,7 @@ class ServerStoreAllComponents(QUndoCommand):
                     cp.instance.name, xml)
                 cp.instance.savedXML = xml
                 cp.savedName = cp.name
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver, "Error in storing the component",
                     unicode(e))
@@ -1167,31 +1171,31 @@ class ServerStoreAllComponents(QUndoCommand):
 
         logger.debug("EXEC componentStoreAll")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It does nothing
     def undo(self):
         logger.debug("UNDO componentStoreAll")
 
 
-## Command which saves all the datasources in files
+# Command which saves all the datasources in files
 class ServerStoreAllDataSources(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
 
-    ## executes the command
+    # executes the command
     # \brief It saves all the datasources in files
     def redo(self):
 
         keys = self.receiver.sourceList.elements.keys()
         progress = QProgressDialog(
             "Storing DataSource elements",
-            QString(), 0, len(keys), self.receiver.sourceList)
+            "", 0, len(keys), self.receiver.sourceList)
         progress.setWindowTitle("Store All DataSources")
         progress.setWindowModality(Qt.WindowModal)
         progress.show()
@@ -1230,7 +1234,7 @@ class ServerStoreAllDataSources(QUndoCommand):
                         ds.instance.name, xml)
                 ds.instance.savedXML = xml
                 ds.savedName = ds.name
-            except Exception, e:
+            except Exception as e:
                 QMessageBox.warning(
                     self.receiver, "Error in datasource storing",
                     unicode(e))
@@ -1246,7 +1250,7 @@ class ServerStoreAllDataSources(QUndoCommand):
 
         logger.debug("EXEC dsourceStoreAll")
 
-    ## executes the command
+    # executes the command
     # \brief It does nothing
     def undo(self):
         logger.debug("UNDO dsourceStoreAll")

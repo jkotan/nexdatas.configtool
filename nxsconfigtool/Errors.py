@@ -15,31 +15,31 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file Errors.py
+# \package nxsconfigtool nexdatas
+# \file Errors.py
 # Error classes
 
 """ "Component Desigener Errors  """
 
 
-## charater error
+# charater error
 class CharacterError(Exception):
     pass
 
 
-## error of passed parameter
+# error of passed parameter
 class ParameterError(Exception):
     pass
 
 
-## merging error for wrong node structure
+# merging error for wrong node structure
 class IncompatibleNodeError(Exception):
-    ## constructor
+    # constructor
     # \param value text of the error
     # \param nodes list of error related nodes
     def __init__(self, value, nodes=None):
         Exception.__init__(self, value)
-        ## text of the error
+        # text of the error
         self.value = value
-        ## list of error related nodes
+        # list of error related nodes
         self.nodes = nodes if nodes else []

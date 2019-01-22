@@ -15,54 +15,62 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ConnectDlg.py
+# \package nxsconfigtool nexdatas
+# \file ConnectDlg.py
 # Connect dialog class
 
 """ server connect widget """
 
-from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import (QDialog, QMessageBox)
+import os
+import sys
 
-from .ui.ui_connectdlg import Ui_ConnectDlg
+from PyQt5.QtWidgets import (QDialog, QMessageBox)
+from PyQt5 import uic
+
+# from .ui.ui_connectdlg import Ui_ConnectDlg
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "connectdlg.ui"))
 
-## dialog defining a tag connect
+if sys.version_info > (3,):
+    unicode = str
+
+
+# dialog defining a tag connect
 class ConnectDlg(QDialog):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(ConnectDlg, self).__init__(parent)
 
-        ## device name of the configuration server
+        # device name of the configuration server
         self.device = u''
-        ## host name of the configuration server
+        # host name of the configuration server
         self.host = u''
-        ## port of the configuration server
+        # port of the configuration server
         self.port = None
-        ## user interface
-        self.ui = Ui_ConnectDlg()
+        # user interface
+        self.ui = _formclass()
 
-    ## creates GUI
+    # creates GUI
     # \brief It updates GUI and creates connection for required actions
     def createGUI(self):
         self.ui.setupUi(self)
         self.updateForm()
         self.__updateUi()
 
-        self.connect(self.ui.connectPushButton, SIGNAL("clicked()"),
-                     self.accept)
-        self.connect(self.ui.cancelPushButton, SIGNAL("clicked()"),
-                     self.reject)
-        self.connect(self.ui.deviceLineEdit,
-                     SIGNAL("textEdited(QString)"), self.__updateUi)
+        self.ui.connectPushButton.clicked.connect(
+            self.accept)
+        self.ui.cancelPushButton.clicked.connect(self.reject)
+        self.ui.deviceLineEdit.textEdited[str].connect(self.__updateUi)
 
-    ## updates the connect dialog
+    # updates the connect dialog
     # \brief It sets initial values of the connection form
     def updateForm(self):
         if self.device is not None:
@@ -72,13 +80,13 @@ class ConnectDlg(QDialog):
         if self.port is not None:
             self.ui.portLineEdit.setText(str(self.port))
 
-    ## updates connect user interface
+    # updates connect user interface
     # \brief It sets enable or disable the OK button
     def __updateUi(self):
-        enable = not self.ui.deviceLineEdit.text().isEmpty()
+        enable = bool(self.ui.deviceLineEdit.text())
         self.ui.connectPushButton.setEnabled(enable)
 
-    ## accepts input text strings
+    # accepts input text strings
     # \brief It copies the connect name and value from lineEdit
     #        widgets and accept the dialog
     def accept(self):
@@ -97,7 +105,7 @@ class ConnectDlg(QDialog):
             port = str(self.ui.portLineEdit.text())
             if port:
                 self.port = int(port)
-        except:
+        except Exception:
             QMessageBox.warning(self, "Wrong port number",
                                 "Please define the port number")
             self.ui.portLineEdit.setFocus()
@@ -114,19 +122,18 @@ class ConnectDlg(QDialog):
                                 "Please define the port")
             self.ui.portLineEdit.setFocus()
             return
-
         QDialog.accept(self)
 
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## connect form
+    # connect form
     form = ConnectDlg()
     form.createGUI()
     form.show()

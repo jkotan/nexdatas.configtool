@@ -15,21 +15,20 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file DomTools.py
+# \package nxsconfigtool nexdatas
+# \file DomTools.py
 # Abstract Node dialog class
 
 """  DOM parser and tree view tools"""
 
-from PyQt4.QtXml import QDomNode
-from PyQt4.QtCore import QString
+from PyQt5.QtXml import QDomNode
 import re
 
 
-## abstract node dialog
+# abstract node dialog
 class DomTools(object):
 
-    ## provides a list of elements from the given text
+    # provides a list of elements from the given text
     # \param text give text
     # \param label element label
     # \returns list of element names from the given text
@@ -43,7 +42,7 @@ class DomTools(object):
                     r"[\w]+",
                     text[(index + len(label) + 2):]
                 ).next().group(0)
-            except:
+            except Exception:
                 subc = ""
             name = subc.strip() if subc else ""
             if name:
@@ -51,7 +50,7 @@ class DomTools(object):
             index = text.find("$%s." % label, index + 1)
         return variables
 
-    ## provides row number of the given node
+    # provides row number of the given node
     # \param child child item
     # \param node parent node
     # \returns row number
@@ -68,12 +67,12 @@ class DomTools(object):
             if row < children.count():
                 return row
 
-    ## provides node text for the given node
+    # provides node text for the given node
     # \param node DOM node
     # \returns string with node texts
     @classmethod
     def getText(cls, node):
-        text = QString()
+        text = ""
         if node:
             child = node.firstChild()
             while not child.isNull():
@@ -82,7 +81,7 @@ class DomTools(object):
                 child = child.nextSibling()
         return text
 
-    ## provides row number of the given element
+    # provides row number of the given element
     # \param element DOM element
     # \param node DOM node
     # \returns row number
@@ -99,7 +98,7 @@ class DomTools(object):
             if row < children.count():
                 return row
 
-    ## replaces node text for the given node
+    # replaces node text for the given node
     # \param node parent DOM node
     # \param index of child text node
     # \param model Component model
@@ -115,17 +114,17 @@ class DomTools(object):
                 child = children.item(i)
                 if child.nodeType() == QDomNode.TextNode:
                     if j == 0 and text:
-                        child.toText().setData(QString(text))
+                        child.toText().setData(str(text))
                     else:
-                        child.toText().setData(QString(""))
+                        child.toText().setData(str(""))
                     j += 1
                 i += 1
 
             if j == 0 and text:
-                textNode = root.createTextNode(QString(text))
+                textNode = root.createTextNode(str(text))
                 cls.appendNode(textNode, index, model)
 
-    ## removes node
+    # removes node
     # \param node DOM node to remove
     # \param parent parent node index
     # \param model Component model
@@ -138,7 +137,7 @@ class DomTools(object):
         if row is not None:
             model.removeItem(row, parent)
 
-    ## replaces node
+    # replaces node
     # \param oldNode old DOM node
     # \param newNode new DOM node
     # \param parent parent node index
@@ -157,7 +156,7 @@ class DomTools(object):
             else:
                 model.appendItem(newNode, parent)
 
-    ## appends node
+    # appends node
     # \param node DOM node to append
     # \param parent parent node index
     # \param model Component model
@@ -166,7 +165,7 @@ class DomTools(object):
         if model.appendItem(node, parent):
             return True
 
-    ## removes node element
+    # removes node element
     # \param element DOM node element to remove
     # \param parent parent node index
     # \param model Component model
@@ -179,7 +178,7 @@ class DomTools(object):
         if row is not None:
             model.removeItem(row, parent)
 
-    ## replaces node element
+    # replaces node element
     # \param oldElement old DOM node element
     # \param newElement new DOM node element
     # \param parent parent node index
@@ -198,7 +197,7 @@ class DomTools(object):
             else:
                 model.appendItem(newElement, parent)
 
-    ## provides the first element in the tree with the given name
+    # provides the first element in the tree with the given name
     # \param node DOM node
     # \param name child name
     # \returns DOM child node

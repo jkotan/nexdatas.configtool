@@ -15,52 +15,62 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file AttributeDlg.py
+# \package nxsconfigtool nexdatas
+# \file AttributeDlg.py
 # Attribute dialog class
 
 """ attribute dialog """
+import os
 
-from PyQt4.QtGui import (QDialog, QDialogButtonBox, QMessageBox)
-from PyQt4.QtCore import SIGNAL
+from PyQt5.QtWidgets import (QDialog, QDialogButtonBox, QMessageBox)
+from PyQt5 import uic
 
-from .ui.ui_attributedlg import Ui_AttributeDlg
+# from .ui.ui_attributedlg import Ui_AttributeDlg
 from .Errors import CharacterError
 
 import logging
-## message logger
+import sys
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "attributedlg.ui"))
 
-## dialog defining a tag attribute
+if sys.version_info > (3,):
+    unicode = str
+
+
+# dialog defining a tag attribute
 class AttributeDlg(QDialog):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(AttributeDlg, self).__init__(parent)
 
-        ## attribute name
+        # attribute name
         self.name = u''
-        ## attribute value
+        # attribute value
         self.value = u''
 
-        ## user interface
-        self.ui = Ui_AttributeDlg()
+        # user interface
+        self.ui = _formclass()
         self.ui.setupUi(self)
 
         self.__updateUi()
 
-        self.connect(self.ui.nameLineEdit,
-                     SIGNAL("textEdited(QString)"), self.__updateUi)
+        self.ui.nameLineEdit.textEdited.connect(self.__updateUi)
+        # self.connect(self.ui.nameLineEdit,
+        #              SIGNAL("textEdited(QString)"), self.__updateUi)
 
-    ## updates attribute user interface
+    # updates attribute user interface
     # \brief It sets enable or disable the OK button
     def __updateUi(self):
-        enable = not self.ui.nameLineEdit.text().isEmpty()
+        enable = bool(self.ui.nameLineEdit.text())
         self.ui.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
 
-    ## accepts input text strings
+    # accepts input text strings
     # \brief It copies the attribute name and value from lineEdit widgets
     #        and accept the dialog
     def accept(self):
@@ -75,7 +85,7 @@ class AttributeDlg(QDialog):
             if name[0] == '-':
                 raise CharacterError("The first character of Name is '-'")
 
-        except CharacterError, e:
+        except CharacterError as e:
             QMessageBox.warning(self, "Character Error", unicode(e))
             return
         self.name = name
@@ -83,15 +93,16 @@ class AttributeDlg(QDialog):
 
         QDialog.accept(self)
 
+
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## attribute form
+    # attribute form
     form = AttributeDlg()
     form.show()
     app.exec_()

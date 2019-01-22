@@ -15,53 +15,64 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file DefinitionDlg.py
+# \package nxsconfigtool nexdatas
+# \file DefinitionDlg.py
 # Definition dialog class
 
 """ definition widget """
 
 import copy
+import os
+import sys
 
-from PyQt4.QtCore import (SIGNAL, QString, Qt, QVariant, QModelIndex)
-from PyQt4.QtGui import (QMessageBox, QTableWidgetItem)
+from PyQt5.QtCore import (Qt, QModelIndex)
+from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem)
+from PyQt5 import uic
 
-from .ui.ui_definitiondlg import Ui_DefinitionDlg
+# from .ui.ui_definitiondlg import Ui_DefinitionDlg
 from .AttributeDlg import AttributeDlg
 from .NodeDlg import NodeDlg
 from .DomTools import DomTools
 
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
 
-## dialog defining a definition tag
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "definitiondlg.ui"))
+
+if sys.version_info > (3,):
+    unicode = str
+
+
+# dialog defining a definition tag
 class DefinitionDlg(NodeDlg):
 
-    ## constructor
+    # constructor
     # \param parent patent instance
     def __init__(self, parent=None):
         super(DefinitionDlg, self).__init__(parent)
 
-        ## definition name
+        # definition name
         self.name = u''
-        ## definition content
+        # definition content
         self.content = u''
-        ## definition doc
+        # definition doc
         self.doc = u''
-        ## definition attributes
+        # definition attributes
         self.attributes = {}
         self.__attributes = {}
 
-        ## allowed subitems
+        # allowed subitems
         self.subItems = ["group", "field", "attribute", "link", "component",
                          "doc", "symbols"]
 
-        ## user interface
-        self.ui = Ui_DefinitionDlg()
+        # user interface
+        self.ui = _formclass()
 
-    ## updates the definition dialog
+    # updates the definition dialog
     # \brief It sets the form local variables
     def updateForm(self):
 
@@ -78,7 +89,7 @@ class DefinitionDlg(NodeDlg):
 
         self.populateAttributes()
 
-    ## provides the state of the definition dialog
+    # provides the state of the definition dialog
     # \returns state of the definition in tuple
     def getState(self):
         attributes = copy.copy(self.attributes)
@@ -90,7 +101,7 @@ class DefinitionDlg(NodeDlg):
                  )
         return state
 
-    ## sets the state of the definition dialog
+    # sets the state of the definition dialog
     # \param state definition state written in tuple
     def setState(self, state):
 
@@ -101,7 +112,7 @@ class DefinitionDlg(NodeDlg):
          ) = state
         self.attributes = copy.copy(attributes)
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It calls ui.setupUi(self),  updateForm() and
     #        connects signals and slots
     def createGUI(self):
@@ -109,27 +120,20 @@ class DefinitionDlg(NodeDlg):
 
         self.updateForm()
 
-        self.connect(
-            self.ui.resetPushButton, SIGNAL("clicked()"), self.reset)
-        self.connect(
-            self.ui.attributeTableWidget,
-            SIGNAL("itemChanged(QTableWidgetItem*)"),
+        self.ui.resetPushButton.clicked.connect(self.reset)
+        self.ui.attributeTableWidget.itemChanged.connect(
             self.__tableItemChanged)
-        self.connect(
-            self.ui.addPushButton,
-            SIGNAL("clicked()"), self.__addAttribute)
-        self.connect(
-            self.ui.removePushButton,
-            SIGNAL("clicked()"), self.__removeAttribute)
+        self.ui.addPushButton.clicked.connect(self.__addAttribute)
+        self.ui.removePushButton.clicked.connect(self.__removeAttribute)
 
-    ## sets the form from the DOM node
+    # sets the form from the DOM node
     # \param node DOM node
     def setFromNode(self, node=None):
         if node:
-            ## defined in NodeDlg class
+            # defined in NodeDlg class
             self.node = node
         if not self.node:
-            ## exception?
+            # exception?
             return
         attributeMap = self.node.attributes()
 
@@ -149,11 +153,11 @@ class DefinitionDlg(NodeDlg):
         text = DomTools.getText(self.node)
         self.content = unicode(text).strip() if text else ""
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         text = DomTools.getText(doc)
         self.doc = unicode(text).strip() if text else ""
 
-    ## adds an attribute
+    # adds an attribute
     #  \brief It runs the Definition Dialog and fetches attribute name and
     #     value
     def __addAttribute(self):
@@ -168,16 +172,16 @@ class DefinitionDlg(NodeDlg):
                     "To change the attribute value, please edit the value "
                     "in the attribute table")
 
-    ## takes a name of the current attribute
+    # takes a name of the current attribute
     # \returns name of the current attribute
     def __currentTableAttribute(self):
         item = self.ui.attributeTableWidget.item(
             self.ui.attributeTableWidget.currentRow(), 0)
         if item is None:
             return None
-        return item.data(Qt.UserRole).toString()
+        return item.data(Qt.UserRole)
 
-    ## removes an attribute
+    # removes an attribute
     #  \brief It removes the current attribute asking before about it
     def __removeAttribute(self):
         attr = self.__currentTableAttribute()
@@ -187,7 +191,7 @@ class DefinitionDlg(NodeDlg):
             self.__attributes.pop(unicode(attr))
             self.populateAttributes()
 
-    ## changes the current value of the attribute
+    # changes the current value of the attribute
     # \brief It changes the current value of the attribute and informs
     #        the user that attribute names arenot editable
     def __tableItemChanged(self, item):
@@ -204,7 +208,7 @@ class DefinitionDlg(NodeDlg):
                 "the attribute and add the new one")
         self.populateAttributes()
 
-    ## fills in the attribute table
+    # fills in the attribute table
     # \param selectedAttribute selected attribute
     def populateAttributes(self, selectedAttribute=None):
         selected = None
@@ -216,7 +220,7 @@ class DefinitionDlg(NodeDlg):
         self.ui.attributeTableWidget.setHorizontalHeaderLabels(headers)
         for row, name in enumerate(self.__attributes):
             item = QTableWidgetItem(name)
-            item.setData(Qt.UserRole, QVariant(name))
+            item.setData(Qt.UserRole, (name))
             self.ui.attributeTableWidget.setItem(row, 0, item)
             item2 = QTableWidgetItem(self.__attributes[name])
             self.ui.attributeTableWidget.setItem(row, 1, item2)
@@ -230,7 +234,7 @@ class DefinitionDlg(NodeDlg):
             selected.setSelected(True)
             self.ui.attributeTableWidget.setCurrentItem(selected)
 
-    ## applys input text strings
+    # applys input text strings
     # \brief It copies the definition name and type from lineEdit widgets
     #        and apply the dialog
     def apply(self):
@@ -253,12 +257,10 @@ class DefinitionDlg(NodeDlg):
 
         if index.column() != 0:
             index = self.view.model().index(index.row(), 0, index.parent())
-        self.view.model().emit(
-            SIGNAL("dataChanged(const QModelIndex &,"
-                   " const QModelIndex &)"), index, finalIndex)
+        self.view.model().dataChanged.emit(index, finalIndex)
         self.view.expand(index)
 
-    ## updates the Node
+    # updates the Node
     # \param index current node index
     # \brief It sets node from the dialog variables
     def updateNode(self, index=QModelIndex()):
@@ -268,19 +270,19 @@ class DefinitionDlg(NodeDlg):
         for _ in range(attributeMap.count()):
             attributeMap.removeNamedItem(attributeMap.item(0).nodeName())
         if self.name:
-            elem.setAttribute(QString("name"), QString(self.name))
+            elem.setAttribute(str("name"), str(self.name))
 
         self.replaceText(mindex, unicode(self.content))
 
         for attr in self.attributes.keys():
-            elem.setAttribute(QString(attr), QString(self.attributes[attr]))
+            elem.setAttribute(str(attr), str(self.attributes[attr]))
 
-        doc = self.node.firstChildElement(QString("doc"))
+        doc = self.node.firstChildElement(str("doc"))
         if not self.doc and doc and doc.nodeName() == "doc":
             self.removeElement(doc, mindex)
         elif self.doc:
-            newDoc = self.root.createElement(QString("doc"))
-            newText = self.root.createTextNode(QString(self.doc))
+            newDoc = self.root.createElement(str("doc"))
+            newText = self.root.createTextNode(str(self.doc))
             newDoc.appendChild(newText)
             if doc and doc.nodeName() == "doc":
                 self.replaceElement(doc, newDoc, mindex)
@@ -290,13 +292,13 @@ class DefinitionDlg(NodeDlg):
 
 if __name__ == "__main__":
     import sys
-    from PyQt4.QtGui import QApplication
+    from PyQt5.QtGui import QApplication
 
     logging.basicConfig(level=logging.DEBUG)
 
-    ## Qt application
+    # Qt application
     app = QApplication(sys.argv)
-    ## definition form
+    # definition form
     form = DefinitionDlg()
     form.name = 'scan'
     form.content = '$components.default'

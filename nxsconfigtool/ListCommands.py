@@ -15,35 +15,39 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file ListCommands.py
+# \package nxsconfigtool nexdatas
+# \file ListCommands.py
 # user commands of GUI application
 
 """ Component Designer commands """
 
-from PyQt4.QtGui import (QMessageBox, QUndoCommand)
+from PyQt5.QtWidgets import (QMessageBox, QUndoCommand)
 
 from .Component import Component
 from .LabeledObject import LabeledObject
 
+import sys
 import logging
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+if sys.version_info > (3,):
+    unicode = str
 
-## Command which creates a new component
+
+# Command which creates a new component
 class ComponentNew(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._comp = None
 
-    ## executes the command
+    # executes the command
     # \brief It creates a new component
     def redo(self):
 
@@ -55,7 +59,7 @@ class ComponentNew(QUndoCommand):
         self.receiver.componentList.addElement(self._comp)
         logger.debug("EXEC componentNew")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It removes the new component
     def undo(self):
         if self._comp is not None:
@@ -72,20 +76,20 @@ class ComponentNew(QUndoCommand):
         logger.debug("UNDO componentNew")
 
 
-## Command which removes the current component from the component list
+# Command which removes the current component from the component list
 class ComponentRemove(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._cp = None
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It removes the current component from the component list
     def redo(self):
         if self._cp is not None:
@@ -109,7 +113,7 @@ class ComponentRemove(QUndoCommand):
 
         logger.debug("EXEC componentRemove")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It reloads the removed component from the component list
     def undo(self):
         if self._cp is not None:
@@ -155,28 +159,28 @@ class ComponentRemove(QUndoCommand):
         logger.debug("UNDO componentRemove")
 
 
-## Command which changes the current component in the list
+# Command which changes the current component in the list
 class ComponentListChanged(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
-        ## new item
+        # new item
         self.item = None
-        ## new directory
+        # new directory
         self.directory = None
-        ## new component name
+        # new component name
         self.name = None
 
         self._cp = None
         self._oldName = None
         self._oldDirectory = None
 
-    ## executes the command
+    # executes the command
     # \brief It changes the current component in the list
     def redo(self):
         if self.item is not None or self.name is not None:
@@ -206,7 +210,7 @@ class ComponentListChanged(QUndoCommand):
 
         logger.debug("EXEC componentChanged")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It changes back the current component in the list
     def undo(self):
         if self._cp is not None:
@@ -224,19 +228,19 @@ class ComponentListChanged(QUndoCommand):
         logger.debug("UNDO componentChanged")
 
 
-## Command which creates a new datasource
+# Command which creates a new datasource
 class DataSourceNew(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._ds = None
 
-    ## executes the command
+    # executes the command
     # \brief It creates a new datasource
     def redo(self):
         if self._ds is None:
@@ -246,7 +250,7 @@ class DataSourceNew(QUndoCommand):
         self.receiver.sourceList.addElement(self._ds)
         logger.debug("EXEC dsourceNew")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It removes the added datasource
     def undo(self):
         if self._ds is not None:
@@ -264,20 +268,20 @@ class DataSourceNew(QUndoCommand):
         logger.debug("UNDO dsourceNew")
 
 
-## Command which removes the current datasource from the datasource list
+# Command which removes the current datasource from the datasource list
 class DataSourceRemove(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
         self._ds = None
         self._subwindow = None
 
-    ## executes the command
+    # executes the command
     # \brief It removes the current datasource from the datasource list
     def redo(self):
 
@@ -301,7 +305,7 @@ class DataSourceRemove(QUndoCommand):
 
         logger.debug("EXEC dsourceRemove")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It adds the removes datasource into the datasource list
     def undo(self):
         if self._ds is not None:
@@ -327,28 +331,28 @@ class DataSourceRemove(QUndoCommand):
         logger.debug("UNDO dsourceRemove")
 
 
-## Command which performs change of  the current datasource
+# Command which performs change of  the current datasource
 class DataSourceListChanged(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
-        ## new item
+        # new item
         self.item = None
-        ## new datasource name
+        # new datasource name
         self.name = None
-        ## new datasource directory
+        # new datasource directory
         self.directory = None
 
         self._ds = None
         self._oldName = None
         self._oldDirectory = None
 
-    ## executes the command
+    # executes the command
     # \brief It performs change of  the current datasource
     def redo(self):
         if self.item is not None or self.name is not None:
@@ -377,7 +381,7 @@ class DataSourceListChanged(QUndoCommand):
 
         logger.debug("EXEC dsourceChanged")
 
-    ## unexecutes the command
+    # unexecutes the command
     # \brief It changes back the current datasource
     def undo(self):
         if self._ds is not None:
@@ -396,18 +400,18 @@ class DataSourceListChanged(QUndoCommand):
         logger.debug("UNDO dsourceChanged")
 
 
-## Command which is performed during closing the Component Designer
+# Command which is performed during closing the Component Designer
 class CloseApplication(QUndoCommand):
 
-    ## constructor
+    # constructor
     # \param receiver command receiver
     # \param parent command parent
     def __init__(self, receiver, parent=None):
         QUndoCommand.__init__(self, parent)
-        ## main window
+        # main window
         self.receiver = receiver
 
-    ## executes the command
+    # executes the command
     # \brief It is performed during closing the Component Designer
     def redo(self):
         if hasattr(self.receiver.ui, 'mdi'):

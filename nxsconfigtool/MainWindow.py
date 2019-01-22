@@ -15,23 +15,26 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file MainWindow.py
+# \package nxsconfigtool nexdatas
+# \file MainWindow.py
 # Main window of the application
 
 """ main window application dialog """
 
 import os
+import sys
 
-from PyQt4.QtCore import (
-    SIGNAL, QSettings, Qt, QVariant, pyqtSlot)
-from PyQt4.QtGui import (
-    QMainWindow,
-    QMessageBox, QIcon,
-    QLabel, QFrame,
-    QUndoGroup, QUndoStack, QTextCursor)
+from PyQt5.QtCore import (
+    QSettings, Qt, pyqtSlot)
+from PyQt5.QtGui import (
+    QIcon,
+    QTextCursor)
+from PyQt5.QtWidgets import (
+    QFrame, QUndoGroup, QUndoStack,
+    QMainWindow, QMessageBox, QLabel)
+from PyQt5 import uic
 
-from .ui.ui_mainwindow import Ui_MainWindow
+# from .ui.ui_mainwindow import Ui_MainWindow
 
 from .DataSourceList import DataSourceList
 from .ComponentList import ComponentList
@@ -52,14 +55,28 @@ from .ComponentCreator import (NXSTOOLS_AVAILABLE)
 
 import logging
 
-## message logger
+# message logger
 logger = logging.getLogger("nxsdesigner")
 
+_formclass, _baseclass = uic.loadUiType(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                 "ui", "mainwindow.ui"))
 
-## main window class
+if sys.version_info > (3,):
+    unicode = str
+
+
+def iternext(it):
+    if sys.version_info > (3,):
+        return next(iter(it.values()))
+    else:
+        return it.itervalues().next()
+
+
+# main window class
 class MainWindow(QMainWindow):
 
-    ## constructor
+    # constructor
     # \param components component direcotry
     # \param datasources datasource directory
     # \param server configuration server
@@ -70,45 +87,45 @@ class MainWindow(QMainWindow):
         logger.debug("PARAMETERS: %s %s %s %s",
                      components, datasources, server, parent)
 
-        ## component tree menu under mouse cursor
+        # component tree menu under mouse cursor
         self.contextMenuActions = None
 
-        ## slots for DataSource widget buttons
+        # slots for DataSource widget buttons
         self.externalDSActions = {}
-        ## datasource list menu under mouse cursor
+        # datasource list menu under mouse cursor
         self.dsourceListMenuActions = None
-        ## list of datasources
+        # list of datasources
         self.sourceList = None
-        ## datasource directory label
+        # datasource directory label
         self.dsDirLabel = None
 
-        ## slots for Component widget buttons
+        # slots for Component widget buttons
         self.externalCPActions = {}
-        ## component list menu under mouse cursor
+        # component list menu under mouse cursor
         self.componentListMenuActions = None
-        ## list of components
+        # list of components
         self.componentList = None
-        ## component directory label
+        # component directory label
         self.cpDirLabel = None
 
-        ## stack with used commands
+        # stack with used commands
         self.undoStack = None
-        ## group of command stacks
+        # group of command stacks
         self.undoGroup = None
 
-        ## user interface
-        self.ui = Ui_MainWindow()
+        # user interface
+        self.ui = _formclass()
 
-        ## configuration server
+        # configuration server
         self.configServer = None
 
-        ## online.xml file name
+        # online.xml file name
         self.onlineFile = None
 
-        ## action slots
+        # action slots
         self.slots = {}
 
-        ## log actions
+        # log actions
         self.logActions = LogActions(self)
 
         settings = QSettings()
@@ -131,9 +148,9 @@ class MainWindow(QMainWindow):
         self.loadComponents()
 
         self.restoreGeometry(
-            settings.value("MainWindow/Geometry").toByteArray())
+            settings.value("MainWindow/Geometry"))
         self.restoreState(
-            settings.value("MainWindow/State").toByteArray())
+            settings.value("MainWindow/State"))
 
         if PYTANGO_AVAILABLE:
             self.setupServer(settings, server)
@@ -194,7 +211,7 @@ class MainWindow(QMainWindow):
         if message:
             logger.info(message)
 
-    ##  creates GUI
+    #  creates GUI
     # \brief It create dialogs for the main window application
     # \param dsDirectory datasource directory
     # \param cpDirectory component directory
@@ -249,7 +266,7 @@ class MainWindow(QMainWindow):
         doc = self.ui.logTextBrowser.document()
         doc.setMaximumBlockCount(1000)
 
-    ## setups direcconfiguration server
+    # setups direcconfiguration server
     # \param settings application QSettings object
     # \param name setting variable name
     # \param default defualt value
@@ -260,7 +277,7 @@ class MainWindow(QMainWindow):
         if directory and os.path.exists(directory):
             return os.path.abspath(directory)
         ldir = ""
-        dsdir = unicode(settings.value(name).toString())
+        dsdir = unicode(settings.value(name))
         if dsdir:
             ldir = os.path.abspath(dsdir)
         else:
@@ -271,7 +288,7 @@ class MainWindow(QMainWindow):
                 ldir = os.getcwd()
         return ldir
 
-    ## setups configuration server
+    # setups configuration server
     # \param settings application QSettings object
     # \param server user's server
     def setupServer(self, settings, server=None):
@@ -281,21 +298,21 @@ class MainWindow(QMainWindow):
             self.configServer.setServer(server)
         else:
             self.configServer.device = unicode(
-                settings.value("ConfigServer/device").toString())
+                settings.value("ConfigServer/device"))
             self.configServer.host = unicode(
-                settings.value("ConfigServer/host").toString())
+                settings.value("ConfigServer/host"))
             self.onlineFile = unicode(
-                settings.value("Online/filename").toString())
-            port = str(settings.value("ConfigServer/port").toString())
+                settings.value("Online/filename"))
+            port = str(settings.value("ConfigServer/port") or "")
             if port:
                 self.configServer.port = int(port)
 
-    ## updates directories in status bar
+    # updates directories in status bar
     def updateStatusBar(self):
         self.cpDirLabel.setText("CP: %s" % (self.componentList.directory))
         self.dsDirLabel.setText("DS: %s" % (self.sourceList.directory))
 
-    ## creates status bar
+    # creates status bar
     # \returns status bar
     def createStatusBar(self):
         status = self.statusBar()
@@ -309,7 +326,7 @@ class MainWindow(QMainWindow):
         status.addWidget(self.dsDirLabel, 4)
         return status
 
-    ## creates action
+    # creates action
     # \param action the action instance
     # \param text string shown in menu
     # \param slot action slot
@@ -319,7 +336,7 @@ class MainWindow(QMainWindow):
     # \param checkable if command/action checkable
     # \param signal action signal
     def __setAction(self, action, _, slot=None, shortcut=None, icon=None,
-                    tip=None, checkable=False, signal="triggered()"):
+                    tip=None, checkable=False, signal="triggered"):
         if icon is not None:
             action.setIcon(QIcon(":/%s.png" % unicode(icon).strip()))
         if shortcut is not None:
@@ -328,7 +345,8 @@ class MainWindow(QMainWindow):
             action.setToolTip(tip)
             action.setStatusTip(tip)
         if slot is not None:
-            self.connect(action, SIGNAL(signal), slot)
+            # self.connect(action, SIGNAL(signal), slot)
+            getattr(action, signal).connect(slot)
         if checkable:
             action.setCheckable(True)
         return action
@@ -344,8 +362,9 @@ class MainWindow(QMainWindow):
     def __setTasks(self, slots):
         if hasattr(slots, "tasks"):
             for pars in slots.tasks:
-                self.connect(pars[1], SIGNAL(pars[2]),
-                             getattr(slots, pars[0]))
+                # self.connect(pars[1], SIGNAL(pars[2]),
+                #             getattr(slots, pars[0]))
+                getattr(pars[1], pars[2]).connect(getattr(slots, pars[0]))
 
     def __createUndoRedoActions(self):
         self.undoGroup.addStack(self.undoStack)
@@ -369,7 +388,7 @@ class MainWindow(QMainWindow):
         self.ui.editToolBar.addAction(actionUndo)
         self.ui.editToolBar.addAction(actionRedo)
 
-    ## creates actions
+    # creates actions
     # \brief It creates actions and sets the command pool and stack
     def createActions(self):
         self.undoGroup = QUndoGroup(self)
@@ -417,15 +436,19 @@ class MainWindow(QMainWindow):
             tip="Go to the component list", checkable=True)
 
         # Signals
-        self.connect(self.componentList.ui.elementListWidget,
-                     SIGNAL("itemDoubleClicked(QListWidgetItem*)"),
-                     self.slots["Edit"].componentEdit)
+        # self.connect(self.componentList.ui.elementListWidget,
+        #              SIGNAL("itemDoubleClicked(QListWidgetItem*)"),
+        #              self.slots["Edit"].componentEdit)
+        self.componentList.ui.elementListWidget.itemDoubleClicked.connect(
+            self.slots["Edit"].componentEdit)
 
-        self.connect(self.sourceList.ui.elementListWidget,
-                     SIGNAL("itemDoubleClicked(QListWidgetItem*)"),
-                     self.slots["Edit"].dsourceEdit)
+        # self.connect(self.sourceList.ui.elementListWidget,
+        #              SIGNAL("itemDoubleClicked(QListWidgetItem*)"),
+        #              self.slots["Edit"].dsourceEdit)
+        self.sourceList.ui.elementListWidget.itemDoubleClicked.connect(
+            self.slots["Edit"].dsourceEdit)
 
-        ## Component context menu
+        # Component context menu
         self.ui.mdi.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.contextMenuActions = (
             self.ui.actionNewGroupItem,
@@ -454,7 +477,7 @@ class MainWindow(QMainWindow):
             self.ui.actionClearComponentItems
         )
 
-        ## Component list menu
+        # Component list menu
         self.componentListMenuActions = (
             self.ui.actionNew,
             self.ui.actionEditComponent,
@@ -479,7 +502,7 @@ class MainWindow(QMainWindow):
             self.ui.actionTakeDataSources
         )
 
-        ## DataSource list menu
+        # DataSource list menu
         self.dsourceListMenuActions = (
             self.ui.actionNewDataSource,
             self.ui.actionEditDataSource,
@@ -520,7 +543,7 @@ class MainWindow(QMainWindow):
             "externalDSLink": self.slots[
                 "Item"].componentLinkDataSourceItemButton}
 
-    ## stores the list element before finishing the application
+    # stores the list element before finishing the application
     # \param event Qt event
     # \param elementList element list
     # \param failures a list of errors
@@ -537,7 +560,7 @@ class MainWindow(QMainWindow):
                         and status != QMessageBox.NoToAll:
                     status = QMessageBox.question(
                         self, "%s - Save" % elementList.clName,
-                        "Do you want to save %s: %s".encode()
+                        "Do you want to save %s: %s"
                         % (elementList.clName, cp.name),
                         QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel
                         | QMessageBox.YesToAll | QMessageBox.NoToAll,
@@ -559,17 +582,16 @@ class MainWindow(QMainWindow):
                             return
                         elementList.populateElements(cid)
 
-                    except IOError, e:
+                    except IOError as e:
                         failures.append(unicode(e))
 
                 elif status == QMessageBox.Cancel:
                     if event:
                         event.ignore()
-                        print "CANCEL"
                     return
         return True
 
-    ## Provides a name of the currently selected datasource
+    # Provides a name of the currently selected datasource
     def currentDataSourceName(self):
         name = ""
         if hasattr(self.sourceList.currentListElement(), "id"):
@@ -581,36 +603,36 @@ class MainWindow(QMainWindow):
                     name = ds.instance.name
         return name
 
-    ## Stores settings in QSettings object
+    # Stores settings in QSettings object
     def __storeSettings(self):
         settings = QSettings()
         settings.setValue(
             "MainWindow/Geometry",
-            QVariant(self.saveGeometry()))
+            (self.saveGeometry()))
         settings.setValue(
             "MainWindow/State",
-            QVariant(self.saveState()))
+            (self.saveState()))
         settings.setValue(
             "DataSources/directory",
-            QVariant(os.path.abspath(self.sourceList.directory)))
+            (os.path.abspath(self.sourceList.directory)))
         settings.setValue(
             "Components/directory",
-            QVariant(os.path.abspath(self.componentList.directory)))
+            (os.path.abspath(self.componentList.directory)))
 
         if self.configServer:
             settings.setValue("ConfigServer/device",
-                              QVariant(self.configServer.device))
+                              (self.configServer.device))
             settings.setValue("ConfigServer/host",
-                              QVariant(self.configServer.host))
+                              (self.configServer.host))
             settings.setValue("ConfigServer/port",
-                              QVariant(self.configServer.port))
+                              (self.configServer.port))
             settings.setValue("ConfigServer/port",
-                              QVariant(self.configServer.port))
+                              (self.configServer.port))
             settings.setValue("Online/filename",
-                              QVariant(self.onlineFile))
+                              (self.onlineFile))
             self.configServer.close()
 
-    ## stores the setting before finishing the application
+    # stores the setting before finishing the application
     # \param event Qt event
     def closeEvent(self, event):
         failures = []
@@ -630,7 +652,7 @@ class MainWindow(QMainWindow):
         self.__storeSettings()
         self.ui.mdi.closeAllSubWindows()
 
-    ## disables/enable the server actions
+    # disables/enable the server actions
     # \param status True for disable
     def disableServer(self, status):
         self.ui.actionFetchComponentsServer.setDisabled(status)
@@ -668,16 +690,16 @@ class MainWindow(QMainWindow):
         else:
             self.setWindowTitle("NXS Component Designer <-> [%s]" % dev)
 
-    ## loads the datasource list
+    # loads the datasource list
     # \brief It loads the datasource list from the default directory
     def loadDataSources(self):
         self.sourceList.loadList(self.externalDSActions)
-        ide = self.sourceList.elements.itervalues().next().id \
+        ide = iternext(self.sourceList.elements).id \
             if len(self.sourceList.elements) else None
 
         self.sourceList.populateElements(ide)
 
-    ## sets the datasource list from dictionary
+    # sets the datasource list from dictionary
     # \param datasources dictionary with datasources, i.e. name:xml
     # \param new logical variable set to True if objects are not saved
     def setDataSources(self, datasources, new=False):
@@ -686,13 +708,13 @@ class MainWindow(QMainWindow):
             self.externalDSActions,
             None,
             new)
-        ide = self.sourceList.elements.itervalues().next().id \
+        ide = iternext(self.sourceList.elements).id \
             if len(self.sourceList.elements) else None
 
         self.sourceList.populateElements(ide)
         return last
 
-    ## sets the component list from the given dictionary
+    # sets the component list from the given dictionary
     # \param components dictionary with components, i.e. name:xml
     def setComponents(self, components):
         self.componentList.setList(
@@ -700,24 +722,24 @@ class MainWindow(QMainWindow):
             self.externalCPActions,
             self.contextMenuActions
         )
-        ide = self.componentList.elements.itervalues().next().id \
+        ide = iternext(self.componentList.elements).id \
             if len(self.componentList.elements) else None
 
         self.componentList.populateElements(ide)
 
-    ## loads the component list
+    # loads the component list
     # \brief It loads the component list from the default directory
     def loadComponents(self):
         self.componentList.loadList(
             self.externalCPActions,
             self.contextMenuActions
         )
-        ide = self.componentList.elements.itervalues().next().id \
+        ide = iternext(self.componentList.elements).id \
             if len(self.componentList.elements) else None
 
         self.componentList.populateElements(ide)
 
-    ## update datasource list item according to open window
+    # update datasource list item according to open window
     # \returns True if windows is open
     def updateDataSourceListItem(self):
         status = False
@@ -735,7 +757,7 @@ class MainWindow(QMainWindow):
                     status = True
         return status
 
-    ## update component list item according to open window
+    # update component list item according to open window
     # \returns True if windows is open
     def updateComponentListItem(self):
         status = False
@@ -753,12 +775,12 @@ class MainWindow(QMainWindow):
                     status = True
         return status
 
-    ## actives sub-window if in mdi area
+    # actives sub-window if in mdi area
     def setActiveSubWindow(self, window):
         w = window if window in self.ui.mdi.subWindowList() else None
         self.ui.mdi.setActiveSubWindow(w)
 
-    ## deselect component list item according to open window
+    # deselect component list item according to open window
     def deselectComponentSubWindow(self):
         if self.ui.mdi.activeSubWindow() and isinstance(
                 self.ui.mdi.activeSubWindow().widget(), ComponentDlg):
@@ -772,7 +794,7 @@ class MainWindow(QMainWindow):
 
                             self.setActiveSubWindow(None)
 
-    ## deselect component list item according to open window
+    # deselect component list item according to open window
     def deselectDataSourceSubWindow(self):
         if self.ui.mdi.activeSubWindow() and isinstance(
                 self.ui.mdi.activeSubWindow().widget(), CommonDataSourceDlg):
@@ -786,13 +808,13 @@ class MainWindow(QMainWindow):
 
                             self.setActiveSubWindow(None)
 
-    ## shows all attributes in the tree
+    # shows all attributes in the tree
     # \brief switch between all attributes in the tree or only type attribute
     def viewAllAttributes(self):
         self.componentList.viewAttributes(
             not self.componentList.viewAttributes())
 
-    ## provides subwindow defined by instance
+    # provides subwindow defined by instance
     # \param instance given instance
     # \param subwindows list of subwindows
     # \returns required subwindow

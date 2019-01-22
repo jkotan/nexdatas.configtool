@@ -15,7 +15,6 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxsconfigtool nexdatas
-## \file nxsconfigtool/qrc/__init__.py
+# \package nxsconfigtool nexdatas
+# \file nxsconfigtool/qrc/__init__.py
 # package constructor
-

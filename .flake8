@@ -2,7 +2,6 @@
 exclude=
     .git,
     docs,
-    doc,
     .eggs,
     dist,
     __pycache__,

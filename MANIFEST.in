@@ -4,4 +4,4 @@ include man/nxsdesigner.1
 include nxsconfigtool/images/*.png
 include nxsconfigtool/ui/*.ui
 include nxsconfigtool/qrc/resources.qrc
-exclude nxsconfigtool/qrc/resources.rcc
+include nxsconfigtool/qrc/resources.rcc

@@ -147,10 +147,12 @@ class MainWindow(QMainWindow):
         self.loadDataSources()
         self.loadComponents()
 
-        self.restoreGeometry(
-            settings.value("MainWindow/Geometry"))
-        self.restoreState(
-            settings.value("MainWindow/State"))
+        mgeo = settings.value("MainWindow/Geometry")
+        if mgeo is not None:
+            self.restoreGeometry(mgeo)
+        mst = settings.value("MainWindow/State")
+        if mst is not None:
+            self.restoreState(mst)
 
         if PYTANGO_AVAILABLE:
             self.setupServer(settings, server)

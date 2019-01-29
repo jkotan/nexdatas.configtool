@@ -1,4 +1,8 @@
 2019-01-29 Jan Kotanski <jankotan@gmail.com>
+	* hide cancel button in progress bar
+	* tagged as v2.0.2
+
+2019-01-29 Jan Kotanski <jankotan@gmail.com>
 	* fix for crash on missing configuration file
 	* tagged as v2.0.1
 

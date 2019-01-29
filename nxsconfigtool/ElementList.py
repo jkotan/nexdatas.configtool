@@ -254,6 +254,7 @@ class ElementList(QWidget):
             "", 0, len(keys), self)
         progress.setWindowTitle("Set Elements")
         progress.setWindowModality(Qt.WindowModal)
+        progress.setCancelButton(None)
         progress.show()
         for i in range(len(keys)):
             elname = keys[i]
@@ -339,6 +340,7 @@ class ElementList(QWidget):
             "", 0, len(dirList), self)
         progress.setWindowTitle("Load Elements")
         progress.setWindowModality(Qt.WindowModal)
+        progress.setCancelButton(None)
         progress.forceShow()
         for i in range(len(dirList)):
             fname = dirList[i]

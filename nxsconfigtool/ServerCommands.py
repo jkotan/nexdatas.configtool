@@ -406,6 +406,7 @@ class ServerDSCreate(QUndoCommand):
                             progress.setWindowTitle(
                                 "Store Created DataSources")
                             progress.setWindowModality(Qt.WindowModal)
+                            progress.setCancelButton(None)
                             progress.show()
 
                             i = 0
@@ -1120,6 +1121,7 @@ class ServerStoreAllComponents(QUndoCommand):
             "", 0, len(keys), self.receiver.componentList)
         progress.setWindowTitle("Store All Components")
         progress.setWindowModality(Qt.WindowModal)
+        progress.setCancelButton(None)
         progress.show()
 
         for i in range(len(keys)):
@@ -1198,6 +1200,7 @@ class ServerStoreAllDataSources(QUndoCommand):
             "", 0, len(keys), self.receiver.sourceList)
         progress.setWindowTitle("Store All DataSources")
         progress.setWindowModality(Qt.WindowModal)
+        progress.setCancelButton(None)
         progress.show()
 
         for i in range(len(keys)):

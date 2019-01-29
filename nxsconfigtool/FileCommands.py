@@ -300,6 +300,7 @@ class ComponentSaveAll(QUndoCommand):
             "", 0, len(keys), self.receiver.componentList)
         progress.setWindowTitle("Save All Components")
         progress.setWindowModality(Qt.WindowModal)
+        progress.setCancelButton(None)
         progress.show()
         for i in range(len(keys)):
             icp = keys[i]
@@ -451,6 +452,7 @@ class DataSourceSaveAll(QUndoCommand):
             "", 0, len(keys), self.receiver.sourceList)
         progress.setWindowTitle("Save All DataSources")
         progress.setWindowModality(Qt.WindowModal)
+        progress.setCancelButton(None)
         progress.show()
 
         for i in range(len(keys)):

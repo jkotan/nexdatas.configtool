@@ -24,10 +24,10 @@ before_install:
   - if [ $TEST == "testsuit" ]; then chmod +x .travis/install.sh; fi
 
 before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
+  - "sudo export DISPLAY=:99.0"
+  - "sudo sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
-  - xhost +local:root
+  - sudo xhost +local:root
   - if [ $TEST == "testsuit" ]; then docker build -t ndts .travis/${OS}_py${PY}; fi
   - if [ $TEST == "testsuit" ]; then docker run  --name  ndts -d -it -v `pwd`:/home/tango -v /tmp/.X11-unix:/tmp/.X11-unix:ro  -e DISPLAY=$DISPLAY   ndts; fi
   - if [ $TEST == "testsuit" ]; then .travis/install.sh ${OS} ${PY}; fi

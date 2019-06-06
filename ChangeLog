@@ -1,3 +1,7 @@
+2019-06-06 Jan Kotanski <jankotan@gmail.com>
+	* change State to state()
+	* tagged as v2.0.3
+
 2019-01-29 Jan Kotanski <jankotan@gmail.com>
 	* hide cancel button in progress bar
 	* tagged as v2.0.2

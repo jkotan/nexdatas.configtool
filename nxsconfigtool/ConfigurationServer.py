@@ -109,8 +109,7 @@ class ConfigurationServer(object):
                 if cnt > 1:
                     time.sleep(0.01)
                 try:
-                    if self._proxy.command_inout("State") \
-                            != PyTango.DevState.RUNNING:
+                    if self._proxy.state() != PyTango.DevState.RUNNING:
                         found = True
                 except Exception:
 
@@ -120,6 +119,7 @@ class ConfigurationServer(object):
 
             if found:
                 self._proxy.set_timeout_millis(25000)
+                self._proxy.set_source(PyTango.DevSource.DEV)
                 self._proxy.command_inout("Open")
                 self.connected = True
             else:
@@ -235,7 +235,7 @@ class ConfigurationServer(object):
     # \brief It closes connecion to configuration server
     def close(self):
         if self._proxy and self.connected:
-            if self._proxy.command_inout("State") == PyTango.DevState.OPEN:
+            if self._proxy.state() == PyTango.DevState.OPEN:
                 self._proxy.command_inout("Close")
                 self.connected = False
 

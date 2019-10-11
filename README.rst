@@ -110,8 +110,7 @@ Moreover it is also good to install
 General overview
 ================
 
-.. figure:: png/designer2.png
-   :alt: component designer
+.. image:: https://github.com/nexdatas/configtool/blob/develop/png/designer2.png?raw=true
 
    Component Designer
 

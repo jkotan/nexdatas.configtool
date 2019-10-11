@@ -63,6 +63,7 @@ install_requires = [
     # 'pytango',
 ]
 
+
 class toolBuild(build_py):
     """ ui and qrc builder for python
     """

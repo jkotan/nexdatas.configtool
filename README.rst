@@ -87,6 +87,25 @@ and
 
 for Component Selector and Sardana related packages.
 
+From pip
+^^^^^^^^
+
+To install it from pip you need to install pyqt5, e.g.
+
+.. code-block:: console
+
+   $ python3 -m venv myvenv
+   $ . myvenv/bin/activate
+
+   $ pip install pyqt5
+   $ pip install nxsconfigtool
+
+Moreover it is also good to install
+
+.. code-block:: console
+
+   $ pip install pytango
+
 
 General overview
 ================

@@ -1,3 +1,7 @@
+2019-10-10 Jan Kotanski <jankotan@gmail.com>
+	* add support for pip
+	* tagged as v2.0.4
+
 2019-06-06 Jan Kotanski <jankotan@gmail.com>
 	* change State to state()
 	* tagged as v2.0.3

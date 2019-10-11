@@ -27,7 +27,10 @@ from distutils.command.clean import clean
 from distutils.util import get_platform
 import shutil
 
-from sphinx.setup_command import BuildDoc
+try:
+    from sphinx.setup_command import BuildDoc
+except Exception:
+    BuildDoc = None
 
 
 #: package name
@@ -54,6 +57,11 @@ SCRIPTS = ['nxsdesigner']
 needs_pytest = set(['test']).intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if needs_pytest else []
 
+install_requires = [
+    'nxstools',
+    # 'pyqt5',
+    # 'pytango',
+]
 
 class toolBuild(build_py):
     """ ui and qrc builder for python
@@ -150,10 +158,24 @@ SETUPDATA = dict(
     maintainer_email="jankotan@gmail.com, eugen.wintersberger@gmail.com, "
     "halil.pasic@gmail.com",
     description=("Configuration tool  for creating components"),
-    license=read('COPYRIGHT'),
+    license='GPLv3',
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Science/Research',
+        'Topic :: Scientific/Engineering :: Physics',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+    ],
     keywords="configuration writer Tango component nexus data",
-    url="https://github.com/jkotan/nexdatas/",
-    platforms=("Linux", " Windows", " MacOS "),
+    url="https://github.com/nexdatas/configtool/",
+    install_requires=install_requires,
+    platforms=("Linux", "Windows", "MacOS"),
     packages=[TOOL, QRCDIR],
     package_data=package_data,
     scripts=get_scripts(SCRIPTS),

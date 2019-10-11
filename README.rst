@@ -3,9 +3,9 @@ Welcome to nxsconfigtool's documentation!
 
 Authors: Jan Kotanski, Eugen Wintersberger, Halil Pasic
 
-Component Designer is a GUI configuration tool dedicated to create components 
-as well as datasources which constitute the XML configuration strings of 
-Nexus Data Writer (NXS). The created XML elements can be saved 
+Component Designer is a GUI configuration tool dedicated to create components
+as well as datasources which constitute the XML configuration strings of
+Nexus Data Writer (NXS). The created XML elements can be saved
 in the extended Nexus XML format in Configuration Tango Server or in disk files.
 
 | Source code: https://github.com/nexdatas/configtool
@@ -18,7 +18,7 @@ Installation
 
 Install the dependencies:
 
-|    PyQt4, PyTango (optional) 
+|    PyQt4, PyTango (optional)
 
 PyTango is only needed if one wants to use Configuration Server
 
@@ -71,7 +71,7 @@ Finally,
 .. code-block:: console
 
 	  $ apt-get update
-	  $ apt-get install nxsconfigtool 
+	  $ apt-get install nxsconfigtool
 
 To instal other NexDaTaS packages
 
@@ -110,18 +110,19 @@ Moreover it is also good to install
 General overview
 ================
 
-.. image:: https://github.com/nexdatas/configtool/blob/develop/png/designer2.png?raw=true
 
    Component Designer
 
-The **NXS Component** Designer program allows to creates *components* as well as 
-*datasources* which constitute the XML configuration strings of 
-Nexus Data Writer (NXS). The created XML elements can be saved 
+.. image:: https://github.com/nexdatas/configtool/blob/develop/doc/png/designer2.png?raw=true
+
+The **NXS Component** Designer program allows to creates *components* as well as
+*datasources* which constitute the XML configuration strings of
+Nexus Data Writer (NXS). The created XML elements can be saved
 in the extended Nexus XML format in Configuration Tango Server or in disk files.
- 
-Collection Dock Window contains lists of the currently open components 
-and datasources. Selecting one of the components or datasources from 
-the lists causes opening either Component Window or DataSource Window. 
+
+Collection Dock Window contains lists of the currently open components
+and datasources. Selecting one of the components or datasources from
+the lists causes opening either Component Window or DataSource Window.
 
 All the most commonly used menu options are also available on Toolbar.
 
@@ -132,5 +133,3 @@ Icons
 =====
 
 Icons fetched from http://findicons.com/pack/990/vistaico_toolbar.
-
-

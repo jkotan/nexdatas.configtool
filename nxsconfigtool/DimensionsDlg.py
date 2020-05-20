@@ -150,7 +150,7 @@ class DimensionsDlg(QDialog):
         self.ui.dimTableWidget.setColumnCount(len(headers))
         self.ui.dimTableWidget.setHorizontalHeaderLabels(headers)
         self.ui.dimTableWidget.setVerticalHeaderLabels(
-            [unicode(l + 1) for l in range(self.rank)])
+            [unicode(el + 1) for el in range(self.rank)])
         for row, ln in enumerate(self.lengths):
             if ln:
                 item = QTableWidgetItem(unicode(ln))

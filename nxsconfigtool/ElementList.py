@@ -313,10 +313,10 @@ class ElementList(QWidget):
     def loadList(self, externalActions=None, itemActions=None):
         try:
             dirList = [
-                l for l in os.listdir(self.directory)
-                if (l.endswith(self.extention)
+                el for el in os.listdir(self.directory)
+                if (el.endswith(self.extention)
                     and (not self.disextention
-                         or not l.endswith(self.disextention)))
+                         or not el.endswith(self.disextention)))
             ]
         except Exception:
             try:
@@ -327,10 +327,10 @@ class ElementList(QWidget):
                     self.directory = os.getcwd()
 
                 dirList = [
-                    l for l in os.listdir(self.directory)
-                    if (l.endswith(self.extention)
+                    el for el in os.listdir(self.directory)
+                    if (el.endswith(self.extention)
                         and (not self.disextention
-                             or not l.endswith(self.disextention)))
+                             or not el.endswith(self.disextention)))
                 ]
             except Exception:
                 return

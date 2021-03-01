@@ -248,7 +248,7 @@ class ElementList(QWidget):
                 return
 
         ide = None
-        keys = elements.keys()
+        keys = list(elements.keys())
         progress = QProgressDialog(
             "Setting %s elements" % self.clName,
             "", 0, len(keys), self)

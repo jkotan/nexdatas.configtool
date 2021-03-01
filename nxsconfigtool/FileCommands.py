@@ -294,7 +294,7 @@ class ComponentSaveAll(QUndoCommand):
     # \brief It saves all components in the file
     def redo(self):
 
-        keys = self.receiver.componentList.elements.keys()
+        keys = list(self.receiver.componentList.elements.keys())
         progress = QProgressDialog(
             "Saving Component elements",
             "", 0, len(keys), self.receiver.componentList)

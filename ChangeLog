@@ -1,3 +1,7 @@
+2021-03-01 Jan Kotanski <jankotan@gmail.com>
+	* convert key generators to list for py3
+	* tagged as v2.0.6
+
 2019-10-10 Jan Kotanski <jankotan@gmail.com>
 	* update README
 	* tagged as v2.0.5

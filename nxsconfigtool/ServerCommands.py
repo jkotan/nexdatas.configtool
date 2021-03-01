@@ -398,7 +398,7 @@ class ServerDSCreate(QUndoCommand):
                         self.receiver.onlineFile = cc.onlineFile
                         cc.create()
                         if cc.action:
-                            keys = cc.datasources.keys()
+                            keys = list(cc.datasources.keys())
                             progress = QProgressDialog(
                                 "Storing DataSource elements",
                                 "", 0, len(keys),
@@ -1115,7 +1115,7 @@ class ServerStoreAllComponents(QUndoCommand):
     # \brief It saves all components in the file
     def redo(self):
 
-        keys = self.receiver.componentList.elements.keys()
+        keys = list(self.receiver.componentList.elements.keys())
         progress = QProgressDialog(
             "Storing Component elements",
             "", 0, len(keys), self.receiver.componentList)
@@ -1194,7 +1194,7 @@ class ServerStoreAllDataSources(QUndoCommand):
     # \brief It saves all the datasources in files
     def redo(self):
 
-        keys = self.receiver.sourceList.elements.keys()
+        keys = list(self.receiver.sourceList.elements.keys())
         progress = QProgressDialog(
             "Storing DataSource elements",
             "", 0, len(keys), self.receiver.sourceList)

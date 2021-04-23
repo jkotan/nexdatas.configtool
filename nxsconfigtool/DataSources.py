@@ -21,8 +21,9 @@
 
 """ widget for different types of datasources """
 
-from PyQt5.QtCore import (Qt, )
-from PyQt5.QtGui import QFontMetrics
+from PyQt5.QtCore import (Qt, QRegExp)
+from PyQt5.QtGui import (QFontMetrics, QSyntaxHighlighter,
+                         QTextCharFormat)
 from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem)
 from PyQt5.QtXml import (QDomDocument)
 from PyQt5 import uic
@@ -54,6 +55,95 @@ _pyevalformclass, _pyevalbaseclass = uic.loadUiType(
 
 if sys.version_info > (3,):
     unicode = str
+
+
+class FormatRule(object):
+    __slots__ = 'pattern', 'fmt', 'index'
+
+    def __init__(self, pattern, fmt, index=0):
+        self.pattern = pattern
+        self.fmt = fmt
+        self.index = index
+
+
+class PyEvalHighlighter(QSyntaxHighlighter):
+
+    def __init__(self, document):
+        QSyntaxHighlighter.__init__(self, document)
+
+        format0 = QTextCharFormat()
+        # format0.setFontWeight(QFont.Bold)
+        format0.setForeground(Qt.red)
+
+        format1 = QTextCharFormat()
+        # format1.setFontWeight(QFont.Bold)
+        format1.setForeground(Qt.darkMagenta)
+
+        format2 = QTextCharFormat()
+        format2.setForeground(Qt.darkGreen)
+
+        format3 = QTextCharFormat()
+        format3.setForeground(Qt.darkBlue)
+
+        format4 = QTextCharFormat()
+        format4.setForeground(Qt.magenta)
+
+        format5 = QTextCharFormat()
+        format5.setForeground(Qt.gray)
+
+        keywords = [
+            'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 'del',
+            'elif', 'else', 'except', 'exec', 'finally', 'for', 'from',
+            'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal',
+            'not', 'or', 'pass', 'print', 'raise', 'return', 'try', 'with',
+            'while', 'yield', 'None', 'True', 'False', 'self'
+        ]
+
+        operators = [
+            '\\^', '\\|', '\\&', '\\~', '>>', '<<', '\\%', '\\*\\*', '\\+=',
+            '-=', '\\*=', '/=', '\\%=', '=', '==', '!=', '<', '<=', '>',
+            '>=', '\\+', '-', '\\*', '/', '//', '\\.'
+        ]
+
+        self.rules = []
+
+        self.rules.extend([FormatRule(QRegExp(r'\b%s\b' % kw), format1)
+                           for kw in keywords])
+        self.rules.extend([FormatRule(QRegExp(r'%s' % op), format2)
+                           for op in operators])
+        self.rules.extend(
+            [FormatRule(QRegExp(r'\bdef\b\s*(\w+)'), format3, 1),
+             FormatRule(QRegExp(r'\bclass\b\s*(\w+)'), format3, 1)])
+        # numeric
+        self.rules.extend(
+            [FormatRule(QRegExp(r'\b[+-]?[0-9]+[lL]?\b'), format3),
+             FormatRule(QRegExp(r'\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b'), format3),
+             FormatRule(QRegExp(
+                 r'\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b'),
+                        format3)])
+        # comments
+        self.rules.extend(
+            [FormatRule(QRegExp(r'#[^\n]*'), format5)])
+        # strings
+        self.rules.extend(
+            [FormatRule(QRegExp(r'"[^"\\]*(\\.[^"\\]*)*"'), format4),
+             FormatRule(QRegExp(r"'[^'\\]*(\\.[^'\\]*)*'"), format4)])
+        # datasources
+        self.rules.extend(
+            [FormatRule(QRegExp(r'\bds.[A-Za-z\(\)\.\$\_]+\b'), format0)])
+
+    def highlightBlock(self, text):
+
+        for rule in self.rules:
+
+            index = rule.pattern.indexIn(text)
+            while index >= 0:
+                index = rule.pattern.pos(rule.index)
+                length = len(str(rule.pattern.cap(rule.index)))
+                self.setFormat(index, length, rule.fmt)
+                index = rule.pattern.indexIn(text, index + length)
+
+        self.setCurrentBlockState(0)
 
 
 # CLIENT dialog impementation
@@ -754,7 +844,16 @@ class PyEvalSource(object):
 
     # connects the dialog actions
     def connectWidgets(self):
-        pass
+        font = self.ui.peScriptTextEdit.font()
+        metrics = QFontMetrics(font)
+        tabStop = 4
+        if hasattr(self.ui.peScriptTextEdit, "setTabStopDistance"):
+            self.ui.peScriptTextEdit.setTabStopDistance(
+                tabStop * metrics.width(' '))
+        else:
+            self.ui.peScriptTextEdit.setTabStopWidth(
+                tabStop * metrics.width(' '))
+        self.highlighter = PyEvalHighlighter(self.ui.peScriptTextEdit)
 
     # sets the tab order of subframe
     # \param first first widget from the parent dialog
@@ -770,15 +869,6 @@ class PyEvalSource(object):
     # updates datasource ui
     # \param datasource class
     def updateForm(self, datasource):
-        font = self.ui.peScriptTextEdit.font()
-        metrics = QFontMetrics(font)
-        tabStop = 4
-        if hasattr(self.ui.peScriptTextEdit, "setTabStopDistance"):
-            self.ui.peScriptTextEdit.setTabStopDistance(
-                tabStop * metrics.width(' '))
-        else:
-            self.ui.peScriptTextEdit.setTabStopWidth(
-                tabStop * metrics.width(' '))
         if datasource.var['PYEVAL'].result is not None:
             self.ui.peResultLineEdit.setText(datasource.var['PYEVAL'].result)
         if datasource.var['PYEVAL'].input is not None:
@@ -858,7 +948,8 @@ class PyEvalSource(object):
                     datasource.var['PYEVAL'].script if (
                         len(datasource.var['PYEVAL'].script) > 0 and
                         datasource.var['PYEVAL'].script[0] == '\n') else (
-                        "\n" + datasource.var['PYEVAL'].script)))
+                            "\n" + datasource.var['PYEVAL'].script))
+                .replace("\t", "    "))
             res.appendChild(script)
         elem.appendChild(res)
         if datasource.var['PYEVAL'].input:

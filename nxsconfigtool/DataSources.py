@@ -22,6 +22,7 @@
 """ widget for different types of datasources """
 
 from PyQt5.QtCore import (Qt, )
+from PyQt5.QtGui import QFontMetrics
 from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem)
 from PyQt5.QtXml import (QDomDocument)
 from PyQt5 import uic
@@ -769,6 +770,10 @@ class PyEvalSource(object):
     # updates datasource ui
     # \param datasource class
     def updateForm(self, datasource):
+        font = self.ui.peScriptTextEdit.font()
+        metrics = QFontMetrics(font)
+        tabStop = 4
+        self.ui.peScriptTextEdit.setTabStopWidth(tabStop * metrics.width(' '))
         if datasource.var['PYEVAL'].result is not None:
             self.ui.peResultLineEdit.setText(datasource.var['PYEVAL'].result)
         if datasource.var['PYEVAL'].input is not None:
@@ -828,6 +833,7 @@ class PyEvalSource(object):
             if hasattr(self.ui, "dQueryLineEdit"):
                 self.ui.dQueryLineEdit.setFocus()
             return
+        script = script.replace('\t', '    ')
         datasource.var['PYEVAL'].script = script
 
     # creates datasource nodes

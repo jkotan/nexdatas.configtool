@@ -22,8 +22,7 @@
 """ widget for different types of datasources """
 
 from PyQt5.QtCore import (Qt, QRegExp)
-from PyQt5.QtGui import (QFontMetrics, QSyntaxHighlighter,
-                         QTextCharFormat)
+from PyQt5.QtGui import (QFontMetrics, QSyntaxHighlighter)
 from PyQt5.QtWidgets import (QMessageBox, QTableWidgetItem)
 from PyQt5.QtXml import (QDomDocument)
 from PyQt5 import uic
@@ -58,38 +57,41 @@ if sys.version_info > (3,):
 
 
 class FormatRule(object):
-    __slots__ = 'pattern', 'fmt', 'index'
+    __slots__ = 'expression', 'fmt', 'index'
 
-    def __init__(self, pattern, fmt, index=0):
-        self.pattern = pattern
+    def __init__(self, expression, fmt, index=0):
+        self.expression = expression
         self.fmt = fmt
         self.index = index
+
+
+class SectionFormatRule(object):
+    __slots__ = 'startExp', 'endExp', 'fmt', 'state', 'index'
+
+    def __init__(self, startExp, endExp, fmt, state=-1, index=-1):
+        self.startExp = startExp
+        self.endExp = endExp
+        self.fmt = fmt
+        self.state = state
+        self.index = index
+
+    def reset(self):
+        self.index = -1
+
+    def nextStart(self, text, start=None):
+        if start is not None:
+            if start < self.index:
+                return self.index
+            self.index = self.startExp.indexIn(text, start)
+        else:
+            self.index = self.startExp.indexIn(text)
+        return self.index
 
 
 class PyEvalHighlighter(QSyntaxHighlighter):
 
     def __init__(self, document):
         QSyntaxHighlighter.__init__(self, document)
-
-        format0 = QTextCharFormat()
-        # format0.setFontWeight(QFont.Bold)
-        format0.setForeground(Qt.red)
-
-        format1 = QTextCharFormat()
-        # format1.setFontWeight(QFont.Bold)
-        format1.setForeground(Qt.darkMagenta)
-
-        format2 = QTextCharFormat()
-        format2.setForeground(Qt.darkGreen)
-
-        format3 = QTextCharFormat()
-        format3.setForeground(Qt.darkBlue)
-
-        format4 = QTextCharFormat()
-        format4.setForeground(Qt.magenta)
-
-        format5 = QTextCharFormat()
-        format5.setForeground(Qt.gray)
 
         keywords = [
             'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 'del',
@@ -107,43 +109,106 @@ class PyEvalHighlighter(QSyntaxHighlighter):
 
         self.rules = []
 
-        self.rules.extend([FormatRule(QRegExp(r'\b%s\b' % kw), format1)
-                           for kw in keywords])
-        self.rules.extend([FormatRule(QRegExp(r'%s' % op), format2)
-                           for op in operators])
         self.rules.extend(
-            [FormatRule(QRegExp(r'\bdef\b\s*(\w+)'), format3, 1),
-             FormatRule(QRegExp(r'\bclass\b\s*(\w+)'), format3, 1)])
+            [FormatRule(QRegExp(r'\b%s\b' % kw), Qt.blue)
+             for kw in keywords])
+        self.rules.extend(
+            [FormatRule(QRegExp(r'%s' % op), Qt.darkGreen)
+             for op in operators])
+        self.rules.extend(
+            [FormatRule(QRegExp(r'\bdef\b\s*(\w+)'), Qt.darkBlue, 1),
+             FormatRule(QRegExp(r'\bclass\b\s*(\w+)'), Qt.darkBlue, 1)])
         # numeric
         self.rules.extend(
-            [FormatRule(QRegExp(r'\b[+-]?[0-9]+[lL]?\b'), format3),
-             FormatRule(QRegExp(r'\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b'), format3),
+            [FormatRule(QRegExp(r'\b[+-]?[0-9]+[lL]?\b'), Qt.darkBlue),
+             FormatRule(QRegExp(r'\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b'),
+                        Qt.darkBlue),
              FormatRule(QRegExp(
                  r'\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b'),
-                        format3)])
-        # comments
-        self.rules.extend(
-            [FormatRule(QRegExp(r'#[^\n]*'), format5)])
-        # strings
-        self.rules.extend(
-            [FormatRule(QRegExp(r'"[^"\\]*(\\.[^"\\]*)*"'), format4),
-             FormatRule(QRegExp(r"'[^'\\]*(\\.[^'\\]*)*'"), format4)])
+                        Qt.darkBlue)])
         # datasources
-        self.rules.extend(
-            [FormatRule(QRegExp(r'\bds.[A-Za-z\(\)\.\$\_]+\b'), format0)])
+        self.rules.append(
+            FormatRule(
+                QRegExp(r'\bds.[A-Za-z\(\)\.\$\_]+\b'), Qt.magenta))
+
+        self.sectionrules = []
+
+        # comments
+        self.sectionrules.append(
+            SectionFormatRule(QRegExp(r'#[^\n]*'), None, Qt.gray, 1))
+
+        # multi-line strings
+        self.sectionrules.extend(
+            [SectionFormatRule(
+                QRegExp(r'"""'), QRegExp(r'"""'), Qt.darkMagenta, 2),
+             SectionFormatRule(
+                QRegExp(r"'''"), QRegExp(r"'''"), Qt.darkMagenta, 3)])
+
+        # strings
+        self.sectionrules.extend(
+            [SectionFormatRule(
+                QRegExp(r'"[^"\\]*(\\.[^"\\]*)*"'), None, Qt.darkMagenta, 4),
+             SectionFormatRule(
+                 QRegExp(r"'[^'\\]*(\\.[^'\\]*)*'"), None, Qt.darkMagenta, 5)])
 
     def highlightBlock(self, text):
 
         for rule in self.rules:
 
-            index = rule.pattern.indexIn(text)
+            index = rule.expression.indexIn(text)
             while index >= 0:
-                index = rule.pattern.pos(rule.index)
-                length = len(str(rule.pattern.cap(rule.index)))
+                index = rule.expression.pos(rule.index)
+                length = len(str(rule.expression.cap(rule.index)))
                 self.setFormat(index, length, rule.fmt)
-                index = rule.pattern.indexIn(text, index + length)
+                index = rule.expression.indexIn(text, index + length)
 
         self.setCurrentBlockState(0)
+
+        for scrule in self.sectionrules:
+            scrule.reset()
+
+        state = self.previousBlockState()
+        size = 0
+        currentrule = None
+        if self.previousBlockState() > 0:
+            start = 0
+        else:
+            state = -1
+            start = -1
+            for scrule in self.sectionrules:
+                rlstart = scrule.nextStart(text)
+                if rlstart >= 0 and (start < 0 or rlstart < start):
+                    start = rlstart
+                    size = scrule.startExp.matchedLength()
+                    state = scrule.state
+
+        while start >= 0 and state > 0:
+            currentrule = self.sectionrules[state - 1]
+            if currentrule.endExp is not None:
+                end = currentrule.endExp.indexIn(text, start + size)
+                if end >= size:
+                    length = end - start + size + \
+                        currentrule.endExp.matchedLength()
+                    self.setCurrentBlockState(0)
+                else:
+                    length = len(str(text)) - start + size
+                    self.setCurrentBlockState(state)
+            else:
+                length = len(str(currentrule.startExp.cap(0)))
+                self.setCurrentBlockState(0)
+
+            self.setFormat(start, length, currentrule.fmt)
+            state = -1
+            newstart = -1
+            for scrule in self.sectionrules:
+                rlstart = scrule.nextStart(text, start + length)
+                if rlstart >= 0 and (newstart < 0 or rlstart < newstart):
+                    start = rlstart
+                    newstart = rlstart
+                    size = scrule.startExp.matchedLength()
+                    state = scrule.state
+            if state < 0:
+                start = -1
 
 
 # CLIENT dialog impementation
@@ -844,6 +909,8 @@ class PyEvalSource(object):
 
     # connects the dialog actions
     def connectWidgets(self):
+        self.ui.peInputLineEdit.setStyleSheet("color: magenta")
+        self.ui.peResultLineEdit.setStyleSheet("color: magenta")
         font = self.ui.peScriptTextEdit.font()
         metrics = QFontMetrics(font)
         tabStop = 4

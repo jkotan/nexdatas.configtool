@@ -1,5 +1,6 @@
 2021-04-23 Jan Kotanski <jankotan@gmail.com>
 	* change tab to 4 spaces
+	* add simple highlights for pyeval
 	* tagged as v2.1.0
 
 2021-03-01 Jan Kotanski <jankotan@gmail.com>

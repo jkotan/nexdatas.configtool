@@ -52,7 +52,7 @@ class ComponentList(ElementList):
         # extention
         self.extention = ".xml"
         # excluded extention
-        self.disextention = "ds.xml"
+        self.disextention = ".ds.xml"
 
     # switches between all attributes in the try or only type attribute
     # \param status all attributes are shown if True

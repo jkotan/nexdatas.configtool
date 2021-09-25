@@ -68,4 +68,3 @@ else
     docker exec  --user root ndts python3 setup.py -q install
 fi
 if [ "$?" -ne "0" ]; then exit 255; fi
-fi

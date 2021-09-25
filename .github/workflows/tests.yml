@@ -1,13 +1,12 @@
 name: Test Package
 
-on
+on:
   push:
   pull_request:
   schedule:
     - cron: '0 6 * * 1'
 
 jobs:
-
   flake8_tests:
     runs-on: ubuntu-latest
     steps:

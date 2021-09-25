@@ -1,9 +1,12 @@
 name: Test Package
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1'
 
 jobs:
-
   flake8_tests:
     runs-on: ubuntu-latest
     steps:
@@ -20,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [debian10, debian9, ubuntu20.04, ubuntu18.04]
+        os: [debian11, debian10, debian9, ubuntu20.04, ubuntu18.04]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2

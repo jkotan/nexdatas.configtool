@@ -1,6 +1,29 @@
 Welcome to nxsconfigtool's documentation!
 =========================================
 
+|github workflow|
+|docs|
+|Pypi Version|
+|Python Versions|
+
+.. |github workflow| image:: https://github.com/nexdatas/configtool/actions/workflows/tests.yml/badge.svg
+   :target: https://github.com/nexdatas/configtool/actions
+   :alt:
+
+.. |docs| image:: https://img.shields.io/badge/Documentation-webpages-ADD8E6.svg
+   :target: https://nexdatas.github.io/configtool/index.html
+   :alt:
+
+.. |Pypi Version| image:: https://img.shields.io/pypi/v/nxsconfigtool.svg
+                  :target: https://pypi.python.org/pypi/nxsconfigtool
+                  :alt:
+
+.. |Python Versions| image:: https://img.shields.io/pypi/pyversions/nxsconfigtool.svg
+                     :target: https://pypi.python.org/pypi/nxsconfigtool/
+                     :alt:
+
+
+
 Authors: Jan Kotanski, Eugen Wintersberger, Halil Pasic
 
 Component Designer is a GUI configuration tool dedicated to create components

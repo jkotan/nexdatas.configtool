@@ -6,12 +6,12 @@ Welcome to nxsconfigtool's documentation!
 |Pypi Version|
 |Python Versions|
 
-.. |github workflow| image:: https://github.com/nexdatas/configtool/actions/workflows/tests.yml/badge.svg
-   :target: https://github.com/nexdatas/configtool/actions
+.. |github workflow| image:: https://github.com/nexdatas/nxsdesigner/actions/workflows/tests.yml/badge.svg
+   :target: https://github.com/nexdatas/nxsdesigner/actions
    :alt:
 
 .. |docs| image:: https://img.shields.io/badge/Documentation-webpages-ADD8E6.svg
-   :target: https://nexdatas.github.io/configtool/index.html
+   :target: https://nexdatas.github.io/nxsdesigner/index.html
    :alt:
 
 .. |Pypi Version| image:: https://img.shields.io/pypi/v/nxsconfigtool.svg
@@ -31,8 +31,8 @@ as well as datasources which constitute the XML configuration strings of
 Nexus Data Writer (NXS). The created XML elements can be saved
 in the extended Nexus XML format in Configuration Tango Server or in disk files.
 
-| Source code: https://github.com/nexdatas/configtool
-| Web page: https://nexdatas.github.io/configtool/
+| Source code: https://github.com/nexdatas/nxsdesigner
+| Web page: https://nexdatas.github.io/nxsdesigner/
 | NexDaTaS Web page: https://nexdatas.github.io
 
 ------------
@@ -50,7 +50,7 @@ From sources
 
 Download the latest NXS Configuration Tool version from
 
-|    https://github.com/nexdatas/configtool/
+|    https://github.com/nexdatas/nxsdesigner/
 
 and extract the sources.
 
@@ -136,7 +136,7 @@ General overview
 
    Component Designer
 
-.. image:: https://github.com/nexdatas/configtool/blob/develop/doc/png/designer2.png?raw=true
+.. image:: https://github.com/nexdatas/nxsdesigner/blob/develop/doc/png/designer2.png?raw=true
 
 The **NXS Component** Designer program allows to creates *components* as well as
 *datasources* which constitute the XML configuration strings of

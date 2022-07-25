@@ -177,7 +177,7 @@ SETUPDATA = dict(
         'Programming Language :: Python :: 3.10',
     ],
     keywords="configuration writer Tango component nexus data",
-    url="https://github.com/nexdatas/configtool/",
+    url="https://github.com/nexdatas/nxsdesigner/",
     install_requires=install_requires,
     platforms=("Linux", "Windows", "MacOS"),
     packages=[TOOL, QRCDIR],

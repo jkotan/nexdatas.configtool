@@ -261,7 +261,7 @@ class DataSourceMethods(object):
             self.__dialog.imp[str(self.__datasource.dataSourceType)
                               ].createNodes(self.__datasource, root, elem)
 
-        if(self.__datasource.doc):
+        if self.__datasource.doc:
             newDoc = root.createElement(str("doc"))
             newText = root.createTextNode(str(self.__datasource.doc))
             newDoc.appendChild(newText)

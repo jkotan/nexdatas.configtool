@@ -28,14 +28,17 @@ from .ConnectDlg import ConnectDlg
 
 
 try:
-    import PyTango
-    # if module PyTango avalable
+    try:
+        import tango
+    except Exception:
+        import PyTango as tango
+    # if module tango avalable
     PYTANGO_AVAILABLE = True
     logger = logging.getLogger("nxsdesigner")
 except ImportError as e:
     PYTANGO_AVAILABLE = False
     logger = logging.getLogger("nxsdesigner")
-    logger.info("PyTango is not available: %s" % e)
+    logger.info("tango is not available: %s" % e)
 
 
 # configuration server
@@ -101,7 +104,7 @@ class ConfigurationServer(object):
     # connects to the configuration server
     # \brief It opens the configuration Tango device
     def connect(self):
-        self._proxy = PyTango.DeviceProxy(self.getDeviceName())
+        self._proxy = tango.DeviceProxy(self.getDeviceName())
         if self._proxy:
             found = False
             cnt = 0
@@ -109,7 +112,7 @@ class ConfigurationServer(object):
                 if cnt > 1:
                     time.sleep(0.01)
                 try:
-                    if self._proxy.state() != PyTango.DevState.RUNNING:
+                    if self._proxy.state() != tango.DevState.RUNNING:
                         found = True
                 except Exception:
 
@@ -119,7 +122,7 @@ class ConfigurationServer(object):
 
             if found:
                 self._proxy.set_timeout_millis(25000)
-                self._proxy.set_source(PyTango.DevSource.DEV)
+                self._proxy.set_source(tango.DevSource.DEV)
                 self._proxy.command_inout("Open")
                 self.connected = True
             else:
@@ -235,7 +238,7 @@ class ConfigurationServer(object):
     # \brief It closes connecion to configuration server
     def close(self):
         if self._proxy and self.connected:
-            if self._proxy.state() == PyTango.DevState.OPEN:
+            if self._proxy.state() == tango.DevState.OPEN:
                 self._proxy.command_inout("Close")
                 self.connected = False
 

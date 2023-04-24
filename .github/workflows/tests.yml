@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [debian11, debian10, debian9, ubuntu22.04, ubuntu20.04]
+        os: [debian11, debian10, ubuntu22.04, ubuntu20.04]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [debian10, debian9]
+        os: [debian10]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2

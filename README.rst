@@ -73,7 +73,7 @@ and launch
 Debian packages
 ^^^^^^^^^^^^^^^
 
-Debian Buster, Stretch or Ubuntu Focal, Bionic packages can be found in the HDRI repository.
+Debian Bullseye, Buster or Ubuntu Jammy, Focal packages can be found in the HDRI repository.
 
 To install the debian packages, add the PGP repository key
 

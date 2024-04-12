@@ -70,18 +70,40 @@ docker exec  --user root ndts /bin/bash -c 'export DEBIAN_FRONTEND=noninteractiv
 if [ "$?" -ne "0" ]; then exit 255; fi
 
 
+
+
 if [ "$2" = "2" ]; then
-    echo "install python packages"
-    docker exec  --user root ndts /bin/bash -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y  python-pytango   nxsconfigserver-db; sleep 10; apt-get -qq install -y   python-nxsconfigserver python-nxstools python-pyqt5 python-setuptools'
+    echo "install pytango and nxsconfigserver-db"
+    docker exec  --user root ndts /bin/bash -c 'apt-get -qq update; apt-get install -y   python-pytango  nxsconfigserver-db ; sleep 10'
 else
-    echo "install python3 packages"
-    if [ "$1" = "ubuntu24.04" ] || [ "$1" = "ubuntu22.04" ] || [ "$1" = "ubuntu20.04" ] || [ "$1" = "debian10" ] || [ "$1" = "ubuntu20.10" ] || [ "$1" = "debian11" ] || [ "$1" = "debian12" ]; then
-	docker exec  --user root ndts /bin/bash -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-tango   nxsconfigserver-db; sleep 10; apt-get -qq install -y   python3-nxsconfigserver python3-nxstools python3-pyqt5 python3-setuptools'
+    if [ "$1" = "debian10" ] || [ "$1" = "ubuntu24.04" ] || [ "$1" = "ubuntu22.04" ] || [ "$1" = "ubuntu20.04" ] || [ "$1" = "ubuntu20.10" ] || [ "$1" = "debian11" ] || [ "$1" = "debian12" ] ; then
+	echo "install pytango"
+	docker exec --user root ndts /bin/bash -c 'apt-get -qq update; apt-get install -y   python3-tango'
+	echo "install nxsconfigserver-db"
+	docker exec --user root ndts /bin/bash -c 'apt-get -qq update; apt-get  install -y   nxsconfigserver-db'
+	if [ "$1" = "ubuntu24.04" ]; then
+	    docker exec  --user root ndts /usr/bin/mysql -e 'GRANT ALL PRIVILEGES ON nxsconfig.* TO "tango"@"%" identified by "rootpw"'
+	    docker exec  --user root ndts /usr/bin/mysql -e 'GRANT ALL PRIVILEGES ON nxsconfig.* TO "tango"@"localhost" identified by "rootpw"'
+	    docker exec  --user root ndts /usr/bin/mysql -e 'FLUSH PRIVILEGES'
+	    docker exec  --user tango ndts /usr/bin/mysql -e 'create database nxsconfig'
+	    docker exec  --user tango ndts /bin/bash -c '/usr/bin/mysql nxsconfig < /usr/share/dbconfig-common/data/nxsconfigserver-db/install/mysql'
+	fi
     else
-	docker exec  --user root ndts /bin/bash -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-pytango   nxsconfigserver-db; sleep 10; apt-get -qq install -y   python3-nxsconfigserver python3-nxstools python3-pyqt5 python3-setuptools'
+	echo "install pytango and nxsconfigserver-db"
+	docker exec  --user root ndts /bin/bash -c 'apt-get -qq update; apt-get -qq install -y   python3-pytango nxsconfigserver-db; sleep 10'
     fi
 fi
-if [ "$?" -ne "0" ]; then exit 255; fi
+if [ "$?" != "0" ]; then exit 255; fi
+
+
+echo "install nxs packages"
+if [ "$2" = "2" ]; then
+    echo "install python-pytango"
+    docker exec --user root ndts /bin/bash -c 'apt-get -qq update; apt-get install -y python-nxsconfigserver python-nxswriter python-nxstools; sleep 10'
+else
+    docker exec --user root ndts /bin/bash -c 'apt-get -qq update; apt-get install -y python3-nxsconfigserver python3-nxswriter python3-nxstools; sleep 10'
+fi
+if [ "$?" != "0" ]; then exit 255; fi
 
 if [ "$2" = "2" ]; then
     echo "install nxsconfigtool"

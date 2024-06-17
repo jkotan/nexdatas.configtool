@@ -101,7 +101,7 @@ if [ "$2" = "2" ]; then
     echo "install python-pytango"
     docker exec --user root ndts /bin/bash -c 'apt-get -qq update; apt-get install -y python-nxsconfigserver python-nxswriter python-pyqt5  python-nxstools  python-setuptools; sleep 10'
 else
-    docker exec --user root ndts /bin/bash -c 'apt-get -qq update; apt-get install -y python3-nxsconfigserver python3-nxswriter s python3-pyqt5  python3-nxstools python3-setuptools; sleep 10'
+    docker exec --user root ndts /bin/bash -c 'apt-get -qq update; apt-get install -y python3-nxsconfigserver python3-nxswriter python3-pyqt5  python3-nxstools python3-setuptools; sleep 10'
 fi
 if [ "$?" != "0" ]; then exit 255; fi
 

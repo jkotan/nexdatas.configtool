@@ -62,7 +62,7 @@ Next, run the installation script
 
 .. code-block:: console
 
-	  $ python setup.py install
+	  $ python3 setup.py install
 
 and launch
 
@@ -73,7 +73,7 @@ and launch
 Debian packages
 ^^^^^^^^^^^^^^^
 
-Debian Bookworm, Bullseye, Buster or Ubuntu Lunar, Jammy, Focal packages can be found in the HDRI repository.
+Debian Bookworm, Bullseye, Buster or Ubuntu Oracular, Noble, Jammy packages can be found in the HDRI repository.
 
 To install the debian packages, add the PGP repository key
 
@@ -100,13 +100,13 @@ To instal other NexDaTaS packages
 
 .. code-block:: console
 
-	  $ apt-get install python-nxswriter python-nxsconfigserver nxsconfigserver-db nxstools
+	  $ apt-get install python3-nxswriter python3-nxsconfigserver nxsconfigserver-db nxstools
 
 and
 
 .. code-block:: console
 
-	  $ apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
+	  $ apt-get install python3-nxsrecselector nxselector python3-sardana-nxsrecorder
 
 for Component Selector and Sardana related packages.
 
